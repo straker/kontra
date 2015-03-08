@@ -1,0 +1,36 @@
+{
+  "name": "kontra",
+  "version": "0.0.0",
+  "description": "Kontra HTML5 game development library",
+  "main": "core.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/straker/kontra.git"
+  },
+  "keywords": [
+    "HTML5",
+    "JavaScript",
+    "game",
+    "library"
+  ],
+  "author": "Steven Lambert",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/straker/kontra/issues"
+  },
+  "homepage": "https://github.com/straker/kontra",
+  "dependencies": {
+    "kontra-asset-loader": "git+https://github.com/straker/kontra-asset-loader.git"
+  },
+  "devDependencies": {
+    "gulp": "^3.8.11",
+    "gulp-concat-util": "^0.5.2",
+    "gulp-jshint": "^1.9.2",
+    "gulp-rename": "^1.2.0",
+    "gulp-uglify": "^1.1.0",
+    "jshint-stylish": "^1.0.1"
+  }
+}

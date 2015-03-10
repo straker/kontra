@@ -14,6 +14,9 @@ gulp.task('scripts', function() {
   return gulp.src(['node_modules/assetLoader/assetLoader.js', 'src/core.js', 'src/*.js'])
     .pipe(concat('kontra.js'))
     .pipe(gulp.dest('.'))
+    .pipe(rename('kontra.min.js'))
+    .pipe(uglify())
+    .pipe(gulp.dest('.'));
 });
 
 gulp.task('watch', function() {

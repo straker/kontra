@@ -3,6 +3,7 @@ var jshint = require('gulp-jshint');
 var concat = require('gulp-concat-util');
 var uglify = require('gulp-uglify');
 var rename = require('gulp-rename');
+var size = require('gulp-size');
 
 gulp.task('lint', function() {
   return gulp.src('src/*.js')
@@ -13,9 +14,11 @@ gulp.task('lint', function() {
 gulp.task('scripts', function() {
   return gulp.src(['node_modules/assetLoader/assetLoader.js', 'src/core.js', 'src/*.js'])
     .pipe(concat('kontra.js'))
+    .pipe(size())
     .pipe(gulp.dest('.'))
     .pipe(rename('kontra.min.js'))
     .pipe(uglify())
+    .pipe(size())
     .pipe(gulp.dest('.'));
 });
 

@@ -1,6 +1,6 @@
 /*jshint -W084 */
 
-// var kontra = (function(kontra, window, document) {
+var kontra = (function(kontra, window, document) {
   var callbacks = {};
   var pressedKeys = {};
 
@@ -112,10 +112,10 @@
    *
    * @throws {SyntaxError} If callback is not a function.
    */
-  kontra.bindKey = function(keys, callback) {
+  kontra.bindKey = function bindKey(keys, callback) {
     if (typeof callback !== 'function') {
       var error = new SyntaxError('Invalid function.');
-      kontra.log.error(error, 'You must a function as the second parameter.');
+      kontra.log.error(error, 'You must provide a function as the second parameter.');
       return;
     }
 
@@ -132,7 +132,7 @@
    * Remove the callback function for a key combination.
    * @param {string|string[]} keys - keys combination string.
    */
-  kontra.unbindKey = function(keys) {
+  kontra.unbindKey = function unbindKey(keys) {
     keys = (kontra.isArray(keys) ? keys : [keys]);
 
     for (var i = 0, key; key = keys[i]; i++) {
@@ -150,7 +150,7 @@
    *
    * @returns {boolean}
    */
-  kontra.keyIsPressed = function(keys) {
+  kontra.keyIsPressed = function keyIsPressed(keys) {
     var combination = normalizeKeys(keys);
     var pressed = true;
 
@@ -184,8 +184,8 @@
    * @returns {string} Normalized combination.
    *
    * @example
-   * normalizeKeys('c+ctrl');  //-> 'ctrl+c'
-   * normalizeKeys('shift+++meta+alt');  //-> 'meta+alt+shift+plus'
+   * normalizeKeys('c+ctrl');  //=> 'ctrl+c'
+   * normalizeKeys('shift+++meta+alt');  //=> 'meta+alt+shift+plus'
    */
   function normalizeKeys(keys) {
     var combination = [];
@@ -291,4 +291,6 @@
   function blurEventHandler(e) {
     pressedKeys = {};
   }
-// })(kontra || {}, window, document);
+
+  return kontra;
+})(kontra || {}, window, document);

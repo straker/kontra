@@ -1,10 +1,9 @@
 var kontra = {};
 
-// var kontra = (function(kontra, window, document) {
-  //------------------------------------------------------------
-  // Utility Functions
-  //------------------------------------------------------------
-
+var kontra = (function(kontra, window, document) {
+  /**
+   * Object for logging to the client.
+   */
   kontra.log = {};
 
   /**
@@ -14,21 +13,45 @@ var kontra = {};
    * @param {Error}  error - Error object.
    * @param {string} message - Error message.
    */
-  kontra.log.error = function(error, message) {
+  kontra.log.error = function logError(error, message) {
     error.originalMessage = error.message;
     error.message = 'Kontra: ' + message + '\n\t' + error.stack;
     console.error(error.message);
   };
 
   /**
-   * Return whether an object is an Array.
+   * Return whether a value is an Array.
    * @memberOf kontra
    *
-   * @param {object} obj - Object to test.
+   * @param {*} value - Value to test.
    *
    * @returns {boolean}
    */
-  kontra.isArray = function(obj) {
-    return Array.isArray(obj);
+  kontra.isArray = Array.isArray;
+
+  /**
+   * Returns whether a value is a String.
+   * @memberOf kontra
+   *
+   * @param {*} value - Value to test.
+   *
+   * @returns {boolean}
+   */
+  kontra.isString = function isString(value) {
+    return typeof value === 'string';
   };
-// })(kontra || {}, window, document);
+
+  /**
+   * Return whether a value is a Number.
+   * @memberOf kontra
+   *
+   * @param {*} value - Value to test.
+   *
+   * @returns {boolean}
+   */
+  kontra.isNumber = function isNumber(value) {
+    return typeof value === 'number';
+  };
+
+  return kontra;
+})(kontra || {}, window, document);

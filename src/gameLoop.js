@@ -1,4 +1,4 @@
-// var kontra = (function(kontra, window, document) {
+var kontra = (function(kontra, window, document) {
   /**
    * Game loop that updates and draws the game every frame.
    * @memberOf kontra
@@ -10,7 +10,7 @@
    * @param {function} options.update - Function called to update the game.
    * @param {function} options.draw - Function called to draw the game.
    */
-  kontra.GameLoop = function(options) {
+  kontra.GameLoop = function GameLoop(options) {
     options = options || {};
 
     // check for required functions
@@ -39,7 +39,7 @@
      * Start the game loop.
      * @memberOf kontra.GameLoop
      */
-    this.start = function() {
+    this.start = function GameLoopStart() {
       requestAnimationFrame(this.frame);
     };
 
@@ -47,7 +47,7 @@
      * Called every frame of the game loop.
      * @memberOf kontra.GameLoop
      */
-    this.frame = function() {
+    this.frame = function GameLoopFrame() {
       rAF = requestAnimationFrame(_this.frame);
 
       now = timestamp();
@@ -69,7 +69,7 @@
      * Pause the game.
      * @memberOf kontra.GameLoop
      */
-    this.pause = function() {
+    this.pause = function GameLoopPause() {
       last = 0;
       cancelAnimationFrame(rAF);
     };
@@ -78,7 +78,7 @@
      * Unpause the game.
      * @memberOf kontra.GameLoop
      */
-    this.unpause = function() {
+    this.unpause = function GameLoopUnpause() {
       requestAnimationFrame(this.frame);
     };
 
@@ -99,7 +99,7 @@
 
   /**
    * Returns the current time.
-   * @memberOf kontra
+   * @private
    *
    * @returns {number}
    */
@@ -121,4 +121,6 @@
       return timestampDate;
     }
   })();
-// })(kontra || {}, window, document);
+
+  return kontra;
+})(kontra || {}, window, document);

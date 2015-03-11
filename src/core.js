@@ -20,7 +20,13 @@ var kontra = (function(kontra, window, document) {
   };
 
   /**
-   * Return whether a value is an Array.
+   * Noop function.
+   * @memberOf kontra
+   */
+  kontra.noop = function noop() {};
+
+  /**
+   * Determine whether a value is an Array.
    * @memberOf kontra
    *
    * @param {*} value - Value to test.
@@ -30,7 +36,7 @@ var kontra = (function(kontra, window, document) {
   kontra.isArray = Array.isArray;
 
   /**
-   * Returns whether a value is a String.
+   * Determine whether a value is a String.
    * @memberOf kontra
    *
    * @param {*} value - Value to test.
@@ -42,7 +48,7 @@ var kontra = (function(kontra, window, document) {
   };
 
   /**
-   * Return whether a value is a Number.
+   * Determine whether a value is a Number.
    * @memberOf kontra
    *
    * @param {*} value - Value to test.

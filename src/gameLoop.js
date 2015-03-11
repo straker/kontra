@@ -20,12 +20,14 @@ var kontra = (function(kontra, window, document) {
       return;
     }
 
+    // animation variables
     var fps = options.fps || 60;
     var last = 0;
     var accumulator = 0;
     var step = 1E3 / fps;
     var slowFactor = options.slowFactor || 1;
     var delta = slowFactor * step;
+
     var update = options.update;
     var draw = options.draw;
     var _this = this;
@@ -40,6 +42,7 @@ var kontra = (function(kontra, window, document) {
      * @memberOf kontra.GameLoop
      */
     this.start = function GameLoopStart() {
+      last = 0;
       requestAnimationFrame(this.frame);
     };
 
@@ -66,33 +69,24 @@ var kontra = (function(kontra, window, document) {
     };
 
     /**
-     * Pause the game.
+     * Stop the game loop.
      * @memberOf kontra.GameLoop
      */
-    this.pause = function GameLoopPause() {
-      last = 0;
+    this.stop = function GameLoopStop() {
       cancelAnimationFrame(rAF);
     };
 
     /**
-     * Unpause the game.
-     * @memberOf kontra.GameLoop
-     */
-    this.unpause = function GameLoopUnpause() {
-      requestAnimationFrame(this.frame);
-    };
-
-    /**
-     * pause the game when the window isn't visible.
+     * Stop the game when the window isn't visible.
      * @memberOf kontra.GameLoop
      * @private
      */
     function onVisibilityChange() {
       if (document.hidden) {
-        _this.pause();
+        _this.stop();
       }
       else {
-        _this.unpause();
+        _this.start();
       }
     }
   };

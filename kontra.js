@@ -1062,9 +1062,38 @@ function qFactory(nextTick, exceptionHandler) {
 
 exports.AssetLoader = AssetLoader;
 })(window, document);
-var kontra = {};
+var kontra = (function(kontra, document) {
+  /**
+   * Set up the canvas.
+   * @memberOf kontra
+   *
+   * @param {object} options - Options for the game.
+   * @param {string|Canvas} options.canvas - ID string or Canvas element to draw the game on.
+   */
+  kontra.init = function init(options) {
+    options = options || {};
 
-var kontra = (function(kontra, window, document) {
+    if (kontra.isString(options.canvas)) {
+      this.canvas = document.getElementById(options.canvas);
+    }
+    else if (kontra.isCanvas(options.canvas)) {
+      this.canvas = canvas;
+    }
+    else {
+      this.canvas = document.getElementsByTagName('canvas')[0];
+
+      if (!this.canvas) {
+        var error = new ReferenceError('No canvas element found.');
+        kontra.log.error(error, 'You must provide a canvas element for the game.');
+        return;
+      }
+    }
+
+    this.context = this.canvas.getContext('2d');
+    this.gameWidth = this.canvas.width;
+    this.gameHeight = this.canvas.height;
+  };
+
   /**
    * Object for logging to the client.
    */
@@ -1090,7 +1119,7 @@ var kontra = (function(kontra, window, document) {
   kontra.noop = function noop() {};
 
   /**
-   * Determine whether a value is an Array.
+   * Determine if a value is an Array.
    * @memberOf kontra
    *
    * @param {*} value - Value to test.
@@ -1100,7 +1129,7 @@ var kontra = (function(kontra, window, document) {
   kontra.isArray = Array.isArray;
 
   /**
-   * Determine whether a value is a String.
+   * Determine if a value is a String.
    * @memberOf kontra
    *
    * @param {*} value - Value to test.
@@ -1112,7 +1141,7 @@ var kontra = (function(kontra, window, document) {
   };
 
   /**
-   * Determine whether a value is a Number.
+   * Determine if a value is a Number.
    * @memberOf kontra
    *
    * @param {*} value - Value to test.
@@ -1123,14 +1152,38 @@ var kontra = (function(kontra, window, document) {
     return typeof value === 'number';
   };
 
-  return kontra;
-})(kontra || {}, window, document);
-var kontra = (function(kontra, window, document) {
-  // use the kontra-asset-loader
-  kontra.assets = new AssetLoader();
+  /**
+   * Determine if a value is an Image.
+   * @memberOf kontra
+   *
+   * @param {*} value - Value to test.
+   *
+   * @returns {boolean}
+   */
+  kontra.isImage = function isImage(value) {
+    return value && value.nodeName.toLowerCase() === 'img';
+  };
+
+  /**
+   * Determine if a value is a Canvas.
+   * @memberOf kontra
+   *
+   * @param {*} value - Value to test.
+   *
+   * @returns {boolean}
+   */
+  kontra.isCanvas = function isCanvas(value) {
+    return value && value.nodeName.toLowerCase() === 'canvas';
+  };
 
   return kontra;
-})(kontra || {}, window, document);
+})(kontra || {}, document);
+var kontra = (function(kontra) {
+  // use the kontra-asset-loader
+  kontra.AssetLoader = AssetLoader;
+
+  return kontra;
+})(kontra || {});
 var kontra = (function(kontra, window, document) {
   /**
    * Game loop that updates and draws the game every frame.
@@ -1253,7 +1306,7 @@ var kontra = (function(kontra, window, document) {
 })(kontra || {}, window, document);
 /*jshint -W084 */
 
-var kontra = (function(kontra, window, document) {
+var kontra = (function(kontra, window) {
   var callbacks = {};
   var pressedKeys = {};
 
@@ -1546,10 +1599,153 @@ var kontra = (function(kontra, window, document) {
   }
 
   return kontra;
-})(kontra || {}, window, document);
+})(kontra || {}, window);
+var kontra = (function(kontra) {
+  kontra.Sprite = Sprite;
+
+  /**
+   * A sprite with a position, velocity, and acceleration.
+   * @memberOf kontra
+   * @constructor
+   *
+   * @see kontra.set for params
+   */
+  function Sprite(properties) {
+    if (!kontra.Vector) {
+      var error = new ReferenceError('Vector() not found.');
+      kontra.log.error(error, 'Kontra.Sprite requires kontra.Vector.');
+      return;
+    }
+
+    this.set(properties);
+  }
+
+  /**
+   * Move the sprite by its velocity.
+   * @memberOf kontra.Sprite
+   */
+  Sprite.prototype.advance = function SpriteAdvance() {
+    this.velocity.add(this.acceleration);
+
+    this.position.add(this.velocity);
+
+    this.timeToLive--;
+  };
+
+  /**
+   * Draw the sprite.
+   * @memberOf kontra.Sprite
+   */
+  Sprite.prototype.render = function SpriteRender() {
+    context.save();
+    context.drawImage(this.image, this.position.x, this.position.y);
+    context.restore();
+  };
+
+  /**
+   * Determine if the sprite is alive.
+   * @returns {boolean}
+   */
+  Sprite.prototype.isAlive = function SpriteIsAlive() {
+    return this.timeToLive > 0;
+  };
+
+  /**
+   * Set properties on the sprite.
+   * @memberOf kontra.Sprite
+   *
+   * @param {object} properties - Properties to set on the sprite.
+   * @param {Vector} properties.point - X, y coordinates of the sprite.
+   * @param {Vector} [properties.velocity] - Change in position.
+   * @param {Vector} [properties.acceleration] - Change in velocity.
+   * @param {number} [properties.timeToLive=Infinity] - How may frames the sprite should be alive.
+   * @param {string|Image|Canvas} [properties.image] - Image for the sprite.
+   * @param {Context} [properties.context=kontra.context] - Provide a context for the sprite to draw on.
+   */
+  Sprite.prototype.set = function SpriteSpawn(properties) {
+    properties = properties || {};
+
+    var _this = this;
+
+    this.position = properties.point || new kontra.Vector();
+    this.velocity = properties.velocity || new kontra.Vector();
+    this.acceleration = properties.acceleration || new kontra.Vector();
+
+    this.context = properties.context || kontra.context;
+
+    // prevent sprite from expiring by setting time to live to Infinity
+    this.timeToLive = properties.timeToLive || Infinity;
+
+    // load an image
+    if (kontra.isString(properties.image)) {
+      this.image = new Image();
+      this.image.onload = function() {
+        _this.width = this.width;
+        _this.height = this.height;
+      };
+      this.image.src = properties.image;
+    }
+    else if (kontra.isImage(properties.image) || kontra.isCanvas(properties.image)) {
+      this.image = properties.image;
+      this.width = this.image.width;
+      this.height = this.image.height;
+    }
+    else {
+      // make the render function for this sprite a noop since there is no image to draw.
+      // this.render/this.draw should be overridden if you want to draw something else.
+      this.render = kontra.noop;
+    }
+  };
+
+  /**
+   * Update the sprites velocity and position.
+   * @memberOf kontra.Sprite
+   * @abstract
+   *
+   * This function can be overridden on a per sprite basis if more functionality
+   * is needed in the update step. Just call this.advance() when you need the
+   * sprite to update its position.
+   *
+   * @example
+   * sprite = new Sprite();
+   * sprite.update = function() {
+   *   // do some logic
+   *
+   *   this.advance();
+   * };
+   */
+  Sprite.prototype.update = function SpriteUpdate() {
+    this.advance();
+  };
+
+  /**
+   * Draw the sprite.
+   * @memberOf kontra.Sprite.
+   * @abstract
+   *
+   * This function can be overridden on a per sprite basis if more functionality
+   * is needed in the draw step. Just call this.render() when you need the sprite
+   * to draw its image.
+   *
+   * @example
+   * sprite = new Sprite();
+   * sprite.draw = function() {
+   *   // do some logic
+   *
+   *   this.render();
+   * };
+   */
+  Sprite.prototype.draw = function SpriteDraw() {
+    this.render();
+  };
+
+  return kontra;
+})(kontra || {});
 /*jshint -W084 */
 
-var kontra = (function(kontra, window, document) {
+var kontra = (function(kontra, undefined) {
+  kontra.SpriteSheet = SpriteSheet;
+
   /**
    * Create a sprite sheet from an image.
    * @memberOf kontra
@@ -1560,7 +1756,7 @@ var kontra = (function(kontra, window, document) {
    * @param {number} options.frameWidth - Width (in px) of each frame.
    * @param {number} options.frameHeight - Height (in px) of each frame.
    */
-  kontra.SpriteSheet = function SpriteSheet(options) {
+  function SpriteSheet(options) {
     options = options || {};
 
     var _this = this;
@@ -1572,7 +1768,7 @@ var kontra = (function(kontra, window, document) {
       this.image.src = options.image;
     }
     // load an image object
-    else if (options.image instanceof Image) {
+    else if (kontra.isImage(options.image)) {
       this.image = options.image;
       calculateFrames();
     }
@@ -1591,7 +1787,7 @@ var kontra = (function(kontra, window, document) {
 
       _this.framesPerRow = Math.floor(_this.image.width / _this.frameWidth);
     }
-  };
+  }
 
   /**
    * Create an animation from the sprite sheet.
@@ -1625,7 +1821,7 @@ var kontra = (function(kontra, window, document) {
    * };
    * sheet.createAnimation(animations);
    */
-  kontra.SpriteSheet.prototype.createAnimation = function SpriteSheetCreateAnimation(animations) {
+  SpriteSheet.prototype.createAnimation = function SpriteSheetCreateAnimation(animations) {
     var error;
 
     if (!animations || Object.keys(animations).length === 0) {
@@ -1696,7 +1892,7 @@ var kontra = (function(kontra, window, document) {
    *
    * @returns {Animation}
    */
-  kontra.SpriteSheet.prototype.getAnimation = function SpriteSheetGetAnimation(name) {
+  SpriteSheet.prototype.getAnimation = function SpriteSheetGetAnimation(name) {
     return this.animations[name];
   };
 
@@ -1796,11 +1992,11 @@ var kontra = (function(kontra, window, document) {
      */
     this.play = function AnimationPlay() {
       // restore references to update and draw functions only if overridden
-      if (this.update === kontra.noop) {
+      if (update !== undefined) {
         this.update = update;
       }
 
-      if (this.draw === kontra.noop) {
+      if (draw !== undefined) {
         this.draw = draw;
       }
 
@@ -1818,18 +2014,19 @@ var kontra = (function(kontra, window, document) {
        * Instead of putting an if statement in both draw/update functions that checks
        * a variable to determine whether to draw or update, we can just reassign the
        * functions to noop and save processing time in the game loop.
+       * @see http://jsperf.com/boolean-check-vs-noop
        *
        * This creates more logic in the setup functions, but one time logic is better than
        * continuous logic.
        */
 
       // don't override if previously overridden
-      if (this.update !== kontra.noop) {
+      if (update === undefined) {
         update = this.update;
         this.update = kontra.noop;
       }
 
-      if (this.draw !== kontra.noop) {
+      if (draw === undefined) {
         draw = this.draw;
         this.draw = kontra.noop;
       }
@@ -1841,7 +2038,7 @@ var kontra = (function(kontra, window, document) {
      */
     this.pause = function AnimationPause() {
       // don't override if previously overridden
-      if (this.update !== kontra.noop) {
+      if (update === undefined) {
         update = this.update;
         this.update = kontra.noop;
       }
@@ -1870,10 +2067,9 @@ var kontra = (function(kontra, window, document) {
   }
 
   return kontra;
-})(kontra || {}, window, document);
+})(kontra || {});
 /**
- * localStorage can be a bit of a pain to work with since it stores everything
- * as strings:
+ * localStorage can be a bit of a pain to work with since it stores everything as strings:
  * localStorage.setItem('item', 1);  //=> '1'
  * localStorage.setItem('item', false);  //=> 'false'
  * localStorage.setItem('item', [1,2,3]);  //=> '1,2,3'
@@ -1883,7 +2079,7 @@ var kontra = (function(kontra, window, document) {
  * @fileoverview A simple wrapper for localStorage to make it easier to work with.
  * Based on [store.js](https://github.com/marcuswestin/store.js)
  */
-var kontra = (function(kontra, window, document, localStorage) {
+var kontra = (function(kontra, window, localStorage, undefined) {
   // check if the browser can use localStorage
   kontra.canUse = kontra.canUse || {};
   kontra.canUse.localStorage = 'localStorage' in window && window.localStorage !== null;
@@ -1951,4 +2147,75 @@ var kontra = (function(kontra, window, document, localStorage) {
   };
 
   return kontra;
-})(kontra || {}, window, document, window.localStorage);
+})(kontra || {}, window, window.localStorage);
+var kontra = (function(kontra, Math) {
+  kontra.Vector = Vector;
+
+  /**
+   * A vector for 2d space.
+   * @memberOf kontra
+   * @constructor
+   *
+   * @param {number} x=0 - Center x coordinate.
+   * @param {number} y=0 - Center y coordinate.
+   */
+  function Vector(x, y) {
+    this.x = x || 0;
+    this.y = y || 0;
+  }
+
+  /**
+   * Set the vector's x and y position.
+   * @memberOf kontra.Vector
+   *
+   * @param {number} x - Center x coordinate.
+   * @param {number} y - Center y coordinate.
+   */
+  Vector.prototype.set = function VecotrSet(x, y) {
+    this.x = x;
+    this.y = y;
+  };
+
+  /**
+   * Add a vector to this vector.
+   * @memberOf kontra.Vector
+   *
+   * @param {Vector} vector - Vector to add.
+   */
+  Vector.prototype.add = function VectorAdd(vector) {
+    this.x += vector.x;
+    this.y += vector.y;
+  };
+
+  /**
+   * Get the length of the vector.
+   * @memberOf kontra.Vector
+   *
+   * @returns {number}
+   */
+  Vector.prototype.length = function VecotrLength() {
+    return Math.sqrt(this.x * this.x + this.y * this.y);
+  };
+
+  /**
+   * Get the angle of the vector.
+   * @memberOf kontra.Vector
+   *
+   * @returns {number}
+   */
+  Vector.prototype.angle = function VectorAnagle() {
+    return Math.atan2(this.y, this.x);
+  };
+
+  /**
+   * Get a new vector from an angle and magnitude
+   * @memberOf kontra.Vector
+   *
+   * @returns {Vector}
+   */
+  Vector.fromAngle = function VectorFromAngle(angle, magnitude) {
+    return new Vector(magnitude * Math.cos(angle), magnitude * Math.sin(angle));
+  };
+
+  return kontra;
+})(kontra || {}, Math);

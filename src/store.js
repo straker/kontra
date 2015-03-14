@@ -1,6 +1,5 @@
 /**
- * localStorage can be a bit of a pain to work with since it stores everything
- * as strings:
+ * localStorage can be a bit of a pain to work with since it stores everything as strings:
  * localStorage.setItem('item', 1);  //=> '1'
  * localStorage.setItem('item', false);  //=> 'false'
  * localStorage.setItem('item', [1,2,3]);  //=> '1,2,3'
@@ -10,7 +9,7 @@
  * @fileoverview A simple wrapper for localStorage to make it easier to work with.
  * Based on [store.js](https://github.com/marcuswestin/store.js)
  */
-var kontra = (function(kontra, window, document, localStorage) {
+var kontra = (function(kontra, window, localStorage, undefined) {
   // check if the browser can use localStorage
   kontra.canUse = kontra.canUse || {};
   kontra.canUse.localStorage = 'localStorage' in window && window.localStorage !== null;
@@ -78,4 +77,4 @@ var kontra = (function(kontra, window, document, localStorage) {
   };
 
   return kontra;
-})(kontra || {}, window, document, window.localStorage);
+})(kontra || {}, window, window.localStorage);

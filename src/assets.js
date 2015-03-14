@@ -1,6 +1,6 @@
-var kontra = (function(kontra, window, document) {
+var kontra = (function(kontra) {
   // use the kontra-asset-loader
-  kontra.assets = new AssetLoader();
+  kontra.AssetLoader = AssetLoader;
 
   return kontra;
-})(kontra || {}, window, document);
+})(kontra || {});

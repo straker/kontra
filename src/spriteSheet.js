@@ -1,6 +1,8 @@
 /*jshint -W084 */
 
-var kontra = (function(kontra, window, document) {
+var kontra = (function(kontra, undefined) {
+  kontra.SpriteSheet = SpriteSheet;
+
   /**
    * Create a sprite sheet from an image.
    * @memberOf kontra
@@ -11,7 +13,7 @@ var kontra = (function(kontra, window, document) {
    * @param {number} options.frameWidth - Width (in px) of each frame.
    * @param {number} options.frameHeight - Height (in px) of each frame.
    */
-  kontra.SpriteSheet = function SpriteSheet(options) {
+  function SpriteSheet(options) {
     options = options || {};
 
     var _this = this;
@@ -23,7 +25,7 @@ var kontra = (function(kontra, window, document) {
       this.image.src = options.image;
     }
     // load an image object
-    else if (options.image instanceof Image) {
+    else if (kontra.isImage(options.image)) {
       this.image = options.image;
       calculateFrames();
     }
@@ -42,7 +44,7 @@ var kontra = (function(kontra, window, document) {
 
       _this.framesPerRow = Math.floor(_this.image.width / _this.frameWidth);
     }
-  };
+  }
 
   /**
    * Create an animation from the sprite sheet.
@@ -76,7 +78,7 @@ var kontra = (function(kontra, window, document) {
    * };
    * sheet.createAnimation(animations);
    */
-  kontra.SpriteSheet.prototype.createAnimation = function SpriteSheetCreateAnimation(animations) {
+  SpriteSheet.prototype.createAnimation = function SpriteSheetCreateAnimation(animations) {
     var error;
 
     if (!animations || Object.keys(animations).length === 0) {
@@ -147,7 +149,7 @@ var kontra = (function(kontra, window, document) {
    *
    * @returns {Animation}
    */
-  kontra.SpriteSheet.prototype.getAnimation = function SpriteSheetGetAnimation(name) {
+  SpriteSheet.prototype.getAnimation = function SpriteSheetGetAnimation(name) {
     return this.animations[name];
   };
 
@@ -247,11 +249,11 @@ var kontra = (function(kontra, window, document) {
      */
     this.play = function AnimationPlay() {
       // restore references to update and draw functions only if overridden
-      if (this.update === kontra.noop) {
+      if (update !== undefined) {
         this.update = update;
       }
 
-      if (this.draw === kontra.noop) {
+      if (draw !== undefined) {
         this.draw = draw;
       }
 
@@ -269,18 +271,19 @@ var kontra = (function(kontra, window, document) {
        * Instead of putting an if statement in both draw/update functions that checks
        * a variable to determine whether to draw or update, we can just reassign the
        * functions to noop and save processing time in the game loop.
+       * @see http://jsperf.com/boolean-check-vs-noop
        *
        * This creates more logic in the setup functions, but one time logic is better than
        * continuous logic.
        */
 
       // don't override if previously overridden
-      if (this.update !== kontra.noop) {
+      if (update === undefined) {
         update = this.update;
         this.update = kontra.noop;
       }
 
-      if (this.draw !== kontra.noop) {
+      if (draw === undefined) {
         draw = this.draw;
         this.draw = kontra.noop;
       }
@@ -292,7 +295,7 @@ var kontra = (function(kontra, window, document) {
      */
     this.pause = function AnimationPause() {
       // don't override if previously overridden
-      if (this.update !== kontra.noop) {
+      if (update === undefined) {
         update = this.update;
         this.update = kontra.noop;
       }
@@ -321,4 +324,4 @@ var kontra = (function(kontra, window, document) {
   }
 
   return kontra;
-})(kontra || {}, window, document);
+})(kontra || {});

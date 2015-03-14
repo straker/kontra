@@ -1,6 +1,6 @@
 /*jshint -W084 */
 
-var kontra = (function(kontra, window, document) {
+var kontra = (function(kontra, window) {
   var callbacks = {};
   var pressedKeys = {};
 
@@ -293,4 +293,4 @@ var kontra = (function(kontra, window, document) {
   }
 
   return kontra;
-})(kontra || {}, window, document);
+})(kontra || {}, window);

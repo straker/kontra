@@ -265,17 +265,14 @@ var kontra = (function(kontra, undefined) {
      * @memberOf Animation
      */
     this.stop = function AnimationStop() {
-      /**
-       * Save references to update and draw functions
-       *
-       * Instead of putting an if statement in both draw/update functions that checks
-       * a variable to determine whether to draw or update, we can just reassign the
-       * functions to noop and save processing time in the game loop.
-       * @see http://jsperf.com/boolean-check-vs-noop
-       *
-       * This creates more logic in the setup functions, but one time logic is better than
-       * continuous logic.
-       */
+
+      // instead of putting an if statement in both draw/update functions that checks
+      // a variable to determine whether to draw or update, we can just reassign the
+      // functions to noop and save processing time in the game loop.
+      // @see http://jsperf.com/boolean-check-vs-noop
+      //
+      // this creates more logic in the setup functions, but one time logic is better than
+      // continuous logic.
 
       // don't override if previously overridden
       if (update === undefined) {

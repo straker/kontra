@@ -1,21 +1,24 @@
-var kontra = (function(kontra) {
+var kontra = (function(kontra, undefined) {
   kontra.Sprite = Sprite;
 
   /**
    * A sprite with a position, velocity, and acceleration.
    * @memberOf kontra
    * @constructor
-   *
-   * @see kontra.set for params
+   * @requires kontra.Vector
    */
-  function Sprite(properties) {
+  function Sprite() {
     if (!kontra.Vector) {
       var error = new ReferenceError('Vector() not found.');
       kontra.log.error(error, 'Kontra.Sprite requires kontra.Vector.');
       return;
     }
 
-    this.set(properties);
+    this.position = new kontra.Vector();
+    this.velocity = new kontra.Vector();
+    this.acceleration = new kontra.Vector();
+    this.timeToLive = 0;
+    this.context = kontra.context;
   }
 
   /**
@@ -35,13 +38,15 @@ var kontra = (function(kontra) {
    * @memberOf kontra.Sprite
    */
   Sprite.prototype.render = function SpriteRender() {
-    context.save();
-    context.drawImage(this.image, this.position.x, this.position.y);
-    context.restore();
+    this.context.save();
+    this.context.drawImage(this.image, this.position.x, this.position.y);
+    this.context.restore();
   };
 
   /**
    * Determine if the sprite is alive.
+   * @memberOf kontra.Sprite
+   *
    * @returns {boolean}
    */
   Sprite.prototype.isAlive = function SpriteIsAlive() {
@@ -53,26 +58,34 @@ var kontra = (function(kontra) {
    * @memberOf kontra.Sprite
    *
    * @param {object} properties - Properties to set on the sprite.
-   * @param {Vector} properties.point - X, y coordinates of the sprite.
-   * @param {Vector} [properties.velocity] - Change in position.
-   * @param {Vector} [properties.acceleration] - Change in velocity.
-   * @param {number} [properties.timeToLive=Infinity] - How may frames the sprite should be alive.
+   * @param {Vector} properties.x - X coordinate of the sprite.
+   * @param {Vector} properties.y - Y coordinate of the sprite.
+   * @param {Vector} [properties.dx] - Change in X position.
+   * @param {Vector} [properties.dy] - Change in Y position.
+   * @param {Vector} [properties.ddx] - Change in X velocity.
+   * @param {Vector} [properties.ddy] - Change in Y velocity.
+   * @param {number} [properties.timeToLive=0] - How may frames the sprite should be alive.
    * @param {string|Image|Canvas} [properties.image] - Image for the sprite.
    * @param {Context} [properties.context=kontra.context] - Provide a context for the sprite to draw on.
+   *
+   * If you need the sprite to live forever, or just need it to stay on screen until you
+   * decide when to kill it, you can set time to live to <code>Infinity</code>. Just be
+   * sure to override the <code>isAlive()</code> function to return true when the sprite
+   * should die.
+   *
+   * @returns {Sprite}
    */
   Sprite.prototype.set = function SpriteSpawn(properties) {
     properties = properties || {};
 
     var _this = this;
 
-    this.position = properties.point || new kontra.Vector();
-    this.velocity = properties.velocity || new kontra.Vector();
-    this.acceleration = properties.acceleration || new kontra.Vector();
+    this.position.set(properties.x, properties.y);
+    this.velocity.set(properties.dx, properties.dy);
+    this.acceleration.set(properties.ddx, properties.ddy);
+    this.timeToLive = properties.timeToLive || 0;
 
-    this.context = properties.context || kontra.context;
-
-    // prevent sprite from expiring by setting time to live to Infinity
-    this.timeToLive = properties.timeToLive || Infinity;
+    this.context = properties.context || this.context;
 
     // load an image
     if (kontra.isString(properties.image)) {
@@ -93,6 +106,8 @@ var kontra = (function(kontra) {
       // this.render/this.draw should be overridden if you want to draw something else.
       this.render = kontra.noop;
     }
+
+    return this;
   };
 
   /**
@@ -101,8 +116,8 @@ var kontra = (function(kontra) {
    * @abstract
    *
    * This function can be overridden on a per sprite basis if more functionality
-   * is needed in the update step. Just call this.advance() when you need the
-   * sprite to update its position.
+   * is needed in the update step. Just call <code>this.advance()</code> when you need
+   * the sprite to update its position.
    *
    * @example
    * sprite = new Sprite();
@@ -110,10 +125,16 @@ var kontra = (function(kontra) {
    *   // do some logic
    *
    *   this.advance();
+   *
+   *   return this;
    * };
+   *
+   * @returns {Sprite}
    */
   Sprite.prototype.update = function SpriteUpdate() {
     this.advance();
+
+    return this;
   };
 
   /**
@@ -122,8 +143,8 @@ var kontra = (function(kontra) {
    * @abstract
    *
    * This function can be overridden on a per sprite basis if more functionality
-   * is needed in the draw step. Just call this.render() when you need the sprite
-   * to draw its image.
+   * is needed in the draw step. Just call <code>this.render()</code> when you need the
+   * sprite to draw its image.
    *
    * @example
    * sprite = new Sprite();
@@ -131,10 +152,16 @@ var kontra = (function(kontra) {
    *   // do some logic
    *
    *   this.render();
+   *
+   *   return this;
    * };
+   *
+   * @returns {Sprite}
    */
   Sprite.prototype.draw = function SpriteDraw() {
     this.render();
+
+    return this;
   };
 
   return kontra;

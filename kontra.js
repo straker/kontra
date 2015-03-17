@@ -1600,24 +1600,148 @@ var kontra = (function(kontra, window) {
 
   return kontra;
 })(kontra || {}, window);
+/*jshint -W084 */
+
 var kontra = (function(kontra) {
+  kontra.Pool = Pool;
+
+  /**
+   * Object pool.
+   * Unused items are at the front of the pool and in use items are at the of the pool.
+   * @memberOf kontra
+   *
+   * @param {object} options - Options for the pool.
+   * @param {number} options.size - Size of the pool.
+   * @param {object} options.Object - Object to put in the pool.
+   *
+   * Objects inside the pool must implement <code>draw()</code>, <code>update()</code>,
+   * <code>set()</code>, and <code>isAlive()</code> functions.
+   */
+  function Pool(options) {
+    options = options || {};
+
+    // ensure objects for the pool have required functions
+    var obj = new options.Object();
+    if (typeof obj.draw !== 'function' || typeof obj.update !== 'function' ||
+        typeof obj.set !== 'function' || typeof obj.isAlive !== 'function') {
+      var error = new ReferenceError('Required function not found.');
+      kontra.log.error(error, 'Objects to be pooled must implement draw(), update(), set() and isAlive() functions.');
+      return;
+    }
+
+    this.size = options.size;
+    this.lastIndex = options.size - 1;
+    this.objects = [];
+
+    // populate the pool
+    this.objects[0] = obj;
+    for (var i = 1; i < this.size; i++) {
+      this.objects[i] = new options.Object();
+    }
+  }
+
+  /**
+   * Get an object from the pool.
+   * @memberOf kontra.Pool
+   *
+   * @param {object} properties - Properties to pass to object.set().
+   *
+   * @returns {boolean} True if the pool had an object to get.
+   */
+  Pool.prototype.get = function(properties) {
+    // the pool is out of objects if the first object is in use
+    if (this.objects[0].isAlive()) {
+      return false;
+    }
+
+    // save off first object in pool to reassign to last object after unshift
+    var obj = this.objects[0];
+
+    // unshift the array
+    for (var i = 1; i < this.size; i++) {
+      this.objects[i-1] = this.objects[i];
+    }
+
+    this.objects[this.lastIndex] = obj.set(properties);
+
+    return true;
+  };
+
+  /**
+   * Update all alive pool objects.
+   * @memberOf kontra.Pool
+   */
+  Pool.prototype.update = function() {
+    var i = this.lastIndex;
+    var obj;
+
+    while (obj = this.objects[i]) {
+
+      // once we find the first object that is not alive we can stop
+      if (!obj.isAlive()) {
+        return;
+      }
+
+      obj.update();
+
+      // if the object is dead, move it to the front of the pool
+      if (!obj.isAlive()) {
+
+        // push an object from the middle of the pool to the front of the pool
+        // without returning a new array through Array#splice to avoid garbage
+        // collection of the old array
+        // @see http://jsperf.com/object-pools-array-vs-loop
+        for (var j = i; j > 0; j--) {
+          this.objects[j] = this.objects[j-1];
+        }
+
+        this.objects[0] = obj;
+      }
+      else {
+        i--;
+      }
+    }
+  };
+
+  /**
+   * Draw all alive pool objects.
+   * @memberOf kontra.Pool
+   */
+  Pool.prototype.draw = function() {
+    for (var i = this.lastIndex, obj; obj = this.objects[i]; i--) {
+
+      // once we find the first object that is not alive we can stop
+      if (!obj.isAlive()) {
+        return;
+      }
+
+      obj.draw();
+    }
+  };
+
+  return kontra;
+})(kontra || {});
+var kontra = (function(kontra, undefined) {
   kontra.Sprite = Sprite;
 
   /**
    * A sprite with a position, velocity, and acceleration.
    * @memberOf kontra
    * @constructor
-   *
-   * @see kontra.set for params
+   * @requires kontra.Vector
    */
-  function Sprite(properties) {
+  function Sprite() {
     if (!kontra.Vector) {
       var error = new ReferenceError('Vector() not found.');
       kontra.log.error(error, 'Kontra.Sprite requires kontra.Vector.');
       return;
     }
 
-    this.set(properties);
+    this.position = new kontra.Vector();
+    this.velocity = new kontra.Vector();
+    this.acceleration = new kontra.Vector();
+    this.timeToLive = 0;
+    this.context = kontra.context;
   }
 
   /**
@@ -1637,13 +1761,15 @@ var kontra = (function(kontra) {
    * @memberOf kontra.Sprite
    */
   Sprite.prototype.render = function SpriteRender() {
-    context.save();
-    context.drawImage(this.image, this.position.x, this.position.y);
-    context.restore();
+    this.context.save();
+    this.context.drawImage(this.image, this.position.x, this.position.y);
+    this.context.restore();
   };
 
   /**
    * Determine if the sprite is alive.
+   * @memberOf kontra.Sprite
+   *
    * @returns {boolean}
    */
   Sprite.prototype.isAlive = function SpriteIsAlive() {
@@ -1655,26 +1781,34 @@ var kontra = (function(kontra) {
    * @memberOf kontra.Sprite
    *
    * @param {object} properties - Properties to set on the sprite.
-   * @param {Vector} properties.point - X, y coordinates of the sprite.
-   * @param {Vector} [properties.velocity] - Change in position.
-   * @param {Vector} [properties.acceleration] - Change in velocity.
-   * @param {number} [properties.timeToLive=Infinity] - How may frames the sprite should be alive.
+   * @param {Vector} properties.x - X coordinate of the sprite.
+   * @param {Vector} properties.y - Y coordinate of the sprite.
+   * @param {Vector} [properties.dx] - Change in X position.
+   * @param {Vector} [properties.dy] - Change in Y position.
+   * @param {Vector} [properties.ddx] - Change in X velocity.
+   * @param {Vector} [properties.ddy] - Change in Y velocity.
+   * @param {number} [properties.timeToLive=0] - How may frames the sprite should be alive.
    * @param {string|Image|Canvas} [properties.image] - Image for the sprite.
    * @param {Context} [properties.context=kontra.context] - Provide a context for the sprite to draw on.
+   *
+   * If you need the sprite to live forever, or just need it to stay on screen until you
+   * decide when to kill it, you can set time to live to <code>Infinity</code>. Just be
+   * sure to override the <code>isAlive()</code> function to return true when the sprite
+   * should die.
+   *
+   * @returns {Sprite}
    */
   Sprite.prototype.set = function SpriteSpawn(properties) {
     properties = properties || {};
 
     var _this = this;
 
-    this.position = properties.point || new kontra.Vector();
-    this.velocity = properties.velocity || new kontra.Vector();
-    this.acceleration = properties.acceleration || new kontra.Vector();
+    this.position.set(properties.x, properties.y);
+    this.velocity.set(properties.dx, properties.dy);
+    this.acceleration.set(properties.ddx, properties.ddy);
+    this.timeToLive = properties.timeToLive || 0;
 
-    this.context = properties.context || kontra.context;
-
-    // prevent sprite from expiring by setting time to live to Infinity
-    this.timeToLive = properties.timeToLive || Infinity;
+    this.context = properties.context || this.context;
 
     // load an image
     if (kontra.isString(properties.image)) {
@@ -1695,6 +1829,8 @@ var kontra = (function(kontra) {
       // this.render/this.draw should be overridden if you want to draw something else.
       this.render = kontra.noop;
     }
+
+    return this;
   };
 
   /**
@@ -1703,8 +1839,8 @@ var kontra = (function(kontra) {
    * @abstract
    *
    * This function can be overridden on a per sprite basis if more functionality
-   * is needed in the update step. Just call this.advance() when you need the
-   * sprite to update its position.
+   * is needed in the update step. Just call <code>this.advance()</code> when you need
+   * the sprite to update its position.
    *
    * @example
    * sprite = new Sprite();
@@ -1712,10 +1848,16 @@ var kontra = (function(kontra) {
    *   // do some logic
    *
    *   this.advance();
+   *
+   *   return this;
    * };
+   *
+   * @returns {Sprite}
    */
   Sprite.prototype.update = function SpriteUpdate() {
     this.advance();
+
+    return this;
   };
 
   /**
@@ -1724,8 +1866,8 @@ var kontra = (function(kontra) {
    * @abstract
    *
    * This function can be overridden on a per sprite basis if more functionality
-   * is needed in the draw step. Just call this.render() when you need the sprite
-   * to draw its image.
+   * is needed in the draw step. Just call <code>this.render()</code> when you need the
+   * sprite to draw its image.
    *
    * @example
    * sprite = new Sprite();
@@ -1733,10 +1875,16 @@ var kontra = (function(kontra) {
    *   // do some logic
    *
    *   this.render();
+   *
+   *   return this;
    * };
+   *
+   * @returns {Sprite}
    */
   Sprite.prototype.draw = function SpriteDraw() {
     this.render();
+
+    return this;
   };
 
   return kontra;
@@ -2008,17 +2156,14 @@ var kontra = (function(kontra, undefined) {
      * @memberOf Animation
      */
     this.stop = function AnimationStop() {
-      /**
-       * Save references to update and draw functions
-       *
-       * Instead of putting an if statement in both draw/update functions that checks
-       * a variable to determine whether to draw or update, we can just reassign the
-       * functions to noop and save processing time in the game loop.
-       * @see http://jsperf.com/boolean-check-vs-noop
-       *
-       * This creates more logic in the setup functions, but one time logic is better than
-       * continuous logic.
-       */
+
+      // instead of putting an if statement in both draw/update functions that checks
+      // a variable to determine whether to draw or update, we can just reassign the
+      // functions to noop and save processing time in the game loop.
+      // @see http://jsperf.com/boolean-check-vs-noop
+      //
+      // this creates more logic in the setup functions, but one time logic is better than
+      // continuous logic.
 
       // don't override if previously overridden
       if (update === undefined) {
@@ -2160,8 +2305,7 @@ var kontra = (function(kontra, Math) {
    * @param {number} y=0 - Center y coordinate.
    */
   function Vector(x, y) {
-    this.x = x || 0;
-    this.y = y || 0;
+    this.set(x, y);
   }
 
   /**
@@ -2172,8 +2316,8 @@ var kontra = (function(kontra, Math) {
    * @param {number} y - Center y coordinate.
    */
   Vector.prototype.set = function VecotrSet(x, y) {
-    this.x = x;
-    this.y = y;
+    this.x = x || 0;
+    this.y = y || 0;
   };
 
   /**

@@ -10,8 +10,7 @@ var kontra = (function(kontra, Math) {
    * @param {number} y=0 - Center y coordinate.
    */
   function Vector(x, y) {
-    this.x = x || 0;
-    this.y = y || 0;
+    this.set(x, y);
   }
 
   /**
@@ -22,8 +21,8 @@ var kontra = (function(kontra, Math) {
    * @param {number} y - Center y coordinate.
    */
   Vector.prototype.set = function VecotrSet(x, y) {
-    this.x = x;
-    this.y = y;
+    this.x = x || 0;
+    this.y = y || 0;
   };
 
   /**

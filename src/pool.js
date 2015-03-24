@@ -8,33 +8,33 @@ var kontra = (function(kontra) {
    * Unused items are at the front of the pool and in use items are at the of the pool.
    * @memberOf kontra
    *
-   * @param {object} options - Options for the pool.
-   * @param {number} options.size - Size of the pool.
-   * @param {object} options.Object - Object to put in the pool.
+   * @param {object} properties - Properties of the pool.
+   * @param {number} properties.size - Size of the pool.
+   * @param {object} properties.Object - Object to put in the pool.
    *
    * Objects inside the pool must implement <code>draw()</code>, <code>update()</code>,
    * <code>set()</code>, and <code>isAlive()</code> functions.
    */
-  function Pool(options) {
-    options = options || {};
+  function Pool(properties) {
+    properties = properties || {};
 
     // ensure objects for the pool have required functions
-    var obj = new options.Object();
+    var obj = new properties.Object();
     if (typeof obj.draw !== 'function' || typeof obj.update !== 'function' ||
         typeof obj.set !== 'function' || typeof obj.isAlive !== 'function') {
       var error = new ReferenceError('Required function not found.');
-      kontra.log.error(error, 'Objects to be pooled must implement draw(), update(), set() and isAlive() functions.');
+      kontra.logError(error, 'Objects to be pooled must implement draw(), update(), set() and isAlive() functions.');
       return;
     }
 
-    this.size = options.size;
-    this.lastIndex = options.size - 1;
+    this.size = properties.size;
+    this.lastIndex = properties.size - 1;
     this.objects = [];
 
     // populate the pool
     this.objects[0] = obj;
     for (var i = 1; i < this.size; i++) {
-      this.objects[i] = new options.Object();
+      this.objects[i] = new properties.Object();
     }
   }
 

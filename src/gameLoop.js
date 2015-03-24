@@ -4,32 +4,33 @@ var kontra = (function(kontra, window, document) {
    * @memberOf kontra
    * @constructor
    *
-   * @param {object}   options - Configure the game loop.
-   * @param {number}   [options.fps=60] - Desired frame rate.
-   * @param {number}   [options.slowFactor=1] - How much to slow down the frame rate.
-   * @param {function} options.update - Function called to update the game.
-   * @param {function} options.draw - Function called to draw the game.
+   * @param {object}   properties - Configure the game loop.
+   * @param {number}   [properties.fps=60] - Desired frame rate.
+   * @param {number}   [properties.slowFactor=1] - How much to slow down the frame rate.
+   * @param {function} properties.update - Function called to update the game.
+   * @param {function} properties.draw - Function called to draw the game.
    */
-  kontra.GameLoop = function GameLoop(options) {
-    options = options || {};
+  kontra.GameLoop = function GameLoop(properties) {
+    properties = properties || {};
 
     // check for required functions
-    if (typeof options.update !== 'function' || typeof options.draw !== 'function') {
+    if (typeof properties.update !== 'function' || typeof properties.draw !== 'function') {
       var error = new ReferenceError('Required functions not found');
-      kontra.log.error(error, 'You must provide update() and draw() functions to create a game loop.');
+      kontra.logError(error, 'You must provide update() and draw() functions to create a game loop.');
       return;
     }
 
     // animation variables
-    var fps = options.fps || 60;
+    var fps = properties.fps || 60;
     var last = 0;
     var accumulator = 0;
     var step = 1E3 / fps;
-    var slowFactor = options.slowFactor || 1;
+    var slowFactor = properties.slowFactor || 1;
     var delta = slowFactor * step;
 
-    var update = options.update;
-    var draw = options.draw;
+    var update = properties.update;
+    var draw = properties.draw;
+    var started = false;
     var _this = this;
     var now;
     var dt;
@@ -42,6 +43,7 @@ var kontra = (function(kontra, window, document) {
      * @memberOf kontra.GameLoop
      */
     this.start = function GameLoopStart() {
+      started = true;
       last = 0;
       requestAnimationFrame(this.frame);
     };
@@ -52,6 +54,8 @@ var kontra = (function(kontra, window, document) {
      */
     this.frame = function GameLoopFrame() {
       rAF = requestAnimationFrame(_this.frame);
+
+      stats.begin();
 
       now = timestamp();
       dt = now - (last || now);
@@ -66,6 +70,8 @@ var kontra = (function(kontra, window, document) {
       }
 
       draw();
+
+      stats.end();
     };
 
     /**
@@ -73,6 +79,16 @@ var kontra = (function(kontra, window, document) {
      * @memberOf kontra.GameLoop
      */
     this.stop = function GameLoopStop() {
+      started = false;
+      cancelAnimationFrame(rAF);
+    };
+
+    /**
+     * Pause the game loop. This is different than stopping so that on visibility
+     * change, we don't just resume the game if it was stopped before.
+     * @memberOf kontra.GameLoop
+     */
+    this.pause = function GameLoopPause() {
       cancelAnimationFrame(rAF);
     };
 
@@ -83,9 +99,9 @@ var kontra = (function(kontra, window, document) {
      */
     function onVisibilityChange() {
       if (document.hidden) {
-        _this.stop();
+        _this.pause();
       }
-      else {
+      else if (started) {
         _this.start();
       }
     }

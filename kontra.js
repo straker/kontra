@@ -1067,16 +1067,16 @@ var kontra = (function(kontra, document) {
    * Set up the canvas.
    * @memberOf kontra
    *
-   * @param {object} options - Options for the game.
-   * @param {string|Canvas} options.canvas - ID string or Canvas element to draw the game on.
+   * @param {object} properties - Properties for the game.
+   * @param {string|Canvas} properties.canvas - ID string or Canvas element to draw the game on.
    */
-  kontra.init = function init(options) {
-    options = options || {};
+  kontra.init = function init(properties) {
+    properties = properties || {};
 
-    if (kontra.isString(options.canvas)) {
-      this.canvas = document.getElementById(options.canvas);
+    if (kontra.isString(properties.canvas)) {
+      this.canvas = document.getElementById(properties.canvas);
     }
-    else if (kontra.isCanvas(options.canvas)) {
+    else if (kontra.isCanvas(properties.canvas)) {
       this.canvas = canvas;
     }
     else {
@@ -1084,7 +1084,7 @@ var kontra = (function(kontra, document) {
 
       if (!this.canvas) {
         var error = new ReferenceError('No canvas element found.');
-        kontra.log.error(error, 'You must provide a canvas element for the game.');
+        kontra.logError(error, 'You must provide a canvas element for the game.');
         return;
       }
     }
@@ -1095,18 +1095,13 @@ var kontra = (function(kontra, document) {
   };
 
   /**
-   * Object for logging to the client.
-   */
-  kontra.log = {};
-
-  /**
    * Throw an error message to the user with readability formating.
    * @memberOf kontra
    *
    * @param {Error}  error - Error object.
    * @param {string} message - Error message.
    */
-  kontra.log.error = function logError(error, message) {
+  kontra.logError = function logError(error, message) {
     error.originalMessage = error.message;
     error.message = 'Kontra: ' + message + '\n\t' + error.stack;
     console.error(error.message);
@@ -1190,32 +1185,33 @@ var kontra = (function(kontra, window, document) {
    * @memberOf kontra
    * @constructor
    *
-   * @param {object}   options - Configure the game loop.
-   * @param {number}   [options.fps=60] - Desired frame rate.
-   * @param {number}   [options.slowFactor=1] - How much to slow down the frame rate.
-   * @param {function} options.update - Function called to update the game.
-   * @param {function} options.draw - Function called to draw the game.
+   * @param {object}   properties - Configure the game loop.
+   * @param {number}   [properties.fps=60] - Desired frame rate.
+   * @param {number}   [properties.slowFactor=1] - How much to slow down the frame rate.
+   * @param {function} properties.update - Function called to update the game.
+   * @param {function} properties.draw - Function called to draw the game.
    */
-  kontra.GameLoop = function GameLoop(options) {
-    options = options || {};
+  kontra.GameLoop = function GameLoop(properties) {
+    properties = properties || {};
 
     // check for required functions
-    if (typeof options.update !== 'function' || typeof options.draw !== 'function') {
+    if (typeof properties.update !== 'function' || typeof properties.draw !== 'function') {
       var error = new ReferenceError('Required functions not found');
-      kontra.log.error(error, 'You must provide update() and draw() functions to create a game loop.');
+      kontra.logError(error, 'You must provide update() and draw() functions to create a game loop.');
       return;
     }
 
     // animation variables
-    var fps = options.fps || 60;
+    var fps = properties.fps || 60;
     var last = 0;
     var accumulator = 0;
     var step = 1E3 / fps;
-    var slowFactor = options.slowFactor || 1;
+    var slowFactor = properties.slowFactor || 1;
     var delta = slowFactor * step;
 
-    var update = options.update;
-    var draw = options.draw;
+    var update = properties.update;
+    var draw = properties.draw;
+    var started = false;
     var _this = this;
     var now;
     var dt;
@@ -1228,6 +1224,7 @@ var kontra = (function(kontra, window, document) {
      * @memberOf kontra.GameLoop
      */
     this.start = function GameLoopStart() {
+      started = true;
       last = 0;
       requestAnimationFrame(this.frame);
     };
@@ -1238,6 +1235,8 @@ var kontra = (function(kontra, window, document) {
      */
     this.frame = function GameLoopFrame() {
       rAF = requestAnimationFrame(_this.frame);
+
+      stats.begin();
 
       now = timestamp();
       dt = now - (last || now);
@@ -1252,6 +1251,8 @@ var kontra = (function(kontra, window, document) {
       }
 
       draw();
+
+      stats.end();
     };
 
     /**
@@ -1259,6 +1260,16 @@ var kontra = (function(kontra, window, document) {
      * @memberOf kontra.GameLoop
      */
     this.stop = function GameLoopStop() {
+      started = false;
+      cancelAnimationFrame(rAF);
+    };
+
+    /**
+     * Pause the game loop. This is different than stopping so that on visibility
+     * change, we don't just resume the game if it was stopped before.
+     * @memberOf kontra.GameLoop
+     */
+    this.pause = function GameLoopPause() {
       cancelAnimationFrame(rAF);
     };
 
@@ -1269,9 +1280,9 @@ var kontra = (function(kontra, window, document) {
      */
     function onVisibilityChange() {
       if (document.hidden) {
-        _this.stop();
+        _this.pause();
       }
-      else {
+      else if (started) {
         _this.start();
       }
     }
@@ -1421,7 +1432,7 @@ var kontra = (function(kontra, window) {
   kontra.bindKey = function bindKey(keys, callback) {
     if (typeof callback !== 'function') {
       var error = new SyntaxError('Invalid function.');
-      kontra.log.error(error, 'You must provide a function as the second parameter.');
+      kontra.logError(error, 'You must provide a function as the second parameter.');
       return;
     }
 
@@ -1610,33 +1621,33 @@ var kontra = (function(kontra) {
    * Unused items are at the front of the pool and in use items are at the of the pool.
    * @memberOf kontra
    *
-   * @param {object} options - Options for the pool.
-   * @param {number} options.size - Size of the pool.
-   * @param {object} options.Object - Object to put in the pool.
+   * @param {object} properties - Properties of the pool.
+   * @param {number} properties.size - Size of the pool.
+   * @param {object} properties.Object - Object to put in the pool.
    *
    * Objects inside the pool must implement <code>draw()</code>, <code>update()</code>,
    * <code>set()</code>, and <code>isAlive()</code> functions.
    */
-  function Pool(options) {
-    options = options || {};
+  function Pool(properties) {
+    properties = properties || {};
 
     // ensure objects for the pool have required functions
-    var obj = new options.Object();
+    var obj = new properties.Object();
     if (typeof obj.draw !== 'function' || typeof obj.update !== 'function' ||
         typeof obj.set !== 'function' || typeof obj.isAlive !== 'function') {
       var error = new ReferenceError('Required function not found.');
-      kontra.log.error(error, 'Objects to be pooled must implement draw(), update(), set() and isAlive() functions.');
+      kontra.logError(error, 'Objects to be pooled must implement draw(), update(), set() and isAlive() functions.');
       return;
     }
 
-    this.size = options.size;
-    this.lastIndex = options.size - 1;
+    this.size = properties.size;
+    this.lastIndex = properties.size - 1;
     this.objects = [];
 
     // populate the pool
     this.objects[0] = obj;
     for (var i = 1; i < this.size; i++) {
-      this.objects[i] = new options.Object();
+      this.objects[i] = new properties.Object();
     }
   }
 
@@ -1729,11 +1740,13 @@ var kontra = (function(kontra, undefined) {
    * @memberOf kontra
    * @constructor
    * @requires kontra.Vector
+   *
+   * @param @see this.set for list of available parameters.
    */
-  function Sprite() {
+  function Sprite(properties) {
     if (!kontra.Vector) {
       var error = new ReferenceError('Vector() not found.');
-      kontra.log.error(error, 'Kontra.Sprite requires kontra.Vector.');
+      kontra.logError(error, 'Kontra.Sprite requires kontra.Vector.');
       return;
     }
 
@@ -1742,6 +1755,10 @@ var kontra = (function(kontra, undefined) {
     this.acceleration = new kontra.Vector();
     this.timeToLive = 0;
     this.context = kontra.context;
+
+    if (properties) {
+      this.set(properties);
+    }
   }
 
   /**
@@ -1899,30 +1916,30 @@ var kontra = (function(kontra, undefined) {
    * @memberOf kontra
    * @constructor
    *
-   * @param {object} options - Configure the sprite sheet.
-   * @param {string|Image} options.image - Path to the image or Image object.
-   * @param {number} options.frameWidth - Width (in px) of each frame.
-   * @param {number} options.frameHeight - Height (in px) of each frame.
+   * @param {object} properties - Configure the sprite sheet.
+   * @param {string|Image} properties.image - Path to the image or Image object.
+   * @param {number} properties.frameWidth - Width (in px) of each frame.
+   * @param {number} properties.frameHeight - Height (in px) of each frame.
    */
-  function SpriteSheet(options) {
-    options = options || {};
+  function SpriteSheet(properties) {
+    properties = properties || {};
 
     var _this = this;
 
     // load an image path
-    if (kontra.isString(options.image)) {
+    if (kontra.isString(properties.image)) {
       this.image = new Image();
       this.image.onload = calculateFrames;
-      this.image.src = options.image;
+      this.image.src = properties.image;
     }
     // load an image object
-    else if (kontra.isImage(options.image)) {
-      this.image = options.image;
+    else if (kontra.isImage(properties.image)) {
+      this.image = properties.image;
       calculateFrames();
     }
     else {
       var error = new SyntaxError('Invalid image.');
-      kontra.log.error(error, 'You must provide an Image or path to an image.');
+      kontra.logError(error, 'You must provide an Image or path to an image.');
       return;
     }
 
@@ -1930,8 +1947,8 @@ var kontra = (function(kontra, undefined) {
      * Calculate the number of frames in a row.
      */
     function calculateFrames() {
-      _this.frameWidth = options.frameWidth || _this.image.width;
-      _this.frameHeight = options.frameHeight || _this.image.height;
+      _this.frameWidth = properties.frameWidth || _this.image.width;
+      _this.frameHeight = properties.frameHeight || _this.image.height;
 
       _this.framesPerRow = Math.floor(_this.image.width / _this.frameWidth);
     }
@@ -1974,7 +1991,7 @@ var kontra = (function(kontra, undefined) {
 
     if (!animations || Object.keys(animations).length === 0) {
       error = new SyntaxError('No animations found.');
-      kontra.log.error(error, 'You must provide at least one named animation to create an Animation.');
+      kontra.logError(error, 'You must provide at least one named animation to create an Animation.');
       return;
     }
 
@@ -1998,7 +2015,7 @@ var kontra = (function(kontra, undefined) {
 
       if (frames === undefined) {
         error = new SyntaxError('No animation frames found.');
-        kontra.log.error(error, 'Animation ' + name + ' must provide a frames property.');
+        kontra.logError(error, 'Animation ' + name + ' must provide a frames property.');
         return;
       }
 
@@ -2222,7 +2239,7 @@ var kontra = (function(kontra, undefined) {
  * localStorage.setItem('item', undefinedVariable);  //=> 'undefined'
  *
  * @fileoverview A simple wrapper for localStorage to make it easier to work with.
- * Based on [store.js](https://github.com/marcuswestin/store.js)
+ * Based on store.js {@see https://github.com/marcuswestin/store.js}
  */
 var kontra = (function(kontra, window, localStorage, undefined) {
   // check if the browser can use localStorage
@@ -2293,6 +2310,176 @@ var kontra = (function(kontra, window, localStorage, undefined) {
 
   return kontra;
 })(kontra || {}, window, window.localStorage);
+/*jshint -W084 */
+
+/**
+ * @fileoverview A tile engine for rendering tilesets.
+ */
+var kontra = (function(kontra, undefined) {
+  /*
+    want to handle:
+      - multiple images
+  */
+
+  /**
+   *
+   */
+   kontra.TileEngine = function TileEngine(properties) {
+    properties = properties || {};
+
+    var _this = this;
+    var rendered = false;
+
+    // since the tile engine can have more than one image, each image must be associated
+    // with a unique set of tiles. This array will hold a reference to the tileset image
+    // that each tile belongs to for quick access when drawing (i.e. O(1))
+    var tileIndex = [undefined];  // index 0 is always an empty tile
+
+    this.tileIndex = tileIndex;
+
+    // size of the tiles
+    // most common tile size on opengameart.org seems to be 32x32, followed by 16x16
+    this.tileWidth = properties.tileWidth || 32;
+    this.tileHeight = properties.tileHeight || 32;
+
+    // size of the map (in tiles)
+    this.width = properties.width || kontra.canvas.width / this.tileWidth | 0;
+    this.height = properties.height || kontra.canvas.height / this.tileHeight | 0;
+
+    // create an off-screen canvas for pre-rendering the map
+    // @see http://jsperf.com/render-vs-prerender
+    var offScreenCanvas = document.createElement('canvas');
+    var offScreenContext = offScreenCanvas.getContext('2d');
+
+    offScreenCanvas.width = this.width * this.tileWidth;
+    offScreenCanvas.height = this.height * this.tileHeight;
+
+    this.context = properties.context || kontra.context;
+    this.layers = [];
+    this.images = [];
+
+    /**
+     * Add an image for the tile engine to use.
+     * @memberOf kontra.TileEngine
+     *
+     * @param {object} properties - Properties of the image to add.
+     * @param {string|Image|Canvas} properties.image - Image to add.
+     * @param {number} properties.firstTile - The first tile to start the image.
+     */
+    this.addImage = function TileEngineAddImage(properties) {
+      properties = properties || {};
+
+      if (kontra.isString(properties.image)) {
+        var img = new Image();
+        img.onload = function() {
+          associateImage.call(_this, {image: this, firstTile: properties.firstTile});
+        };
+        img.src = properties.image;
+      }
+      else if (kontra.isImage(properties.image) || kontra.isCanvas(properties.image)) {
+        associateImage({image: properties.image, firstTile: properties.firstTile});
+      }
+    };
+
+    /**
+     * Associate an image with its tiles.
+     * @memberOf kontra.TileEngine
+     *
+     * @param {object} properties - Properties of the image to add.
+     * @param {string|Image|Canvas} properties.image - Image to add.
+     * @param {number} properties.firstTile - The first tile to start the image.
+     */
+    function associateImage(properties) {
+      var image = properties.image;
+      var startTile = properties.firsTile || tileIndex.length;
+
+      image.tileWidth = image.width / this.tileWidth;
+      image.tileHeight = image.height / this.tileHeight;
+      image.startTile = startTile;
+
+      this.images.push(image);
+
+      // associate the new image tiles with the image
+      for (var i = 0, len = image.tileWidth * image.tileHeight; i < len; i++) {
+        // objects are just pointers so storing an object is only storing a pointer of 4 bytes
+        // @see http://stackoverflow.com/questions/4740593/how-is-memory-handled-with-javascript-objects
+        tileIndex[startTile + i] = image;
+      }
+    }
+
+    /**
+     * Add a layer.
+     * @memberOf kontra.TileEngine
+     *
+     * @param {object} properties -
+     * @param {number[]} properties.data - Tile layer data.
+     * @param {number} properties.index - Draw order for tile layer. Highest number is drawn last (i.e. on top of all other layers).
+     * @param {string} properties.name - Layer name.
+     */
+    this.addLayer = function TileEngineAddLayer(properties) {
+      properties = properties || {};
+
+      this.layers.push({
+        name: properties.name,
+        data: properties.data,
+        index: properties.index
+      });
+
+      // sort the layers by index
+      // default sort method is good enough for small lists
+      this.layers.sort(function(a, b) {
+        return a.index - b.index;
+      });
+
+      // pre-render the canvas when a new layer is added (i.e the only time the map
+      // should change)
+      preRenderImage.call(this);
+    };
+
+    /**
+     *
+     * @memberOf kontra.TileEngine
+     */
+    this.draw = function TileEngineDraw() {
+      this.context.drawImage(offScreenCanvas, 0, 0);
+    };
+
+    /**
+     * Pre-render the tiles to make drawing fast.
+     */
+    function preRenderImage() {
+      var tile, image, x, y, sx, sy;
+
+      // draw each layer in order
+      for (var i = 0, layer; layer = this.layers[i]; i++) {
+        for (var j = 0, len = layer.data.length; j < len; j++) {
+          tile = layer.data[j];
+
+          // skip empty tiles (0)
+          if (!tile) {
+            continue;
+          }
+
+          image = tileIndex[tile];
+
+          x = (j % this.width) * this.tileWidth;
+          y = (j / this.width | 0) * this.tileHeight;
+
+          var tileOffset = tile - image.startTile;
+
+          sx = (tileOffset % image.tileWidth) * this.tileWidth;
+          sy = (tileOffset / image.tileWidth | 0) * this.tileHeight;
+
+          offScreenContext.drawImage(image, sx, sy, this.tileWidth, this.tileHeight, x, y, this.tileWidth, this.tileHeight);
+        }
+      }
+
+      rendered = true;
+    }
+  };
+
+  return kontra;
+})(kontra || {});
 var kontra = (function(kontra, Math) {
   kontra.Vector = Vector;
 
@@ -2357,7 +2544,7 @@ var kontra = (function(kontra, Math) {
    *
    * @returns {Vector}
    */
-  Vector.fromAngle = function VectorFromAngle(angle, magnitude) {
+  Vector.prototype.fromAngle = function VectorFromAngle(angle, magnitude) {
     return new Vector(magnitude * Math.cos(angle), magnitude * Math.sin(angle));
   };
 

@@ -7,7 +7,7 @@
  * localStorage.setItem('item', undefinedVariable);  //=> 'undefined'
  *
  * @fileoverview A simple wrapper for localStorage to make it easier to work with.
- * Based on [store.js](https://github.com/marcuswestin/store.js)
+ * Based on store.js {@see https://github.com/marcuswestin/store.js}
  */
 var kontra = (function(kontra, window, localStorage, undefined) {
   // check if the browser can use localStorage

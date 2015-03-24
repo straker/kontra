@@ -5,6 +5,10 @@ var uglify = require('gulp-uglify');
 var rename = require('gulp-rename');
 var size = require('gulp-size');
 
+function swallowError(error) {
+  this.emit('end');
+}
+
 gulp.task('lint', function() {
   return gulp.src('src/*.js')
     .pipe(jshint())
@@ -18,6 +22,7 @@ gulp.task('scripts', function() {
     .pipe(gulp.dest('.'))
     .pipe(rename('kontra.min.js'))
     .pipe(uglify())
+    .on('error', swallowError)  // prevent uglify task from crashing watch on
     .pipe(size())
     .pipe(gulp.dest('.'));
 });

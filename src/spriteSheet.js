@@ -8,30 +8,30 @@ var kontra = (function(kontra, undefined) {
    * @memberOf kontra
    * @constructor
    *
-   * @param {object} options - Configure the sprite sheet.
-   * @param {string|Image} options.image - Path to the image or Image object.
-   * @param {number} options.frameWidth - Width (in px) of each frame.
-   * @param {number} options.frameHeight - Height (in px) of each frame.
+   * @param {object} properties - Configure the sprite sheet.
+   * @param {string|Image} properties.image - Path to the image or Image object.
+   * @param {number} properties.frameWidth - Width (in px) of each frame.
+   * @param {number} properties.frameHeight - Height (in px) of each frame.
    */
-  function SpriteSheet(options) {
-    options = options || {};
+  function SpriteSheet(properties) {
+    properties = properties || {};
 
     var _this = this;
 
     // load an image path
-    if (kontra.isString(options.image)) {
+    if (kontra.isString(properties.image)) {
       this.image = new Image();
       this.image.onload = calculateFrames;
-      this.image.src = options.image;
+      this.image.src = properties.image;
     }
     // load an image object
-    else if (kontra.isImage(options.image)) {
-      this.image = options.image;
+    else if (kontra.isImage(properties.image)) {
+      this.image = properties.image;
       calculateFrames();
     }
     else {
       var error = new SyntaxError('Invalid image.');
-      kontra.log.error(error, 'You must provide an Image or path to an image.');
+      kontra.logError(error, 'You must provide an Image or path to an image.');
       return;
     }
 
@@ -39,8 +39,8 @@ var kontra = (function(kontra, undefined) {
      * Calculate the number of frames in a row.
      */
     function calculateFrames() {
-      _this.frameWidth = options.frameWidth || _this.image.width;
-      _this.frameHeight = options.frameHeight || _this.image.height;
+      _this.frameWidth = properties.frameWidth || _this.image.width;
+      _this.frameHeight = properties.frameHeight || _this.image.height;
 
       _this.framesPerRow = Math.floor(_this.image.width / _this.frameWidth);
     }
@@ -83,7 +83,7 @@ var kontra = (function(kontra, undefined) {
 
     if (!animations || Object.keys(animations).length === 0) {
       error = new SyntaxError('No animations found.');
-      kontra.log.error(error, 'You must provide at least one named animation to create an Animation.');
+      kontra.logError(error, 'You must provide at least one named animation to create an Animation.');
       return;
     }
 
@@ -107,7 +107,7 @@ var kontra = (function(kontra, undefined) {
 
       if (frames === undefined) {
         error = new SyntaxError('No animation frames found.');
-        kontra.log.error(error, 'Animation ' + name + ' must provide a frames property.');
+        kontra.logError(error, 'Animation ' + name + ' must provide a frames property.');
         return;
       }
 

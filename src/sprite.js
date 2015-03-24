@@ -6,11 +6,13 @@ var kontra = (function(kontra, undefined) {
    * @memberOf kontra
    * @constructor
    * @requires kontra.Vector
+   *
+   * @param @see this.set for list of available parameters.
    */
-  function Sprite() {
+  function Sprite(properties) {
     if (!kontra.Vector) {
       var error = new ReferenceError('Vector() not found.');
-      kontra.log.error(error, 'Kontra.Sprite requires kontra.Vector.');
+      kontra.logError(error, 'Kontra.Sprite requires kontra.Vector.');
       return;
     }
 
@@ -19,6 +21,10 @@ var kontra = (function(kontra, undefined) {
     this.acceleration = new kontra.Vector();
     this.timeToLive = 0;
     this.context = kontra.context;
+
+    if (properties) {
+      this.set(properties);
+    }
   }
 
   /**

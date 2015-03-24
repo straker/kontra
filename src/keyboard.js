@@ -115,7 +115,7 @@ var kontra = (function(kontra, window) {
   kontra.bindKey = function bindKey(keys, callback) {
     if (typeof callback !== 'function') {
       var error = new SyntaxError('Invalid function.');
-      kontra.log.error(error, 'You must provide a function as the second parameter.');
+      kontra.logError(error, 'You must provide a function as the second parameter.');
       return;
     }
 

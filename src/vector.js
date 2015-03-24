@@ -62,7 +62,7 @@ var kontra = (function(kontra, Math) {
    *
    * @returns {Vector}
    */
-  Vector.fromAngle = function VectorFromAngle(angle, magnitude) {
+  Vector.prototype.fromAngle = function VectorFromAngle(angle, magnitude) {
     return new Vector(magnitude * Math.cos(angle), magnitude * Math.sin(angle));
   };
 

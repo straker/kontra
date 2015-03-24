@@ -3,16 +3,16 @@ var kontra = (function(kontra, document) {
    * Set up the canvas.
    * @memberOf kontra
    *
-   * @param {object} options - Options for the game.
-   * @param {string|Canvas} options.canvas - ID string or Canvas element to draw the game on.
+   * @param {object} properties - Properties for the game.
+   * @param {string|Canvas} properties.canvas - ID string or Canvas element to draw the game on.
    */
-  kontra.init = function init(options) {
-    options = options || {};
+  kontra.init = function init(properties) {
+    properties = properties || {};
 
-    if (kontra.isString(options.canvas)) {
-      this.canvas = document.getElementById(options.canvas);
+    if (kontra.isString(properties.canvas)) {
+      this.canvas = document.getElementById(properties.canvas);
     }
-    else if (kontra.isCanvas(options.canvas)) {
+    else if (kontra.isCanvas(properties.canvas)) {
       this.canvas = canvas;
     }
     else {
@@ -20,7 +20,7 @@ var kontra = (function(kontra, document) {
 
       if (!this.canvas) {
         var error = new ReferenceError('No canvas element found.');
-        kontra.log.error(error, 'You must provide a canvas element for the game.');
+        kontra.logError(error, 'You must provide a canvas element for the game.');
         return;
       }
     }
@@ -31,18 +31,13 @@ var kontra = (function(kontra, document) {
   };
 
   /**
-   * Object for logging to the client.
-   */
-  kontra.log = {};
-
-  /**
    * Throw an error message to the user with readability formating.
    * @memberOf kontra
    *
    * @param {Error}  error - Error object.
    * @param {string} message - Error message.
    */
-  kontra.log.error = function logError(error, message) {
+  kontra.logError = function logError(error, message) {
     error.originalMessage = error.message;
     error.message = 'Kontra: ' + message + '\n\t' + error.stack;
     console.error(error.message);

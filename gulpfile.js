@@ -16,7 +16,7 @@ gulp.task('lint', function() {
 });
 
 gulp.task('scripts', function() {
-  return gulp.src(['node_modules/assetLoader/assetLoader.js', 'src/core.js', 'src/*.js'])
+  return gulp.src(['node_modules/kontra-asset-loader/kontraAssetLoader.js', 'src/core.js', 'src/*.js'])
     .pipe(concat('kontra.js'))
     .pipe(size())
     .pipe(gulp.dest('.'))

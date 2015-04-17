@@ -1,655 +1,3 @@
-(function(exports, document) {
-'use strict';
-/*
- * Copyright (C) 2014 Steven Lambert
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of this
- * software and associated documentation files (the "Software"), to deal in the Software
- * without restriction, including without limitation the rights to use, copy, modify,
- * merge, publish, distribute, sublicense, and/or sell copies of the Software, and to
- * permit persons to whom the Software is furnished to do so, subject to the following
- * conditions:
- *
- * The above copyright notice and this permission notice shall be included in all copies
- * or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
- * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
- * PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
- * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
- * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
- * OR OTHER DEALINGS IN THE SOFTWARE.
- */
-
- /**
- * @fileoverview HTML5 JavaScript asset loader. Part of the Kontra game library.
- * @author steven@sklambert.com (Steven Lambert)
- * @requires qLite.js
- */
-
-// save the toString method for objects
-var toString = ({}).toString;
-
-/**
- * @class AssetLoader
- * @property {string} manifestUrl - The URL to the manifest file.
- * @property {object} manifest    - The JSON parsed manifest file.
- * @property {object} assets      - List of loaded assets.
- * @property {string} assetRoot   - Root directive for all assets.
- * @property {object} bundles     - List of created bundles.
- * @property {object} canPlay     - List of audio type compatibility.
- */
-function AssetLoader() {
-  // manifest
-  this.manifestUrl = '';
-  this.manifest  = {};
-
-  // assets
-  this.assets = {};
-  this.assetRoot = './';
-  this.bundles = {};
-
-  this.supportedAssets = ['jpeg', 'jpg', 'gif', 'png', 'wav', 'mp3', 'ogg', 'aac', 'm4a', 'js', 'css', 'json'];
-
-  // detect iOS so we can deal with audio assets not pre-loading
-  this.isiOS = (navigator.userAgent.match(/(iPad|iPhone|iPod)/g) ? true : false);
-
-  // audio playability (taken from Modernizr)
-  var audio = new Audio();
-  this.canPlay = {};
-  this.canPlay.wav = audio.canPlayType('audio/wav; codecs="1"').replace(/no/, '');
-  this.canPlay.mp3 = audio.canPlayType('audio/mpeg;').replace(/no/, '');
-  this.canPlay.ogg = audio.canPlayType('audio/ogg; codecs="vorbis"').replace(/no/, '');
-  this.canPlay.aac = audio.canPlayType('audio/aac;').replace(/no/, '');
-  this.canPlay.m4a = (audio.canPlayType('audio/x-m4a;') || this.canPlay.aac).replace(/no/, '');
-}
-
-/**
- * Add a bundle to the bundles dictionary.
- * @private
- * @memberof AssetLoader
- * @param {string} bundleName - The name of the bundle.
- * @throws {Error} If the bundle already exists.
- */
-function addBundle(bundleName) {
-  if (this.bundles[bundleName]) {
-    throw new Error('Bundle \'' + bundleName + '\' already created');
-  }
-  else {
-    // make the status property in-enumerable so it isn't returned in a for-in loop
-    this.bundles[bundleName] = Object.create(Object.prototype, { status: {
-      value: 'created',
-      writable: true,
-      enumerable: false,
-      configurable: false }
-    });
-  }
-}
-
-/**
- * Count the number of assets.
- * @private
- * @memberof AssetLoader
- * @param {object} assets - The assets to count.
- * @return {number} Total number of assets.
- */
-function countAssets(assets) {
-  var total = 0;
-  var asset, type;
-
-  for (var assetName in assets) {
-    if (assets.hasOwnProperty(assetName)) {
-      asset = assets[assetName];
-
-      if (asset instanceof Array) {
-        type = 'audio';
-      }
-      else {
-        type = getType(asset);
-      }
-
-      // only count audio assets if this is not iOS
-      if (type === 'audio' && !this.isiOS) {
-        total++;
-      }
-      else {
-        total++;
-      }
-    }
-  }
-
-  return total;
-}
-
-/**
- * Test if an object is a string.
- * @private
- * @memberof AssetLoader
- * @param {object} obj - The object to test.
- * @returns {boolean} True if the object is a string.
- */
-function isString(obj) {
-  return toString.call(obj) === '[object String]';
-}
-
-/**
- * Return the type of asset based on it's extension.
- * @private
- * @memberof AssetLoader
- * @param {string} url - The URL to the asset.
- * @returns {string} image, audio, js, json.
- */
-function getType(url) {
-  if (url.match(/\.(jpeg|jpg|gif|png)$/)) {
-    return 'image';
-  }
-  else if (url.match(/\.(wav|mp3|ogg|aac|m4a)$/)) {
-    return 'audio';
-  }
-  else if(url.match(/\.(js)$/)) {
-    return 'js';
-  }
-  else if(url.match(/\.(css)$/)) {
-    return 'css';
-  }
-  else if(url.match(/\.(json)$/)) {
-    return 'json';
-  }
-}
-
-/**
- * Return the extension of an asset.
- * @private
- * @memberof AssetLoader
- * @param {string} url - The URL to the asset.
- * @returns {string}
- */
-function getExtension(url) {
-  // @see {@link http://jsperf.com/extract-file-extension}
-  return url.substr((~-url.lastIndexOf(".") >>> 0) + 2);
-}
-
-/**
- * Format Error messages for better output.
- * Use this function right before passing the Error to the user.
- * @private
- * @memberOf AssetLoader
- * @param {Error}  err - Error object.
- * @param {string} msg - Custom message.
- * @returns {string} The formated err message.
- */
-function formatError(err, msg) {
-  err.originalMessage = err.message;
-  err.message = 'AssetLoader: ' + msg + '\n\t' + err.stack;
-  return err;
-}
-/**
- * Load an asset manifest file.
- * @public
- * @memberof AssetLoader
- * @param {string} url - The URL to the asset manifest file.
- * @returns {Promise} A deferred promise.
- */
-AssetLoader.prototype.loadManifest = function(url) {
-  var _this = this;
-  var deferred = q.defer();
-  var i, len, bundle, bundles;
-
-  // load the manifest only if it hasn't been loaded
-  if (this.manifestUrl !== url) {
-    this.loadJSON(url)
-    .then(function loadMainfestJSONSuccess(manifest) {
-
-      _this.manifest = manifest;
-      _this.manifestUrl = url;
-      _this.assetRoot = manifest.assetRoot || './';
-
-      // create bundles and add assets
-      try {
-        for (i = 0, len = manifest.bundles.length; i < len; i++) {
-          bundle = manifest.bundles[i];
-          _this.createBundle(bundle.name, true);
-          _this.addBundleAsset(bundle.name, bundle.assets, true);
-        }
-      }
-      catch (err) {
-        deferred.reject(err);
-      }
-
-      // load bundles
-      if (manifest.loadBundles) {
-
-        if (isString(manifest.loadBundles)) {
-          // load all bundles
-          if (manifest.loadBundles === 'all') {
-            bundles = Object.keys(_this.bundles || {});
-          }
-          else {
-            bundles = [manifest.loadBundles];
-          }
-        }
-        else if (manifest.loadBundles instanceof Array) {
-          bundles = manifest.loadBundles;
-        }
-
-        _this.loadBundle(bundles)
-        .then(function loadMainfestSuccess() {
-          deferred.resolve();
-        }, function loadMainfestError(err) {
-          deferred.reject(err);
-        }, function loadMainfestNotify(progress) {
-          deferred.notify(progress);
-        });
-      }
-      else {
-        deferred.resolve();
-      }
-    }, function loadMainfestJSONError(err) {
-      err.message = err.message.replace('JSON', 'manifest');
-      deferred.reject(err);
-    });
-  }
-  else {
-    deferred.resolve();
-  }
-
-  return deferred.promise;
-};
-/**
- * Create a bundle.
- * @public
- * @memberof AssetLoader
- * @param {string|array} bundle    - The name of the bundle(s).
- * @param {boolean}      isPromise - If this function is called by a function that uses a promise.
- * @throws {Error} If the bundle name already exists.
- * @example
- * AssetLoader.createBundle('bundleName');
- * AssetLoader.createBundle(['bundle1', 'bundle2']);
- */
-AssetLoader.prototype.createBundle = function(bundle, isPromise) {
-  try {
-    // list of bundle names
-    if (bundle instanceof Array) {
-      for (var i = 0, len = bundle.length; i < len; i++) {
-        addBundle.call(this, bundle[i]);
-      }
-    }
-    // single bundle name
-    else {
-      addBundle.call(this, bundle);
-    }
-  }
-  catch(err) {
-    if (isPromise) {
-      throw formatError(err, 'Unable to create bundle');
-    }
-    else {
-      throw err;
-    }
-  }
-};
-
-/**
- * Load all assets in a bundle.
- * @public
- * @memberof AssetLoader
- * @param {string|array} bundle - The name of the bundle(s).
- * @returns {Promise} A deferred promise.
- * @throws {ReferenceError} If the bundle has not be created.
- * @example
- * AssetLoader.loadBundle('bundleName');
- * AssetLoader.loadBundle(['bundle1', 'bundle2']);
- */
-AssetLoader.prototype.loadBundle = function(bundle) {
-  var _this = this;
-  var numLoaded = 0;
-  var numAssets = 0;
-  var bundles = [];
-  var deferred = q.defer();  // defer to return
-  var promises = [];  // keep track of all assets loaded
-  var assets;
-
-  if (bundle instanceof Array) {
-    bundles = bundle;
-  }
-  else if (isString(bundle)) {
-    bundles = [bundle];
-  }
-
-  for (var i = 0, len = bundles.length; i < len; i++) {
-    assets = this.bundles[ bundles[i] ];
-
-    if (!assets) {
-      var err = new ReferenceError('Bundle not created');
-      deferred.reject(formatError(err, 'Unable to load bundle \'' + bundle + '\''));
-      return deferred.promise;
-    }
-
-    numAssets += countAssets.call(this, assets);
-
-    assets.status = 'loading';
-    promises.push(this.loadAsset(assets));
-  }
-
-  (function(_this, bundles) {
-    q.all(promises)
-    .then(function loadBundlesSuccess() {
-      for (var i = 0, len = bundles.length; i < len; i++) {
-        _this.bundles[ bundles[i] ].status = 'loaded';
-      }
-
-      deferred.resolve();
-    }, function loadBundlesError(err) {
-      deferred.reject(err);
-    }, function loadBundlesNotify() {
-      // notify user of progress
-      deferred.notify({'loaded': ++numLoaded, 'total': numAssets});
-    });
-  })(_this, bundles);
-
-  return deferred.promise;
-};
-
-/**
- * Add an asset to a bundle.
- * @public
- * @memberof AssetLoader
- * @param {string}  bundleName - The name of the bundle.
- * @param {object}  asset      - The asset(s) to add to the bundle.
- * @param {boolean} isPromise  - If this function is called by a function that uses a promise.
- * @throws {ReferenceError} If the bundle has not be created.
- * @example
- * AssetLoader.addBundleAsset('bundleName', {'assetName': 'assetUrl'});
- * AssetLoader.addBundleAsset('bundleName', {'asset1': 'asset1Url', 'asset2': 'asset2Url'});
- */
-AssetLoader.prototype.addBundleAsset = function(bundleName, asset, isPromise) {
-  if (!this.bundles[bundleName]) {
-    var err = new ReferenceError('Bundle not created');
-
-    // format the error message for a promises reject
-    if (isPromise) {
-      throw formatError(err, 'Unable to add asset to bundle \'' + bundleName + '\'');
-    }
-    else {
-      throw err;
-    }
-  }
-  else {
-    for (var assetName in asset) {
-      if (asset.hasOwnProperty(assetName)) {
-        this.bundles[bundleName][assetName] = asset[assetName];
-      }
-    }
-  }
-};
-/**
- * Load an asset.
- * @public
- * @memberof AssetLoader
- * @param {object} asset - The asset(s) to load.
- * @returns {Promise} A deferred promise.
- * @throws {TypeError} If the asset type is not supported.
- * @example
- * AssetLoader.loadAsset({'assetName': 'assetUrl'});
- * AssetLoader.loadAsset({'asset1': 'asset1Url', 'asset2': 'asset2Url'});
- */
-AssetLoader.prototype.loadAsset = function(asset) {
-  var _this = this;
-  var numLoaded = 0;
-  var numAssets = countAssets.call(this, asset);
-  var deferred = q.defer();
-  var promises = [];
-  var src, type, defer;
-
-  for (var assetName in asset) {
-    if (asset.hasOwnProperty(assetName)) {
-      src = asset[assetName];
-
-      // multiple audio formats
-      if (src instanceof Array) {
-        type = 'audio';
-      }
-      else {
-        type = getType(src);
-      }
-      defer = q.defer();
-
-      // load asset by type
-      switch(type) {
-        case 'image':
-          // create closure for event binding
-          (function loadImage(name, src, defer) {
-            var image = new Image();
-            image.status = 'loading';
-            image.name = name;
-            image.onload = function() {
-              image.status = 'loaded';
-              _this.assets[name] = image;
-              defer.resolve();
-              deferred.notify({'loaded': ++numLoaded, 'total': numAssets});
-            };
-            image.onerror = function() {
-              defer.reject(new Error('Unable to load Image \'' + name + '\''));
-            };
-            image.src = src;
-
-            promises.push(defer.promise);
-          })(assetName, src, defer);
-          break;
-
-        case 'audio':
-          if (isString(src)) {
-            src = [src];
-          }
-
-          // check that the browser can play one of the listed audio types
-          var source, playableSrc;
-          for (var i = 0, len = src.length; i < len; i++) {
-            source = src[i];
-            var extension = getExtension(source);
-
-            // break on first audio type that is playable
-            if (this.canPlay[extension]) {
-              playableSrc = source;
-              break;
-            }
-          }
-
-          if (!playableSrc) {
-            defer.reject(new Error('Browser cannot play any of the audio types provided for asset \'' + assetName + '\''));
-            promises.push(defer.promise);
-          }
-          else {
-            // don't count audio in iOS
-            if (this.isiOS) {
-              numAssets--;
-            }
-
-            (function loadAudio(name, src, defer) {
-              var audio = new Audio();
-              audio.status = 'loading';
-              audio.name = name;
-              audio.addEventListener('canplay', function() {
-                audio.status = 'loaded';
-                _this.assets[name] = audio;
-                defer.resolve();
-                deferred.notify({'loaded': ++numLoaded, 'total': numAssets});
-              });
-              audio.onerror = function() {
-                defer.reject(new Error('Unable to load Audio \'' + name + '\''));
-              };
-              audio.src = src;
-              audio.preload = 'auto';
-              audio.load();
-
-              // for iOS, just load the asset without adding it the promises array
-              // the audio will be downloaded on user interaction instead
-              if (_this.isiOS) {
-                audio.status = 'loaded';
-                _this.assets[name] = audio;
-              }
-              else {
-                promises.push(defer.promise);
-              }
-            })(assetName, playableSrc, defer);
-          }
-          break;
-
-        case 'js':
-          this.loadScript(src)
-          .then(function loadScriptSuccess() {
-            defer.resolve();
-            deferred.notify({'loaded': ++numLoaded, 'total': numAssets});
-          }, function loadScriptError(err) {
-            defer.reject(new Error(err.name + ': ' + err.message + ' \'' + assetName + '\' from src \'' + src + '\''));
-          });
-
-          promises.push(defer.promise);
-          break;
-
-        case 'css':
-          this.loadCSS(src)
-          .then(function loadCSSSuccess() {
-            defer.resolve();
-            deferred.notify({'loaded': ++numLoaded, 'total': numAssets});
-          }, function loadCSSError(err) {
-            defer.reject(new Error(err.name + ': ' + err.message + ' \'' + assetName + '\' from src \'' + src + '\''));
-          });
-
-          promises.push(defer.promise);
-          break;
-
-        case 'json':
-          (function loadJSONFile(name, src, defer) {
-            _this.loadJSON(src)
-            .then(function loadJsonSuccess(json) {
-              _this.assets[name] = json;
-              defer.resolve();
-              deferred.notify({'loaded': ++numLoaded, 'total': numAssets});
-            }, function loadJSONError(err) {
-              defer.reject(new Error(err.name + ': ' + err.message + ' \'' + name + '\' from src \'' + src + '\''));
-            });
-
-            promises.push(defer.promise);
-          })(assetName, src, defer);
-          break;
-
-        default:
-          var err = new TypeError('Unsupported asset type');
-          deferred.reject(formatError(err, 'File type for asset \'' + assetName + '\' is not supported. Please use ' + this.supportedAssets.join(', ')));
-      }
-    }
-  }
-
-  if (numAssets === 0) {
-    deferred.resolve();
-    return deferred.promise;
-  }
-
-  q.all(promises)
-  .then(function loadAssetSuccess(value) {
-    deferred.resolve(value);
-  },
-  function loadAssetError(err) {
-    deferred.reject(err);
-  });
-
-  return deferred.promise;
-};
-
-/**
- * Load a JavaScript file.
- * <p><strong>NOTE:</strong> This function does not add the asset to the assets dictionary.</p>
- * @public
- * @memberof AssetLoader
- * @param {string} url - The URL to the JavaScript file.
- * @returns {Promise} A deferred promise.
- */
-AssetLoader.prototype.loadScript = function(url) {
-  var deferred = q.defer();
-  var script = document.createElement('script');
-  script.async = true;
-  script.onload = function() {
-    deferred.resolve();
-  };
-  script.onerror = function() {
-    var err = new Error();
-    deferred.reject(formatError(err, 'Unable to load JavaScript file'));
-  };
-  script.src = url;
-  document.body.appendChild(script);
-
-  return deferred.promise;
-};
-
-/**
- * Load a CSS file.
- * <p><strong>NOTE:</strong> This function does not add the asset to the assets dictionary.</p>
- * @public
- * @memberof AssetLoader
- * @param {string} url - The URL to the CSS file.
- * @returns {Promise} A deferred promise.
- */
-AssetLoader.prototype.loadCSS = function(url) {
-  var deferred = q.defer();
-
-  /*
-   * Because of the lack of onload and onerror support for &lt;link> tags, we need to load the CSS
-   * file via ajax and then put the contents of the file into a &lt;style> tag.
-   * @see {@link http://pieisgood.org/test/script-link-events/}
-   */
-  var req = new XMLHttpRequest();
-  req.addEventListener('load', function CSSLoaded() {
-    // ensure we have a css file before creating the <style> tag
-    if (req.status === 200 && req.getResponseHeader('content-type').indexOf('text/css') !== -1) {
-      var style = document.createElement('style');
-      style.innerHTML = req.responseText;
-      style.setAttribute('data-url', url);  // set data attribute for testing purposes
-      document.getElementsByTagName('head')[0].appendChild(style);
-      deferred.resolve();
-    }
-    else {
-      var err = new Error(req.responseText);
-      deferred.reject(formatError(err, 'Unable to load CSS file'));
-    }
-  });
-  req.open('GET', url, true);
-  req.send();
-
-  return deferred.promise;
-};
-
-/**
- * Load a JSON file.
- * @public
- * @memberof AssetLoader
- * @param {string} url - The URL to the JSON file.
- * @returns {Promise} A deferred promise. Resolves with the parsed JSON.
- * @throws {Error} When the JSON file fails to load.
- */
-AssetLoader.prototype.loadJSON = function(url) {
-  var deferred = q.defer();
-  var req = new XMLHttpRequest();
-  req.addEventListener('load', function JSONLoaded() {
-    if (req.status === 200) {
-      try {
-        var json = JSON.parse(req.responseText);
-        deferred.resolve(json);
-      }
-      catch (err) {
-        deferred.reject(formatError(err, 'Unable to parse JSON file'));
-      }
-    }
-    else {
-      var err = new Error(req.responseText);
-      deferred.reject(formatError(err, 'Unable to load JSON file'));
-    }
-  });
-  req.open('GET', url, true);
-  req.send();
-
-  return deferred.promise;
-};
 /**
  * The MIT License
  *
@@ -1059,16 +407,444 @@ function qFactory(nextTick, exceptionHandler) {
     all: all
   };
 }
+var kontra = (function(kontra) {
+  var isImage = /(jpeg|jpg|gif|png)$/;
+  var isAudio = /(wav|mp3|ogg|aac|m4a)$/;
+  var folderSeparator = /(\\|\/)/g;
 
-exports.AssetLoader = AssetLoader;
-})(window, document);
+  // all assets are stored by name as well as by URL
+  kontra.images = {};
+  kontra.audios = {};
+  kontra.data = {};
+
+  // base asset path for determining asset URLs
+  kontra.assetPaths = {
+    images: '',
+    audios: '',
+    data: '',
+  };
+
+  // audio playability
+  // @see https://github.com/Modernizr/Modernizr/blob/master/feature-detects/audio.js
+  var audio = new Audio();
+  kontra.canUse = kontra.canUse || {};
+  kontra.canUse.wav = '';
+  kontra.canUse.mp3 = audio.canPlayType('audio/mpeg;').replace(/^no$/,'');
+  kontra.canUse.ogg = audio.canPlayType('audio/ogg; codecs="vorbis"').replace(/^no$/,'');
+  kontra.canUse.aac = audio.canPlayType('audio/aac;').replace(/^no$/,'');
+  kontra.canUse.m4a = (audio.canPlayType('audio/x-m4a;') || kontra.canUse.aac).replace(/^no$/,'');
+
+  /**
+   * Get the extension of an asset.
+   * @see http://jsperf.com/extract-file-extension
+   * @memberOf kontra
+   *
+   * @param {string} url - The URL to the asset.
+   *
+   * @returns {string}
+   */
+  kontra.getAssetExtension = function getAssetExtension(url) {
+    return url.substr((~-url.lastIndexOf(".") >>> 0) + 2);
+  };
+
+  /**
+   * Get the type of asset based on its extension.
+   * @memberOf kontra
+   *
+   * @param {string} url - The URL to the asset.
+   *
+   * @returns {string} Image, Audio, Data.
+   */
+  kontra.getAssetType = function getAssetType(url) {
+    var extension = this.getAssetExtension(url);
+
+    if (extension.match(isImage)) {
+      return 'Image';
+    }
+    else if (extension.match(isAudio)) {
+      return 'Audio';
+    }
+    else {
+      return 'Data';
+    }
+  };
+
+  /**
+   * Get the name of an asset.
+   * @memberOf kontra
+   *
+   * @param {string} url - The URL to the asset.
+   *
+   * @returns {string}
+   */
+  kontra.getAssetName = function getAssetName(url) {
+    return url.replace(/\.[^/.]+$/, "");
+  };
+
+  return kontra;
+})(kontra || {});
+/*jshint -W084 */
+
+var kontra = (function(kontra, q) {
+  /**
+   * Load an Image, Audio, or data file.
+   * @memberOf kontra
+   *
+   * @param {string|string[]} - Comma separated list of assets to load.
+   *
+   * @returns {Promise} A deferred promise.
+   *
+   * @example
+   * kontra.loadAsset('car.png');
+   * kontra.loadAsset(['explosion.mp3', 'explosion.ogg']);
+   * kontra.loadAsset('bio.json');
+   * kontra.loadAsset('car.png', ['explosion.mp3', 'explosion.ogg'], 'bio.json');
+   */
+  kontra.loadAssets = function loadAsset() {
+    var deferred = q.defer();
+    var promises = [];
+    var numLoaded = 0;
+    var numAssets = arguments.length;
+    var type, name, url;
+
+    if (!arguments.length) {
+      deferred.resolve();
+    }
+
+    for (var i = 0, asset; asset = arguments[i]; i++) {
+      if (!Array.isArray(asset)) {
+        url = asset;
+      }
+      else {
+        url = asset[0];
+      }
+
+      type = this.getAssetType(url);
+
+      // create a closure for event binding
+      (function(assetDeferred) {
+        promises.push(assetDeferred.promise);
+
+        kontra['load' + type](url).then(
+          function loadAssetSuccess() {
+            assetDeferred.resolve();
+            deferred.notify({'loaded': ++numLoaded, 'total': numAssets});
+          },
+          function loadAssetError(error) {
+            assetDeferred.reject(error);
+        });
+      })(q.defer());
+    }
+
+    q.all(promises).then(
+      function loadAssetsSuccess() {
+        deferred.resolve();
+      },
+      function loadAssetsError(error) {
+        deferred.reject(error);
+    });
+
+    return deferred.promise;
+  };
+
+  /**
+   * Load an Image file. Uses assetPaths.images to resolve URL.
+   * @memberOf kontra
+   *
+   * @param {string} url - The URL to the Image file.
+   *
+   * @returns {Promise} A deferred promise. Promise resolves with the Image.
+   *
+   * @example
+   * kontra.loadImage('car.png');
+   * kontra.loadImage('autobots/truck.png');
+   */
+  kontra.loadImage = function(url) {
+    var deferred = q.defer();
+    var name = this.getAssetName(url);
+    var image = new Image();
+
+    url = this.assetPaths.images + url;
+
+    image.onload = function loadImageOnLoad() {
+      kontra.images[name] = kontra.images[url] = this;
+      deferred.resolve(this);
+    };
+
+    image.onerror = function loadImageOnError() {
+      deferred.reject('Unable to load image ' + url);
+    };
+
+    image.src = url;
+
+    return deferred.promise;
+  };
+
+  /**
+   * Load an Audio file. Supports loading multiple audio formats which will be resolved by
+   * the browser in the order listed. Uses assetPaths.audios to resolve URL.
+   * @memberOf kontra
+   *
+   * @param {string|string[]} url - The URL to the Audio file.
+   *
+   * @returns {Promise} A deferred promise. Promise resolves with the Audio.
+   *
+   * @example
+   * kontra.loadAudio('sound_effects/laser.mp3');
+   * kontra.loadAudio(['explosion.mp3', 'explosion.m4a', 'explosion.ogg']);
+   *
+   * There are two ways to load Audio in the web: HTML5 Audio or the Web Audio API.
+   * HTML5 Audio has amazing browser support, including back to IE9
+   * (http://caniuse.com/#feat=audio). However, the web Audio API isn't supported in
+   * IE nor Android Browsers (http://caniuse.com/#search=Web%20Audio%20API).
+   *
+   * To support the most browsers we'll use HTML5 Audio. However, doing so means we'll
+   * have to work around mobile device limitations as well as Audio implementation
+   * limitations.
+   *
+   * Android browsers require playing Audio through user interaction whereas iOS 6+ can
+   * play through normal JavaScript. Moreover, Android can only play one sound source at
+   * a time whereas iOS 6+ can handle more than one. See this article for more details
+   * (http://pupunzi.open-lab.com/2013/03/13/making-html5-audio-actually-work-on-mobile/)
+   *
+   * Both iOS and Android will download an Audio through JavaScript, but neither will play
+   * it until user interaction. You can get around this issue by having a splash screen
+   * that requires user interaction to start the game and using that event to play the audio.
+   * (http://jsfiddle.net/straker/5dsm6jgt/)
+   */
+  kontra.loadAudio = function(url) {
+    var deferred = q.defer();
+    var source, name, playableSource, audio;
+
+    if (!Array.isArray(url)) {
+      url = [url];
+    }
+
+    // determine which audio format the browser can play
+    for (var i = 0; source = url[i]; i++) {
+      if ( this.canUse[this.getAssetExtension(source)] ) {
+        playableSource = source;
+        break;
+      }
+    }
+
+    if (!playableSource) {
+      deferred.reject('Browser cannot play any of the audio formats provided');
+    }
+    else {
+      name = this.getAssetName(playableSource);
+      audio = new Audio();
+
+      source = this.assetPaths.audios + playableSource;
+
+      audio.addEventListener('canplay', function loadAudioOnLoad() {
+        kontra.audios[name] = kontra.audios[source] = this;
+        deferred.resolve(this);
+      });
+
+      audio.onerror = function loadAudioOnError() {
+        deferred.reject('Unable to load audio ' + source);
+      };
+
+      audio.src = source;
+      audio.preload = 'auto';
+      audio.load();
+    }
+
+    return deferred.promise;
+  };
+
+
+  /**
+   * Load a data file (be it text or JSON). Uses assetPaths.data to resolve URL.
+   * @memberOf kontra
+   *
+   * @param {string} url - The URL to the data file.
+   *
+   * @returns {Promise} A deferred promise. Resolves with the data or parsed JSON.
+   *
+   * @example
+   * kontra.loadData('bio.json');
+   * kontra.loadData('dialog.txt');
+   */
+  kontra.loadData = function(url) {
+    var deferred = q.defer();
+    var req = new XMLHttpRequest();
+    var name = this.getAssetName(url);
+    var dataUrl = this.assetPaths.data + url;
+
+    req.addEventListener('load', function loadDataOnLoad() {
+      if (req.status !== 200) {
+        deferred.reject(req.responseText);
+        return;
+      }
+
+      try {
+        var json = JSON.parse(req.responseText);
+        kontra.data[name] = kontra.data[dataUrl] = json;
+
+        deferred.resolve(json);
+      }
+      catch(e) {
+        var data = req.responseText;
+        kontra.data[name] = kontra.data[dataUrl] = data;
+
+        deferred.resolve(data);
+      }
+    });
+
+    req.open('GET', dataUrl, true);
+    req.send();
+
+    return deferred.promise;
+  };
+
+  return kontra;
+})(kontra || {}, q);
+/*jshint -W084 */
+
+var kontra = (function(kontra, q) {
+  kontra.bundles = {};
+
+  /**
+   * Create a group of assets that can be loaded using <code>kontra.loadBundle()</code>.
+   * @memberOf kontra
+   *
+   * @param {string} bundle - The name of the bundle.
+   * @param {string[]} assets - Assets to add to the bundle.
+   *
+   * @example
+   * kontra.createBundle('myBundle', ['car.png', ['explosion.mp3', 'explosion.ogg']]);
+   */
+  kontra.createBundle = function createBundle(bundle, assets) {
+    if (this.bundles[bundle]) {
+      return;
+    }
+
+    this.bundles[bundle] = assets || [];
+  };
+
+  /**
+   * Load all assets that are part of a bundle.
+   * @memberOf kontra
+   *
+   * @param {string|string[]} - Comma separated list of bundles to load.
+   *
+   * @returns {Promise} A deferred promise.
+   *
+   * @example
+   * kontra.loadBundles('myBundle');
+   * kontra.loadBundles('myBundle', 'myOtherBundle');
+   */
+  kontra.loadBundles = function loadBundles() {
+    var deferred = q.defer();
+    var promises = [];
+    var numLoaded = 0;
+    var numAssets = 0;
+    var assets;
+
+    for (var i = 0, bundle; bundle = arguments[i]; i++) {
+      if (!(assets = this.bundles[bundle])) {
+        deferred.reject('Bundle \'' + bundle + '\' has not been created.');
+        continue;
+      }
+
+      numAssets += assets.length;
+
+      promises.push(this.loadAssets.apply(this, assets));
+    }
+
+    q.all(promises).then(
+      function loadBundlesSuccess() {
+        deferred.resolve();
+      },
+      function loadBundlesError(error) {
+        deferred.reject(error);
+      },
+      function loadBundlesNofity() {
+        deferred.notify({'loaded': ++numLoaded, 'total': numAssets});
+    });
+
+    return deferred.promise;
+  };
+
+  return kontra;
+})(kontra || {}, q);
+/*jshint -W084 */
+
+var kontra = (function(kontra, q) {
+  /**
+   * Load an asset manifest file.
+   * @memberOf kontra
+   *
+   * @param {string} url - The URL to the asset manifest file.
+   *
+   * @returns {Promise} A deferred promise.
+   */
+  kontra.loadManifest = function loadManifest(url) {
+    var deferred = q.defer();
+    var bundles;
+
+    kontra.loadData(url).then(
+      function loadManifestSuccess(manifest) {
+        kontra.assetPaths.images = manifest.imagePath || '';
+        kontra.assetPaths.audios = manifest.audioPath || '';
+        kontra.assetPaths.data = manifest.dataPath || '';
+
+        // create bundles and add assets
+        for (var i = 0, bundle; bundle = manifest.bundles[i]; i++) {
+          kontra.createBundle(bundle.name, bundle.assets);
+        }
+
+        if (!manifest.loadBundles) {
+          deferred.resolve();
+          return;
+        }
+
+        // load all bundles
+        if (manifest.loadBundles === 'all') {
+          bundles = Object.keys(kontra.bundles || {});
+        }
+        // load a single bundle
+        else if (!Array.isArray(manifest.loadBundles)) {
+          bundles = [manifest.loadBundles];
+        }
+        // load multiple bundles
+        else {
+          bundles = manifest.loadBundles;
+        }
+
+        kontra.loadBundles.apply(kontra, bundles).then(
+          function loadBundlesSuccess() {
+            deferred.resolve();
+          },
+          function loadBundlesError(error) {
+            deferred.reject(error);
+          },
+          function loadBundlesNotify(progress) {
+            deferred.notify(progress);
+        });
+      },
+      function loadManifestError(error) {
+        deferred.reject(error);
+    });
+
+    return deferred.promise;
+  };
+
+  return kontra;
+})(kontra || {}, q);
+/* global console */
+
 var kontra = (function(kontra, document) {
+  'use strict';
+
   /**
    * Set up the canvas.
    * @memberOf kontra
    *
    * @param {object} properties - Properties for the game.
-   * @param {string|Canvas} properties.canvas - ID string or Canvas element to draw the game on.
+   * @param {string|Canvas} properties.canvas - Main canvas ID or Element for the game.
    */
   kontra.init = function init(properties) {
     properties = properties || {};
@@ -1077,7 +853,7 @@ var kontra = (function(kontra, document) {
       this.canvas = document.getElementById(properties.canvas);
     }
     else if (kontra.isCanvas(properties.canvas)) {
-      this.canvas = canvas;
+      this.canvas = properties.canvas;
     }
     else {
       this.canvas = document.getElementsByTagName('canvas')[0];
@@ -1095,7 +871,7 @@ var kontra = (function(kontra, document) {
   };
 
   /**
-   * Throw an error message to the user with readability formating.
+   * Throw an error message to the user with readable formating.
    * @memberOf kontra
    *
    * @param {Error}  error - Error object.
@@ -1173,31 +949,26 @@ var kontra = (function(kontra, document) {
 
   return kontra;
 })(kontra || {}, document);
-var kontra = (function(kontra) {
-  // use the kontra-asset-loader
-  kontra.AssetLoader = AssetLoader;
-
-  return kontra;
-})(kontra || {});
 var kontra = (function(kontra, window, document) {
+  'use strict';
+
   /**
-   * Game loop that updates and draws the game every frame.
+   * Game loop that updates and renders the game every frame.
    * @memberOf kontra
    * @constructor
    *
    * @param {object}   properties - Configure the game loop.
    * @param {number}   [properties.fps=60] - Desired frame rate.
-   * @param {number}   [properties.slowFactor=1] - How much to slow down the frame rate.
    * @param {function} properties.update - Function called to update the game.
-   * @param {function} properties.draw - Function called to draw the game.
+   * @param {function} properties.render - Function called to render the game.
    */
   kontra.GameLoop = function GameLoop(properties) {
     properties = properties || {};
 
     // check for required functions
-    if (typeof properties.update !== 'function' || typeof properties.draw !== 'function') {
+    if (typeof properties.update !== 'function' || typeof properties.render !== 'function') {
       var error = new ReferenceError('Required functions not found');
-      kontra.logError(error, 'You must provide update() and draw() functions to create a game loop.');
+      kontra.logError(error, 'You must provide update() and render() functions to create a game loop.');
       return;
     }
 
@@ -1205,17 +976,14 @@ var kontra = (function(kontra, window, document) {
     var fps = properties.fps || 60;
     var last = 0;
     var accumulator = 0;
-    var step = 1E3 / fps;
-    var slowFactor = properties.slowFactor || 1;
-    var delta = slowFactor * step;
-
-    var update = properties.update;
-    var draw = properties.draw;
-    var started = false;
-    var _this = this;
+    var delta = 1E3 / fps;
     var now;
     var dt;
     var rAF;
+
+    var update = properties.update;
+    var render = properties.render;
+    var _this = this;
 
     document.addEventListener( 'visibilitychange', onVisibilityChange, false);
 
@@ -1224,7 +992,6 @@ var kontra = (function(kontra, window, document) {
      * @memberOf kontra.GameLoop
      */
     this.start = function GameLoopStart() {
-      started = true;
       last = 0;
       requestAnimationFrame(this.frame);
     };
@@ -1236,80 +1003,61 @@ var kontra = (function(kontra, window, document) {
     this.frame = function GameLoopFrame() {
       rAF = requestAnimationFrame(_this.frame);
 
-      stats.begin();
-
       now = timestamp();
+
+      // on the first call last will be 0, so we need to offset this by making dt=0 so
+      // that the first update isn't a very large value.
       dt = now - (last || now);
       last = now;
 
       accumulator += dt;
 
       while (accumulator >= delta) {
-        update();
+        update(delta);
 
         accumulator -= delta;
       }
 
-      draw();
-
-      stats.end();
+      render();
     };
 
     /**
      * Stop the game loop.
-     * @memberOf kontra.GameLoop
      */
-    this.stop = function GameLoopStop() {
-      started = false;
+    this.stop = function GameLoopPause() {
       cancelAnimationFrame(rAF);
     };
 
     /**
-     * Pause the game loop. This is different than stopping so that on visibility
-     * change, we don't just resume the game if it was stopped before.
-     * @memberOf kontra.GameLoop
-     */
-    this.pause = function GameLoopPause() {
-      cancelAnimationFrame(rAF);
-    };
-
-    /**
-     * Stop the game when the window isn't visible.
+     * Reset last to 0 when regaining screen focus, otherwise we end up with a very large
+     * dt value on the return.
      * @memberOf kontra.GameLoop
      * @private
      */
     function onVisibilityChange() {
-      if (document.hidden) {
-        _this.pause();
-      }
-      else if (started) {
-        _this.start();
+      if (!document.hidden) {
+        last = 0;
       }
     }
   };
 
   /**
-   * Returns the current time.
+   * Returns the current time. Uses the User Timing API if it's available or defaults to
+   * using Date().getTime()
    * @private
    *
    * @returns {number}
    */
   var timestamp = (function() {
-    // function to call if window.performance.now is available
-    function timestampPerformance() {
-      return window.performance.now();
-    }
-
-    // default function to call
-    function timestampDate() {
-      return new Date().getTime();
-    }
-
     if (window.performance && window.performance.now) {
-      return timestampPerformance;
+      return function timestampPerformance() {
+        return window.performance.now();
+      };
     }
     else {
-      return timestampDate;
+      return function timestampDate() {
+        return new Date().getTime();
+      };
     }
   })();
 
@@ -1318,6 +1066,8 @@ var kontra = (function(kontra, window, document) {
 /*jshint -W084 */
 
 var kontra = (function(kontra, window) {
+  'use strict';
+
   var callbacks = {};
   var pressedKeys = {};
 
@@ -1368,11 +1118,11 @@ var kontra = (function(kontra, window) {
   };
 
   // alpha keys
-  for (i = 0; i < 26; i++) {
+  for (var i = 0; i < 26; i++) {
     keyMap[65+i] = String.fromCharCode(65+i).toLowerCase();
   }
   // numeric keys
-  for (var i = 0; i < 10; i++) {
+  for (i = 0; i < 10; i++) {
     keyMap[48+i] = ''+i;
   }
   // f keys
@@ -1614,6 +1364,8 @@ var kontra = (function(kontra, window) {
 /*jshint -W084 */
 
 var kontra = (function(kontra) {
+  'use strict';
+
   kontra.Pool = Pool;
 
   /**
@@ -1625,7 +1377,7 @@ var kontra = (function(kontra) {
    * @param {number} properties.size - Size of the pool.
    * @param {object} properties.Object - Object to put in the pool.
    *
-   * Objects inside the pool must implement <code>draw()</code>, <code>update()</code>,
+   * Objects inside the pool must implement <code>render()</code>, <code>update()</code>,
    * <code>set()</code>, and <code>isAlive()</code> functions.
    */
   function Pool(properties) {
@@ -1633,10 +1385,10 @@ var kontra = (function(kontra) {
 
     // ensure objects for the pool have required functions
     var obj = new properties.Object();
-    if (typeof obj.draw !== 'function' || typeof obj.update !== 'function' ||
+    if (typeof obj.render !== 'function' || typeof obj.update !== 'function' ||
         typeof obj.set !== 'function' || typeof obj.isAlive !== 'function') {
       var error = new ReferenceError('Required function not found.');
-      kontra.logError(error, 'Objects to be pooled must implement draw(), update(), set() and isAlive() functions.');
+      kontra.logError(error, 'Objects to be pooled must implement render(), update(), set() and isAlive() functions.');
       return;
     }
 
@@ -1673,7 +1425,8 @@ var kontra = (function(kontra) {
       this.objects[i-1] = this.objects[i];
     }
 
-    this.objects[this.lastIndex] = obj.set(properties);
+    obj.set(properties);
+    this.objects[this.lastIndex] = obj;
 
     return true;
   };
@@ -1715,10 +1468,10 @@ var kontra = (function(kontra) {
   };
 
   /**
-   * Draw all alive pool objects.
+   * render all alive pool objects.
    * @memberOf kontra.Pool
    */
-  Pool.prototype.draw = function() {
+  Pool.prototype.render = function() {
     for (var i = this.lastIndex, obj; obj = this.objects[i]; i--) {
 
       // once we find the first object that is not alive we can stop
@@ -1726,14 +1479,86 @@ var kontra = (function(kontra) {
         return;
       }
 
-      obj.draw();
+      obj.render();
     }
   };
 
   return kontra;
 })(kontra || {});
-var kontra = (function(kontra, undefined) {
+var kontra = (function(kontra, Math, undefined) {
+  'use strict';
+
+  kontra.Vector = Vector;
   kontra.Sprite = Sprite;
+
+  /**
+   * A vector for 2d space.
+   * @memberOf kontra
+   * @constructor
+   *
+   * @param {number} x=0 - Center x coordinate.
+   * @param {number} y=0 - Center y coordinate.
+   */
+  function Vector(x, y) {
+    this.set(x, y);
+  }
+
+  /**
+   * Set the vector's x and y position.
+   * @memberOf kontra.Vector
+   *
+   * @param {number} x - Center x coordinate.
+   * @param {number} y - Center y coordinate.
+   */
+  Vector.prototype.set = function VecotrSet(x, y) {
+    this.x = x || 0;
+    this.y = y || 0;
+  };
+
+  /**
+   * Add a vector to this vector.
+   * @memberOf kontra.Vector
+   *
+   * @param {Vector} vector - Vector to add.
+   */
+  Vector.prototype.add = function VectorAdd(vector) {
+    this.x += vector.x;
+    this.y += vector.y;
+  };
+
+  /**
+   * Get the length of the vector.
+   * @memberOf kontra.Vector
+   *
+   * @returns {number}
+   */
+  Vector.prototype.length = function VecotrLength() {
+    return Math.sqrt(this.x * this.x + this.y * this.y);
+  };
+
+  /**
+   * Get the angle of the vector.
+   * @memberOf kontra.Vector
+   *
+   * @returns {number}
+   */
+  Vector.prototype.angle = function VectorAnagle() {
+    return Math.atan2(this.y, this.x);
+  };
+
+  /**
+   * Get a new vector from an angle and magnitude
+   * @memberOf kontra.Vector
+   *
+   * @returns {Vector}
+   */
+  Vector.prototype.fromAngle = function VectorFromAngle(angle, magnitude) {
+    return new Vector(magnitude * Math.cos(angle), magnitude * Math.sin(angle));
+  };
+
+
+
+
 
   /**
    * A sprite with a position, velocity, and acceleration.
@@ -1744,12 +1569,6 @@ var kontra = (function(kontra, undefined) {
    * @param @see this.set for list of available parameters.
    */
   function Sprite(properties) {
-    if (!kontra.Vector) {
-      var error = new ReferenceError('Vector() not found.');
-      kontra.logError(error, 'Kontra.Sprite requires kontra.Vector.');
-      return;
-    }
-
     this.position = new kontra.Vector();
     this.velocity = new kontra.Vector();
     this.acceleration = new kontra.Vector();
@@ -1764,11 +1583,12 @@ var kontra = (function(kontra, undefined) {
   /**
    * Move the sprite by its velocity.
    * @memberOf kontra.Sprite
+   *
+   * @param {number} dt - Time since last update.
    */
-  Sprite.prototype.advance = function SpriteAdvance() {
-    this.velocity.add(this.acceleration);
-
-    this.position.add(this.velocity);
+  Sprite.prototype.advance = function SpriteAdvance(dt) {
+    this.velocity.add(this.acceleration * dt);
+    this.position.add(this.velocity * dt);
 
     this.timeToLive--;
   };
@@ -1777,10 +1597,8 @@ var kontra = (function(kontra, undefined) {
    * Draw the sprite.
    * @memberOf kontra.Sprite
    */
-  Sprite.prototype.render = function SpriteRender() {
-    this.context.save();
+  Sprite.prototype.draw = function SpriteRender() {
     this.context.drawImage(this.image, this.position.x, this.position.y);
-    this.context.restore();
   };
 
   /**
@@ -1798,15 +1616,17 @@ var kontra = (function(kontra, undefined) {
    * @memberOf kontra.Sprite
    *
    * @param {object} properties - Properties to set on the sprite.
-   * @param {Vector} properties.x - X coordinate of the sprite.
-   * @param {Vector} properties.y - Y coordinate of the sprite.
-   * @param {Vector} [properties.dx] - Change in X position.
-   * @param {Vector} [properties.dy] - Change in Y position.
-   * @param {Vector} [properties.ddx] - Change in X velocity.
-   * @param {Vector} [properties.ddy] - Change in Y velocity.
+   * @param {number} properties.x - X coordinate of the sprite.
+   * @param {number} properties.y - Y coordinate of the sprite.
+   * @param {number} [properties.dx] - Change in X position.
+   * @param {number} [properties.dy] - Change in Y position.
+   * @param {number} [properties.ddx] - Change in X velocity.
+   * @param {number} [properties.ddy] - Change in Y velocity.
    * @param {number} [properties.timeToLive=0] - How may frames the sprite should be alive.
-   * @param {string|Image|Canvas} [properties.image] - Image for the sprite.
+   * @param {Image|Canvas} [properties.image] - Image for the sprite.
    * @param {Context} [properties.context=kontra.context] - Provide a context for the sprite to draw on.
+   * @param {function} [properties.update] - Function to use to update the sprite.
+   * @param {function} [properties.render] - Function to use to render the sprite.
    *
    * If you need the sprite to live forever, or just need it to stay on screen until you
    * decide when to kill it, you can set time to live to <code>Infinity</code>. Just be
@@ -1815,10 +1635,8 @@ var kontra = (function(kontra, undefined) {
    *
    * @returns {Sprite}
    */
-  Sprite.prototype.set = function SpriteSpawn(properties) {
+  Sprite.prototype.set = function SpriteSet(properties) {
     properties = properties || {};
-
-    var _this = this;
 
     this.position.set(properties.x, properties.y);
     this.velocity.set(properties.dx, properties.dy);
@@ -1827,16 +1645,7 @@ var kontra = (function(kontra, undefined) {
 
     this.context = properties.context || this.context;
 
-    // load an image
-    if (kontra.isString(properties.image)) {
-      this.image = new Image();
-      this.image.onload = function() {
-        _this.width = this.width;
-        _this.height = this.height;
-      };
-      this.image.src = properties.image;
-    }
-    else if (kontra.isImage(properties.image) || kontra.isCanvas(properties.image)) {
+    if (kontra.isImage(properties.image) || kontra.isCanvas(properties.image)) {
       this.image = properties.image;
       this.width = this.image.width;
       this.height = this.image.height;
@@ -1847,7 +1656,13 @@ var kontra = (function(kontra, undefined) {
       this.render = kontra.noop;
     }
 
-    return this;
+    if (properties.update) {
+      this.update = properties.update;
+    }
+
+    if (properties.render) {
+      this.render = properties.render;
+    }
   };
 
   /**
@@ -1855,60 +1670,58 @@ var kontra = (function(kontra, undefined) {
    * @memberOf kontra.Sprite
    * @abstract
    *
+   * @param {number} dt - Time since last update.
+   *
    * This function can be overridden on a per sprite basis if more functionality
    * is needed in the update step. Just call <code>this.advance()</code> when you need
    * the sprite to update its position.
    *
    * @example
-   * sprite = new Sprite();
-   * sprite.update = function() {
-   *   // do some logic
+   * sprite = new kontra.Sprite({
+   *   update: function update(dt) {
+   *     // do some logic
    *
-   *   this.advance();
-   *
-   *   return this;
-   * };
+   *     this.advance(dt);
+   *   }
+   * });
    *
    * @returns {Sprite}
    */
-  Sprite.prototype.update = function SpriteUpdate() {
-    this.advance();
-
-    return this;
+  Sprite.prototype.update = function SpriteUpdate(dt) {
+    this.advance(dt);
   };
 
   /**
-   * Draw the sprite.
+   * Render the sprite.
    * @memberOf kontra.Sprite.
    * @abstract
    *
    * This function can be overridden on a per sprite basis if more functionality
-   * is needed in the draw step. Just call <code>this.render()</code> when you need the
+   * is needed in the render step. Just call <code>this.draw()</code> when you need the
    * sprite to draw its image.
    *
    * @example
-   * sprite = new Sprite();
-   * sprite.draw = function() {
-   *   // do some logic
+   * sprite = new kontra.Sprite({
+   *   render: function render() {
+   *     // do some logic
    *
-   *   this.render();
-   *
-   *   return this;
-   * };
+   *     this.draw();
+   *   }
+   * });
    *
    * @returns {Sprite}
    */
-  Sprite.prototype.draw = function SpriteDraw() {
+  Sprite.prototype.render = function SpriteDraw() {
     this.render();
-
-    return this;
   };
 
   return kontra;
-})(kontra || {});
+})(kontra || {}, Math);
 /*jshint -W084 */
 
 var kontra = (function(kontra, undefined) {
+  'use strict';
+
   kontra.SpriteSheet = SpriteSheet;
 
   /**
@@ -1917,40 +1730,26 @@ var kontra = (function(kontra, undefined) {
    * @constructor
    *
    * @param {object} properties - Configure the sprite sheet.
-   * @param {string|Image} properties.image - Path to the image or Image object.
+   * @param {Image|Canvas} properties.image - Image for the sprite sheet.
    * @param {number} properties.frameWidth - Width (in px) of each frame.
    * @param {number} properties.frameHeight - Height (in px) of each frame.
    */
   function SpriteSheet(properties) {
     properties = properties || {};
 
-    var _this = this;
+    this.animations = {};
 
-    // load an image path
-    if (kontra.isString(properties.image)) {
-      this.image = new Image();
-      this.image.onload = calculateFrames;
-      this.image.src = properties.image;
-    }
-    // load an image object
-    else if (kontra.isImage(properties.image)) {
+    if (kontra.isImage(properties.image) || kontra.isCanvas(properties.image)) {
       this.image = properties.image;
-      calculateFrames();
+      this.frameWidth = properties.frameWidth;
+      this.frameHeight = properties.frameHeight;
+
+      this.framesPerRow = this.image.width / this.frameWidth | 0;
     }
     else {
       var error = new SyntaxError('Invalid image.');
-      kontra.logError(error, 'You must provide an Image or path to an image.');
+      kontra.logError(error, 'You must provide an Image for the SpriteSheet.');
       return;
-    }
-
-    /**
-     * Calculate the number of frames in a row.
-     */
-    function calculateFrames() {
-      _this.frameWidth = properties.frameWidth || _this.image.width;
-      _this.frameHeight = properties.frameHeight || _this.image.height;
-
-      _this.framesPerRow = Math.floor(_this.image.width / _this.frameWidth);
     }
   }
 
@@ -1963,7 +1762,8 @@ var kontra = (function(kontra, undefined) {
    * @param {number} animations.animationName.frameSpeed=1 - Number of frames to wait before transitioning the animation to the next frame.
    *
    * @example
-   * var animations = {
+   * var sheet = kontra.SpriteSheet(img, 16, 16);
+   * sheet.createAnimation({
    *   idle: {
    *     frames: 1  // single frame animation
    *   },
@@ -1983,8 +1783,7 @@ var kontra = (function(kontra, undefined) {
    *     frames: ['8..10', 13, '10..8'],  // you can also mix and match, in this case frames [8,9,10,13,10,9,8]
    *     frameSpeed: 2
    *   }
-   * };
-   * sheet.createAnimation(animations);
+   * });
    */
   SpriteSheet.prototype.createAnimation = function SpriteSheetCreateAnimation(animations) {
     var error;
@@ -1994,8 +1793,6 @@ var kontra = (function(kontra, undefined) {
       kontra.logError(error, 'You must provide at least one named animation to create an Animation.');
       return;
     }
-
-    this.animations = {};
 
     // create each animation by parsing the frames
     var animation;
@@ -2242,6 +2039,8 @@ var kontra = (function(kontra, undefined) {
  * Based on store.js {@see https://github.com/marcuswestin/store.js}
  */
 var kontra = (function(kontra, window, localStorage, undefined) {
+  'use strict';
+
   // check if the browser can use localStorage
   kontra.canUse = kontra.canUse || {};
   kontra.canUse.localStorage = 'localStorage' in window && window.localStorage !== null;
@@ -2312,30 +2111,33 @@ var kontra = (function(kontra, window, localStorage, undefined) {
 })(kontra || {}, window, window.localStorage);
 /*jshint -W084 */
 
-/**
- * @fileoverview A tile engine for rendering tilesets.
- */
 var kontra = (function(kontra, undefined) {
-  /*
-    want to handle:
-      - multiple images
-  */
+  'use strict';
 
   /**
+   * A tile engine for rendering tilesets. Works well with the tile engine program Tiled.
+   * @memberOf kontra
+   * @constructor
    *
+   * @param {object} properties - Configure the tile engine.
+   * @param {number} properties.tileWidth - Width of the tile.
+   * @param {number} properties.tileHeight - Height of the tile.
+   * @param {number} properties.width - Width of the map (in tiles).
+   * @param {number} properties.height - Height of the map (in tiles).
+   * @param {Context} [properties.context=kontra.context] - Provide a context for the tile engine to draw on.
    */
    kontra.TileEngine = function TileEngine(properties) {
     properties = properties || {};
 
     var _this = this;
-    var rendered = false;
 
     // since the tile engine can have more than one image, each image must be associated
     // with a unique set of tiles. This array will hold a reference to the tileset image
     // that each tile belongs to for quick access when drawing (i.e. O(1))
     var tileIndex = [undefined];  // index 0 is always an empty tile
 
-    this.tileIndex = tileIndex;
+    // draw order of layers (by name)
+    var layerOrder = [];
 
     // size of the tiles
     // most common tile size on opengameart.org seems to be 32x32, followed by 16x16
@@ -2355,7 +2157,7 @@ var kontra = (function(kontra, undefined) {
     offScreenCanvas.height = this.height * this.tileHeight;
 
     this.context = properties.context || kontra.context;
-    this.layers = [];
+    this.layers = {};
     this.images = [];
 
     /**
@@ -2363,18 +2165,21 @@ var kontra = (function(kontra, undefined) {
      * @memberOf kontra.TileEngine
      *
      * @param {object} properties - Properties of the image to add.
-     * @param {string|Image|Canvas} properties.image - Image to add.
+     * @param {string} properties.name - Name of the image.
+     * @param {string|Image|Canvas} properties.image - Path to the image or Image object.
      * @param {number} properties.firstTile - The first tile to start the image.
      */
     this.addImage = function TileEngineAddImage(properties) {
       properties = properties || {};
 
       if (kontra.isString(properties.image)) {
-        var img = new Image();
-        img.onload = function() {
-          associateImage.call(_this, {image: this, firstTile: properties.firstTile});
-        };
-        img.src = properties.image;
+        kontra.loadImage(properties.image, properties.name).then(
+          function loadImageSuccess(image) {
+            associateImage({image: image, firstTile: properties.firstTile});
+          }, function loadImageError(error) {
+            console.error(error);
+            return;
+        });
       }
       else if (kontra.isImage(properties.image) || kontra.isCanvas(properties.image)) {
         associateImage({image: properties.image, firstTile: properties.firstTile});
@@ -2382,67 +2187,100 @@ var kontra = (function(kontra, undefined) {
     };
 
     /**
-     * Associate an image with its tiles.
+     * Remove an image from the tile engine.
      * @memberOf kontra.TileEngine
      *
-     * @param {object} properties - Properties of the image to add.
-     * @param {string|Image|Canvas} properties.image - Image to add.
-     * @param {number} properties.firstTile - The first tile to start the image.
+     * @param {string} name - Name of the image to remove.
      */
-    function associateImage(properties) {
-      var image = properties.image;
-      var startTile = properties.firsTile || tileIndex.length;
+    this.removeImage = function TileEngineRemoveImage(name) {
+      var image = kontra.assets[name];
 
-      image.tileWidth = image.width / this.tileWidth;
-      image.tileHeight = image.height / this.tileHeight;
-      image.startTile = startTile;
-
-      this.images.push(image);
-
-      // associate the new image tiles with the image
-      for (var i = 0, len = image.tileWidth * image.tileHeight; i < len; i++) {
-        // objects are just pointers so storing an object is only storing a pointer of 4 bytes
-        // @see http://stackoverflow.com/questions/4740593/how-is-memory-handled-with-javascript-objects
-        tileIndex[startTile + i] = image;
+      // unassociate image from tiles
+      for (var i = image.firstTile, len = image.tileWidth * image.tileHeight; i <= len; i++) {
+        tileIndex[i] = null;
       }
-    }
+
+      for (var j = 0, img; img = this.images[j]; j++) {
+        if (image === img) {
+          this.images.splice(j, 1);
+        }
+      }
+    };
+
 
     /**
-     * Add a layer.
+     * Add a layer to the tile engine.
      * @memberOf kontra.TileEngine
      *
-     * @param {object} properties -
+     * @param {object} properties - Properties of the layer to add.
+     * @param {string} properties.name - Name of the layer.
      * @param {number[]} properties.data - Tile layer data.
      * @param {number} properties.index - Draw order for tile layer. Highest number is drawn last (i.e. on top of all other layers).
-     * @param {string} properties.name - Layer name.
      */
     this.addLayer = function TileEngineAddLayer(properties) {
       properties = properties || {};
 
-      this.layers.push({
-        name: properties.name,
+      this.layers[properties.name] = {
         data: properties.data,
         index: properties.index
+      };
+
+      layerOrder.push(properties.name);
+
+      layerOrder.sort(function(a, b) {
+        return _this.layers[a].index - _this.layers[b].index;
       });
 
-      // sort the layers by index
-      // default sort method is good enough for small lists
-      this.layers.sort(function(a, b) {
-        return a.index - b.index;
-      });
-
-      // pre-render the canvas when a new layer is added (i.e the only time the map
-      // should change)
-      preRenderImage.call(this);
+      preRenderImage();
     };
 
     /**
+     * Remove a layer from the tile engine.
+     * @memberOf kontra.TileEngine
      *
+     * @param {string} name - Name of the layer to remove.
+     */
+    this.removeLayer = function TileEngineRemoveLayer(name) {
+      this.layers[name] = null;
+    };
+
+    /**
+     * Draw the pre-rendered canvas.
      * @memberOf kontra.TileEngine
      */
     this.draw = function TileEngineDraw() {
       this.context.drawImage(offScreenCanvas, 0, 0);
     };
+
+    /**
+     * Associate an image with its tiles.
+     * @memberOf kontra.TileEngine
+     *
+     * @param {object} properties - Properties of the image to add.
+     * @param {Image|Canvas} properties.image - Image to add.
+     * @param {number} properties.firstTile - The first tile to start the image.
+     */
+    function associateImage(properties) {
+      var image = properties.image;
+      var firstTile = properties.firstTile || tileIndex.length;
+
+      image.tileWidth = image.width / _this.tileWidth;
+      image.tileHeight = image.height / _this.tileHeight;
+      image.firstTile = firstTile;
+
+      _this.images.push(image);
+
+      // associate the new image tiles with the image
+      for (var i = 0, len = image.tileWidth * image.tileHeight; i < len; i++) {
+        // objects are just pointers so storing an object is only storing a pointer of 4 bytes,
+        // which is the same as storing a number
+        // @see http://stackoverflow.com/questions/4740593/how-is-memory-handled-with-javascript-objects
+        // @see http://stackoverflow.com/questions/16888036/javascript-how-to-reduce-the-memory-size-of-a-number
+        tileIndex[firstTile + i] = image;
+      }
+
+      preRenderImage();
+    }
 
     /**
      * Pre-render the tiles to make drawing fast.
@@ -2451,102 +2289,31 @@ var kontra = (function(kontra, undefined) {
       var tile, image, x, y, sx, sy;
 
       // draw each layer in order
-      for (var i = 0, layer; layer = this.layers[i]; i++) {
+      for (var i = 0, layer; layer = _this.layers[layerOrder[i]]; i++) {
         for (var j = 0, len = layer.data.length; j < len; j++) {
           tile = layer.data[j];
 
-          // skip empty tiles (0)
-          if (!tile) {
+          // skip empty tiles (0) and skip images that haven't been loaded yet as
+          // they'll pre-render when they are done loading
+          if (!tile || !tileIndex[tile]) {
             continue;
           }
 
           image = tileIndex[tile];
 
-          x = (j % this.width) * this.tileWidth;
-          y = (j / this.width | 0) * this.tileHeight;
+          x = (j % _this.width) * _this.tileWidth;
+          y = (j / _this.width | 0) * _this.tileHeight;
 
-          var tileOffset = tile - image.startTile;
+          var tileOffset = tile - image.firstTile;
 
-          sx = (tileOffset % image.tileWidth) * this.tileWidth;
-          sy = (tileOffset / image.tileWidth | 0) * this.tileHeight;
+          sx = (tileOffset % image.tileWidth) * _this.tileWidth;
+          sy = (tileOffset / image.tileWidth | 0) * _this.tileHeight;
 
-          offScreenContext.drawImage(image, sx, sy, this.tileWidth, this.tileHeight, x, y, this.tileWidth, this.tileHeight);
+          offScreenContext.drawImage(image, sx, sy, _this.tileWidth, _this.tileHeight, x, y, _this.tileWidth, _this.tileHeight);
         }
       }
-
-      rendered = true;
     }
   };
 
   return kontra;
 })(kontra || {});
-var kontra = (function(kontra, Math) {
-  kontra.Vector = Vector;
-
-  /**
-   * A vector for 2d space.
-   * @memberOf kontra
-   * @constructor
-   *
-   * @param {number} x=0 - Center x coordinate.
-   * @param {number} y=0 - Center y coordinate.
-   */
-  function Vector(x, y) {
-    this.set(x, y);
-  }
-
-  /**
-   * Set the vector's x and y position.
-   * @memberOf kontra.Vector
-   *
-   * @param {number} x - Center x coordinate.
-   * @param {number} y - Center y coordinate.
-   */
-  Vector.prototype.set = function VecotrSet(x, y) {
-    this.x = x || 0;
-    this.y = y || 0;
-  };
-
-  /**
-   * Add a vector to this vector.
-   * @memberOf kontra.Vector
-   *
-   * @param {Vector} vector - Vector to add.
-   */
-  Vector.prototype.add = function VectorAdd(vector) {
-    this.x += vector.x;
-    this.y += vector.y;
-  };
-
-  /**
-   * Get the length of the vector.
-   * @memberOf kontra.Vector
-   *
-   * @returns {number}
-   */
-  Vector.prototype.length = function VecotrLength() {
-    return Math.sqrt(this.x * this.x + this.y * this.y);
-  };
-
-  /**
-   * Get the angle of the vector.
-   * @memberOf kontra.Vector
-   *
-   * @returns {number}
-   */
-  Vector.prototype.angle = function VectorAnagle() {
-    return Math.atan2(this.y, this.x);
-  };
-
-  /**
-   * Get a new vector from an angle and magnitude
-   * @memberOf kontra.Vector
-   *
-   * @returns {Vector}
-   */
-  Vector.prototype.fromAngle = function VectorFromAngle(angle, magnitude) {
-    return new Vector(magnitude * Math.cos(angle), magnitude * Math.sin(angle));
-  };
-
-  return kontra;
-})(kontra || {}, Math);

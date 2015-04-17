@@ -1,29 +1,32 @@
 /*jshint -W084 */
 
-/**
- * @fileoverview A tile engine for rendering tilesets.
- */
 var kontra = (function(kontra, undefined) {
-  /*
-    want to handle:
-      - multiple images
-  */
+  'use strict';
 
   /**
+   * A tile engine for rendering tilesets. Works well with the tile engine program Tiled.
+   * @memberOf kontra
+   * @constructor
    *
+   * @param {object} properties - Configure the tile engine.
+   * @param {number} properties.tileWidth - Width of the tile.
+   * @param {number} properties.tileHeight - Height of the tile.
+   * @param {number} properties.width - Width of the map (in tiles).
+   * @param {number} properties.height - Height of the map (in tiles).
+   * @param {Context} [properties.context=kontra.context] - Provide a context for the tile engine to draw on.
    */
    kontra.TileEngine = function TileEngine(properties) {
     properties = properties || {};
 
     var _this = this;
-    var rendered = false;
 
     // since the tile engine can have more than one image, each image must be associated
     // with a unique set of tiles. This array will hold a reference to the tileset image
     // that each tile belongs to for quick access when drawing (i.e. O(1))
     var tileIndex = [undefined];  // index 0 is always an empty tile
 
-    this.tileIndex = tileIndex;
+    // draw order of layers (by name)
+    var layerOrder = [];
 
     // size of the tiles
     // most common tile size on opengameart.org seems to be 32x32, followed by 16x16
@@ -43,7 +46,7 @@ var kontra = (function(kontra, undefined) {
     offScreenCanvas.height = this.height * this.tileHeight;
 
     this.context = properties.context || kontra.context;
-    this.layers = [];
+    this.layers = {};
     this.images = [];
 
     /**
@@ -51,18 +54,21 @@ var kontra = (function(kontra, undefined) {
      * @memberOf kontra.TileEngine
      *
      * @param {object} properties - Properties of the image to add.
-     * @param {string|Image|Canvas} properties.image - Image to add.
+     * @param {string} properties.name - Name of the image.
+     * @param {string|Image|Canvas} properties.image - Path to the image or Image object.
      * @param {number} properties.firstTile - The first tile to start the image.
      */
     this.addImage = function TileEngineAddImage(properties) {
       properties = properties || {};
 
       if (kontra.isString(properties.image)) {
-        var img = new Image();
-        img.onload = function() {
-          associateImage.call(_this, {image: this, firstTile: properties.firstTile});
-        };
-        img.src = properties.image;
+        kontra.loadImage(properties.image, properties.name).then(
+          function loadImageSuccess(image) {
+            associateImage({image: image, firstTile: properties.firstTile});
+          }, function loadImageError(error) {
+            console.error(error);
+            return;
+        });
       }
       else if (kontra.isImage(properties.image) || kontra.isCanvas(properties.image)) {
         associateImage({image: properties.image, firstTile: properties.firstTile});
@@ -70,67 +76,100 @@ var kontra = (function(kontra, undefined) {
     };
 
     /**
-     * Associate an image with its tiles.
+     * Remove an image from the tile engine.
      * @memberOf kontra.TileEngine
      *
-     * @param {object} properties - Properties of the image to add.
-     * @param {string|Image|Canvas} properties.image - Image to add.
-     * @param {number} properties.firstTile - The first tile to start the image.
+     * @param {string} name - Name of the image to remove.
      */
-    function associateImage(properties) {
-      var image = properties.image;
-      var startTile = properties.firsTile || tileIndex.length;
+    this.removeImage = function TileEngineRemoveImage(name) {
+      var image = kontra.assets[name];
 
-      image.tileWidth = image.width / this.tileWidth;
-      image.tileHeight = image.height / this.tileHeight;
-      image.startTile = startTile;
-
-      this.images.push(image);
-
-      // associate the new image tiles with the image
-      for (var i = 0, len = image.tileWidth * image.tileHeight; i < len; i++) {
-        // objects are just pointers so storing an object is only storing a pointer of 4 bytes
-        // @see http://stackoverflow.com/questions/4740593/how-is-memory-handled-with-javascript-objects
-        tileIndex[startTile + i] = image;
+      // unassociate image from tiles
+      for (var i = image.firstTile, len = image.tileWidth * image.tileHeight; i <= len; i++) {
+        tileIndex[i] = null;
       }
-    }
+
+      for (var j = 0, img; img = this.images[j]; j++) {
+        if (image === img) {
+          this.images.splice(j, 1);
+        }
+      }
+    };
+
 
     /**
-     * Add a layer.
+     * Add a layer to the tile engine.
      * @memberOf kontra.TileEngine
      *
-     * @param {object} properties -
+     * @param {object} properties - Properties of the layer to add.
+     * @param {string} properties.name - Name of the layer.
      * @param {number[]} properties.data - Tile layer data.
      * @param {number} properties.index - Draw order for tile layer. Highest number is drawn last (i.e. on top of all other layers).
-     * @param {string} properties.name - Layer name.
      */
     this.addLayer = function TileEngineAddLayer(properties) {
       properties = properties || {};
 
-      this.layers.push({
-        name: properties.name,
+      this.layers[properties.name] = {
         data: properties.data,
         index: properties.index
+      };
+
+      layerOrder.push(properties.name);
+
+      layerOrder.sort(function(a, b) {
+        return _this.layers[a].index - _this.layers[b].index;
       });
 
-      // sort the layers by index
-      // default sort method is good enough for small lists
-      this.layers.sort(function(a, b) {
-        return a.index - b.index;
-      });
-
-      // pre-render the canvas when a new layer is added (i.e the only time the map
-      // should change)
-      preRenderImage.call(this);
+      preRenderImage();
     };
 
     /**
+     * Remove a layer from the tile engine.
+     * @memberOf kontra.TileEngine
      *
+     * @param {string} name - Name of the layer to remove.
+     */
+    this.removeLayer = function TileEngineRemoveLayer(name) {
+      this.layers[name] = null;
+    };
+
+    /**
+     * Draw the pre-rendered canvas.
      * @memberOf kontra.TileEngine
      */
     this.draw = function TileEngineDraw() {
       this.context.drawImage(offScreenCanvas, 0, 0);
     };
+
+    /**
+     * Associate an image with its tiles.
+     * @memberOf kontra.TileEngine
+     *
+     * @param {object} properties - Properties of the image to add.
+     * @param {Image|Canvas} properties.image - Image to add.
+     * @param {number} properties.firstTile - The first tile to start the image.
+     */
+    function associateImage(properties) {
+      var image = properties.image;
+      var firstTile = properties.firstTile || tileIndex.length;
+
+      image.tileWidth = image.width / _this.tileWidth;
+      image.tileHeight = image.height / _this.tileHeight;
+      image.firstTile = firstTile;
+
+      _this.images.push(image);
+
+      // associate the new image tiles with the image
+      for (var i = 0, len = image.tileWidth * image.tileHeight; i < len; i++) {
+        // objects are just pointers so storing an object is only storing a pointer of 4 bytes,
+        // which is the same as storing a number
+        // @see http://stackoverflow.com/questions/4740593/how-is-memory-handled-with-javascript-objects
+        // @see http://stackoverflow.com/questions/16888036/javascript-how-to-reduce-the-memory-size-of-a-number
+        tileIndex[firstTile + i] = image;
+      }
+
+      preRenderImage();
+    }
 
     /**
      * Pre-render the tiles to make drawing fast.
@@ -139,30 +178,29 @@ var kontra = (function(kontra, undefined) {
       var tile, image, x, y, sx, sy;
 
       // draw each layer in order
-      for (var i = 0, layer; layer = this.layers[i]; i++) {
+      for (var i = 0, layer; layer = _this.layers[layerOrder[i]]; i++) {
         for (var j = 0, len = layer.data.length; j < len; j++) {
           tile = layer.data[j];
 
-          // skip empty tiles (0)
-          if (!tile) {
+          // skip empty tiles (0) and skip images that haven't been loaded yet as
+          // they'll pre-render when they are done loading
+          if (!tile || !tileIndex[tile]) {
             continue;
           }
 
           image = tileIndex[tile];
 
-          x = (j % this.width) * this.tileWidth;
-          y = (j / this.width | 0) * this.tileHeight;
+          x = (j % _this.width) * _this.tileWidth;
+          y = (j / _this.width | 0) * _this.tileHeight;
 
-          var tileOffset = tile - image.startTile;
+          var tileOffset = tile - image.firstTile;
 
-          sx = (tileOffset % image.tileWidth) * this.tileWidth;
-          sy = (tileOffset / image.tileWidth | 0) * this.tileHeight;
+          sx = (tileOffset % image.tileWidth) * _this.tileWidth;
+          sy = (tileOffset / image.tileWidth | 0) * _this.tileHeight;
 
-          offScreenContext.drawImage(image, sx, sy, this.tileWidth, this.tileHeight, x, y, this.tileWidth, this.tileHeight);
+          offScreenContext.drawImage(image, sx, sy, _this.tileWidth, _this.tileHeight, x, y, _this.tileWidth, _this.tileHeight);
         }
       }
-
-      rendered = true;
     }
   };
 

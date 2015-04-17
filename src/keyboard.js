@@ -1,6 +1,8 @@
 /*jshint -W084 */
 
 var kontra = (function(kontra, window) {
+  'use strict';
+
   var callbacks = {};
   var pressedKeys = {};
 
@@ -51,11 +53,11 @@ var kontra = (function(kontra, window) {
   };
 
   // alpha keys
-  for (i = 0; i < 26; i++) {
+  for (var i = 0; i < 26; i++) {
     keyMap[65+i] = String.fromCharCode(65+i).toLowerCase();
   }
   // numeric keys
-  for (var i = 0; i < 10; i++) {
+  for (i = 0; i < 10; i++) {
     keyMap[48+i] = ''+i;
   }
   // f keys

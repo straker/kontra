@@ -1,5 +1,77 @@
-var kontra = (function(kontra, undefined) {
+var kontra = (function(kontra, Math, undefined) {
+  'use strict';
+
+  kontra.Vector = Vector;
   kontra.Sprite = Sprite;
+
+  /**
+   * A vector for 2d space.
+   * @memberOf kontra
+   * @constructor
+   *
+   * @param {number} x=0 - Center x coordinate.
+   * @param {number} y=0 - Center y coordinate.
+   */
+  function Vector(x, y) {
+    this.set(x, y);
+  }
+
+  /**
+   * Set the vector's x and y position.
+   * @memberOf kontra.Vector
+   *
+   * @param {number} x - Center x coordinate.
+   * @param {number} y - Center y coordinate.
+   */
+  Vector.prototype.set = function VecotrSet(x, y) {
+    this.x = x || 0;
+    this.y = y || 0;
+  };
+
+  /**
+   * Add a vector to this vector.
+   * @memberOf kontra.Vector
+   *
+   * @param {Vector} vector - Vector to add.
+   */
+  Vector.prototype.add = function VectorAdd(vector) {
+    this.x += vector.x;
+    this.y += vector.y;
+  };
+
+  /**
+   * Get the length of the vector.
+   * @memberOf kontra.Vector
+   *
+   * @returns {number}
+   */
+  Vector.prototype.length = function VecotrLength() {
+    return Math.sqrt(this.x * this.x + this.y * this.y);
+  };
+
+  /**
+   * Get the angle of the vector.
+   * @memberOf kontra.Vector
+   *
+   * @returns {number}
+   */
+  Vector.prototype.angle = function VectorAnagle() {
+    return Math.atan2(this.y, this.x);
+  };
+
+  /**
+   * Get a new vector from an angle and magnitude
+   * @memberOf kontra.Vector
+   *
+   * @returns {Vector}
+   */
+  Vector.prototype.fromAngle = function VectorFromAngle(angle, magnitude) {
+    return new Vector(magnitude * Math.cos(angle), magnitude * Math.sin(angle));
+  };
+
+
+
+
 
   /**
    * A sprite with a position, velocity, and acceleration.
@@ -10,12 +82,6 @@ var kontra = (function(kontra, undefined) {
    * @param @see this.set for list of available parameters.
    */
   function Sprite(properties) {
-    if (!kontra.Vector) {
-      var error = new ReferenceError('Vector() not found.');
-      kontra.logError(error, 'Kontra.Sprite requires kontra.Vector.');
-      return;
-    }
-
     this.position = new kontra.Vector();
     this.velocity = new kontra.Vector();
     this.acceleration = new kontra.Vector();
@@ -30,11 +96,12 @@ var kontra = (function(kontra, undefined) {
   /**
    * Move the sprite by its velocity.
    * @memberOf kontra.Sprite
+   *
+   * @param {number} dt - Time since last update.
    */
-  Sprite.prototype.advance = function SpriteAdvance() {
-    this.velocity.add(this.acceleration);
-
-    this.position.add(this.velocity);
+  Sprite.prototype.advance = function SpriteAdvance(dt) {
+    this.velocity.add(this.acceleration * dt);
+    this.position.add(this.velocity * dt);
 
     this.timeToLive--;
   };
@@ -43,10 +110,8 @@ var kontra = (function(kontra, undefined) {
    * Draw the sprite.
    * @memberOf kontra.Sprite
    */
-  Sprite.prototype.render = function SpriteRender() {
-    this.context.save();
+  Sprite.prototype.draw = function SpriteRender() {
     this.context.drawImage(this.image, this.position.x, this.position.y);
-    this.context.restore();
   };
 
   /**
@@ -64,15 +129,17 @@ var kontra = (function(kontra, undefined) {
    * @memberOf kontra.Sprite
    *
    * @param {object} properties - Properties to set on the sprite.
-   * @param {Vector} properties.x - X coordinate of the sprite.
-   * @param {Vector} properties.y - Y coordinate of the sprite.
-   * @param {Vector} [properties.dx] - Change in X position.
-   * @param {Vector} [properties.dy] - Change in Y position.
-   * @param {Vector} [properties.ddx] - Change in X velocity.
-   * @param {Vector} [properties.ddy] - Change in Y velocity.
+   * @param {number} properties.x - X coordinate of the sprite.
+   * @param {number} properties.y - Y coordinate of the sprite.
+   * @param {number} [properties.dx] - Change in X position.
+   * @param {number} [properties.dy] - Change in Y position.
+   * @param {number} [properties.ddx] - Change in X velocity.
+   * @param {number} [properties.ddy] - Change in Y velocity.
    * @param {number} [properties.timeToLive=0] - How may frames the sprite should be alive.
-   * @param {string|Image|Canvas} [properties.image] - Image for the sprite.
+   * @param {Image|Canvas} [properties.image] - Image for the sprite.
    * @param {Context} [properties.context=kontra.context] - Provide a context for the sprite to draw on.
+   * @param {function} [properties.update] - Function to use to update the sprite.
+   * @param {function} [properties.render] - Function to use to render the sprite.
    *
    * If you need the sprite to live forever, or just need it to stay on screen until you
    * decide when to kill it, you can set time to live to <code>Infinity</code>. Just be
@@ -81,10 +148,8 @@ var kontra = (function(kontra, undefined) {
    *
    * @returns {Sprite}
    */
-  Sprite.prototype.set = function SpriteSpawn(properties) {
+  Sprite.prototype.set = function SpriteSet(properties) {
     properties = properties || {};
-
-    var _this = this;
 
     this.position.set(properties.x, properties.y);
     this.velocity.set(properties.dx, properties.dy);
@@ -93,16 +158,7 @@ var kontra = (function(kontra, undefined) {
 
     this.context = properties.context || this.context;
 
-    // load an image
-    if (kontra.isString(properties.image)) {
-      this.image = new Image();
-      this.image.onload = function() {
-        _this.width = this.width;
-        _this.height = this.height;
-      };
-      this.image.src = properties.image;
-    }
-    else if (kontra.isImage(properties.image) || kontra.isCanvas(properties.image)) {
+    if (kontra.isImage(properties.image) || kontra.isCanvas(properties.image)) {
       this.image = properties.image;
       this.width = this.image.width;
       this.height = this.image.height;
@@ -113,7 +169,13 @@ var kontra = (function(kontra, undefined) {
       this.render = kontra.noop;
     }
 
-    return this;
+    if (properties.update) {
+      this.update = properties.update;
+    }
+
+    if (properties.render) {
+      this.render = properties.render;
+    }
   };
 
   /**
@@ -121,54 +183,50 @@ var kontra = (function(kontra, undefined) {
    * @memberOf kontra.Sprite
    * @abstract
    *
+   * @param {number} dt - Time since last update.
+   *
    * This function can be overridden on a per sprite basis if more functionality
    * is needed in the update step. Just call <code>this.advance()</code> when you need
    * the sprite to update its position.
    *
    * @example
-   * sprite = new Sprite();
-   * sprite.update = function() {
-   *   // do some logic
+   * sprite = new kontra.Sprite({
+   *   update: function update(dt) {
+   *     // do some logic
    *
-   *   this.advance();
-   *
-   *   return this;
-   * };
+   *     this.advance(dt);
+   *   }
+   * });
    *
    * @returns {Sprite}
    */
-  Sprite.prototype.update = function SpriteUpdate() {
-    this.advance();
-
-    return this;
+  Sprite.prototype.update = function SpriteUpdate(dt) {
+    this.advance(dt);
   };
 
   /**
-   * Draw the sprite.
+   * Render the sprite.
    * @memberOf kontra.Sprite.
    * @abstract
    *
    * This function can be overridden on a per sprite basis if more functionality
-   * is needed in the draw step. Just call <code>this.render()</code> when you need the
+   * is needed in the render step. Just call <code>this.draw()</code> when you need the
    * sprite to draw its image.
    *
    * @example
-   * sprite = new Sprite();
-   * sprite.draw = function() {
-   *   // do some logic
+   * sprite = new kontra.Sprite({
+   *   render: function render() {
+   *     // do some logic
    *
-   *   this.render();
-   *
-   *   return this;
-   * };
+   *     this.draw();
+   *   }
+   * });
    *
    * @returns {Sprite}
    */
-  Sprite.prototype.draw = function SpriteDraw() {
+  Sprite.prototype.render = function SpriteDraw() {
     this.render();
-
-    return this;
   };
 
   return kontra;
-})(kontra || {});
+})(kontra || {}, Math);

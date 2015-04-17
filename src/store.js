@@ -10,6 +10,8 @@
  * Based on store.js {@see https://github.com/marcuswestin/store.js}
  */
 var kontra = (function(kontra, window, localStorage, undefined) {
+  'use strict';
+
   // check if the browser can use localStorage
   kontra.canUse = kontra.canUse || {};
   kontra.canUse.localStorage = 'localStorage' in window && window.localStorage !== null;

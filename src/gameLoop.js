@@ -1,22 +1,23 @@
 var kontra = (function(kontra, window, document) {
+  'use strict';
+
   /**
-   * Game loop that updates and draws the game every frame.
+   * Game loop that updates and renders the game every frame.
    * @memberOf kontra
    * @constructor
    *
    * @param {object}   properties - Configure the game loop.
    * @param {number}   [properties.fps=60] - Desired frame rate.
-   * @param {number}   [properties.slowFactor=1] - How much to slow down the frame rate.
    * @param {function} properties.update - Function called to update the game.
-   * @param {function} properties.draw - Function called to draw the game.
+   * @param {function} properties.render - Function called to render the game.
    */
   kontra.GameLoop = function GameLoop(properties) {
     properties = properties || {};
 
     // check for required functions
-    if (typeof properties.update !== 'function' || typeof properties.draw !== 'function') {
+    if (typeof properties.update !== 'function' || typeof properties.render !== 'function') {
       var error = new ReferenceError('Required functions not found');
-      kontra.logError(error, 'You must provide update() and draw() functions to create a game loop.');
+      kontra.logError(error, 'You must provide update() and render() functions to create a game loop.');
       return;
     }
 
@@ -24,17 +25,14 @@ var kontra = (function(kontra, window, document) {
     var fps = properties.fps || 60;
     var last = 0;
     var accumulator = 0;
-    var step = 1E3 / fps;
-    var slowFactor = properties.slowFactor || 1;
-    var delta = slowFactor * step;
-
-    var update = properties.update;
-    var draw = properties.draw;
-    var started = false;
-    var _this = this;
+    var delta = 1E3 / fps;
     var now;
     var dt;
     var rAF;
+
+    var update = properties.update;
+    var render = properties.render;
+    var _this = this;
 
     document.addEventListener( 'visibilitychange', onVisibilityChange, false);
 
@@ -43,7 +41,6 @@ var kontra = (function(kontra, window, document) {
      * @memberOf kontra.GameLoop
      */
     this.start = function GameLoopStart() {
-      started = true;
       last = 0;
       requestAnimationFrame(this.frame);
     };
@@ -55,80 +52,61 @@ var kontra = (function(kontra, window, document) {
     this.frame = function GameLoopFrame() {
       rAF = requestAnimationFrame(_this.frame);
 
-      stats.begin();
-
       now = timestamp();
+
+      // on the first call last will be 0, so we need to offset this by making dt=0 so
+      // that the first update isn't a very large value.
       dt = now - (last || now);
       last = now;
 
       accumulator += dt;
 
       while (accumulator >= delta) {
-        update();
+        update(delta);
 
         accumulator -= delta;
       }
 
-      draw();
-
-      stats.end();
+      render();
     };
 
     /**
      * Stop the game loop.
-     * @memberOf kontra.GameLoop
      */
-    this.stop = function GameLoopStop() {
-      started = false;
+    this.stop = function GameLoopPause() {
       cancelAnimationFrame(rAF);
     };
 
     /**
-     * Pause the game loop. This is different than stopping so that on visibility
-     * change, we don't just resume the game if it was stopped before.
-     * @memberOf kontra.GameLoop
-     */
-    this.pause = function GameLoopPause() {
-      cancelAnimationFrame(rAF);
-    };
-
-    /**
-     * Stop the game when the window isn't visible.
+     * Reset last to 0 when regaining screen focus, otherwise we end up with a very large
+     * dt value on the return.
      * @memberOf kontra.GameLoop
      * @private
      */
     function onVisibilityChange() {
-      if (document.hidden) {
-        _this.pause();
-      }
-      else if (started) {
-        _this.start();
+      if (!document.hidden) {
+        last = 0;
       }
     }
   };
 
   /**
-   * Returns the current time.
+   * Returns the current time. Uses the User Timing API if it's available or defaults to
+   * using Date().getTime()
    * @private
    *
    * @returns {number}
    */
   var timestamp = (function() {
-    // function to call if window.performance.now is available
-    function timestampPerformance() {
-      return window.performance.now();
-    }
-
-    // default function to call
-    function timestampDate() {
-      return new Date().getTime();
-    }
-
     if (window.performance && window.performance.now) {
-      return timestampPerformance;
+      return function timestampPerformance() {
+        return window.performance.now();
+      };
     }
     else {
-      return timestampDate;
+      return function timestampDate() {
+        return new Date().getTime();
+      };
     }
   })();
 

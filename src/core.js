@@ -1,10 +1,14 @@
+/* global console */
+
 var kontra = (function(kontra, document) {
+  'use strict';
+
   /**
    * Set up the canvas.
    * @memberOf kontra
    *
    * @param {object} properties - Properties for the game.
-   * @param {string|Canvas} properties.canvas - ID string or Canvas element to draw the game on.
+   * @param {string|Canvas} properties.canvas - Main canvas ID or Element for the game.
    */
   kontra.init = function init(properties) {
     properties = properties || {};
@@ -13,7 +17,7 @@ var kontra = (function(kontra, document) {
       this.canvas = document.getElementById(properties.canvas);
     }
     else if (kontra.isCanvas(properties.canvas)) {
-      this.canvas = canvas;
+      this.canvas = properties.canvas;
     }
     else {
       this.canvas = document.getElementsByTagName('canvas')[0];
@@ -31,7 +35,7 @@ var kontra = (function(kontra, document) {
   };
 
   /**
-   * Throw an error message to the user with readability formating.
+   * Throw an error message to the user with readable formating.
    * @memberOf kontra
    *
    * @param {Error}  error - Error object.

@@ -1,6 +1,8 @@
 /*jshint -W084 */
 
 var kontra = (function(kontra) {
+  'use strict';
+
   kontra.Pool = Pool;
 
   /**
@@ -12,7 +14,7 @@ var kontra = (function(kontra) {
    * @param {number} properties.size - Size of the pool.
    * @param {object} properties.Object - Object to put in the pool.
    *
-   * Objects inside the pool must implement <code>draw()</code>, <code>update()</code>,
+   * Objects inside the pool must implement <code>render()</code>, <code>update()</code>,
    * <code>set()</code>, and <code>isAlive()</code> functions.
    */
   function Pool(properties) {
@@ -20,10 +22,10 @@ var kontra = (function(kontra) {
 
     // ensure objects for the pool have required functions
     var obj = new properties.Object();
-    if (typeof obj.draw !== 'function' || typeof obj.update !== 'function' ||
+    if (typeof obj.render !== 'function' || typeof obj.update !== 'function' ||
         typeof obj.set !== 'function' || typeof obj.isAlive !== 'function') {
       var error = new ReferenceError('Required function not found.');
-      kontra.logError(error, 'Objects to be pooled must implement draw(), update(), set() and isAlive() functions.');
+      kontra.logError(error, 'Objects to be pooled must implement render(), update(), set() and isAlive() functions.');
       return;
     }
 
@@ -60,7 +62,8 @@ var kontra = (function(kontra) {
       this.objects[i-1] = this.objects[i];
     }
 
-    this.objects[this.lastIndex] = obj.set(properties);
+    obj.set(properties);
+    this.objects[this.lastIndex] = obj;
 
     return true;
   };
@@ -102,10 +105,10 @@ var kontra = (function(kontra) {
   };
 
   /**
-   * Draw all alive pool objects.
+   * render all alive pool objects.
    * @memberOf kontra.Pool
    */
-  Pool.prototype.draw = function() {
+  Pool.prototype.render = function() {
     for (var i = this.lastIndex, obj; obj = this.objects[i]; i--) {
 
       // once we find the first object that is not alive we can stop
@@ -113,7 +116,7 @@ var kontra = (function(kontra) {
         return;
       }
 
-      obj.draw();
+      obj.render();
     }
   };
 

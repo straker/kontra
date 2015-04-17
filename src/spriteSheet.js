@@ -1,6 +1,8 @@
 /*jshint -W084 */
 
 var kontra = (function(kontra, undefined) {
+  'use strict';
+
   kontra.SpriteSheet = SpriteSheet;
 
   /**
@@ -9,40 +11,26 @@ var kontra = (function(kontra, undefined) {
    * @constructor
    *
    * @param {object} properties - Configure the sprite sheet.
-   * @param {string|Image} properties.image - Path to the image or Image object.
+   * @param {Image|Canvas} properties.image - Image for the sprite sheet.
    * @param {number} properties.frameWidth - Width (in px) of each frame.
    * @param {number} properties.frameHeight - Height (in px) of each frame.
    */
   function SpriteSheet(properties) {
     properties = properties || {};
 
-    var _this = this;
+    this.animations = {};
 
-    // load an image path
-    if (kontra.isString(properties.image)) {
-      this.image = new Image();
-      this.image.onload = calculateFrames;
-      this.image.src = properties.image;
-    }
-    // load an image object
-    else if (kontra.isImage(properties.image)) {
+    if (kontra.isImage(properties.image) || kontra.isCanvas(properties.image)) {
       this.image = properties.image;
-      calculateFrames();
+      this.frameWidth = properties.frameWidth;
+      this.frameHeight = properties.frameHeight;
+
+      this.framesPerRow = this.image.width / this.frameWidth | 0;
     }
     else {
       var error = new SyntaxError('Invalid image.');
-      kontra.logError(error, 'You must provide an Image or path to an image.');
+      kontra.logError(error, 'You must provide an Image for the SpriteSheet.');
       return;
-    }
-
-    /**
-     * Calculate the number of frames in a row.
-     */
-    function calculateFrames() {
-      _this.frameWidth = properties.frameWidth || _this.image.width;
-      _this.frameHeight = properties.frameHeight || _this.image.height;
-
-      _this.framesPerRow = Math.floor(_this.image.width / _this.frameWidth);
     }
   }
 
@@ -55,7 +43,8 @@ var kontra = (function(kontra, undefined) {
    * @param {number} animations.animationName.frameSpeed=1 - Number of frames to wait before transitioning the animation to the next frame.
    *
    * @example
-   * var animations = {
+   * var sheet = kontra.SpriteSheet(img, 16, 16);
+   * sheet.createAnimation({
    *   idle: {
    *     frames: 1  // single frame animation
    *   },
@@ -75,8 +64,7 @@ var kontra = (function(kontra, undefined) {
    *     frames: ['8..10', 13, '10..8'],  // you can also mix and match, in this case frames [8,9,10,13,10,9,8]
    *     frameSpeed: 2
    *   }
-   * };
-   * sheet.createAnimation(animations);
+   * });
    */
   SpriteSheet.prototype.createAnimation = function SpriteSheetCreateAnimation(animations) {
     var error;
@@ -86,8 +74,6 @@ var kontra = (function(kontra, undefined) {
       kontra.logError(error, 'You must provide at least one named animation to create an Animation.');
       return;
     }
-
-    this.animations = {};
 
     // create each animation by parsing the frames
     var animation;

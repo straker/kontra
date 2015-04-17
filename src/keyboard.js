@@ -231,7 +231,7 @@ var kontra = (function(kontra, window) {
     var combination = [];
 
     // check for modifiers
-    for (var i = 0, modifiers; modifier = modifierOrder[i]; i++) {
+    for (var i = 0, modifier; modifier = modifierOrder[i]; i++) {
       if (e[modifier+'Key']) {
         combination.push(modifier);
       }

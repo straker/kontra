@@ -29,7 +29,7 @@ var kontra = (function(kontra, window, document) {
    * Game loop that updates and renders the game every frame.
    * @memberOf kontra
    *
-   * @see kontra.gameLoop._prot.set for list of params
+   * @see kontra.gameLoop._proto.set for list of params
    */
   kontra.gameLoop = function(properties) {
     var gameLoop = Object.create(kontra.gameLoop._proto);
@@ -62,8 +62,8 @@ var kontra = (function(kontra, window, document) {
       this._accumulator = 0;
       this._delta = 1E3 / (properties.fps || 60);
 
-      this._update = properties.update;
-      this._render = properties.render;
+      this.update = properties.update;
+      this.render = properties.render;
     },
 
     /**
@@ -80,27 +80,29 @@ var kontra = (function(kontra, window, document) {
      * @memberOf kontra.gameLoop
      */
     frame: function() {
-      this._rAF = requestAnimationFrame(this.frame.bind(this));
+      var _this = this;
 
-      this._now = kontra.timestamp();
-      this._dt = this._now - this._last;
-      this._last = this._now;
+      _this._rAF = requestAnimationFrame(_this.frame.bind(_this));
 
-      // this prevents updating the game with a very large dt if the game were to
+      _this._now = kontra.timestamp();
+      _this._dt = _this._now - _this._last;
+      _this._last = _this._now;
+
+      // _this prevents updating the game with a very large dt if the game were to
       // lose focus and then regain focus later
-      if (this._dt > 1E3) {
+      if (_this._dt > 1E3) {
         return;
       }
 
-      this._accumulator += this._dt;
+      _this._accumulator += _this._dt;
 
-      while (this._accumulator >= this._delta) {
-        this._update(this._delta);
+      while (_this._accumulator >= _this._delta) {
+        _this.update(_this._delta / 1E3);
 
-        this._accumulator -= this._delta;
+        _this._accumulator -= _this._delta;
       }
 
-      this._render();
+      _this.render();
     },
 
     /**

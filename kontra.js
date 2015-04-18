@@ -866,8 +866,10 @@ var kontra = (function(kontra, document) {
     }
 
     this.context = this.canvas.getContext('2d');
-    this.gameWidth = this.canvas.width;
-    this.gameHeight = this.canvas.height;
+    this.game = {
+      width: this.canvas.width,
+      height: this.canvas.height
+    };
   };
 
   /**
@@ -878,9 +880,7 @@ var kontra = (function(kontra, document) {
    * @param {string} message - Error message.
    */
   kontra.logError = function logError(error, message) {
-    error.originalMessage = error.message;
-    error.message = 'Kontra: ' + message + '\n\t' + error.stack;
-    console.error(error.message);
+    console.error('Kontra: ' + message + '\n\t' + error.stack);
   };
 
   /**
@@ -980,7 +980,7 @@ var kontra = (function(kontra, window, document) {
    * Game loop that updates and renders the game every frame.
    * @memberOf kontra
    *
-   * @see kontra.gameLoop._prot.set for list of params
+   * @see kontra.gameLoop._proto.set for list of params
    */
   kontra.gameLoop = function(properties) {
     var gameLoop = Object.create(kontra.gameLoop._proto);
@@ -1013,8 +1013,8 @@ var kontra = (function(kontra, window, document) {
       this._accumulator = 0;
       this._delta = 1E3 / (properties.fps || 60);
 
-      this._update = properties.update;
-      this._render = properties.render;
+      this.update = properties.update;
+      this.render = properties.render;
     },
 
     /**
@@ -1031,27 +1031,29 @@ var kontra = (function(kontra, window, document) {
      * @memberOf kontra.gameLoop
      */
     frame: function() {
-      this._rAF = requestAnimationFrame(this.frame.bind(this));
+      var _this = this;
 
-      this._now = kontra.timestamp();
-      this._dt = this._now - this._last;
-      this._last = this._now;
+      _this._rAF = requestAnimationFrame(_this.frame.bind(_this));
 
-      // this prevents updating the game with a very large dt if the game were to
+      _this._now = kontra.timestamp();
+      _this._dt = _this._now - _this._last;
+      _this._last = _this._now;
+
+      // _this prevents updating the game with a very large dt if the game were to
       // lose focus and then regain focus later
-      if (this._dt > 1E3) {
+      if (_this._dt > 1E3) {
         return;
       }
 
-      this._accumulator += this._dt;
+      _this._accumulator += _this._dt;
 
-      while (this._accumulator >= this._delta) {
-        this._update(this._delta);
+      while (_this._accumulator >= _this._delta) {
+        _this.update(_this._delta / 1E3);
 
-        this._accumulator -= this._delta;
+        _this._accumulator -= _this._delta;
       }
 
-      this._render();
+      _this.render();
     },
 
     /**
@@ -1367,120 +1369,154 @@ var kontra = (function(kontra, window) {
 var kontra = (function(kontra) {
   'use strict';
 
-  kontra.Pool = Pool;
-
   /**
-   * Object pool.
+   * Object pool. The pool will grow in size to accommodate as many objects as are needed.
    * Unused items are at the front of the pool and in use items are at the of the pool.
    * @memberOf kontra
    *
-   * @param {object} properties - Properties of the pool.
-   * @param {number} properties.size - Size of the pool.
-   * @param {object} properties.Object - Object to put in the pool.
-   *
-   * Objects inside the pool must implement <code>render()</code>, <code>update()</code>,
-   * <code>set()</code>, and <code>isAlive()</code> functions.
+   * @see kontra.pool._proto.set for list of params
    */
-  function Pool(properties) {
-    properties = properties || {};
+  kontra.pool = function(properties) {
+    var pool = Object.create(kontra.pool._proto);
+    pool.set(properties);
 
-    // ensure objects for the pool have required functions
-    var obj = new properties.Object();
-    if (typeof obj.render !== 'function' || typeof obj.update !== 'function' ||
-        typeof obj.set !== 'function' || typeof obj.isAlive !== 'function') {
-      var error = new ReferenceError('Required function not found.');
-      kontra.logError(error, 'Objects to be pooled must implement render(), update(), set() and isAlive() functions.');
-      return;
-    }
-
-    this.size = properties.size;
-    this.lastIndex = properties.size - 1;
-    this.objects = [];
-
-    // populate the pool
-    this.objects[0] = obj;
-    for (var i = 1; i < this.size; i++) {
-      this.objects[i] = new properties.Object();
-    }
-  }
-
-  /**
-   * Get an object from the pool.
-   * @memberOf kontra.Pool
-   *
-   * @param {object} properties - Properties to pass to object.set().
-   *
-   * @returns {boolean} True if the pool had an object to get.
-   */
-  Pool.prototype.get = function(properties) {
-    // the pool is out of objects if the first object is in use
-    if (this.objects[0].isAlive()) {
-      return false;
-    }
-
-    // save off first object in pool to reassign to last object after unshift
-    var obj = this.objects[0];
-
-    // unshift the array
-    for (var i = 1; i < this.size; i++) {
-      this.objects[i-1] = this.objects[i];
-    }
-
-    obj.set(properties);
-    this.objects[this.lastIndex] = obj;
-
-    return true;
+    return pool;
   };
 
-  /**
-   * Update all alive pool objects.
-   * @memberOf kontra.Pool
-   */
-  Pool.prototype.update = function() {
-    var i = this.lastIndex;
-    var obj;
+  kontra.pool._proto = {
+    /**
+     * Set properties on the pool.
+     *
+     * @param {object} properties - Properties of the pool.
+     * @param {object} properties.create - Function that returns the object to use in the pool.
+     * @param {number} properties.maxSize - The maximum size that the pool will grow to.
+     *
+     * Objects inside the pool must implement <code>render()</code>, <code>update()</code>,
+     * <code>set()</code>, and <code>isAlive()</code> functions.
+     */
+    set: function(properties) {
+      properties = properties || {};
 
-    while (obj = this.objects[i]) {
+      // ensure objects for the pool have required functions
+      var obj;
+      try {
+        obj = properties.create();
 
-      // once we find the first object that is not alive we can stop
-      if (!obj.isAlive()) {
-        return;
+        if (typeof obj.render !== 'function' || typeof obj.update !== 'function' ||
+            typeof obj.set !== 'function' || typeof obj.isAlive !== 'function') {
+          throw new ReferenceError('Required functions not found.');
+        }
       }
+      catch (error) {
+        var message;
 
-      obj.update();
-
-      // if the object is dead, move it to the front of the pool
-      if (!obj.isAlive()) {
-
-        // push an object from the middle of the pool to the front of the pool
-        // without returning a new array through Array#splice to avoid garbage
-        // collection of the old array
-        // @see http://jsperf.com/object-pools-array-vs-loop
-        for (var j = i; j > 0; j--) {
-          this.objects[j] = this.objects[j-1];
+        if (error.name === 'TypeError') {
+          message = 'The parameter \'create\' must be a function that returns an object.';
+        }
+        else {
+          message = 'Objects to be pooled must implement render(), update(), set() and isAlive() functions.';
         }
 
-        this.objects[0] = obj;
-      }
-      else {
-        i--;
-      }
-    }
-  };
-
-  /**
-   * render all alive pool objects.
-   * @memberOf kontra.Pool
-   */
-  Pool.prototype.render = function() {
-    for (var i = this.lastIndex, obj; obj = this.objects[i]; i--) {
-
-      // once we find the first object that is not alive we can stop
-      if (!obj.isAlive()) {
+        kontra.logError(error, message);
         return;
       }
 
-      obj.render();
+      this.create = properties.create;
+
+      // start the pool with an object
+      this.objects = [obj];
+      this.size = 1;
+      this.maxSize = properties.maxSize || Infinity;
+      this.lastIndex = 0;
+    },
+
+    /**
+     * Get an object from the pool.
+     * @memberOf kontra.Pool
+     *
+     * @param {object} properties - Properties to pass to object.set().
+     *
+     * @returns {object} The first object that was available to use.
+     */
+    get: function(properties) {
+      // the pool is out of objects if the first object is in use and it can't grow
+      if (this.objects[0].isAlive() && this.size === this.maxSize) {
+        return;
+      }
+      // 'double' the size of the array by filling it with twice as many objects
+      else {
+        for (var x = 0; x < this.size && this.objects.length < this.maxSize; x++) {
+          this.objects.unshift(this.create());
+        }
+
+        this.size = this.objects.length;
+        this.lastIndex = this.size - 1;
+      }
+
+      // save off first object in pool to reassign to last object after unshift
+      var obj = this.objects[0];
+
+      // unshift the array
+      for (var i = 1; i < this.size; i++) {
+        this.objects[i-1] = this.objects[i];
+      }
+
+      obj.set(properties);
+      this.objects[this.lastIndex] = obj;
+
+      return obj;
+    },
+
+    /**
+     * Update all alive pool objects.
+     * @memberOf kontra.Pool
+     */
+    update: function() {
+      var i = this.lastIndex;
+      var obj;
+
+      while (obj = this.objects[i]) {
+
+        // once we find the first object that is not alive we can stop
+        if (!obj.isAlive()) {
+          return;
+        }
+
+        obj.update();
+
+        // if the object is dead, move it to the front of the pool
+        if (!obj.isAlive()) {
+
+          // push an object from the middle of the pool to the front of the pool
+          // without returning a new array through Array#splice to avoid garbage
+          // collection of the old array
+          // @see http://jsperf.com/object-pools-array-vs-loop
+          for (var j = i; j > 0; j--) {
+            this.objects[j] = this.objects[j-1];
+          }
+
+          this.objects[0] = obj;
+        }
+        else {
+          i--;
+        }
+      }
+    },
+
+    /**
+     * render all alive pool objects.
+     * @memberOf kontra.Pool
+     */
+    render: function() {
+      for (var i = this.lastIndex, obj; obj = this.objects[i]; i--) {
+
+        // once we find the first object that is not alive we can stop
+        if (!obj.isAlive()) {
+          return;
+        }
+
+        obj.render();
+      }
     }
   };
 
@@ -1493,7 +1529,7 @@ var kontra = (function(kontra, Math, undefined) {
    * A vector for 2d space.
    * @memberOf kontra
    *
-   * @see kontra.vector._prot.set for list of params
+   * @see kontra.vector._proto.set for list of params
    */
   kontra.vector = function(x, y) {
     var vector = Object.create(kontra.vector._proto);
@@ -1648,8 +1684,8 @@ var kontra = (function(kontra, Math, undefined) {
 
       if (kontra.isImage(properties.image) || kontra.isCanvas(properties.image)) {
         this.image = properties.image;
-        this.width = this.image.width;
-        this.height = this.image.height;
+        this.width = properties.image.width;
+        this.height = properties.image.height;
       }
       else {
         // make the render function for this sprite a noop since there is no image to draw.

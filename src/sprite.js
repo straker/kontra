@@ -5,7 +5,7 @@ var kontra = (function(kontra, Math, undefined) {
    * A vector for 2d space.
    * @memberOf kontra
    *
-   * @see kontra.vector._prot.set for list of params
+   * @see kontra.vector._proto.set for list of params
    */
   kontra.vector = function(x, y) {
     var vector = Object.create(kontra.vector._proto);
@@ -160,8 +160,8 @@ var kontra = (function(kontra, Math, undefined) {
 
       if (kontra.isImage(properties.image) || kontra.isCanvas(properties.image)) {
         this.image = properties.image;
-        this.width = this.image.width;
-        this.height = this.image.height;
+        this.width = properties.image.width;
+        this.height = properties.image.height;
       }
       else {
         // make the render function for this sprite a noop since there is no image to draw.

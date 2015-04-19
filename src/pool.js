@@ -8,7 +8,7 @@ var kontra = (function(kontra) {
    * Unused items are at the front of the pool and in use items are at the of the pool.
    * @memberOf kontra
    *
-   * @see kontra.pool._proto.set for list of params
+   * @see kontra.pool._proto.set for list of parameters.
    */
   kontra.pool = function(properties) {
     var pool = Object.create(kontra.pool._proto);
@@ -66,44 +66,48 @@ var kontra = (function(kontra) {
 
     /**
      * Get an object from the pool.
-     * @memberOf kontra.Pool
+     * @memberOf kontra.pool
      *
      * @param {object} properties - Properties to pass to object.set().
-     *
-     * @returns {object} The first object that was available to use.
      */
     get: function(properties) {
+      var _this = this;
+
       // the pool is out of objects if the first object is in use and it can't grow
-      if (this.objects[0].isAlive() && this.size === this.maxSize) {
+      if (_this.objects[0].isAlive() && _this.size === _this.maxSize) {
         return;
       }
       // 'double' the size of the array by filling it with twice as many objects
       else {
-        for (var x = 0; x < this.size && this.objects.length < this.maxSize; x++) {
-          this.objects.unshift(this.create());
+        for (var x = 0; x < _this.size && _this.objects.length < _this.maxSize; x++) {
+          _this.objects.unshift(_this.create());
         }
 
-        this.size = this.objects.length;
-        this.lastIndex = this.size - 1;
+        _this.size = _this.objects.length;
+        _this.lastIndex = _this.size - 1;
       }
 
       // save off first object in pool to reassign to last object after unshift
-      var obj = this.objects[0];
+      var obj = _this.objects[0];
+      obj.set(properties);
 
-      // unshift the array
-      for (var i = 1; i < this.size; i++) {
-        this.objects[i-1] = this.objects[i];
+      // failsafe to ensure that the last object in the list after a get() is never dead
+      // doing so will cause the entire update/render logic to break
+      if (!obj.isAlive()) {
+        return;
       }
 
-      obj.set(properties);
-      this.objects[this.lastIndex] = obj;
+      // unshift the array
+      for (var i = 1; i < _this.size; i++) {
+        _this.objects[i-1] = _this.objects[i];
+      }
 
-      return obj;
+      _this.objects[_this.lastIndex] = obj;
     },
 
     /**
      * Update all alive pool objects.
-     * @memberOf kontra.Pool
+     * @memberOf kontra.pool
      */
     update: function() {
       var i = this.lastIndex;
@@ -139,7 +143,7 @@ var kontra = (function(kontra) {
 
     /**
      * render all alive pool objects.
-     * @memberOf kontra.Pool
+     * @memberOf kontra.pool
      */
     render: function() {
       for (var i = this.lastIndex, obj; obj = this.objects[i]; i--) {

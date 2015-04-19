@@ -29,7 +29,7 @@ var kontra = (function(kontra, window, document) {
    * Game loop that updates and renders the game every frame.
    * @memberOf kontra
    *
-   * @see kontra.gameLoop._proto.set for list of params
+   * @see kontra.gameLoop._proto.set for list of parameters.
    */
   kontra.gameLoop = function(properties) {
     var gameLoop = Object.create(kontra.gameLoop._proto);
@@ -67,15 +67,6 @@ var kontra = (function(kontra, window, document) {
     },
 
     /**
-     * Start the game loop.
-     * @memberOf kontra.gameLoop
-     */
-    start: function() {
-      this._last = kontra.timestamp();
-      requestAnimationFrame(this.frame.bind(this));
-    },
-
-    /**
      * Called every frame of the game loop.
      * @memberOf kontra.gameLoop
      */
@@ -88,8 +79,8 @@ var kontra = (function(kontra, window, document) {
       _this._dt = _this._now - _this._last;
       _this._last = _this._now;
 
-      // _this prevents updating the game with a very large dt if the game were to
-      // lose focus and then regain focus later
+      // prevent updating the game with a very large dt if the game were to lose focus
+      // and then regain focus later
       if (_this._dt > 1E3) {
         return;
       }
@@ -103,6 +94,15 @@ var kontra = (function(kontra, window, document) {
       }
 
       _this.render();
+    },
+
+    /**
+     * Start the game loop.
+     * @memberOf kontra.gameLoop
+     */
+    start: function() {
+      this._last = kontra.timestamp();
+      requestAnimationFrame(this.frame.bind(this));
     },
 
     /**

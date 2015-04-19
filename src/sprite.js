@@ -5,7 +5,7 @@ var kontra = (function(kontra, Math, undefined) {
    * A vector for 2d space.
    * @memberOf kontra
    *
-   * @see kontra.vector._proto.set for list of params
+   * @see kontra.vector._proto.set for list of parameters.
    */
   kontra.vector = function(x, y) {
     var vector = Object.create(kontra.vector._proto);
@@ -32,7 +32,7 @@ var kontra = (function(kontra, Math, undefined) {
      * @memberOf kontra.vector
      *
      * @param {vector} vector - Vector to add.
-     * @param {number} dt - Time since last update.
+     * @param {number} dt=1 - Time since last update.
      */
     add: function(vector, dt) {
       this.x += vector.x * (dt || 1);
@@ -77,10 +77,9 @@ var kontra = (function(kontra, Math, undefined) {
   /**
    * A sprite with a position, velocity, and acceleration.
    * @memberOf kontra
-   * @constructor
    * @requires kontra.vector
    *
-   * @see kontra.sprite._prot.set for list of params
+   * @see kontra.sprite._prot.set for list of parameters.
    */
   kontra.sprite = function(properties) {
     var sprite = Object.create(kontra.sprite._proto);
@@ -95,7 +94,7 @@ var kontra = (function(kontra, Math, undefined) {
   kontra.sprite._proto = {
     /**
      * Move the sprite by its velocity.
-     * @memberOf kontra.Sprite
+     * @memberOf kontra.sprite
      *
      * @param {number} dt - Time since last update.
      */
@@ -103,20 +102,54 @@ var kontra = (function(kontra, Math, undefined) {
       this.velocity.add(this.acceleration, dt);
       this.position.add(this.velocity, dt);
 
+      this.updateAnimation(dt);
+
       this.timeToLive--;
     },
 
     /**
      * Draw the sprite.
-     * @memberOf kontra.Sprite
+     * @memberOf kontra.sprite
      */
     draw: function() {
       this.context.drawImage(this.image, this.position.x, this.position.y);
     },
 
     /**
+     * Play an animation.
+     * @memberOf kontra.sprite
+     *
+     * @param {string} name - Name of the animation to play.
+     */
+    playAnimation: function(name) {
+      this.currentAnimation = this.animations[name];
+    },
+
+    /**
+     * Update the currently playing animation. Used when animations are passed to the sprite.
+     * @memberOf kontra.sprite
+     *
+     * @param {number} dt - Time since last update.
+     */
+    updateAnimation: function(dt) {
+      this.currentAnimation.update(dt);
+    },
+
+    /**
+     * Draw the currently playing animation. Used when animations are passed to the sprite.
+     * @memberOf kontra.sprite
+     */
+    drawAnimation: function() {
+      this.currentAnimation.render({
+        context: this.context,
+        x: this.position.x,
+        y: this.position.y
+      });
+    },
+
+    /**
      * Determine if the sprite is alive.
-     * @memberOf kontra.Sprite
+     * @memberOf kontra.sprite
      *
      * @returns {boolean}
      */
@@ -126,7 +159,7 @@ var kontra = (function(kontra, Math, undefined) {
 
     /**
      * Set properties on the sprite.
-     * @memberOf kontra.Sprite
+     * @memberOf kontra.sprite
      *
      * @param {object} properties - Properties to set on the sprite.
      * @param {number} properties.x - X coordinate of the sprite.
@@ -136,8 +169,9 @@ var kontra = (function(kontra, Math, undefined) {
      * @param {number} [properties.ddx] - Change in X velocity.
      * @param {number} [properties.ddy] - Change in Y velocity.
      * @param {number} [properties.timeToLive=0] - How may frames the sprite should be alive.
-     * @param {Image|Canvas} [properties.image] - Image for the sprite.
      * @param {Context} [properties.context=kontra.context] - Provide a context for the sprite to draw on.
+     * @param {Image|Canvas} [properties.image] - Image for the sprite.
+     * @param {object} [properties.animations] - Animations for the sprite.
      * @param {function} [properties.update] - Function to use to update the sprite.
      * @param {function} [properties.render] - Function to use to render the sprite.
      *
@@ -145,42 +179,56 @@ var kontra = (function(kontra, Math, undefined) {
      * decide when to kill it, you can set time to live to <code>Infinity</code>. Just be
      * sure to override the <code>isAlive()</code> function to return true when the sprite
      * should die.
-     *
-     * @returns {Sprite}
      */
     set: function(properties) {
       properties = properties || {};
 
-      this.position.set(properties.x, properties.y);
-      this.velocity.set(properties.dx, properties.dy);
-      this.acceleration.set(properties.ddx, properties.ddy);
-      this.timeToLive = properties.timeToLive || 0;
+      var _this = this;
 
-      this.context = properties.context || kontra.context;
+      _this.position.set(properties.x, properties.y);
+      _this.velocity.set(properties.dx, properties.dy);
+      _this.acceleration.set(properties.ddx, properties.ddy);
+      _this.timeToLive = properties.timeToLive || 0;
+
+      _this.context = properties.context || kontra.context;
 
       if (kontra.isImage(properties.image) || kontra.isCanvas(properties.image)) {
-        this.image = properties.image;
-        this.width = properties.image.width;
-        this.height = properties.image.height;
+        _this.image = properties.image;
+        _this.width = properties.image.width;
+        _this.height = properties.image.height;
+
+        _this.render = _this.draw;
+
+        // make the updateAnimation function a noop since there is no animation to update
+        _this.updateAnimation = kontra.noop;
+      }
+      else if (properties.animations) {
+        _this.animations = properties.animations;
+
+        // default the current animation to the first one in the list
+        _this.currentAnimation = Object.keys(properties.animations)[0];
+
+        // change the draw function to draw animations instead of images
+        _this.draw = _this.drawAnimation;
       }
       else {
-        // make the render function for this sprite a noop since there is no image to draw.
-        // this.render/this.draw should be overridden if you want to draw something else.
-        this.render = kontra.noop;
+        // make the render function for a noop since there is no image to draw.
+        // this.render should be overridden if you want to draw something else.
+        _this.render = kontra.noop;
       }
 
       if (properties.update) {
-        this.update = properties.update;
+        _this.update = properties.update;
       }
 
       if (properties.render) {
-        this.render = properties.render;
+        _this.render = properties.render;
       }
     },
 
     /**
      * Update the sprites velocity and position.
-     * @memberOf kontra.Sprite
+     * @memberOf kontra.sprite
      * @abstract
      *
      * @param {number} dt - Time since last update.
@@ -190,15 +238,13 @@ var kontra = (function(kontra, Math, undefined) {
      * the sprite to update its position.
      *
      * @example
-     * sprite = new kontra.Sprite({
+     * sprite = new kontra.sprite({
      *   update: function update(dt) {
      *     // do some logic
      *
      *     this.advance(dt);
      *   }
      * });
-     *
-     * @returns {Sprite}
      */
     update: function(dt) {
       this.advance(dt);
@@ -206,7 +252,7 @@ var kontra = (function(kontra, Math, undefined) {
 
     /**
      * Render the sprite.
-     * @memberOf kontra.Sprite.
+     * @memberOf kontra.sprite.
      * @abstract
      *
      * This function can be overridden on a per sprite basis if more functionality
@@ -214,15 +260,13 @@ var kontra = (function(kontra, Math, undefined) {
      * sprite to draw its image.
      *
      * @example
-     * sprite = new kontra.Sprite({
+     * sprite = new kontra.sprite({
      *   render: function render() {
      *     // do some logic
      *
      *     this.draw();
      *   }
      * });
-     *
-     * @returns {Sprite}
      */
     render: function() {
       this.draw();

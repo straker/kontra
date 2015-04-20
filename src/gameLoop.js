@@ -48,7 +48,7 @@ var kontra = (function(kontra, window, document) {
      * @param {function} properties.update - Function called to update the game.
      * @param {function} properties.render - Function called to render the game.
      */
-    set: function(properties) {
+    set: function set(properties) {
       properties = properties || {};
 
       // check for required functions
@@ -70,7 +70,7 @@ var kontra = (function(kontra, window, document) {
      * Called every frame of the game loop.
      * @memberOf kontra.gameLoop
      */
-    frame: function() {
+    frame: function frame() {
       var _this = this;
 
       _this._rAF = requestAnimationFrame(_this.frame.bind(_this));
@@ -100,7 +100,7 @@ var kontra = (function(kontra, window, document) {
      * Start the game loop.
      * @memberOf kontra.gameLoop
      */
-    start: function() {
+    start: function start() {
       this._last = kontra.timestamp();
       requestAnimationFrame(this.frame.bind(this));
     },
@@ -108,7 +108,7 @@ var kontra = (function(kontra, window, document) {
     /**
      * Stop the game loop.
      */
-    stop: function() {
+    stop: function stop() {
       cancelAnimationFrame(this._rAF);
     }
   };

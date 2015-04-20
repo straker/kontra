@@ -28,7 +28,7 @@ var kontra = (function(kontra) {
      * Objects inside the pool must implement <code>render()</code>, <code>update()</code>,
      * <code>set()</code>, and <code>isAlive()</code> functions.
      */
-    set: function(properties) {
+    set: function set(properties) {
       properties = properties || {};
 
       // ensure objects for the pool have required functions
@@ -70,7 +70,7 @@ var kontra = (function(kontra) {
      *
      * @param {object} properties - Properties to pass to object.set().
      */
-    get: function(properties) {
+    get: function get(properties) {
       var _this = this;
 
       // the pool is out of objects if the first object is in use and it can't grow
@@ -109,7 +109,7 @@ var kontra = (function(kontra) {
      * Update all alive pool objects.
      * @memberOf kontra.pool
      */
-    update: function() {
+    update: function update() {
       var i = this.lastIndex;
       var obj;
 
@@ -145,7 +145,7 @@ var kontra = (function(kontra) {
      * render all alive pool objects.
      * @memberOf kontra.pool
      */
-    render: function() {
+    render: function render() {
       for (var i = this.lastIndex, obj; obj = this.objects[i]; i--) {
 
         // once we find the first object that is not alive we can stop

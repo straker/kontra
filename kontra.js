@@ -999,7 +999,7 @@ var kontra = (function(kontra, window, document) {
      * @param {function} properties.update - Function called to update the game.
      * @param {function} properties.render - Function called to render the game.
      */
-    set: function(properties) {
+    set: function set(properties) {
       properties = properties || {};
 
       // check for required functions
@@ -1021,7 +1021,7 @@ var kontra = (function(kontra, window, document) {
      * Called every frame of the game loop.
      * @memberOf kontra.gameLoop
      */
-    frame: function() {
+    frame: function frame() {
       var _this = this;
 
       _this._rAF = requestAnimationFrame(_this.frame.bind(_this));
@@ -1051,7 +1051,7 @@ var kontra = (function(kontra, window, document) {
      * Start the game loop.
      * @memberOf kontra.gameLoop
      */
-    start: function() {
+    start: function start() {
       this._last = kontra.timestamp();
       requestAnimationFrame(this.frame.bind(this));
     },
@@ -1059,7 +1059,7 @@ var kontra = (function(kontra, window, document) {
     /**
      * Stop the game loop.
      */
-    stop: function() {
+    stop: function stop() {
       cancelAnimationFrame(this._rAF);
     }
   };
@@ -1394,7 +1394,7 @@ var kontra = (function(kontra) {
      * Objects inside the pool must implement <code>render()</code>, <code>update()</code>,
      * <code>set()</code>, and <code>isAlive()</code> functions.
      */
-    set: function(properties) {
+    set: function set(properties) {
       properties = properties || {};
 
       // ensure objects for the pool have required functions
@@ -1436,7 +1436,7 @@ var kontra = (function(kontra) {
      *
      * @param {object} properties - Properties to pass to object.set().
      */
-    get: function(properties) {
+    get: function get(properties) {
       var _this = this;
 
       // the pool is out of objects if the first object is in use and it can't grow
@@ -1475,7 +1475,7 @@ var kontra = (function(kontra) {
      * Update all alive pool objects.
      * @memberOf kontra.pool
      */
-    update: function() {
+    update: function update() {
       var i = this.lastIndex;
       var obj;
 
@@ -1511,7 +1511,7 @@ var kontra = (function(kontra) {
      * render all alive pool objects.
      * @memberOf kontra.pool
      */
-    render: function() {
+    render: function render() {
       for (var i = this.lastIndex, obj; obj = this.objects[i]; i--) {
 
         // once we find the first object that is not alive we can stop
@@ -1550,7 +1550,7 @@ var kontra = (function(kontra, Math, undefined) {
      * @param {number} x=0 - Center x coordinate.
      * @param {number} y=0 - Center y coordinate.
      */
-    set: function(x, y) {
+    set: function set(x, y) {
       this.x = x || 0;
       this.y = y || 0;
     },
@@ -1562,7 +1562,7 @@ var kontra = (function(kontra, Math, undefined) {
      * @param {vector} vector - Vector to add.
      * @param {number} dt=1 - Time since last update.
      */
-    add: function(vector, dt) {
+    add: function add(vector, dt) {
       this.x += vector.x * (dt || 1);
       this.y += vector.y * (dt || 1);
     },
@@ -1573,7 +1573,7 @@ var kontra = (function(kontra, Math, undefined) {
      *
      * @returns {number}
      */
-    length: function() {
+    length: function length() {
       return Math.sqrt(this.x * this.x + this.y * this.y);
     },
 
@@ -1583,7 +1583,7 @@ var kontra = (function(kontra, Math, undefined) {
      *
      * @returns {number}
      */
-    angle: function() {
+    angle: function angle() {
       return Math.atan2(this.y, this.x);
     },
 
@@ -1593,7 +1593,7 @@ var kontra = (function(kontra, Math, undefined) {
      *
      * @returns {vector}
      */
-    fromAngle: function(angle, magnitude) {
+    fromAngle: function fromAngle(angle, magnitude) {
       return vector(magnitude * Math.cos(angle), magnitude * Math.sin(angle));
     }
   };
@@ -1626,7 +1626,7 @@ var kontra = (function(kontra, Math, undefined) {
      *
      * @param {number} dt - Time since last update.
      */
-    advance: function(dt) {
+    advance: function advance(dt) {
       this.velocity.add(this.acceleration, dt);
       this.position.add(this.velocity, dt);
 
@@ -1639,8 +1639,17 @@ var kontra = (function(kontra, Math, undefined) {
      * Draw the sprite.
      * @memberOf kontra.sprite
      */
-    draw: function() {
+    draw: function draw() {
       this.context.drawImage(this.image, this.position.x, this.position.y);
+    },
+
+    /**
+     * Draw a simple rectangle. Useful for prototyping.
+     * @memberOf kontra.sprite
+     */
+    drawRect: function drawRect() {
+      this.context.fillStyle = this.color;
+      this.context.fillRect(this.position.x, this.position.y, this.width, this.height);
     },
 
     /**
@@ -1649,7 +1658,7 @@ var kontra = (function(kontra, Math, undefined) {
      *
      * @param {string} name - Name of the animation to play.
      */
-    playAnimation: function(name) {
+    playAnimation: function playAnimation(name) {
       this.currentAnimation = this.animations[name];
     },
 
@@ -1659,7 +1668,7 @@ var kontra = (function(kontra, Math, undefined) {
      *
      * @param {number} dt - Time since last update.
      */
-    updateAnimation: function(dt) {
+    advanceAnimation: function advanceAnimation(dt) {
       this.currentAnimation.update(dt);
     },
 
@@ -1667,7 +1676,7 @@ var kontra = (function(kontra, Math, undefined) {
      * Draw the currently playing animation. Used when animations are passed to the sprite.
      * @memberOf kontra.sprite
      */
-    drawAnimation: function() {
+    drawAnimation: function drawAnimation() {
       this.currentAnimation.render({
         context: this.context,
         x: this.position.x,
@@ -1681,7 +1690,7 @@ var kontra = (function(kontra, Math, undefined) {
      *
      * @returns {boolean}
      */
-    isAlive: function() {
+    isAlive: function isAlive() {
       return this.timeToLive > 0;
     },
 
@@ -1696,10 +1705,18 @@ var kontra = (function(kontra, Math, undefined) {
      * @param {number} [properties.dy] - Change in Y position.
      * @param {number} [properties.ddx] - Change in X velocity.
      * @param {number} [properties.ddy] - Change in Y velocity.
+     *
      * @param {number} [properties.timeToLive=0] - How may frames the sprite should be alive.
      * @param {Context} [properties.context=kontra.context] - Provide a context for the sprite to draw on.
+     *
      * @param {Image|Canvas} [properties.image] - Image for the sprite.
-     * @param {object} [properties.animations] - Animations for the sprite.
+     *
+     * @param {object} [properties.animations] - Animations for the sprite instead of an image.
+     *
+     * @param {string} [properties.color] - If no image or animation is provided, use color to draw a rectangle for the sprite.
+     * @param {number} [properties.width] - Width of the sprite for drawing a rectangle.
+     * @param {number} [properties.height] - Height of the sprite for drawing a rectangle.
+     *
      * @param {function} [properties.update] - Function to use to update the sprite.
      * @param {function} [properties.render] - Function to use to render the sprite.
      *
@@ -1708,7 +1725,7 @@ var kontra = (function(kontra, Math, undefined) {
      * sure to override the <code>isAlive()</code> function to return true when the sprite
      * should die.
      */
-    set: function(properties) {
+    set: function set(properties) {
       properties = properties || {};
 
       var _this = this;
@@ -1725,9 +1742,8 @@ var kontra = (function(kontra, Math, undefined) {
         _this.width = properties.image.width;
         _this.height = properties.image.height;
 
+        // change update and render functions to work with images
         _this.render = _this.draw;
-
-        // make the updateAnimation function a noop since there is no animation to update
         _this.updateAnimation = kontra.noop;
       }
       else if (properties.animations) {
@@ -1736,13 +1752,19 @@ var kontra = (function(kontra, Math, undefined) {
         // default the current animation to the first one in the list
         _this.currentAnimation = Object.keys(properties.animations)[0];
 
-        // change the draw function to draw animations instead of images
-        _this.draw = _this.drawAnimation;
+        // change update and render functions to work with animations
+        _this.render = _this.drawAnimation;
+        _this.updateAnimation = _this.advanceAnimation;
       }
       else {
+        _this.color = properties.color;
+        _this.width = properties.width;
+        _this.height = properties.height;
+
         // make the render function for a noop since there is no image to draw.
-        // this.render should be overridden if you want to draw something else.
-        _this.render = kontra.noop;
+        // this.render should be overridden if you want to draw something else (like a box).
+        _this.render = _this.drawRect;
+        _this.updateAnimation = kontra.noop;
       }
 
       if (properties.update) {
@@ -1774,7 +1796,7 @@ var kontra = (function(kontra, Math, undefined) {
      *   }
      * });
      */
-    update: function(dt) {
+    update: function update(dt) {
       this.advance(dt);
     },
 
@@ -1796,7 +1818,7 @@ var kontra = (function(kontra, Math, undefined) {
      *   }
      * });
      */
-    render: function() {
+    render: function render() {
       this.draw();
     }
   };
@@ -1831,7 +1853,7 @@ var kontra = (function(kontra, undefined) {
      * @param {number[]} properties.frames - List of frames of the animation.
      * @param {number}  properties.frameSpeed - Time to wait before transitioning the animation to the next frame.
      */
-    set: function(properties) {
+    set: function set(properties) {
       properties = properties || {};
 
       this.spriteSheet = properties.spriteSheet;
@@ -1851,7 +1873,7 @@ var kontra = (function(kontra, undefined) {
      *
      * @param {number} dt=1 - Time since last update.
      */
-    advance: function(dt) {
+    advance: function advance(dt) {
       // normalize dt to work with milliseconds as a decimal or an integer
       dt = (dt < 1 ? dt * 1E3 : dt) || 1;
 
@@ -1875,7 +1897,7 @@ var kontra = (function(kontra, undefined) {
      * @param {integer} properties.y - Y position to draw
      * @param {Context} [properties.context=kontra.context] - Provide a context for the sprite to draw on.
      */
-    draw: function(properties) {
+    draw: function draw(properties) {
       properties = properties || {};
 
       var context = properties.context || kontra.context;
@@ -1897,7 +1919,7 @@ var kontra = (function(kontra, undefined) {
      * Play the animation.
      * @memberOf kontra.animation
      */
-    play: function() {
+    play: function play() {
       // restore references to update and render functions only if overridden
       this.update = this.advance;
       this.render = this.draw;
@@ -1907,7 +1929,7 @@ var kontra = (function(kontra, undefined) {
      * Stop the animation and prevent update and render.
      * @memberOf kontra.animation
      */
-    stop: function() {
+    stop: function stop() {
 
       // instead of putting an if statement in both render/update functions that checks
       // a variable to determine whether to render or update, we can just reassign the
@@ -1921,7 +1943,7 @@ var kontra = (function(kontra, undefined) {
      * Pause the animation and prevent update.
      * @memberOf kontra.animation
      */
-    pause: function() {
+    pause: function pause() {
       this.update = kontra.noop;
     }
   };
@@ -1955,16 +1977,17 @@ var kontra = (function(kontra, undefined) {
      * @param {number} properties.frameWidth - Width (in px) of each frame.
      * @param {number} properties.frameHeight - Height (in px) of each frame.
      */
-    set: function(properties) {
+    set: function set(properties) {
       properties = properties || {};
 
       this.animations = {};
-      this.frame = {};
 
       if (kontra.isImage(properties.image) || kontra.isCanvas(properties.image)) {
         this.image = properties.image;
-        this.frame.width = properties.frameWidth;
-        this.frame.height = properties.frameHeight;
+        this.frame = {
+          width: properties.frameWidth,
+          height: properties.frameHeight
+        };
 
         this.framesPerRow = properties.image.width / properties.frameWidth | 0;
       }
@@ -2011,7 +2034,7 @@ var kontra = (function(kontra, undefined) {
      *   }
      * });
      */
-    createAnimations: function(animations) {
+    createAnimations: function createAnimations(animations) {
       var error;
 
       if (!animations || Object.keys(animations).length === 0) {
@@ -2082,7 +2105,7 @@ var kontra = (function(kontra, undefined) {
      *
      * @returns {number[]} List of frames.
      */
-    _parseFrames: function(frames) {
+    _parseFrames: function parseFrames(frames) {
       var sequence = [];
       var consecutiveFrames = frames.split('..').map(Number);
 

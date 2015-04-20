@@ -26,7 +26,7 @@ var kontra = (function(kontra, undefined) {
      * @param {number[]} properties.frames - List of frames of the animation.
      * @param {number}  properties.frameSpeed - Time to wait before transitioning the animation to the next frame.
      */
-    set: function(properties) {
+    set: function set(properties) {
       properties = properties || {};
 
       this.spriteSheet = properties.spriteSheet;
@@ -46,7 +46,7 @@ var kontra = (function(kontra, undefined) {
      *
      * @param {number} dt=1 - Time since last update.
      */
-    advance: function(dt) {
+    advance: function advance(dt) {
       // normalize dt to work with milliseconds as a decimal or an integer
       dt = (dt < 1 ? dt * 1E3 : dt) || 1;
 
@@ -70,7 +70,7 @@ var kontra = (function(kontra, undefined) {
      * @param {integer} properties.y - Y position to draw
      * @param {Context} [properties.context=kontra.context] - Provide a context for the sprite to draw on.
      */
-    draw: function(properties) {
+    draw: function draw(properties) {
       properties = properties || {};
 
       var context = properties.context || kontra.context;
@@ -92,7 +92,7 @@ var kontra = (function(kontra, undefined) {
      * Play the animation.
      * @memberOf kontra.animation
      */
-    play: function() {
+    play: function play() {
       // restore references to update and render functions only if overridden
       this.update = this.advance;
       this.render = this.draw;
@@ -102,7 +102,7 @@ var kontra = (function(kontra, undefined) {
      * Stop the animation and prevent update and render.
      * @memberOf kontra.animation
      */
-    stop: function() {
+    stop: function stop() {
 
       // instead of putting an if statement in both render/update functions that checks
       // a variable to determine whether to render or update, we can just reassign the
@@ -116,7 +116,7 @@ var kontra = (function(kontra, undefined) {
      * Pause the animation and prevent update.
      * @memberOf kontra.animation
      */
-    pause: function() {
+    pause: function pause() {
       this.update = kontra.noop;
     }
   };
@@ -150,16 +150,17 @@ var kontra = (function(kontra, undefined) {
      * @param {number} properties.frameWidth - Width (in px) of each frame.
      * @param {number} properties.frameHeight - Height (in px) of each frame.
      */
-    set: function(properties) {
+    set: function set(properties) {
       properties = properties || {};
 
       this.animations = {};
-      this.frame = {};
 
       if (kontra.isImage(properties.image) || kontra.isCanvas(properties.image)) {
         this.image = properties.image;
-        this.frame.width = properties.frameWidth;
-        this.frame.height = properties.frameHeight;
+        this.frame = {
+          width: properties.frameWidth,
+          height: properties.frameHeight
+        };
 
         this.framesPerRow = properties.image.width / properties.frameWidth | 0;
       }
@@ -206,7 +207,7 @@ var kontra = (function(kontra, undefined) {
      *   }
      * });
      */
-    createAnimations: function(animations) {
+    createAnimations: function createAnimations(animations) {
       var error;
 
       if (!animations || Object.keys(animations).length === 0) {
@@ -277,7 +278,7 @@ var kontra = (function(kontra, undefined) {
      *
      * @returns {number[]} List of frames.
      */
-    _parseFrames: function(frames) {
+    _parseFrames: function parseFrames(frames) {
       var sequence = [];
       var consecutiveFrames = frames.split('..').map(Number);
 

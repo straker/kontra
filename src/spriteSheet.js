@@ -33,6 +33,9 @@ var kontra = (function(kontra, undefined) {
       this.frames = properties.frames;
       this.frameSpeed = properties.frameSpeed;
 
+      this.width = properties.spriteSheet.frame.width;
+      this.height = properties.spriteSheet.frame.height;
+
       this.currentFrame = 0;
       this._accumulator = 0;
       this.update = this.advance;

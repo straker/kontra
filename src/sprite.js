@@ -2,7 +2,7 @@ var kontra = (function(kontra, Math, undefined) {
   'use strict';
 
   /**
-   * A vector for 2d space.
+   * A vector for 2D space.
    * @memberOf kontra
    *
    * @see kontra.vector._proto.set for list of parameters.
@@ -223,6 +223,8 @@ var kontra = (function(kontra, Math, undefined) {
 
         // default the current animation to the first one in the list
         _this.currentAnimation = Object.keys(properties.animations)[0];
+        _this.width = _this.currentAnimation.width;
+        _this.height = _this.currentAnimation.height;
 
         // change update and render functions to work with animations
         _this.render = _this.drawAnimation;
@@ -249,6 +251,14 @@ var kontra = (function(kontra, Math, undefined) {
     },
 
     /**
+     * Simple bounding box collision test.
+     * @memberOf kontra.sprite
+     *
+     * @param {object} obj - Object to check collision against.
+     */
+
+
+    /**
      * Update the sprites velocity and position.
      * @memberOf kontra.sprite
      * @abstract
@@ -260,7 +270,7 @@ var kontra = (function(kontra, Math, undefined) {
      * the sprite to update its position.
      *
      * @example
-     * sprite = new kontra.sprite({
+     * sprite = kontra.sprite({
      *   update: function update(dt) {
      *     // do some logic
      *
@@ -282,7 +292,7 @@ var kontra = (function(kontra, Math, undefined) {
      * sprite to draw its image.
      *
      * @example
-     * sprite = new kontra.sprite({
+     * sprite = kontra.sprite({
      *   render: function render() {
      *     // do some logic
      *

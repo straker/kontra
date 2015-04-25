@@ -98,21 +98,11 @@ var kontra = (function(kontra, Math, undefined) {
      *
      * @param {number} dt - Time since last update.
      */
-    advance: function advance(dt) {
+    advanceSprite: function advanceSprite(dt) {
       this.velocity.add(this.acceleration, dt);
       this.position.add(this.velocity, dt);
 
-      this.updateAnimation(dt);
-
       this.timeToLive--;
-    },
-
-    /**
-     * Draw the sprite.
-     * @memberOf kontra.sprite
-     */
-    draw: function draw() {
-      this.context.drawImage(this.image, this.position.x, this.position.y);
     },
 
     /**
@@ -125,13 +115,11 @@ var kontra = (function(kontra, Math, undefined) {
     },
 
     /**
-     * Play an animation.
+     * Draw the sprite.
      * @memberOf kontra.sprite
-     *
-     * @param {string} name - Name of the animation to play.
      */
-    playAnimation: function playAnimation(name) {
-      this.currentAnimation = this.animations[name];
+    drawImage: function drawImage() {
+      this.context.drawImage(this.image, this.position.x, this.position.y);
     },
 
     /**
@@ -141,6 +129,8 @@ var kontra = (function(kontra, Math, undefined) {
      * @param {number} dt - Time since last update.
      */
     advanceAnimation: function advanceAnimation(dt) {
+      this.advanceSprite(dt);
+
       this.currentAnimation.update(dt);
     },
 
@@ -154,6 +144,16 @@ var kontra = (function(kontra, Math, undefined) {
         x: this.position.x,
         y: this.position.y
       });
+    },
+
+    /**
+     * Play an animation.
+     * @memberOf kontra.sprite
+     *
+     * @param {string} name - Name of the animation to play.
+     */
+    playAnimation: function playAnimation(name) {
+      this.currentAnimation = this.animations[name];
     },
 
     /**
@@ -214,31 +214,30 @@ var kontra = (function(kontra, Math, undefined) {
         _this.width = properties.image.width;
         _this.height = properties.image.height;
 
-        // change update and render functions to work with images
-        _this.render = _this.draw;
-        _this.updateAnimation = kontra.noop;
+        // change the advance and draw functions to work with images
+        _this.advance = _this.advanceSprite;
+        _this.draw = _this.drawImage;
       }
       else if (properties.animations) {
         _this.animations = properties.animations;
 
         // default the current animation to the first one in the list
-        _this.currentAnimation = Object.keys(properties.animations)[0];
+        _this.currentAnimation = properties.animations[ Object.keys(properties.animations)[0] ];
         _this.width = _this.currentAnimation.width;
         _this.height = _this.currentAnimation.height;
 
-        // change update and render functions to work with animations
-        _this.render = _this.drawAnimation;
-        _this.updateAnimation = _this.advanceAnimation;
+        // change the advance and draw functions to work with animations
+        _this.advance = _this.advanceAnimation;
+        _this.draw = _this.drawAnimation;
       }
       else {
         _this.color = properties.color;
         _this.width = properties.width;
         _this.height = properties.height;
 
-        // make the render function for a noop since there is no image to draw.
-        // this.render should be overridden if you want to draw something else (like a box).
-        _this.render = _this.drawRect;
-        _this.updateAnimation = kontra.noop;
+        // change the advance and draw functions to work with rectangles
+        _this.advance = _this.advanceSprite;
+        _this.draw = _this.drawRect;
       }
 
       if (properties.update) {
@@ -254,9 +253,24 @@ var kontra = (function(kontra, Math, undefined) {
      * Simple bounding box collision test.
      * @memberOf kontra.sprite
      *
-     * @param {object} obj - Object to check collision against.
+     * @param {object} object - Object to check collision against.
+     *
+     * @returns {boolean} True if the objects collide, false otherwise.
      */
+    collidesWith: function collidesWith(object) {
+      // handle non-kontra.sprite objects as well as kontra.sprite objects
+      var x = (object.x !== undefined ? object.x : object.position.x);
+      var y = (object.y !== undefined ? object.y : object.position.y);
 
+      if (this.position.x < x + object.width &&
+          this.position.x + this.width > x &&
+          this.position.y < y + object.height &&
+          this.position.y + this.height > y) {
+        return true;
+      }
+
+      return false;
+    },
 
     /**
      * Update the sprites velocity and position.

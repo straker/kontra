@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Kontra Test</title>
+  <style>
+    canvas {
+      border: 1px solid black;
+    }
+  </style>
+  <script type="text/javascript" src="kontra.js"></script>
+</head>
+<body>
+  <canvas id="game" width="600" height="400"></canvas>
+  <script>
+  kontra.loadAssets('ship.png', 'spriteSheet.png').then(function() {
+    kontra.init();
+
+    // sheet = kontra.spriteSheet({
+    //   image: kontra.images.spriteSheet,
+    //   frameWidth: 125,
+    //   frameHeight: 125,
+    //   animations: {
+    //     'walk': {
+    //       frames: '0..15',
+    //       frameSpeed: 3
+    //     }
+    //   }
+    // });
+
+    player = kontra.sprite({
+      x: 350,
+      y: 200,
+      color: '#ff0000',
+      width: 20,
+      height: 40,
+      update: function() {
+        if (kontra.keyIsPressed('left')) {
+          player.position.x -= 2;
+        }
+        else if (kontra.keyIsPressed('right')) {
+          player.position.x += 2;
+        }
+
+        if (kontra.keyIsPressed('up')) {
+          player.position.y -= 2;
+        }
+        else if (kontra.keyIsPressed('down')) {
+          player.position.y += 2;
+        }
+      }
+    });
+
+    // anim = kontra.sprite({
+    //   x: 100,
+    //   y: 100,
+    //   animations: {
+    //     'walk': sheet.animations.walk
+    //   }
+    // });
+
+    quadtree = kontra.quadtree({
+      maxObjects: 25
+    });
+
+    pool = kontra.pool({
+      create: kontra.sprite,
+      maxSize: 5000
+    });
+
+    // quadtree.add(player);
+
+    // player.playAnimation('walk');
+
+    loop = kontra.gameLoop({
+      update: function(dt) {
+        pool.get({
+          x: Math.random() * kontra.game.width | 0,
+          y: Math.random() * kontra.game.height | 0,
+          dx: Math.random() * (Math.random() > 0.5 ? 1 : -1),
+          dy: Math.random() * (Math.random() > 0.5 ? 1 : -1),
+          color: 'blue',
+          width: 10,
+          height: 10,
+          timeToLive: Math.random() * 1000 | 0
+        });
+
+        player.update();
+        pool.update();
+        // anim.update();
+
+        quadtree.clear();
+        quadtree.add(player);
+        quadtree.add(pool.objects);
+
+        objects = quadtree.get(player);
+        player.color = 'red';
+
+        for (var i = 0; obj = objects[i]; i++) {
+          if (obj !== player) {
+            if (obj.collidesWith(player)) {
+              obj.color = 'purple';
+              player.color = 'purple';
+            }
+            else {
+              obj.color = 'blue';
+            }
+          }
+        }
+      },
+      render: function() {
+        kontra.context.clearRect(0,0, kontra.game.width, kontra.game.height);
+        quadtree.render();
+        player.render()
+        pool.render();
+        // anim.render();
+      }
+    });
+  });
+  </script>
+</body>
+</html>

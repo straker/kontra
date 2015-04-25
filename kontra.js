@@ -1532,17 +1532,16 @@ var kontra = (function(kontra, undefined) {
   'use strict';
 
   /**
-   * A quadtree for 2D collision checking. All objects will be placed in leaf nodes of
-   * the tree so that collision checks are faster. This will add multiple copies of the
-   * same object to the tree if the object intersects multiple nodes.
-   * @see http://stackoverflow.com/questions/4981866/quadtree-for-2d-collision-detection)
+   * A quadtree for 2D collision checking. The quadtree acts like an object pool in that it
+   * will create subnodes as objects are needed but it won't clean up the subnodes when it
+   * collapses to avoid garbage collection.
    * @memberOf kontra
    *
    * @see kontra.quadtree._proto.set for list of parameters.
-   *
-   * The quadrant indices are numbered as follows:
+   *L
+   * The quadrant indices are numbered as follows (following a z-order curve):
    *     |
-   *  1  |  0
+   *  0  |  1
    * ----+----
    *  2  |  3
    *     |
@@ -1559,17 +1558,24 @@ var kontra = (function(kontra, undefined) {
      * Set properties on the quadtree.
      * @memberOf kontra.quadtree
      *
-     * @param {number} [level=0] - Current node level.
-     * @param {number} [maxLevels=5] - Maximum node levels the quadtree can have.
-     * @param {number} [maxObjects=10] - Maximum number of objects a node can support before splitting.
+     * @param {number} [depth=0] - Current node depth.
+     * @param {number} [maxDepth=3] - Maximum node depths the quadtree can have.
+     * @param {number} [maxObjects=25] - Maximum number of objects a node can support before splitting.
+     * @param {object} [parentNode] - The node that contains this node.
      * @param {object} [bounds] - The 2D space this node occupies.
      */
     set: function set(properties) {
       properties = properties || {};
 
-      this.level = properties.level || 0;
-      this.maxLevels = properties.maxLevels || 5;
-      this.maxObjects = properties.maxObjects || 10;
+      this.depth = properties.depth || 0;
+      this.maxDepth = properties.maxDepth || 3;
+      this.maxObjects = properties.maxObjects || 25;
+
+      // since we won't clean up any subnodes, we need to keep track of which nodes are
+      // currently the leaf node so we know which nodes to add objects to
+      this.isBranchNode = false;
+
+      this.parentNode = properties.parentNode;
 
       this.bounds = properties.bounds || {
         x: 0,
@@ -1579,7 +1585,7 @@ var kontra = (function(kontra, undefined) {
       };
 
       this.objects = [];
-      this.nodes = [];
+      this.subnodes = [];
     },
 
     /**
@@ -1587,13 +1593,19 @@ var kontra = (function(kontra, undefined) {
      * @memberOf kontra.quadtree
      */
     clear: function clear() {
-      this.nodes.length = 0;
+      if (this.isBranchNode) {
+        for (var i = 0; i < 4; i++) {
+          this.subnodes[i].clear();
+        }
+      }
+
+      this.isBranchNode = false;
       this.objects.length = 0;
     },
 
     /**
      * Find the leaf node the object belongs to and get all objects that are part of
-     * the node.
+     * that node.
      * @memberOf kontra.quadtree
      *
      * @param {object} object - Object to use for finding the leaf node.
@@ -1602,13 +1614,20 @@ var kontra = (function(kontra, undefined) {
      */
     get: function get(object) {
       var node = this;
-      var index;
+      var objects = [];
+      var indices, index;
 
       // traverse the tree until we get to a leaf node
-      while (node.nodes.length) {
-        index = this._getIndex(object);
+      while (node.subnodes.length && this.isBranchNode) {
+        indices = this._getIndex(object);
 
-        node = node.nodes[index];
+        for (var i = 0, length = indices.length; i < length; i++) {
+          index = indices[i];
+
+          objects.push.apply(objects, this.subnodes[index].get(object));
+        }
+
+        return objects;
       }
 
       return node.objects;
@@ -1623,42 +1642,47 @@ var kontra = (function(kontra, undefined) {
      * @param {object} obj - Objects to add to the quadtree.
      */
     add: function add(object) {
+      var _this = this;
       var i, obj, indices, index;
 
       // add multiple objects separately
       if (kontra.isArray(object)) {
         for (i = 0; obj = object[i]; i++) {
-          this.add(obj);
+          _this.add(obj);
         }
 
         return;
       }
 
-      // current node has subnodes, so we need to add this object into a subnode
-      if (this.nodes.length) {
-        this._addToSubnode(object);
+      // current node has subnodes, so we need to add _this object into a subnode
+      if (_this.subnodes.length && _this.isBranchNode) {
+        _this._addToSubnode(object);
 
         return;
       }
 
-      // this node is a leaf node so add the object to it
-      this.objects.push(object);
+      // _this node is a leaf node so add the object to it
+      _this.objects.push(object);
+
+      if (_this.parentNode) {
+        _this.parentNode.numSubnodeObjects++;
+      }
 
       // split the node if there are too many objects
-      if (this.objects.length > this.maxObjects && this.level < this.maxLevels) {
-        this._split();
+      if (_this.objects.length > _this.maxObjects && _this.depth < _this.maxDepth) {
+        _this._split();
 
         // move all objects to their corresponding subnodes
-        for (i = 0; obj = this.objects[i]; i++) {
-          this._addToSubnode(obj);
+        for (i = 0; obj = _this.objects[i]; i++) {
+          _this._addToSubnode(obj);
         }
 
-        this.objects.length = 0;
+        _this.objects.length = 0;
       }
     },
 
     /**
-     * Insert an object into a subnode
+     * Add an object to a subnode.
      * @memberOf kontra.quadtree
      * @private
      *
@@ -1669,7 +1693,7 @@ var kontra = (function(kontra, undefined) {
 
       // add the object to all subnodes it intersects
       for (var i = 0, length = indices.length; i < length; i++) {
-        this.nodes[ indices[i] ].add(object);
+        this.subnodes[ indices[i] ].add(object);
       }
     },
 
@@ -1688,18 +1712,18 @@ var kontra = (function(kontra, undefined) {
       var verticalMidpoint = this.bounds.x + this.bounds.width / 2;
       var horizontalMidpoint = this.bounds.y + this.bounds.height / 2;
 
-      // handle non-sprite objects as well as kontra.sprite objects
+      // handle non-kontra.sprite objects as well as kontra.sprite objects
       var x = (object.x !== undefined ? object.x : object.position.x);
       var y = (object.y !== undefined ? object.y : object.position.y);
 
       // save off quadrant checks for reuse
-      var intersectsTopQuadrants = y < horizontalMidpoint;
-      var intersectsBottomQuadrants = y + object.height >= horizontalMidpoint;
+      var intersectsTopQuadrants = y < horizontalMidpoint && y + object.height >= this.bounds.y;
+      var intersectsBottomQuadrants = y + object.height >= horizontalMidpoint && y < this.bounds.y + this.bounds.height;
 
       // object intersects with the left quadrants
-      if (x < verticalMidpoint) {
+      if (x < verticalMidpoint && x + object.width >= this.bounds.x) {
         if (intersectsTopQuadrants) {  // top left
-          indices.push(1);
+          indices.push(0);
         }
 
         if (intersectsBottomQuadrants) {  // bottom left
@@ -1708,9 +1732,9 @@ var kontra = (function(kontra, undefined) {
       }
 
       // object intersects with the right quadrants
-      if (x + object.width >= verticalMidpoint) {  // top right
+      if (x + object.width >= verticalMidpoint && x < this.bounds.x + this.bounds.width) {  // top right
         if (intersectsTopQuadrants) {
-          indices.push(0);
+          indices.push(1);
         }
 
         if (intersectsBottomQuadrants) {  // bottom right
@@ -1727,24 +1751,53 @@ var kontra = (function(kontra, undefined) {
      * @private
      */
     _split: function split() {
+      this.isBranchNode = true;
+
+      // only split if we haven't split before
+      if (this.subnodes.length) {
+        return;
+      }
+
       var subWidth = this.bounds.width / 2 | 0;
       var subHeight = this.bounds.height / 2 | 0;
+      var x = this.bounds.x;
+      var y = this.bounds.y;
 
       for (var i = 0; i < 4; i++) {
-        this.nodes[i] = kontra.quadtree({
+        this.subnodes[i] = kontra.quadtree({
           bounds: {
-            x: this.bounds.x + (i % 3 === 0 ? subWidth : 0),  // nodes 0 and 3
-            y: this.bounds.y + (i >= 2 ? subHeight : 0),      // nodes 2 and 3
+            x: x + (i % 2 === 1 ? subWidth : 0),  // nodes 1 and 3
+            y: y + (i >= 2 ? subHeight : 0),      // nodes 2 and 3
             width: subWidth,
             height: subHeight
           },
-          level: this.level+1,
-          maxLevels: this.maxLevels,
-          maxObjects: this.maxObjects
+          depth: this.depth+1,
+          maxDepth: this.maxDepth,
+          maxObjects: this.maxObjects,
+          parentNode: this
         });
       }
     },
 
+    render: function() {
+      if (this.objects.length || (this.parentNode && this.parentNode.isBranchNode) || this.depth === 0) {
+
+        kontra.context.strokeStyle = 'red';
+        kontra.context.strokeRect(this.bounds.x, this.bounds.y, this.bounds.width, this.bounds.height);
+
+        // kontra.context.fillStyle = 'black';
+        // for (var i = 0; i < this.objects.length; i++) {
+        //   var obj = this.objects[i];
+        //   kontra.context.fillRect(obj.x, obj.y, obj.width, obj.height);
+        // }
+
+        if (this.subnodes.length) {
+          for (var i = 0; i < 4; i++) {
+            this.subnodes[i].render();
+          }
+        }
+      }
+    }
   };
 
   return kontra;
@@ -1849,21 +1902,11 @@ var kontra = (function(kontra, Math, undefined) {
      *
      * @param {number} dt - Time since last update.
      */
-    advance: function advance(dt) {
+    advanceSprite: function advanceSprite(dt) {
       this.velocity.add(this.acceleration, dt);
       this.position.add(this.velocity, dt);
 
-      this.updateAnimation(dt);
-
       this.timeToLive--;
-    },
-
-    /**
-     * Draw the sprite.
-     * @memberOf kontra.sprite
-     */
-    draw: function draw() {
-      this.context.drawImage(this.image, this.position.x, this.position.y);
     },
 
     /**
@@ -1876,13 +1919,11 @@ var kontra = (function(kontra, Math, undefined) {
     },
 
     /**
-     * Play an animation.
+     * Draw the sprite.
      * @memberOf kontra.sprite
-     *
-     * @param {string} name - Name of the animation to play.
      */
-    playAnimation: function playAnimation(name) {
-      this.currentAnimation = this.animations[name];
+    drawImage: function drawImage() {
+      this.context.drawImage(this.image, this.position.x, this.position.y);
     },
 
     /**
@@ -1892,6 +1933,8 @@ var kontra = (function(kontra, Math, undefined) {
      * @param {number} dt - Time since last update.
      */
     advanceAnimation: function advanceAnimation(dt) {
+      this.advanceSprite(dt);
+
       this.currentAnimation.update(dt);
     },
 
@@ -1905,6 +1948,16 @@ var kontra = (function(kontra, Math, undefined) {
         x: this.position.x,
         y: this.position.y
       });
+    },
+
+    /**
+     * Play an animation.
+     * @memberOf kontra.sprite
+     *
+     * @param {string} name - Name of the animation to play.
+     */
+    playAnimation: function playAnimation(name) {
+      this.currentAnimation = this.animations[name];
     },
 
     /**
@@ -1965,31 +2018,30 @@ var kontra = (function(kontra, Math, undefined) {
         _this.width = properties.image.width;
         _this.height = properties.image.height;
 
-        // change update and render functions to work with images
-        _this.render = _this.draw;
-        _this.updateAnimation = kontra.noop;
+        // change the advance and draw functions to work with images
+        _this.advance = _this.advanceSprite;
+        _this.draw = _this.drawImage;
       }
       else if (properties.animations) {
         _this.animations = properties.animations;
 
         // default the current animation to the first one in the list
-        _this.currentAnimation = Object.keys(properties.animations)[0];
+        _this.currentAnimation = properties.animations[ Object.keys(properties.animations)[0] ];
         _this.width = _this.currentAnimation.width;
         _this.height = _this.currentAnimation.height;
 
-        // change update and render functions to work with animations
-        _this.render = _this.drawAnimation;
-        _this.updateAnimation = _this.advanceAnimation;
+        // change the advance and draw functions to work with animations
+        _this.advance = _this.advanceAnimation;
+        _this.draw = _this.drawAnimation;
       }
       else {
         _this.color = properties.color;
         _this.width = properties.width;
         _this.height = properties.height;
 
-        // make the render function for a noop since there is no image to draw.
-        // this.render should be overridden if you want to draw something else (like a box).
-        _this.render = _this.drawRect;
-        _this.updateAnimation = kontra.noop;
+        // change the advance and draw functions to work with rectangles
+        _this.advance = _this.advanceSprite;
+        _this.draw = _this.drawRect;
       }
 
       if (properties.update) {
@@ -2005,9 +2057,24 @@ var kontra = (function(kontra, Math, undefined) {
      * Simple bounding box collision test.
      * @memberOf kontra.sprite
      *
-     * @param {object} obj - Object to check collision against.
+     * @param {object} object - Object to check collision against.
+     *
+     * @returns {boolean} True if the objects collide, false otherwise.
      */
+    collidesWith: function collidesWith(object) {
+      // handle non-kontra.sprite objects as well as kontra.sprite objects
+      var x = (object.x !== undefined ? object.x : object.position.x);
+      var y = (object.y !== undefined ? object.y : object.position.y);
 
+      if (this.position.x < x + object.width &&
+          this.position.x + this.width > x &&
+          this.position.y < y + object.height &&
+          this.position.y + this.height > y) {
+        return true;
+      }
+
+      return false;
+    },
 
     /**
      * Update the sprites velocity and position.

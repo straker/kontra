@@ -40,33 +40,25 @@ var kontra = (function(kontra, Math, undefined) {
     },
 
     /**
-     * Get the length of the vector.
+     * Clamp the vector between two points that form a rectangle.
+     * Please note that clamping will only work if the add function is called.
      * @memberOf kontra.vector
      *
-     * @returns {number}
+     * @param {number} xMin - Min x value.
+     * @param {number} yMin - Min y value.
+     * @param {number} xMax - Max x value.
+     * @param {number} yMax - Max y value.
      */
-    length: function length() {
-      return Math.sqrt(this.x * this.x + this.y * this.y);
-    },
+    clamp: function clamp(xMin, yMin, xMax, yMax) {
 
-    /**
-     * Get the angle of the vector.
-     * @memberOf kontra.vector
-     *
-     * @returns {number}
-     */
-    angle: function angle() {
-      return Math.atan2(this.y, this.x);
-    },
+      // overwrite add function to clamp the final values.
+      this.add = function clampAdd(vector, dt) {
+        var x = this.x + vector.x * (dt || 1);
+        var y = this.y + vector.y * (dt || 1);
 
-    /**
-     * Get a new vector from an angle and magnitude
-     * @memberOf kontra.vector
-     *
-     * @returns {vector}
-     */
-    fromAngle: function fromAngle(angle, magnitude) {
-      return vector(magnitude * Math.cos(angle), magnitude * Math.sin(angle));
+        this.x = Math.min( Math.max(x, xMin), xMax );
+        this.y = Math.min( Math.max(y, yMin), yMax );
+      };
     }
   };
 

@@ -1164,7 +1164,7 @@ var kontra = (function(kontra, window) {
   // aliases modifier keys to their actual key for keyup event
   var aliases = {
     'leftwindow': 'meta',  // mac
-    'select': 'meta'  // mac
+    'select': 'meta'       // mac
   };
 
   // modifier order for combinations
@@ -1175,14 +1175,20 @@ var kontra = (function(kontra, window) {
   window.addEventListener('blur', blurEventHandler);
 
   /**
+   * Object for using keyboard.
+   */
+  kontra.keys = {};
+
+  /**
    * Register a function to be called on a keyboard keys.
+   * Please note that not all keyboard combinations can be executed due to ghosting.
    * @memberOf kontra
    *
    * @param {string|string[]} keys - keys combination string(s).
    *
    * @throws {SyntaxError} If callback is not a function.
    */
-  kontra.bindKey = function bindKey(keys, callback) {
+  kontra.keys.bind = function bindKey(keys, callback) {
     if (typeof callback !== 'function') {
       var error = new SyntaxError('Invalid function.');
       kontra.logError(error, 'You must provide a function as the second parameter.');
@@ -1202,7 +1208,7 @@ var kontra = (function(kontra, window) {
    * Remove the callback function for a key combination.
    * @param {string|string[]} keys - keys combination string.
    */
-  kontra.unbindKey = function unbindKey(keys) {
+  kontra.keys.unbind = function unbindKey(keys) {
     keys = (kontra.isArray(keys) ? keys : [keys]);
 
     for (var i = 0, key; key = keys[i]; i++) {
@@ -1220,7 +1226,7 @@ var kontra = (function(kontra, window) {
    *
    * @returns {boolean}
    */
-  kontra.keyIsPressed = function keyIsPressed(keys) {
+  kontra.keys.pressed = function keyPressed(keys) {
     var combination = normalizeKeys(keys);
     var pressed = true;
 
@@ -1654,19 +1660,15 @@ var kontra = (function(kontra, undefined) {
         return;
       }
 
-      // current node has subnodes, so we need to add _this object into a subnode
+      // current node has subnodes, so we need to add this object into a subnode
       if (_this.subnodes.length && _this.isBranchNode) {
         _this._addToSubnode(object);
 
         return;
       }
 
-      // _this node is a leaf node so add the object to it
+      // this node is a leaf node so add the object to it
       _this.objects.push(object);
-
-      if (_this.parentNode) {
-        _this.parentNode.numSubnodeObjects++;
-      }
 
       // split the node if there are too many objects
       if (_this.objects.length > _this.maxObjects && _this.depth < _this.maxDepth) {
@@ -1779,17 +1781,16 @@ var kontra = (function(kontra, undefined) {
       }
     },
 
+    /**
+     * Draw the quadtree. Useful for visual debugging.
+     * @memberOf kontra.quadtree
+     */
     render: function() {
-      if (this.objects.length || (this.parentNode && this.parentNode.isBranchNode) || this.depth === 0) {
+      // don't draw empty leaf nodes, always draw branch nodes and the first node
+      if (this.objects.length || this.isBranchNode || this.depth === 0) {
 
         kontra.context.strokeStyle = 'red';
         kontra.context.strokeRect(this.bounds.x, this.bounds.y, this.bounds.width, this.bounds.height);
-
-        // kontra.context.fillStyle = 'black';
-        // for (var i = 0; i < this.objects.length; i++) {
-        //   var obj = this.objects[i];
-        //   kontra.context.fillRect(obj.x, obj.y, obj.width, obj.height);
-        // }
 
         if (this.subnodes.length) {
           for (var i = 0; i < 4; i++) {
@@ -1844,33 +1845,25 @@ var kontra = (function(kontra, Math, undefined) {
     },
 
     /**
-     * Get the length of the vector.
+     * Clamp the vector between two points that form a rectangle.
+     * Please note that clamping will only work if the add function is called.
      * @memberOf kontra.vector
      *
-     * @returns {number}
+     * @param {number} xMin - Min x value.
+     * @param {number} yMin - Min y value.
+     * @param {number} xMax - Max x value.
+     * @param {number} yMax - Max y value.
      */
-    length: function length() {
-      return Math.sqrt(this.x * this.x + this.y * this.y);
-    },
+    clamp: function clamp(xMin, yMin, xMax, yMax) {
 
-    /**
-     * Get the angle of the vector.
-     * @memberOf kontra.vector
-     *
-     * @returns {number}
-     */
-    angle: function angle() {
-      return Math.atan2(this.y, this.x);
-    },
+      // overwrite add function to clamp the final values.
+      this.add = function clampAdd(vector, dt) {
+        var x = this.x + vector.x * (dt || 1);
+        var y = this.y + vector.y * (dt || 1);
 
-    /**
-     * Get a new vector from an angle and magnitude
-     * @memberOf kontra.vector
-     *
-     * @returns {vector}
-     */
-    fromAngle: function fromAngle(angle, magnitude) {
-      return vector(magnitude * Math.cos(angle), magnitude * Math.sin(angle));
+        this.x = Math.min( Math.max(x, xMin), xMax );
+        this.y = Math.min( Math.max(y, yMin), yMax );
+      };
     }
   };
 

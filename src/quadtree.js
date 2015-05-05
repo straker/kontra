@@ -126,19 +126,15 @@ var kontra = (function(kontra, undefined) {
         return;
       }
 
-      // current node has subnodes, so we need to add _this object into a subnode
+      // current node has subnodes, so we need to add this object into a subnode
       if (_this.subnodes.length && _this.isBranchNode) {
         _this._addToSubnode(object);
 
         return;
       }
 
-      // _this node is a leaf node so add the object to it
+      // this node is a leaf node so add the object to it
       _this.objects.push(object);
-
-      if (_this.parentNode) {
-        _this.parentNode.numSubnodeObjects++;
-      }
 
       // split the node if there are too many objects
       if (_this.objects.length > _this.maxObjects && _this.depth < _this.maxDepth) {
@@ -251,17 +247,16 @@ var kontra = (function(kontra, undefined) {
       }
     },
 
+    /**
+     * Draw the quadtree. Useful for visual debugging.
+     * @memberOf kontra.quadtree
+     */
     render: function() {
-      if (this.objects.length || (this.parentNode && this.parentNode.isBranchNode) || this.depth === 0) {
+      // don't draw empty leaf nodes, always draw branch nodes and the first node
+      if (this.objects.length || this.isBranchNode || this.depth === 0) {
 
         kontra.context.strokeStyle = 'red';
         kontra.context.strokeRect(this.bounds.x, this.bounds.y, this.bounds.width, this.bounds.height);
-
-        // kontra.context.fillStyle = 'black';
-        // for (var i = 0; i < this.objects.length; i++) {
-        //   var obj = this.objects[i];
-        //   kontra.context.fillRect(obj.x, obj.y, obj.width, obj.height);
-        // }
 
         if (this.subnodes.length) {
           for (var i = 0; i < 4; i++) {

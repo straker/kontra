@@ -34,21 +34,23 @@
       width: 20,
       height: 40,
       update: function() {
-        if (kontra.keyIsPressed('left')) {
-          player.position.x -= 2;
+        if (kontra.keys.pressed('left')) {
+          player.position.add({x: -2, y: 0});
         }
-        else if (kontra.keyIsPressed('right')) {
-          player.position.x += 2;
+        else if (kontra.keys.pressed('right')) {
+          player.position.add({x: 2, y: 0});
         }
 
-        if (kontra.keyIsPressed('up')) {
-          player.position.y -= 2;
+        if (kontra.keys.pressed('up')) {
+          player.position.add({x: 0, y: -2});
         }
-        else if (kontra.keyIsPressed('down')) {
-          player.position.y += 2;
+        else if (kontra.keys.pressed('down')) {
+          player.position.add({x: 0, y: 2});
         }
       }
     });
+
+    player.position.clamp(0, 0, kontra.game.width - player.width, kontra.game.height - player.height);
 
     // anim = kontra.sprite({
     //   x: 100,

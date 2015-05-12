@@ -6,7 +6,7 @@ var kontra = (function(kontra) {
   /**
    * Object pool. The pool will grow in size to accommodate as many objects as are needed.
    * Unused items are at the front of the pool and in use items are at the of the pool.
-   * @memberOf kontra
+   * @memberof kontra
    *
    * @see kontra.pool._proto.set for list of parameters.
    */
@@ -34,7 +34,7 @@ var kontra = (function(kontra) {
       // ensure objects for the pool have required functions
       var obj;
       try {
-        obj = properties.create();
+        obj = properties.create({});
 
         if (typeof obj.render !== 'function' || typeof obj.update !== 'function' ||
             typeof obj.set !== 'function' || typeof obj.isAlive !== 'function') {
@@ -62,11 +62,12 @@ var kontra = (function(kontra) {
       this.size = 1;
       this.maxSize = properties.maxSize || Infinity;
       this.lastIndex = 0;
+      this.inUse = 0;
     },
 
     /**
      * Get an object from the pool.
-     * @memberOf kontra.pool
+     * @memberof kontra.pool
      *
      * @param {object} properties - Properties to pass to object.set().
      */
@@ -80,7 +81,7 @@ var kontra = (function(kontra) {
       // 'double' the size of the array by filling it with twice as many objects
       else {
         for (var x = 0; x < _this.size && _this.objects.length < _this.maxSize; x++) {
-          _this.objects.unshift(_this.create());
+          _this.objects.unshift(_this.create({}));
         }
 
         _this.size = _this.objects.length;
@@ -91,34 +92,50 @@ var kontra = (function(kontra) {
       var obj = _this.objects[0];
       obj.set(properties);
 
-      // failsafe to ensure that the last object in the list after a get() is never dead
-      // doing so will cause the entire update/render logic to break
-      if (!obj.isAlive()) {
-        return;
-      }
-
       // unshift the array
       for (var i = 1; i < _this.size; i++) {
         _this.objects[i-1] = _this.objects[i];
       }
 
       _this.objects[_this.lastIndex] = obj;
+      _this.inUse++;
+    },
+
+    /**
+     * Return all objects that are alive from the pool.
+     * @memberof kontra.pool
+     *
+     * @returns {object[]}
+     */
+    getAliveObjects: function getAliveObjects() {
+      return this.objects.slice(this.objects.length - this.inUse);
+    },
+
+    /**
+     * Clear the object pool.
+     * @memberof kontra.pool
+     */
+    clear: function clear() {
+      this.inUse = 0;
+      this.size = 1;
+      this.lastIndex = 0;
+      this.objects.length = 0;
+      this.objects.push(this.create({}));
     },
 
     /**
      * Update all alive pool objects.
-     * @memberOf kontra.pool
+     * @memberof kontra.pool
      */
     update: function update() {
       var i = this.lastIndex;
       var obj;
 
-      while (obj = this.objects[i]) {
+      // only iterate over the objects that are alive
+      var index = this.objects.length - this.inUse;
 
-        // once we find the first object that is not alive we can stop
-        if (!obj.isAlive()) {
-          return;
-        }
+      while (i >= index) {
+        obj = this.objects[i];
 
         obj.update();
 
@@ -134,6 +151,8 @@ var kontra = (function(kontra) {
           }
 
           this.objects[0] = obj;
+          this.inUse--;
+          index++;
         }
         else {
           i--;
@@ -143,17 +162,13 @@ var kontra = (function(kontra) {
 
     /**
      * render all alive pool objects.
-     * @memberOf kontra.pool
+     * @memberof kontra.pool
      */
     render: function render() {
-      for (var i = this.lastIndex, obj; obj = this.objects[i]; i--) {
+      var index = this.objects.length - this.inUse;
 
-        // once we find the first object that is not alive we can stop
-        if (!obj.isAlive()) {
-          return;
-        }
-
-        obj.render();
+      for (var i = this.lastIndex; i >= index; i--) {
+        this.objects[i].render();
       }
     }
   };

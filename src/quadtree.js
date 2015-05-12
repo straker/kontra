@@ -7,7 +7,7 @@ var kontra = (function(kontra, undefined) {
    * A quadtree for 2D collision checking. The quadtree acts like an object pool in that it
    * will create subnodes as objects are needed but it won't clean up the subnodes when it
    * collapses to avoid garbage collection.
-   * @memberOf kontra
+   * @memberof kontra
    *
    * @see kontra.quadtree._proto.set for list of parameters.
    *L
@@ -28,7 +28,7 @@ var kontra = (function(kontra, undefined) {
   kontra.quadtree._proto = {
     /**
      * Set properties on the quadtree.
-     * @memberOf kontra.quadtree
+     * @memberof kontra.quadtree
      *
      * @param {number} [depth=0] - Current node depth.
      * @param {number} [maxDepth=3] - Maximum node depths the quadtree can have.
@@ -62,7 +62,7 @@ var kontra = (function(kontra, undefined) {
 
     /**
      * Clear the quadtree
-     * @memberOf kontra.quadtree
+     * @memberof kontra.quadtree
      */
     clear: function clear() {
       if (this.isBranchNode) {
@@ -78,7 +78,7 @@ var kontra = (function(kontra, undefined) {
     /**
      * Find the leaf node the object belongs to and get all objects that are part of
      * that node.
-     * @memberOf kontra.quadtree
+     * @memberof kontra.quadtree
      *
      * @param {object} object - Object to use for finding the leaf node.
      *
@@ -109,7 +109,7 @@ var kontra = (function(kontra, undefined) {
      * Add an object to the quadtree. Once the number of objects in the node exceeds
      * the maximum number of objects allowed, it will split and move all objects to their
      * corresponding subnodes.
-     * @memberOf kontra.quadtree
+     * @memberof kontra.quadtree
      *
      * @param {object} obj - Objects to add to the quadtree.
      */
@@ -151,7 +151,7 @@ var kontra = (function(kontra, undefined) {
 
     /**
      * Add an object to a subnode.
-     * @memberOf kontra.quadtree
+     * @memberof kontra.quadtree
      * @private
      *
      * @param {object} object - Object to add into a subnode
@@ -167,7 +167,7 @@ var kontra = (function(kontra, undefined) {
 
     /**
      * Determine which subnodes the object intersects with.
-     * @memberOf kontra.quadtree
+     * @memberof kontra.quadtree
      * @private
      *
      * @param {object} object - Object to check.
@@ -215,7 +215,7 @@ var kontra = (function(kontra, undefined) {
 
     /**
      * Split the node into four subnodes.
-     * @memberOf kontra.quadtree
+     * @memberof kontra.quadtree
      * @private
      */
     _split: function split() {
@@ -249,7 +249,7 @@ var kontra = (function(kontra, undefined) {
 
     /**
      * Draw the quadtree. Useful for visual debugging.
-     * @memberOf kontra.quadtree
+     * @memberof kontra.quadtree
      */
     render: function() {
       // don't draw empty leaf nodes, always draw branch nodes and the first node

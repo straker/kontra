@@ -27,7 +27,7 @@ var kontra = (function(kontra, window, document) {
 
   /**
    * Game loop that updates and renders the game every frame.
-   * @memberOf kontra
+   * @memberof kontra
    *
    * @see kontra.gameLoop._proto.set for list of parameters.
    */
@@ -41,7 +41,7 @@ var kontra = (function(kontra, window, document) {
   kontra.gameLoop._proto = {
     /**
      * Set properties on the game loop.
-     * @memberOf kontra.gameLoop
+     * @memberof kontra.gameLoop
      *
      * @param {object}   properties - Configure the game loop.
      * @param {number}   [properties.fps=60] - Desired frame rate.
@@ -58,6 +58,8 @@ var kontra = (function(kontra, window, document) {
         return;
       }
 
+      this.isStopped = false;
+
       // animation variables
       this._accumulator = 0;
       this._delta = 1E3 / (properties.fps || 60);
@@ -68,7 +70,7 @@ var kontra = (function(kontra, window, document) {
 
     /**
      * Called every frame of the game loop.
-     * @memberOf kontra.gameLoop
+     * @memberof kontra.gameLoop
      */
     frame: function frame() {
       var _this = this;
@@ -98,10 +100,11 @@ var kontra = (function(kontra, window, document) {
 
     /**
      * Start the game loop.
-     * @memberOf kontra.gameLoop
+     * @memberof kontra.gameLoop
      */
     start: function start() {
       this._last = kontra.timestamp();
+      this.isStopped = false;
       requestAnimationFrame(this.frame.bind(this));
     },
 
@@ -109,6 +112,7 @@ var kontra = (function(kontra, window, document) {
      * Stop the game loop.
      */
     stop: function stop() {
+      this.isStopped = true;
       cancelAnimationFrame(this._rAF);
     }
   };

@@ -5,7 +5,7 @@ var kontra = (function(kontra, undefined) {
 
   /**
    * A tile engine for rendering tilesets. Works well with the tile engine program Tiled.
-   * @memberOf kontra
+   * @memberof kontra
    * @constructor
    *
    * @param {object} properties - Configure the tile engine.
@@ -51,7 +51,7 @@ var kontra = (function(kontra, undefined) {
 
     /**
      * Add an image for the tile engine to use.
-     * @memberOf kontra.TileEngine
+     * @memberof kontra.TileEngine
      *
      * @param {object} properties - Properties of the image to add.
      * @param {string} properties.name - Name of the image.
@@ -77,7 +77,7 @@ var kontra = (function(kontra, undefined) {
 
     /**
      * Remove an image from the tile engine.
-     * @memberOf kontra.TileEngine
+     * @memberof kontra.TileEngine
      *
      * @param {string} name - Name of the image to remove.
      */
@@ -99,7 +99,7 @@ var kontra = (function(kontra, undefined) {
 
     /**
      * Add a layer to the tile engine.
-     * @memberOf kontra.TileEngine
+     * @memberof kontra.TileEngine
      *
      * @param {object} properties - Properties of the layer to add.
      * @param {string} properties.name - Name of the layer.
@@ -125,7 +125,7 @@ var kontra = (function(kontra, undefined) {
 
     /**
      * Remove a layer from the tile engine.
-     * @memberOf kontra.TileEngine
+     * @memberof kontra.TileEngine
      *
      * @param {string} name - Name of the layer to remove.
      */
@@ -135,7 +135,7 @@ var kontra = (function(kontra, undefined) {
 
     /**
      * Draw the pre-rendered canvas.
-     * @memberOf kontra.TileEngine
+     * @memberof kontra.TileEngine
      */
     this.draw = function TileEngineDraw() {
       this.context.drawImage(offScreenCanvas, 0, 0);
@@ -143,7 +143,7 @@ var kontra = (function(kontra, undefined) {
 
     /**
      * Associate an image with its tiles.
-     * @memberOf kontra.TileEngine
+     * @memberof kontra.TileEngine
      *
      * @param {object} properties - Properties of the image to add.
      * @param {Image|Canvas} properties.image - Image to add.

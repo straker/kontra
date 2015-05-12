@@ -107,14 +107,14 @@ var kontra = (function(kontra, window) {
   window.addEventListener('blur', blurEventHandler);
 
   /**
-   * Object for using keyboard.
+   * Object for using the keyboard.
    */
   kontra.keys = {};
 
   /**
    * Register a function to be called on a keyboard keys.
    * Please note that not all keyboard combinations can be executed due to ghosting.
-   * @memberOf kontra
+   * @memberof kontra.keys
    *
    * @param {string|string[]} keys - keys combination string(s).
    *
@@ -138,6 +138,8 @@ var kontra = (function(kontra, window) {
 
   /**
    * Remove the callback function for a key combination.
+   * @memberof kontra.keys
+   *
    * @param {string|string[]} keys - keys combination string.
    */
   kontra.keys.unbind = function unbindKey(keys) {
@@ -152,7 +154,7 @@ var kontra = (function(kontra, window) {
 
   /**
    * Returns whether a key is pressed.
-   * @memberOf kontra
+   * @memberof kontra.keys
    *
    * @param {string} keys - Keys combination string.
    *

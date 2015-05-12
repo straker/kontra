@@ -5,7 +5,7 @@ var kontra = (function(kontra, undefined) {
 
   /**
    * Single animation from a sprite sheet.
-   * @memberOf kontra
+   * @memberof kontra
    *
    * @see kontra.pool._proto.set for list of parameters.
    */
@@ -19,7 +19,7 @@ var kontra = (function(kontra, undefined) {
   kontra.animation._proto = {
     /**
      * Set properties on the animation.
-     * @memberOf kontra.animation
+     * @memberof kontra.animation
      *
      * @param {object} properties - Properties of the animation.
      * @param {spriteSheet} properties.spriteSheet - Sprite sheet for the animation.
@@ -44,7 +44,7 @@ var kontra = (function(kontra, undefined) {
 
     /**
      * Update the animation. Used when the animation is not paused or stopped.
-     * @memberOf kontra.animation
+     * @memberof kontra.animation
      * @private
      *
      * @param {number} dt=1 - Time since last update.
@@ -65,7 +65,7 @@ var kontra = (function(kontra, undefined) {
 
     /**
      * Draw the current frame. Used when the animation is not stopped.
-     * @memberOf kontra.animation
+     * @memberof kontra.animation
      * @private
      *
      * @param {object} properties - How to draw the animation.
@@ -93,7 +93,7 @@ var kontra = (function(kontra, undefined) {
 
     /**
      * Play the animation.
-     * @memberOf kontra.animation
+     * @memberof kontra.animation
      */
     play: function play() {
       // restore references to update and render functions only if overridden
@@ -103,7 +103,7 @@ var kontra = (function(kontra, undefined) {
 
     /**
      * Stop the animation and prevent update and render.
-     * @memberOf kontra.animation
+     * @memberof kontra.animation
      */
     stop: function stop() {
 
@@ -117,7 +117,7 @@ var kontra = (function(kontra, undefined) {
 
     /**
      * Pause the animation and prevent update.
-     * @memberOf kontra.animation
+     * @memberof kontra.animation
      */
     pause: function pause() {
       this.update = kontra.noop;
@@ -131,7 +131,7 @@ var kontra = (function(kontra, undefined) {
 
   /**
    * Create a sprite sheet from an image.
-   * @memberOf kontra
+   * @memberof kontra
    *
    * @see kontra.spriteSheet._proto.set for list of parameters.
    */
@@ -145,7 +145,7 @@ var kontra = (function(kontra, undefined) {
   kontra.spriteSheet._proto = {
     /**
      * Set properties on the spriteSheet.
-     * @memberOf kontra
+     * @memberof kontra
      * @constructor
      *
      * @param {object} properties - Configure the sprite sheet.
@@ -180,7 +180,7 @@ var kontra = (function(kontra, undefined) {
 
     /**
      * Create animations from the sprite sheet.
-     * @memberOf kontra.spriteSheet
+     * @memberof kontra.spriteSheet
      *
      * @param {object} animations - List of named animations to create from the Image.
      * @param {number|string|number[]|string[]} animations.animationName.frames - A single frame or list of frames for this animation.
@@ -274,7 +274,7 @@ var kontra = (function(kontra, undefined) {
 
     /**
      * Parse a string of consecutive frames.
-     * @memberOf kontra.spriteSheet
+     * @memberof kontra.spriteSheet
      * @private
      *
      * @param {string} frames - Start and end frame.

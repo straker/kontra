@@ -3,7 +3,7 @@ var kontra = (function(kontra, Math, undefined) {
 
   /**
    * A vector for 2D space.
-   * @memberOf kontra
+   * @memberof kontra
    *
    * @see kontra.vector._proto.set for list of parameters.
    */
@@ -17,7 +17,7 @@ var kontra = (function(kontra, Math, undefined) {
   kontra.vector._proto = {
     /**
      * Set the vector's x and y position.
-     * @memberOf kontra.vector
+     * @memberof kontra.vector
      *
      * @param {number} x=0 - Center x coordinate.
      * @param {number} y=0 - Center y coordinate.
@@ -29,20 +29,20 @@ var kontra = (function(kontra, Math, undefined) {
 
     /**
      * Add a vector to this vector.
-     * @memberOf kontra.vector
+     * @memberof kontra.vector
      *
      * @param {vector} vector - Vector to add.
      * @param {number} dt=1 - Time since last update.
      */
     add: function add(vector, dt) {
-      this.x += vector.x * (dt || 1);
-      this.y += vector.y * (dt || 1);
+      this.x += (vector.x || 0) * (dt || 1);
+      this.y += (vector.y || 0) * (dt || 1);
     },
 
     /**
      * Clamp the vector between two points that form a rectangle.
      * Please note that clamping will only work if the add function is called.
-     * @memberOf kontra.vector
+     * @memberof kontra.vector
      *
      * @param {number} xMin - Min x value.
      * @param {number} yMin - Min y value.
@@ -53,8 +53,8 @@ var kontra = (function(kontra, Math, undefined) {
 
       // overwrite add function to clamp the final values.
       this.add = function clampAdd(vector, dt) {
-        var x = this.x + vector.x * (dt || 1);
-        var y = this.y + vector.y * (dt || 1);
+        var x = this.x + (vector.x || 0) * (dt || 1);
+        var y = this.y + (vector.y || 0) * (dt || 1);
 
         this.x = Math.min( Math.max(x, xMin), xMax );
         this.y = Math.min( Math.max(y, yMin), yMax );
@@ -68,7 +68,7 @@ var kontra = (function(kontra, Math, undefined) {
 
   /**
    * A sprite with a position, velocity, and acceleration.
-   * @memberOf kontra
+   * @memberof kontra
    * @requires kontra.vector
    *
    * @see kontra.sprite._prot.set for list of parameters.
@@ -86,7 +86,7 @@ var kontra = (function(kontra, Math, undefined) {
   kontra.sprite._proto = {
     /**
      * Move the sprite by its velocity.
-     * @memberOf kontra.sprite
+     * @memberof kontra.sprite
      *
      * @param {number} dt - Time since last update.
      */
@@ -99,7 +99,7 @@ var kontra = (function(kontra, Math, undefined) {
 
     /**
      * Draw a simple rectangle. Useful for prototyping.
-     * @memberOf kontra.sprite
+     * @memberof kontra.sprite
      */
     drawRect: function drawRect() {
       this.context.fillStyle = this.color;
@@ -108,7 +108,7 @@ var kontra = (function(kontra, Math, undefined) {
 
     /**
      * Draw the sprite.
-     * @memberOf kontra.sprite
+     * @memberof kontra.sprite
      */
     drawImage: function drawImage() {
       this.context.drawImage(this.image, this.position.x, this.position.y);
@@ -116,7 +116,7 @@ var kontra = (function(kontra, Math, undefined) {
 
     /**
      * Update the currently playing animation. Used when animations are passed to the sprite.
-     * @memberOf kontra.sprite
+     * @memberof kontra.sprite
      *
      * @param {number} dt - Time since last update.
      */
@@ -128,7 +128,7 @@ var kontra = (function(kontra, Math, undefined) {
 
     /**
      * Draw the currently playing animation. Used when animations are passed to the sprite.
-     * @memberOf kontra.sprite
+     * @memberof kontra.sprite
      */
     drawAnimation: function drawAnimation() {
       this.currentAnimation.render({
@@ -140,7 +140,7 @@ var kontra = (function(kontra, Math, undefined) {
 
     /**
      * Play an animation.
-     * @memberOf kontra.sprite
+     * @memberof kontra.sprite
      *
      * @param {string} name - Name of the animation to play.
      */
@@ -150,7 +150,7 @@ var kontra = (function(kontra, Math, undefined) {
 
     /**
      * Determine if the sprite is alive.
-     * @memberOf kontra.sprite
+     * @memberof kontra.sprite
      *
      * @returns {boolean}
      */
@@ -160,7 +160,7 @@ var kontra = (function(kontra, Math, undefined) {
 
     /**
      * Set properties on the sprite.
-     * @memberOf kontra.sprite
+     * @memberof kontra.sprite
      *
      * @param {object} properties - Properties to set on the sprite.
      * @param {number} properties.x - X coordinate of the sprite.
@@ -170,6 +170,7 @@ var kontra = (function(kontra, Math, undefined) {
      * @param {number} [properties.ddx] - Change in X velocity.
      * @param {number} [properties.ddy] - Change in Y velocity.
      *
+     * @param {object} [properties.properties] - Additional properties to set on the sprite.
      * @param {number} [properties.timeToLive=0] - How may frames the sprite should be alive.
      * @param {Context} [properties.context=kontra.context] - Provide a context for the sprite to draw on.
      *
@@ -185,9 +186,8 @@ var kontra = (function(kontra, Math, undefined) {
      * @param {function} [properties.render] - Function to use to render the sprite.
      *
      * If you need the sprite to live forever, or just need it to stay on screen until you
-     * decide when to kill it, you can set time to live to <code>Infinity</code>. Just be
-     * sure to override the <code>isAlive()</code> function to return true when the sprite
-     * should die.
+     * decide when to kill it, you can set <code>timeToLive</code> to <code>Infinity</code>.
+     * Just be sure to set <code>timeToLive</code> to 0 when you want the sprite to die.
      */
     set: function set(properties) {
       properties = properties || {};
@@ -201,6 +201,7 @@ var kontra = (function(kontra, Math, undefined) {
 
       _this.context = properties.context || kontra.context;
 
+      // image sprite
       if (kontra.isImage(properties.image) || kontra.isCanvas(properties.image)) {
         _this.image = properties.image;
         _this.width = properties.image.width;
@@ -210,6 +211,7 @@ var kontra = (function(kontra, Math, undefined) {
         _this.advance = _this.advanceSprite;
         _this.draw = _this.drawImage;
       }
+      // animation sprite
       else if (properties.animations) {
         _this.animations = properties.animations;
 
@@ -222,6 +224,7 @@ var kontra = (function(kontra, Math, undefined) {
         _this.advance = _this.advanceAnimation;
         _this.draw = _this.drawAnimation;
       }
+      // rectangle sprite
       else {
         _this.color = properties.color;
         _this.width = properties.width;
@@ -239,11 +242,18 @@ var kontra = (function(kontra, Math, undefined) {
       if (properties.render) {
         _this.render = properties.render;
       }
+
+      // loop through all additional properties and add them to the sprite
+      for (var prop in properties.properties) {
+        if (properties.properties.hasOwnProperty(prop)) {
+          _this[prop] = properties.properties[prop];
+        }
+      }
     },
 
     /**
      * Simple bounding box collision test.
-     * @memberOf kontra.sprite
+     * @memberof kontra.sprite
      *
      * @param {object} object - Object to check collision against.
      *
@@ -266,7 +276,7 @@ var kontra = (function(kontra, Math, undefined) {
 
     /**
      * Update the sprites velocity and position.
-     * @memberOf kontra.sprite
+     * @memberof kontra.sprite
      * @abstract
      *
      * @param {number} dt - Time since last update.
@@ -290,7 +300,7 @@ var kontra = (function(kontra, Math, undefined) {
 
     /**
      * Render the sprite.
-     * @memberOf kontra.sprite.
+     * @memberof kontra.sprite.
      * @abstract
      *
      * This function can be overridden on a per sprite basis if more functionality

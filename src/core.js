@@ -5,7 +5,7 @@ var kontra = (function(kontra, document) {
 
   /**
    * Set up the canvas.
-   * @memberOf kontra
+   * @memberof kontra
    *
    * @param {object} properties - Properties for the game.
    * @param {string|Canvas} properties.canvas - Main canvas ID or Element for the game.
@@ -38,7 +38,7 @@ var kontra = (function(kontra, document) {
 
   /**
    * Throw an error message to the user with readable formating.
-   * @memberOf kontra
+   * @memberof kontra
    *
    * @param {Error}  error - Error object.
    * @param {string} message - Error message.
@@ -49,13 +49,13 @@ var kontra = (function(kontra, document) {
 
   /**
    * Noop function.
-   * @memberOf kontra
+   * @memberof kontra
    */
   kontra.noop = function noop() {};
 
   /**
    * Determine if a value is an Array.
-   * @memberOf kontra
+   * @memberof kontra
    *
    * @param {*} value - Value to test.
    *
@@ -65,7 +65,7 @@ var kontra = (function(kontra, document) {
 
   /**
    * Determine if a value is a String.
-   * @memberOf kontra
+   * @memberof kontra
    *
    * @param {*} value - Value to test.
    *
@@ -77,7 +77,7 @@ var kontra = (function(kontra, document) {
 
   /**
    * Determine if a value is a Number.
-   * @memberOf kontra
+   * @memberof kontra
    *
    * @param {*} value - Value to test.
    *
@@ -89,7 +89,7 @@ var kontra = (function(kontra, document) {
 
   /**
    * Determine if a value is an Image.
-   * @memberOf kontra
+   * @memberof kontra
    *
    * @param {*} value - Value to test.
    *
@@ -101,7 +101,7 @@ var kontra = (function(kontra, document) {
 
   /**
    * Determine if a value is a Canvas.
-   * @memberOf kontra
+   * @memberof kontra
    *
    * @param {*} value - Value to test.
    *

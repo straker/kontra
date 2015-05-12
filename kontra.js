@@ -841,7 +841,7 @@ var kontra = (function(kontra, document) {
 
   /**
    * Set up the canvas.
-   * @memberOf kontra
+   * @memberof kontra
    *
    * @param {object} properties - Properties for the game.
    * @param {string|Canvas} properties.canvas - Main canvas ID or Element for the game.
@@ -874,7 +874,7 @@ var kontra = (function(kontra, document) {
 
   /**
    * Throw an error message to the user with readable formating.
-   * @memberOf kontra
+   * @memberof kontra
    *
    * @param {Error}  error - Error object.
    * @param {string} message - Error message.
@@ -885,13 +885,13 @@ var kontra = (function(kontra, document) {
 
   /**
    * Noop function.
-   * @memberOf kontra
+   * @memberof kontra
    */
   kontra.noop = function noop() {};
 
   /**
    * Determine if a value is an Array.
-   * @memberOf kontra
+   * @memberof kontra
    *
    * @param {*} value - Value to test.
    *
@@ -901,7 +901,7 @@ var kontra = (function(kontra, document) {
 
   /**
    * Determine if a value is a String.
-   * @memberOf kontra
+   * @memberof kontra
    *
    * @param {*} value - Value to test.
    *
@@ -913,7 +913,7 @@ var kontra = (function(kontra, document) {
 
   /**
    * Determine if a value is a Number.
-   * @memberOf kontra
+   * @memberof kontra
    *
    * @param {*} value - Value to test.
    *
@@ -925,7 +925,7 @@ var kontra = (function(kontra, document) {
 
   /**
    * Determine if a value is an Image.
-   * @memberOf kontra
+   * @memberof kontra
    *
    * @param {*} value - Value to test.
    *
@@ -937,7 +937,7 @@ var kontra = (function(kontra, document) {
 
   /**
    * Determine if a value is a Canvas.
-   * @memberOf kontra
+   * @memberof kontra
    *
    * @param {*} value - Value to test.
    *
@@ -978,7 +978,7 @@ var kontra = (function(kontra, window, document) {
 
   /**
    * Game loop that updates and renders the game every frame.
-   * @memberOf kontra
+   * @memberof kontra
    *
    * @see kontra.gameLoop._proto.set for list of parameters.
    */
@@ -992,7 +992,7 @@ var kontra = (function(kontra, window, document) {
   kontra.gameLoop._proto = {
     /**
      * Set properties on the game loop.
-     * @memberOf kontra.gameLoop
+     * @memberof kontra.gameLoop
      *
      * @param {object}   properties - Configure the game loop.
      * @param {number}   [properties.fps=60] - Desired frame rate.
@@ -1009,6 +1009,8 @@ var kontra = (function(kontra, window, document) {
         return;
       }
 
+      this.isStopped = false;
+
       // animation variables
       this._accumulator = 0;
       this._delta = 1E3 / (properties.fps || 60);
@@ -1019,7 +1021,7 @@ var kontra = (function(kontra, window, document) {
 
     /**
      * Called every frame of the game loop.
-     * @memberOf kontra.gameLoop
+     * @memberof kontra.gameLoop
      */
     frame: function frame() {
       var _this = this;
@@ -1049,10 +1051,11 @@ var kontra = (function(kontra, window, document) {
 
     /**
      * Start the game loop.
-     * @memberOf kontra.gameLoop
+     * @memberof kontra.gameLoop
      */
     start: function start() {
       this._last = kontra.timestamp();
+      this.isStopped = false;
       requestAnimationFrame(this.frame.bind(this));
     },
 
@@ -1060,6 +1063,7 @@ var kontra = (function(kontra, window, document) {
      * Stop the game loop.
      */
     stop: function stop() {
+      this.isStopped = true;
       cancelAnimationFrame(this._rAF);
     }
   };
@@ -1175,14 +1179,14 @@ var kontra = (function(kontra, window) {
   window.addEventListener('blur', blurEventHandler);
 
   /**
-   * Object for using keyboard.
+   * Object for using the keyboard.
    */
   kontra.keys = {};
 
   /**
    * Register a function to be called on a keyboard keys.
    * Please note that not all keyboard combinations can be executed due to ghosting.
-   * @memberOf kontra
+   * @memberof kontra.keys
    *
    * @param {string|string[]} keys - keys combination string(s).
    *
@@ -1206,6 +1210,8 @@ var kontra = (function(kontra, window) {
 
   /**
    * Remove the callback function for a key combination.
+   * @memberof kontra.keys
+   *
    * @param {string|string[]} keys - keys combination string.
    */
   kontra.keys.unbind = function unbindKey(keys) {
@@ -1220,7 +1226,7 @@ var kontra = (function(kontra, window) {
 
   /**
    * Returns whether a key is pressed.
-   * @memberOf kontra
+   * @memberof kontra.keys
    *
    * @param {string} keys - Keys combination string.
    *
@@ -1370,6 +1376,7 @@ var kontra = (function(kontra, window) {
 
   return kontra;
 })(kontra || {}, window);
+
 /*jshint -W084 */
 
 var kontra = (function(kontra) {
@@ -1378,7 +1385,7 @@ var kontra = (function(kontra) {
   /**
    * Object pool. The pool will grow in size to accommodate as many objects as are needed.
    * Unused items are at the front of the pool and in use items are at the of the pool.
-   * @memberOf kontra
+   * @memberof kontra
    *
    * @see kontra.pool._proto.set for list of parameters.
    */
@@ -1406,7 +1413,7 @@ var kontra = (function(kontra) {
       // ensure objects for the pool have required functions
       var obj;
       try {
-        obj = properties.create();
+        obj = properties.create({});
 
         if (typeof obj.render !== 'function' || typeof obj.update !== 'function' ||
             typeof obj.set !== 'function' || typeof obj.isAlive !== 'function') {
@@ -1434,11 +1441,12 @@ var kontra = (function(kontra) {
       this.size = 1;
       this.maxSize = properties.maxSize || Infinity;
       this.lastIndex = 0;
+      this.inUse = 0;
     },
 
     /**
      * Get an object from the pool.
-     * @memberOf kontra.pool
+     * @memberof kontra.pool
      *
      * @param {object} properties - Properties to pass to object.set().
      */
@@ -1452,7 +1460,7 @@ var kontra = (function(kontra) {
       // 'double' the size of the array by filling it with twice as many objects
       else {
         for (var x = 0; x < _this.size && _this.objects.length < _this.maxSize; x++) {
-          _this.objects.unshift(_this.create());
+          _this.objects.unshift(_this.create({}));
         }
 
         _this.size = _this.objects.length;
@@ -1463,34 +1471,50 @@ var kontra = (function(kontra) {
       var obj = _this.objects[0];
       obj.set(properties);
 
-      // failsafe to ensure that the last object in the list after a get() is never dead
-      // doing so will cause the entire update/render logic to break
-      if (!obj.isAlive()) {
-        return;
-      }
-
       // unshift the array
       for (var i = 1; i < _this.size; i++) {
         _this.objects[i-1] = _this.objects[i];
       }
 
       _this.objects[_this.lastIndex] = obj;
+      _this.inUse++;
+    },
+
+    /**
+     * Return all objects that are alive from the pool.
+     * @memberof kontra.pool
+     *
+     * @returns {object[]}
+     */
+    getAliveObjects: function getAliveObjects() {
+      return this.objects.slice(this.objects.length - this.inUse);
+    },
+
+    /**
+     * Clear the object pool.
+     * @memberof kontra.pool
+     */
+    clear: function clear() {
+      this.inUse = 0;
+      this.size = 1;
+      this.lastIndex = 0;
+      this.objects.length = 0;
+      this.objects.push(this.create({}));
     },
 
     /**
      * Update all alive pool objects.
-     * @memberOf kontra.pool
+     * @memberof kontra.pool
      */
     update: function update() {
       var i = this.lastIndex;
       var obj;
 
-      while (obj = this.objects[i]) {
+      // only iterate over the objects that are alive
+      var index = this.objects.length - this.inUse;
 
-        // once we find the first object that is not alive we can stop
-        if (!obj.isAlive()) {
-          return;
-        }
+      while (i >= index) {
+        obj = this.objects[i];
 
         obj.update();
 
@@ -1506,6 +1530,8 @@ var kontra = (function(kontra) {
           }
 
           this.objects[0] = obj;
+          this.inUse--;
+          index++;
         }
         else {
           i--;
@@ -1515,17 +1541,13 @@ var kontra = (function(kontra) {
 
     /**
      * render all alive pool objects.
-     * @memberOf kontra.pool
+     * @memberof kontra.pool
      */
     render: function render() {
-      for (var i = this.lastIndex, obj; obj = this.objects[i]; i--) {
+      var index = this.objects.length - this.inUse;
 
-        // once we find the first object that is not alive we can stop
-        if (!obj.isAlive()) {
-          return;
-        }
-
-        obj.render();
+      for (var i = this.lastIndex; i >= index; i--) {
+        this.objects[i].render();
       }
     }
   };
@@ -1541,7 +1563,7 @@ var kontra = (function(kontra, undefined) {
    * A quadtree for 2D collision checking. The quadtree acts like an object pool in that it
    * will create subnodes as objects are needed but it won't clean up the subnodes when it
    * collapses to avoid garbage collection.
-   * @memberOf kontra
+   * @memberof kontra
    *
    * @see kontra.quadtree._proto.set for list of parameters.
    *L
@@ -1562,7 +1584,7 @@ var kontra = (function(kontra, undefined) {
   kontra.quadtree._proto = {
     /**
      * Set properties on the quadtree.
-     * @memberOf kontra.quadtree
+     * @memberof kontra.quadtree
      *
      * @param {number} [depth=0] - Current node depth.
      * @param {number} [maxDepth=3] - Maximum node depths the quadtree can have.
@@ -1596,7 +1618,7 @@ var kontra = (function(kontra, undefined) {
 
     /**
      * Clear the quadtree
-     * @memberOf kontra.quadtree
+     * @memberof kontra.quadtree
      */
     clear: function clear() {
       if (this.isBranchNode) {
@@ -1612,7 +1634,7 @@ var kontra = (function(kontra, undefined) {
     /**
      * Find the leaf node the object belongs to and get all objects that are part of
      * that node.
-     * @memberOf kontra.quadtree
+     * @memberof kontra.quadtree
      *
      * @param {object} object - Object to use for finding the leaf node.
      *
@@ -1643,7 +1665,7 @@ var kontra = (function(kontra, undefined) {
      * Add an object to the quadtree. Once the number of objects in the node exceeds
      * the maximum number of objects allowed, it will split and move all objects to their
      * corresponding subnodes.
-     * @memberOf kontra.quadtree
+     * @memberof kontra.quadtree
      *
      * @param {object} obj - Objects to add to the quadtree.
      */
@@ -1685,7 +1707,7 @@ var kontra = (function(kontra, undefined) {
 
     /**
      * Add an object to a subnode.
-     * @memberOf kontra.quadtree
+     * @memberof kontra.quadtree
      * @private
      *
      * @param {object} object - Object to add into a subnode
@@ -1701,7 +1723,7 @@ var kontra = (function(kontra, undefined) {
 
     /**
      * Determine which subnodes the object intersects with.
-     * @memberOf kontra.quadtree
+     * @memberof kontra.quadtree
      * @private
      *
      * @param {object} object - Object to check.
@@ -1749,7 +1771,7 @@ var kontra = (function(kontra, undefined) {
 
     /**
      * Split the node into four subnodes.
-     * @memberOf kontra.quadtree
+     * @memberof kontra.quadtree
      * @private
      */
     _split: function split() {
@@ -1783,7 +1805,7 @@ var kontra = (function(kontra, undefined) {
 
     /**
      * Draw the quadtree. Useful for visual debugging.
-     * @memberOf kontra.quadtree
+     * @memberof kontra.quadtree
      */
     render: function() {
       // don't draw empty leaf nodes, always draw branch nodes and the first node
@@ -1808,7 +1830,7 @@ var kontra = (function(kontra, Math, undefined) {
 
   /**
    * A vector for 2D space.
-   * @memberOf kontra
+   * @memberof kontra
    *
    * @see kontra.vector._proto.set for list of parameters.
    */
@@ -1822,7 +1844,7 @@ var kontra = (function(kontra, Math, undefined) {
   kontra.vector._proto = {
     /**
      * Set the vector's x and y position.
-     * @memberOf kontra.vector
+     * @memberof kontra.vector
      *
      * @param {number} x=0 - Center x coordinate.
      * @param {number} y=0 - Center y coordinate.
@@ -1834,20 +1856,20 @@ var kontra = (function(kontra, Math, undefined) {
 
     /**
      * Add a vector to this vector.
-     * @memberOf kontra.vector
+     * @memberof kontra.vector
      *
      * @param {vector} vector - Vector to add.
      * @param {number} dt=1 - Time since last update.
      */
     add: function add(vector, dt) {
-      this.x += vector.x * (dt || 1);
-      this.y += vector.y * (dt || 1);
+      this.x += (vector.x || 0) * (dt || 1);
+      this.y += (vector.y || 0) * (dt || 1);
     },
 
     /**
      * Clamp the vector between two points that form a rectangle.
      * Please note that clamping will only work if the add function is called.
-     * @memberOf kontra.vector
+     * @memberof kontra.vector
      *
      * @param {number} xMin - Min x value.
      * @param {number} yMin - Min y value.
@@ -1858,8 +1880,8 @@ var kontra = (function(kontra, Math, undefined) {
 
       // overwrite add function to clamp the final values.
       this.add = function clampAdd(vector, dt) {
-        var x = this.x + vector.x * (dt || 1);
-        var y = this.y + vector.y * (dt || 1);
+        var x = this.x + (vector.x || 0) * (dt || 1);
+        var y = this.y + (vector.y || 0) * (dt || 1);
 
         this.x = Math.min( Math.max(x, xMin), xMax );
         this.y = Math.min( Math.max(y, yMin), yMax );
@@ -1873,7 +1895,7 @@ var kontra = (function(kontra, Math, undefined) {
 
   /**
    * A sprite with a position, velocity, and acceleration.
-   * @memberOf kontra
+   * @memberof kontra
    * @requires kontra.vector
    *
    * @see kontra.sprite._prot.set for list of parameters.
@@ -1891,7 +1913,7 @@ var kontra = (function(kontra, Math, undefined) {
   kontra.sprite._proto = {
     /**
      * Move the sprite by its velocity.
-     * @memberOf kontra.sprite
+     * @memberof kontra.sprite
      *
      * @param {number} dt - Time since last update.
      */
@@ -1904,7 +1926,7 @@ var kontra = (function(kontra, Math, undefined) {
 
     /**
      * Draw a simple rectangle. Useful for prototyping.
-     * @memberOf kontra.sprite
+     * @memberof kontra.sprite
      */
     drawRect: function drawRect() {
       this.context.fillStyle = this.color;
@@ -1913,7 +1935,7 @@ var kontra = (function(kontra, Math, undefined) {
 
     /**
      * Draw the sprite.
-     * @memberOf kontra.sprite
+     * @memberof kontra.sprite
      */
     drawImage: function drawImage() {
       this.context.drawImage(this.image, this.position.x, this.position.y);
@@ -1921,7 +1943,7 @@ var kontra = (function(kontra, Math, undefined) {
 
     /**
      * Update the currently playing animation. Used when animations are passed to the sprite.
-     * @memberOf kontra.sprite
+     * @memberof kontra.sprite
      *
      * @param {number} dt - Time since last update.
      */
@@ -1933,7 +1955,7 @@ var kontra = (function(kontra, Math, undefined) {
 
     /**
      * Draw the currently playing animation. Used when animations are passed to the sprite.
-     * @memberOf kontra.sprite
+     * @memberof kontra.sprite
      */
     drawAnimation: function drawAnimation() {
       this.currentAnimation.render({
@@ -1945,7 +1967,7 @@ var kontra = (function(kontra, Math, undefined) {
 
     /**
      * Play an animation.
-     * @memberOf kontra.sprite
+     * @memberof kontra.sprite
      *
      * @param {string} name - Name of the animation to play.
      */
@@ -1955,7 +1977,7 @@ var kontra = (function(kontra, Math, undefined) {
 
     /**
      * Determine if the sprite is alive.
-     * @memberOf kontra.sprite
+     * @memberof kontra.sprite
      *
      * @returns {boolean}
      */
@@ -1965,7 +1987,7 @@ var kontra = (function(kontra, Math, undefined) {
 
     /**
      * Set properties on the sprite.
-     * @memberOf kontra.sprite
+     * @memberof kontra.sprite
      *
      * @param {object} properties - Properties to set on the sprite.
      * @param {number} properties.x - X coordinate of the sprite.
@@ -1975,6 +1997,7 @@ var kontra = (function(kontra, Math, undefined) {
      * @param {number} [properties.ddx] - Change in X velocity.
      * @param {number} [properties.ddy] - Change in Y velocity.
      *
+     * @param {object} [properties.properties] - Additional properties to set on the sprite.
      * @param {number} [properties.timeToLive=0] - How may frames the sprite should be alive.
      * @param {Context} [properties.context=kontra.context] - Provide a context for the sprite to draw on.
      *
@@ -1990,9 +2013,8 @@ var kontra = (function(kontra, Math, undefined) {
      * @param {function} [properties.render] - Function to use to render the sprite.
      *
      * If you need the sprite to live forever, or just need it to stay on screen until you
-     * decide when to kill it, you can set time to live to <code>Infinity</code>. Just be
-     * sure to override the <code>isAlive()</code> function to return true when the sprite
-     * should die.
+     * decide when to kill it, you can set <code>timeToLive</code> to <code>Infinity</code>.
+     * Just be sure to set <code>timeToLive</code> to 0 when you want the sprite to die.
      */
     set: function set(properties) {
       properties = properties || {};
@@ -2006,6 +2028,7 @@ var kontra = (function(kontra, Math, undefined) {
 
       _this.context = properties.context || kontra.context;
 
+      // image sprite
       if (kontra.isImage(properties.image) || kontra.isCanvas(properties.image)) {
         _this.image = properties.image;
         _this.width = properties.image.width;
@@ -2015,6 +2038,7 @@ var kontra = (function(kontra, Math, undefined) {
         _this.advance = _this.advanceSprite;
         _this.draw = _this.drawImage;
       }
+      // animation sprite
       else if (properties.animations) {
         _this.animations = properties.animations;
 
@@ -2027,6 +2051,7 @@ var kontra = (function(kontra, Math, undefined) {
         _this.advance = _this.advanceAnimation;
         _this.draw = _this.drawAnimation;
       }
+      // rectangle sprite
       else {
         _this.color = properties.color;
         _this.width = properties.width;
@@ -2044,11 +2069,18 @@ var kontra = (function(kontra, Math, undefined) {
       if (properties.render) {
         _this.render = properties.render;
       }
+
+      // loop through all additional properties and add them to the sprite
+      for (var prop in properties.properties) {
+        if (properties.properties.hasOwnProperty(prop)) {
+          _this[prop] = properties.properties[prop];
+        }
+      }
     },
 
     /**
      * Simple bounding box collision test.
-     * @memberOf kontra.sprite
+     * @memberof kontra.sprite
      *
      * @param {object} object - Object to check collision against.
      *
@@ -2071,7 +2103,7 @@ var kontra = (function(kontra, Math, undefined) {
 
     /**
      * Update the sprites velocity and position.
-     * @memberOf kontra.sprite
+     * @memberof kontra.sprite
      * @abstract
      *
      * @param {number} dt - Time since last update.
@@ -2095,7 +2127,7 @@ var kontra = (function(kontra, Math, undefined) {
 
     /**
      * Render the sprite.
-     * @memberOf kontra.sprite.
+     * @memberof kontra.sprite.
      * @abstract
      *
      * This function can be overridden on a per sprite basis if more functionality
@@ -2125,7 +2157,7 @@ var kontra = (function(kontra, undefined) {
 
   /**
    * Single animation from a sprite sheet.
-   * @memberOf kontra
+   * @memberof kontra
    *
    * @see kontra.pool._proto.set for list of parameters.
    */
@@ -2139,7 +2171,7 @@ var kontra = (function(kontra, undefined) {
   kontra.animation._proto = {
     /**
      * Set properties on the animation.
-     * @memberOf kontra.animation
+     * @memberof kontra.animation
      *
      * @param {object} properties - Properties of the animation.
      * @param {spriteSheet} properties.spriteSheet - Sprite sheet for the animation.
@@ -2164,7 +2196,7 @@ var kontra = (function(kontra, undefined) {
 
     /**
      * Update the animation. Used when the animation is not paused or stopped.
-     * @memberOf kontra.animation
+     * @memberof kontra.animation
      * @private
      *
      * @param {number} dt=1 - Time since last update.
@@ -2185,7 +2217,7 @@ var kontra = (function(kontra, undefined) {
 
     /**
      * Draw the current frame. Used when the animation is not stopped.
-     * @memberOf kontra.animation
+     * @memberof kontra.animation
      * @private
      *
      * @param {object} properties - How to draw the animation.
@@ -2213,7 +2245,7 @@ var kontra = (function(kontra, undefined) {
 
     /**
      * Play the animation.
-     * @memberOf kontra.animation
+     * @memberof kontra.animation
      */
     play: function play() {
       // restore references to update and render functions only if overridden
@@ -2223,7 +2255,7 @@ var kontra = (function(kontra, undefined) {
 
     /**
      * Stop the animation and prevent update and render.
-     * @memberOf kontra.animation
+     * @memberof kontra.animation
      */
     stop: function stop() {
 
@@ -2237,7 +2269,7 @@ var kontra = (function(kontra, undefined) {
 
     /**
      * Pause the animation and prevent update.
-     * @memberOf kontra.animation
+     * @memberof kontra.animation
      */
     pause: function pause() {
       this.update = kontra.noop;
@@ -2251,7 +2283,7 @@ var kontra = (function(kontra, undefined) {
 
   /**
    * Create a sprite sheet from an image.
-   * @memberOf kontra
+   * @memberof kontra
    *
    * @see kontra.spriteSheet._proto.set for list of parameters.
    */
@@ -2265,7 +2297,7 @@ var kontra = (function(kontra, undefined) {
   kontra.spriteSheet._proto = {
     /**
      * Set properties on the spriteSheet.
-     * @memberOf kontra
+     * @memberof kontra
      * @constructor
      *
      * @param {object} properties - Configure the sprite sheet.
@@ -2300,7 +2332,7 @@ var kontra = (function(kontra, undefined) {
 
     /**
      * Create animations from the sprite sheet.
-     * @memberOf kontra.spriteSheet
+     * @memberof kontra.spriteSheet
      *
      * @param {object} animations - List of named animations to create from the Image.
      * @param {number|string|number[]|string[]} animations.animationName.frames - A single frame or list of frames for this animation.
@@ -2394,7 +2426,7 @@ var kontra = (function(kontra, undefined) {
 
     /**
      * Parse a string of consecutive frames.
-     * @memberOf kontra.spriteSheet
+     * @memberof kontra.spriteSheet
      * @private
      *
      * @param {string} frames - Start and end frame.
@@ -2457,7 +2489,7 @@ var kontra = (function(kontra, window, localStorage, undefined) {
 
   /**
    * Save an item to localStorage.
-   * @memberOf kontra
+   * @memberof kontra.store
    *
    * @param {string} key - Name to store the item as.
    * @param {*} value - Item to store.
@@ -2473,7 +2505,7 @@ var kontra = (function(kontra, window, localStorage, undefined) {
 
   /**
    * Retrieve an item from localStorage and convert it back to it's original type.
-   * @memberOf kontra
+   * @memberof kontra.store
    *
    * @param {string} key - Name of the item.
    *
@@ -2492,7 +2524,7 @@ var kontra = (function(kontra, window, localStorage, undefined) {
 
   /**
    * Remove an item from localStorage.
-   * @memberOf kontra
+   * @memberof kontra.store
    *
    * @param {string} key - Name of the item.
    */
@@ -2502,7 +2534,7 @@ var kontra = (function(kontra, window, localStorage, undefined) {
 
   /**
    * Clear all keys from localStorage.
-   * @memberOf kontra
+   * @memberof kontra.store
    */
   kontra.store.clear = function clearStore() {
     localStorage.clear();
@@ -2517,7 +2549,7 @@ var kontra = (function(kontra, undefined) {
 
   /**
    * A tile engine for rendering tilesets. Works well with the tile engine program Tiled.
-   * @memberOf kontra
+   * @memberof kontra
    * @constructor
    *
    * @param {object} properties - Configure the tile engine.
@@ -2563,7 +2595,7 @@ var kontra = (function(kontra, undefined) {
 
     /**
      * Add an image for the tile engine to use.
-     * @memberOf kontra.TileEngine
+     * @memberof kontra.TileEngine
      *
      * @param {object} properties - Properties of the image to add.
      * @param {string} properties.name - Name of the image.
@@ -2589,7 +2621,7 @@ var kontra = (function(kontra, undefined) {
 
     /**
      * Remove an image from the tile engine.
-     * @memberOf kontra.TileEngine
+     * @memberof kontra.TileEngine
      *
      * @param {string} name - Name of the image to remove.
      */
@@ -2611,7 +2643,7 @@ var kontra = (function(kontra, undefined) {
 
     /**
      * Add a layer to the tile engine.
-     * @memberOf kontra.TileEngine
+     * @memberof kontra.TileEngine
      *
      * @param {object} properties - Properties of the layer to add.
      * @param {string} properties.name - Name of the layer.
@@ -2637,7 +2669,7 @@ var kontra = (function(kontra, undefined) {
 
     /**
      * Remove a layer from the tile engine.
-     * @memberOf kontra.TileEngine
+     * @memberof kontra.TileEngine
      *
      * @param {string} name - Name of the layer to remove.
      */
@@ -2647,7 +2679,7 @@ var kontra = (function(kontra, undefined) {
 
     /**
      * Draw the pre-rendered canvas.
-     * @memberOf kontra.TileEngine
+     * @memberof kontra.TileEngine
      */
     this.draw = function TileEngineDraw() {
       this.context.drawImage(offScreenCanvas, 0, 0);
@@ -2655,7 +2687,7 @@ var kontra = (function(kontra, undefined) {
 
     /**
      * Associate an image with its tiles.
-     * @memberOf kontra.TileEngine
+     * @memberof kontra.TileEngine
      *
      * @param {object} properties - Properties of the image to add.
      * @param {Image|Canvas} properties.image - Image to add.

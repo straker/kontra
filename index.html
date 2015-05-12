@@ -66,7 +66,7 @@
 
     pool = kontra.pool({
       create: kontra.sprite,
-      maxSize: 5000
+      maxSize: 10
     });
 
     // quadtree.add(player);
@@ -78,40 +78,40 @@
         pool.get({
           x: Math.random() * kontra.game.width | 0,
           y: Math.random() * kontra.game.height | 0,
-          dx: Math.random() * (Math.random() > 0.5 ? 1 : -1),
-          dy: Math.random() * (Math.random() > 0.5 ? 1 : -1),
+          dx: 0,
+          dy: 0,
           color: 'blue',
           width: 10,
           height: 10,
-          timeToLive: Math.random() * 1000 | 0
+          timeToLive: Infinity
         });
 
         player.update();
         pool.update();
         // anim.update();
 
-        quadtree.clear();
-        quadtree.add(player);
-        quadtree.add(pool.objects);
+        // quadtree.clear();
+        // quadtree.add(player);
+        // quadtree.add(pool.objects);
 
-        objects = quadtree.get(player);
-        player.color = 'red';
+        // objects = quadtree.get(player);
+        // player.color = 'red';
 
-        for (var i = 0; obj = objects[i]; i++) {
-          if (obj !== player) {
-            if (obj.collidesWith(player)) {
-              obj.color = 'purple';
-              player.color = 'purple';
-            }
-            else {
-              obj.color = 'blue';
-            }
-          }
-        }
+        // for (var i = 0; obj = objects[i]; i++) {
+        //   if (obj !== player) {
+        //     if (obj.collidesWith(player)) {
+        //       obj.color = 'purple';
+        //       player.color = 'purple';
+        //     }
+        //     else {
+        //       obj.color = 'blue';
+        //     }
+        //   }
+        // }
       },
       render: function() {
         kontra.context.clearRect(0,0, kontra.game.width, kontra.game.height);
-        quadtree.render();
+        // quadtree.render();
         player.render()
         pool.render();
         // anim.render();

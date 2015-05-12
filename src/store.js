@@ -27,7 +27,7 @@ var kontra = (function(kontra, window, localStorage, undefined) {
 
   /**
    * Save an item to localStorage.
-   * @memberOf kontra
+   * @memberof kontra.store
    *
    * @param {string} key - Name to store the item as.
    * @param {*} value - Item to store.
@@ -43,7 +43,7 @@ var kontra = (function(kontra, window, localStorage, undefined) {
 
   /**
    * Retrieve an item from localStorage and convert it back to it's original type.
-   * @memberOf kontra
+   * @memberof kontra.store
    *
    * @param {string} key - Name of the item.
    *
@@ -62,7 +62,7 @@ var kontra = (function(kontra, window, localStorage, undefined) {
 
   /**
    * Remove an item from localStorage.
-   * @memberOf kontra
+   * @memberof kontra.store
    *
    * @param {string} key - Name of the item.
    */
@@ -72,7 +72,7 @@ var kontra = (function(kontra, window, localStorage, undefined) {
 
   /**
    * Clear all keys from localStorage.
-   * @memberOf kontra
+   * @memberof kontra.store
    */
   kontra.store.clear = function clearStore() {
     localStorage.clear();

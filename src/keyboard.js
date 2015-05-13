@@ -96,7 +96,7 @@ var kontra = (function(kontra, window) {
   // aliases modifier keys to their actual key for keyup event
   var aliases = {
     'leftwindow': 'meta',  // mac
-    'select': 'meta'  // mac
+    'select': 'meta'       // mac
   };
 
   // modifier order for combinations
@@ -107,14 +107,20 @@ var kontra = (function(kontra, window) {
   window.addEventListener('blur', blurEventHandler);
 
   /**
+   * Object for using the keyboard.
+   */
+  kontra.keys = {};
+
+  /**
    * Register a function to be called on a keyboard keys.
-   * @memberOf kontra
+   * Please note that not all keyboard combinations can be executed due to ghosting.
+   * @memberof kontra.keys
    *
    * @param {string|string[]} keys - keys combination string(s).
    *
    * @throws {SyntaxError} If callback is not a function.
    */
-  kontra.bindKey = function bindKey(keys, callback) {
+  kontra.keys.bind = function bindKey(keys, callback) {
     if (typeof callback !== 'function') {
       var error = new SyntaxError('Invalid function.');
       kontra.logError(error, 'You must provide a function as the second parameter.');
@@ -132,9 +138,11 @@ var kontra = (function(kontra, window) {
 
   /**
    * Remove the callback function for a key combination.
+   * @memberof kontra.keys
+   *
    * @param {string|string[]} keys - keys combination string.
    */
-  kontra.unbindKey = function unbindKey(keys) {
+  kontra.keys.unbind = function unbindKey(keys) {
     keys = (kontra.isArray(keys) ? keys : [keys]);
 
     for (var i = 0, key; key = keys[i]; i++) {
@@ -146,13 +154,13 @@ var kontra = (function(kontra, window) {
 
   /**
    * Returns whether a key is pressed.
-   * @memberOf kontra
+   * @memberof kontra.keys
    *
    * @param {string} keys - Keys combination string.
    *
    * @returns {boolean}
    */
-  kontra.keyIsPressed = function keyIsPressed(keys) {
+  kontra.keys.pressed = function keyPressed(keys) {
     var combination = normalizeKeys(keys);
     var pressed = true;
 
@@ -231,7 +239,7 @@ var kontra = (function(kontra, window) {
     var combination = [];
 
     // check for modifiers
-    for (var i = 0, modifiers; modifier = modifierOrder[i]; i++) {
+    for (var i = 0, modifier; modifier = modifierOrder[i]; i++) {
       if (e[modifier+'Key']) {
         combination.push(modifier);
       }

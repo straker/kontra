@@ -6,7 +6,7 @@ My custom game library based on years of game development.
 - **modular**: pick and choose what you want to use. no inter-dependencies
 - **feature library**: don't implement everything. do the basics and some high level features, but leave most the grunt work to other frameworks/libraries
 - **extensible**: everything should allow the developer to customize and add
-- **fast**: all design decisions should work towards the goal of FPS of 60FPS. remove all logic from render loops and move to setup functions
+- **fast**: all design decisions should work towards the goal of 60FPS. remove all logic from render loops and move to setup functions
 - **memory conscious**: take up as little memory footprint as needed
 
 ## Use it when
@@ -19,22 +19,25 @@ My custom game library based on years of game development.
 ## Features
 
 ### Basic
-- [ ] game loop
-    - [ ] update and render callbacks
-- [ ] assets
-    - [ ] image
-    - [ ] audio
-    - [ ] data/json
+- [x] game loop
+    - [x] update and render callbacks
+- [x] assets
+    - [x] image
+    - [x] audio
+    - [x] data/json
 - [ ] input
-    - [ ] keyboard
+    - [x] keyboard
     - [ ] mouse
     - [ ] gamepad
     - [ ] touch
 - [ ] canvas
     - [ ] centering
     - [ ] scaling
-- [ ] localstorage wrapper
-- [ ] object pool
+- [x] sprite
+    - [x] vector
+- [x] localstorage wrapper
+- [x] object pool
 - [ ] quadtree
-- [ ] spritesheet
+- [x] spritesheet
+    - [x] animation 
 - [ ] tile engine

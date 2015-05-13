@@ -1,6 +1,6 @@
 {
   "name": "kontra",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Kontra HTML5 game development library",
   "main": "core.js",
   "scripts": {
@@ -26,11 +26,15 @@
     "kontra-asset-loader": "git+https://github.com/straker/kontra-asset-loader.git"
   },
   "devDependencies": {
+    "argv": "0.0.2",
+    "colors": "^1.1.0",
     "gulp": "^3.8.11",
     "gulp-concat-util": "^0.5.2",
+    "gulp-connect": "^2.2.0",
     "gulp-jshint": "^1.9.2",
     "gulp-rename": "^1.2.0",
     "gulp-size": "^1.2.1",
+    "gulp-sourcemaps": "^1.5.2",
     "gulp-uglify": "^1.1.0",
     "jshint-stylish": "^1.0.1"
   }

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Kontra Test</title>
+  <style>
+    html, body {
+      padding: 0;
+      margin: 0;
+    }
+    canvas {
+      background: transparent;
+    }
+    .score {
+      position: absolute;
+      top: 5px;
+      left: 480px;
+      color: #FF7F00;
+      font-family: Helvetica, sans-serif;
+      cursor: default;
+    }
+    .game-over {
+      position: absolute;
+      top: 100px;
+      left: 210px;
+      color: #FF7F00;
+      font-family: Helvetica, sans-serif;
+      font-size: 30px;
+      cursor: default;
+      display: none;
+    }
+    .game-over span {
+      font-size: 20px;
+      cursor: pointer;
+      position: relative;
+      left: 50px;
+    }
+    .game-over span:hover {
+      color: #FFD700;
+    }
+    .loading {
+      position: absolute;
+      top: 100px;
+      left: 210px;
+      color: #FF7F00;
+      font-family: Helvetica, sans-serif;
+      font-size: 30px;
+      cursor: default;
+    }
+  </style>
+  <script type="text/javascript" src="../../kontra.js"></script>
+</head>
+<body>
+  <canvas id="game" width="600" height="360"></canvas>
+  <p>M - Mute</p>
+  <p>P - Pause</p>
+
+  <div class="score">SCORE: <span id="score">0</span></div>
+  <div class="game-over" id="game-over">GAME OVER<p><span onclick="startGame()">Restart</span></p></div>
+  <div class="loading" id="loading">LOADING...<p>Please wait</p></div>
+  <script src='js/galaxian.js'></script>
+</body>
+</html>

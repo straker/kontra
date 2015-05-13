@@ -1,2 +1,4 @@
 node_modules
 .DS_Store
+kontra.build.js
+kontra.build.min.js

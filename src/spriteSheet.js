@@ -3,308 +3,308 @@
 var kontra = (function(kontra, undefined) {
   'use strict';
 
-  kontra.SpriteSheet = SpriteSheet;
-
-  /**
-   * Create a sprite sheet from an image.
-   * @memberOf kontra
-   * @constructor
-   *
-   * @param {object} properties - Configure the sprite sheet.
-   * @param {Image|Canvas} properties.image - Image for the sprite sheet.
-   * @param {number} properties.frameWidth - Width (in px) of each frame.
-   * @param {number} properties.frameHeight - Height (in px) of each frame.
-   */
-  function SpriteSheet(properties) {
-    properties = properties || {};
-
-    this.animations = {};
-
-    if (kontra.isImage(properties.image) || kontra.isCanvas(properties.image)) {
-      this.image = properties.image;
-      this.frameWidth = properties.frameWidth;
-      this.frameHeight = properties.frameHeight;
-
-      this.framesPerRow = this.image.width / this.frameWidth | 0;
-    }
-    else {
-      var error = new SyntaxError('Invalid image.');
-      kontra.logError(error, 'You must provide an Image for the SpriteSheet.');
-      return;
-    }
-  }
-
-  /**
-   * Create an animation from the sprite sheet.
-   * @memberOf kontra.SpriteSheet
-   *
-   * @param {object} animations - List of named animations to create from the Image.
-   * @param {number|string|number[]|string[]} animations.animationName.frames - A single frame or list of frames for this animation.
-   * @param {number} animations.animationName.frameSpeed=1 - Number of frames to wait before transitioning the animation to the next frame.
-   *
-   * @example
-   * var sheet = kontra.SpriteSheet(img, 16, 16);
-   * sheet.createAnimation({
-   *   idle: {
-   *     frames: 1  // single frame animation
-   *   },
-   *   walk: {
-   *     frames: '2..6',  // consecutive frame animation (frames 2-6, inclusive)
-   *     frameSpeed: 4
-   *   },
-   *   moonWalk: {
-   *     frames: '6..2',  // descending consecutive frame animation
-   *     frameSpeed: 4
-   *   },
-   *   jump: {
-   *     frames: [7, 12, 2],  // non-consecutive frame animation
-   *     frameSpeed: 3
-   *   },
-   *   attack: {
-   *     frames: ['8..10', 13, '10..8'],  // you can also mix and match, in this case frames [8,9,10,13,10,9,8]
-   *     frameSpeed: 2
-   *   }
-   * });
-   */
-  SpriteSheet.prototype.createAnimation = function SpriteSheetCreateAnimation(animations) {
-    var error;
-
-    if (!animations || Object.keys(animations).length === 0) {
-      error = new SyntaxError('No animations found.');
-      kontra.logError(error, 'You must provide at least one named animation to create an Animation.');
-      return;
-    }
-
-    // create each animation by parsing the frames
-    var animation;
-    var frames;
-    for (var name in animations) {
-      if (!animations.hasOwnProperty(name)) {
-        continue;
-      }
-
-      animation = animations[name];
-      frames = animation.frames;
-
-      animation.frameSpeed = animation.frameSpeed || 1;
-
-      // array that holds the order of the animation
-      animation.animationSequence = [];
-
-      if (frames === undefined) {
-        error = new SyntaxError('No animation frames found.');
-        kontra.logError(error, 'Animation ' + name + ' must provide a frames property.');
-        return;
-      }
-
-      // single frame
-      if (kontra.isNumber(frames)) {
-        animation.animationSequence.push(frames);
-      }
-      // consecutive frames
-      else if (kontra.isString(frames)) {
-        animation.animationSequence = parseConsecutiveFrames(frames);
-      }
-      // non-consecutive frames
-      else if (kontra.isArray(frames)) {
-        for (var i = 0, frame; frame = frames[i]; i++) {
-
-          // consecutive frames
-          if (kontra.isString(frame)) {
-            var consecutiveFrames = parseConsecutiveFrames(frame);
-
-            // add new frames to the end of the array
-            animation.animationSequence.push.apply(animation.animationSequence,consecutiveFrames);
-          }
-          // single frame
-          else {
-            animation.animationSequence.push(frame);
-          }
-        }
-      }
-
-      this.animations[name] = new Animation(this, animation);
-    }
-  };
-
-  /**
-   * Get an animation by name.
-   * @memberOf kontra.SpriteSheet
-   *
-   * @param {string} name - Name of the animation.
-   *
-   * @returns {Animation}
-   */
-  SpriteSheet.prototype.getAnimation = function SpriteSheetGetAnimation(name) {
-    return this.animations[name];
-  };
-
-  /**
-   * Parse a string of consecutive frames.
-   * @private
-   *
-   * @param {string} frames - Start and end frame.
-   *
-   * @returns {number[]} List of frames.
-   */
-  function parseConsecutiveFrames(frames) {
-    var animationSequence = [];
-    var consecutiveFrames = frames.split('..');
-
-    // turn each string into a number
-    consecutiveFrames[0] = parseInt(consecutiveFrames[0], 10);
-    consecutiveFrames[1] = parseInt(consecutiveFrames[1], 10);
-
-    // determine which direction to loop
-    var direction = (consecutiveFrames[0] < consecutiveFrames[1] ? 1 : -1);
-    var i;
-
-    // ascending frame order
-    if (direction === 1) {
-      for (i = consecutiveFrames[0]; i <= consecutiveFrames[1]; i++) {
-        animationSequence.push(i);
-      }
-    }
-    // descending order
-    else {
-      for (i = consecutiveFrames[0]; i >= consecutiveFrames[1]; i--) {
-        animationSequence.push(i);
-      }
-    }
-
-    return animationSequence;
-  }
-
   /**
    * Single animation from a sprite sheet.
-   * @private
-   * @constructor
+   * @memberof kontra
    *
-   * @param {SpriteSheet} spriteSheet - Sprite sheet for the animation.
-   * @param {object} animation - Animation object.
-   * @param {number[]} animation.animationSequence - List of frames of the animation.
-   * @param {number}  animation.frameSpeed - Number of frames to wait before transitioning the animation to the next frame.
+   * @see kontra.pool._proto.set for list of parameters.
    */
-  function Animation(spriteSheet, animation) {
+  kontra.animation = function(properties) {
+    var animation = Object.create(kontra.animation._proto);
+    animation.set(properties);
 
-    this.animationSequence = animation.animationSequence;
-    this.frameSpeed = animation.frameSpeed;
+    return animation;
+  };
 
-    var currentFrame = 0;  // the current frame to draw
-    var counter = 0;       // keep track of frame rate
-    var update;
-    var draw;
-
+  kontra.animation._proto = {
     /**
-     * Update the animation.
-     * @memberOf Animation
-     */
-    this.update = function AnimationUpdate() {
-      // update to the next frame if it is time
-      if (counter === this.frameSpeed - 1) {
-        currentFrame = ++currentFrame % this.animationSequence.length;
-      }
-
-      // update the counter
-      counter = ++counter % this.frameSpeed;
-    };
-
-    /**
-     * Draw the current frame.
-     * @memberOf Animation
+     * Set properties on the animation.
+     * @memberof kontra.animation
      *
-     * @param {integer} x - X position to draw
-     * @param {integer} y - Y position to draw
+     * @param {object} properties - Properties of the animation.
+     * @param {spriteSheet} properties.spriteSheet - Sprite sheet for the animation.
+     * @param {number[]} properties.frames - List of frames of the animation.
+     * @param {number}  properties.frameSpeed - Time to wait before transitioning the animation to the next frame.
      */
-    this.draw = function AnimationDraw(x, y) {
-      // get the row and col of the frame
-      var row = Math.floor(this.animationSequence[currentFrame] / spriteSheet.framesPerRow);
-      var col = Math.floor(this.animationSequence[currentFrame] % spriteSheet.framesPerRow);
+    set: function set(properties) {
+      properties = properties || {};
 
-      ctx.drawImage(
-        spriteSheet.image,
-        col * spriteSheet.frameWidth, row * spriteSheet.frameHeight,
-        spriteSheet.frameWidth, spriteSheet.frameHeight,
-        x, y,
-        spriteSheet.frameWidth, spriteSheet.frameHeight);
-    };
+      this.spriteSheet = properties.spriteSheet;
+      this.frames = properties.frames;
+      this.frameSpeed = properties.frameSpeed;
+
+      this.width = properties.spriteSheet.frame.width;
+      this.height = properties.spriteSheet.frame.height;
+
+      this.currentFrame = 0;
+      this._accumulator = 0;
+      this.update = this.advance;
+      this.render = this.draw;
+    },
+
+    /**
+     * Update the animation. Used when the animation is not paused or stopped.
+     * @memberof kontra.animation
+     * @private
+     *
+     * @param {number} dt=1 - Time since last update.
+     */
+    advance: function advance(dt) {
+      // normalize dt to work with milliseconds as a decimal or an integer
+      dt = (dt < 1 ? dt * 1E3 : dt) || 1;
+
+      this._accumulator += dt;
+
+      // update to the next frame if it's time
+      while (this._accumulator >= this.frameSpeed) {
+        this.currentFrame = ++this.currentFrame % this.frames.length;
+
+        this._accumulator -= this.frameSpeed;
+      }
+    },
+
+    /**
+     * Draw the current frame. Used when the animation is not stopped.
+     * @memberof kontra.animation
+     * @private
+     *
+     * @param {object} properties - How to draw the animation.
+     * @param {integer} properties.x - X position to draw
+     * @param {integer} properties.y - Y position to draw
+     * @param {Context} [properties.context=kontra.context] - Provide a context for the sprite to draw on.
+     */
+    draw: function draw(properties) {
+      properties = properties || {};
+
+      var context = properties.context || kontra.context;
+
+      // get the row and col of the frame
+      var row = this.frames[this.currentFrame] / this.spriteSheet.framesPerRow | 0;
+      var col = this.frames[this.currentFrame] % this.spriteSheet.framesPerRow | 0;
+
+      context.drawImage(
+        this.spriteSheet.image,
+        col * this.spriteSheet.frame.width, row * this.spriteSheet.frame.height,
+        this.spriteSheet.frame.width, this.spriteSheet.frame.height,
+        properties.x, properties.y,
+        this.spriteSheet.frame.width, this.spriteSheet.frame.height
+      );
+    },
 
     /**
      * Play the animation.
-     * @memberOf Animation
+     * @memberof kontra.animation
      */
-    this.play = function AnimationPlay() {
-      // restore references to update and draw functions only if overridden
-      if (update !== undefined) {
-        this.update = update;
-      }
-
-      if (draw !== undefined) {
-        this.draw = draw;
-      }
-
-      update = draw = undefined;
-    };
+    play: function play() {
+      // restore references to update and render functions only if overridden
+      this.update = this.advance;
+      this.render = this.draw;
+    },
 
     /**
-     * Stop the animation and prevent update and draw.
-     * @memberOf Animation
+     * Stop the animation and prevent update and render.
+     * @memberof kontra.animation
      */
-    this.stop = function AnimationStop() {
+    stop: function stop() {
 
-      // instead of putting an if statement in both draw/update functions that checks
-      // a variable to determine whether to draw or update, we can just reassign the
+      // instead of putting an if statement in both render/update functions that checks
+      // a variable to determine whether to render or update, we can just reassign the
       // functions to noop and save processing time in the game loop.
       // @see http://jsperf.com/boolean-check-vs-noop
-      //
-      // this creates more logic in the setup functions, but one time logic is better than
-      // continuous logic.
-
-      // don't override if previously overridden
-      if (update === undefined) {
-        update = this.update;
-        this.update = kontra.noop;
-      }
-
-      if (draw === undefined) {
-        draw = this.draw;
-        this.draw = kontra.noop;
-      }
-    };
+      this.update = kontra.noop;
+      this.render = kontra.noop;
+    },
 
     /**
      * Pause the animation and prevent update.
-     * @memberOf Animation
+     * @memberof kontra.animation
      */
-    this.pause = function AnimationPause() {
-      // don't override if previously overridden
-      if (update === undefined) {
-        update = this.update;
-        this.update = kontra.noop;
+    pause: function pause() {
+      this.update = kontra.noop;
+    }
+  };
+
+
+
+
+
+
+  /**
+   * Create a sprite sheet from an image.
+   * @memberof kontra
+   *
+   * @see kontra.spriteSheet._proto.set for list of parameters.
+   */
+  kontra.spriteSheet = function(properties) {
+    var spriteSheet = Object.create(kontra.spriteSheet._proto);
+    spriteSheet.set(properties);
+
+    return spriteSheet;
+  };
+
+  kontra.spriteSheet._proto = {
+    /**
+     * Set properties on the spriteSheet.
+     * @memberof kontra
+     * @constructor
+     *
+     * @param {object} properties - Configure the sprite sheet.
+     * @param {Image|Canvas} properties.image - Image for the sprite sheet.
+     * @param {number} properties.frameWidth - Width (in px) of each frame.
+     * @param {number} properties.frameHeight - Height (in px) of each frame.
+     */
+    set: function set(properties) {
+      properties = properties || {};
+
+      this.animations = {};
+
+      if (kontra.isImage(properties.image) || kontra.isCanvas(properties.image)) {
+        this.image = properties.image;
+        this.frame = {
+          width: properties.frameWidth,
+          height: properties.frameHeight
+        };
+
+        this.framesPerRow = properties.image.width / properties.frameWidth | 0;
       }
-    };
+      else {
+        var error = new SyntaxError('Invalid image.');
+        kontra.logError(error, 'You must provide an Image for the SpriteSheet.');
+        return;
+      }
+
+      if (properties.animations) {
+        this.createAnimations(properties.animations);
+      }
+    },
 
     /**
-     * Go to a specific animation frame index.
-     * @memberOf Animation
+     * Create animations from the sprite sheet.
+     * @memberof kontra.spriteSheet
      *
-     * @param {number} frame - Animation frame to go to.
+     * @param {object} animations - List of named animations to create from the Image.
+     * @param {number|string|number[]|string[]} animations.animationName.frames - A single frame or list of frames for this animation.
+     * @param {number} animations.animationName.frameSpeed=1 - Number of frames to wait before transitioning the animation to the next frame.
      *
      * @example
-     * sheet.createAnimation({
-     *   run: { frames: [2,6,8,4,3] }
+     * var sheet = kontra.spriteSheet(img, 16, 16);
+     * sheet.createAnimations({
+     *   idle: {
+     *     frames: 1  // single frame animation
+     *   },
+     *   walk: {
+     *     frames: '2..6',  // ascending consecutive frame animation (frames 2-6, inclusive)
+     *     frameSpeed: 4
+     *   },
+     *   moonWalk: {
+     *     frames: '6..2',  // descending consecutive frame animation
+     *     frameSpeed: 4
+     *   },
+     *   jump: {
+     *     frames: [7, 12, 2],  // non-consecutive frame animation
+     *     frameSpeed: 3
+     *   },
+     *   attack: {
+     *     frames: ['8..10', 13, '10..8'],  // you can also mix and match, in this case frames [8,9,10,13,10,9,8]
+     *     frameSpeed: 2
+     *   }
      * });
-     * var run = sheet.getAnimation('run');
-     * run.gotoFrame(2);  //=> animation will go to 8 (2nd index)
-     * run.gotoFrame(0);  //=> animation will go to 2 (0th index)
      */
-    this.gotoFrame = function AnimationGotoFrame(frame) {
-      if (kontra.isNumber(frame) && frame >= 0 && frame < this.animationSequence.length) {
-        currentFrame = frame;
-        counter = 0;
+    createAnimations: function createAnimations(animations) {
+      var error;
+
+      if (!animations || Object.keys(animations).length === 0) {
+        error = new ReferenceError('No animations found.');
+        kontra.logError(error, 'You must provide at least one named animation to create an Animation.');
+        return;
       }
-    };
-  }
+
+      // create each animation by parsing the frames
+      var animation, frames, frameSpeed, sequence;
+      for (var name in animations) {
+        if (!animations.hasOwnProperty(name)) {
+          continue;
+        }
+
+        animation = animations[name];
+        frames = animation.frames;
+        frameSpeed = animation.frameSpeed;
+
+        // array that holds the order of the animation
+        sequence = [];
+
+        if (frames === undefined) {
+          error = new ReferenceError('No animation frames found.');
+          kontra.logError(error, 'Animation ' + name + ' must provide a frames property.');
+          return;
+        }
+
+        // single frame
+        if (kontra.isNumber(frames)) {
+          sequence.push(frames);
+        }
+        // consecutive frames
+        else if (kontra.isString(frames)) {
+          sequence = this._parseFrames(frames);
+        }
+        // non-consecutive frames
+        else if (kontra.isArray(frames)) {
+          for (var i = 0, frame; frame = frames[i]; i++) {
+
+            // consecutive frames
+            if (kontra.isString(frame)) {
+
+              // add new frames to the end of the array
+              sequence.push.apply(sequence, this._parseFrames(frame));
+            }
+            // single frame
+            else {
+              sequence.push(frame);
+            }
+          }
+        }
+
+        this.animations[name] = kontra.animation({
+          spriteSheet: this,
+          frames: sequence,
+          frameSpeed: frameSpeed
+        });
+      }
+    },
+
+    /**
+     * Parse a string of consecutive frames.
+     * @memberof kontra.spriteSheet
+     * @private
+     *
+     * @param {string} frames - Start and end frame.
+     *
+     * @returns {number[]} List of frames.
+     */
+    _parseFrames: function parseFrames(frames) {
+      var sequence = [];
+      var consecutiveFrames = frames.split('..').map(Number);
+
+      // determine which direction to loop
+      var direction = (consecutiveFrames[0] < consecutiveFrames[1] ? 1 : -1);
+      var i;
+
+      // ascending frame order
+      if (direction === 1) {
+        for (i = consecutiveFrames[0]; i <= consecutiveFrames[1]; i++) {
+          sequence.push(i);
+        }
+      }
+      // descending order
+      else {
+        for (i = consecutiveFrames[0]; i >= consecutiveFrames[1]; i--) {
+          sequence.push(i);
+        }
+      }
+
+      return sequence;
+    }
+  };
 
   return kontra;
 })(kontra || {});

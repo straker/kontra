@@ -79,9 +79,15 @@ gulp.task('build', function() {
 
   // normalize files to include full path and extension
   for (var i = 0; i < src.length; i++) {
+    // add required dependencies
     switch (src[i]) {
+    case 'qLite':
+      src[i] = 'node_modules/kontra-asset-loader/node_modules/qLite/qLite.js';
+      break;
+
     case 'assets':
       src[i] = 'node_modules/kontra-asset-loader/src/assets.js';
+      src.push('qLite');
       break;
 
     case 'assetBundle':

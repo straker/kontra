@@ -949,12 +949,12 @@ var kontra = (function(kontra, document) {
 
   return kontra;
 })(kontra || {}, document);
-var kontra = (function(kontra, window, document) {
+var kontra = (function(kontra, window) {
   'use strict';
 
   /**
-   * Returns the current time. Uses the User Timing API if it's available or defaults to
-   * using Date().getTime()
+   * Get the current time. Uses the User Timing API if it's available or defaults to using
+   * Date().getTime()
    * @private
    *
    * @returns {number}
@@ -971,10 +971,6 @@ var kontra = (function(kontra, window, document) {
       };
     }
   })();
-
-
-
-
 
   /**
    * Game loop that updates and renders the game every frame.
@@ -1069,7 +1065,7 @@ var kontra = (function(kontra, window, document) {
   };
 
   return kontra;
-})(kontra || {}, window, document);
+})(kontra || {}, window);
 /*jshint -W084 */
 
 var kontra = (function(kontra, window) {
@@ -1402,7 +1398,9 @@ var kontra = (function(kontra) {
      *
      * @param {object} properties - Properties of the pool.
      * @param {object} properties.create - Function that returns the object to use in the pool.
+     * @param {object} properties.createProperties - Properties that will be passed to the create function.
      * @param {number} properties.maxSize - The maximum size that the pool will grow to.
+     * @param {boolean} properties.fill - Fill the pool to max size instead of slowly growing.
      *
      * Objects inside the pool must implement <code>render()</code>, <code>update()</code>,
      * <code>set()</code>, and <code>isAlive()</code> functions.
@@ -1410,31 +1408,26 @@ var kontra = (function(kontra) {
     set: function set(properties) {
       properties = properties || {};
 
-      // ensure objects for the pool have required functions
-      var obj;
-      try {
-        obj = properties.create({});
+      var error, obj;
 
-        if (typeof obj.render !== 'function' || typeof obj.update !== 'function' ||
-            typeof obj.set !== 'function' || typeof obj.isAlive !== 'function') {
-          throw new ReferenceError('Required functions not found.');
-        }
-      }
-      catch (error) {
-        var message;
-
-        if (error.name === 'TypeError') {
-          message = 'The parameter \'create\' must be a function that returns an object.';
-        }
-        else {
-          message = 'Objects to be pooled must implement render(), update(), set() and isAlive() functions.';
-        }
-
-        kontra.logError(error, message);
+      if (typeof properties.create !== 'function') {
+        error = new SyntaxError('Required function not found.');
+        kontra.logError(error, 'Parameter \'create\' must be a function that returns an object.');
         return;
       }
 
-      this.create = properties.create;
+      // bind the create function to always use the create properties
+      this.create = properties.create.bind(this, properties.createProperties || {});
+
+      // ensure objects for the pool have required functions
+      obj = this.create();
+
+      if (!obj || typeof obj.render !== 'function' || typeof obj.update !== 'function' ||
+          typeof obj.set !== 'function' || typeof obj.isAlive !== 'function') {
+        error = new ReferenceError('Create object required functions not found.');
+        kontra.logError(error, 'Objects to be pooled must implement render(), update(), set() and isAlive() functions.');
+        return;
+      }
 
       // start the pool with an object
       this.objects = [obj];
@@ -1442,6 +1435,13 @@ var kontra = (function(kontra) {
       this.maxSize = properties.maxSize || Infinity;
       this.lastIndex = 0;
       this.inUse = 0;
+
+      // fill the pool
+      if (properties.fill) {
+        while (this.objects.length < this.maxSize) {
+          this.objects.unshift(this.create());
+        }
+      }
     },
 
     /**
@@ -1451,20 +1451,24 @@ var kontra = (function(kontra) {
      * @param {object} properties - Properties to pass to object.set().
      */
     get: function get(properties) {
+      properties = properties || {};
+
       var _this = this;
 
       // the pool is out of objects if the first object is in use and it can't grow
-      if (_this.objects[0].isAlive() && _this.size === _this.maxSize) {
-        return;
-      }
-      // 'double' the size of the array by filling it with twice as many objects
-      else {
-        for (var x = 0; x < _this.size && _this.objects.length < _this.maxSize; x++) {
-          _this.objects.unshift(_this.create({}));
+      if (_this.objects[0].isAlive()) {
+        if (_this.size === _this.maxSize) {
+          return;
         }
+        // 'double' the size of the array by filling it with twice as many objects
+        else {
+          for (var x = 0; x < _this.size && _this.objects.length < _this.maxSize; x++) {
+            _this.objects.unshift(_this.create());
+          }
 
-        _this.size = _this.objects.length;
-        _this.lastIndex = _this.size - 1;
+          _this.size = _this.objects.length;
+          _this.lastIndex = _this.size - 1;
+        }
       }
 
       // save off first object in pool to reassign to last object after unshift

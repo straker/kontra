@@ -3,10 +3,11 @@
 <head>
   <title>Kontra Test</title>
   <style>
+    html, body {
+      padding: 0;
+      margin: 0;
+    }
     canvas {
-      position: absolute;
-      top: 0;
-      left: 0;
       background: transparent;
     }
     .score {
@@ -50,6 +51,9 @@
 </head>
 <body>
   <canvas id="game" width="600" height="360"></canvas>
+  <p>M - Mute</p>
+  <p>P - Pause</p>
+
   <div class="score">SCORE: <span id="score">0</span></div>
   <div class="game-over" id="game-over">GAME OVER<p><span onclick="startGame()">Restart</span></p></div>
   <div class="loading" id="loading">LOADING...<p>Please wait</p></div>

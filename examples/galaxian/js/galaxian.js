@@ -1,88 +1,110 @@
 kontra.init();
 
+// set default asset paths
 kontra.assetPaths.images = 'imgs/';
 kontra.assetPaths.audios = 'sounds/';
 
+// load assets
 kontra.loadAssets(
   // images
   'ship.png', 'bg.png', 'bullet_enemy.png', 'bullet.png', 'enemy.png',
   // audios
   'explosion.mp3', 'game_over.mp3', 'kick_shock.mp3', 'laser.mp3'
-).then(loadGame);
-
-function loadGame() {
-  document.getElementById('loading').style.display = "none";
+).then(function() {
+  document.getElementById('loading').style.display = 'none';
   var score = document.getElementById('score');
   var playerScore = 0;
 
-  kontra.audios.laser.volume = kontra.audios.explosion.volume = 0.25;
   kontra.audios.kick_shock.loop = true;
 
+  /*
+   * Audio pools
+   */
   // create an audio sprite for use in an audio pool, mimicing a normal image sprite
-  audioSprite = {
+  var audioSprite = {
     isAlive: function() {
       return !this.audio.ended;
     },
-    // set required properties
     set: function() {
       this.audio.play();
     },
+    // set required properties
     render: function() {},
     update: function() {}
   };
 
-  // create audio pools
-  laserPool = kontra.pool({
-    create: function() {
-      var sprite = Object.create(audioSprite);
-      sprite.audio = kontra.audios.laser.cloneNode();
+  // common create functions for audio pool
+  /**
+   * Create a new sound effect from the passed object.
+   * @param {object} properties - Properties for the audio.
+   * @param {Audio} properties.audio - Audio object to clone.
+   */
+  function create(properties) {
+    var sprite = Object.create(audioSprite);
+    sprite.audio = properties.audio.cloneNode();
+    sprite.audio.volume = 0.25;
 
-      // kill the audio by forcing it to jump to the end of the track
-      sprite.audio.currentTime = kontra.audios.laser.duration;
+    // kill the audio by forcing it to jump to the end of the track
+    sprite.audio.currentTime = properties.audio.duration;
 
-      return sprite;
-    },
-    maxSize: 5
-  });
-
-  explosionPool = kontra.pool({
-    create: function() {
-      var sprite = Object.create(audioSprite);
-      sprite.audio = kontra.audios.explosion.cloneNode();
-
-      // kill the audio by forcing it to jump to the end of the track
-      sprite.audio.currentTime = kontra.audios.explosion.duration;
-
-      return sprite;
-    },
-    maxSize: 10
-  });
-
-  // populate the audio pools so that all the audio files are loaded when we need them
-  while (laserPool.size !== laserPool.maxSize) {
-    laserPool.get();
-    explosionPool.get();
+    return sprite;
   }
 
-  // game objects
-  bullets = kontra.pool({
+  /**
+   * Toggle all the audios in the pool
+   */
+  function toggleVolume() {
+    for (var i = 0, obj; obj = this.objects[i]; i++) {
+      obj.audio.muted = !obj.audio.muted;
+    }
+  }
+
+  // create audio pools
+  var laserPool = kontra.pool({
+    create: create,
+    createProperties: {
+      audio: kontra.audios.laser
+    },
+    fill: true,
+    maxSize: 5
+  });
+  laserPool.toggleVolume = toggleVolume;
+
+  var explosionPool = kontra.pool({
+    create: create,
+    createProperties: {
+      audio: kontra.audios.explosion
+    },
+    fill: true,
+    maxSize: 10
+  });
+  explosionPool.toggleVolume = toggleVolume;
+
+  /*
+   * object pools
+   */
+  var bullets = kontra.pool({
     create: kontra.sprite,
     maxSize: 30
   });
 
-  enemies = kontra.pool({
+  var enemies = kontra.pool({
     create: kontra.sprite,
     maxSize: 18
   });
 
-  enemyBullets = kontra.pool({
+  var enemyBullets = kontra.pool({
     create: kontra.sprite,
     maxSize: 30
   });
 
-  quadtree = kontra.quadtree();
+  /*
+   * game objects
+   */
+  var quadtree = kontra.quadtree();
 
-  background = kontra.sprite({
+  // panning background
+  var background = kontra.sprite({
     dy: 1,
     image: kontra.images.bg,
     update: function() {
@@ -99,7 +121,8 @@ function loadGame() {
     }
   });
 
-  player = kontra.sprite({
+  // player ship
+  var player = kontra.sprite({
     x: 280,
     y: 270,
     image: kontra.images.ship,
@@ -124,27 +147,18 @@ function loadGame() {
       }
 
       if (kontra.keys.pressed('space') && this.counter >= 15) {
-        bullets.get({
-          x: this.position.x + 6,
-          y: this.position.y,
-          dy: -3,
-          image: kontra.images.bullet,
-          timeToLive: 130,
-          properties: {
-            type: 'friendly'
-          }
-        });
-
-        bullets.get({
-          x: this.position.x + 33,
-          y: this.position.y,
-          dy: -3,
-          image: kontra.images.bullet,
-          timeToLive: 130,
-          properties: {
-            type: 'friendly'
-          }
-        });
+        for (var i = 0; i < 2; i++) {
+          bullets.get({
+            x: this.position.x + 6 + (i * 27),
+            y: this.position.y,
+            dy: -3,
+            image: kontra.images.bullet,
+            timeToLive: 130,
+            properties: {
+              type: 'friendly'
+            }
+          });
+        }
 
         laserPool.get();
 
@@ -153,14 +167,14 @@ function loadGame() {
     }
   });
 
-  // clamp player position to the lower third of the screen
+  // clamp player position to lower third of the screen
   player.position.clamp(
     0, kontra.game.height * 2 / 3,
     kontra.game.width - player.width, kontra.game.height - player.height
   );
 
   /**
-   * Spawn a new wave of enemies
+   * Spawn a new wave of enemies.
    */
   function spawnWave() {
     var width = kontra.images.enemy.width;
@@ -223,10 +237,10 @@ function loadGame() {
     }
   }
 
-  /**
+  /*
    * Game loop
    */
-  loop = kontra.gameLoop({
+  var loop = kontra.gameLoop({
     update: function(dt) {
       background.update();
       player.update();
@@ -249,7 +263,6 @@ function loadGame() {
 
       for (var i = 0, obj; obj = objects[i]; i++) {
         if (obj.type === 'hostile' && obj.collidesWith(player)) {
-          obj.timeToLive = 0;
           gameOver();
         }
       }
@@ -262,7 +275,9 @@ function loadGame() {
           if (obj.type === 'enemy' && obj.collidesWith(bullet)) {
             bullet.timeToLive = 0;
             obj.timeToLive = 0;
+
             explosionPool.get();
+
             playerScore += 10;
             score.innerHTML = playerScore;
           }
@@ -290,23 +305,27 @@ function loadGame() {
   kontra.keys.bind('p', function() {
     if (loop.isStopped) {
       loop.start();
+      kontra.audios.kick_shock.play();
     }
     else {
       loop.stop();
-    }
-
-    toggleMusic();
-  });
-
-  function toggleMusic() {
-    if (!kontra.audios.kick_shock.paused) {
       kontra.audios.kick_shock.pause();
     }
-    else if (!loop.isStopped) {
-      kontra.audios.kick_shock.play();
-    }
+  });
+
+  /**
+   * Toggle the music on and off.
+   */
+  function toggleMusic() {
+    kontra.audios.kick_shock.muted = !kontra.audios.kick_shock.muted;
+    kontra.audios.game_over.muted = !kontra.audios.game_over.muted
+    laserPool.toggleVolume();
+    explosionPool.toggleVolume();
   }
 
+  /**
+   * Show the game over screen.
+   */
   function gameOver() {
     loop.stop();
     document.getElementById('game-over').style.display = 'block';
@@ -315,19 +334,25 @@ function loadGame() {
     kontra.audios.game_over.play();
   }
 
+  /**
+   * Start the game.
+   */
+  window.startGame = function() {
+    document.getElementById('game-over').style.display = 'none';
+    enemies.clear();
+    enemyBullets.clear();
+    bullets.clear();
+
+    playerScore = 0;
+    score.innerHTML = 0;
+
+    loop.start();
+    kontra.audios.game_over.pause();
+    kontra.audios.kick_shock.currentTime = 0;
+    kontra.audios.kick_shock.play();
+
+    player.position.set(280, 270);
+  };
+
   startGame();
-}
-
-function startGame() {
-  document.getElementById('game-over').style.display = 'none';
-  enemies.clear();
-  enemyBullets.clear();
-  bullets.clear();
-
-  loop.start();
-  kontra.audios.game_over.pause();
-  kontra.audios.kick_shock.currentTime = 0;
-  kontra.audios.kick_shock.play();
-
-  player.position.set(280, 270);
-}
+});

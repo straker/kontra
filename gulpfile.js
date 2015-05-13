@@ -1,15 +1,15 @@
-var gulp = require('gulp');
-var jshint = require('gulp-jshint');
-var concat = require('gulp-concat-util');
-var uglify = require('gulp-uglify');
-var rename = require('gulp-rename');
-var size = require('gulp-size');
-var connect = require('gulp-connect');
-var sourcemaps = require('gulp-sourcemaps');
-
-var package = require('./package.json');
 var argv = require('yargs').argv;
 var colors = require('colors');
+var gulp = require('gulp');
+var concat = require('gulp-concat-util');
+var connect = require('gulp-connect');
+var jshint = require('gulp-jshint');
+var rename = require('gulp-rename');
+var size = require('gulp-size');
+var sourcemaps = require('gulp-sourcemaps');
+var uglify = require('gulp-uglify');
+
+var package = require('./package.json');
 
 function swallowError(error) {
   // print error so we know that uglify task didn't complete

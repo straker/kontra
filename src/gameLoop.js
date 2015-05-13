@@ -1,9 +1,9 @@
-var kontra = (function(kontra, window, document) {
+var kontra = (function(kontra, window) {
   'use strict';
 
   /**
-   * Returns the current time. Uses the User Timing API if it's available or defaults to
-   * using Date().getTime()
+   * Get the current time. Uses the User Timing API if it's available or defaults to using
+   * Date().getTime()
    * @private
    *
    * @returns {number}
@@ -20,10 +20,6 @@ var kontra = (function(kontra, window, document) {
       };
     }
   })();
-
-
-
-
 
   /**
    * Game loop that updates and renders the game every frame.
@@ -118,4 +114,4 @@ var kontra = (function(kontra, window, document) {
   };
 
   return kontra;
-})(kontra || {}, window, document);
+})(kontra || {}, window);

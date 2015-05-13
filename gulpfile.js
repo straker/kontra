@@ -43,20 +43,23 @@ gulp.task('build', function() {
   // output files that can be built
   if (!argv.files) {
     var files = [
-      '     assets - Load images, audio, and data assets',
-      '   gameLoop - Update and render the game',
-      '   keyboard - Keyboard input handler',
-      '       pool - Object pool for object reuse',
-      '   quadtree - 2D spatial partition for storing objects by their positions',
-      '     sprite - Object for drawing rectangles, images, or sprite sheet animations',
-      'spriteSheet - Sprite sheets and sprite animations',
-      '      store - Local Storage wrapper to make it easier to work with'
+      '       assets - Load images, audio, and data assets',
+      '  assetBundle - List of assets to be loaded later (' + 'assets'.blue + ')',
+      'assetManifest - File that defines all assets and bundles (' + 'assetBundle'.blue + ')',
+      '     gameLoop - Update and render the game',
+      '     keyboard - Keyboard input handler',
+      '         pool - Object pool for object reuse',
+      '     quadtree - 2D spatial partition for storing objects by their positions',
+      '       sprite - Object for drawing rectangles, images, and sprite sheet animations',
+      '  spriteSheet - Sprite sheets and sprite animations',
+      '        store - Local Storage interface for ease of use'
     ];
 
     console.log('\n================================='.blue);
     console.log('    Custom Build of Kontra.js'.blue);
     console.log('================================='.blue);
-    console.log('\nUse'.white, '--files'.cyan, 'to select which modules to build:\n'.white);
+    console.log('\nUse'.white, '--files'.cyan, 'to select which modules to build:'.white);
+    console.log('(modules shown in parentheses are a dependency of the module)\n')
 
     // output the file name in a different color
     for (var i = 0, file; file = files[i]; i++) {
@@ -75,8 +78,25 @@ gulp.task('build', function() {
   src.unshift('core');
 
   // normalize files to include full path and extension
-  for (var i = 0, length = src.length; i < length; i++) {
-    src[i] = 'src/' + src[i] + '.js';
+  for (var i = 0; i < src.length; i++) {
+    switch (src[i]) {
+    case 'assets':
+      src[i] = 'node_modules/kontra-asset-loader/src/assets.js';
+      break;
+
+    case 'assetBundle':
+      src[i] = 'node_modules/kontra-asset-loader/src/bundles.js';
+      src.push('assets');
+      break;
+
+    case 'assetManifest':
+      src[i] = 'node_modules/kontra-asset-loader/src/manifest.js';
+      src.push('assetBundle');
+      break;
+
+    default:
+      src[i] = 'src/' + src[i] + '.js';
+    }
   }
 
   // create header for unminified build

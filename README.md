@@ -12,7 +12,7 @@ Kontra.js prides itself in being:
 
 - **lightweight**: under 20K minified.
 - **modular**: pick and choose what modules you want to use using `gulp build`. very few inter-dependencies.
-- **extensible**: everything is customizable and can be extensible.
+- **extensible**: everything is customizable and can be extended.
 - **fast**: all logic has been removed from the update and render cycles.
 - **memory conscious**: takes up as little memory as needed and tries not to be wasteful about the memory it does take up.
 

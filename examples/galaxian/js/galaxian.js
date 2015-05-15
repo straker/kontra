@@ -85,7 +85,7 @@ kontra.loadAssets(
    */
   var bullets = kontra.pool({
     create: kontra.sprite,
-    maxSize: 30
+    maxSize: 20
   });
 
   var enemies = kontra.pool({
@@ -148,6 +148,7 @@ kontra.loadAssets(
 
       if (kontra.keys.pressed('space') && this.counter >= 15) {
         for (var i = 0; i < 2; i++) {
+          console.log('get');
           bullets.get({
             x: this.position.x + 6 + (i * 27),
             y: this.position.y,
@@ -253,10 +254,7 @@ kontra.loadAssets(
       var liveBullets = bullets.getAliveObjects();
 
       quadtree.clear();
-      quadtree.add(player);
-      quadtree.add(liveBullets);
-      quadtree.add(enemies.getAliveObjects());
-      quadtree.add(enemyBullets.getAliveObjects());
+      quadtree.add(enemies.getAliveObjects(), enemyBullets.getAliveObjects());
 
       // find collisions between the player ship and enemy bullets
       objects = quadtree.get(player);

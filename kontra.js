@@ -1514,7 +1514,16 @@ var kontra = (function(kontra) {
       var obj;
 
       // only iterate over the objects that are alive
-      var index = this.objects.length - this.inUse;
+      //
+      // If the user kills an object outside of the update cycle, the pool won't know of
+      // the change until the next update and inUse won't be decremented. If the user then
+      // gets an object when inUse is the same size as objects.length, inUse will increment
+      // and this statement will evaluate to -1.
+      //
+      // I don't like having to go through the pool to kill an object as it forces you to know
+      // which object came from which pool. Instead, we'll just prevent the index from going below
+      // 0 and accept the fact that inUse may be out of sync for a frame.
+      var index = Math.max(this.objects.length - this.inUse, 0);
 
       while (i >= index) {
         obj = this.objects[i];
@@ -1547,7 +1556,7 @@ var kontra = (function(kontra) {
      * @memberof kontra.pool
      */
     render: function render() {
-      var index = this.objects.length - this.inUse;
+      var index = Math.max(this.objects.length - this.inUse, 0);
 
       for (var i = this.lastIndex; i >= index; i--) {
         this.objects[i].render();
@@ -1669,42 +1678,42 @@ var kontra = (function(kontra, undefined) {
      * the maximum number of objects allowed, it will split and move all objects to their
      * corresponding subnodes.
      * @memberof kontra.quadtree
-     *
-     * @param {object} obj - Objects to add to the quadtree.
      */
-    add: function add(object) {
+    add: function add() {
       var _this = this;
-      var i, obj, indices, index;
+      var i, object, obj, indices, index;
 
-      // add multiple objects separately
-      if (kontra.isArray(object)) {
-        for (i = 0; obj = object[i]; i++) {
-          _this.add(obj);
+      for (var j = 0, length = arguments.length; j < length; j++) {
+        object = arguments[j];
+
+        // add a group of objects separately
+        if (kontra.isArray(object)) {
+          _this.add.apply(this, object);
+
+          continue;
         }
 
-        return;
-      }
+        // current node has subnodes, so we need to add this object into a subnode
+        if (_this.subnodes.length && _this.isBranchNode) {
+          _this._addToSubnode(object);
 
-      // current node has subnodes, so we need to add this object into a subnode
-      if (_this.subnodes.length && _this.isBranchNode) {
-        _this._addToSubnode(object);
-
-        return;
-      }
-
-      // this node is a leaf node so add the object to it
-      _this.objects.push(object);
-
-      // split the node if there are too many objects
-      if (_this.objects.length > _this.maxObjects && _this.depth < _this.maxDepth) {
-        _this._split();
-
-        // move all objects to their corresponding subnodes
-        for (i = 0; obj = _this.objects[i]; i++) {
-          _this._addToSubnode(obj);
+          continue;
         }
 
-        _this.objects.length = 0;
+        // this node is a leaf node so add the object to it
+        _this.objects.push(object);
+
+        // split the node if there are too many objects
+        if (_this.objects.length > _this.maxObjects && _this.depth < _this.maxDepth) {
+          _this._split();
+
+          // move all objects to their corresponding subnodes
+          for (i = 0; obj = _this.objects[i]; i++) {
+            _this._addToSubnode(obj);
+          }
+
+          _this.objects.length = 0;
+        }
       }
     },
 
@@ -1812,7 +1821,8 @@ var kontra = (function(kontra, undefined) {
      */
     render: function() {
       // don't draw empty leaf nodes, always draw branch nodes and the first node
-      if (this.objects.length || this.isBranchNode || this.depth === 0) {
+      if (this.objects.length || this.depth === 0 ||
+          (this.parentNode && this.parentNode.isBranchNode)) {
 
         kontra.context.strokeStyle = 'red';
         kontra.context.strokeRect(this.bounds.x, this.bounds.y, this.bounds.width, this.bounds.height);
@@ -2307,6 +2317,7 @@ var kontra = (function(kontra, undefined) {
      * @param {Image|Canvas} properties.image - Image for the sprite sheet.
      * @param {number} properties.frameWidth - Width (in px) of each frame.
      * @param {number} properties.frameHeight - Height (in px) of each frame.
+     * @param {object} properties.animations - Animations to create from the sprite sheet.
      */
     set: function set(properties) {
       properties = properties || {};
@@ -2342,7 +2353,7 @@ var kontra = (function(kontra, undefined) {
      * @param {number} animations.animationName.frameSpeed=1 - Number of frames to wait before transitioning the animation to the next frame.
      *
      * @example
-     * var sheet = kontra.spriteSheet(img, 16, 16);
+     * var sheet = kontra.spriteSheet({image: img, frameWidth: 16, frameHeight: 16});
      * sheet.createAnimations({
      *   idle: {
      *     frames: 1  // single frame animation

@@ -152,6 +152,7 @@ var kontra = (function(kontra, undefined) {
      * @param {Image|Canvas} properties.image - Image for the sprite sheet.
      * @param {number} properties.frameWidth - Width (in px) of each frame.
      * @param {number} properties.frameHeight - Height (in px) of each frame.
+     * @param {object} properties.animations - Animations to create from the sprite sheet.
      */
     set: function set(properties) {
       properties = properties || {};
@@ -187,7 +188,7 @@ var kontra = (function(kontra, undefined) {
      * @param {number} animations.animationName.frameSpeed=1 - Number of frames to wait before transitioning the animation to the next frame.
      *
      * @example
-     * var sheet = kontra.spriteSheet(img, 16, 16);
+     * var sheet = kontra.spriteSheet({image: img, frameWidth: 16, frameHeight: 16});
      * sheet.createAnimations({
      *   idle: {
      *     frames: 1  // single frame animation

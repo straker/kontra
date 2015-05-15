@@ -140,7 +140,16 @@ var kontra = (function(kontra) {
       var obj;
 
       // only iterate over the objects that are alive
-      var index = this.objects.length - this.inUse;
+      //
+      // If the user kills an object outside of the update cycle, the pool won't know of
+      // the change until the next update and inUse won't be decremented. If the user then
+      // gets an object when inUse is the same size as objects.length, inUse will increment
+      // and this statement will evaluate to -1.
+      //
+      // I don't like having to go through the pool to kill an object as it forces you to know
+      // which object came from which pool. Instead, we'll just prevent the index from going below
+      // 0 and accept the fact that inUse may be out of sync for a frame.
+      var index = Math.max(this.objects.length - this.inUse, 0);
 
       while (i >= index) {
         obj = this.objects[i];
@@ -173,7 +182,7 @@ var kontra = (function(kontra) {
      * @memberof kontra.pool
      */
     render: function render() {
-      var index = this.objects.length - this.inUse;
+      var index = Math.max(this.objects.length - this.inUse, 0);
 
       for (var i = this.lastIndex; i >= index; i--) {
         this.objects[i].render();

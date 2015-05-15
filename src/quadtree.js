@@ -110,42 +110,42 @@ var kontra = (function(kontra, undefined) {
      * the maximum number of objects allowed, it will split and move all objects to their
      * corresponding subnodes.
      * @memberof kontra.quadtree
-     *
-     * @param {object} obj - Objects to add to the quadtree.
      */
-    add: function add(object) {
+    add: function add() {
       var _this = this;
-      var i, obj, indices, index;
+      var i, object, obj, indices, index;
 
-      // add multiple objects separately
-      if (kontra.isArray(object)) {
-        for (i = 0; obj = object[i]; i++) {
-          _this.add(obj);
+      for (var j = 0, length = arguments.length; j < length; j++) {
+        object = arguments[j];
+
+        // add a group of objects separately
+        if (kontra.isArray(object)) {
+          _this.add.apply(this, object);
+
+          continue;
         }
 
-        return;
-      }
+        // current node has subnodes, so we need to add this object into a subnode
+        if (_this.subnodes.length && _this.isBranchNode) {
+          _this._addToSubnode(object);
 
-      // current node has subnodes, so we need to add this object into a subnode
-      if (_this.subnodes.length && _this.isBranchNode) {
-        _this._addToSubnode(object);
-
-        return;
-      }
-
-      // this node is a leaf node so add the object to it
-      _this.objects.push(object);
-
-      // split the node if there are too many objects
-      if (_this.objects.length > _this.maxObjects && _this.depth < _this.maxDepth) {
-        _this._split();
-
-        // move all objects to their corresponding subnodes
-        for (i = 0; obj = _this.objects[i]; i++) {
-          _this._addToSubnode(obj);
+          continue;
         }
 
-        _this.objects.length = 0;
+        // this node is a leaf node so add the object to it
+        _this.objects.push(object);
+
+        // split the node if there are too many objects
+        if (_this.objects.length > _this.maxObjects && _this.depth < _this.maxDepth) {
+          _this._split();
+
+          // move all objects to their corresponding subnodes
+          for (i = 0; obj = _this.objects[i]; i++) {
+            _this._addToSubnode(obj);
+          }
+
+          _this.objects.length = 0;
+        }
       }
     },
 
@@ -253,7 +253,8 @@ var kontra = (function(kontra, undefined) {
      */
     render: function() {
       // don't draw empty leaf nodes, always draw branch nodes and the first node
-      if (this.objects.length || this.isBranchNode || this.depth === 0) {
+      if (this.objects.length || this.depth === 0 ||
+          (this.parentNode && this.parentNode.isBranchNode)) {
 
         kontra.context.strokeStyle = 'red';
         kontra.context.strokeRect(this.bounds.x, this.bounds.y, this.bounds.width, this.bounds.height);

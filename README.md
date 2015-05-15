@@ -1,43 +1,24 @@
-My custom game library based on years of game development.
+# Kontra.js
 
-## Goals
+Kontra.js is a lightweight JavaScript gaming mirco-framework. 
 
-- **lightweight**: under 50K minified (even before you pick and choose)
-- **modular**: pick and choose what you want to use. no inter-dependencies
-- **feature library**: don't implement everything. do the basics and some high level features, but leave most the grunt work to other frameworks/libraries
-- **extensible**: everything should allow the developer to customize and add
-- **fast**: all design decisions should work towards the goal of 60FPS. remove all logic from render loops and move to setup functions
-- **memory conscious**: take up as little memory footprint as needed
+The goal of Kontra.js is not to implement everything you could possibly need to make a game. There are already libraries out there that do that (like [Phaser](http://phaser.io/) or [Jaws](http://jawsjs.com/)).
+
+Instead, Kontra.js aims to implement basic game requirements like asset loading, keyboard input, the game loop, and spites to keep the library very small and focused, leaving the grunt work to either other libraries or the developer.
+
+Kontra.js does provide some more advance data structures like object pools and quadtrees that have been fine tuned to be fast and memory efficient. 
+
+Kontra.js prides itself in being:
+
+- **lightweight**: under 20K minified.
+- **modular**: pick and choose what modules you want to use using `gulp build`. very few inter-dependencies.
+- **extensible**: everything is customizable and can be extensible.
+- **fast**: all logic has been removed from the update and render cycles.
+- **memory conscious**: takes up as little memory as needed and tries not to be wasteful about the memory it does take up.
 
 ## Use it when
 
 - you want to get something up and running fairly quickly
 - you want a basic structure that is easy to scale and extend
-- in conjunction with other micro-libraries (like Playground.js)
-- to prototype
-
-## Features
-
-### Basic
-- [x] game loop
-    - [x] update and render callbacks
-- [x] assets
-    - [x] image
-    - [x] audio
-    - [x] data/json
-- [ ] input
-    - [x] keyboard
-    - [ ] mouse
-    - [ ] gamepad
-    - [ ] touch
-- [ ] canvas
-    - [ ] centering
-    - [ ] scaling
-- [x] sprite
-    - [x] vector
-- [x] localstorage wrapper
-- [x] object pool
-- [ ] quadtree
-- [x] spritesheet
-    - [x] animation 
-- [ ] tile engine
+- in conjunction with other libraries (like [Playground.js](http://playgroundjs.com/))
+- prototyping

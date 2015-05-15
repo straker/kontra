@@ -22,3 +22,8 @@ Kontra.js prides itself in being:
 - you want a basic structure that is easy to scale and extend
 - in conjunction with other libraries (like [Playground.js](http://playgroundjs.com/))
 - prototyping
+
+
+## Documentation
+
+All the documentation can be found in the [wiki](https://github.com/straker/kontra/wiki).

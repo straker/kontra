@@ -1,6 +1,6 @@
 {
   "name": "kontra",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Kontra HTML5 game development library",
   "main": "core.js",
   "scripts": {

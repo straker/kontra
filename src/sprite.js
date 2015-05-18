@@ -5,26 +5,30 @@ var kontra = (function(kontra, Math, undefined) {
    * A vector for 2D space.
    * @memberof kontra
    *
-   * @see kontra.vector._proto.set for list of parameters.
+   * @see kontra.vector.prototype.set for list of parameters.
    */
   kontra.vector = function(x, y) {
-    var vector = Object.create(kontra.vector._proto);
+    var vector = Object.create(kontra.vector.prototype);
     vector.set(x, y);
 
     return vector;
   };
 
-  kontra.vector._proto = {
+  kontra.vector.prototype = {
     /**
      * Set the vector's x and y position.
      * @memberof kontra.vector
      *
      * @param {number} x=0 - Center x coordinate.
      * @param {number} y=0 - Center y coordinate.
+     *
+     * @returns {vector}
      */
     set: function set(x, y) {
       this.x = x || 0;
       this.y = y || 0;
+
+      return this;
     },
 
     /**
@@ -74,16 +78,13 @@ var kontra = (function(kontra, Math, undefined) {
    * @see kontra.sprite._prot.set for list of parameters.
    */
   kontra.sprite = function(properties) {
-    var sprite = Object.create(kontra.sprite._proto);
-    sprite.position = kontra.vector();
-    sprite.velocity = kontra.vector();
-    sprite.acceleration = kontra.vector();
+    var sprite = Object.create(kontra.sprite.prototype);
     sprite.set(properties);
 
     return sprite;
   };
 
-  kontra.sprite._proto = {
+  kontra.sprite.prototype = {
     /**
      * Move the sprite by its velocity.
      * @memberof kontra.sprite
@@ -194,11 +195,11 @@ var kontra = (function(kontra, Math, undefined) {
 
       var _this = this;
 
-      _this.position.set(properties.x, properties.y);
-      _this.velocity.set(properties.dx, properties.dy);
-      _this.acceleration.set(properties.ddx, properties.ddy);
-      _this.timeToLive = properties.timeToLive || 0;
+      _this.position = (_this.position || kontra.vector()).set(properties.x, properties.y);
+      _this.velocity = (_this.velocity || kontra.vector()).set(properties.dx, properties.dy);
+      _this.acceleration = (_this.acceleration || kontra.vector()).set(properties.ddx, properties.ddy);
 
+      _this.timeToLive = properties.timeToLive || 0;
       _this.context = properties.context || kontra.context;
 
       // image sprite

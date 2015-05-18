@@ -9,7 +9,7 @@ var kontra = (function(kontra, undefined) {
    * collapses to avoid garbage collection.
    * @memberof kontra
    *
-   * @see kontra.quadtree._proto.set for list of parameters.
+   * @see kontra.quadtree.prototype.set for list of parameters.
    *L
    * The quadrant indices are numbered as follows (following a z-order curve):
    *     |
@@ -19,13 +19,13 @@ var kontra = (function(kontra, undefined) {
    *     |
    */
   kontra.quadtree = function(properties) {
-    var quadtree = Object.create(kontra.quadtree._proto);
+    var quadtree = Object.create(kontra.quadtree.prototype);
     quadtree.set(properties);
 
     return quadtree;
   };
 
-  kontra.quadtree._proto = {
+  kontra.quadtree.prototype = {
     /**
      * Set properties on the quadtree.
      * @memberof kontra.quadtree

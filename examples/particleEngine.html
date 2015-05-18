@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Particle Engine</title>
+  <style>
+  canvas {
+    background: black;
+  }
+  </style>
+  <script type="text/javascript" src="../../kontra.js"></script>
+</head>
+<body>
+  <canvas width="600" height="600"></canvas>
+  <script>
+  kontra.init();
+
+  var midX = kontra.canvas.width / 2;
+  var midY = kontra.canvas.height / 2;
+
+  // you can animate about 5000 particles in 60PFS
+  // each field means you have to reduce the particle count about 1000 to remain under 60FPS
+  var fields = [
+    kontra.sprite({
+      x: midX - 75,
+      y: midY + 20,
+      width: 3,
+      height: 3,
+      color: 'green',
+      properties: {
+        mass: 900,
+        size: 3
+      }
+    }),
+    kontra.sprite({
+      x: midX + 25,
+      y: midY + 10,
+      width: 3,
+      height: 3,
+      color: 'red',
+      properties: {
+        mass: -50,
+        size: 3
+      }
+    })
+  ];
+
+  var pool = kontra.pool({
+    create: kontra.sprite,
+    maxSize: 4000,
+    fill: true
+  });
+
+  kontra.context.fillStyle = 'blue';
+
+  // redefine sprite update to account for fields
+  kontra.sprite.prototype.update = function() {
+    // apply field
+    var totalAccelerationX = 0
+    var totalAccelerationY = 0;
+
+    for (var i = 0, field; field = fields[i]; i++) {
+
+      var vectorX = field.position.x - this.position.x;
+      var vectorY = field.position.y - this.position.y;
+
+      var force = field.mass / Math.pow(vectorX * vectorX + vectorY * vectorY, 1.5);
+
+      totalAccelerationX += vectorX * force;
+      totalAccelerationY += vectorY * force;
+    }
+
+    this.acceleration.x = totalAccelerationX
+    this.acceleration.y = totalAccelerationY
+
+    this.advance();
+  };
+
+  // redefine sprite render to not change context fillStyle every time
+  kontra.sprite.prototype.render = function() {
+    kontra.context.fillRect(this.position.x, this.position.y, 3, 3);
+  };
+
+  var loop = kontra.gameLoop({
+    update: function() {
+      for (var i = 0; i < 4; i++) {
+        pool.get({
+          x: midX + 75,
+          y: midY,
+          dx: 2 - Math.random() * 4,
+          dy: 2 - Math.random() * 4,
+          color: 'blue',
+          width: 1,
+          height: 1,
+          timeToLive: Infinity
+        });
+      }
+
+      pool.update();
+    },
+    render: function() {
+      kontra.context.clearRect(0, 0, kontra.game.width, kontra.game.height);
+
+      pool.render();
+    }
+  });
+
+  loop.start();
+  </script>
+</body>
+</html>

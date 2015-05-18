@@ -7,16 +7,16 @@ var kontra = (function(kontra, undefined) {
    * Single animation from a sprite sheet.
    * @memberof kontra
    *
-   * @see kontra.pool._proto.set for list of parameters.
+   * @see kontra.pool.prototype.set for list of parameters.
    */
   kontra.animation = function(properties) {
-    var animation = Object.create(kontra.animation._proto);
+    var animation = Object.create(kontra.animation.prototype);
     animation.set(properties);
 
     return animation;
   };
 
-  kontra.animation._proto = {
+  kontra.animation.prototype = {
     /**
      * Set properties on the animation.
      * @memberof kontra.animation
@@ -133,16 +133,16 @@ var kontra = (function(kontra, undefined) {
    * Create a sprite sheet from an image.
    * @memberof kontra
    *
-   * @see kontra.spriteSheet._proto.set for list of parameters.
+   * @see kontra.spriteSheet.prototype.set for list of parameters.
    */
   kontra.spriteSheet = function(properties) {
-    var spriteSheet = Object.create(kontra.spriteSheet._proto);
+    var spriteSheet = Object.create(kontra.spriteSheet.prototype);
     spriteSheet.set(properties);
 
     return spriteSheet;
   };
 
-  kontra.spriteSheet._proto = {
+  kontra.spriteSheet.prototype = {
     /**
      * Set properties on the spriteSheet.
      * @memberof kontra

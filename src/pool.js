@@ -8,16 +8,16 @@ var kontra = (function(kontra) {
    * Unused items are at the front of the pool and in use items are at the of the pool.
    * @memberof kontra
    *
-   * @see kontra.pool._proto.set for list of parameters.
+   * @see kontra.pool.prototype.set for list of parameters.
    */
   kontra.pool = function(properties) {
-    var pool = Object.create(kontra.pool._proto);
+    var pool = Object.create(kontra.pool.prototype);
     pool.set(properties);
 
     return pool;
   };
 
-  kontra.pool._proto = {
+  kontra.pool.prototype = {
     /**
      * Set properties on the pool.
      *

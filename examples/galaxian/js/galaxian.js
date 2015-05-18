@@ -20,7 +20,7 @@ kontra.loadAssets(
   /*
    * Audio pools
    */
-  // create an audio sprite for use in an audio pool, mimicing a normal image sprite
+  // create an audio sprite for use in an audio pool, mimicking a normal image sprite
   var audioSprite = {
     isAlive: function() {
       return !this.audio.ended;

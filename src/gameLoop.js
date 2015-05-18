@@ -25,16 +25,16 @@ var kontra = (function(kontra, window) {
    * Game loop that updates and renders the game every frame.
    * @memberof kontra
    *
-   * @see kontra.gameLoop._proto.set for list of parameters.
+   * @see kontra.gameLoop.prototype.set for list of parameters.
    */
   kontra.gameLoop = function(properties) {
-    var gameLoop = Object.create(kontra.gameLoop._proto);
+    var gameLoop = Object.create(kontra.gameLoop.prototype);
     gameLoop.set(properties);
 
     return gameLoop;
   };
 
-  kontra.gameLoop._proto = {
+  kontra.gameLoop.prototype = {
     /**
      * Set properties on the game loop.
      * @memberof kontra.gameLoop

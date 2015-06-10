@@ -69,8 +69,8 @@ var kontra = (function(kontra, undefined) {
      * @private
      *
      * @param {object} properties - How to draw the animation.
-     * @param {integer} properties.x - X position to draw
-     * @param {integer} properties.y - Y position to draw
+     * @param {number} properties.x - X position to draw.
+     * @param {number} properties.y - Y position to draw.
      * @param {Context} [properties.context=kontra.context] - Provide a context for the sprite to draw on.
      */
     draw: function draw(properties) {

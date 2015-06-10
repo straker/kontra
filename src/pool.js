@@ -20,6 +20,7 @@ var kontra = (function(kontra) {
   kontra.pool.prototype = {
     /**
      * Set properties on the pool.
+     * @memberof kontra.pool
      *
      * @param {object} properties - Properties of the pool.
      * @param {object} properties.create - Function that returns the object to use in the pool.
@@ -49,7 +50,7 @@ var kontra = (function(kontra) {
 
       if (!obj || typeof obj.render !== 'function' || typeof obj.update !== 'function' ||
           typeof obj.set !== 'function' || typeof obj.isAlive !== 'function') {
-        error = new ReferenceError('Create object required functions not found.');
+        error = new SyntaxError('Create object required functions not found.');
         kontra.logError(error, 'Objects to be pooled must implement render(), update(), set() and isAlive() functions.');
         return;
       }

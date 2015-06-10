@@ -52,6 +52,7 @@ gulp.task('build', function() {
       '     quadtree - 2D spatial partition for storing objects by their positions',
       '       sprite - Object for drawing rectangles, images, and sprite sheet animations',
       '  spriteSheet - Sprite sheets and sprite animations',
+      '   tileEngine - Tile engine for rendering tilesets',
       '        store - Local Storage interface for ease of use'
     ];
 
@@ -111,15 +112,16 @@ gulp.task('build', function() {
     '/*',
     ' * Kontra.js v' + package.version + ' (Custom Build on ' + date + ') | MIT',
     ' * Build: --files ' + originalSrc,
-    ' */\n\n'
+    ' */\n'
   ]
 
   return gulp.src(src)
     .pipe(concat('kontra.build.js'))
-    .pipe(concat.header(header.join('\n')))
+    .pipe(concat.header(header.join('\n') + '\n'))
     .pipe(size())
     .pipe(gulp.dest('.'))
     .pipe(uglify())
+    .pipe(concat.header(header.join('\n')))
     .pipe(rename('kontra.build.min.js'))
     .pipe(size())
     .pipe(gulp.dest('.'))

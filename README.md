@@ -10,7 +10,7 @@ Kontra.js does provide some more advance data structures like object pools and q
 
 Kontra.js prides itself in being:
 
-- **lightweight**: under 20K minified.
+- **lightweight**: under 25K minified.
 - **modular**: pick and choose what modules you want to use using `gulp build`. very few inter-dependencies.
 - **extensible**: everything is customizable and can be extended.
 - **fast**: all logic has been removed from the update and render cycles.

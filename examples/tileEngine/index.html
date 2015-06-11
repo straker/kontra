@@ -113,7 +113,7 @@
 
           // player will walk in the center of the map so long as he doesn't
           // reach the edge
-          if (tileEngine.sy >= 0 && this.position.y <= this.startY) {
+          if (tileEngine.sy > 0 && this.position.y <= this.startY) {
             tileEngine.sy -= this.speed;
           }
           // otherwise the map will stop moving and the player will move from
@@ -133,7 +133,7 @@
             return;
           }
 
-          if (tileEngine.sy <= tileEngine.mapHeight - kontra.canvas.height &&
+          if (tileEngine.sy < tileEngine.mapHeight - kontra.canvas.height &&
               this.position.y >= this.startY) {
             tileEngine.sy += this.speed;
           }
@@ -152,7 +152,7 @@
             return;
           }
 
-          if (tileEngine.sx >= 0 && this.position.x <= this.startX) {
+          if (tileEngine.sx > 0 && this.position.x <= this.startX) {
             tileEngine.sx -= this.speed;
           }
           else {
@@ -170,7 +170,7 @@
             return;
           }
 
-          if (tileEngine.sx <= tileEngine.mapWidth - kontra.canvas.width &&
+          if (tileEngine.sx < tileEngine.mapWidth - kontra.canvas.width &&
               this.position.x >= this.startX) {
             tileEngine.sx += this.speed;
           }
@@ -180,6 +180,8 @@
         }
       },
     });
+
+    window.tileEngine = tileEngine;
 
     player.position.clamp(0, 0, kontra.canvas.width - 64, kontra.canvas.height - 64);
 

@@ -2560,7 +2560,7 @@ var kontra = (function(kontra, window, localStorage, undefined) {
 })(kontra || {}, window, window.localStorage);
 /*jshint -W084 */
 
-var kontra = (function(kontra, undefined) {
+var kontra = (function(kontra, Math, undefined) {
   'use strict';
 
   /**
@@ -2625,6 +2625,12 @@ var kontra = (function(kontra, undefined) {
       // make the off-screen canvas the full size of the map
       _this._offscreenCanvas.width = _this.mapWidth = _this.width * _this.tileWidth;
       _this._offscreenCanvas.height = _this.mapHeight = _this.height * _this.tileHeight;
+
+      // when clipping an image, sx and sy must within the image region, otherwise
+      // Firefox and Safari won't draw it.
+      // @see http://stackoverflow.com/questions/19338032/canvas-indexsizeerror-index-or-size-is-negative-or-greater-than-the-allowed-a
+      _this.sxMax = _this.mapWidth - _this.canvasWidth;
+      _this.syMax = _this.mapHeight - _this.canvasHeight;
 
       _this.layers = {};
 
@@ -2801,6 +2807,10 @@ var kontra = (function(kontra, undefined) {
     render: function render() {
       var _this = this;
 
+      // ensure sx and sy are within the image region
+      _this.sx = Math.min( Math.max(_this.sx, 0), _this.sxMax );
+      _this.sy = Math.min( Math.max(_this.sy, 0), _this.syMax );
+
       _this.context.drawImage(
         _this._offscreenCanvas,
         _this.sx, _this.sy, _this.canvasWidth, _this.canvasHeight,
@@ -2970,4 +2980,4 @@ var kontra = (function(kontra, undefined) {
   };
 
   return kontra;
-})(kontra || {});
+})(kontra || {}, Math);

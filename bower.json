@@ -1,0 +1,28 @@
+{
+  "name": "kontra",
+  "main": "kontra.js",
+  "homepage": "https://github.com/straker/kontra",
+  "authors": [
+    "Steven Lambert <steven@sklambert.com> (http://sklambert.com/)"
+  ],
+  "description": "Kontra HTML5 game development library",
+  "keywords": [
+    "HTML",
+    "JavaScript",
+    "game",
+    "library"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests",
+    "examples"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/straker/kontra.git"
+  },
+}

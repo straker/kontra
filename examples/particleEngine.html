@@ -26,10 +26,8 @@
       width: 3,
       height: 3,
       color: 'green',
-      properties: {
-        mass: 900,
-        size: 3
-      }
+      mass: 900,
+      size: 3
     }),
     kontra.sprite({
       x: midX + 25,
@@ -37,10 +35,8 @@
       width: 3,
       height: 3,
       color: 'red',
-      properties: {
-        mass: -50,
-        size: 3
-      }
+      mass: -50,
+      size: 3
     })
   ];
 
@@ -60,8 +56,8 @@
 
     for (var i = 0, field; field = fields[i]; i++) {
 
-      var vectorX = field.position.x - this.position.x;
-      var vectorY = field.position.y - this.position.y;
+      var vectorX = field.x - this.x;
+      var vectorY = field.y - this.y;
 
       var force = field.mass / Math.pow(vectorX * vectorX + vectorY * vectorY, 1.5);
 
@@ -77,7 +73,7 @@
 
   // redefine sprite render to not change context fillStyle every time
   kontra.sprite.prototype.render = function() {
-    kontra.context.fillRect(this.position.x, this.position.y, 3, 3);
+    kontra.context.fillRect(this.x, this.y, 3, 3);
   };
 
   var loop = kontra.gameLoop({

@@ -1,6 +1,23 @@
 var kontra = (function(kontra, Math, undefined) {
   'use strict';
 
+  // prevent these properties from being set at the end of kontra.sprite.set()
+  var excludedProperties = [
+    'x',
+    'y',
+    'dx',
+    'dy',
+    'ddx',
+    'ddy',
+    'timeToLive',
+    'context',
+    'image',
+    'animations',
+    'color',
+    'width',
+    'height'
+  ];
+
   /**
    * A vector for 2D space.
    * @memberof kontra
@@ -16,7 +33,7 @@ var kontra = (function(kontra, Math, undefined) {
 
   kontra.vector.prototype = {
     /**
-     * Set the vector's x and y position.
+     * Set the vectors x and y position.
      * @memberof kontra.vector
      *
      * @param {number} x=0 - Center x coordinate.
@@ -48,21 +65,40 @@ var kontra = (function(kontra, Math, undefined) {
      * Please note that clamping will only work if the add function is called.
      * @memberof kontra.vector
      *
-     * @param {number} xMin - Min x value.
-     * @param {number} yMin - Min y value.
-     * @param {number} xMax - Max x value.
-     * @param {number} yMax - Max y value.
+     * @param {number} [xMin=-Infinity] - Min x value.
+     * @param {number} [yMin=Infinity] - Min y value.
+     * @param {number} [xMax=-Infinity] - Max x value.
+     * @param {number} [yMax=Infinity] - Max y value.
      */
     clamp: function clamp(xMin, yMin, xMax, yMax) {
+      this._xMin = (xMin !== undefined ? xMin : -Infinity);
+      this._xMax = (xMax !== undefined ? xMax : Infinity);
+      this._yMin = (yMin !== undefined ? yMin : -Infinity);
+      this._yMax = (yMax !== undefined ? yMax : Infinity);
 
-      // overwrite add function to clamp the final values.
-      this.add = function clampAdd(vector, dt) {
-        var x = this.x + (vector.x || 0) * (dt || 1);
-        var y = this.y + (vector.y || 0) * (dt || 1);
+      // rename x and y so we can use them as getters and setters
+      this._x = this.x;
+      this._y = this.y;
 
-        this.x = Math.min( Math.max(x, xMin), xMax );
-        this.y = Math.min( Math.max(y, yMin), yMax );
-      };
+      // define getters to return the renamed x and y and setters to clamp their value
+      Object.defineProperties(this, {
+        x: {
+          get: function() {
+            return this._x;
+          },
+          set: function(value) {
+            this._x = Math.min( Math.max(value, this._xMin), this._xMax );
+          }
+        },
+        y: {
+          get: function() {
+            return this._y;
+          },
+          set: function(value) {
+            this._y = Math.min( Math.max(value, this._yMin), this._yMax );
+          }
+        }
+      });
     }
   };
 
@@ -171,7 +207,6 @@ var kontra = (function(kontra, Math, undefined) {
      * @param {number} [properties.ddx] - Change in X velocity.
      * @param {number} [properties.ddy] - Change in Y velocity.
      *
-     * @param {object} [properties.properties] - Additional properties to set on the sprite.
      * @param {number} [properties.timeToLive=0] - How may frames the sprite should be alive.
      * @param {Context} [properties.context=kontra.context] - Provide a context for the sprite to draw on.
      *
@@ -236,20 +271,94 @@ var kontra = (function(kontra, Math, undefined) {
         _this.draw = _this.drawRect;
       }
 
-      if (properties.update) {
-        _this.update = properties.update;
-      }
-
-      if (properties.render) {
-        _this.render = properties.render;
-      }
-
-      // loop through all additional properties and add them to the sprite
-      for (var prop in properties.properties) {
-        if (properties.properties.hasOwnProperty(prop)) {
-          _this[prop] = properties.properties[prop];
+      // loop through all other properties an add them to the sprite
+      for (var prop in properties) {
+        if (properties.hasOwnProperty(prop) && excludedProperties.indexOf(prop) === -1) {
+          _this[prop] = properties[prop];
         }
       }
+    },
+
+    // define getter and setter shortcut functions to make it easier to work work with the
+    // position, velocity, and acceleration vectors.
+
+    /**
+     * Sprite position.x
+     * @memberof kontra.sprite
+     *
+     * @property {number} x
+     */
+    get x() {
+      return this.position.x;
+    },
+
+    /**
+     * Sprite position.y
+     * @memberof kontra.sprite
+     *
+     * @property {number} y
+     */
+    get y() {
+      return this.position.y;
+    },
+
+    /**
+     * Sprite velocity.x
+     * @memberof kontra.sprite
+     *
+     * @property {number} dx
+     */
+    get dx() {
+      return this.velocity.x;
+    },
+
+    /**
+     * Sprite velocity.y
+     * @memberof kontra.sprite
+     *
+     * @property {number} dy
+     */
+    get dy() {
+      return this.velocity.y;
+    },
+
+    /**
+     * Sprite acceleration.x
+     * @memberof kontra.sprite
+     *
+     * @property {number} ddx
+     */
+    get ddx() {
+      return this.acceleration.x;
+    },
+
+    /**
+     * Sprite acceleration.y
+     * @memberof kontra.sprite
+     *
+     * @property {number} ddy
+     */
+    get ddy() {
+      return this.acceleration.y;
+    },
+
+    set x(value) {
+      this.position.x = value;
+    },
+    set y(value) {
+      this.position.y = value;
+    },
+    set dx(value) {
+      this.velocity.x = value;
+    },
+    set dy(value) {
+      this.velocity.y = value;
+    },
+    set ddx(value) {
+      this.acceleration.x = value;
+    },
+    set ddy(value) {
+      this.acceleration.y = value;
     },
 
     /**

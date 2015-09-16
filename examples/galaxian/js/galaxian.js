@@ -110,14 +110,14 @@ kontra.loadAssets(
     update: function() {
       this.advance();
 
-      if (this.position.y >= kontra.game.height) {
-        this.position.y = 0;
+      if (this.y >= kontra.game.height) {
+        this.y = 0;
       }
     },
     render: function() {
       this.draw();
 
-      this.context.drawImage(this.image, this.position.x, this.position.y - kontra.game.height);
+      this.context.drawImage(this.image, this.x, this.y - kontra.game.height);
     }
   });
 
@@ -126,38 +126,34 @@ kontra.loadAssets(
     x: 280,
     y: 270,
     image: kontra.images.ship,
-    properties: {
-      counter: 15
-    },
+    counter: 15,
     update: function() {
       this.counter++;
 
       if (kontra.keys.pressed('left')) {
-        player.position.add({x: -3});
+        this.x -= 3;
       }
       else if (kontra.keys.pressed('right')) {
-        player.position.add({x: 3});
+        this.x += 3;
       }
 
       if (kontra.keys.pressed('up')) {
-        player.position.add({y: -3});
+        this.y -= 3;
       }
       else if (kontra.keys.pressed('down')) {
-        player.position.add({y: 3});
+        this.y += 3;
       }
 
       if (kontra.keys.pressed('space') && this.counter >= 15) {
         for (var i = 0; i < 2; i++) {
           console.log('get');
           bullets.get({
-            x: this.position.x + 6 + (i * 27),
-            y: this.position.y,
+            x: this.x + 6 + (i * 27),
+            y: this.y,
             dy: -3,
             image: kontra.images.bullet,
             timeToLive: 130,
-            properties: {
-              type: 'friendly'
-            }
+            type: 'friendly'
           });
         }
 
@@ -190,40 +186,36 @@ kontra.loadAssets(
         dy: 2,
         image: kontra.images.enemy,
         timeToLive: Infinity,
-        properties: {
-          leftEdge: x - 90,
-          rightEdge: x + 90 + width,
-          bottomEdge: y + 140,
-          speed: 2,
-          type: 'enemy'
-        },
+        leftEdge: x - 90,
+        rightEdge: x + 90 + width,
+        bottomEdge: y + 140,
+        speed: 2,
+        type: 'enemy',
         update: function() {
           this.advance();
 
           // change enemy velocity to move back and forth
-          if (this.position.x <= this.leftEdge) {
-            this.velocity.x = this.speed;
+          if (this.x <= this.leftEdge) {
+            this.dx = this.speed;
           }
-          else if (this.position.x >= this.rightEdge) {
-            this.velocity.x = -this.speed;
+          else if (this.x >= this.rightEdge) {
+            this.dx = -this.speed;
           }
-          else if (this.position.y >= this.bottomEdge) {
-            this.velocity.y = 0;
-            this.velocity.x = -this.speed;
-            this.position.y -= 5;
+          else if (this.y >= this.bottomEdge) {
+            this.dy = 0;
+            this.dx = -this.speed;
+            this.y -= 5;
           }
 
           // randomly fire bullets
           if (Math.floor(Math.random()*101)/100 < .01) {
             enemyBullets.get({
-              x: this.position.x + this.width / 2,
-              y: this.position.y + this.height,
+              x: this.x + this.width / 2,
+              y: this.y + this.height,
               dy: 2.5,
               image: kontra.images.bullet_enemy,
               timeToLive: 150,
-              properties: {
-                type: 'hostile'
-              }
+              type: 'hostile'
             });
           }
         },

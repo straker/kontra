@@ -83,17 +83,15 @@
       y: 268,
       width: 64,
       height: 64,
-      properties: {
-        speed: 3,
-        startX: 268,
-        startY: 268
-      },
+      speed: 3,
+      startX: 268,
+      startY: 268,
       animations: spritesheet.animations,
       update: function() {
         // create a smaller bounding box for the player's collision
         var collisionBox = {
-          y: this.position.y + 43,
-          x: this.position.x + 28,
+          y: this.y + 43,
+          x: this.x + 28,
           width: 6,
           height: 22
         };
@@ -113,13 +111,13 @@
 
           // player will walk in the center of the map so long as he doesn't
           // reach the edge
-          if (tileEngine.sy > 0 && this.position.y <= this.startY) {
+          if (tileEngine.sy > 0 && this.y <= this.startY) {
             tileEngine.sy -= this.speed;
           }
           // otherwise the map will stop moving and the player will move from
           // the center
           else {
-            this.position.add({y: -this.speed});
+            this.y -= this.speed;
           }
         }
 
@@ -134,11 +132,11 @@
           }
 
           if (tileEngine.sy < tileEngine.mapHeight - kontra.canvas.height &&
-              this.position.y >= this.startY) {
+              this.y >= this.startY) {
             tileEngine.sy += this.speed;
           }
           else {
-            this.position.add({y: this.speed});
+            this.y += this.speed;
           }
         }
 
@@ -152,11 +150,11 @@
             return;
           }
 
-          if (tileEngine.sx > 0 && this.position.x <= this.startX) {
+          if (tileEngine.sx > 0 && this.x <= this.startX) {
             tileEngine.sx -= this.speed;
           }
           else {
-            this.position.add({x: -this.speed});
+            this.x -= this.speed;
           }
         }
 
@@ -171,19 +169,17 @@
           }
 
           if (tileEngine.sx < tileEngine.mapWidth - kontra.canvas.width &&
-              this.position.x >= this.startX) {
+              this.x >= this.startX) {
             tileEngine.sx += this.speed;
           }
           else {
-            this.position.add({x: this.speed});
+            this.x += this.speed;
           }
         }
       },
     });
 
-    window.tileEngine = tileEngine;
-
-    player.position.clamp(0, 0, kontra.canvas.width - 64, kontra.canvas.height - 64);
+    player.position.clamp(0, 0, kontra.canvas.width - player.width, kontra.canvas.height - player.height);
 
     var loop = kontra.gameLoop({
       update: function() {

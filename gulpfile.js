@@ -8,6 +8,7 @@ var rename = require('gulp-rename');
 var size = require('gulp-size');
 var sourcemaps = require('gulp-sourcemaps');
 var uglify = require('gulp-uglify');
+var karma = require('karma').server;
 
 var package = require('./package.json');
 
@@ -135,6 +136,12 @@ gulp.task('connect', function() {
 
 gulp.task('watch', function() {
   gulp.watch('src/*.js', ['lint', 'scripts']);
+});
+
+gulp.task('test', function(done) {
+  karma.start({
+    configFile: __dirname + '/karma.conf.js'
+  }, done);
 });
 
 gulp.task('default', ['lint', 'scripts', 'connect', 'watch']);

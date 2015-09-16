@@ -135,27 +135,28 @@ var kontra = (function(kontra) {
     /**
      * Update all alive pool objects.
      * @memberof kontra.pool
+     *
+     * @param {number} dt - Time since last update.
      */
-    update: function update() {
+    update: function update(dt) {
       var i = this.lastIndex;
       var obj;
 
-      // only iterate over the objects that are alive
-      //
       // If the user kills an object outside of the update cycle, the pool won't know of
       // the change until the next update and inUse won't be decremented. If the user then
       // gets an object when inUse is the same size as objects.length, inUse will increment
       // and this statement will evaluate to -1.
       //
-      // I don't like having to go through the pool to kill an object as it forces you to know
-      // which object came from which pool. Instead, we'll just prevent the index from going below
-      // 0 and accept the fact that inUse may be out of sync for a frame.
+      // I don't like having to go through the pool to kill an object as it forces you to
+      // know which object came from which pool. Instead, we'll just prevent the index from
+      // going below 0 and accept the fact that inUse may be out of sync for a frame.
       var index = Math.max(this.objects.length - this.inUse, 0);
 
+      // only iterate over the objects that are alive
       while (i >= index) {
         obj = this.objects[i];
 
-        obj.update();
+        obj.update(dt);
 
         // if the object is dead, move it to the front of the pool
         if (!obj.isAlive()) {

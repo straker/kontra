@@ -4,7 +4,7 @@
   "description": "Kontra HTML5 game development library",
   "main": "core.js",
   "scripts": {
-    "test": " ./node_modules/.bin/karma start --single-run --browsers Chrome,Firefox,Safari,IE"
+    "test": "./node_modules/.bin/karma start --single-run --browsers PhantomJS"
   },
   "repository": {
     "type": "git",
@@ -43,8 +43,10 @@
     "karma-firefox-launcher": "^0.1.6",
     "karma-ie-launcher": "^0.2.0",
     "karma-mocha": "^0.2.0",
+    "karma-phantomjs-launcher": "^0.2.1",
     "karma-safari-launcher": "^0.1.1",
     "mocha": "^2.3.2",
+    "phantomjs": "^1.9.18",
     "yargs": "^3.25.0"
   }
 }

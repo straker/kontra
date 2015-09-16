@@ -7,6 +7,7 @@ module.exports = function(config) {
     frameworks: ['mocha', 'chai'],
     files: [
       // assets
+      'test/audioShim.js',
       'kontra.js',
       'test/*.js'
     ],

@@ -96,7 +96,7 @@ var kontra = (function(kontra, document) {
    * @returns {boolean}
    */
   kontra.isImage = function isImage(value) {
-    return value && value.nodeName.toLowerCase() === 'img';
+    return value instanceof HTMLImageElement;
   };
 
   /**
@@ -108,7 +108,7 @@ var kontra = (function(kontra, document) {
    * @returns {boolean}
    */
   kontra.isCanvas = function isCanvas(value) {
-    return value && value.nodeName.toLowerCase() === 'canvas';
+    return value instanceof HTMLCanvasElement;
   };
 
   return kontra;

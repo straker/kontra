@@ -220,7 +220,7 @@ var kontra = (function(kontra, window) {
     if (shiftKeys[keys]) {
       combination.push('shift+'+shiftKeys[keys]);
     }
-    else if(keys) {
+    else if (keys) {
       combination.push(keys);
     }
 

@@ -26,7 +26,6 @@
     "kontra-asset-loader": "git+https://github.com/straker/kontra-asset-loader.git"
   },
   "devDependencies": {
-    "argv": "0.0.2",
     "chai": "^3.2.0",
     "colors": "^1.1.0",
     "gulp": "^3.8.11",
@@ -45,6 +44,7 @@
     "karma-ie-launcher": "^0.2.0",
     "karma-mocha": "^0.2.0",
     "karma-safari-launcher": "^0.1.1",
-    "mocha": "^2.3.2"
+    "mocha": "^2.3.2",
+    "yargs": "^3.25.0"
   }
 }

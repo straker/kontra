@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/straker/kontra.svg?branch=master)](https://travis-ci.org/straker/kontra)
+
 # Kontra.js
 
 Kontra.js is a lightweight JavaScript gaming mirco-framework. 

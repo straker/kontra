@@ -4,10 +4,10 @@
 module.exports = function(config) {
   config.set({
     basePath: '',
-    frameworks: ['mocha', 'chai'],
+    frameworks: ['mocha', 'chai', 'sinon'],
     files: [
       // assets
-      'test/audioShim.js',
+      'test/phantom.polyfill.js',
       'kontra.js',
       'test/*.js'
     ],

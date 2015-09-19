@@ -36,6 +36,8 @@ var kontra = (function(kontra) {
 
       var error, obj;
 
+      // check for the correct structure of the objects added to pools so we know that the
+      // rest of the pool code will work without errors
       if (typeof properties.create !== 'function') {
         error = new SyntaxError('Required function not found.');
         kontra.logError(error, 'Parameter \'create\' must be a function that returns an object.');
@@ -64,8 +66,18 @@ var kontra = (function(kontra) {
 
       // fill the pool
       if (properties.fill) {
-        while (this.objects.length < this.maxSize) {
-          this.objects.unshift(this.create());
+        if (properties.maxSize) {
+          while (this.objects.length < this.maxSize) {
+            this.objects.unshift(this.create());
+          }
+
+          this.size = this.maxSize;
+          this.lastIndex = this.maxSize - 1;
+        }
+        else {
+          error = new SyntaxError('Required property not found.');
+          kontra.logError(error, 'Parameter \'maxSize\' must be set before you can fill a pool.');
+          return;
         }
       }
     },
@@ -129,7 +141,7 @@ var kontra = (function(kontra) {
       this.size = 1;
       this.lastIndex = 0;
       this.objects.length = 0;
-      this.objects.push(this.create({}));
+      this.objects.push(this.create());
     },
 
     /**

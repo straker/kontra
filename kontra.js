@@ -840,7 +840,7 @@ var kontra = (function(kontra, document) {
   'use strict';
 
   /**
-   * Set up the canvas.
+   * Initialize the canvas.
    * @memberof kontra
    *
    * @param {object} properties - Properties for the game.
@@ -955,7 +955,7 @@ var kontra = (function(kontra, window) {
   /**
    * Get the current time. Uses the User Timing API if it's available or defaults to using
    * Date().getTime()
-   * @private
+   * @memberof kontra
    *
    * @returns {number}
    */
@@ -976,18 +976,18 @@ var kontra = (function(kontra, window) {
    * Game loop that updates and renders the game every frame.
    * @memberof kontra
    *
-   * @see kontra.gameLoop.prototype.set for list of parameters.
+   * @see kontra.gameLoop.prototype.init for list of parameters.
    */
   kontra.gameLoop = function(properties) {
     var gameLoop = Object.create(kontra.gameLoop.prototype);
-    gameLoop.set(properties);
+    gameLoop.init(properties);
 
     return gameLoop;
   };
 
   kontra.gameLoop.prototype = {
     /**
-     * Set properties on the game loop.
+     * Initialize properties on the game loop.
      * @memberof kontra.gameLoop
      *
      * @param {object}   properties - Configure the game loop.
@@ -995,7 +995,7 @@ var kontra = (function(kontra, window) {
      * @param {function} properties.update - Function called to update the game.
      * @param {function} properties.render - Function called to render the game.
      */
-    set: function set(properties) {
+    init: function init(properties) {
       properties = properties || {};
 
       // check for required functions
@@ -1016,13 +1016,32 @@ var kontra = (function(kontra, window) {
     },
 
     /**
-     * Called every frame of the game loop.
+     * Start the game loop.
      * @memberof kontra.gameLoop
      */
-    frame: function frame() {
+    start: function start() {
+      this._last = kontra.timestamp();
+      this.isStopped = false;
+      requestAnimationFrame(this._frame.bind(this));
+    },
+
+    /**
+     * Stop the game loop.
+     */
+    stop: function stop() {
+      this.isStopped = true;
+      cancelAnimationFrame(this._rAF);
+    },
+
+    /**
+     * Called every frame of the game loop.
+     * @memberof kontra.gameLoop
+     * @private
+     */
+    _frame: function frame() {
       var _this = this;
 
-      _this._rAF = requestAnimationFrame(_this.frame.bind(_this));
+      _this._rAF = requestAnimationFrame(_this._frame.bind(_this));
 
       _this._now = kontra.timestamp();
       _this._dt = _this._now - _this._last;
@@ -1043,24 +1062,6 @@ var kontra = (function(kontra, window) {
       }
 
       _this.render();
-    },
-
-    /**
-     * Start the game loop.
-     * @memberof kontra.gameLoop
-     */
-    start: function start() {
-      this._last = kontra.timestamp();
-      this.isStopped = false;
-      requestAnimationFrame(this.frame.bind(this));
-    },
-
-    /**
-     * Stop the game loop.
-     */
-    stop: function stop() {
-      this.isStopped = true;
-      cancelAnimationFrame(this._rAF);
     }
   };
 
@@ -1382,18 +1383,18 @@ var kontra = (function(kontra) {
    * Unused items are at the front of the pool and in use items are at the of the pool.
    * @memberof kontra
    *
-   * @see kontra.pool.prototype.set for list of parameters.
+   * @see kontra.pool.prototype.init for list of parameters.
    */
   kontra.pool = function(properties) {
     var pool = Object.create(kontra.pool.prototype);
-    pool.set(properties);
+    pool.init(properties);
 
     return pool;
   };
 
   kontra.pool.prototype = {
     /**
-     * Set properties on the pool.
+     * Initialize properties on the pool.
      * @memberof kontra.pool
      *
      * @param {object} properties - Properties of the pool.
@@ -1403,9 +1404,9 @@ var kontra = (function(kontra) {
      * @param {boolean} properties.fill - Fill the pool to max size instead of slowly growing.
      *
      * Objects inside the pool must implement <code>render()</code>, <code>update()</code>,
-     * <code>set()</code>, and <code>isAlive()</code> functions.
+     * <code>init()</code>, and <code>isAlive()</code> functions.
      */
-    set: function set(properties) {
+    init: function init(properties) {
       properties = properties || {};
 
       var error, obj;
@@ -1425,9 +1426,9 @@ var kontra = (function(kontra) {
       obj = this.create();
 
       if (!obj || typeof obj.render !== 'function' || typeof obj.update !== 'function' ||
-          typeof obj.set !== 'function' || typeof obj.isAlive !== 'function') {
+          typeof obj.init !== 'function' || typeof obj.isAlive !== 'function') {
         error = new SyntaxError('Create object required functions not found.');
-        kontra.logError(error, 'Objects to be pooled must implement render(), update(), set() and isAlive() functions.');
+        kontra.logError(error, 'Objects to be pooled must implement render(), update(), init() and isAlive() functions.');
         return;
       }
 
@@ -1460,7 +1461,7 @@ var kontra = (function(kontra) {
      * Get an object from the pool.
      * @memberof kontra.pool
      *
-     * @param {object} properties - Properties to pass to object.set().
+     * @param {object} properties - Properties to pass to object.init().
      */
     get: function get(properties) {
       properties = properties || {};
@@ -1485,7 +1486,7 @@ var kontra = (function(kontra) {
 
       // save off first object in pool to reassign to last object after unshift
       var obj = _this.objects[0];
-      obj.set(properties);
+      obj.init(properties);
 
       // unshift the array
       for (var i = 1; i < _this.size; i++) {
@@ -1591,7 +1592,7 @@ var kontra = (function(kontra, undefined) {
    * collapses to avoid garbage collection.
    * @memberof kontra
    *
-   * @see kontra.quadtree.prototype.set for list of parameters.
+   * @see kontra.quadtree.prototype.init for list of parameters.
    *L
    * The quadrant indices are numbered as follows (following a z-order curve):
    *     |
@@ -1602,14 +1603,14 @@ var kontra = (function(kontra, undefined) {
    */
   kontra.quadtree = function(properties) {
     var quadtree = Object.create(kontra.quadtree.prototype);
-    quadtree.set(properties);
+    quadtree.init(properties);
 
     return quadtree;
   };
 
   kontra.quadtree.prototype = {
     /**
-     * Set properties on the quadtree.
+     * Initialize properties on the quadtree.
      * @memberof kontra.quadtree
      *
      * @param {number} [depth=0] - Current node depth.
@@ -1618,7 +1619,7 @@ var kontra = (function(kontra, undefined) {
      * @param {object} [parentNode] - The node that contains this node.
      * @param {object} [bounds] - The 2D space this node occupies.
      */
-    set: function set(properties) {
+    init: function init(properties) {
       properties = properties || {};
 
       this.depth = properties.depth || 0;
@@ -1855,7 +1856,7 @@ var kontra = (function(kontra, undefined) {
 var kontra = (function(kontra, Math, undefined) {
   'use strict';
 
-  // prevent these properties from being set at the end of kontra.sprite.set()
+  // prevent these properties from being set at the end of kontra.sprite.init()
   var excludedProperties = [
     'x',
     'y',
@@ -1876,18 +1877,18 @@ var kontra = (function(kontra, Math, undefined) {
    * A vector for 2D space.
    * @memberof kontra
    *
-   * @see kontra.vector.prototype.set for list of parameters.
+   * @see kontra.vector.prototype.init for list of parameters.
    */
   kontra.vector = function(x, y) {
     var vector = Object.create(kontra.vector.prototype);
-    vector.set(x, y);
+    vector.init(x, y);
 
     return vector;
   };
 
   kontra.vector.prototype = {
     /**
-     * Set the vectors x and y position.
+     * Initialize the vectors x and y position.
      * @memberof kontra.vector
      *
      * @param {number} x=0 - Center x coordinate.
@@ -1895,7 +1896,7 @@ var kontra = (function(kontra, Math, undefined) {
      *
      * @returns {vector}
      */
-    set: function set(x, y) {
+    init: function init(x, y) {
       this.x = x || 0;
       this.y = y || 0;
 
@@ -1965,11 +1966,11 @@ var kontra = (function(kontra, Math, undefined) {
    * @memberof kontra
    * @requires kontra.vector
    *
-   * @see kontra.sprite._prot.set for list of parameters.
+   * @see kontra.sprite.prototype.init for list of parameters.
    */
   kontra.sprite = function(properties) {
     var sprite = Object.create(kontra.sprite.prototype);
-    sprite.set(properties);
+    sprite.init(properties);
 
     return sprite;
   };
@@ -2050,10 +2051,10 @@ var kontra = (function(kontra, Math, undefined) {
     },
 
     /**
-     * Set properties on the sprite.
+     * Initialize properties on the sprite.
      * @memberof kontra.sprite
      *
-     * @param {object} properties - Properties to set on the sprite.
+     * @param {object} properties - Properties of the sprite.
      * @param {number} properties.x - X coordinate of the sprite.
      * @param {number} properties.y - Y coordinate of the sprite.
      * @param {number} [properties.dx] - Change in X position.
@@ -2079,14 +2080,14 @@ var kontra = (function(kontra, Math, undefined) {
      * decide when to kill it, you can set <code>timeToLive</code> to <code>Infinity</code>.
      * Just be sure to set <code>timeToLive</code> to 0 when you want the sprite to die.
      */
-    set: function set(properties) {
+    init: function init(properties) {
       properties = properties || {};
 
       var _this = this;
 
-      _this.position = (_this.position || kontra.vector()).set(properties.x, properties.y);
-      _this.velocity = (_this.velocity || kontra.vector()).set(properties.dx, properties.dy);
-      _this.acceleration = (_this.acceleration || kontra.vector()).set(properties.ddx, properties.ddy);
+      _this.position = (_this.position || kontra.vector()).init(properties.x, properties.y);
+      _this.velocity = (_this.velocity || kontra.vector()).init(properties.dx, properties.dy);
+      _this.acceleration = (_this.acceleration || kontra.vector()).init(properties.ddx, properties.ddy);
 
       _this.timeToLive = properties.timeToLive || 0;
       _this.context = properties.context || kontra.context;
@@ -2296,18 +2297,18 @@ var kontra = (function(kontra, undefined) {
    * Single animation from a sprite sheet.
    * @memberof kontra
    *
-   * @see kontra.pool.prototype.set for list of parameters.
+   * @see kontra.pool.prototype.init for list of parameters.
    */
   kontra.animation = function(properties) {
     var animation = Object.create(kontra.animation.prototype);
-    animation.set(properties);
+    animation.init(properties);
 
     return animation;
   };
 
   kontra.animation.prototype = {
     /**
-     * Set properties on the animation.
+     * Initialize properties on the animation.
      * @memberof kontra.animation
      *
      * @param {object} properties - Properties of the animation.
@@ -2315,7 +2316,7 @@ var kontra = (function(kontra, undefined) {
      * @param {number[]} properties.frames - List of frames of the animation.
      * @param {number}  properties.frameSpeed - Time to wait before transitioning the animation to the next frame.
      */
-    set: function set(properties) {
+    init: function init(properties) {
       properties = properties || {};
 
       this.spriteSheet = properties.spriteSheet;
@@ -2422,18 +2423,18 @@ var kontra = (function(kontra, undefined) {
    * Create a sprite sheet from an image.
    * @memberof kontra
    *
-   * @see kontra.spriteSheet.prototype.set for list of parameters.
+   * @see kontra.spriteSheet.prototype.init for list of parameters.
    */
   kontra.spriteSheet = function(properties) {
     var spriteSheet = Object.create(kontra.spriteSheet.prototype);
-    spriteSheet.set(properties);
+    spriteSheet.init(properties);
 
     return spriteSheet;
   };
 
   kontra.spriteSheet.prototype = {
     /**
-     * Set properties on the spriteSheet.
+     * Initialize properties on the spriteSheet.
      * @memberof kontra
      * @constructor
      *
@@ -2443,7 +2444,7 @@ var kontra = (function(kontra, undefined) {
      * @param {number} properties.frameHeight - Height (in px) of each frame.
      * @param {object} properties.animations - Animations to create from the sprite sheet.
      */
-    set: function set(properties) {
+    init: function init(properties) {
       properties = properties || {};
 
       this.animations = {};
@@ -2689,18 +2690,18 @@ var kontra = (function(kontra, Math, undefined) {
    * A tile engine for rendering tilesets. Works well with the tile engine program Tiled.
    * @memberof kontra
    *
-   * @see kontra.tileEngine.prototype.set for list of parameters.
+   * @see kontra.tileEngine.prototype.init for list of parameters.
    */
   kontra.tileEngine = function(properties) {
     var tileEngine = Object.create(kontra.tileEngine.prototype);
-    tileEngine.set(properties);
+    tileEngine.init(properties);
 
     return tileEngine;
   };
 
   kontra.tileEngine.prototype = {
     /**
-     * Set properties on the tile engine.
+     * Initialize properties on the tile engine.
      * @memberof kontra.tileEngine
      *
      * @param {object} properties - Properties of the tile engine.
@@ -2714,7 +2715,7 @@ var kontra = (function(kontra, Math, undefined) {
      * @param {number} [properties.sy=0] - Y position to clip the tileset.
      * @param {Context} [properties.context=kontra.context] - Provide a context for the tile engine to draw on.
      */
-    set: function set(properties) {
+    init: function init(properties) {
       properties = properties || {};
 
       var _this = this;
@@ -3033,7 +3034,7 @@ var kontra = (function(kontra, Math, undefined) {
 
     /**
      * Modified binary search that will return the tileset associated with the tile
-     * @memberOf kontra.tileEngine
+     * @memberof kontra.tileEngine
      * @private
      *
      * @param {number} tile - Tile grid.
@@ -3064,6 +3065,8 @@ var kontra = (function(kontra, Math, undefined) {
 
     /**
      * Pre-render the tiles to make drawing fast.
+     * @memberof kontra.tileEngine
+     * @private
      */
     _preRenderImage: function preRenderImage() {
       var _this = this;

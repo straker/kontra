@@ -4,7 +4,7 @@ var kontra = (function(kontra, document) {
   'use strict';
 
   /**
-   * Set up the canvas.
+   * Initialize the canvas.
    * @memberof kontra
    *
    * @param {object} properties - Properties for the game.

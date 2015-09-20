@@ -9,7 +9,7 @@ describe('', function() {
       update: function() {
         this.timeToLive--;
       },
-      set: function(properties) {
+      init: function(properties) {
         this.alive = properties.alive;
 
         for(prop in properties) {
@@ -22,37 +22,38 @@ describe('', function() {
     };
   }
 
-  // stub the logError function so we can test errors being logged
-  beforeEach(function() {
-    sinon.stub(kontra, 'logError', kontra.noop);
-  });
-
-  afterEach(function() {
-    kontra.logError.restore();
-  });
-
 
 
 
 
   // --------------------------------------------------
-  // kontra.pool.set
+  // kontra.pool.init
   // --------------------------------------------------
-  describe('kontra.pool.set', function() {
+  describe('kontra.pool.init', function() {
 
     it('should log an error if the create function is not passed', function() {
+      sinon.stub(kontra, 'logError', kontra.noop);
+
       kontra.pool({});
 
       expect(kontra.logError.called).to.be.ok;
+
+      kontra.logError.restore();
     });
 
     it('should log an error if the create function did not return an object', function() {
+      sinon.stub(kontra, 'logError', kontra.noop);
+
       kontra.pool({create:kontra.noop});
 
       expect(kontra.logError.called).to.be.ok;
+
+      kontra.logError.restore();
     });
 
     it('should log an error if the create function returned an object with missing functions', function() {
+      sinon.stub(kontra, 'logError', kontra.noop);
+
       kontra.pool({create: function() {
         return {
           render: kontra.noop
@@ -60,6 +61,8 @@ describe('', function() {
       }});
 
       expect(kontra.logError.called).to.be.ok;
+
+      kontra.logError.restore();
     });
 
     it('should fill the pool when passed the fill property', function() {
@@ -75,15 +78,21 @@ describe('', function() {
     });
 
     it('should log an error if you try to fill the pool with a default maxSize', function() {
+      sinon.stub(kontra, 'logError', kontra.noop);
+
       kontra.pool({
         create: sprite,
         fill: true
       });
 
       expect(kontra.logError.called).to.be.ok;
+
+      kontra.logError.restore();
     });
 
     it('should call the create function and pass it createProperties', function() {
+      sinon.stub(kontra, 'logError', kontra.noop);
+
       var spy = sinon.spy();
       var props = {foo: 'bar'};
 
@@ -93,6 +102,8 @@ describe('', function() {
       });
 
       expect(spy.calledWith(props)).to.be.ok;
+
+      kontra.logError.restore();
     });
 
   });
@@ -106,12 +117,12 @@ describe('', function() {
   // --------------------------------------------------
   describe('kontra.pool.get', function() {
 
-    it('should call the objects set function', function() {
+    it('should call the objects init function', function() {
       var pool = kontra.pool({
         create: sprite
       });
 
-      var spy = sinon.spy(pool.objects[0], 'set');
+      var spy = sinon.spy(pool.objects[0], 'init');
 
       pool.get();
 
@@ -268,7 +279,7 @@ describe('', function() {
             update: function() {
               count++;
             },
-            set: function(properties) { this.alive = properties.alive; },
+            init: function(properties) { this.alive = properties.alive; },
             isAlive: function() { return this.alive; },
           }
         },
@@ -340,7 +351,7 @@ describe('', function() {
             render: function() {
               count++;
             },
-            set: function(properties) { this.alive = properties.alive; },
+            init: function(properties) { this.alive = properties.alive; },
             isAlive: function() { return this.alive; },
           }
         },

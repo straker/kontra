@@ -8,18 +8,18 @@ var kontra = (function(kontra) {
    * Unused items are at the front of the pool and in use items are at the of the pool.
    * @memberof kontra
    *
-   * @see kontra.pool.prototype.set for list of parameters.
+   * @see kontra.pool.prototype.init for list of parameters.
    */
   kontra.pool = function(properties) {
     var pool = Object.create(kontra.pool.prototype);
-    pool.set(properties);
+    pool.init(properties);
 
     return pool;
   };
 
   kontra.pool.prototype = {
     /**
-     * Set properties on the pool.
+     * Initialize properties on the pool.
      * @memberof kontra.pool
      *
      * @param {object} properties - Properties of the pool.
@@ -29,9 +29,9 @@ var kontra = (function(kontra) {
      * @param {boolean} properties.fill - Fill the pool to max size instead of slowly growing.
      *
      * Objects inside the pool must implement <code>render()</code>, <code>update()</code>,
-     * <code>set()</code>, and <code>isAlive()</code> functions.
+     * <code>init()</code>, and <code>isAlive()</code> functions.
      */
-    set: function set(properties) {
+    init: function init(properties) {
       properties = properties || {};
 
       var error, obj;
@@ -51,9 +51,9 @@ var kontra = (function(kontra) {
       obj = this.create();
 
       if (!obj || typeof obj.render !== 'function' || typeof obj.update !== 'function' ||
-          typeof obj.set !== 'function' || typeof obj.isAlive !== 'function') {
+          typeof obj.init !== 'function' || typeof obj.isAlive !== 'function') {
         error = new SyntaxError('Create object required functions not found.');
-        kontra.logError(error, 'Objects to be pooled must implement render(), update(), set() and isAlive() functions.');
+        kontra.logError(error, 'Objects to be pooled must implement render(), update(), init() and isAlive() functions.');
         return;
       }
 
@@ -86,7 +86,7 @@ var kontra = (function(kontra) {
      * Get an object from the pool.
      * @memberof kontra.pool
      *
-     * @param {object} properties - Properties to pass to object.set().
+     * @param {object} properties - Properties to pass to object.init().
      */
     get: function get(properties) {
       properties = properties || {};
@@ -111,7 +111,7 @@ var kontra = (function(kontra) {
 
       // save off first object in pool to reassign to last object after unshift
       var obj = _this.objects[0];
-      obj.set(properties);
+      obj.init(properties);
 
       // unshift the array
       for (var i = 1; i < _this.size; i++) {

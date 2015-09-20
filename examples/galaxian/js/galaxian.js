@@ -25,7 +25,7 @@ kontra.loadAssets(
     isAlive: function() {
       return !this.audio.ended;
     },
-    set: function() {
+    init: function() {
       this.audio.play();
     },
     // set required properties
@@ -341,7 +341,7 @@ kontra.loadAssets(
     kontra.audios.kick_shock.currentTime = 0;
     kontra.audios.kick_shock.play();
 
-    player.position.set(280, 270);
+    player.position.init(280, 270);
   };
 
   startGame();

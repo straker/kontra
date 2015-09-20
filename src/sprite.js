@@ -1,7 +1,7 @@
 var kontra = (function(kontra, Math, undefined) {
   'use strict';
 
-  // prevent these properties from being set at the end of kontra.sprite.set()
+  // prevent these properties from being set at the end of kontra.sprite.init()
   var excludedProperties = [
     'x',
     'y',
@@ -22,18 +22,18 @@ var kontra = (function(kontra, Math, undefined) {
    * A vector for 2D space.
    * @memberof kontra
    *
-   * @see kontra.vector.prototype.set for list of parameters.
+   * @see kontra.vector.prototype.init for list of parameters.
    */
   kontra.vector = function(x, y) {
     var vector = Object.create(kontra.vector.prototype);
-    vector.set(x, y);
+    vector.init(x, y);
 
     return vector;
   };
 
   kontra.vector.prototype = {
     /**
-     * Set the vectors x and y position.
+     * Initialize the vectors x and y position.
      * @memberof kontra.vector
      *
      * @param {number} x=0 - Center x coordinate.
@@ -41,7 +41,7 @@ var kontra = (function(kontra, Math, undefined) {
      *
      * @returns {vector}
      */
-    set: function set(x, y) {
+    init: function init(x, y) {
       this.x = x || 0;
       this.y = y || 0;
 
@@ -111,11 +111,11 @@ var kontra = (function(kontra, Math, undefined) {
    * @memberof kontra
    * @requires kontra.vector
    *
-   * @see kontra.sprite._prot.set for list of parameters.
+   * @see kontra.sprite.prototype.init for list of parameters.
    */
   kontra.sprite = function(properties) {
     var sprite = Object.create(kontra.sprite.prototype);
-    sprite.set(properties);
+    sprite.init(properties);
 
     return sprite;
   };
@@ -196,10 +196,10 @@ var kontra = (function(kontra, Math, undefined) {
     },
 
     /**
-     * Set properties on the sprite.
+     * Initialize properties on the sprite.
      * @memberof kontra.sprite
      *
-     * @param {object} properties - Properties to set on the sprite.
+     * @param {object} properties - Properties of the sprite.
      * @param {number} properties.x - X coordinate of the sprite.
      * @param {number} properties.y - Y coordinate of the sprite.
      * @param {number} [properties.dx] - Change in X position.
@@ -225,14 +225,14 @@ var kontra = (function(kontra, Math, undefined) {
      * decide when to kill it, you can set <code>timeToLive</code> to <code>Infinity</code>.
      * Just be sure to set <code>timeToLive</code> to 0 when you want the sprite to die.
      */
-    set: function set(properties) {
+    init: function init(properties) {
       properties = properties || {};
 
       var _this = this;
 
-      _this.position = (_this.position || kontra.vector()).set(properties.x, properties.y);
-      _this.velocity = (_this.velocity || kontra.vector()).set(properties.dx, properties.dy);
-      _this.acceleration = (_this.acceleration || kontra.vector()).set(properties.ddx, properties.ddy);
+      _this.position = (_this.position || kontra.vector()).init(properties.x, properties.y);
+      _this.velocity = (_this.velocity || kontra.vector()).init(properties.dx, properties.dy);
+      _this.acceleration = (_this.acceleration || kontra.vector()).init(properties.ddx, properties.ddy);
 
       _this.timeToLive = properties.timeToLive || 0;
       _this.context = properties.context || kontra.context;

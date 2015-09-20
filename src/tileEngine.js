@@ -7,18 +7,18 @@ var kontra = (function(kontra, Math, undefined) {
    * A tile engine for rendering tilesets. Works well with the tile engine program Tiled.
    * @memberof kontra
    *
-   * @see kontra.tileEngine.prototype.set for list of parameters.
+   * @see kontra.tileEngine.prototype.init for list of parameters.
    */
   kontra.tileEngine = function(properties) {
     var tileEngine = Object.create(kontra.tileEngine.prototype);
-    tileEngine.set(properties);
+    tileEngine.init(properties);
 
     return tileEngine;
   };
 
   kontra.tileEngine.prototype = {
     /**
-     * Set properties on the tile engine.
+     * Initialize properties on the tile engine.
      * @memberof kontra.tileEngine
      *
      * @param {object} properties - Properties of the tile engine.
@@ -32,7 +32,7 @@ var kontra = (function(kontra, Math, undefined) {
      * @param {number} [properties.sy=0] - Y position to clip the tileset.
      * @param {Context} [properties.context=kontra.context] - Provide a context for the tile engine to draw on.
      */
-    set: function set(properties) {
+    init: function init(properties) {
       properties = properties || {};
 
       var _this = this;
@@ -351,7 +351,7 @@ var kontra = (function(kontra, Math, undefined) {
 
     /**
      * Modified binary search that will return the tileset associated with the tile
-     * @memberOf kontra.tileEngine
+     * @memberof kontra.tileEngine
      * @private
      *
      * @param {number} tile - Tile grid.
@@ -382,6 +382,8 @@ var kontra = (function(kontra, Math, undefined) {
 
     /**
      * Pre-render the tiles to make drawing fast.
+     * @memberof kontra.tileEngine
+     * @private
      */
     _preRenderImage: function preRenderImage() {
       var _this = this;

@@ -4,7 +4,7 @@ var kontra = (function(kontra, window) {
   /**
    * Get the current time. Uses the User Timing API if it's available or defaults to using
    * Date().getTime()
-   * @private
+   * @memberof kontra
    *
    * @returns {number}
    */
@@ -25,18 +25,18 @@ var kontra = (function(kontra, window) {
    * Game loop that updates and renders the game every frame.
    * @memberof kontra
    *
-   * @see kontra.gameLoop.prototype.set for list of parameters.
+   * @see kontra.gameLoop.prototype.init for list of parameters.
    */
   kontra.gameLoop = function(properties) {
     var gameLoop = Object.create(kontra.gameLoop.prototype);
-    gameLoop.set(properties);
+    gameLoop.init(properties);
 
     return gameLoop;
   };
 
   kontra.gameLoop.prototype = {
     /**
-     * Set properties on the game loop.
+     * Initialize properties on the game loop.
      * @memberof kontra.gameLoop
      *
      * @param {object}   properties - Configure the game loop.
@@ -44,7 +44,7 @@ var kontra = (function(kontra, window) {
      * @param {function} properties.update - Function called to update the game.
      * @param {function} properties.render - Function called to render the game.
      */
-    set: function set(properties) {
+    init: function init(properties) {
       properties = properties || {};
 
       // check for required functions
@@ -65,13 +65,32 @@ var kontra = (function(kontra, window) {
     },
 
     /**
-     * Called every frame of the game loop.
+     * Start the game loop.
      * @memberof kontra.gameLoop
      */
-    frame: function frame() {
+    start: function start() {
+      this._last = kontra.timestamp();
+      this.isStopped = false;
+      requestAnimationFrame(this._frame.bind(this));
+    },
+
+    /**
+     * Stop the game loop.
+     */
+    stop: function stop() {
+      this.isStopped = true;
+      cancelAnimationFrame(this._rAF);
+    },
+
+    /**
+     * Called every frame of the game loop.
+     * @memberof kontra.gameLoop
+     * @private
+     */
+    _frame: function frame() {
       var _this = this;
 
-      _this._rAF = requestAnimationFrame(_this.frame.bind(_this));
+      _this._rAF = requestAnimationFrame(_this._frame.bind(_this));
 
       _this._now = kontra.timestamp();
       _this._dt = _this._now - _this._last;
@@ -92,24 +111,6 @@ var kontra = (function(kontra, window) {
       }
 
       _this.render();
-    },
-
-    /**
-     * Start the game loop.
-     * @memberof kontra.gameLoop
-     */
-    start: function start() {
-      this._last = kontra.timestamp();
-      this.isStopped = false;
-      requestAnimationFrame(this.frame.bind(this));
-    },
-
-    /**
-     * Stop the game loop.
-     */
-    stop: function stop() {
-      this.isStopped = true;
-      cancelAnimationFrame(this._rAF);
     }
   };
 

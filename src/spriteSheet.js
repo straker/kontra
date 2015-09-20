@@ -7,18 +7,18 @@ var kontra = (function(kontra, undefined) {
    * Single animation from a sprite sheet.
    * @memberof kontra
    *
-   * @see kontra.pool.prototype.set for list of parameters.
+   * @see kontra.pool.prototype.init for list of parameters.
    */
   kontra.animation = function(properties) {
     var animation = Object.create(kontra.animation.prototype);
-    animation.set(properties);
+    animation.init(properties);
 
     return animation;
   };
 
   kontra.animation.prototype = {
     /**
-     * Set properties on the animation.
+     * Initialize properties on the animation.
      * @memberof kontra.animation
      *
      * @param {object} properties - Properties of the animation.
@@ -26,7 +26,7 @@ var kontra = (function(kontra, undefined) {
      * @param {number[]} properties.frames - List of frames of the animation.
      * @param {number}  properties.frameSpeed - Time to wait before transitioning the animation to the next frame.
      */
-    set: function set(properties) {
+    init: function init(properties) {
       properties = properties || {};
 
       this.spriteSheet = properties.spriteSheet;
@@ -133,18 +133,18 @@ var kontra = (function(kontra, undefined) {
    * Create a sprite sheet from an image.
    * @memberof kontra
    *
-   * @see kontra.spriteSheet.prototype.set for list of parameters.
+   * @see kontra.spriteSheet.prototype.init for list of parameters.
    */
   kontra.spriteSheet = function(properties) {
     var spriteSheet = Object.create(kontra.spriteSheet.prototype);
-    spriteSheet.set(properties);
+    spriteSheet.init(properties);
 
     return spriteSheet;
   };
 
   kontra.spriteSheet.prototype = {
     /**
-     * Set properties on the spriteSheet.
+     * Initialize properties on the spriteSheet.
      * @memberof kontra
      * @constructor
      *
@@ -154,7 +154,7 @@ var kontra = (function(kontra, undefined) {
      * @param {number} properties.frameHeight - Height (in px) of each frame.
      * @param {object} properties.animations - Animations to create from the sprite sheet.
      */
-    set: function set(properties) {
+    init: function init(properties) {
       properties = properties || {};
 
       this.animations = {};

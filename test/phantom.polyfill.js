@@ -92,3 +92,27 @@ if (typeof Function.prototype.bind != 'function') {
 
   window.Audio = Audio;
 })();
+
+/**
+ * RequestAnimationFrame polyfill for PhantomJS.
+ */
+(function() {
+  // only set if requestAnimationFrame is not defined
+  if (!window.requestAnimationFrame) {
+    window.requestAnimationFrame = function(callback, element) {
+      var currTime = new Date().getTime();
+      var timeToCall = Math.max(0, 16 - (currTime - lastTime));
+      var id = window.setTimeout(function() { callback(currTime + timeToCall); },
+        timeToCall);
+      lastTime = currTime + timeToCall;
+      return id;
+    };
+  }
+
+  // only set if cancelAnimationFrame is not defined
+  if (!window.cancelAnimationFrame) {
+    window.cancelAnimationFrame = function(id) {
+      clearTimeout(id);
+    };
+  }
+})();

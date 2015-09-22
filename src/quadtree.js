@@ -30,11 +30,12 @@ var kontra = (function(kontra, undefined) {
      * Initialize properties on the quadtree.
      * @memberof kontra.quadtree
      *
-     * @param {number} [depth=0] - Current node depth.
-     * @param {number} [maxDepth=3] - Maximum node depths the quadtree can have.
-     * @param {number} [maxObjects=25] - Maximum number of objects a node can support before splitting.
-     * @param {object} [parentNode] - The node that contains this node.
-     * @param {object} [bounds] - The 2D space this node occupies.
+     * @param {object} properties - Properties of the quadtree.
+     * @param {number} [properties.depth=0] - Current node depth.
+     * @param {number} [properties.maxDepth=3] - Maximum node depths the quadtree can have.
+     * @param {number} [properties.maxObjects=25] - Maximum number of objects a node can support before splitting.
+     * @param {object} [properties.parentNode] - The node that contains this node.
+     * @param {object} [properties.bounds] - The 2D space this node occupies.
      */
     init: function init(properties) {
       properties = properties || {};
@@ -228,14 +229,12 @@ var kontra = (function(kontra, undefined) {
 
       var subWidth = this.bounds.width / 2 | 0;
       var subHeight = this.bounds.height / 2 | 0;
-      var x = this.bounds.x;
-      var y = this.bounds.y;
 
       for (var i = 0; i < 4; i++) {
         this.subnodes[i] = kontra.quadtree({
           bounds: {
-            x: x + (i % 2 === 1 ? subWidth : 0),  // nodes 1 and 3
-            y: y + (i >= 2 ? subHeight : 0),      // nodes 2 and 3
+            x: this.bounds.x + (i % 2 === 1 ? subWidth : 0),  // nodes 1 and 3
+            y: this.bounds.y + (i >= 2 ? subHeight : 0),      // nodes 2 and 3
             width: subWidth,
             height: subHeight
           },

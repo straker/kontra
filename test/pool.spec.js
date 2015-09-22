@@ -20,7 +20,7 @@ describe('', function() {
         return this.alive || this.timeToLive > 0;
       },
     };
-  }
+  };
 
 
 

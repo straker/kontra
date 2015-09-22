@@ -1,5 +1,5 @@
 // --------------------------------------------------
-// init
+// kontra.init
 // --------------------------------------------------
 describe('kontra.init', function() {
   var canvas = document.createElement('canvas');
@@ -53,7 +53,7 @@ describe('kontra.init', function() {
 
 
 // --------------------------------------------------
-// isArray
+// kontra.isArray
 // --------------------------------------------------
 describe('kontra.isArray', function() {
 
@@ -79,7 +79,7 @@ describe('kontra.isArray', function() {
 
 
 // --------------------------------------------------
-// isString
+// kontra.isString
 // --------------------------------------------------
 describe('kontra.isString', function() {
 
@@ -105,7 +105,7 @@ describe('kontra.isString', function() {
 
 
 // --------------------------------------------------
-// isNumber
+// kontra.isNumber
 // --------------------------------------------------
 describe('kontra.isNumber', function() {
 
@@ -131,7 +131,7 @@ describe('kontra.isNumber', function() {
 
 
 // --------------------------------------------------
-// isImage
+// kontra.isImage
 // --------------------------------------------------
 describe('kontra.isImage', function() {
 
@@ -157,7 +157,7 @@ describe('kontra.isImage', function() {
 
 
 // --------------------------------------------------
-// isCanvas
+// kontra.isCanvas
 // --------------------------------------------------
 describe('kontra.isCanvas', function() {
 

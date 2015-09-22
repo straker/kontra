@@ -148,7 +148,7 @@ var kontra = (function(kontra, undefined) {
      * @memberof kontra
      * @constructor
      *
-     * @param {object} properties - Configure the sprite sheet.
+     * @param {object} properties - Properties of the sprite sheet.
      * @param {Image|Canvas} properties.image - Image for the sprite sheet.
      * @param {number} properties.frameWidth - Width (in px) of each frame.
      * @param {number} properties.frameHeight - Height (in px) of each frame.

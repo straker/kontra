@@ -39,7 +39,7 @@ var kontra = (function(kontra, window) {
      * Initialize properties on the game loop.
      * @memberof kontra.gameLoop
      *
-     * @param {object}   properties - Configure the game loop.
+     * @param {object}   properties - Properties of the game loop.
      * @param {number}   [properties.fps=60] - Desired frame rate.
      * @param {function} properties.update - Function called to update the game.
      * @param {function} properties.render - Function called to render the game.

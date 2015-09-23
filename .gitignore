@@ -3,3 +3,4 @@ node_modules
 kontra.build.js
 kontra.build.min.js
 index.html
+coverage

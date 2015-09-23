@@ -4,13 +4,26 @@
 module.exports = function(config) {
   config.set({
     basePath: '',
+    singleRun: true,
+    autoWatch: false,
     frameworks: ['mocha', 'chai', 'sinon'],
     files: [
       // assets
       'test/phantom.polyfill.js',
-      'kontra.js',
+      'src/*.js',
       'test/*.js'
     ],
-    browsers: ['Chrome', 'Firefox', 'Safari', 'IE']
+    browsers: ['PhantomJS'],
+    reporters: ['progress', 'coverage'],
+    preprocessors: {
+      'src/*.js': ['coverage']
+    },
+    coverageReporter: {
+      dir : 'coverage/',
+      reporters: [
+        {type: 'lcov', subdir: '.'},
+        {type: 'text-summary'}
+      ]
+    }
   });
 };

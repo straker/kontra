@@ -1694,6 +1694,12 @@ var kontra = (function(kontra, undefined) {
      * the maximum number of objects allowed, it will split and move all objects to their
      * corresponding subnodes.
      * @memberof kontra.quadtree
+     *
+     * @param {...object|object[]} Objects to add to the quadtree
+     *
+     * @example
+     * kontra.quadtree().add({id:1}, {id:2}, {id:3});
+     * kontra.quadtree().add([{id:1}, {id:2}], {id:3});
      */
     add: function add() {
       var _this = this;
@@ -1764,16 +1770,12 @@ var kontra = (function(kontra, undefined) {
       var verticalMidpoint = this.bounds.x + this.bounds.width / 2;
       var horizontalMidpoint = this.bounds.y + this.bounds.height / 2;
 
-      // handle non-kontra.sprite objects as well as kontra.sprite objects
-      var x = (object.x !== undefined ? object.x : object.position.x);
-      var y = (object.y !== undefined ? object.y : object.position.y);
-
       // save off quadrant checks for reuse
-      var intersectsTopQuadrants = y < horizontalMidpoint && y + object.height >= this.bounds.y;
-      var intersectsBottomQuadrants = y + object.height >= horizontalMidpoint && y < this.bounds.y + this.bounds.height;
+      var intersectsTopQuadrants = object.y < horizontalMidpoint && object.y + object.height >= this.bounds.y;
+      var intersectsBottomQuadrants = object.y + object.height >= horizontalMidpoint && object.y < this.bounds.y + this.bounds.height;
 
       // object intersects with the left quadrants
-      if (x < verticalMidpoint && x + object.width >= this.bounds.x) {
+      if (object.x < verticalMidpoint && object.x + object.width >= this.bounds.x) {
         if (intersectsTopQuadrants) {  // top left
           indices.push(0);
         }
@@ -1784,7 +1786,7 @@ var kontra = (function(kontra, undefined) {
       }
 
       // object intersects with the right quadrants
-      if (x + object.width >= verticalMidpoint && x < this.bounds.x + this.bounds.width) {  // top right
+      if (object.x + object.width >= verticalMidpoint && object.x < this.bounds.x + this.bounds.width) {  // top right
         if (intersectsTopQuadrants) {
           indices.push(1);
         }

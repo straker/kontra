@@ -89,7 +89,7 @@ var kontra = (function(kontra, Math, undefined) {
      * @memberof kontra.tileEngine
      *
      * @param {object} properties - Properties of the image to add.
-     * @param {string|Image|Canvas} properties.image - Path to the image or Image object.
+     * @param {Image|Canvas} properties.image - Path to the image or Image object.
      * @param {number} properties.firstGrid - The first tile grid to start the image.
      */
     addTileset: function addTileset(properties) {
@@ -107,7 +107,7 @@ var kontra = (function(kontra, Math, undefined) {
             var tiles = (lastTileset.image.width / this.tileWidth | 0) *
                         (lastTileset.image.height / this.tileHeight | 0);
 
-            firstGrid = lastTileset.firstGrid + tiles - 1;
+            firstGrid = lastTileset.firstGrid + tiles;
           }
           // otherwise this is the first tile added to the tile map
           else {
@@ -141,7 +141,7 @@ var kontra = (function(kontra, Math, undefined) {
      * @param {string} properties.name - Name of the layer.
      * @param {number[]} properties.data - Tile layer data.
      * @param {boolean} [properties.render=true] - If the layer should be drawn.
-     * @param {number} properties.zIndex - Draw order for tile layer. Highest number is drawn last (i.e. on top of all other layers).
+     * @param {number} [properties.zIndex] - Draw order for tile layer. Highest number is drawn last (i.e. on top of all other layers).
      */
     addLayer: function addLayer(properties) {
       properties = properties || {};
@@ -194,16 +194,12 @@ var kontra = (function(kontra, Math, undefined) {
      * @returns {boolean} True if the object collides with a tile, false otherwise.
      */
     layerCollidesWith: function layerCollidesWith(name, object) {
-      // handle non-kontra.sprite objects as well as kontra.sprite objects
-      var x = (object.x !== undefined ? object.x : object.position.x);
-      var y = (object.y !== undefined ? object.y : object.position.y);
-
       // calculate all tiles that the object can collide with
-      var row = this._getRow(y);
-      var col = this._getCol(x);
+      var row = this._getRow(object.y);
+      var col = this._getCol(object.x);
 
-      var endRow = this._getRow(y + object.height);
-      var endCol = this._getCol(x + object.width);
+      var endRow = this._getRow(object.y + object.height);
+      var endCol = this._getCol(object.x + object.width);
 
       // check all tiles
       var index;

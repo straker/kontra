@@ -215,7 +215,7 @@ describe('', function() {
       kontra.logError.restore();
     });
 
-    it('should set default properties on the spriteSheet when passed an image', function() {
+    it('should initialize properties on the spriteSheet when passed an image', function() {
       var spriteSheet = kontra.spriteSheet({
         image: new Image(100, 200),
         frameWidth: 10,

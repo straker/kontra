@@ -59,20 +59,20 @@
       frameHeight: 64,
       animations: {
         walk_up: {
-          frames: '104..112',
-          frameSpeed: 4
+          frames: '105..112',
+          frameRate: 12
         },
         walk_left: {
-          frames: '117..125',
-          frameSpeed: 4
+          frames: '118..125',
+          frameRate: 12
         },
         walk_down: {
-          frames: '130..138',
-          frameSpeed: 4
+          frames: '131..138',
+          frameRate: 12
         },
         walk_right: {
-          frames: '143..151',
-          frameSpeed: 4
+          frames: '144..151',
+          frameRate: 12
         }
       }
     });
@@ -81,8 +81,6 @@
     var player = kontra.sprite({
       x: 268,
       y: 268,
-      width: 64,
-      height: 64,
       speed: 3,
       startX: 268,
       startY: 268,
@@ -179,7 +177,7 @@
       },
     });
 
-    player.position.clamp(0, 0, kontra.canvas.width - player.width, kontra.canvas.height - player.height);
+    player.position.clamp(-16, -16, kontra.canvas.width - player.width + 16, kontra.canvas.height - player.height + 16);
 
     var loop = kontra.gameLoop({
       update: function() {

@@ -137,6 +137,20 @@ describe('', function() {
     expect(kontra.keys.pressed('shift++')).to.be.true;
   });
 
+  it('should handle e.which and e.keyCode', function() {
+    simulateEvent('keydown', {which: 65});
+    simulateEvent('keydown', {keyCode: 66});
+
+    expect(kontra.keys.pressed('a')).to.be.true;
+    expect(kontra.keys.pressed('b')).to.be.true;
+  });
+
+  it('should handle special key combination ctrl+ctrl', function() {
+    simulateEvent('keydown', {keyCode: 17, ctrlKey: true});
+
+    expect(kontra.keys.pressed('ctrl')).to.be.true;
+  });
+
 
 
 
@@ -145,6 +159,16 @@ describe('', function() {
   // kontra.keys.bind
   // --------------------------------------------------
   describe('kontra.keys.bind', function() {
+
+    it('should log an error if a callback is not provided', function() {
+      sinon.stub(kontra, 'logError', kontra.noop);
+
+      kontra.keys.bind('a');
+
+      expect(kontra.logError.called).to.be.ok;
+
+      kontra.logError.restore();
+    });
 
     it('should call the callback when a single key combination is pressed', function(done) {
       kontra.keys.bind('a', function() {

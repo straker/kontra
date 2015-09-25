@@ -1,5 +1,5 @@
 /**
- * Polyfill function.prototype.bind in PhantomJS.
+ * function.prototype.bind polyfill for PhantomJS.
  * @see https://github.com/ariya/phantomjs/issues/10522#issuecomment-39248521
  */
 if (typeof Function.prototype.bind != 'function') {
@@ -22,7 +22,7 @@ if (typeof Function.prototype.bind != 'function') {
 }
 
 /**
- * Simple Audio shim for PhantomJS tests.
+ * Simple Audio shim for PhantomJS.
  */
 (function() {
   // only load when Audio is not defined

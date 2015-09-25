@@ -1,5 +1,3 @@
-/*jshint -W084 */
-
 var kontra = (function(kontra, undefined) {
   'use strict';
 
@@ -30,11 +28,12 @@ var kontra = (function(kontra, undefined) {
      * Initialize properties on the quadtree.
      * @memberof kontra.quadtree
      *
-     * @param {number} [depth=0] - Current node depth.
-     * @param {number} [maxDepth=3] - Maximum node depths the quadtree can have.
-     * @param {number} [maxObjects=25] - Maximum number of objects a node can support before splitting.
-     * @param {object} [parentNode] - The node that contains this node.
-     * @param {object} [bounds] - The 2D space this node occupies.
+     * @param {object} properties - Properties of the quadtree.
+     * @param {number} [properties.depth=0] - Current node depth.
+     * @param {number} [properties.maxDepth=3] - Maximum node depths the quadtree can have.
+     * @param {number} [properties.maxObjects=25] - Maximum number of objects a node can support before splitting.
+     * @param {object} [properties.parentNode] - The node that contains this node.
+     * @param {object} [properties.bounds] - The 2D space this node occupies.
      */
     init: function init(properties) {
       properties = properties || {};
@@ -110,6 +109,12 @@ var kontra = (function(kontra, undefined) {
      * the maximum number of objects allowed, it will split and move all objects to their
      * corresponding subnodes.
      * @memberof kontra.quadtree
+     *
+     * @param {...object|object[]} Objects to add to the quadtree
+     *
+     * @example
+     * kontra.quadtree().add({id:1}, {id:2}, {id:3});
+     * kontra.quadtree().add([{id:1}, {id:2}], {id:3});
      */
     add: function add() {
       var _this = this;
@@ -180,16 +185,12 @@ var kontra = (function(kontra, undefined) {
       var verticalMidpoint = this.bounds.x + this.bounds.width / 2;
       var horizontalMidpoint = this.bounds.y + this.bounds.height / 2;
 
-      // handle non-kontra.sprite objects as well as kontra.sprite objects
-      var x = (object.x !== undefined ? object.x : object.position.x);
-      var y = (object.y !== undefined ? object.y : object.position.y);
-
       // save off quadrant checks for reuse
-      var intersectsTopQuadrants = y < horizontalMidpoint && y + object.height >= this.bounds.y;
-      var intersectsBottomQuadrants = y + object.height >= horizontalMidpoint && y < this.bounds.y + this.bounds.height;
+      var intersectsTopQuadrants = object.y < horizontalMidpoint && object.y + object.height >= this.bounds.y;
+      var intersectsBottomQuadrants = object.y + object.height >= horizontalMidpoint && object.y < this.bounds.y + this.bounds.height;
 
       // object intersects with the left quadrants
-      if (x < verticalMidpoint && x + object.width >= this.bounds.x) {
+      if (object.x < verticalMidpoint && object.x + object.width >= this.bounds.x) {
         if (intersectsTopQuadrants) {  // top left
           indices.push(0);
         }
@@ -200,7 +201,7 @@ var kontra = (function(kontra, undefined) {
       }
 
       // object intersects with the right quadrants
-      if (x + object.width >= verticalMidpoint && x < this.bounds.x + this.bounds.width) {  // top right
+      if (object.x + object.width >= verticalMidpoint && object.x < this.bounds.x + this.bounds.width) {  // top right
         if (intersectsTopQuadrants) {
           indices.push(1);
         }
@@ -228,14 +229,12 @@ var kontra = (function(kontra, undefined) {
 
       var subWidth = this.bounds.width / 2 | 0;
       var subHeight = this.bounds.height / 2 | 0;
-      var x = this.bounds.x;
-      var y = this.bounds.y;
 
       for (var i = 0; i < 4; i++) {
         this.subnodes[i] = kontra.quadtree({
           bounds: {
-            x: x + (i % 2 === 1 ? subWidth : 0),  // nodes 1 and 3
-            y: y + (i >= 2 ? subHeight : 0),      // nodes 2 and 3
+            x: this.bounds.x + (i % 2 === 1 ? subWidth : 0),  // nodes 1 and 3
+            y: this.bounds.y + (i >= 2 ? subHeight : 0),      // nodes 2 and 3
             width: subWidth,
             height: subHeight
           },
@@ -252,6 +251,7 @@ var kontra = (function(kontra, undefined) {
      * @memberof kontra.quadtree
      */
     render: function() {
+      /* istanbul ignore next */
       // don't draw empty leaf nodes, always draw branch nodes and the first node
       if (this.objects.length || this.depth === 0 ||
           (this.parentNode && this.parentNode.isBranchNode)) {

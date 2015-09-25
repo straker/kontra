@@ -341,7 +341,7 @@ kontra.loadAssets(
     kontra.audios.kick_shock.currentTime = 0;
     kontra.audios.kick_shock.play();
 
-    player.position.init(280, 270);
+    player.position.init({x: 280, y: 270});
   };
 
   startGame();

@@ -1,5 +1,3 @@
-/*jshint -W084 */
-
 var kontra = (function(kontra, window) {
   'use strict';
 

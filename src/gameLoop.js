@@ -39,7 +39,7 @@ var kontra = (function(kontra, window) {
      * Initialize properties on the game loop.
      * @memberof kontra.gameLoop
      *
-     * @param {object}   properties - Configure the game loop.
+     * @param {object}   properties - Properties of the game loop.
      * @param {number}   [properties.fps=60] - Desired frame rate.
      * @param {function} properties.update - Function called to update the game.
      * @param {function} properties.render - Function called to render the game.
@@ -59,6 +59,7 @@ var kontra = (function(kontra, window) {
       // animation variables
       this._accumulator = 0;
       this._delta = 1E3 / (properties.fps || 60);
+      this._step = 1 / (properties.fps || 60);
 
       this.update = properties.update;
       this.render = properties.render;
@@ -105,7 +106,7 @@ var kontra = (function(kontra, window) {
       _this._accumulator += _this._dt;
 
       while (_this._accumulator >= _this._delta) {
-        _this.update(_this._delta / 1E3);
+        _this.update(_this._step);
 
         _this._accumulator -= _this._delta;
       }

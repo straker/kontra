@@ -20,7 +20,7 @@ describe('', function() {
         return this.alive || this.timeToLive > 0;
       },
     };
-  }
+  };
 
 
 
@@ -34,7 +34,7 @@ describe('', function() {
     it('should log an error if the create function is not passed', function() {
       sinon.stub(kontra, 'logError', kontra.noop);
 
-      kontra.pool({});
+      kontra.pool();
 
       expect(kontra.logError.called).to.be.ok;
 

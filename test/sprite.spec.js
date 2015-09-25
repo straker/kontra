@@ -438,4 +438,39 @@ describe('', function() {
     });
 
   });
+
+
+
+
+
+  // --------------------------------------------------
+  // kontra.sprite.playAnimation
+  // --------------------------------------------------
+  describe('kontra.sprite.playAnimation', function() {
+
+    it('should set the animation to play', function() {
+      var animations = {
+        'walk': {
+          width: 10,
+          height: 20
+        },
+        'idle': {
+          width: 10,
+          height: 20
+        }
+      };
+
+      var sprite = kontra.sprite({
+        animations: animations
+      });
+
+      expect(sprite.currentAnimation).to.equal(animations.walk);
+
+      sprite.playAnimation('idle');
+
+      expect(sprite.currentAnimation).to.equal(animations.idle);
+    });
+
+  });
+
 });

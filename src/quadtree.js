@@ -1,5 +1,3 @@
-/*jshint -W084 */
-
 var kontra = (function(kontra, undefined) {
   'use strict';
 
@@ -253,6 +251,7 @@ var kontra = (function(kontra, undefined) {
      * @memberof kontra.quadtree
      */
     render: function() {
+      /* istanbul ignore next */
       // don't draw empty leaf nodes, always draw branch nodes and the first node
       if (this.objects.length || this.depth === 0 ||
           (this.parentNode && this.parentNode.isBranchNode)) {

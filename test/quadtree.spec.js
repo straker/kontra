@@ -256,6 +256,29 @@ describe('', function() {
       expect(getObjects[1]).to.equal(objects[1]);
     });
 
+    it('should return objects from leaf nodes', function() {
+      var objects = [
+        {x: 0, y: 0, width: 10, height: 10},
+        {x: 10, y: 10, width: 10, height: 10},
+        {x: 20, y: 20, width: 10, height: 10},
+        {x: 30, y: 30, width: 10, height: 10},
+        {x: 40, y: 40, width: 10, height: 10},
+        {x: 50, y: 50, width: 10, height: 10},
+        {x: 60, y: 10, width: 10, height: 10}
+      ];
+
+      quadtree.add(objects);
+
+      var getObjects = quadtree.get({x: 5, y: 25, width: 20, height: 20});
+
+      expect(getObjects.length).to.equal(5);
+      expect(getObjects[0]).to.equal(objects[0]);
+      expect(getObjects[1]).to.equal(objects[1]);
+      expect(getObjects[2]).to.equal(objects[2]);
+      expect(getObjects[3]).to.equal(objects[3]);
+      expect(getObjects[4]).to.equal(objects[4]);
+    });
+
   });
 
 });

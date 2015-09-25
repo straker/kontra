@@ -2,12 +2,24 @@
 // kontra.init
 // --------------------------------------------------
 describe('kontra.init', function() {
-  var canvas = document.createElement('canvas');
-  canvas.width = 600;
-  canvas.height = 600;
-  document.body.appendChild(canvas);
+  var canvas;
+
+  it('should log an error if no canvas element exists', function() {
+    sinon.stub(kontra, 'logError', kontra.noop);
+
+    kontra.init();
+
+    expect(kontra.logError.called).to.be.ok;
+
+    kontra.logError.restore();
+  });
 
   it('should select the first canvas element on the page when no query parameters are passed', function() {
+    canvas = document.createElement('canvas');
+    canvas.width = 600;
+    canvas.height = 600;
+    document.body.appendChild(canvas);
+
     kontra.init();
 
     expect(kontra.canvas).to.equal(canvas);

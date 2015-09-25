@@ -8,7 +8,7 @@ var rename = require('gulp-rename');
 var size = require('gulp-size');
 var sourcemaps = require('gulp-sourcemaps');
 var uglify = require('gulp-uglify');
-var karma = require('karma').server;
+var Server = require('karma').Server;
 
 var package = require('./package.json');
 
@@ -139,9 +139,17 @@ gulp.task('watch', function() {
 });
 
 gulp.task('test', function(done) {
-  karma.start({
-    configFile: __dirname + '/karma.conf.js'
-  }, done);
+  new Server({
+    basePath: '',
+    frameworks: ['mocha', 'chai', 'sinon'],
+    files: [
+      // assets
+      'test/phantom.polyfill.js',
+      'src/*.js',
+      'test/*.js'
+    ],
+    browsers: ['Chrome', 'Firefox', 'Safari', 'IE']
+  }, done).start();
 });
 
 gulp.task('default', ['lint', 'scripts', 'connect', 'watch']);

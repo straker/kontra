@@ -59,6 +59,7 @@ var kontra = (function(kontra, window) {
       // animation variables
       this._accumulator = 0;
       this._delta = 1E3 / (properties.fps || 60);
+      this._step = 1 / (properties.fps || 60);
 
       this.update = properties.update;
       this.render = properties.render;
@@ -105,7 +106,7 @@ var kontra = (function(kontra, window) {
       _this._accumulator += _this._dt;
 
       while (_this._accumulator >= _this._delta) {
-        _this.update(_this._delta / 1E3);
+        _this.update(_this._step);
 
         _this._accumulator -= _this._delta;
       }

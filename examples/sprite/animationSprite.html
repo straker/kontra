@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Animation Sprite</title>
+  <script src="../../kontra.js"></script>
+</head>
+<body>
+  <canvas id="game" width="600" height="400" style="background: #333331"></canvas>
+  <script id="code">
+    // initialize the game and setup the canvas
+    kontra.init();
+
+    // set image path so we don't have to reference the sprite sheet by it's path
+    kontra.assetPaths.images = '../imgs/';
+
+    // load the sprite sheet
+    kontra.loadImage('character_walk_sheet.png').then(function() {
+
+      // create the sprite sheet and its animation
+      window.spriteSheet = kontra.spriteSheet({
+        image: kontra.images.character_walk_sheet,
+        frameWidth: 72,
+        frameHeight: 97,
+        animations: {
+          walk: {
+            frames: '0..10',
+            frameRate: 30
+          }
+        }
+      });
+
+      // pass the animations to the sprite
+      window.sprite = kontra.sprite({
+        x: 267,
+        y: 154,
+        animations: spriteSheet.animations
+      });
+
+      // set the animation to play
+      sprite.playAnimation('walk');
+
+      // create the game loop to update and render the sprite
+      window.loop = kontra.gameLoop({
+        update: function() {
+          sprite.update();
+        },
+        render: function() {
+          kontra.context.clearRect(0, 0, kontra.canvas.width, kontra.canvas.height);
+
+          sprite.render();
+        }
+      });
+
+      // start the loop
+      loop.start();
+    });
+  </script>
+  <script src="../prism/codeOutput.js"></script>
+</body>
+</html>

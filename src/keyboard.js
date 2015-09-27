@@ -271,7 +271,6 @@ var kontra = (function(kontra, window) {
 
     if (callbacks[combination]) {
       callbacks[combination](e, combination);
-      e.preventDefault();
     }
   }
 

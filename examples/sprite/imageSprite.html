@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Image Sprite</title>
+  <script src="../../kontra.js"></script>
+</head>
+<body>
+  <canvas id="game" width="600" height="400" style="background: #333331"></canvas>
+  <script id="code">
+    // initialize the game and setup the canvas
+    kontra.init();
+
+    // set image path so we don't have to reference the image by it's path
+    kontra.assetPaths.images = '../imgs/';
+
+    // load the image
+    kontra.loadImage('character.png').then(function() {
+
+      // pass the image to the sprite
+      window.sprite = kontra.sprite({
+        x: 267,
+        y: 154,
+        image: kontra.images.character
+      });
+
+      // render the sprite
+      sprite.render();
+    });
+  </script>
+  <script src="../prism/codeOutput.js"></script>
+</body>
+</html>

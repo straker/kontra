@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Sprite Collision</title>
+  <script src="../../kontra.js"></script>
+</head>
+<body>
+  <canvas id="game" width="600" height="400" style="background: #333331"></canvas>
+  <script id="code">
+    // initialize the game and setup the canvas
+    kontra.init();
+
+    // create a basic sprite with a velocity
+    window.sprite1 = kontra.sprite({
+      x: 100,
+      y: 180,
+      dx: 3,
+      dy: 0,
+      width: 60,
+      height: 40,
+      color: 'red'
+    });
+
+    // create a second basic sprite
+    window.sprite2 = kontra.sprite({
+      x: kontra.game.width - 100 - 60,
+      y: 180,
+      dx: -3,
+      dy: 0,
+      width: 60,
+      height: 40,
+      color: 'blue'
+    });
+
+
+    // create the game loop to update and render the sprite
+    window.loop = kontra.gameLoop({
+      update: function() {
+        sprite1.update();
+        sprite2.update();
+
+        // check for collision
+        if (sprite1.collidesWith(sprite2)) {
+          sprite1.color = 'purple';
+          sprite2.color= 'purple';
+        }
+        else {
+          sprite1.color = 'red';
+          sprite2.color = 'blue';
+        }
+
+        // reset the sprites position when it reaches the edge of the game
+        if (sprite1.x > kontra.game.width) {
+          sprite1.x = -sprite1.width;
+        }
+        if (sprite2.x < -sprite2.width) {
+          sprite2.x = kontra.game.width;
+        }
+      },
+      render: function() {
+        kontra.context.clearRect(0, 0, kontra.canvas.width, kontra.canvas.height);
+
+        sprite1.render();
+        sprite2.render();
+      }
+    });
+
+    // start the loop
+    loop.start();
+  </script>
+  <script src="../prism/codeOutput.js"></script>
+</body>
+</html>

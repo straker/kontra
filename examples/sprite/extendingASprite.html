@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Sprite Collision</title>
+  <script src="../../kontra.js"></script>
+</head>
+<body>
+  <canvas id="game" width="600" height="400" style="background: #333331"></canvas>
+  <script id="code">
+    // initialize the game and setup the canvas
+    kontra.init();
+
+    // create a custom sprite
+    function CustomSprite(properties) {
+      // add custom properties
+      properties.color = 'green';
+      properties.altColor = 'red';
+      properties.width = 20;
+      properties.height = 40;
+
+      // initialize the sprite
+      kontra.sprite.prototype.init.call(this, properties);
+    }
+    CustomSprite.prototype = Object.create(kontra.sprite.prototype);
+
+    // create custom functions
+    CustomSprite.prototype.stripe = function() {
+      var pos = 0;
+
+      this.context.fillStyle = this.altColor;
+      while (pos < this.height) {
+        this.context.fillRect(this.x, this.y + pos, this.width, 10);
+
+        pos += 20;
+      }
+    };
+    CustomSprite.prototype.render = function() {
+      this.draw();  // draw the sprite normally
+      this.stripe();
+    };
+
+    window.sprite = new CustomSprite({
+      x: 290,
+      y: 180
+    });
+
+    sprite.render();
+  </script>
+  <script src="../prism/codeOutput.js"></script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Controlling A Sprite</title>
+  <script src="../../kontra.js"></script>
+</head>
+<body>
+  <canvas id="game" width="600" height="400" style="background: #333331"></canvas>
+  <script id="code">
+    // initialize the game and setup the canvas
+    kontra.init();
+
+    // create a basic sprite with a velocity
+    window.sprite = kontra.sprite({
+      x: 290,
+      y: 180,
+      dx: 3,
+      dy: 0,
+      width: 20,
+      height: 40,
+      color: 'red',
+      counter: 0,
+      update: function() {
+        // call advance to move the sprite by its velocity
+        this.advance();
+
+        // reset the sprites position when it reaches the edge of the game
+        if (this.x > kontra.game.width) {
+          this.x = -this.width;
+        }
+      },
+      render: function() {
+        // change the color of the sprite every 30 frames
+        if (++this.counter % 30 === 0) {
+          this.color = (this.color === 'red' ? 'blue' : 'red');
+        }
+
+        // call draw to draw the sprite to the screen
+        this.draw();
+      }
+    });
+
+    // create the game loop to update and render the sprite
+    window.loop = kontra.gameLoop({
+      update: function() {
+        sprite.update();
+      },
+      render: function() {
+        kontra.context.clearRect(0, 0, kontra.canvas.width, kontra.canvas.height);
+
+        sprite.render();
+      }
+    });
+
+    // start the loop
+    loop.start();
+  </script>
+  <script src="../prism/codeOutput.js"></script>
+</body>
+</html>

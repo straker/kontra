@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Controlling A Sprite</title>
+  <script src="../../kontra.js"></script>
+</head>
+<body>
+  <canvas id="game" width="600" height="400" style="background: #333331"></canvas>
+  <script id="code">
+    // initialize the game and setup the canvas
+    kontra.init();
+
+    // create a basic sprite with a velocity
+    window.sprite = kontra.sprite({
+      x: 290,
+      y: 180,
+      dx: 3,
+      dy: 3,
+      width: 20,
+      height: 40,
+      color: 'red',
+      // pass a custom update function to the sprite
+      update: function() {
+        // move the sprite with the keyboard
+        if (kontra.keys.pressed('up')) {
+          this.y -= this.dy;
+        }
+        else if (kontra.keys.pressed('down')) {
+          this.y += this.dy;
+        }
+
+        if (kontra.keys.pressed('left')) {
+          this.x -= this.dx;
+        }
+        else if (kontra.keys.pressed('right')) {
+          this.x += this.dx;
+        }
+      }
+    });
+
+    // prevent default key behavior
+    kontra.keys.bind(['up', 'down', 'left', 'right'], function(e) {
+      e.preventDefault();
+    });
+
+    // clamp sprites movement to the game
+    sprite.position.clamp(0, 0, kontra.game.width - sprite.width, kontra.game.height - sprite.height);
+
+    // create the game loop to update and render the sprite
+    window.loop = kontra.gameLoop({
+      update: function() {
+        sprite.update();
+      },
+      render: function() {
+        kontra.context.clearRect(0, 0, kontra.canvas.width, kontra.canvas.height);
+
+        sprite.render();
+      }
+    });
+
+    // start the loop
+    loop.start();
+  </script>
+  <script src="../prism/codeOutput.js"></script>
+</body>
+</html>

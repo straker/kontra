@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Rect Sprite</title>
+  <script src="../../kontra.js"></script>
+</head>
+<body>
+  <canvas id="game" width="600" height="400" style="background: #333331"></canvas>
+  <script id="code">
+    // initialize the game and setup the canvas
+    kontra.init();
+
+    // create a basic sprite
+    window.sprite = kontra.sprite({
+      x: 290,
+      y: 180,
+      width: 20,
+      height: 40,
+      color: 'red'
+    });
+
+    // render the sprite
+    sprite.render();
+  </script>
+  <script src="../prism/codeOutput.js"></script>
+</body>
+</html>

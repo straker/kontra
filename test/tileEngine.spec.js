@@ -132,8 +132,8 @@ describe('', function() {
       tileEngine = kontra.tileEngine({
         tileWidth: 10,
         tileHeight: 10,
-        width: 50,
-        height: 50
+        width: 3,
+        height: 3
       });
 
       sinon.stub(kontra.tileEngine.prototype, '_preRenderImage', kontra.noop);
@@ -164,9 +164,10 @@ describe('', function() {
 
       expect(tileEngine.layers.test[0]).to.equal(0);
       expect(tileEngine.layers.test[1]).to.equal(0);
-      expect(tileEngine.layers.test[2]).to.equal(1);
-      expect(tileEngine.layers.test[3]).to.equal(0);
+      expect(tileEngine.layers.test[2]).to.equal(0);
+      expect(tileEngine.layers.test[3]).to.equal(1);
       expect(tileEngine.layers.test[4]).to.equal(0);
+      expect(tileEngine.layers.test[5]).to.equal(0);
     });
 
     it('should add the tileset in the correct order', function() {
@@ -306,6 +307,176 @@ describe('', function() {
       expect(tileEngine.tileAtLayer('test', 20, 9)).to.equal(1);
       expect(tileEngine.tileAtLayer('test', 30, 10)).to.equal(undefined);
       expect(tileEngine.tileAtLayer('test', 40, 1)).to.equal(0);
+    });
+
+  });
+
+
+
+
+
+  // --------------------------------------------------
+  // kontra.tileEngine.render
+  // --------------------------------------------------
+  describe('kontra.tileEngine.render', function() {
+
+    it('should correctly render all layers', function() {
+      canvas = document.createElement('canvas');
+      canvas.width = 20;
+      canvas.height = 30;
+
+      var context = canvas.getContext('2d');
+      var image = new Image(100, 100);
+
+      var tileEngine = kontra.tileEngine({
+        tileWidth: 10,
+        tileHeight: 10,
+        width: 2,
+        height: 3,
+        context: context
+      });
+
+      sinon.stub(tileEngine._offscreenContext, 'drawImage', kontra.noop);
+      sinon.stub(tileEngine.context, 'drawImage', kontra.noop);
+
+      tileEngine.addTileset({
+        image: image
+      });
+
+      tileEngine.addLayer({
+        name: 'test',
+        data: [0,0,1,0,0]
+      });
+
+      // _preRenderImage should have been called and looped through the layer
+      // since there are 4 empty tiles, the drawImage function should only have
+      // been called once
+      expect(tileEngine._offscreenContext.drawImage.calledOnce).to.be.ok;
+
+      expect(tileEngine._offscreenContext.drawImage.calledWith(
+        image,
+        0, 0, 10, 10,
+        0, 10, 10, 10
+      )).to.be.ok;
+
+      tileEngine.render();
+
+      expect(tileEngine.context.drawImage.called).to.be.ok;
+      expect(tileEngine.context.drawImage.calledWith(
+        tileEngine._offscreenCanvas,
+        0, 0, 20, 30,
+        0, 0, 20, 30
+      )).to.be.ok;
+
+      tileEngine._offscreenContext.drawImage.restore();
+      tileEngine.context.drawImage.restore();
+    });
+
+  });
+
+
+
+
+
+  // --------------------------------------------------
+  // kontra.tileEngine.renderLayer
+  // --------------------------------------------------
+  describe('kontra.tileEngine.renderLayer', function() {
+
+    it('should correctly render a layer', function() {
+      var canvas = document.createElement('canvas');
+      canvas.width = 20;
+      canvas.height = 30;
+
+      var context = canvas.getContext('2d');
+      var image = new Image(100, 100);
+
+      var tileEngine = kontra.tileEngine({
+        tileWidth: 10,
+        tileHeight: 10,
+        width: 2,
+        height: 10,
+        context: context
+      });
+
+      tileEngine.addTileset({
+        image: image
+      });
+
+      sinon.stub(kontra.tileEngine.prototype, '_preRenderImage', kontra.noop);
+      sinon.stub(tileEngine.context, 'drawImage', kontra.noop);
+
+      tileEngine.addLayer({
+        name: 'test',
+        data: [0,0,1,0,0]
+      });
+
+      tileEngine.renderLayer('test');
+
+      expect(tileEngine.context.drawImage.called).to.be.ok;
+      expect(tileEngine.context.drawImage.calledWith(
+        image,
+        0, 0, 10, 10,
+        0, 10, 10, 10
+      )).to.be.ok;
+
+      kontra.tileEngine.prototype._preRenderImage.restore();
+      tileEngine.context.drawImage.restore();
+    });
+
+    it('should account for sx and sy', function() {
+      var canvas = document.createElement('canvas');
+      canvas.width = 50;
+      canvas.height = 50;
+
+      var context = canvas.getContext('2d');
+      var image = new Image(100, 100);
+
+      var tileEngine = kontra.tileEngine({
+        tileWidth: 10,
+        tileHeight: 10,
+        width: 10,
+        height: 10,
+        context: context
+      });
+
+      tileEngine.addTileset({
+        image: image
+      });
+
+      sinon.stub(kontra.tileEngine.prototype, '_preRenderImage', kontra.noop);
+      sinon.stub(tileEngine.context, 'drawImage', kontra.noop);
+
+      tileEngine.addLayer({
+        name: 'test',
+        data: [
+          [],
+          [],
+          [],
+          [],
+          [],
+          [],
+          [],
+          [0,0,0,0,0,0,0,1,0,0],
+          [],
+          []
+        ]
+      });
+
+      tileEngine.sx = 50;
+      tileEngine.sy = 50;
+
+      tileEngine.renderLayer('test');
+
+      expect(tileEngine.context.drawImage.called).to.be.ok;
+      expect(tileEngine.context.drawImage.calledWith(
+        image,
+        0, 0, 10, 10,
+        20, 20, 10, 10
+      )).to.be.ok;
+
+      kontra.tileEngine.prototype._preRenderImage.restore();
+      tileEngine.context.drawImage.restore();
     });
 
   });

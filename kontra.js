@@ -2762,8 +2762,8 @@ var kontra = (function(kontra, Math, undefined) {
       // when clipping an image, sx and sy must within the image region, otherwise
       // Firefox and Safari won't draw it.
       // @see http://stackoverflow.com/questions/19338032/canvas-indexsizeerror-index-or-size-is-negative-or-greater-than-the-allowed-a
-      _this.sxMax = _this.mapWidth - _this.canvasWidth;
-      _this.syMax = _this.mapHeight - _this.canvasHeight;
+      _this.sxMax = Math.max(0, _this.mapWidth - _this.canvasWidth);
+      _this.syMax = Math.max(0, _this.mapHeight - _this.canvasHeight);
 
       _this.layers = {};
 
@@ -2850,8 +2850,8 @@ var kontra = (function(kontra, Math, undefined) {
         data = [];
 
         for (var r = 0, row; row = properties.data[r]; r++) {
-          for (var c = 0, length = row.length; c < length; c++) {
-            data.push(row[c]);
+          for (var c = 0; c < this.width; c++) {
+            data.push(row[c] || 0);
           }
         }
       }
@@ -2968,8 +2968,8 @@ var kontra = (function(kontra, Math, undefined) {
       var startY = row * _this.tileHeight - _this.sy;
 
       // calculate how many tiles the drawing canvas can hold
-      var viewWidth = Math.ceil(_this.canvasWidth / _this.tileWidth) + 1;
-      var viewHeight = Math.ceil(_this.canvasHeight / _this.tileHeight) + 1;
+      var viewWidth = Math.min(Math.ceil(_this.canvasWidth / _this.tileWidth) + 1, _this.width);
+      var viewHeight = Math.min(Math.ceil(_this.canvasHeight / _this.tileHeight) + 1, _this.height);
       var numTiles = viewWidth * viewHeight;
 
       var count = 0;

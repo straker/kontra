@@ -177,7 +177,7 @@
       },
     });
 
-    player.position.clamp(-16, -16, kontra.canvas.width - player.width + 16, kontra.canvas.height - player.height + 16);
+    player.position.clamp(-16, -16, kontra.canvas.width - player.width + 16, kontra.canvas.height - player.height);
 
     var loop = kontra.gameLoop({
       update: function() {

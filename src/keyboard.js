@@ -125,7 +125,7 @@ var kontra = (function(kontra, window) {
       return;
     }
 
-    keys = (kontra.isArray(keys) ? keys : [keys]);
+    keys = (Array.isArray(keys) ? keys : [keys]);
 
     for (var i = 0, key; key = keys[i]; i++) {
       var combination = normalizeKeys(key);
@@ -141,7 +141,7 @@ var kontra = (function(kontra, window) {
    * @param {string|string[]} keys - keys combination string.
    */
   kontra.keys.unbind = function unbindKey(keys) {
-    keys = (kontra.isArray(keys) ? keys : [keys]);
+    keys = (Array.isArray(keys) ? keys : [keys]);
 
     for (var i = 0, key; key = keys[i]; i++) {
       var combination = normalizeKeys(key);

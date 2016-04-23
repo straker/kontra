@@ -890,16 +890,6 @@ var kontra = (function(kontra, document) {
   kontra.noop = function noop() {};
 
   /**
-   * Determine if a value is an Array.
-   * @memberof kontra
-   *
-   * @param {*} value - Value to test.
-   *
-   * @returns {boolean}
-   */
-  kontra.isArray = Array.isArray;
-
-  /**
    * Determine if a value is a String.
    * @memberof kontra
    *
@@ -992,6 +982,7 @@ var kontra = (function(kontra, window) {
      *
      * @param {object}   properties - Properties of the game loop.
      * @param {number}   [properties.fps=60] - Desired frame rate.
+     * @param {boolean}  [properties.clearCanvas=true] - Clear the canvas every frame.
      * @param {function} properties.update - Function called to update the game.
      * @param {function} properties.render - Function called to render the game.
      */
@@ -1014,6 +1005,10 @@ var kontra = (function(kontra, window) {
 
       this.update = properties.update;
       this.render = properties.render;
+
+      if (properties.clearCanvas === false) {
+        this._clearCanvas = kontra.noop;
+      }
     },
 
     /**
@@ -1040,29 +1035,37 @@ var kontra = (function(kontra, window) {
      * @private
      */
     _frame: function frame() {
-      var _this = this;
+      this._rAF = requestAnimationFrame(this._frame.bind(this));
 
-      _this._rAF = requestAnimationFrame(_this._frame.bind(_this));
-
-      _this._now = kontra.timestamp();
-      _this._dt = _this._now - _this._last;
-      _this._last = _this._now;
+      this._now = kontra.timestamp();
+      this._dt = this._now - this._last;
+      this._last = this._now;
 
       // prevent updating the game with a very large dt if the game were to lose focus
       // and then regain focus later
-      if (_this._dt > 1E3) {
+      if (this._dt > 1E3) {
         return;
       }
 
-      _this._accumulator += _this._dt;
+      this._accumulator += this._dt;
 
-      while (_this._accumulator >= _this._delta) {
-        _this.update(_this._step);
+      while (this._accumulator >= this._delta) {
+        this.update(this._step);
 
-        _this._accumulator -= _this._delta;
+        this._accumulator -= this._delta;
       }
 
-      _this.render();
+      this._clearCanvas();
+      this.render();
+    },
+
+    /**
+     * Clear the canvas on every frame.
+     * @memberof kontra.gameLoop
+     * @private
+     */
+    _clearCanvas: function() {
+      kontra.context.clearRect(0,0,kontra.game.width,kontra.game.height);
     }
   };
 
@@ -1195,7 +1198,7 @@ var kontra = (function(kontra, window) {
       return;
     }
 
-    keys = (kontra.isArray(keys) ? keys : [keys]);
+    keys = (Array.isArray(keys) ? keys : [keys]);
 
     for (var i = 0, key; key = keys[i]; i++) {
       var combination = normalizeKeys(key);
@@ -1211,7 +1214,7 @@ var kontra = (function(kontra, window) {
    * @param {string|string[]} keys - keys combination string.
    */
   kontra.keys.unbind = function unbindKey(keys) {
-    keys = (kontra.isArray(keys) ? keys : [keys]);
+    keys = (Array.isArray(keys) ? keys : [keys]);
 
     for (var i = 0, key; key = keys[i]; i++) {
       var combination = normalizeKeys(key);
@@ -1462,35 +1465,33 @@ var kontra = (function(kontra) {
     get: function get(properties) {
       properties = properties || {};
 
-      var _this = this;
-
       // the pool is out of objects if the first object is in use and it can't grow
-      if (_this.objects[0].isAlive()) {
-        if (_this.size === _this.maxSize) {
+      if (this.objects[0].isAlive()) {
+        if (this.size === this.maxSize) {
           return;
         }
-        // 'double' the size of the array by filling it with twice as many objects
+        // double the size of the array by filling it with twice as many objects
         else {
-          for (var x = 0; x < _this.size && _this.objects.length < _this.maxSize; x++) {
-            _this.objects.unshift(_this.create());
+          for (var x = 0; x < this.size && this.objects.length < this.maxSize; x++) {
+            this.objects.unshift(this.create());
           }
 
-          _this.size = _this.objects.length;
-          _this.lastIndex = _this.size - 1;
+          this.size = this.objects.length;
+          this.lastIndex = this.size - 1;
         }
       }
 
       // save off first object in pool to reassign to last object after unshift
-      var obj = _this.objects[0];
+      var obj = this.objects[0];
       obj.init(properties);
 
       // unshift the array
-      for (var i = 1; i < _this.size; i++) {
-        _this.objects[i-1] = _this.objects[i];
+      for (var i = 1; i < this.size; i++) {
+        this.objects[i-1] = this.objects[i];
       }
 
-      _this.objects[_this.lastIndex] = obj;
-      _this.inUse++;
+      this.objects[this.lastIndex] = obj;
+      this.inUse++;
     },
 
     /**
@@ -1587,7 +1588,7 @@ var kontra = (function(kontra, undefined) {
    * @memberof kontra
    *
    * @see kontra.quadtree.prototype.init for list of parameters.
-   *L
+   *
    * The quadrant indices are numbered as follows (following a z-order curve):
    *     |
    *  0  |  1
@@ -1696,39 +1697,38 @@ var kontra = (function(kontra, undefined) {
      * kontra.quadtree().add([{id:1}, {id:2}], {id:3});
      */
     add: function add() {
-      var _this = this;
       var i, object, obj, indices, index;
 
       for (var j = 0, length = arguments.length; j < length; j++) {
         object = arguments[j];
 
         // add a group of objects separately
-        if (kontra.isArray(object)) {
-          _this.add.apply(this, object);
+        if (Array.isArray(object)) {
+          this.add.apply(this, object);
 
           continue;
         }
 
         // current node has subnodes, so we need to add this object into a subnode
-        if (_this.subnodes.length && _this.isBranchNode) {
-          _this._addToSubnode(object);
+        if (this.subnodes.length && this.isBranchNode) {
+          this._addToSubnode(object);
 
           continue;
         }
 
         // this node is a leaf node so add the object to it
-        _this.objects.push(object);
+        this.objects.push(object);
 
         // split the node if there are too many objects
-        if (_this.objects.length > _this.maxObjects && _this.depth < _this.maxDepth) {
-          _this._split();
+        if (this.objects.length > this.maxObjects && this.depth < this.maxDepth) {
+          this._split();
 
           // move all objects to their corresponding subnodes
-          for (i = 0; obj = _this.objects[i]; i++) {
-            _this._addToSubnode(obj);
+          for (i = 0; obj = this.objects[i]; i++) {
+            this._addToSubnode(obj);
           }
 
-          _this.objects.length = 0;
+          this.objects.length = 0;
         }
       }
     },
@@ -1851,23 +1851,6 @@ var kontra = (function(kontra, undefined) {
 })(kontra || {});
 var kontra = (function(kontra, Math, undefined) {
   'use strict';
-
-  // prevent these properties from being set at the end of kontra.sprite.init()
-  var excludedProperties = [
-    'x',
-    'y',
-    'dx',
-    'dy',
-    'ddx',
-    'ddy',
-    'timeToLive',
-    'context',
-    'image',
-    'animations',
-    'color',
-    'width',
-    'height'
-  ];
 
   /**
    * A vector for 2D space.
@@ -2008,67 +1991,67 @@ var kontra = (function(kontra, Math, undefined) {
     init: function init(properties) {
       properties = properties || {};
 
-      var _this = this;
-
-      _this.position = (_this.position || kontra.vector()).init({
+      this.position = (this.position || kontra.vector()).init({
         x: properties.x,
         y: properties.y
       });
-      _this.velocity = (_this.velocity || kontra.vector()).init({
+      this.velocity = (this.velocity || kontra.vector()).init({
         x: properties.dx,
         y: properties.dy
       });
-      _this.acceleration = (_this.acceleration || kontra.vector()).init({
+      this.acceleration = (this.acceleration || kontra.vector()).init({
         x: properties.ddx,
         y: properties.ddy
       });
 
-      _this.timeToLive = properties.timeToLive || 0;
-      _this.context = properties.context || kontra.context;
+      // loop through properties before overrides
+      for (var prop in properties) {
+        if (!properties.hasOwnProperty(prop)) {
+          continue;
+        }
+
+        this[prop] = properties[prop];
+      }
+
+      this.timeToLive = properties.timeToLive || 0;
+      this.context = properties.context || kontra.context;
 
       // image sprite
       if (kontra.isImage(properties.image) || kontra.isCanvas(properties.image)) {
-        _this.image = properties.image;
-        _this.width = properties.image.width;
-        _this.height = properties.image.height;
+        this.image = properties.image;
+        this.width = properties.image.width;
+        this.height = properties.image.height;
 
         // change the advance and draw functions to work with images
-        _this.advance = _this._advanceSprite;
-        _this.draw = _this._drawImage;
+        this.advance = this._advanceSprite;
+        this.draw = this._drawImage;
       }
       // animation sprite
       else if (properties.animations) {
-        _this.animations = properties.animations;
+        this.animations = properties.animations;
 
         // default the current animation to the first one in the list
-        _this.currentAnimation = properties.animations[ Object.keys(properties.animations)[0] ];
-        _this.width = _this.currentAnimation.width;
-        _this.height = _this.currentAnimation.height;
+        this.currentAnimation = properties.animations[ Object.keys(properties.animations)[0] ];
+        this.width = this.currentAnimation.width;
+        this.height = this.currentAnimation.height;
 
         // change the advance and draw functions to work with animations
-        _this.advance = _this._advanceAnimation;
-        _this.draw = _this._drawAnimation;
+        this.advance = this._advanceAnimation;
+        this.draw = this._drawAnimation;
       }
       // rectangle sprite
       else {
-        _this.color = properties.color;
-        _this.width = properties.width;
-        _this.height = properties.height;
+        this.color = properties.color;
+        this.width = properties.width;
+        this.height = properties.height;
 
         // change the advance and draw functions to work with rectangles
-        _this.advance = _this._advanceSprite;
-        _this.draw = _this._drawRect;
-      }
-
-      // loop through all other properties an add them to the sprite
-      for (var prop in properties) {
-        if (properties.hasOwnProperty(prop) && excludedProperties.indexOf(prop) === -1) {
-          _this[prop] = properties[prop];
-        }
+        this.advance = this._advanceSprite;
+        this.draw = this._drawRect;
       }
     },
 
-    // define getter and setter shortcut functions to make it easier to work work with the
+    // define getter and setter shortcut functions to make it easier to work with the
     // position, velocity, and acceleration vectors.
 
     /**
@@ -2169,14 +2152,10 @@ var kontra = (function(kontra, Math, undefined) {
      * @returns {boolean} True if the objects collide, false otherwise.
      */
     collidesWith: function collidesWith(object) {
-      if (this.x < object.x + object.width &&
-          this.x + this.width > object.x &&
-          this.y < object.y + object.height &&
-          this.y + this.height > object.y) {
-        return true;
-      }
-
-      return false;
+      return this.x < object.x + object.width &&
+             this.x + this.width > object.x &&
+             this.y < object.y + object.height &&
+             this.y + this.height > object.y;
     },
 
     /**
@@ -2319,7 +2298,7 @@ var kontra = (function(kontra, undefined) {
      * @memberof kontra.animation
      *
      * @param {object} properties - Properties of the animation.
-     * @param {spriteSheet} properties.spriteSheet - Sprite sheet for the animation.
+     * @param {object} properties.spriteSheet - Sprite sheet for the animation.
      * @param {number[]} properties.frames - List of frames of the animation.
      * @param {number}  properties.frameRate - Number of frames to display in one second.
      */
@@ -2371,6 +2350,16 @@ var kontra = (function(kontra, undefined) {
      */
     pause: function pause() {
       this.update = kontra.noop;
+    },
+
+    /**
+     * Clone an animation to be used more than once.
+     * @memberof kontra.animation
+     *
+     * @returns {object}
+     */
+    clone: function clone() {
+      return kontra.animation(this);
     },
 
     /**
@@ -2546,7 +2535,7 @@ var kontra = (function(kontra, undefined) {
           sequence = this._parseFrames(frames);
         }
         // non-consecutive frames
-        else if (kontra.isArray(frames)) {
+        else if (Array.isArray(frames)) {
           for (var i = 0, frame; frame = frames[i]; i++) {
 
             // consecutive frames
@@ -2728,8 +2717,6 @@ var kontra = (function(kontra, Math, undefined) {
     init: function init(properties) {
       properties = properties || {};
 
-      var _this = this;
-
       // size of the map (in tiles)
       if (!properties.width || !properties.height) {
         var error = new ReferenceError('Required parameters not found');
@@ -2737,46 +2724,46 @@ var kontra = (function(kontra, Math, undefined) {
         return;
       }
 
-      _this.width = properties.width;
-      _this.height = properties.height;
+      this.width = properties.width;
+      this.height = properties.height;
 
       // size of the tiles. Most common tile size on opengameart.org seems to be 32x32,
       // followed by 16x16
-      _this.tileWidth = properties.tileWidth || 32;
-      _this.tileHeight = properties.tileHeight || 32;
+      this.tileWidth = properties.tileWidth || 32;
+      this.tileHeight = properties.tileHeight || 32;
 
-      _this.context = properties.context || kontra.context;
+      this.context = properties.context || kontra.context;
 
-      _this.canvasWidth = _this.context.canvas.width;
-      _this.canvasHeight = _this.context.canvas.height;
+      this.canvasWidth = this.context.canvas.width;
+      this.canvasHeight = this.context.canvas.height;
 
       // create an off-screen canvas for pre-rendering the map
       // @see http://jsperf.com/render-vs-prerender
-      _this._offscreenCanvas = document.createElement('canvas');
-      _this._offscreenContext = _this._offscreenCanvas.getContext('2d');
+      this._offscreenCanvas = document.createElement('canvas');
+      this._offscreenContext = this._offscreenCanvas.getContext('2d');
 
       // make the off-screen canvas the full size of the map
-      _this._offscreenCanvas.width = _this.mapWidth = _this.width * _this.tileWidth;
-      _this._offscreenCanvas.height = _this.mapHeight = _this.height * _this.tileHeight;
+      this._offscreenCanvas.width = this.mapWidth = this.width * this.tileWidth;
+      this._offscreenCanvas.height = this.mapHeight = this.height * this.tileHeight;
 
       // when clipping an image, sx and sy must within the image region, otherwise
       // Firefox and Safari won't draw it.
       // @see http://stackoverflow.com/questions/19338032/canvas-indexsizeerror-index-or-size-is-negative-or-greater-than-the-allowed-a
-      _this.sxMax = Math.max(0, _this.mapWidth - _this.canvasWidth);
-      _this.syMax = Math.max(0, _this.mapHeight - _this.canvasHeight);
+      this.sxMax = Math.max(0, this.mapWidth - this.canvasWidth);
+      this.syMax = Math.max(0, this.mapHeight - this.canvasHeight);
 
-      _this.layers = {};
+      this.layers = {};
 
       // draw order of layers (by name)
-      _this._layerOrder = [];
+      this._layerOrder = [];
 
       // each tileset will hold the first and the last grid as well as the image for the tileset
-      _this.tilesets = [];
+      this.tilesets = [];
 
-      _this.x = properties.x || 0;
-      _this.y = properties.y || 0;
-      _this.sx = properties.sx || 0;
-      _this.sy = properties.sy || 0;
+      this.x = properties.x || 0;
+      this.y = properties.y || 0;
+      this.sx = properties.sx || 0;
+      this.sy = properties.sy || 0;
     },
 
     /**
@@ -2842,11 +2829,10 @@ var kontra = (function(kontra, Math, undefined) {
       properties = properties || {};
       properties.render = (properties.render === undefined ? true : properties.render);
 
-      var _this = this;
       var data;
 
       // flatten a 2D array into a single array
-      if (kontra.isArray(properties.data[0])) {
+      if (Array.isArray(properties.data[0])) {
         data = [];
 
         for (var r = 0, row; row = properties.data[r]; r++) {
@@ -2868,8 +2854,8 @@ var kontra = (function(kontra, Math, undefined) {
         this._layerOrder.push(properties.name);
 
         this._layerOrder.sort(function(a, b) {
-          return _this.layers[a].zIndex - _this.layers[b].zIndex;
-        });
+          return this.layers[a].zIndex - this.layers[b].zIndex;
+        }.bind(this));
 
         this._preRenderImage();
       }
@@ -2890,17 +2876,17 @@ var kontra = (function(kontra, Math, undefined) {
      */
     layerCollidesWith: function layerCollidesWith(name, object) {
       // calculate all tiles that the object can collide with
-      var row = this._getRow(object.y);
-      var col = this._getCol(object.x);
+      var row = this.getRow(object.y);
+      var col = this.getCol(object.x);
 
-      var endRow = this._getRow(object.y + object.height);
-      var endCol = this._getCol(object.x + object.width);
+      var endRow = this.getRow(object.y + object.height);
+      var endCol = this.getCol(object.x + object.width);
 
       // check all tiles
       var index;
       for (var r = row; r <= endRow; r++) {
         for (var c = col; c <= endCol; c++) {
-          index = c + r * this.width;
+          index = this._getIndex({row: r, col: c});
 
           if (this.layers[name][index]) {
             return true;
@@ -2912,21 +2898,24 @@ var kontra = (function(kontra, Math, undefined) {
     },
 
     /**
-     * Get the tile from the specified layer at x, y.
+     * Get the tile from the specified layer at x, y or row, col.
      * @memberof kontra.tileEngine
      *
      * @param {string} name - Name of the layer.
-     * @param {number} x - X coordinate of the tile.
-     * @param {number} y - Y coordinate of the tile.
+     * @param {object} position - Position of the tile in either x, y or row, col.
+     * @param {number} position.x - X coordinate of the tile.
+     * @param {number} position.y - Y coordinate of the tile.
+     * @param {number} position.row - Row of the tile.
+     * @param {number} position.col - Col of the tile.
      *
      * @returns {number}
      */
-    tileAtLayer: function tileAtLayer(name, x, y) {
-      var row = this._getRow(y);
-      var col = this._getCol(x);
-      var index = col + row * this.width;
+    tileAtLayer: function tileAtLayer(name, position) {
+      var index = this._getIndex(position);
 
-      return this.layers[name][index];
+      if (index >= 0) {
+        return this.layers[name][index];
+      }
     },
 
     /**
@@ -2934,16 +2923,14 @@ var kontra = (function(kontra, Math, undefined) {
      * @memberof kontra.tileEngine
      */
     render: function render() {
-      var _this = this;
-
       // ensure sx and sy are within the image region
-      _this.sx = Math.min( Math.max(_this.sx, 0), _this.sxMax );
-      _this.sy = Math.min( Math.max(_this.sy, 0), _this.syMax );
+      this.sx = Math.min( Math.max(this.sx, 0), this.sxMax );
+      this.sy = Math.min( Math.max(this.sy, 0), this.syMax );
 
-      _this.context.drawImage(
-        _this._offscreenCanvas,
-        _this.sx, _this.sy, _this.canvasWidth, _this.canvasHeight,
-        _this.x, _this.y, _this.canvasWidth, _this.canvasHeight
+      this.context.drawImage(
+        this._offscreenCanvas,
+        this.sx, this.sy, this.canvasWidth, this.canvasHeight,
+        this.x, this.y, this.canvasWidth, this.canvasHeight
       );
     },
 
@@ -2954,22 +2941,20 @@ var kontra = (function(kontra, Math, undefined) {
      * @param {string} name - Name of the layer to render.
      */
     renderLayer: function renderLayer(name) {
-      var _this = this;
-
-      var layer = _this.layers[name];
+      var layer = this.layers[name];
 
       // calculate the starting tile
-      var row = _this._getRow();
-      var col = _this._getCol();
-      var index = col + row * _this.width;
+      var row = this.getRow();
+      var col = this.getCol();
+      var index = this._getIndex({row: row, col: col});
 
       // calculate where to start drawing the tile relative to the drawing canvas
-      var startX = col * _this.tileWidth - _this.sx;
-      var startY = row * _this.tileHeight - _this.sy;
+      var startX = col * this.tileWidth - this.sx;
+      var startY = row * this.tileHeight - this.sy;
 
       // calculate how many tiles the drawing canvas can hold
-      var viewWidth = Math.min(Math.ceil(_this.canvasWidth / _this.tileWidth) + 1, _this.width);
-      var viewHeight = Math.min(Math.ceil(_this.canvasHeight / _this.tileHeight) + 1, _this.height);
+      var viewWidth = Math.min(Math.ceil(this.canvasWidth / this.tileWidth) + 1, this.width);
+      var viewHeight = Math.min(Math.ceil(this.canvasHeight / this.tileHeight) + 1, this.height);
       var numTiles = viewWidth * viewHeight;
 
       var count = 0;
@@ -2980,27 +2965,27 @@ var kontra = (function(kontra, Math, undefined) {
         tile = layer[index];
 
         if (tile) {
-          tileset = _this._getTileset(tile);
+          tileset = this._getTileset(tile);
           image = tileset.image;
 
-          x = startX + (count % viewWidth) * _this.tileWidth;
-          y = startY + (count / viewWidth | 0) * _this.tileHeight;
+          x = startX + (count % viewWidth) * this.tileWidth;
+          y = startY + (count / viewWidth | 0) * this.tileHeight;
 
           tileOffset = tile - tileset.firstGrid;
-          width = image.width / _this.tileWidth;
+          width = image.width / this.tileWidth;
 
-          sx = (tileOffset % width) * _this.tileWidth;
-          sy = (tileOffset / width | 0) * _this.tileHeight;
+          sx = (tileOffset % width) * this.tileWidth;
+          sy = (tileOffset / width | 0) * this.tileHeight;
 
-          _this.context.drawImage(
+          this.context.drawImage(
             image,
-            sx, sy, _this.tileWidth, _this.tileHeight,
-            x, y, _this.tileWidth, _this.tileHeight
+            sx, sy, this.tileWidth, this.tileHeight,
+            x, y, this.tileWidth, this.tileHeight
           );
         }
 
         if (++count % viewWidth === 0) {
-          index = col + (++row * _this.width);
+          index = col + (++row * this.width);
         }
         else {
           index++;
@@ -3011,13 +2996,12 @@ var kontra = (function(kontra, Math, undefined) {
     /**
      * Get the row from the y coordinate.
      * @memberof kontra.tileEngine
-     * @private
      *
      * @param {number} y - Y coordinate.
      *
      * @return {number}
      */
-    _getRow: function getRow(y) {
+    getRow: function getRow(y) {
       y = y || 0;
 
       return (this.sy + y) / this.tileHeight | 0;
@@ -3026,16 +3010,47 @@ var kontra = (function(kontra, Math, undefined) {
     /**
      * Get the col from the x coordinate.
      * @memberof kontra.tileEngine
-     * @private
      *
      * @param {number} x - X coordinate.
      *
      * @return {number}
      */
-    _getCol: function getCol(x) {
+    getCol: function getCol(x) {
       x = x || 0;
 
       return (this.sx + x) / this.tileWidth | 0;
+    },
+
+    /**
+     * Get the index of the x, y or row, col.
+     * @memberof kontra.tileEngine
+     * @private
+     *
+     * @param {number} position.x - X coordinate of the tile.
+     * @param {number} position.y - Y coordinate of the tile.
+     * @param {number} position.row - Row of the tile.
+     * @param {number} position.col - Col of the tile.
+     *
+     * @return {number} Returns the tile index or -1 if the x, y or row, col is outside the dimensions of the tile engine.
+     */
+    _getIndex: function getIndex(position) {
+      var row, col;
+
+      if (typeof position.x !== 'undefined' && typeof position.y !== 'undefined') {
+        row = this.getRow(position.y);
+        col = this.getCol(position.x);
+      }
+      else {
+        row = position.row;
+        col = position.col;
+      }
+
+      // don't calculate out of bound numbers
+      if (row < 0 || col < 0 || row >= this.height || col >= this.width) {
+        return -1;
+      }
+
+      return col + row * this.width;
     },
 
     /**
@@ -3075,11 +3090,10 @@ var kontra = (function(kontra, Math, undefined) {
      * @private
      */
     _preRenderImage: function preRenderImage() {
-      var _this = this;
       var tile, tileset, image, x, y, sx, sy, tileOffset, width;
 
       // draw each layer in order
-      for (var i = 0, layer; layer = _this.layers[_this._layerOrder[i]]; i++) {
+      for (var i = 0, layer; layer = this.layers[this._layerOrder[i]]; i++) {
         for (var j = 0, len = layer.length; j < len; j++) {
           tile = layer[j];
 
@@ -3088,22 +3102,22 @@ var kontra = (function(kontra, Math, undefined) {
             continue;
           }
 
-          tileset = _this._getTileset(tile);
+          tileset = this._getTileset(tile);
           image = tileset.image;
 
-          x = (j % _this.width) * _this.tileWidth;
-          y = (j / _this.width | 0) * _this.tileHeight;
+          x = (j % this.width) * this.tileWidth;
+          y = (j / this.width | 0) * this.tileHeight;
 
           tileOffset = tile - tileset.firstGrid;
-          width = image.width / _this.tileWidth;
+          width = image.width / this.tileWidth;
 
-          sx = (tileOffset % width) * _this.tileWidth;
-          sy = (tileOffset / width | 0) * _this.tileHeight;
+          sx = (tileOffset % width) * this.tileWidth;
+          sy = (tileOffset / width | 0) * this.tileHeight;
 
-          _this._offscreenContext.drawImage(
+          this._offscreenContext.drawImage(
             image,
-            sx, sy, _this.tileWidth, _this.tileHeight,
-            x, y, _this.tileWidth, _this.tileHeight
+            sx, sy, this.tileWidth, this.tileHeight,
+            x, y, this.tileWidth, this.tileHeight
           );
         }
       }

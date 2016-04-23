@@ -1,23 +1,6 @@
 var kontra = (function(kontra, Math, undefined) {
   'use strict';
 
-  // prevent these properties from being set at the end of kontra.sprite.init()
-  var excludedProperties = [
-    'x',
-    'y',
-    'dx',
-    'dy',
-    'ddx',
-    'ddy',
-    'timeToLive',
-    'context',
-    'image',
-    'animations',
-    'color',
-    'width',
-    'height'
-  ];
-
   /**
    * A vector for 2D space.
    * @memberof kontra
@@ -157,67 +140,67 @@ var kontra = (function(kontra, Math, undefined) {
     init: function init(properties) {
       properties = properties || {};
 
-      var _this = this;
-
-      _this.position = (_this.position || kontra.vector()).init({
+      this.position = (this.position || kontra.vector()).init({
         x: properties.x,
         y: properties.y
       });
-      _this.velocity = (_this.velocity || kontra.vector()).init({
+      this.velocity = (this.velocity || kontra.vector()).init({
         x: properties.dx,
         y: properties.dy
       });
-      _this.acceleration = (_this.acceleration || kontra.vector()).init({
+      this.acceleration = (this.acceleration || kontra.vector()).init({
         x: properties.ddx,
         y: properties.ddy
       });
 
-      _this.timeToLive = properties.timeToLive || 0;
-      _this.context = properties.context || kontra.context;
+      // loop through properties before overrides
+      for (var prop in properties) {
+        if (!properties.hasOwnProperty(prop)) {
+          continue;
+        }
+
+        this[prop] = properties[prop];
+      }
+
+      this.timeToLive = properties.timeToLive || 0;
+      this.context = properties.context || kontra.context;
 
       // image sprite
       if (kontra.isImage(properties.image) || kontra.isCanvas(properties.image)) {
-        _this.image = properties.image;
-        _this.width = properties.image.width;
-        _this.height = properties.image.height;
+        this.image = properties.image;
+        this.width = properties.image.width;
+        this.height = properties.image.height;
 
         // change the advance and draw functions to work with images
-        _this.advance = _this._advanceSprite;
-        _this.draw = _this._drawImage;
+        this.advance = this._advanceSprite;
+        this.draw = this._drawImage;
       }
       // animation sprite
       else if (properties.animations) {
-        _this.animations = properties.animations;
+        this.animations = properties.animations;
 
         // default the current animation to the first one in the list
-        _this.currentAnimation = properties.animations[ Object.keys(properties.animations)[0] ];
-        _this.width = _this.currentAnimation.width;
-        _this.height = _this.currentAnimation.height;
+        this.currentAnimation = properties.animations[ Object.keys(properties.animations)[0] ];
+        this.width = this.currentAnimation.width;
+        this.height = this.currentAnimation.height;
 
         // change the advance and draw functions to work with animations
-        _this.advance = _this._advanceAnimation;
-        _this.draw = _this._drawAnimation;
+        this.advance = this._advanceAnimation;
+        this.draw = this._drawAnimation;
       }
       // rectangle sprite
       else {
-        _this.color = properties.color;
-        _this.width = properties.width;
-        _this.height = properties.height;
+        this.color = properties.color;
+        this.width = properties.width;
+        this.height = properties.height;
 
         // change the advance and draw functions to work with rectangles
-        _this.advance = _this._advanceSprite;
-        _this.draw = _this._drawRect;
-      }
-
-      // loop through all other properties an add them to the sprite
-      for (var prop in properties) {
-        if (properties.hasOwnProperty(prop) && excludedProperties.indexOf(prop) === -1) {
-          _this[prop] = properties[prop];
-        }
+        this.advance = this._advanceSprite;
+        this.draw = this._drawRect;
       }
     },
 
-    // define getter and setter shortcut functions to make it easier to work work with the
+    // define getter and setter shortcut functions to make it easier to work with the
     // position, velocity, and acceleration vectors.
 
     /**
@@ -318,14 +301,10 @@ var kontra = (function(kontra, Math, undefined) {
      * @returns {boolean} True if the objects collide, false otherwise.
      */
     collidesWith: function collidesWith(object) {
-      if (this.x < object.x + object.width &&
-          this.x + this.width > object.x &&
-          this.y < object.y + object.height &&
-          this.y + this.height > object.y) {
-        return true;
-      }
-
-      return false;
+      return this.x < object.x + object.width &&
+             this.x + this.width > object.x &&
+             this.y < object.y + object.height &&
+             this.y + this.height > object.y;
     },
 
     /**

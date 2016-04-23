@@ -65,32 +65,6 @@ describe('kontra.init', function() {
 
 
 // --------------------------------------------------
-// kontra.isArray
-// --------------------------------------------------
-describe('kontra.isArray', function() {
-
-  it('should correctly identify an array', function() {
-    expect(kontra.isArray('')).to.be.false;
-    expect(kontra.isArray(1)).to.be.false;
-    expect(kontra.isArray(true)).to.be.false;
-    expect(kontra.isArray({})).to.be.false;
-    expect(kontra.isArray(null)).to.be.false;
-    expect(kontra.isArray(undefined)).to.be.false;
-    expect(kontra.isArray(new Image())).to.be.false;
-    expect(kontra.isArray(document.createElement('img'))).to.be.false;
-    expect(kontra.isArray(document.createElement('canvas'))).to.be.false;
-    expect(kontra.isArray(function(){})).to.be.false;
-
-    expect(kontra.isArray([])).to.be.true;
-  });
-
-});
-
-
-
-
-
-// --------------------------------------------------
 // kontra.isString
 // --------------------------------------------------
 describe('kontra.isString', function() {

@@ -11,7 +11,7 @@
 </head>
 <body>
   <canvas width="600" height="600"></canvas>
-  <script>
+  <script id="code">
   /**
    * ATTRIBUTION:
    * terrain.png - [LPC Tile Atlas]{@link http://opengameart.org/content/lpc-tile-atlas}. See
@@ -30,6 +30,8 @@
       tileHeight: terrain.tileheight,
       width: terrain.width,
       height: terrain.height,
+
+      // center the game world
       sx: terrain.width * terrain.tilewidth / 2 - kontra.canvas.width / 2,
       sy: terrain.height * terrain.tileheight - kontra.canvas.height
     });
@@ -59,7 +61,7 @@
       frameHeight: 64,
       animations: {
         walk_up: {
-          frames: '105..112',
+          frames: '105..112',  // frames 105 through 112
           frameRate: 12
         },
         walk_left: {
@@ -177,6 +179,7 @@
       },
     });
 
+    // clamp player position in the game world
     player.position.clamp(-16, -16, kontra.canvas.width - player.width + 16, kontra.canvas.height - player.height);
 
     var loop = kontra.gameLoop({
@@ -184,8 +187,6 @@
         player.update();
       },
       render: function() {
-        kontra.context.clearRect(0,0,kontra.canvas.width,kontra.canvas.height);
-
         tileEngine.render();
         player.render();
 

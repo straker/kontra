@@ -41,6 +41,7 @@ var kontra = (function(kontra, window) {
      *
      * @param {object}   properties - Properties of the game loop.
      * @param {number}   [properties.fps=60] - Desired frame rate.
+     * @param {boolean}  [properties.clearCanvas=true] - Clear the canvas every frame.
      * @param {function} properties.update - Function called to update the game.
      * @param {function} properties.render - Function called to render the game.
      */
@@ -63,6 +64,10 @@ var kontra = (function(kontra, window) {
 
       this.update = properties.update;
       this.render = properties.render;
+
+      if (properties.clearCanvas === false) {
+        this._clearCanvas = kontra.noop;
+      }
     },
 
     /**
@@ -89,29 +94,37 @@ var kontra = (function(kontra, window) {
      * @private
      */
     _frame: function frame() {
-      var _this = this;
+      this._rAF = requestAnimationFrame(this._frame.bind(this));
 
-      _this._rAF = requestAnimationFrame(_this._frame.bind(_this));
-
-      _this._now = kontra.timestamp();
-      _this._dt = _this._now - _this._last;
-      _this._last = _this._now;
+      this._now = kontra.timestamp();
+      this._dt = this._now - this._last;
+      this._last = this._now;
 
       // prevent updating the game with a very large dt if the game were to lose focus
       // and then regain focus later
-      if (_this._dt > 1E3) {
+      if (this._dt > 1E3) {
         return;
       }
 
-      _this._accumulator += _this._dt;
+      this._accumulator += this._dt;
 
-      while (_this._accumulator >= _this._delta) {
-        _this.update(_this._step);
+      while (this._accumulator >= this._delta) {
+        this.update(this._step);
 
-        _this._accumulator -= _this._delta;
+        this._accumulator -= this._delta;
       }
 
-      _this.render();
+      this._clearCanvas();
+      this.render();
+    },
+
+    /**
+     * Clear the canvas on every frame.
+     * @memberof kontra.gameLoop
+     * @private
+     */
+    _clearCanvas: function() {
+      kontra.context.clearRect(0,0,kontra.game.width,kontra.game.height);
     }
   };
 

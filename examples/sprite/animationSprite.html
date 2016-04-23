@@ -23,7 +23,7 @@
         frameHeight: 97,
         animations: {
           walk: {
-            frames: '0..10',
+            frames: '0..10',  // frames 0 through 10
             frameRate: 30
           }
         }
@@ -45,8 +45,6 @@
           sprite.update();
         },
         render: function() {
-          kontra.context.clearRect(0, 0, kontra.canvas.width, kontra.canvas.height);
-
           sprite.render();
         }
       });

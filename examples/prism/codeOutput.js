@@ -5,10 +5,10 @@
 
   var prisimcss = document.createElement('link');
   prisimcss.setAttribute('rel', 'stylesheet');
-  prisimcss.href = '../prism/prism.css';
+  prisimcss.href = '/examples/prism/prism.css';
   document.head.appendChild(prisimcss);
 
   var prisimjs = document.createElement('script');
-  prisimjs.src = '../prism/prism.js';
+  prisimjs.src = '/examples/prism/prism.js';
   document.body.appendChild(prisimjs);
 })();

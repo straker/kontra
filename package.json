@@ -1,8 +1,8 @@
 {
   "name": "kontra",
-  "version": "2.0.2",
+  "version": "2.1.0",
   "description": "Kontra HTML5 game development library",
-  "main": "core.js",
+  "main": "kontra.js",
   "scripts": {
     "test": "./node_modules/.bin/karma start --single-run --browsers PhantomJS"
   },

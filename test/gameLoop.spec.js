@@ -30,6 +30,16 @@ describe('kontra.gameLoop.init', function() {
     kontra.logError.restore();
   });
 
+  it('should let you prevent clearing the canvas', function() {
+    var loop = kontra.gameLoop({
+      update: kontra.noop,
+      render: kontra.noop,
+      clearCanvas: false
+    });
+
+    expect(loop._clearCanvas).to.equal(kontra.noop);
+  });
+
 });
 
 

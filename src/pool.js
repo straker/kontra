@@ -89,35 +89,33 @@ var kontra = (function(kontra) {
     get: function get(properties) {
       properties = properties || {};
 
-      var _this = this;
-
       // the pool is out of objects if the first object is in use and it can't grow
-      if (_this.objects[0].isAlive()) {
-        if (_this.size === _this.maxSize) {
+      if (this.objects[0].isAlive()) {
+        if (this.size === this.maxSize) {
           return;
         }
-        // 'double' the size of the array by filling it with twice as many objects
+        // double the size of the array by filling it with twice as many objects
         else {
-          for (var x = 0; x < _this.size && _this.objects.length < _this.maxSize; x++) {
-            _this.objects.unshift(_this.create());
+          for (var x = 0; x < this.size && this.objects.length < this.maxSize; x++) {
+            this.objects.unshift(this.create());
           }
 
-          _this.size = _this.objects.length;
-          _this.lastIndex = _this.size - 1;
+          this.size = this.objects.length;
+          this.lastIndex = this.size - 1;
         }
       }
 
       // save off first object in pool to reassign to last object after unshift
-      var obj = _this.objects[0];
+      var obj = this.objects[0];
       obj.init(properties);
 
       // unshift the array
-      for (var i = 1; i < _this.size; i++) {
-        _this.objects[i-1] = _this.objects[i];
+      for (var i = 1; i < this.size; i++) {
+        this.objects[i-1] = this.objects[i];
       }
 
-      _this.objects[_this.lastIndex] = obj;
-      _this.inUse++;
+      this.objects[this.lastIndex] = obj;
+      this.inUse++;
     },
 
     /**

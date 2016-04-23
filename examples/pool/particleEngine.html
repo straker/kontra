@@ -2,16 +2,11 @@
 <html>
 <head>
   <title>Particle Engine</title>
-  <style>
-  canvas {
-    background: black;
-  }
-  </style>
   <script type="text/javascript" src="../../kontra.js"></script>
 </head>
 <body>
-  <canvas width="600" height="600"></canvas>
-  <script>
+  <canvas width="600" height="600" style="background: #333331"></canvas>
+  <script id="code">
   kontra.init();
 
   var midX = kontra.canvas.width / 2;
@@ -42,11 +37,11 @@
 
   var pool = kontra.pool({
     create: kontra.sprite,
-    maxSize: 4000,
+    maxSize: 5000,
     fill: true
   });
 
-  kontra.context.fillStyle = 'blue';
+  kontra.context.fillStyle = 'white';
 
   // redefine sprite update to account for fields
   kontra.sprite.prototype.update = function() {
@@ -84,7 +79,7 @@
           y: midY,
           dx: 2 - Math.random() * 4,
           dy: 2 - Math.random() * 4,
-          color: 'blue',
+          color: 'white',
           width: 1,
           height: 1,
           timeToLive: Infinity
@@ -94,13 +89,12 @@
       pool.update();
     },
     render: function() {
-      kontra.context.clearRect(0, 0, kontra.game.width, kontra.game.height);
-
       pool.render();
     }
   });
 
   loop.start();
   </script>
+  <script src="prism/codeOutput.js"></script>
 </body>
 </html>

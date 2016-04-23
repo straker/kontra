@@ -54,16 +54,6 @@ var kontra = (function(kontra, document) {
   kontra.noop = function noop() {};
 
   /**
-   * Determine if a value is an Array.
-   * @memberof kontra
-   *
-   * @param {*} value - Value to test.
-   *
-   * @returns {boolean}
-   */
-  kontra.isArray = Array.isArray;
-
-  /**
    * Determine if a value is a String.
    * @memberof kontra
    *

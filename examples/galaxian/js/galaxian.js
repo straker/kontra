@@ -234,6 +234,7 @@ kontra.loadAssets(
    * Game loop
    */
   var loop = kontra.gameLoop({
+    clearCanvas: false,
     update: function(dt) {
       background.update();
       player.update();

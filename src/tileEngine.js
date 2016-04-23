@@ -33,8 +33,6 @@ var kontra = (function(kontra, Math, undefined) {
     init: function init(properties) {
       properties = properties || {};
 
-      var _this = this;
-
       // size of the map (in tiles)
       if (!properties.width || !properties.height) {
         var error = new ReferenceError('Required parameters not found');
@@ -42,46 +40,46 @@ var kontra = (function(kontra, Math, undefined) {
         return;
       }
 
-      _this.width = properties.width;
-      _this.height = properties.height;
+      this.width = properties.width;
+      this.height = properties.height;
 
       // size of the tiles. Most common tile size on opengameart.org seems to be 32x32,
       // followed by 16x16
-      _this.tileWidth = properties.tileWidth || 32;
-      _this.tileHeight = properties.tileHeight || 32;
+      this.tileWidth = properties.tileWidth || 32;
+      this.tileHeight = properties.tileHeight || 32;
 
-      _this.context = properties.context || kontra.context;
+      this.context = properties.context || kontra.context;
 
-      _this.canvasWidth = _this.context.canvas.width;
-      _this.canvasHeight = _this.context.canvas.height;
+      this.canvasWidth = this.context.canvas.width;
+      this.canvasHeight = this.context.canvas.height;
 
       // create an off-screen canvas for pre-rendering the map
       // @see http://jsperf.com/render-vs-prerender
-      _this._offscreenCanvas = document.createElement('canvas');
-      _this._offscreenContext = _this._offscreenCanvas.getContext('2d');
+      this._offscreenCanvas = document.createElement('canvas');
+      this._offscreenContext = this._offscreenCanvas.getContext('2d');
 
       // make the off-screen canvas the full size of the map
-      _this._offscreenCanvas.width = _this.mapWidth = _this.width * _this.tileWidth;
-      _this._offscreenCanvas.height = _this.mapHeight = _this.height * _this.tileHeight;
+      this._offscreenCanvas.width = this.mapWidth = this.width * this.tileWidth;
+      this._offscreenCanvas.height = this.mapHeight = this.height * this.tileHeight;
 
       // when clipping an image, sx and sy must within the image region, otherwise
       // Firefox and Safari won't draw it.
       // @see http://stackoverflow.com/questions/19338032/canvas-indexsizeerror-index-or-size-is-negative-or-greater-than-the-allowed-a
-      _this.sxMax = Math.max(0, _this.mapWidth - _this.canvasWidth);
-      _this.syMax = Math.max(0, _this.mapHeight - _this.canvasHeight);
+      this.sxMax = Math.max(0, this.mapWidth - this.canvasWidth);
+      this.syMax = Math.max(0, this.mapHeight - this.canvasHeight);
 
-      _this.layers = {};
+      this.layers = {};
 
       // draw order of layers (by name)
-      _this._layerOrder = [];
+      this._layerOrder = [];
 
       // each tileset will hold the first and the last grid as well as the image for the tileset
-      _this.tilesets = [];
+      this.tilesets = [];
 
-      _this.x = properties.x || 0;
-      _this.y = properties.y || 0;
-      _this.sx = properties.sx || 0;
-      _this.sy = properties.sy || 0;
+      this.x = properties.x || 0;
+      this.y = properties.y || 0;
+      this.sx = properties.sx || 0;
+      this.sy = properties.sy || 0;
     },
 
     /**
@@ -147,11 +145,10 @@ var kontra = (function(kontra, Math, undefined) {
       properties = properties || {};
       properties.render = (properties.render === undefined ? true : properties.render);
 
-      var _this = this;
       var data;
 
       // flatten a 2D array into a single array
-      if (kontra.isArray(properties.data[0])) {
+      if (Array.isArray(properties.data[0])) {
         data = [];
 
         for (var r = 0, row; row = properties.data[r]; r++) {
@@ -173,8 +170,8 @@ var kontra = (function(kontra, Math, undefined) {
         this._layerOrder.push(properties.name);
 
         this._layerOrder.sort(function(a, b) {
-          return _this.layers[a].zIndex - _this.layers[b].zIndex;
-        });
+          return this.layers[a].zIndex - this.layers[b].zIndex;
+        }.bind(this));
 
         this._preRenderImage();
       }
@@ -195,17 +192,17 @@ var kontra = (function(kontra, Math, undefined) {
      */
     layerCollidesWith: function layerCollidesWith(name, object) {
       // calculate all tiles that the object can collide with
-      var row = this._getRow(object.y);
-      var col = this._getCol(object.x);
+      var row = this.getRow(object.y);
+      var col = this.getCol(object.x);
 
-      var endRow = this._getRow(object.y + object.height);
-      var endCol = this._getCol(object.x + object.width);
+      var endRow = this.getRow(object.y + object.height);
+      var endCol = this.getCol(object.x + object.width);
 
       // check all tiles
       var index;
       for (var r = row; r <= endRow; r++) {
         for (var c = col; c <= endCol; c++) {
-          index = c + r * this.width;
+          index = this._getIndex({row: r, col: c});
 
           if (this.layers[name][index]) {
             return true;
@@ -217,21 +214,24 @@ var kontra = (function(kontra, Math, undefined) {
     },
 
     /**
-     * Get the tile from the specified layer at x, y.
+     * Get the tile from the specified layer at x, y or row, col.
      * @memberof kontra.tileEngine
      *
      * @param {string} name - Name of the layer.
-     * @param {number} x - X coordinate of the tile.
-     * @param {number} y - Y coordinate of the tile.
+     * @param {object} position - Position of the tile in either x, y or row, col.
+     * @param {number} position.x - X coordinate of the tile.
+     * @param {number} position.y - Y coordinate of the tile.
+     * @param {number} position.row - Row of the tile.
+     * @param {number} position.col - Col of the tile.
      *
      * @returns {number}
      */
-    tileAtLayer: function tileAtLayer(name, x, y) {
-      var row = this._getRow(y);
-      var col = this._getCol(x);
-      var index = col + row * this.width;
+    tileAtLayer: function tileAtLayer(name, position) {
+      var index = this._getIndex(position);
 
-      return this.layers[name][index];
+      if (index >= 0) {
+        return this.layers[name][index];
+      }
     },
 
     /**
@@ -239,16 +239,14 @@ var kontra = (function(kontra, Math, undefined) {
      * @memberof kontra.tileEngine
      */
     render: function render() {
-      var _this = this;
-
       // ensure sx and sy are within the image region
-      _this.sx = Math.min( Math.max(_this.sx, 0), _this.sxMax );
-      _this.sy = Math.min( Math.max(_this.sy, 0), _this.syMax );
+      this.sx = Math.min( Math.max(this.sx, 0), this.sxMax );
+      this.sy = Math.min( Math.max(this.sy, 0), this.syMax );
 
-      _this.context.drawImage(
-        _this._offscreenCanvas,
-        _this.sx, _this.sy, _this.canvasWidth, _this.canvasHeight,
-        _this.x, _this.y, _this.canvasWidth, _this.canvasHeight
+      this.context.drawImage(
+        this._offscreenCanvas,
+        this.sx, this.sy, this.canvasWidth, this.canvasHeight,
+        this.x, this.y, this.canvasWidth, this.canvasHeight
       );
     },
 
@@ -259,22 +257,20 @@ var kontra = (function(kontra, Math, undefined) {
      * @param {string} name - Name of the layer to render.
      */
     renderLayer: function renderLayer(name) {
-      var _this = this;
-
-      var layer = _this.layers[name];
+      var layer = this.layers[name];
 
       // calculate the starting tile
-      var row = _this._getRow();
-      var col = _this._getCol();
-      var index = col + row * _this.width;
+      var row = this.getRow();
+      var col = this.getCol();
+      var index = this._getIndex({row: row, col: col});
 
       // calculate where to start drawing the tile relative to the drawing canvas
-      var startX = col * _this.tileWidth - _this.sx;
-      var startY = row * _this.tileHeight - _this.sy;
+      var startX = col * this.tileWidth - this.sx;
+      var startY = row * this.tileHeight - this.sy;
 
       // calculate how many tiles the drawing canvas can hold
-      var viewWidth = Math.min(Math.ceil(_this.canvasWidth / _this.tileWidth) + 1, _this.width);
-      var viewHeight = Math.min(Math.ceil(_this.canvasHeight / _this.tileHeight) + 1, _this.height);
+      var viewWidth = Math.min(Math.ceil(this.canvasWidth / this.tileWidth) + 1, this.width);
+      var viewHeight = Math.min(Math.ceil(this.canvasHeight / this.tileHeight) + 1, this.height);
       var numTiles = viewWidth * viewHeight;
 
       var count = 0;
@@ -285,27 +281,27 @@ var kontra = (function(kontra, Math, undefined) {
         tile = layer[index];
 
         if (tile) {
-          tileset = _this._getTileset(tile);
+          tileset = this._getTileset(tile);
           image = tileset.image;
 
-          x = startX + (count % viewWidth) * _this.tileWidth;
-          y = startY + (count / viewWidth | 0) * _this.tileHeight;
+          x = startX + (count % viewWidth) * this.tileWidth;
+          y = startY + (count / viewWidth | 0) * this.tileHeight;
 
           tileOffset = tile - tileset.firstGrid;
-          width = image.width / _this.tileWidth;
+          width = image.width / this.tileWidth;
 
-          sx = (tileOffset % width) * _this.tileWidth;
-          sy = (tileOffset / width | 0) * _this.tileHeight;
+          sx = (tileOffset % width) * this.tileWidth;
+          sy = (tileOffset / width | 0) * this.tileHeight;
 
-          _this.context.drawImage(
+          this.context.drawImage(
             image,
-            sx, sy, _this.tileWidth, _this.tileHeight,
-            x, y, _this.tileWidth, _this.tileHeight
+            sx, sy, this.tileWidth, this.tileHeight,
+            x, y, this.tileWidth, this.tileHeight
           );
         }
 
         if (++count % viewWidth === 0) {
-          index = col + (++row * _this.width);
+          index = col + (++row * this.width);
         }
         else {
           index++;
@@ -316,13 +312,12 @@ var kontra = (function(kontra, Math, undefined) {
     /**
      * Get the row from the y coordinate.
      * @memberof kontra.tileEngine
-     * @private
      *
      * @param {number} y - Y coordinate.
      *
      * @return {number}
      */
-    _getRow: function getRow(y) {
+    getRow: function getRow(y) {
       y = y || 0;
 
       return (this.sy + y) / this.tileHeight | 0;
@@ -331,16 +326,47 @@ var kontra = (function(kontra, Math, undefined) {
     /**
      * Get the col from the x coordinate.
      * @memberof kontra.tileEngine
-     * @private
      *
      * @param {number} x - X coordinate.
      *
      * @return {number}
      */
-    _getCol: function getCol(x) {
+    getCol: function getCol(x) {
       x = x || 0;
 
       return (this.sx + x) / this.tileWidth | 0;
+    },
+
+    /**
+     * Get the index of the x, y or row, col.
+     * @memberof kontra.tileEngine
+     * @private
+     *
+     * @param {number} position.x - X coordinate of the tile.
+     * @param {number} position.y - Y coordinate of the tile.
+     * @param {number} position.row - Row of the tile.
+     * @param {number} position.col - Col of the tile.
+     *
+     * @return {number} Returns the tile index or -1 if the x, y or row, col is outside the dimensions of the tile engine.
+     */
+    _getIndex: function getIndex(position) {
+      var row, col;
+
+      if (typeof position.x !== 'undefined' && typeof position.y !== 'undefined') {
+        row = this.getRow(position.y);
+        col = this.getCol(position.x);
+      }
+      else {
+        row = position.row;
+        col = position.col;
+      }
+
+      // don't calculate out of bound numbers
+      if (row < 0 || col < 0 || row >= this.height || col >= this.width) {
+        return -1;
+      }
+
+      return col + row * this.width;
     },
 
     /**
@@ -380,11 +406,10 @@ var kontra = (function(kontra, Math, undefined) {
      * @private
      */
     _preRenderImage: function preRenderImage() {
-      var _this = this;
       var tile, tileset, image, x, y, sx, sy, tileOffset, width;
 
       // draw each layer in order
-      for (var i = 0, layer; layer = _this.layers[_this._layerOrder[i]]; i++) {
+      for (var i = 0, layer; layer = this.layers[this._layerOrder[i]]; i++) {
         for (var j = 0, len = layer.length; j < len; j++) {
           tile = layer[j];
 
@@ -393,22 +418,22 @@ var kontra = (function(kontra, Math, undefined) {
             continue;
           }
 
-          tileset = _this._getTileset(tile);
+          tileset = this._getTileset(tile);
           image = tileset.image;
 
-          x = (j % _this.width) * _this.tileWidth;
-          y = (j / _this.width | 0) * _this.tileHeight;
+          x = (j % this.width) * this.tileWidth;
+          y = (j / this.width | 0) * this.tileHeight;
 
           tileOffset = tile - tileset.firstGrid;
-          width = image.width / _this.tileWidth;
+          width = image.width / this.tileWidth;
 
-          sx = (tileOffset % width) * _this.tileWidth;
-          sy = (tileOffset / width | 0) * _this.tileHeight;
+          sx = (tileOffset % width) * this.tileWidth;
+          sy = (tileOffset / width | 0) * this.tileHeight;
 
-          _this._offscreenContext.drawImage(
+          this._offscreenContext.drawImage(
             image,
-            sx, sy, _this.tileWidth, _this.tileHeight,
-            x, y, _this.tileWidth, _this.tileHeight
+            sx, sy, this.tileWidth, this.tileHeight,
+            x, y, this.tileWidth, this.tileHeight
           );
         }
       }

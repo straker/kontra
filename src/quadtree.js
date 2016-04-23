@@ -8,7 +8,7 @@ var kontra = (function(kontra, undefined) {
    * @memberof kontra
    *
    * @see kontra.quadtree.prototype.init for list of parameters.
-   *L
+   *
    * The quadrant indices are numbered as follows (following a z-order curve):
    *     |
    *  0  |  1
@@ -117,39 +117,38 @@ var kontra = (function(kontra, undefined) {
      * kontra.quadtree().add([{id:1}, {id:2}], {id:3});
      */
     add: function add() {
-      var _this = this;
       var i, object, obj, indices, index;
 
       for (var j = 0, length = arguments.length; j < length; j++) {
         object = arguments[j];
 
         // add a group of objects separately
-        if (kontra.isArray(object)) {
-          _this.add.apply(this, object);
+        if (Array.isArray(object)) {
+          this.add.apply(this, object);
 
           continue;
         }
 
         // current node has subnodes, so we need to add this object into a subnode
-        if (_this.subnodes.length && _this.isBranchNode) {
-          _this._addToSubnode(object);
+        if (this.subnodes.length && this.isBranchNode) {
+          this._addToSubnode(object);
 
           continue;
         }
 
         // this node is a leaf node so add the object to it
-        _this.objects.push(object);
+        this.objects.push(object);
 
         // split the node if there are too many objects
-        if (_this.objects.length > _this.maxObjects && _this.depth < _this.maxDepth) {
-          _this._split();
+        if (this.objects.length > this.maxObjects && this.depth < this.maxDepth) {
+          this._split();
 
           // move all objects to their corresponding subnodes
-          for (i = 0; obj = _this.objects[i]; i++) {
-            _this._addToSubnode(obj);
+          for (i = 0; obj = this.objects[i]; i++) {
+            this._addToSubnode(obj);
           }
 
-          _this.objects.length = 0;
+          this.objects.length = 0;
         }
       }
     },

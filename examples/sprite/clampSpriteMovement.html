@@ -43,7 +43,7 @@
       e.preventDefault();
     });
 
-    // clamp sprites movement to the game
+    // clamp sprites movement to the game between x1, y1, and x2, y2
     sprite.position.clamp(0, 0, kontra.game.width - sprite.width, kontra.game.height - sprite.height);
 
     // create the game loop to update and render the sprite
@@ -52,8 +52,6 @@
         sprite.update();
       },
       render: function() {
-        kontra.context.clearRect(0, 0, kontra.canvas.width, kontra.canvas.height);
-
         sprite.render();
       }
     });

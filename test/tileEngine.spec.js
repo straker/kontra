@@ -301,12 +301,24 @@ describe('', function() {
       kontra.tileEngine.prototype._preRenderImage.restore();
     });
 
-    it('should return the correct tile', function() {
-      expect(tileEngine.tileAtLayer('test', 0, 0)).to.equal(0);
-      expect(tileEngine.tileAtLayer('test', 10, 5)).to.equal(0);
-      expect(tileEngine.tileAtLayer('test', 20, 9)).to.equal(1);
-      expect(tileEngine.tileAtLayer('test', 30, 10)).to.equal(undefined);
-      expect(tileEngine.tileAtLayer('test', 40, 1)).to.equal(0);
+    it('should return the correct tile using x, y coordinates', function() {
+      expect(tileEngine.tileAtLayer('test', {x: 0, y: 0})).to.equal(0);
+      expect(tileEngine.tileAtLayer('test', {x: 10, y: 5})).to.equal(0);
+      expect(tileEngine.tileAtLayer('test', {x: 20, y: 9})).to.equal(1);
+      expect(tileEngine.tileAtLayer('test', {x: 30, y: 10})).to.equal(undefined);
+      expect(tileEngine.tileAtLayer('test', {x: 40, y: 1})).to.equal(0);
+    });
+
+    it('should return the correct tile using row, col coordinates', function() {
+      expect(tileEngine.tileAtLayer('test', {row: 0, col: 0})).to.equal(0);
+      expect(tileEngine.tileAtLayer('test', {row: 0, col: 1})).to.equal(0);
+      expect(tileEngine.tileAtLayer('test', {row: 0, col: 2})).to.equal(1);
+      expect(tileEngine.tileAtLayer('test', {row: 1, col: 3})).to.equal(undefined);
+      expect(tileEngine.tileAtLayer('test', {row: 0, col: 4})).to.equal(0);
+    });
+
+    it('should not process out of bound positions', function() {
+      expect(tileEngine.tileAtLayer('test', {x: -10, y: 0})).to.equal(undefined);
     });
 
   });

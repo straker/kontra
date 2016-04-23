@@ -20,7 +20,7 @@ var kontra = (function(kontra, undefined) {
      * @memberof kontra.animation
      *
      * @param {object} properties - Properties of the animation.
-     * @param {spriteSheet} properties.spriteSheet - Sprite sheet for the animation.
+     * @param {object} properties.spriteSheet - Sprite sheet for the animation.
      * @param {number[]} properties.frames - List of frames of the animation.
      * @param {number}  properties.frameRate - Number of frames to display in one second.
      */
@@ -72,6 +72,16 @@ var kontra = (function(kontra, undefined) {
      */
     pause: function pause() {
       this.update = kontra.noop;
+    },
+
+    /**
+     * Clone an animation to be used more than once.
+     * @memberof kontra.animation
+     *
+     * @returns {object}
+     */
+    clone: function clone() {
+      return kontra.animation(this);
     },
 
     /**
@@ -247,7 +257,7 @@ var kontra = (function(kontra, undefined) {
           sequence = this._parseFrames(frames);
         }
         // non-consecutive frames
-        else if (kontra.isArray(frames)) {
+        else if (Array.isArray(frames)) {
           for (var i = 0, frame; frame = frames[i]; i++) {
 
             // consecutive frames

@@ -54,7 +54,8 @@ gulp.task('build', function() {
       '       sprite - Object for drawing rectangles, images, and sprite sheet animations',
       '  spriteSheet - Sprite sheets and sprite animations',
       '   tileEngine - Tile engine for rendering tilesets',
-      '        store - Local Storage interface for ease of use'
+      '        store - Local Storage interface for ease of use',
+      '        qLite - Promise library'
     ];
 
     console.log('\n================================='.blue);

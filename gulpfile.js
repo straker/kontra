@@ -44,7 +44,7 @@ gulp.task('build', function() {
   // output files that can be built
   if (!argv.files) {
     var files = [
-      '       assets - Load images, audio, and data assets',
+      '       assets - Load images, audio, and data assets (' + 'qLite'.blue + ')',
       '  assetBundle - List of assets to be loaded later (' + 'assets'.blue + ')',
       'assetManifest - File that defines all assets and bundles (' + 'assetBundle'.blue + ')',
       '     gameLoop - Update and render the game',
@@ -62,7 +62,7 @@ gulp.task('build', function() {
     console.log('    Custom Build of Kontra.js'.blue);
     console.log('================================='.blue);
     console.log('\nUse'.white, '--files'.cyan, 'to select which modules to build:'.white);
-    console.log('(modules shown in parentheses are a dependency of the module)\n')
+    console.log('(modules shown in parentheses are a dependency of the module and will be automatically installed)\n')
 
     // output the file name in a different color
     for (var i = 0, file; file = files[i]; i++) {

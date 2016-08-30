@@ -37,3 +37,7 @@ Kontra.js prides itself in being:
 ## Documentation
 
 All the documentation can be found in the [wiki](https://github.com/straker/kontra/wiki).
+
+## Community tutorials
+
+- [js13kGames Video Tutorial Series by Zenva](https://gamedevacademy.org/js13kgames-tutorial-video-series/)

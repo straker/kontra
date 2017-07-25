@@ -6,7 +6,6 @@ var connect = require('gulp-connect');
 var jshint = require('gulp-jshint');
 var rename = require('gulp-rename');
 var size = require('gulp-size');
-var sourcemaps = require('gulp-sourcemaps');
 var uglify = require('gulp-uglify');
 var Server = require('karma').Server;
 
@@ -27,17 +26,22 @@ gulp.task('lint', function() {
 
 gulp.task('scripts', function() {
   return gulp.src(['node_modules/kontra-asset-loader/kontraAssetLoader.js', 'src/core.js', 'src/*.js'])
-    .pipe(sourcemaps.init())
-      .pipe(concat('kontra.js'))
-      .pipe(size())
-      .pipe(gulp.dest('.'))
-      .pipe(uglify())
-      .on('error', swallowError)  // prevent uglify task from crashing watch on error
-      .pipe(rename('kontra.min.js'))
-      .pipe(size())
-    .pipe(sourcemaps.write('./'))
+    .pipe(concat('kontra.js'))
+    .pipe(size())
+    .pipe(gulp.dest('.'))
+    .pipe(gulp.dest('./docs/js'))
+    .pipe(uglify())
+    .on('error', swallowError)  // prevent uglify task from crashing watch on error
+    .pipe(rename('kontra.min.js'))
+    .pipe(size())
     .pipe(gulp.dest('.'))
     .pipe(connect.reload());
+});
+
+gulp.task('dist', function() {
+  return gulp.src('src/*.js')
+    .pipe(uglify())
+    .pipe(gulp.dest('./dist'));
 });
 
 gulp.task('build', function() {

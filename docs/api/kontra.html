@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Kontra.js – Kontra</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/webcomponentsjs/0.7.22/webcomponents-lite.min.js"></script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/themes/prism.min.css">
+  <link rel="stylesheet" href="/styles.css">
+
+  <link rel="import" href="/components/main-nav.html">
+  <link rel="import" href="/components/code-output.html">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/components/prism-javascript.min.js"></script>
+  <script src="/js/kontra.js"></script>
+</head>
+<body>
+  <div class="content">
+    <main-nav></main-nav>
+
+    <main id="main" tabindex="0">
+      <div>
+        <h1>Kontra</h1>
+
+        <p>Some info.</p>
+
+        <div class="toc">
+          <h2>Table of Contents</h2>
+
+          <ul>
+            <li>
+              <strong>Public Properties</strong>
+              <ul>
+                <li><a href="#assetPaths">kontra.assetPaths</a></li>
+                <li><a href="#audios">kontra.audios</a></li>
+                <li><a href="#bundles">kontra.bundles</a></li>
+                <li><a href="#canUse">kontra.canUse</a></li>
+                <li><a href="#canvas">kontra.canvas</a></li>
+                <li><a href="#context">kontra.context</a></li>
+                <li><a href="#data">kontra.data</a></li>
+                <li><a href="#images">kontra.images</a></li>
+                <li><a href="keyboard.html">kontra.keys</a></li>
+                <li><a href="store.html">kontra.store</a></li>
+              </ul>
+            </li>
+
+            <li>
+              <strong>Public Methods</strong>
+              <ul>
+                <li><a href="animation.html">kontra.animation(properties)</a></li>
+                <li><a href="#createBundle">kontra.createBundle(bundle, assets)</a></li>
+                <li><a href="gameLoop.html">kontra.gameLoop(properties)</a></li>
+                <li><a href="#init">kontra.init([canvas])</a></li>
+                <li><a href="#loadAssets">kontra.loadAssets([asset[, ...]])</a></li>
+                <li><a href="#loadAudio">kontra.loadAudio(url)</a></li>
+                <li><a href="#loadBundles">kontra.loadBundles([bundle[, ...]])</a></li>
+                <li><a href="#loadData">kontra.loadData(url)</a></li>
+                <li><a href="#loadImage">kontra.loadImage(url)</a></li>
+                <li><a href="#loadManifest">kontra.loadManifest(url)</a></li>
+                <li><a href="pool.html">kontra.pool(properties)</a></li>
+                <li><a href="quadtree.html">kontra.quadtree(properties)</a></li>
+                <li><a href="sprite.html">kontra.sprite(properties)</a></li>
+                <li><a href="spriteSheet.html">kontra.spriteSheet(properties)</a></li>
+                <li><a href="tileEngine.html">kontra.tileEngine(properties)</a></li>
+                <li><a href="#timestamp">kontra.timestamp()</a></li>
+                <li><a href="vector.html">kontra.vector(properties)</a></li>
+              </ul>
+            </li>
+
+          </ul>
+        </div>
+
+
+
+
+        <section></section>
+          <h2 id="canvas"><a href="#canvas" class="section-link">kontra.canvas</a></h2>
+
+          <p><em>{HTMLCanvasElement}</em></p>
+
+          <p>The main canvas element of the game. Use this property to easily get the <code>width</code> and <code>height</code> of the canvas.</p>
+        </section>
+
+
+
+
+
+        <section>
+          <h2 id="context"><a href="#context" class="section-link">kontra.context</a></h2>
+
+          <p><em>{CanvasRenderingContext2D}</em></p>
+
+          <p>The main 2D context of the <a href="#canvas">canvas element</a>. Use this property to easily get the main context for the game.</p>
+        </section>
+
+
+
+
+
+        <section>
+          <h2 id="init"><a href="#init" class="section-link">kontra.init([canvas])</a></h2>
+
+          <dl>
+            <dt><strong>canvas</strong> <em>{string | HTMLCanvasElement}</em></dt>
+            <dd>Optional. The ID of the canvas or a Canvas element</dd>
+          </dl>
+
+          <p>Initialize the game and set up internal references to the canvas and drawing context. By default, it will use the first canvas element on the page.</p>
+
+          <p>You can also pass the ID of the canvas or a Canvas element to use as the main drawing context.</p>
+        </section>
+
+
+
+
+
+
+        <h2 id="isString">kontra.isString(value)</h2>
+
+        <dl>
+          <dt><strong>value</strong> <em>{*}</em></dt>
+          <dd>Value to test if it is a string.</dd>
+        </dl>
+
+        <p>Returns <code>true</code> if the value is a string, <code>false</code> otherwise.</p>
+
+
+
+
+
+        <h2 id="isNumber">kontra.isNumber(value)</h2>
+
+        <dl>
+          <dt><strong>value</strong> <em>{*}</em></dt>
+          <dd>Value to test if it is a number.</dd>
+        </dl>
+
+        <p>Returns <code>true</code> if the value is a number, <code>false</code> otherwise.</p>
+
+
+
+
+
+        <h2 id="isImage">kontra.isImage(value)</h2>
+
+        <dl>
+          <dt><strong>value</strong> <em>{*}</em></dt>
+          <dd>Value to test if it is an HTMLImageElement.</dd>
+        </dl>
+
+        <p>Returns <code>true</code> if the value is an <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLImageElement">HTMLImageElement</a>, <code>false</code> otherwise.</p>
+
+
+
+
+
+        <h2 id="isCanvas">kontra.isCanvas(value)</h2>
+
+        <dl>
+          <dt><strong>value</strong> <em>{*}</em></dt>
+          <dd>Value to test if it is an HTMLCanvasElement.</dd>
+        </dl>
+
+        <p>Returns <code>true</code> if the value is an <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement">HTMLCanvasElement</a>, <code>false</code> otherwise.</p>
+
+      </div>
+    </main>
+  </div>
+
+</body>
+</html>

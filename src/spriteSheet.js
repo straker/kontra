@@ -5,11 +5,14 @@ var kontra = (function(kontra, undefined) {
    * Single animation from a sprite sheet.
    * @memberof kontra
    *
-   * @see kontra.pool.prototype.init for list of parameters.
+   * @param {object} properties - Properties of the animation.
+   * @param {object} properties.spriteSheet - Sprite sheet for the animation.
+   * @param {number[]} properties.frames - List of frames of the animation.
+   * @param {number}  properties.frameRate - Number of frames to display in one second.
    */
   kontra.animation = function(properties) {
     var animation = Object.create(kontra.animation.prototype);
-    animation.init(properties);
+    animation._init(properties);
 
     return animation;
   };
@@ -18,13 +21,14 @@ var kontra = (function(kontra, undefined) {
     /**
      * Initialize properties on the animation.
      * @memberof kontra.animation
+     * @private
      *
      * @param {object} properties - Properties of the animation.
      * @param {object} properties.spriteSheet - Sprite sheet for the animation.
      * @param {number[]} properties.frames - List of frames of the animation.
      * @param {number}  properties.frameRate - Number of frames to display in one second.
      */
-    init: function init(properties) {
+    _init: function init(properties) {
       properties = properties || {};
 
       this.spriteSheet = properties.spriteSheet;
@@ -62,8 +66,8 @@ var kontra = (function(kontra, undefined) {
       // a variable to determine whether to render or update, we can just reassign the
       // functions to noop and save processing time in the game loop.
       // @see http://jsperf.com/boolean-check-vs-noop
-      this.update = kontra.noop;
-      this.render = kontra.noop;
+      this.update = kontra._noop;
+      this.render = kontra._noop;
     },
 
     /**
@@ -71,7 +75,7 @@ var kontra = (function(kontra, undefined) {
      * @memberof kontra.animation
      */
     pause: function pause() {
-      this.update = kontra.noop;
+      this.update = kontra._noop;
     },
 
     /**
@@ -142,11 +146,15 @@ var kontra = (function(kontra, undefined) {
    * Create a sprite sheet from an image.
    * @memberof kontra
    *
-   * @see kontra.spriteSheet.prototype.init for list of parameters.
+   * @param {object} properties - Properties of the sprite sheet.
+   * @param {Image|Canvas} properties.image - Image for the sprite sheet.
+   * @param {number} properties.frameWidth - Width (in px) of each frame.
+   * @param {number} properties.frameHeight - Height (in px) of each frame.
+   * @param {object} properties.animations - Animations to create from the sprite sheet.
    */
   kontra.spriteSheet = function(properties) {
     var spriteSheet = Object.create(kontra.spriteSheet.prototype);
-    spriteSheet.init(properties);
+    spriteSheet._init(properties);
 
     return spriteSheet;
   };
@@ -155,6 +163,7 @@ var kontra = (function(kontra, undefined) {
     /**
      * Initialize properties on the spriteSheet.
      * @memberof kontra
+     * @private
      *
      * @param {object} properties - Properties of the sprite sheet.
      * @param {Image|Canvas} properties.image - Image for the sprite sheet.
@@ -162,12 +171,12 @@ var kontra = (function(kontra, undefined) {
      * @param {number} properties.frameHeight - Height (in px) of each frame.
      * @param {object} properties.animations - Animations to create from the sprite sheet.
      */
-    init: function init(properties) {
+    _init: function init(properties) {
       properties = properties || {};
 
       this.animations = {};
 
-      if (kontra.isImage(properties.image) || kontra.isCanvas(properties.image)) {
+      if (kontra._isImage(properties.image) || kontra._isCanvas(properties.image)) {
         this.image = properties.image;
         this.frame = {
           width: properties.frameWidth,
@@ -178,7 +187,7 @@ var kontra = (function(kontra, undefined) {
       }
       else {
         var error = new SyntaxError('Invalid image.');
-        kontra.logError(error, 'You must provide an Image for the SpriteSheet.');
+        kontra._logError(error, 'You must provide an Image for the SpriteSheet.');
         return;
       }
 
@@ -224,7 +233,7 @@ var kontra = (function(kontra, undefined) {
 
       if (!animations || Object.keys(animations).length === 0) {
         error = new ReferenceError('No animations found.');
-        kontra.logError(error, 'You must provide at least one named animation to create an Animation.');
+        kontra._logError(error, 'You must provide at least one named animation to create an Animation.');
         return;
       }
 
@@ -244,16 +253,16 @@ var kontra = (function(kontra, undefined) {
 
         if (frames === undefined) {
           error = new ReferenceError('No animation frames found.');
-          kontra.logError(error, 'Animation ' + name + ' must provide a frames property.');
+          kontra._logError(error, 'Animation ' + name + ' must provide a frames property.');
           return;
         }
 
         // single frame
-        if (kontra.isNumber(frames)) {
+        if (kontra._isNumber(frames)) {
           sequence.push(frames);
         }
         // consecutive frames
-        else if (kontra.isString(frames)) {
+        else if (kontra._isString(frames)) {
           sequence = this._parseFrames(frames);
         }
         // non-consecutive frames
@@ -261,7 +270,7 @@ var kontra = (function(kontra, undefined) {
           for (var i = 0, frame; frame = frames[i]; i++) {
 
             // consecutive frames
-            if (kontra.isString(frame)) {
+            if (kontra._isString(frame)) {
 
               // add new frames to the end of the array
               sequence.push.apply(sequence, this._parseFrames(frame));
@@ -274,7 +283,7 @@ var kontra = (function(kontra, undefined) {
         }
         else {
           error = new SyntaxError('Improper frames value');
-          kontra.logError(error, 'The frames property must be a number, string, or array.');
+          kontra._logError(error, 'The frames property must be a number, string, or array.');
           return;
         }
 

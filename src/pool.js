@@ -6,11 +6,15 @@ var kontra = (function(kontra) {
    * Unused items are at the front of the pool and in use items are at the of the pool.
    * @memberof kontra
    *
-   * @see kontra.pool.prototype.init for list of parameters.
+   * @param {object} properties - Properties of the pool.
+   * @param {object} properties.create - Function that returns the object to use in the pool.
+   * @param {object} properties.createProperties - Properties that will be passed to the create function.
+   * @param {number} properties.maxSize - The maximum size that the pool will grow to.
+   * @param {boolean} properties.fill - Fill the pool to max size instead of slowly growing.
    */
   kontra.pool = function(properties) {
     var pool = Object.create(kontra.pool.prototype);
-    pool.init(properties);
+    pool._init(properties);
 
     return pool;
   };
@@ -19,6 +23,7 @@ var kontra = (function(kontra) {
     /**
      * Initialize properties on the pool.
      * @memberof kontra.pool
+     * @private
      *
      * @param {object} properties - Properties of the pool.
      * @param {object} properties.create - Function that returns the object to use in the pool.
@@ -29,7 +34,7 @@ var kontra = (function(kontra) {
      * Objects inside the pool must implement <code>render()</code>, <code>update()</code>,
      * <code>init()</code>, and <code>isAlive()</code> functions.
      */
-    init: function init(properties) {
+    _init: function init(properties) {
       properties = properties || {};
 
       var error, obj;
@@ -38,7 +43,7 @@ var kontra = (function(kontra) {
       // rest of the pool code will work without errors
       if (typeof properties.create !== 'function') {
         error = new SyntaxError('Required function not found.');
-        kontra.logError(error, 'Parameter \'create\' must be a function that returns an object.');
+        kontra._logError(error, 'Parameter \'create\' must be a function that returns an object.');
         return;
       }
 
@@ -51,7 +56,7 @@ var kontra = (function(kontra) {
       if (!obj || typeof obj.render !== 'function' || typeof obj.update !== 'function' ||
           typeof obj.init !== 'function' || typeof obj.isAlive !== 'function') {
         error = new SyntaxError('Create object required functions not found.');
-        kontra.logError(error, 'Objects to be pooled must implement render(), update(), init() and isAlive() functions.');
+        kontra._logError(error, 'Objects to be pooled must implement render(), update(), init() and isAlive() functions.');
         return;
       }
 
@@ -74,7 +79,7 @@ var kontra = (function(kontra) {
         }
         else {
           error = new SyntaxError('Required property not found.');
-          kontra.logError(error, 'Parameter \'maxSize\' must be set before you can fill a pool.');
+          kontra._logError(error, 'Parameter \'maxSize\' must be set before you can fill a pool.');
           return;
         }
       }

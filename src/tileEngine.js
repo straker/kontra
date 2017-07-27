@@ -5,11 +5,20 @@ var kontra = (function(kontra, Math, undefined) {
    * A tile engine for rendering tilesets. Works well with the tile engine program Tiled.
    * @memberof kontra
    *
-   * @see kontra.tileEngine.prototype.init for list of parameters.
+   * @param {object} properties - Properties of the tile engine.
+   * @param {number} [properties.tileWidth=32] - Width of a tile.
+   * @param {number} [properties.tileHeight=32] - Height of a tile.
+   * @param {number} properties.width - Width of the map (in tiles).
+   * @param {number} properties.height - Height of the map (in tiles).
+   * @param {number} [properties.x=0] - X position to draw.
+   * @param {number} [properties.y=0] - Y position to draw.
+   * @param {number} [properties.sx=0] - X position to clip the tileset.
+   * @param {number} [properties.sy=0] - Y position to clip the tileset.
+   * @param {Context} [properties.context=kontra.context] - Provide a context for the tile engine to draw on.
    */
   kontra.tileEngine = function(properties) {
     var tileEngine = Object.create(kontra.tileEngine.prototype);
-    tileEngine.init(properties);
+    tileEngine._init(properties);
 
     return tileEngine;
   };
@@ -18,6 +27,7 @@ var kontra = (function(kontra, Math, undefined) {
     /**
      * Initialize properties on the tile engine.
      * @memberof kontra.tileEngine
+     * @private
      *
      * @param {object} properties - Properties of the tile engine.
      * @param {number} [properties.tileWidth=32] - Width of a tile.
@@ -30,13 +40,13 @@ var kontra = (function(kontra, Math, undefined) {
      * @param {number} [properties.sy=0] - Y position to clip the tileset.
      * @param {Context} [properties.context=kontra.context] - Provide a context for the tile engine to draw on.
      */
-    init: function init(properties) {
+    _init: function init(properties) {
       properties = properties || {};
 
       // size of the map (in tiles)
       if (!properties.width || !properties.height) {
         var error = new ReferenceError('Required parameters not found');
-        kontra.logError(error, 'You must provide width and height of the map to create a tile engine.');
+        kontra._logError(error, 'You must provide width and height of the map to create a tile engine.');
         return;
       }
 
@@ -93,10 +103,14 @@ var kontra = (function(kontra, Math, undefined) {
     addTileset: function addTileset(properties) {
       properties = properties || {};
 
-      if (kontra.isImage(properties.image) || kontra.isCanvas(properties.image)) {
+      if (kontra._isImage(properties.image) || kontra._isCanvas(properties.image)) {
         var image = properties.image;
         var firstGrid = properties.firstGrid;
-        var numTiles = (image.width / this.tileWidth | 0) * (image.height / this.tileHeight | 0);
+
+        // if the width or height of the provided image is smaller than the tile size,
+        // default calculation to 1
+        var numTiles = ( (image.width / this.tileWidth | 0) || 1 ) *
+                       ( (image.height / this.tileHeight | 0) || 1 );
 
         if (!firstGrid) {
           // only calculate the first grid if the tile map has a tileset already
@@ -126,7 +140,7 @@ var kontra = (function(kontra, Math, undefined) {
       }
       else {
         var error = new SyntaxError('Invalid image.');
-        kontra.logError(error, 'You must provide an Image for the tile engine.');
+        kontra._logError(error, 'You must provide an Image for the tile engine.');
         return;
       }
     },
@@ -391,7 +405,7 @@ var kontra = (function(kontra, Math, undefined) {
         if (tile >= currTile.firstGrid && tile <= currTile.lastGrid) {
           return currTile;
         }
-        else if (currTile < tile) {
+        else if (currTile.lastGrid < tile) {
           min = index + 1;
         }
         else {

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Kontra.js – Download</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/webcomponentsjs/0.7.22/webcomponents-lite.min.js"></script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/themes/prism.min.css">
+  <link rel="stylesheet" href="/styles.css">
+
+  <link rel="import" href="/components/main-nav.html">
+  <link rel="import" href="/components/code-output.html">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/components/prism-javascript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fetch/2.0.3/fetch.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/es6-promise/4.1.1/es6-promise.auto.min.js"></script>
+  <script src="/js/kontra.js"></script>
+</head>
+<body>
+  <div class="content">
+    <main-nav></main-nav>
+
+    <main id="main" tabindex="0">
+      <div>
+        <h1>Download</h1>
+
+        <p>To ensure you can squeeze every byte out of your game, download only the files you need.</p>
+
+        <form>
+          <fieldset id="compression">
+            <legend>Compression level</legend>
+
+            <label>
+              <input type="radio" name="compression" value="dev">
+              Development version
+            </label>
+
+            <label>
+              <input type="radio" name="compression" value="min" checked>
+              Minified version
+            </label>
+          </fieldset>
+
+          <fieldset id="files"'>
+            <legend>Files</legend>
+
+            <label>
+              <input type="checkbox" name="files" value="core" checked disabled>
+              Core <small class="filesize"></small>
+            </label>
+
+            <hr>
+
+            <label>
+              <input type="checkbox" name="files" value="gameLoop" checked>
+              Game Loop <small class="filesize"></small>
+            </label>
+
+            <label>
+              <input type="checkbox" name="files" value="keyboard" checked>
+              Keyboard <small class="filesize"></small>
+            </label>
+
+            <label>
+              <input type="checkbox" name="files" value="sprite" checked>
+              Sprite and Vector <small class="filesize"></small>
+            </label>
+
+            <hr>
+
+            <label>
+              <input type="checkbox" name="files" value="assets">
+              Assets <small class="filesize"></small>
+            </label>
+
+            <label>
+              <input type="checkbox" name="files" value="assetBundle">
+              Assets Bundle <small class="filesize"></small>
+            </label>
+
+            <label>
+              <input type="checkbox" name="files" value="assetManifest">
+              Asset Manifest <small class="filesize"></small>
+            </label>
+
+            <label>
+              <input type="checkbox" name="files" value="pool">
+              Object pool <small class="filesize"></small>
+            </label>
+
+            <label>
+              <input type="checkbox" name="files" value="quadtree">
+              Quardtree <small class="filesize"></small>
+            </label>
+
+            <label>
+              <input type="checkbox" name="files" value="spriteSheet">
+              Sprite Sheet and Animations <small class="filesize"></small>
+            </label>
+
+            <label>
+              <input type="checkbox" name="files" value="tileEngine">
+              Tile Engine <small class="filesize"></small>
+            </label>
+
+            <label>
+              <input type="checkbox" name="files" value="store">
+              Store <small class="filesize"></small>
+            </label>
+          </fieldset>
+        </form>
+
+        <p><strong>Total file size:</strong> <span id="total-filesize"></span></p>
+
+        <h2 class="code-title">Code <a id="download" download="kontra.js" target="_blank">Download</a></h2>
+        <pre class="code-output"><code id="code" class="language-javascript"></code></pre>
+      </div>
+    </main>
+  </div>
+
+  <script src="/js/download.js"></script>
+</body>
+</html>

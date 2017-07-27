@@ -25,11 +25,15 @@ var kontra = (function(kontra, window) {
    * Game loop that updates and renders the game every frame.
    * @memberof kontra
    *
-   * @see kontra.gameLoop.prototype.init for list of parameters.
+   * @param {object}   properties - Properties of the game loop.
+   * @param {number}   [properties.fps=60] - Desired frame rate.
+   * @param {boolean}  [properties.clearCanvas=true] - Clear the canvas every frame.
+   * @param {function} properties.update - Function called to update the game.
+   * @param {function} properties.render - Function called to render the game.
    */
   kontra.gameLoop = function(properties) {
     var gameLoop = Object.create(kontra.gameLoop.prototype);
-    gameLoop.init(properties);
+    gameLoop._init(properties);
 
     return gameLoop;
   };
@@ -38,6 +42,7 @@ var kontra = (function(kontra, window) {
     /**
      * Initialize properties on the game loop.
      * @memberof kontra.gameLoop
+     * @private
      *
      * @param {object}   properties - Properties of the game loop.
      * @param {number}   [properties.fps=60] - Desired frame rate.
@@ -45,17 +50,17 @@ var kontra = (function(kontra, window) {
      * @param {function} properties.update - Function called to update the game.
      * @param {function} properties.render - Function called to render the game.
      */
-    init: function init(properties) {
+    _init: function init(properties) {
       properties = properties || {};
 
       // check for required functions
       if (typeof properties.update !== 'function' || typeof properties.render !== 'function') {
         var error = new ReferenceError('Required functions not found');
-        kontra.logError(error, 'You must provide update() and render() functions to create a game loop.');
+        kontra._logError(error, 'You must provide update() and render() functions to create a game loop.');
         return;
       }
 
-      this.isStopped = false;
+      this.isStopped = true;
 
       // animation variables
       this._accumulator = 0;
@@ -66,7 +71,7 @@ var kontra = (function(kontra, window) {
       this.render = properties.render;
 
       if (properties.clearCanvas === false) {
-        this._clearCanvas = kontra.noop;
+        this._clearCanvas = kontra._noop;
       }
     },
 
@@ -123,8 +128,8 @@ var kontra = (function(kontra, window) {
      * @memberof kontra.gameLoop
      * @private
      */
-    _clearCanvas: function() {
-      kontra.context.clearRect(0,0,kontra.game.width,kontra.game.height);
+    _clearCanvas: function clearCanvas() {
+      kontra.context.clearRect(0,0,kontra.canvas.width,kontra.canvas.height);
     }
   };
 

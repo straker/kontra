@@ -7,7 +7,12 @@ var kontra = (function(kontra, undefined) {
    * collapses to avoid garbage collection.
    * @memberof kontra
    *
-   * @see kontra.quadtree.prototype.init for list of parameters.
+   * @param {object} properties - Properties of the quadtree.
+   * @param {number} [properties.depth=0] - Current node depth.
+   * @param {number} [properties.maxDepth=3] - Maximum node depths the quadtree can have.
+   * @param {number} [properties.maxObjects=25] - Maximum number of objects a node can support before splitting.
+   * @param {object} [properties.parentNode] - The node that contains this node.
+   * @param {object} [properties.bounds] - The 2D space this node occupies.
    *
    * The quadrant indices are numbered as follows (following a z-order curve):
    *     |
@@ -18,7 +23,7 @@ var kontra = (function(kontra, undefined) {
    */
   kontra.quadtree = function(properties) {
     var quadtree = Object.create(kontra.quadtree.prototype);
-    quadtree.init(properties);
+    quadtree._init(properties);
 
     return quadtree;
   };
@@ -27,6 +32,7 @@ var kontra = (function(kontra, undefined) {
     /**
      * Initialize properties on the quadtree.
      * @memberof kontra.quadtree
+     * @private
      *
      * @param {object} properties - Properties of the quadtree.
      * @param {number} [properties.depth=0] - Current node depth.
@@ -35,7 +41,7 @@ var kontra = (function(kontra, undefined) {
      * @param {object} [properties.parentNode] - The node that contains this node.
      * @param {object} [properties.bounds] - The 2D space this node occupies.
      */
-    init: function init(properties) {
+    _init: function init(properties) {
       properties = properties || {};
 
       this.depth = properties.depth || 0;
@@ -51,8 +57,8 @@ var kontra = (function(kontra, undefined) {
       this.bounds = properties.bounds || {
         x: 0,
         y: 0,
-        width: kontra.game.width,
-        height: kontra.game.height
+        width: kontra.canvas.width,
+        height: kontra.canvas.height
       };
 
       this.objects = [];

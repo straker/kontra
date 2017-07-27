@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Kontra.js – Kontra.store</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/webcomponentsjs/0.7.22/webcomponents-lite.min.js"></script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/themes/prism.min.css">
+  <link rel="stylesheet" href="/styles.css">
+
+  <link rel="import" href="/components/main-nav.html">
+  <link rel="import" href="/components/code-output.html">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/components/prism-javascript.min.js"></script>
+  <script src="/js/kontra.js"></script>
+</head>
+<body>
+  <div class="content">
+    <main-nav></main-nav>
+
+    <main id="main" tabindex="0">
+      <div>
+        <h1>Kontra.store</h1>
+
+        <p>A simple interface to local storage based on <a href="https://github.com/marcuswestin/store.js">store.js</a>, whose sole purpose is to ensure that any keys you save to local storage come out the same type as when they went in.</p>
+
+        <p>Normally when you save something to local storage, it converts it into a string. So if you were to save a number, it would be saved as <code>"12"</code> instead of <code>12</code>. This means when you retrieved the number, it would now be a string.</p>
+
+        <pre><code class="language-javascript">kontra.store.set('highScore', 100);
+
+kontra.store.get('highScore');  //=> 100
+
+kontra.store.remove('highScore');
+
+kontra.store.get('highScore');  //=> null
+
+kontra.store.clear();</code></pre>
+
+
+
+
+
+        <section class="toc">
+          <h2 id="toc"><a href="#toc" class="section-link">Table of Contents</a></h2>
+
+          <ul>
+            <li>
+              <strong>Methods</strong>
+              <ul>
+                <li><a href="#clear">kontra.store.clear()</a></li>
+                <li><a href="#get">kontra.store.get(key)</a></li>
+                <li><a href="#remove">kontra.store.remove(key)</a></li>
+                <li><a href="#set">kontra.store.set(key, value)</a></li>
+              </ul>
+            </li>
+          </ul>
+        </section>
+
+
+
+
+
+        <section>
+          <h2 id="clear"><a href="#clear" class="section-link">kontra.store.clear()</a></h2>
+
+          <p>Empty all keys out of local storage.</p>
+
+        </section>
+
+
+
+
+
+        <section>
+          <h2 id="get"><a href="#get" class="section-link">kontra.store.get(key)</a></h2>
+
+          <dl>
+            <dt><strong>key</strong> <em>{string}</em></dt>
+            <dd>Key to retrieve.</dd>
+          </dl>
+
+          <p>Get a keys value from local storage.</p>
+
+        </section>
+
+
+
+
+
+        <section>
+          <h2 id="remove"><a href="#remove" class="section-link">kontra.store.remove(key)</a></h2>
+
+          <dl>
+            <dt><strong>key</strong> <em>{string}</em></dt>
+            <dd>Key to remove.</dd>
+          </dl>
+
+          <p>Remove a key from local storage.</p>
+
+        </section>
+
+
+
+
+
+        <section>
+          <h2 id="set"><a href="#set" class="section-link">kontra.store.set(key, value)</a></h2>
+
+          <dl>
+            <dt><strong>key</strong> <em>{string}</em></dt>
+            <dd>Key to set.</dd>
+            <dt><strong>value</strong> <em>{*}</em></dt>
+            <dd>Value to add.</dd>
+          </dl>
+
+          <p>Add or update a keys value in local storage.</p>
+
+        </section>
+
+
+      </div>
+    </main>
+  </div>
+
+</body>
+</html>

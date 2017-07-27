@@ -1,0 +1,49 @@
+<template id="code-output">
+  <canvas width="600" height="200"></canvas>
+
+  <pre><code class="language-javascript"></code></pre>
+</template>
+
+<script>
+  (function() {
+    var excludesRegex = /([ ]*\/\* exclude:start \*\/[\s\S]*?\/\* exclude:end \*\/[\n\r]?)/g;
+    var uid = 0;
+
+    var doc = (document._currentScript || document.currentScript).ownerDocument;
+    var template = doc.querySelector('#code-output');
+    var codeOutputProto = Object.create(HTMLElement.prototype);
+
+    codeOutputProto.createdCallback = function() {
+      var temp = document.importNode(template.content, true);
+      var id = 'canvas-element-' + (uid++);
+
+      var canvas = temp.querySelector('canvas');
+
+      if (this.getAttribute('height')) {
+        canvas.setAttribute('height', this.getAttribute('height'));
+      }
+
+      var script = document.createElement('script');
+      var code = temp.querySelector('code');
+      var textNode = document.createTextNode(
+        '(function() {\nkontra.init("' + id + '");\n' +
+        'var canvas = document.querySelector("#' + id + '");\n' +
+        'var context = canvas.getContext("2d")\n' +
+        this.textContent +
+        '})();'
+      );
+
+      canvas.setAttribute('id', id);
+      code.innerHTML = this.innerHTML.trim().replace(excludesRegex, '');
+      script.appendChild(textNode);
+      temp.appendChild(script);
+      this.innerHTML = '';
+
+      this.appendChild(temp);
+    };
+
+    document.registerElement('code-output', {
+      prototype: codeOutputProto
+    });
+  })();
+</script>

@@ -269,7 +269,7 @@ describe('', function() {
         'walk': {
           width: 10,
           height: 20,
-          update: kontra.noop
+          update: kontra._noop
         }
       };
 
@@ -308,7 +308,7 @@ describe('', function() {
         y: 20,
       });
 
-      sinon.stub(sprite.context, 'fillRect', kontra.noop);
+      sinon.stub(sprite.context, 'fillRect', kontra._noop);
 
       sprite.render();
 
@@ -328,7 +328,7 @@ describe('', function() {
         image: img
       });
 
-      sinon.stub(sprite.context, 'drawImage', kontra.noop);
+      sinon.stub(sprite.context, 'drawImage', kontra._noop);
 
       sprite.render();
 
@@ -343,8 +343,8 @@ describe('', function() {
         'walk': {
           width: 10,
           height: 20,
-          update: kontra.noop,
-          render: kontra.noop
+          update: kontra._noop,
+          render: kontra._noop
         }
       };
 
@@ -354,7 +354,7 @@ describe('', function() {
         animations: animations
       });
 
-      sinon.stub(sprite.currentAnimation, 'render', kontra.noop);
+      sinon.stub(sprite.currentAnimation, 'render', kontra._noop);
 
       sprite.render();
 

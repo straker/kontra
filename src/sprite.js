@@ -5,11 +5,13 @@ var kontra = (function(kontra, Math, undefined) {
    * A vector for 2D space.
    * @memberof kontra
    *
-   * @see kontra.vector.prototype.init for list of parameters.
+   * @param {object} properties - Properties of the vector.
+   * @param {number} properties.x=0 - X coordinate.
+   * @param {number} properties.y=0 - Y coordinate.
    */
   kontra.vector = function(properties) {
     var vector = Object.create(kontra.vector.prototype);
-    vector.init(properties);
+    vector._init(properties);
 
     return vector;
   };
@@ -18,6 +20,7 @@ var kontra = (function(kontra, Math, undefined) {
     /**
      * Initialize the vectors x and y position.
      * @memberof kontra.vector
+     * @private
      *
      * @param {object} properties - Properties of the vector.
      * @param {number} properties.x=0 - X coordinate.
@@ -25,7 +28,7 @@ var kontra = (function(kontra, Math, undefined) {
      *
      * @returns {vector}
      */
-    init: function init(properties) {
+    _init: function init(properties) {
       properties = properties || {};
 
       this.x = properties.x || 0;
@@ -97,7 +100,27 @@ var kontra = (function(kontra, Math, undefined) {
    * @memberof kontra
    * @requires kontra.vector
    *
-   * @see kontra.sprite.prototype.init for list of parameters.
+   * @param {object} properties - Properties of the sprite.
+   * @param {number} properties.x - X coordinate of the sprite.
+   * @param {number} properties.y - Y coordinate of the sprite.
+   * @param {number} [properties.dx] - Change in X position.
+   * @param {number} [properties.dy] - Change in Y position.
+   * @param {number} [properties.ddx] - Change in X velocity.
+   * @param {number} [properties.ddy] - Change in Y velocity.
+   *
+   * @param {number} [properties.timeToLive=0] - How may frames the sprite should be alive.
+   * @param {Context} [properties.context=kontra.context] - Provide a context for the sprite to draw on.
+   *
+   * @param {Image|Canvas} [properties.image] - Image for the sprite.
+   *
+   * @param {object} [properties.animations] - Animations for the sprite instead of an image.
+   *
+   * @param {string} [properties.color] - If no image or animation is provided, use color to draw a rectangle for the sprite.
+   * @param {number} [properties.width] - Width of the sprite for drawing a rectangle.
+   * @param {number} [properties.height] - Height of the sprite for drawing a rectangle.
+   *
+   * @param {function} [properties.update] - Function to use to update the sprite.
+   * @param {function} [properties.render] - Function to use to render the sprite.
    */
   kontra.sprite = function(properties) {
     var sprite = Object.create(kontra.sprite.prototype);
@@ -140,15 +163,15 @@ var kontra = (function(kontra, Math, undefined) {
     init: function init(properties) {
       properties = properties || {};
 
-      this.position = (this.position || kontra.vector()).init({
+      this.position = (this.position || kontra.vector())._init({
         x: properties.x,
         y: properties.y
       });
-      this.velocity = (this.velocity || kontra.vector()).init({
+      this.velocity = (this.velocity || kontra.vector())._init({
         x: properties.dx,
         y: properties.dy
       });
-      this.acceleration = (this.acceleration || kontra.vector()).init({
+      this.acceleration = (this.acceleration || kontra.vector())._init({
         x: properties.ddx,
         y: properties.ddy
       });
@@ -166,7 +189,7 @@ var kontra = (function(kontra, Math, undefined) {
       this.context = properties.context || kontra.context;
 
       // image sprite
-      if (kontra.isImage(properties.image) || kontra.isCanvas(properties.image)) {
+      if (kontra._isImage(properties.image) || kontra._isCanvas(properties.image)) {
         this.image = properties.image;
         this.width = properties.image.width;
         this.height = properties.image.height;

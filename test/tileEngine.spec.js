@@ -9,13 +9,13 @@ describe('', function() {
   describe('kontra.tileEngine.init', function() {
 
     it('should log an error if no dimensions are passed', function() {
-      sinon.stub(kontra, 'logError', kontra.noop);
+      sinon.stub(kontra, '_logError', kontra._noop);
 
       kontra.tileEngine();
 
-      expect(kontra.logError.called).to.be.ok;
+      expect(kontra._logError.called).to.be.ok;
 
-      kontra.logError.restore();
+      kontra._logError.restore();
     });
 
     it('should initialize properties on the tile engine', function() {
@@ -52,13 +52,13 @@ describe('', function() {
     });
 
     it('should log an error if no image is provided', function() {
-      sinon.stub(kontra, 'logError', kontra.noop);
+      sinon.stub(kontra, '_logError', kontra._noop);
 
       tileEngine.addTileset();
 
-      expect(kontra.logError.called).to.be.ok;
+      expect(kontra._logError.called).to.be.ok;
 
-      kontra.logError.restore();
+      kontra._logError.restore();
     });
 
     it('should use firstGrid if passed', function() {
@@ -136,7 +136,7 @@ describe('', function() {
         height: 3
       });
 
-      sinon.stub(kontra.tileEngine.prototype, '_preRenderImage', kontra.noop);
+      sinon.stub(kontra.tileEngine.prototype, '_preRenderImage', kontra._noop);
     });
 
     afterEach(function() {
@@ -224,7 +224,7 @@ describe('', function() {
         height: 50
       });
 
-      sinon.stub(kontra.tileEngine.prototype, '_preRenderImage', kontra.noop);
+      sinon.stub(kontra.tileEngine.prototype, '_preRenderImage', kontra._noop);
 
       tileEngine.addLayer({
         name: 'test',
@@ -289,7 +289,7 @@ describe('', function() {
         height: 50
       });
 
-      sinon.stub(kontra.tileEngine.prototype, '_preRenderImage', kontra.noop);
+      sinon.stub(kontra.tileEngine.prototype, '_preRenderImage', kontra._noop);
 
       tileEngine.addLayer({
         name: 'test',
@@ -348,8 +348,8 @@ describe('', function() {
         context: context
       });
 
-      sinon.stub(tileEngine._offscreenContext, 'drawImage', kontra.noop);
-      sinon.stub(tileEngine.context, 'drawImage', kontra.noop);
+      sinon.stub(tileEngine._offscreenContext, 'drawImage', kontra._noop);
+      sinon.stub(tileEngine.context, 'drawImage', kontra._noop);
 
       tileEngine.addTileset({
         image: image
@@ -415,8 +415,8 @@ describe('', function() {
         image: image
       });
 
-      sinon.stub(kontra.tileEngine.prototype, '_preRenderImage', kontra.noop);
-      sinon.stub(tileEngine.context, 'drawImage', kontra.noop);
+      sinon.stub(kontra.tileEngine.prototype, '_preRenderImage', kontra._noop);
+      sinon.stub(tileEngine.context, 'drawImage', kontra._noop);
 
       tileEngine.addLayer({
         name: 'test',
@@ -456,8 +456,8 @@ describe('', function() {
         image: image
       });
 
-      sinon.stub(kontra.tileEngine.prototype, '_preRenderImage', kontra.noop);
-      sinon.stub(tileEngine.context, 'drawImage', kontra.noop);
+      sinon.stub(kontra.tileEngine.prototype, '_preRenderImage', kontra._noop);
+      sinon.stub(tileEngine.context, 'drawImage', kontra._noop);
 
       tileEngine.addLayer({
         name: 'test',

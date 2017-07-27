@@ -14,8 +14,8 @@ describe('', function() {
       expect(typeof quadtree.bounds).to.equal('object');
       expect(quadtree.bounds.x).to.equal(0);
       expect(quadtree.bounds.y).to.equal(0);
-      expect(quadtree.bounds.width).to.equal(kontra.game.width);
-      expect(quadtree.bounds.height).to.equal(kontra.game.height);
+      expect(quadtree.bounds.width).to.equal(kontra.canvas.width);
+      expect(quadtree.bounds.height).to.equal(kontra.canvas.height);
     });
 
     it('should allow you to set the maxDepth and maxObject counts', function() {

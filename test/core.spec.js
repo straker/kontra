@@ -5,13 +5,13 @@ describe('kontra.init', function() {
   var canvas;
 
   it('should log an error if no canvas element exists', function() {
-    sinon.stub(kontra, 'logError', kontra.noop);
+    sinon.stub(kontra, '_logError', kontra._noop);
 
     kontra.init();
 
-    expect(kontra.logError.called).to.be.ok;
+    expect(kontra._logError.called).to.be.ok;
 
-    kontra.logError.restore();
+    kontra._logError.restore();
   });
 
   it('should select the first canvas element on the page when no query parameters are passed', function() {
@@ -29,11 +29,6 @@ describe('kontra.init', function() {
     expect(kontra.context.canvas).to.equal(canvas);
   });
 
-  it('should set the game width and height to that of the canvas', function() {
-    expect(kontra.game.width).to.equal(canvas.width);
-    expect(kontra.game.height).to.equal(canvas.height);
-  });
-
   it('should select a canvas that matches the passed id', function() {
     var c = document.createElement('canvas');
     c.width = 600;
@@ -41,7 +36,7 @@ describe('kontra.init', function() {
     c.id = 'game';
     document.body.appendChild(c);
 
-    kontra.init({canvas: 'game'});
+    kontra.init('game');
 
     expect(kontra.canvas).to.equal(c);
   });
@@ -53,7 +48,7 @@ describe('kontra.init', function() {
     c.id = 'game2';
     document.body.appendChild(c);
 
-    kontra.init({canvas: c});
+    kontra.init(c);
 
     expect(kontra.canvas).to.equal(c);
   });
@@ -65,23 +60,23 @@ describe('kontra.init', function() {
 
 
 // --------------------------------------------------
-// kontra.isString
+// kontra._isString
 // --------------------------------------------------
-describe('kontra.isString', function() {
+describe('kontra._isString', function() {
 
   it('should correctly identify a string', function() {
-    expect(kontra.isString(1)).to.be.false;
-    expect(kontra.isString(true)).to.be.false;
-    expect(kontra.isString({})).to.be.false;
-    expect(kontra.isString(null)).to.be.false;
-    expect(kontra.isString(undefined)).to.be.false;
-    expect(kontra.isString(new Image())).to.be.false;
-    expect(kontra.isString(document.createElement('img'))).to.be.false;
-    expect(kontra.isString(document.createElement('canvas'))).to.be.false;
-    expect(kontra.isString(function(){})).to.be.false;
-    expect(kontra.isString([])).to.be.false;
+    expect(kontra._isString(1)).to.be.false;
+    expect(kontra._isString(true)).to.be.false;
+    expect(kontra._isString({})).to.be.false;
+    expect(kontra._isString(null)).to.be.false;
+    expect(kontra._isString(undefined)).to.be.false;
+    expect(kontra._isString(new Image())).to.be.false;
+    expect(kontra._isString(document.createElement('img'))).to.be.false;
+    expect(kontra._isString(document.createElement('canvas'))).to.be.false;
+    expect(kontra._isString(function(){})).to.be.false;
+    expect(kontra._isString([])).to.be.false;
 
-    expect(kontra.isString('')).to.be.true;
+    expect(kontra._isString('')).to.be.true;
   });
 
 });
@@ -91,23 +86,23 @@ describe('kontra.isString', function() {
 
 
 // --------------------------------------------------
-// kontra.isNumber
+// kontra._isNumber
 // --------------------------------------------------
-describe('kontra.isNumber', function() {
+describe('kontra._isNumber', function() {
 
   it('should correctly identify a number', function() {
-    expect(kontra.isNumber(true)).to.be.false;
-    expect(kontra.isNumber({})).to.be.false;
-    expect(kontra.isNumber(null)).to.be.false;
-    expect(kontra.isNumber(undefined)).to.be.false;
-    expect(kontra.isNumber([])).to.be.false;
-    expect(kontra.isNumber(new Image())).to.be.false;
-    expect(kontra.isNumber(document.createElement('img'))).to.be.false;
-    expect(kontra.isNumber(document.createElement('canvas'))).to.be.false;
-    expect(kontra.isNumber(function(){})).to.be.false;
-    expect(kontra.isNumber('')).to.be.false;
+    expect(kontra._isNumber(true)).to.be.false;
+    expect(kontra._isNumber({})).to.be.false;
+    expect(kontra._isNumber(null)).to.be.false;
+    expect(kontra._isNumber(undefined)).to.be.false;
+    expect(kontra._isNumber([])).to.be.false;
+    expect(kontra._isNumber(new Image())).to.be.false;
+    expect(kontra._isNumber(document.createElement('img'))).to.be.false;
+    expect(kontra._isNumber(document.createElement('canvas'))).to.be.false;
+    expect(kontra._isNumber(function(){})).to.be.false;
+    expect(kontra._isNumber('')).to.be.false;
 
-    expect(kontra.isNumber(1)).to.be.true;
+    expect(kontra._isNumber(1)).to.be.true;
   });
 
 });
@@ -117,23 +112,23 @@ describe('kontra.isNumber', function() {
 
 
 // --------------------------------------------------
-// kontra.isImage
+// kontra._isImage
 // --------------------------------------------------
-describe('kontra.isImage', function() {
+describe('kontra._isImage', function() {
 
   it('should correctly identify an image element', function() {
-    expect(kontra.isImage(true)).to.be.false;
-    expect(kontra.isImage({})).to.be.false;
-    expect(kontra.isImage(null)).to.be.false;
-    expect(kontra.isImage(undefined)).to.be.false;
-    expect(kontra.isImage([])).to.be.false;
-    expect(kontra.isImage('')).to.be.false;
-    expect(kontra.isImage(1)).to.be.false;
-    expect(kontra.isImage(document.createElement('canvas'))).to.be.false;
-    expect(kontra.isImage(function(){})).to.be.false;
+    expect(kontra._isImage(true)).to.be.false;
+    expect(kontra._isImage({})).to.be.false;
+    expect(kontra._isImage(null)).to.be.false;
+    expect(kontra._isImage(undefined)).to.be.false;
+    expect(kontra._isImage([])).to.be.false;
+    expect(kontra._isImage('')).to.be.false;
+    expect(kontra._isImage(1)).to.be.false;
+    expect(kontra._isImage(document.createElement('canvas'))).to.be.false;
+    expect(kontra._isImage(function(){})).to.be.false;
 
-    expect(kontra.isImage(new Image())).to.be.true;
-    expect(kontra.isImage(document.createElement('img'))).to.be.true;
+    expect(kontra._isImage(new Image())).to.be.true;
+    expect(kontra._isImage(document.createElement('img'))).to.be.true;
   });
 
 });
@@ -143,23 +138,23 @@ describe('kontra.isImage', function() {
 
 
 // --------------------------------------------------
-// kontra.isCanvas
+// kontra._isCanvas
 // --------------------------------------------------
-describe('kontra.isCanvas', function() {
+describe('kontra._isCanvas', function() {
 
   it('should correctly identify a canvas element', function() {
-    expect(kontra.isCanvas(true)).to.be.false;
-    expect(kontra.isCanvas({})).to.be.false;
-    expect(kontra.isCanvas(null)).to.be.false;
-    expect(kontra.isCanvas(undefined)).to.be.false;
-    expect(kontra.isCanvas([])).to.be.false;
-    expect(kontra.isCanvas('')).to.be.false;
-    expect(kontra.isCanvas(1)).to.be.false;
-    expect(kontra.isCanvas(new Image())).to.be.false;
-    expect(kontra.isCanvas(document.createElement('img'))).to.be.false;
-    expect(kontra.isCanvas(function(){})).to.be.false;
+    expect(kontra._isCanvas(true)).to.be.false;
+    expect(kontra._isCanvas({})).to.be.false;
+    expect(kontra._isCanvas(null)).to.be.false;
+    expect(kontra._isCanvas(undefined)).to.be.false;
+    expect(kontra._isCanvas([])).to.be.false;
+    expect(kontra._isCanvas('')).to.be.false;
+    expect(kontra._isCanvas(1)).to.be.false;
+    expect(kontra._isCanvas(new Image())).to.be.false;
+    expect(kontra._isCanvas(document.createElement('img'))).to.be.false;
+    expect(kontra._isCanvas(function(){})).to.be.false;
 
-    expect(kontra.isCanvas(document.createElement('canvas'))).to.be.true;
+    expect(kontra._isCanvas(document.createElement('canvas'))).to.be.true;
   });
 
 });

@@ -147,8 +147,8 @@ describe('', function() {
     it('should continue the animation', function() {
       animation.stop();
 
-      expect(animation.update).to.equal(kontra.noop);
-      expect(animation.render).to.equal(kontra.noop);
+      expect(animation.update).to.equal(kontra._noop);
+      expect(animation.render).to.equal(kontra._noop);
     });
 
   });
@@ -165,7 +165,7 @@ describe('', function() {
     it('should continue the animation', function() {
       animation.pause();
 
-      expect(animation.update).to.equal(kontra.noop);
+      expect(animation.update).to.equal(kontra._noop);
       expect(animation.render).to.equal(animation._draw);
     });
 
@@ -206,13 +206,13 @@ describe('', function() {
   describe('kontra.spriteSheet.init', function() {
 
     it('should log an error if no image is provided', function() {
-      sinon.stub(kontra, 'logError', kontra.noop);
+      sinon.stub(kontra, '_logError', kontra._noop);
 
       kontra.spriteSheet();
 
-      expect(kontra.logError.called).to.be.ok;
+      expect(kontra._logError.called).to.be.ok;
 
-      kontra.logError.restore();
+      kontra._logError.restore();
     });
 
     it('should initialize properties on the spriteSheet when passed an image', function() {
@@ -228,7 +228,7 @@ describe('', function() {
     });
 
     it('should create animations if passed an animation object', function() {
-      sinon.stub(kontra.spriteSheet.prototype, 'createAnimations', kontra.noop);
+      sinon.stub(kontra.spriteSheet.prototype, 'createAnimations', kontra._noop);
 
       var spriteSheet = kontra.spriteSheet({
         image: new Image(100, 200),
@@ -263,35 +263,35 @@ describe('', function() {
     })
 
     it('should log an error if no animations object was passed', function() {
-      sinon.stub(kontra, 'logError', kontra.noop);
+      sinon.stub(kontra, '_logError', kontra._noop);
 
       spriteSheet.createAnimations();
 
-      expect(kontra.logError.called).to.be.ok;
+      expect(kontra._logError.called).to.be.ok;
 
-      kontra.logError.restore();
+      kontra._logError.restore();
     });
 
     it('should log an error if the animations object was empty', function() {
-      sinon.stub(kontra, 'logError', kontra.noop);
+      sinon.stub(kontra, '_logError', kontra._noop);
 
       spriteSheet.createAnimations({});
 
-      expect(kontra.logError.called).to.be.ok;
+      expect(kontra._logError.called).to.be.ok;
 
-      kontra.logError.restore();
+      kontra._logError.restore();
     });
 
     it('should log an error if no frames property was passed', function() {
-      sinon.stub(kontra, 'logError', kontra.noop);
+      sinon.stub(kontra, '_logError', kontra._noop);
 
       spriteSheet.createAnimations({
         'walk': {}
       });
 
-      expect(kontra.logError.called).to.be.ok;
+      expect(kontra._logError.called).to.be.ok;
 
-      kontra.logError.restore();
+      kontra._logError.restore();
     });
 
     it('should accept a single frame', function() {
@@ -361,7 +361,7 @@ describe('', function() {
     });
 
     it('should log an error if passed an improper frames property', function() {
-      sinon.stub(kontra, 'logError', kontra.noop);
+      sinon.stub(kontra, '_logError', kontra._noop);
 
       spriteSheet.createAnimations({
         walk: {
@@ -369,9 +369,9 @@ describe('', function() {
         }
       });
 
-      expect(kontra.logError.called).to.be.ok;
+      expect(kontra._logError.called).to.be.ok;
 
-      kontra.logError.restore();
+      kontra._logError.restore();
     });
 
   });

@@ -1,0 +1,12 @@
+License
+-------
+
+CC0 1.0 Universal
+ - http://creativecommons.org/publicdomain/zero/1.0/
+
+Assets from:
+    http://opengameart.org/content/platformer-tiles
+
+Kenny.nl
+    OpenGameArt  Kenny
+    Homepage  http://www.kenney.nl/

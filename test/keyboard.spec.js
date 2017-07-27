@@ -161,13 +161,13 @@ describe('', function() {
   describe('kontra.keys.bind', function() {
 
     it('should log an error if a callback is not provided', function() {
-      sinon.stub(kontra, 'logError', kontra.noop);
+      sinon.stub(kontra, '_logError', kontra._noop);
 
       kontra.keys.bind('a');
 
-      expect(kontra.logError.called).to.be.ok;
+      expect(kontra._logError.called).to.be.ok;
 
-      kontra.logError.restore();
+      kontra._logError.restore();
     });
 
     it('should call the callback when a single key combination is pressed', function(done) {

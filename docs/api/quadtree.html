@@ -18,7 +18,7 @@
   <div class="content">
     <main-nav></main-nav>
 
-    <main id="main" tabindex="0">
+    <main id="main">
       <div>
         <h1>Kontra.quadtree(properties)</h1>
 
@@ -40,12 +40,13 @@
 
 
         <section class="toc">
-          <h2 id="toc"><a href="#toc" class="section-link">Table of Contents</a></h2>
+          <h2 id="toc"><a href="#toc" class="section-link">Table of Contents<span aria-hidden="true">#</span></a></h2>
 
           <ul>
             <li>
               <ul>
-                <li><a href="what-is-a-quadtree">What is a Quadtree?</a></li>
+                <li><a href="#what-is-a-quadtree">What is a Quadtree?</a></li>
+                <li><a href="#when-to-use">When to Use</a></li>
                 <li><a href="#basic-use">Basic Use</a></li>
               </ul>
             </li>
@@ -76,7 +77,7 @@
 
 
         <section>
-          <h2 id="what-is-a-quadtree"><a href="#what-is-a-quadtree" class="section-link">What is an Quadtree?</a></h2>
+          <h2 id="what-is-a-quadtree"><a href="#what-is-a-quadtree" class="section-link">What is an Quadtree?<span aria-hidden="true">#</span></a></h2>
 
           <p>Collision detection can be a very costly operation. The more objects in the game that can collide, the more costly it gets.</p>
 
@@ -86,7 +87,7 @@
 
           <p>A quadtree starts off as a single node that encompasses the whole screen. When there are more objects in a node than the <a href="#maxObjects">maxObjects</a> of the node, the node splits into four subnodes. All objects are then reassigned into their corresponding subnode based on their position.</p>
 
-          <p>A quadtree will continue to split as more objects are added and nodes begin to fill up. A quadtree will only split <a href="#maxDepth">maxDepth</a> number of times. After that, the last subnodes will keep filling up but won't split.</p>
+          <p>A quadtree will continue to split as more objects are added and nodes begin to fill up. <a href="#maxDepth">maxDepth</a> defines how many levels deep a quadtree can be. After maxDepth is reached, the last subnodes will keep filling up but won't split.</p>
 
         </section>
 
@@ -95,7 +96,20 @@
 
 
         <section>
-          <h2 id="basic-use"><a href="#basic-use" class="section-link">Basic Use</a></h2>
+          <h2 id="when-to-use"><a href="#when-to-use" class="section-link">When to Use<span aria-hidden="true">#</span></a></h2>
+
+          <p>As a general rule of thumb, you should only use a quadtree when you need one. In other words, don't pre-optimize your game becuase you think you might need to.</p>
+
+          <p>Instead, build your game without the quadtree and if you notice that your game is slowing down due to things like collision detection, or finding which objects are closet, then bring in the quadtree to help. But not before.</p>
+
+        </section>
+
+
+
+
+
+        <section>
+          <h2 id="basic-use"><a href="#basic-use" class="section-link">Basic Use<span aria-hidden="true">#</span></a></h2>
 
           <p>To use a quadtree, you'll first create it using <code>kontra.quadtree()</code>. Then, every frame you'll remove all objects from the quadtree using its <a href="#clear">clear()</a> function and add all objects back using its <a href="#add">add()</a> function. You can add a single object or an array of objects, and as many objects as you need.</p>
 
@@ -126,7 +140,7 @@ var loop = kontra.gameLoop({
 
 
         <section>
-          <h2 id="add"><a href="#add" class="section-link">kontra.quadtree.add(object[, ...])</a></h2>
+          <h2 id="add"><a href="#add" class="section-link">kontra.quadtree.add(object[, ...])<span aria-hidden="true">#</span></a></h2>
 
           <dl>
             <dt><strong>object</strong> <em>{object | object[]}</em></dt>
@@ -160,7 +174,7 @@ var loop = kontra.gameLoop({
 
 
         <section>
-          <h2 id="bounds"><a href="#bounds" class="section-link">kontra.quadtree.bounds</a></h2>
+          <h2 id="bounds"><a href="#bounds" class="section-link">kontra.quadtree.bounds<span aria-hidden="true">#</span></a></h2>
 
           <p><em>{object}</em></p>
 
@@ -173,7 +187,7 @@ var loop = kontra.gameLoop({
 
 
         <section>
-          <h2 id="clear"><a href="#clear" class="section-link">kontra.quadtree.clear()</a></h2>
+          <h2 id="clear"><a href="#clear" class="section-link">kontra.quadtree.clear()<span aria-hidden="true">#</span></a></h2>
 
           <p>Clear the quadtree. Removes all objects from the quadtree. You should clear the quadtree every frame before adding all objects back into it.</p>
 
@@ -184,7 +198,7 @@ var loop = kontra.gameLoop({
 
 
         <section>
-          <h2 id="get"><a href="#get" class="section-link">kontra.quadtree.get(object)</a></h2>
+          <h2 id="get"><a href="#get" class="section-link">kontra.quadtree.get(object)<span aria-hidden="true">#</span></a></h2>
 
           <dl>
             <dt><strong>object</strong> <em>{object}</em></dt>
@@ -207,7 +221,7 @@ quadtree.get(player);  //=> [player, enemy1]</code></pre>
 
 
         <section>
-          <h2 id="maxDepth"><a href="#maxDepth" class="section-link">kontra.quadtree.maxDepth</a></h2>
+          <h2 id="maxDepth"><a href="#maxDepth" class="section-link">kontra.quadtree.maxDepth<span aria-hidden="true">#</span></a></h2>
 
           <p><em>{number}</em></p>
 
@@ -220,7 +234,7 @@ quadtree.get(player);  //=> [player, enemy1]</code></pre>
 
 
         <section>
-          <h2 id="maxObjects"><a href="#maxObjects" class="section-link">kontra.quadtree.maxObjects</a></h2>
+          <h2 id="maxObjects"><a href="#maxObjects" class="section-link">kontra.quadtree.maxObjects<span aria-hidden="true">#</span></a></h2>
 
           <p><em>{number}</em></p>
 
@@ -233,7 +247,7 @@ quadtree.get(player);  //=> [player, enemy1]</code></pre>
 
 
         <section>
-          <h2 id="render"><a href="#render" class="section-link">kontra.quadtree.render()</a></h2>
+          <h2 id="render"><a href="#render" class="section-link">kontra.quadtree.render()<span aria-hidden="true">#</span></a></h2>
 
           <p>Render the bounds of each node in the quadtree. This is a very useful function for debugging problems with the quadtree.</p>
 

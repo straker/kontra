@@ -9,6 +9,9 @@
     var excludesRegex = /([ ]*\/\* exclude:start \*\/[\s\S]*?\/\* exclude:end \*\/[\n\r]?)/g;
     var uid = 0;
 
+    var codeEls = [];
+    var nativeImports = ('import' in document.createElement('link'));
+
     var doc = (document._currentScript || document.currentScript).ownerDocument;
     var template = doc.querySelector('#code-output');
     var codeOutputProto = Object.create(HTMLElement.prototype);
@@ -19,6 +22,9 @@
 
       var canvas = temp.querySelector('canvas');
 
+      if (this.getAttribute('width')) {
+        canvas.setAttribute('width', this.getAttribute('width'));
+      }
       if (this.getAttribute('height')) {
         canvas.setAttribute('height', this.getAttribute('height'));
       }
@@ -40,10 +46,22 @@
       this.innerHTML = '';
 
       this.appendChild(temp);
+
+      if (!nativeImports) {
+        codeEls.push(code);
+      }
     };
 
     document.registerElement('code-output', {
       prototype: codeOutputProto
     });
+
+    if (!nativeImports) {
+      window.addEventListener('WebComponentsReady', function() {
+        codeEls.forEach(function(el) {
+          Prism.highlightElement(el)
+        });
+      });
+    }
   })();
 </script>

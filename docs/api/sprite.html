@@ -20,7 +20,7 @@
   <div class="content">
     <main-nav></main-nav>
 
-    <main id="main" tabindex="0">
+    <main id="main">
       <div>
         <h1>Kontra.sprite(properties)</h1>
 
@@ -45,8 +45,8 @@
           <dd>Optional. The context the sprite should draw to. Defaults <a href="/api/kontra.html#context">kontra.context</a>.</dd>
           <dt><strong>properties.image</strong> <em>{HTMLImageElement | HTMLCanvasElement}</em></dt>
           <dd>Optional. Use an image to draw the sprite.</dd>
-          <dt><strong>properties.animations</strong> <em>{<a href="/api/animation.html">kontra.animation</a>}</em></dt>
-          <dd>Optional. Use a <a href="/api/spriteSheet.html">kontra.spritesheet</a> animation to draw the sprite.</dd>
+          <dt><strong>properties.animations</strong> <em>{object}</em></dt>
+          <dd>Optional. An object of <a href="/api/animation.html">kontra.animations</a> from a <a href="/api/spriteSheet.html">kontra.spritesheet</a> to animate the sprite.</dd>
           <dt><strong>properties.color</strong> <em>{string}</em></dt>
           <dd>Optional. Fill color for the sprite if no image or animation is provided.</dd>
           <dt><strong>properties.width</strong> <em>{number}</em></dt>
@@ -70,7 +70,7 @@
 
 
         <section class="toc">
-          <h2 id="toc"><a href="#toc" class="section-link">Table of Contents</a></h2>
+          <h2 id="toc"><a href="#toc" class="section-link">Table of Contents<span aria-hidden="true">#</span></a></h2>
 
           <ul>
             <li>
@@ -125,7 +125,7 @@
 
 
         <section>
-          <h2 id="rect-sprite"><a href="#rect-sprite" class="section-link">Rectangle Sprite</a></h2>
+          <h2 id="rect-sprite"><a href="#rect-sprite" class="section-link">Rectangle Sprite<span aria-hidden="true">#</span></a></h2>
 
           <p>In its most basic form, a sprite is a rectangle with a fill color. To create a rectangle sprite, pass the properties <a href="#width">width</a>, <a href="#height">height</a>, and <a href="#color">color</a>. A rectangle sprite is great for initial prototyping and particles.</p>
 
@@ -149,7 +149,7 @@ sprite.render();
 
 
         <section>
-          <h2 id="image-sprite"><a href="#image-sprite" class="section-link">Image Sprite</a></h2>
+          <h2 id="image-sprite"><a href="#image-sprite" class="section-link">Image Sprite<span aria-hidden="true">#</span></a></h2>
 
           <p>A sprite can use an image instead of drawing a rectangle. To create an image sprite, use the <a href="#image">image</a> property. The size of the sprite will automatically be set as the <code>width</code> and <code>height</code> of the image.</p>
 
@@ -176,7 +176,7 @@ image.onload = function() {
 
 
         <section>
-          <h2 id="animation-sprite"><a href="#animation-sprite" class="section-link">Animation Sprite</a></h2>
+          <h2 id="animation-sprite"><a href="#animation-sprite" class="section-link">Animation Sprite<span aria-hidden="true">#</span></a></h2>
 
           <p>A sprite can use a spritesheet animation as well. To create an animation sprite, use the <a href="#animations">animations</a> property. The size of the sprite will automatically be set as the <code>width</code> and <code>height</code> of a frame of the spritesheet.</p>
 
@@ -189,7 +189,7 @@ image.src = '/imgs/character_walk_sheet.png';
 image.onload = function() {
 
   // use kontra.spriteSheet to create animations from an image
-  spriteSheet = kontra.spriteSheet({
+  var spriteSheet = kontra.spriteSheet({
     image: image,
     frameWidth: 72,
     frameHeight: 97,
@@ -231,7 +231,7 @@ image.onload = function() {
 
   // start the loop
   loop.start();
-}
+};
 </code-output>
         </section>
 
@@ -240,7 +240,7 @@ image.onload = function() {
 
 
         <section>
-          <h2 id="custom-properties"><a href="#custom-properties" class="section-link">Custom Properties</a></h2>
+          <h2 id="custom-properties"><a href="#custom-properties" class="section-link">Custom Properties<span aria-hidden="true">#</span></a></h2>
 
           <p>If you need to draw a different shape, such as a circle, you can pass in your own properties and render function to handle drawing the sprite.</p>
 
@@ -271,7 +271,7 @@ sprite.render();
 
 
         <section>
-          <h2 id="acceleration"><a href="#acceleration" class="section-link">kontra.sprite.acceleration</a></h2>
+          <h2 id="acceleration"><a href="#acceleration" class="section-link">kontra.sprite.acceleration<span aria-hidden="true">#</span></a></h2>
 
           <p><em>{<a href="/api/vector.html">kontra.vector</a>}</em></p>
 
@@ -284,7 +284,7 @@ sprite.render();
 
 
         <section>
-          <h2 id="advance"><a href="#advance" class="section-link">kontra.sprite.advance(dt)</a></h2>
+          <h2 id="advance"><a href="#advance" class="section-link">kontra.sprite.advance(dt)<span aria-hidden="true">#</span></a></h2>
 
           <dl>
             <dt><strong>dt</strong> <em>{number}</em></dt>
@@ -322,12 +322,31 @@ sprite.render();
 
 
        <section>
-          <h2 id="animations"><a href="#animations" class="section-link">kontra.sprite.animations</a></h2>
+          <h2 id="animations"><a href="#animations" class="section-link">kontra.sprite.animations<span aria-hidden="true">#</span></a></h2>
 
-          <p><em>{<a href="/api/animation.html">kontra.animation</a>}</em></p>
+          <p><em>{object}</em></p>
 
-          <p>Sprite sheet animations for the sprite. These are the animations that can be used by name for the sprites <a href="#playAnimation">playAnimation()</a> function.</p>
+          <p>An object of <a href="/api/animation.html">kontra.animations</a> from a <a href="/api/spriteSheet.html">kontra.spritesheet</a> to animate the sprite. Each animation is named so that it can can be used by name for the sprites <a href="#playAnimation">playAnimation()</a> function.</p>
 
+          <pre><code class="language-javascript">var spriteSheet = kontra.spriteSheet({
+  /* ... */,
+  animations: {
+    idle: {
+      frames: 1
+    },
+    walk: {
+      frames: [1,2,3]
+    }
+  }
+});
+
+var sprite = kontra.sprite({
+  x: 100,
+  y: 200,
+  animations: spriteSheet.animations
+});
+
+sprite.playAnimation('idle');</code></pre>
         </section>
 
 
@@ -335,7 +354,7 @@ sprite.render();
 
 
         <section>
-          <h2 id="collidesWith"><a href="#collidesWith" class="section-link">kontra.sprite.collidesWith(sprite)</a></h2>
+          <h2 id="collidesWith"><a href="#collidesWith" class="section-link">kontra.sprite.collidesWith(sprite)<span aria-hidden="true">#</span></a></h2>
 
           <dl>
             <dt><strong>sprite</strong> <em>{object}</em></dt>
@@ -401,7 +420,7 @@ sprite.collidesWith(sprite2);  //=> true</code></pre>
 
 
         <section>
-          <h2 id="color"><a href="#color" class="section-link">kontra.sprite.color</a></h2>
+          <h2 id="color"><a href="#color" class="section-link">kontra.sprite.color<span aria-hidden="true">#</span></a></h2>
 
           <p><em>{string}</em></p>
 
@@ -414,7 +433,7 @@ sprite.collidesWith(sprite2);  //=> true</code></pre>
 
 
         <section>
-          <h2 id="context"><a href="#context" class="section-link">kontra.sprite.context</a></h2>
+          <h2 id="context"><a href="#context" class="section-link">kontra.sprite.context<span aria-hidden="true">#</span></a></h2>
 
           <p><em>{CanvasRenderingContext2D}</em></p>
 
@@ -427,7 +446,7 @@ sprite.collidesWith(sprite2);  //=> true</code></pre>
 
 
         <section>
-          <h2 id="currentAnimation"><a href="#currentAnimation" class="section-link">kontra.sprite.currentAnimation</a></h2>
+          <h2 id="currentAnimation"><a href="#currentAnimation" class="section-link">kontra.sprite.currentAnimation<span aria-hidden="true">#</span></a></h2>
 
           <p><em>{<a href="/api/animation.html">kontra.animation</a>}</em></p>
 
@@ -440,7 +459,7 @@ sprite.collidesWith(sprite2);  //=> true</code></pre>
 
 
         <section>
-          <h2 id="ddx"><a href="#ddx" class="section-link">kontra.sprite.ddx</a></h2>
+          <h2 id="ddx"><a href="#ddx" class="section-link">kontra.sprite.ddx<span aria-hidden="true">#</span></a></h2>
 
           <p><em>{number}</em></p>
 
@@ -453,7 +472,7 @@ sprite.collidesWith(sprite2);  //=> true</code></pre>
 
 
         <section>
-          <h2 id="ddy"><a href="#ddy" class="section-link">kontra.sprite.ddy</a></h2>
+          <h2 id="ddy"><a href="#ddy" class="section-link">kontra.sprite.ddy<span aria-hidden="true">#</span></a></h2>
 
           <p><em>{number}</em></p>
 
@@ -466,7 +485,7 @@ sprite.collidesWith(sprite2);  //=> true</code></pre>
 
 
         <section>
-          <h2 id="draw"><a href="#draw" class="section-link">kontra.sprite.draw()</a></h2>
+          <h2 id="draw"><a href="#draw" class="section-link">kontra.sprite.draw()<span aria-hidden="true">#</span></a></h2>
 
           <p>Draw the sprite on its context at the its X and Y position. This function changes based on the type of the sprite. For a <a href="#rect-sprite">rectangle sprite</a>, it uses <code>context.fillRect()</code>, for an <a href="#image-sprite">image sprite</a> it uses <code>context.drawImage()</code>, and for an <a href="#animation-sprite">animation sprite</a> it uses <code>kontra.spriteSheet.render()</code>.</p>
 
@@ -499,7 +518,7 @@ sprite.render();
 
 
         <section>
-          <h2 id="dx"><a href="#dx" class="section-link">kontra.sprite.dx</a></h2>
+          <h2 id="dx"><a href="#dx" class="section-link">kontra.sprite.dx<span aria-hidden="true">#</span></a></h2>
 
           <p><em>{number}</em></p>
 
@@ -512,7 +531,7 @@ sprite.render();
 
 
         <section>
-          <h2 id="dy"><a href="#dy" class="section-link">kontra.sprite.dy</a></h2>
+          <h2 id="dy"><a href="#dy" class="section-link">kontra.sprite.dy<span aria-hidden="true">#</span></a></h2>
 
           <p><em>{number}</em></p>
 
@@ -525,7 +544,7 @@ sprite.render();
 
 
         <section>
-          <h2 id="height"><a href="#height" class="section-link">kontra.sprite.height</a></h2>
+          <h2 id="height"><a href="#height" class="section-link">kontra.sprite.height<span aria-hidden="true">#</span></a></h2>
 
           <p><em>{number}</em></p>
 
@@ -538,7 +557,7 @@ sprite.render();
 
 
         <section>
-          <h2 id="image"><a href="#image" class="section-link">kontra.sprite.image</a></h2>
+          <h2 id="image"><a href="#image" class="section-link">kontra.sprite.image<span aria-hidden="true">#</span></a></h2>
 
           <p><em>{HTMLImageElement | HTMLCanvasElement}</em></p>
 
@@ -551,7 +570,7 @@ sprite.render();
 
 
         <section>
-          <h2 id="init"><a href="#init" class="section-link">kontra.sprite.init(properties)</a></h2>
+          <h2 id="init"><a href="#init" class="section-link">kontra.sprite.init(properties)<span aria-hidden="true">#</span></a></h2>
 
           <dl>
             <dt><strong>properties</strong> <em>{object}</em></dt>
@@ -567,7 +586,7 @@ sprite.render();
 
 
         <section>
-          <h2 id="isAlive"><a href="#isAlive" class="section-link">kontra.sprite.isAlive()</a></h2>
+          <h2 id="isAlive"><a href="#isAlive" class="section-link">kontra.sprite.isAlive()<span aria-hidden="true">#</span></a></h2>
 
           <p>Returns true if the sprites <a href="#timeToLive">timeToLive</a> is greater than 0. Primarily used by <a href="/api/pool.html">kontra.pool</a> to know when to recycle an object.</p>
 
@@ -578,7 +597,7 @@ sprite.render();
 
 
         <section>
-          <h2 id="playAnimation"><a href="#playAnimation" class="section-link">kontra.sprite.playAnimation(name)</a></h2>
+          <h2 id="playAnimation"><a href="#playAnimation" class="section-link">kontra.sprite.playAnimation(name)<span aria-hidden="true">#</span></a></h2>
 
           <dl>
             <dt><strong>name</strong> <em>{string}</em></dt>
@@ -586,6 +605,26 @@ sprite.render();
           </dl>
 
           <p>Set the currently playing animation of an <a href="#animation-sprite">animation sprite</a>.</p>
+
+          <pre><code class="language-javascript">var spriteSheet = kontra.spriteSheet({
+  /* ... */,
+  animations: {
+    idle: {
+      frames: 1
+    },
+    walk: {
+      frames: [1,2,3]
+    }
+  }
+});
+
+var sprite = kontra.sprite({
+  x: 100,
+  y: 200,
+  animations: spriteSheet.animations
+});
+
+sprite.playAnimation('idle');</code></pre>
 
         </section>
 
@@ -595,7 +634,7 @@ sprite.render();
 
 
         <section>
-          <h2 id="position"><a href="#position" class="section-link">kontra.sprite.position</a></h2>
+          <h2 id="position"><a href="#position" class="section-link">kontra.sprite.position<span aria-hidden="true">#</span></a></h2>
 
           <p><em>{<a href="/api/vector.html">kontra.vector</a>}</em></p>
 
@@ -608,7 +647,7 @@ sprite.render();
 
 
         <section>
-          <h2 id="render"><a href="#render" class="section-link">kontra.sprite.render()</a></h2>
+          <h2 id="render"><a href="#render" class="section-link">kontra.sprite.render()<span aria-hidden="true">#</span></a></h2>
 
           <p>Render the sprite to its context. Calls the sprites <a href="#draw">draw()</a> function.</p>
 
@@ -619,7 +658,7 @@ sprite.render();
 
 
         <section>
-          <h2 id="timeToLive"><a href="#timeToLive" class="section-link">kontra.sprite.timeToLive</a></h2>
+          <h2 id="timeToLive"><a href="#timeToLive" class="section-link">kontra.sprite.timeToLive<span aria-hidden="true">#</span></a></h2>
 
           <p><em>{number}</em></p>
 
@@ -632,7 +671,7 @@ sprite.render();
 
 
         <section>
-          <h2 id="update"><a href="#update" class="section-link">kontra.sprite.update(dt)</a></h2>
+          <h2 id="update"><a href="#update" class="section-link">kontra.sprite.update(dt)<span aria-hidden="true">#</span></a></h2>
 
           <dl>
             <dt><strong>dt</strong> <em>{number}</em></dt>
@@ -648,7 +687,7 @@ sprite.render();
 
 
         <section>
-          <h2 id="velocity"><a href="#velocity" class="section-link">kontra.sprite.velocity</a></h2>
+          <h2 id="velocity"><a href="#velocity" class="section-link">kontra.sprite.velocity<span aria-hidden="true">#</span></a></h2>
 
           <p><em>{<a href="/api/vector.html">kontra.vector</a>}</em></p>
 
@@ -661,7 +700,7 @@ sprite.render();
 
 
         <section>
-          <h2 id="width"><a href="#width" class="section-link">kontra.sprite.width</a></h2>
+          <h2 id="width"><a href="#width" class="section-link">kontra.sprite.width<span aria-hidden="true">#</span></a></h2>
 
           <p><em>{number}</em></p>
 
@@ -674,7 +713,7 @@ sprite.render();
 
 
         <section>
-          <h2 id="x"><a href="#x" class="section-link">kontra.sprite.x</a></h2>
+          <h2 id="x"><a href="#x" class="section-link">kontra.sprite.x<span aria-hidden="true">#</span></a></h2>
 
           <p><em>{number}</em></p>
 
@@ -687,7 +726,7 @@ sprite.render();
 
 
         <section>
-          <h2 id="y"><a href="#y" class="section-link">kontra.sprite.y</a></h2>
+          <h2 id="y"><a href="#y" class="section-link">kontra.sprite.y<span aria-hidden="true">#</span></a></h2>
 
           <p><em>{number}</em></p>
 

@@ -2728,8 +2728,8 @@ var kontra = (function(kontra, Math, undefined) {
 
       // size of the tiles. Most common tile size on opengameart.org seems to be 32x32,
       // followed by 16x16
-      this.tileWidth = properties.tileWidth || 32;
-      this.tileHeight = properties.tileHeight || 32;
+      this.tileWidth = properties.tileWidth || properties.tilewidth || 32;
+      this.tileHeight = properties.tileHeight || properties.tileheight || 32;
 
       this.context = properties.context || kontra.context;
 
@@ -2751,34 +2751,70 @@ var kontra = (function(kontra, Math, undefined) {
       this.sxMax = Math.max(0, this.mapWidth - this.canvasWidth);
       this.syMax = Math.max(0, this.mapHeight - this.canvasHeight);
 
+      // each tileset will hold the first and the last grid as well as the image for the tileset
+      this.tilesets = [];
       this.layers = {};
 
       // draw order of layers (by name)
       this._layerOrder = [];
 
-      // each tileset will hold the first and the last grid as well as the image for the tileset
-      this.tilesets = [];
-
       this.x = properties.x || 0;
       this.y = properties.y || 0;
       this.sx = properties.sx || 0;
       this.sy = properties.sy || 0;
+
+      if (properties.tilesets) {
+        this.addTilesets(properties.tilesets);
+      }
+
+      if (properties.layers) {
+        this.addLayers(properties.layers);
+      }
     },
 
     /**
      * Add an tileset for the tile engine to use.
      * @memberof kontra.tileEngine
      *
-     * @param {object} properties - Properties of the image to add.
-     * @param {Image|Canvas} properties.image - Path to the image or Image object.
-     * @param {number} properties.firstGrid - The first tile grid to start the image.
+     * @param {object|object[]} tileset - Properties of the image to add.
+     * @param {Image|Canvas} tileset.image - Path to the image or Image object.
+     * @param {number} tileset.firstGrid - The first tile grid to start the image.
      */
-    addTileset: function addTileset(properties) {
-      properties = properties || {};
+    addTilesets: function addTilesets(tilesets) {
+      if (!Array.isArray(tilesets)) {
+        tilesets = [tilesets]
+      }
 
-      if (kontra._isImage(properties.image) || kontra._isCanvas(properties.image)) {
-        var image = properties.image;
-        var firstGrid = properties.firstGrid;
+      tilesets.forEach(function(tileset) {
+        var image;
+        // var tilesetImageName = tileset.image.substring(tileset.image.lastIndexOf('/') + 1, tileset.image.lastIndexOf('.'));
+
+        if (kontra._isImage(tileset.image) || kontra._isCanvas(tileset.image)) {
+          image = tileset.image;
+        }
+        else if (kontra._isString(tileset.image)) {
+          // see if the image path is in kontra.images
+          var i = Infinity;
+          while (i >= 0) {
+            var i = tileset.image.lastIndexOf('/', i);
+            var path = tileset.image.substr(i);
+
+            if (kontra.images[path]) {
+              image = kontra.images[path];
+              break;
+            }
+
+            i--;
+          }
+        }
+
+        if (!image) {
+          var error = new SyntaxError('Invalid image.');
+          kontra._logError(error, 'You must provide an Image for the tile engine.');
+          return;
+        }
+
+        var firstGrid = tileset.firstGrid;
 
         // if the width or height of the provided image is smaller than the tile size,
         // default calculation to 1
@@ -2810,12 +2846,7 @@ var kontra = (function(kontra, Math, undefined) {
         this.tilesets.sort(function(a, b) {
           return a.firstGrid - b.firstGrid;
         });
-      }
-      else {
-        var error = new SyntaxError('Invalid image.');
-        kontra._logError(error, 'You must provide an Image for the tile engine.');
-        return;
-      }
+      }.bind(this));
     },
 
     /**
@@ -2828,40 +2859,60 @@ var kontra = (function(kontra, Math, undefined) {
      * @param {boolean} [properties.render=true] - If the layer should be drawn.
      * @param {number} [properties.zIndex] - Draw order for tile layer. Highest number is drawn last (i.e. on top of all other layers).
      */
-    addLayer: function addLayer(properties) {
-      properties = properties || {};
-      properties.render = (properties.render === undefined ? true : properties.render);
+    addLayers: function addLayers(layers) {
+      if (!Array.isArray(layers)) {
+        layers = [layers]
+      }
 
-      var data;
+      layers.forEach(function(layer) {
+        layer.render = (layer.render === undefined ? true : layer.render);
 
-      // flatten a 2D array into a single array
-      if (Array.isArray(properties.data[0])) {
-        data = [];
+        var data;
 
-        for (var r = 0, row; row = properties.data[r]; r++) {
-          for (var c = 0; c < this.width; c++) {
-            data.push(row[c] || 0);
+        // flatten a 2D array into a single array
+        if (Array.isArray(layer.data[0])) {
+          data = [];
+
+          for (var r = 0, row; row = layer.data[r]; r++) {
+            for (var c = 0; c < this.width; c++) {
+              data.push(row[c] || 0);
+            }
           }
         }
-      }
-      else {
-        data = properties.data;
-      }
+        else {
+          data = layer.data;
+        }
 
-      this.layers[properties.name] = data;
-      this.layers[properties.name].zIndex = properties.zIndex || 0;
-      this.layers[properties.name].render = properties.render;
+        this.layers[layer.name] = {
+          data: data,
+          zIndex: layer.zIndex || 0,
+          render: layer.render
+        };
 
-      // only add the layer to the layer order if it should be drawn
-      if (properties.render) {
-        this._layerOrder.push(properties.name);
+        // merge properties of layer onto layer object
+        for (var prop in layer.properties) {
+          var value = layer.properties[prop];
 
-        this._layerOrder.sort(function(a, b) {
-          return this.layers[a].zIndex - this.layers[b].zIndex;
-        }.bind(this));
+          try {
+            value = JSON.parse(value);
+          }
+          catch(e) {}
 
-        this._preRenderImage();
-      }
+          this.layers[layer.name][prop] = value;
+        }
+
+        // only add the layer to the layer order if it should be drawn
+        if (this.layers[layer.name].render) {
+          this._layerOrder.push(layer.name);
+
+          this._layerOrder.sort(function(a, b) {
+            return this.layers[a].zIndex - this.layers[b].zIndex;
+          }.bind(this));
+
+        }
+      }.bind(this));
+
+      this._preRenderImage();
     },
 
     /**
@@ -2891,7 +2942,7 @@ var kontra = (function(kontra, Math, undefined) {
         for (var c = col; c <= endCol; c++) {
           index = this._getIndex({row: r, col: c});
 
-          if (this.layers[name][index]) {
+          if (this.layers[name].data[index]) {
             return true;
           }
         }
@@ -2917,7 +2968,7 @@ var kontra = (function(kontra, Math, undefined) {
       var index = this._getIndex(position);
 
       if (index >= 0) {
-        return this.layers[name][index];
+        return this.layers[name].data[index];
       }
     },
 
@@ -2965,7 +3016,7 @@ var kontra = (function(kontra, Math, undefined) {
 
       // draw just enough of the layer to fit inside the drawing canvas
       while (count < numTiles) {
-        tile = layer[index];
+        tile = layer.data[index];
 
         if (tile) {
           tileset = this._getTileset(tile);
@@ -3097,8 +3148,8 @@ var kontra = (function(kontra, Math, undefined) {
 
       // draw each layer in order
       for (var i = 0, layer; layer = this.layers[this._layerOrder[i]]; i++) {
-        for (var j = 0, len = layer.length; j < len; j++) {
-          tile = layer[j];
+        for (var j = 0, len = layer.data.length; j < len; j++) {
+          tile = layer.data[j];
 
           // skip empty tiles (0)
           if (!tile) {

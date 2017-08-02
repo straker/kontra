@@ -90,12 +90,12 @@
 
             <label>
               <input type="checkbox" name="files" value="quadtree">
-              Quardtree <small class="filesize"></small>
+              Quadtree <small class="filesize"></small>
             </label>
 
             <label>
               <input type="checkbox" name="files" value="spriteSheet">
-              Sprite Sheet and Animations <small class="filesize"></small>
+              Sprite Sheet and Animation <small class="filesize"></small>
             </label>
 
             <label>
@@ -110,10 +110,16 @@
           </fieldset>
         </form>
 
-        <p><strong>Total file size:</strong> <span id="total-filesize"></span></p>
+        <div role="region" aria-live="polite" aria-atomic="true">
+          <p><strong>Total file size:</strong> <span id="total-filesize"></span></p>
+        </div>
 
-        <h2 class="code-title">Code <a id="download" download="kontra.js" target="_blank">Download</a></h2>
-        <pre class="code-output"><code id="code" class="language-javascript"></code></pre>
+        <section class="code-section">
+          <h2 class="code-title">Code</h2>
+          <a id="download" download="kontra.js" href="data:application/octet-stream;charset=utf-8" aria-label="Download code">Download</a>
+
+          <pre class="code-output"><code id="code" class="language-javascript"></code></pre>
+        </section>
       </div>
     </main>
   </div>

@@ -18,7 +18,7 @@
   <div class="content">
     <main-nav></main-nav>
 
-    <main id="main" tabindex="0">
+    <main id="main">
       <div>
         <h1>Kontra.pool(properties)</h1>
 
@@ -42,12 +42,13 @@
 
 
         <section class="toc">
-          <h2 id="toc"><a href="#toc" class="section-link">Table of Contents</a></h2>
+          <h2 id="toc"><a href="#toc" class="section-link">Table of Contents<span aria-hidden="true">#</span></a></h2>
 
           <ul>
             <li>
               <ul>
                 <li><a href="what-is-an-object-pool">What is an Object Pool?</a></li>
+                <li><a href="#when-to-use">When to Use</a></li>
                 <li><a href="#basic-use">Basic Use</a></li>
               </ul>
             </li>
@@ -79,7 +80,7 @@
 
 
         <section>
-          <h2 id="what-is-an-object-pool"><a href="#what-is-an-object-pool" class="section-link">What is an Object Pool?</a></h2>
+          <h2 id="what-is-an-object-pool"><a href="#what-is-an-object-pool" class="section-link">What is an Object Pool?<span aria-hidden="true">#</span></a></h2>
 
           <p>Typically when you create an object, such as a particle, you'd use it for a short amount of time and then destroy it when it's done. Every time you need a new object, you have to create a new one and then destroy it. If creating the new object is costly (slow, takes lots of memory, etc.) or garbage collection becomes costly for so many destroyed objects, an object pool may help performance.</p>
 
@@ -94,7 +95,20 @@
 
 
         <section>
-          <h2 id="basic-use"><a href="#basic-use" class="section-link">Basic Use</a></h2>
+          <h2 id="when-to-use"><a href="#when-to-use" class="section-link">When to Use<span aria-hidden="true">#</span></a></h2>
+
+          <p>You should use an object pool when the cost of creating new objects is high or if you're frequently creating and destroying lots of objects. As a general rule of thumb, you should only use an object pool when you need one. In other words, don't pre-optimize your game becuase you think you might need to.</p>
+
+          <p>Instead, build your game without the object pool and if you notice that your game is slowing down due to things such as creaing lots of objects or when the garbage collection hits, then bring in the object pool to help. But not before.</p>
+
+        </section>
+
+
+
+
+
+        <section>
+          <h2 id="basic-use"><a href="#basic-use" class="section-link">Basic Use<span aria-hidden="true">#</span></a></h2>
 
           <p>To use the pool, you must pass the <code>create()</code> function, which should return a new <a href="/api/sprite.html">kontra.sprite</a> or object. This object will be added to the pool every time there are no more objects to reuse.</p>
 
@@ -135,7 +149,7 @@ pool.get({
 
 
         <section>
-          <h2 id="clear"><a href="#clear" class="section-link">kontra.pool.clear()</a></h2>
+          <h2 id="clear"><a href="#clear" class="section-link">kontra.pool.clear()<span aria-hidden="true">#</span></a></h2>
 
           <p>Clear the object pool. Removes all objects from the pool and resets its <a href="#size">size</a> to 1.</p>
 
@@ -146,7 +160,7 @@ pool.get({
 
 
         <section>
-          <h2 id="get"><a href="#get" class="section-link">kontra.pool.get(properties)</a></h2>
+          <h2 id="get"><a href="#get" class="section-link">kontra.pool.get(properties)<span aria-hidden="true">#</span></a></h2>
 
           <dl>
             <dt><strong>properties</strong> <em>{object}</em></dt>
@@ -177,7 +191,7 @@ pool.get({
 
 
         <section>
-          <h2 id="getAliveObjects"><a href="#getAliveObjects" class="section-link">kontra.pool.getAliveObjects()</a></h2>
+          <h2 id="getAliveObjects"><a href="#getAliveObjects" class="section-link">kontra.pool.getAliveObjects()<span aria-hidden="true">#</span></a></h2>
 
           <p>Returns an array of all objects currently in use. Useful if you need to do special processing on all in use objects outside of the pool, such as add all alive objects to a <a href="/api/quadtree.html">quadtree</a>.</p>
 
@@ -188,7 +202,7 @@ pool.get({
 
 
         <section>
-          <h2 id="maxSize"><a href="#maxSize" class="section-link">kontra.pool.maxSize</a></h2>
+          <h2 id="maxSize"><a href="#maxSize" class="section-link">kontra.pool.maxSize<span aria-hidden="true">#</span></a></h2>
 
           <p><em>{number}</em></p>
 
@@ -201,7 +215,7 @@ pool.get({
 
 
         <section>
-          <h2 id="objects"><a href="#objects" class="section-link">kontra.pool.objects</a></h2>
+          <h2 id="objects"><a href="#objects" class="section-link">kontra.pool.objects<span aria-hidden="true">#</span></a></h2>
 
           <p><em>{object[]}</em></p>
 
@@ -214,7 +228,7 @@ pool.get({
 
 
         <section>
-          <h2 id="render"><a href="#render" class="section-link">kontra.pool.render()</a></h2>
+          <h2 id="render"><a href="#render" class="section-link">kontra.pool.render()<span aria-hidden="true">#</span></a></h2>
 
           <p>Render all in use objects in the pool by calling the objects <code>render()</code> function.</p>
 
@@ -225,7 +239,7 @@ pool.get({
 
 
         <section>
-          <h2 id="size"><a href="#size" class="section-link">kontra.pool.size</a></h2>
+          <h2 id="size"><a href="#size" class="section-link">kontra.pool.size<span aria-hidden="true">#</span></a></h2>
 
           <p><em>{number}</em></p>
 
@@ -238,7 +252,7 @@ pool.get({
 
 
         <section>
-          <h2 id="update"><a href="#update" class="section-link">kontra.pool.update(dt)</a></h2>
+          <h2 id="update"><a href="#update" class="section-link">kontra.pool.update(dt)<span aria-hidden="true">#</span></a></h2>
 
           <dl>
             <dt><strong>dt</strong> <em>{number}</em></dt>

@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Kontra.js – Kontra.animation</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/webcomponentsjs/0.7.22/webcomponents-lite.min.js"></script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/themes/prism.min.css">
+  <link rel="stylesheet" href="/styles.css">
+
+  <link rel="import" href="/components/main-nav.html">
+  <link rel="import" href="/components/code-output.html">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/components/prism-javascript.min.js"></script>
+  <script src="/js/kontra.js"></script>
+</head>
+<body>
+  <div class="content">
+    <main-nav></main-nav>
+
+    <main id="main">
+      <div>
+        <h1>Kontra.animation(properties)</h1>
+
+        <dl>
+          <dt><strong>properties</strong> <em>{object}</em></dt>
+          <dd>Properties of the animation.</dd>
+          <dt><strong>properties.spriteSheet</strong> <em>{<a href="/api/spriteSheet.html">kontra.spriteSheet</a>}</em></dt>
+          <dd>The sprite sheet to use for the animation.</dd>
+          <dt><strong>properties.frames</strong> <em>{number[]}</em></dt>
+          <dd>Sequence of frames to use from the sprite sheet.</dd>
+          <dt><strong>properties.frameRate</strong> <em>{number}</em></dt>
+          <dd>Number of frames to display per second.</dd>
+
+        </dl>
+
+        <p>An object for drawing sprite sheet animations.</p>
+
+        <p>An animation defines the sequence of <a href="#frames">frames</a> to use from a sprite sheet. It also defines at what speed the animation should run using <a href="#frameRate">frameRate</a>.</p>
+
+        <p>Typically you don't create a <code>kontra.animation</code> directly, but instead would create them through <a href="/api/spriteSheet.html">kontra.spriteSheet</a>.</p>
+
+        <p>Added to the <code>kontra</code> object when <a href="/api/spriteSheet.html">kontra.spriteSheet</a> is installed.</p>
+
+        <pre><code class="language-javascript">var spriteSheet = kontra.spriteSheet({/* ... */});
+
+var animation = kontra.animation({
+  spriteSheet: spriteSheet,
+  frames: [1,2,3,6],
+  frameRate: 30
+});</code></pre>
+
+
+
+
+
+        <section class="toc">
+          <h2 id="toc"><a href="#toc" class="section-link">Table of Contents<span aria-hidden="true">#</span></a></h2>
+
+          <ul>
+            <li>
+              <strong>Properties</strong>
+              <ul>
+                <li><a href="#currentFrame">kontra.animation.currentFrame</a></li>
+                <li><a href="#frameRate">kontra.animation.frameRate</a></li>
+                <li><a href="#frames">kontra.animation.frames</a></li>
+                <li><a href="#height">kontra.animation.height</a></li>
+                <li><a href="#spriteSheet">kontra.animation.spriteSheet</a></li>
+                <li><a href="#width">kontra.animation.width</a></li>
+              </ul>
+            </li>
+
+            <li>
+              <strong>Methods</strong>
+              <ul>
+                <li><a href="#clone">kontra.animation.clone()</a></li>
+                <li><a href="#pause">kontra.animation.pause()</a></li>
+                <li><a href="#play">kontra.animation.play()</a></li>
+                <li><a href="#render">kontra.animation.render(properties)</a></li>
+                <li><a href="#stop">kontra.animation.stop()</a></li>
+                <li><a href="#update">kontra.animation.update(dt)</a></li>
+              </ul>
+            </li>
+          </ul>
+        </section>
+
+
+
+
+        <section>
+          <h2 id="clone"><a href="#clone" class="section-link">kontra.animation.clone()<span aria-hidden="true">#</span></a></h2>
+
+          <p>Clone an animation so it can be used more than once. If multiple <a href="/api/sprite.html">sprites</a> share an animation, it must be cloned for each sprite otherwise all sprites would update the same animation, causing it to update at an accelerated speed.</p>
+
+          <pre><code class="language-javascript">var sprite = kontra.sprite({
+  x: 200,
+  y: 100,
+  animations: {
+    'walk': animation.clone()
+  }
+});
+
+var sprite2 = kontra.sprite({
+  x: 300,
+  y: 50,
+  animations: {
+    'walk': animation.clone()
+  }
+});</code></pre>
+
+        </section>
+
+
+
+
+
+        <section>
+          <h2 id="currentFrame"><a href="#currentFrame" class="section-link">kontra.animation.currentFrame<span aria-hidden="true">#</span></a></h2>
+
+          <p><em>{number}</em></p>
+
+          <p>The index of the currently playing frame in the <a href="#frames">frames</a> array.</p>
+
+        </section>
+
+
+
+
+
+        <section>
+          <h2 id="frameRate"><a href="#frameRate" class="section-link">kontra.animation.frameRate<span aria-hidden="true">#</span></a></h2>
+
+          <p><em>{number}</em></p>
+
+          <p>Number of frames to display per second. Adjusting this value will change the speed of the animation.</p>
+
+        </section>
+
+
+
+
+
+        <section>
+          <h2 id="frames"><a href="#frames" class="section-link">kontra.animation.frames<span aria-hidden="true">#</span></a></h2>
+
+          <p><em>{number[]}</em></p>
+
+          <p>Sequence of frames to use from the sprite sheet.</p>
+
+        </section>
+
+
+
+
+
+        <section>
+          <h2 id="height"><a href="#height" class="section-link">kontra.animation.height<span aria-hidden="true">#</span></a></h2>
+
+          <p><em>{number}</em></p>
+
+          <p>The height of an individual frame from the sprite sheet.</p>
+
+        </section>
+
+
+
+
+
+        <section>
+          <h2 id="pause"><a href="#pause" class="section-link">kontra.animation.pause()<span aria-hidden="true">#</span></a></h2>
+
+          <p>Pause the animation. This will stop the animation from updating but will continue to render it.</p>
+
+        </section>
+
+
+
+
+
+        <section>
+          <h2 id="play"><a href="#play" class="section-link">kontra.animation.play()<span aria-hidden="true">#</span></a></h2>
+
+          <p>Play the animation. This will resume updating the animation and rendering it.</p>
+
+        </section>
+
+
+
+
+
+        <section>
+          <h2 id="render"><a href="#render" class="section-link">kontra.animation.render(properties)<span aria-hidden="true">#</span></a></h2>
+
+          <dl>
+            <dt><strong>properties</strong> <em>{object}</em></dt>
+            <dd>How the animation should be rendered.</dd>
+            <dt><strong>properties.x</strong> <em>{number}</em></dt>
+            <dd>X coordinate to render the animation.</dd>
+            <dt><strong>properties.y</strong> <em>{number}</em></dt>
+            <dd>Y coordinate to render the animation.</dd>
+            <dt><strong>properties.context</strong> <em>{CanvasRenderingContext2D}</em></dt>
+            <dd>Optional. The context the animation should draw to. Defaults <a href="/api/kontra.html#context">kontra.context</a>.</dd>
+          </dl>
+
+          <p>Render the current frame to the <code>x</code>, <code>y</code> position.</p>
+
+        </section>
+
+
+
+
+
+        <section>
+          <h2 id="spriteSheet"><a href="#spriteSheet" class="section-link">kontra.animation.spriteSheet<span aria-hidden="true">#</span></a></h2>
+
+          <p><em>{<a href="/api/spriteSheet.html">kontra.spriteSheet</a>}</em></p>
+
+          <p>The sprite sheet to use for the animation.</p>
+
+        </section>
+
+
+
+
+
+        <section>
+          <h2 id="stop"><a href="#stop" class="section-link">kontra.animation.stop()<span aria-hidden="true">#</span></a></h2>
+
+          <p>Stop the animation. This will stop the animation from updating an from rendering.</p>
+
+        </section>
+
+
+
+
+
+        <section>
+          <h2 id="update"><a href="#update" class="section-link">kontra.animation.update(dt)<span aria-hidden="true">#</span></a></h2>
+
+          <dl>
+            <dt><strong>dt</strong> <em>{number}</em></dt>
+            <dd>Optional. Time since last update.</dd>
+          </dl>
+
+          <p>Update the animation.</p>
+
+        </section>
+
+
+      </div>
+    </main>
+  </div>
+
+</body>
+</html>

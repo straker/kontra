@@ -42,7 +42,7 @@ body {
 }
 
 h2, h3, h4, h5, h6 {
-  margin: 0;
+  margin: 0 0 1rem 0;
   font-weight: normal;
 }
 
@@ -62,8 +62,8 @@ h2 {
 }
 
 h3 {
-  font-size: 1.625rem;   /* 26 / 16 */
-  line-height: 3.25rem;  /* 1.625 * 2 */
+  font-size: 1.375rem;   /* 26 / 16 */
+  line-height: 1.625rem;
 }
 
 h4 {
@@ -81,7 +81,7 @@ p {
   line-height: 1.625rem;
 }
 
-p, ul, ol, dl, table, pre[class*=language-], canvas, form {
+p, ul, ol, dl, table, pre[class*=language-], canvas, form, figure {
   margin: 0 0 1.312rem;
 }
 
@@ -98,7 +98,7 @@ dd + dt {
 }
 
 a {
-  color: #0095dd;
+  color: #3e76c2;
   text-decoration: none;
 }
 
@@ -108,7 +108,7 @@ a:focus {
 }
 
 a:visited {
-  color: #0095dd;
+  color: #3e76c2;
 }
 
 
@@ -120,7 +120,6 @@ a:visited {
 
 canvas {
   background: #333331;
-  /*outline: none;*/
 }
 
 main {
@@ -141,6 +140,7 @@ main-nav {
   padding: 1.325rem;
   width: 250px;
   flex-shrink: 0;
+  overflow-y: auto;
 }
 
 nav {
@@ -195,7 +195,32 @@ nav * {
 }
 
 .toc ul {
-  list-style: none;
+  position: relative;
+}
+
+/* hide bulleted lists without using "list-style: none;" so VoiceOver still reads
+   the toc as a list
+   @see http://www.456bereastreet.com/archive/201109/screen_readers_list_items_and_list-stylenone/ */
+.toc ul:after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 1.312rem;
+  background: #fdfdfd;
+}
+
+/* make the first level links line up with the nested links */
+.toc > ul > li > a {
+  margin-left: 1.312rem;
+}
+
+.toc li > h3 {
+  margin-top: 1.312rem;
+  font-size: 1rem;
+  line-height: 1.625rem;
+  font-weight: bold;
 }
 
 section {
@@ -216,11 +241,11 @@ main h3 {
   color: #242729;
 }
 
-.section-link:after {
-  content: '#';
+h2 [aria-hidden=true],
+h3 [aria-hidden=true] {
   position: absolute;
-  right: 0;
   top: 0;
+  right: 0;
 }
 
 code[class*=language-], pre[class*=language-] {
@@ -249,8 +274,7 @@ label {
   display: inline-block;
   position: absolute;
   right: 0;
-  top: 50%;
-  transform: translateY(-50%);
+  top: 0;
   border: 1px solid #3073dd;
   padding: 0.607rem 1.429rem;
   text-decoration: none;
@@ -267,11 +291,49 @@ label {
 
 }
 
-.code-title {
+.code-section {
   position: relative;
+  margin-top: 0;
+}
+
+.code-title {
   max-width: 100%;
 }
 
 .code-output {
-  height: 500px;
+  height: 350px;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+figure {
+  text-align: center;
+}
+
+figure img {
+  background: #333331;
+  max-width: 100%;
+}
+
+figcaption {
+  font-size: 16px;
+  font-style: italic;
+}
+
+code-output {
+  display: block;
+  text-align: center;
+}
+
+dd > dl {
+  margin-top: 1.312rem;
 }

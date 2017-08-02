@@ -199,7 +199,7 @@
         code = code.replace('/* global console */\n\n', '');
 
         code = '/*\n' +
-               ' * Kontra.js v' + version + ' (Custom Build on (' + todaysDate + ') | MIT\n' +
+               ' * Kontra.js v' + version + ' (Custom Build on ' + todaysDate + ') | MIT\n' +
                ' * Build: ' + window.location.origin + window.location.pathname + (filesList.length ? '?files=' + filesList.join('+') : '') + '\n' +
                ' */' + code;
 

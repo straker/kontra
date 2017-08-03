@@ -2723,6 +2723,21 @@ var kontra = (function(kontra, Math, undefined) {
         return;
       }
 
+      // merge properties of layer onto layer object
+      for (var prop in properties.properties) {
+        var value = properties.properties[prop];
+
+        try {
+          value = JSON.parse(value);
+        }
+        catch(e) {}
+
+        // move it back to a property so the regular code can run, but keep it as
+        // a this value in case the rest of the code doesn't make use of that property
+        this[prop] = value;
+        properties[prop] = value;
+      }
+
       this.width = properties.width;
       this.height = properties.height;
 

@@ -4,26 +4,32 @@
 module.exports = function(config) {
   config.set({
     basePath: '',
-    singleRun: true,
-    autoWatch: false,
+    singleRun: false,
+    autoWatch: true,
     frameworks: ['mocha', 'chai', 'sinon'],
     files: [
       // assets
-      'test/phantom.polyfill.js',
+      {pattern: 'test/audio/*.*', included: false, served: true },
+      {pattern: 'test/css/*.*', included: false, served: true },
+      {pattern: 'test/imgs/*.*', included: false, served: true },
+      {pattern: 'test/js/*.*', included: false, served: true },
+      {pattern: 'test/json/*.*', included: false, served: true },
+
+      'src/core.js',
       'src/*.js',
-      'test/*.js'
+      'test/*.js',
     ],
-    browsers: ['PhantomJS'],
-    reporters: ['progress', 'coverage'],
-    preprocessors: {
-      'src/*.js': ['coverage']
-    },
-    coverageReporter: {
-      dir : 'coverage/',
-      reporters: [
-        {type: 'lcov', subdir: '.'},
-        {type: 'text-summary'}
-      ]
-    }
+    browsers: ['Chrome'],
+    // reporters: ['progress', 'coverage'],
+    // preprocessors: {
+    //   'src/*.js': ['coverage']
+    // },
+    // coverageReporter: {
+    //   dir : 'coverage/',
+    //   reporters: [
+    //     {type: 'lcov', subdir: '.'},
+    //     {type: 'text-summary'}
+    //   ]
+    // }
   });
 };

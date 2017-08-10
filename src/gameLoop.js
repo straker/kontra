@@ -1,25 +1,4 @@
-var kontra = (function(kontra, window) {
-  'use strict';
-
-  /**
-   * Get the current time. Uses the User Timing API if it's available or defaults to using
-   * Date().getTime()
-   * @memberof kontra
-   *
-   * @returns {number}
-   */
-  kontra.timestamp = (function() {
-    if (window.performance && window.performance.now) {
-      return function timestampPerformance() {
-        return window.performance.now();
-      };
-    }
-    else {
-      return function timestampDate() {
-        return new Date().getTime();
-      };
-    }
-  })();
+(function(kontra, requestAnimationFrame, performance) {
 
   /**
    * Game loop that updates and renders the game every frame.
@@ -32,106 +11,85 @@ var kontra = (function(kontra, window) {
    * @param {function} properties.render - Function called to render the game.
    */
   kontra.gameLoop = function(properties) {
-    var gameLoop = Object.create(kontra.gameLoop.prototype);
-    gameLoop._init(properties);
+    properties = properties || {};
 
-    return gameLoop;
-  };
+    // check for required functions
+    if ( !(kontra._isFunc(properties.update) && kontra._isFunc(properties.render)) ) {
+      throw Error('You must provide update() and render() functions');
+    }
 
-  kontra.gameLoop.prototype = {
-    /**
-     * Initialize properties on the game loop.
-     * @memberof kontra.gameLoop
-     * @private
-     *
-     * @param {object}   properties - Properties of the game loop.
-     * @param {number}   [properties.fps=60] - Desired frame rate.
-     * @param {boolean}  [properties.clearCanvas=true] - Clear the canvas every frame.
-     * @param {function} properties.update - Function called to update the game.
-     * @param {function} properties.render - Function called to render the game.
-     */
-    _init: function init(properties) {
-      properties = properties || {};
+    // animation variables
+    var fps = properties.fps || 60;
+    var accumulator = 0;
+    var delta = 1E3 / fps;  // delta between performance.now timings (in ms)
+    var step = 1 / fps;
 
-      // check for required functions
-      if (typeof properties.update !== 'function' || typeof properties.render !== 'function') {
-        var error = new ReferenceError('Required functions not found');
-        kontra._logError(error, 'You must provide update() and render() functions to create a game loop.');
-        return;
-      }
-
-      this.isStopped = true;
-
-      // animation variables
-      this._accumulator = 0;
-      this._delta = 1E3 / (properties.fps || 60);
-      this._step = 1 / (properties.fps || 60);
-
-      this.update = properties.update;
-      this.render = properties.render;
-
-      if (properties.clearCanvas === false) {
-        this._clearCanvas = kontra._noop;
-      }
-    },
-
-    /**
-     * Start the game loop.
-     * @memberof kontra.gameLoop
-     */
-    start: function start() {
-      this._last = kontra.timestamp();
-      this.isStopped = false;
-      requestAnimationFrame(this._frame.bind(this));
-    },
-
-    /**
-     * Stop the game loop.
-     */
-    stop: function stop() {
-      this.isStopped = true;
-      cancelAnimationFrame(this._rAF);
-    },
+    var clear = (properties.clearCanvas === false ?
+                kontra._noop :
+                function clear() {
+                  kontra.context.clearRect(0,0,kontra.canvas.width,kontra.canvas.height);
+                });
+    var last, rAF, now, dt;
 
     /**
      * Called every frame of the game loop.
-     * @memberof kontra.gameLoop
-     * @private
      */
-    _frame: function frame() {
-      this._rAF = requestAnimationFrame(this._frame.bind(this));
+    function frame() {
+      rAF = requestAnimationFrame(frame);
 
-      this._now = kontra.timestamp();
-      this._dt = this._now - this._last;
-      this._last = this._now;
+      now = performance.now();
+      dt = now - last;
+      last = now;
 
       // prevent updating the game with a very large dt if the game were to lose focus
       // and then regain focus later
-      if (this._dt > 1E3) {
+      if (dt > 1E3) {
         return;
       }
 
-      this._accumulator += this._dt;
+      accumulator += dt;
 
-      while (this._accumulator >= this._delta) {
-        this.update(this._step);
+      while (accumulator >= delta) {
+        gameLoop.update(step);
 
-        this._accumulator -= this._delta;
+        accumulator -= delta;
       }
 
-      this._clearCanvas();
-      this.render();
-    },
-
-    /**
-     * Clear the canvas on every frame.
-     * @memberof kontra.gameLoop
-     * @private
-     */
-    _clearCanvas: function clearCanvas() {
-      kontra.context.clearRect(0,0,kontra.canvas.width,kontra.canvas.height);
+      clear();
+      gameLoop.render();
     }
-  };
 
-  return kontra;
-})(kontra || {}, window);
+    // game loop object
+    var gameLoop = {
+      update: properties.update,
+      render: properties.render,
+      isStopped: true,
+
+      /**
+       * Start the game loop.
+       * @memberof kontra.gameLoop
+       */
+      start: function start() {
+        last = performance.now();
+        this.isStopped = false;
+        requestAnimationFrame(frame);
+      },
+
+      /**
+       * Stop the game loop.
+       */
+      stop: function stop() {
+        this.isStopped = true;
+        cancelAnimationFrame(rAF);
+      },
+
+      // expose properties for testing
+      _frame: frame,
+      set _last(value) {
+        last = value;
+      }
+    };
+
+    return gameLoop;
+  };
+})(kontra, requestAnimationFrame, performance);

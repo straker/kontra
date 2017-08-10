@@ -32,7 +32,7 @@ function simulateEvent(type, config) {
 // --------------------------------------------------
 // kontra.keys
 // --------------------------------------------------
-describe('', function() {
+describe('kontra.keys', function() {
 
   // reset pressed keys before each test
   beforeEach(function() {
@@ -46,109 +46,27 @@ describe('', function() {
   // --------------------------------------------------
   // kontra.keys.pressed
   // --------------------------------------------------
-  describe('kontra.keys.pressed', function() {
+  describe('pressed', function() {
 
     it('should return false when a key is not pressed', function() {
-      expect(kontra.keys.pressed('a')).to.be.false;
-      expect(kontra.keys.pressed('ctrl+c')).to.be.false;
-      expect(kontra.keys.pressed('f1')).to.be.false;
-      expect(kontra.keys.pressed('!')).to.be.false;
+      expect(kontra.keys.pressed('a')).to.be.not.ok;
+      expect(kontra.keys.pressed('f1')).to.be.not.ok;
+      expect(kontra.keys.pressed('numpad0')).to.be.not.ok;
     });
 
     it('should return true for a single key', function() {
-      simulateEvent('keydown', {keyCode: 65});
+      simulateEvent('keydown', {which: 65});
 
       expect(kontra.keys.pressed('a')).to.be.true;
     });
 
     it('should return false if the key is no longer pressed', function() {
-      simulateEvent('keydown', {keyCode: 65});
-      simulateEvent('keyup', {keyCode: 65});
+      simulateEvent('keydown', {which: 65});
+      simulateEvent('keyup', {which: 65});
 
-      expect(kontra.keys.pressed('a')).to.be.false;
+      expect(kontra.keys.pressed('a')).to.be.not.ok;
     });
 
-    it('should return true for a ctrl key combination', function() {
-      simulateEvent('keydown', {keyCode: 65, ctrlKey: true});
-
-      expect(kontra.keys.pressed('ctrl+a')).to.be.true;
-    });
-
-    it('should return true for a shift key combination', function() {
-      simulateEvent('keydown', {keyCode: 65, shiftKey: true});
-
-      expect(kontra.keys.pressed('shift+a')).to.be.true;
-    });
-
-    it('should return true for an alt key combination', function() {
-      simulateEvent('keydown', {keyCode: 65, altKey: true});
-
-      expect(kontra.keys.pressed('alt+a')).to.be.true;
-    });
-
-    it('should return true for a meta key combination', function() {
-      simulateEvent('keydown', {keyCode: 65, metaKey: true});
-
-      expect(kontra.keys.pressed('meta+a')).to.be.true;
-    });
-
-    it('should return true for a complex key combination', function() {
-      simulateEvent('keydown', {
-        keyCode: 65,
-        ctrlKey: true,
-        shiftKey: true,
-        altKey: true,
-        metaKey: true
-      });
-
-      expect(kontra.keys.pressed('meta+ctrl+alt+shift+a')).to.be.true;
-    });
-
-    it('should normalize key combination order', function() {
-      simulateEvent('keydown', {
-        keyCode: 65,
-        ctrlKey: true,
-        shiftKey: true,
-        altKey: true,
-        metaKey: true
-      });
-
-      expect(kontra.keys.pressed('meta+ctrl+alt+shift+a')).to.be.true;
-      expect(kontra.keys.pressed('ctrl+alt+shift+a+meta')).to.be.true;
-      expect(kontra.keys.pressed('alt+shift+a+meta+ctrl')).to.be.true;
-      expect(kontra.keys.pressed('shift+a+meta+ctrl+alt')).to.be.true;
-      expect(kontra.keys.pressed('a+meta+ctrl+alt+shift')).to.be.true;
-      expect(kontra.keys.pressed('a+shift+alt+ctrl+meta')).to.be.true;
-    });
-
-  });
-
-  it('should handle shift keys', function() {
-    simulateEvent('keydown', {keyCode: 65, shiftKey: true});
-    simulateEvent('keydown', {keyCode: 49, shiftKey: true});
-
-    expect(kontra.keys.pressed('A')).to.be.true;
-    expect(kontra.keys.pressed('!')).to.be.true;
-  });
-
-  it('should handle the + key in a combination', function() {
-    simulateEvent('keydown', {keyCode: 187, shiftKey: true});
-
-    expect(kontra.keys.pressed('shift++')).to.be.true;
-  });
-
-  it('should handle e.which and e.keyCode', function() {
-    simulateEvent('keydown', {which: 65});
-    simulateEvent('keydown', {keyCode: 66});
-
-    expect(kontra.keys.pressed('a')).to.be.true;
-    expect(kontra.keys.pressed('b')).to.be.true;
-  });
-
-  it('should handle special key combination ctrl+ctrl', function() {
-    simulateEvent('keydown', {keyCode: 17, ctrlKey: true});
-
-    expect(kontra.keys.pressed('ctrl')).to.be.true;
   });
 
 
@@ -158,35 +76,14 @@ describe('', function() {
   // --------------------------------------------------
   // kontra.keys.bind
   // --------------------------------------------------
-  describe('kontra.keys.bind', function() {
-
-    it('should log an error if a callback is not provided', function() {
-      sinon.stub(kontra, '_logError', kontra._noop);
-
-      kontra.keys.bind('a');
-
-      expect(kontra._logError.called).to.be.ok;
-
-      kontra._logError.restore();
-    });
+  describe('bind', function() {
 
     it('should call the callback when a single key combination is pressed', function(done) {
       kontra.keys.bind('a', function() {
         done();
       });
 
-      simulateEvent('keydown', {keyCode: 65});
-
-      // this should never be called since done() should be called in the callback
-      expect(false).to.be.true;
-    });
-
-    it('should call the callback when a complex key combination is pressed', function(done) {
-      kontra.keys.bind('a+shift+ctrl', function() {
-        done();
-      });
-
-      simulateEvent('keydown', {keyCode: 65, shiftKey: true, ctrlKey: true});
+      simulateEvent('keydown', {which: 65});
 
       // this should never be called since done() should be called in the callback
       expect(false).to.be.true;
@@ -197,7 +94,7 @@ describe('', function() {
         done();
       });
 
-      simulateEvent('keydown', {keyCode: 66});
+      simulateEvent('keydown', {which: 66});
 
       // this should never be called since done() should be called in the callback
       expect(false).to.be.true;
@@ -212,7 +109,7 @@ describe('', function() {
   // --------------------------------------------------
   // kontra.keys.unbind
   // --------------------------------------------------
-  describe('kontra.keys.unbind', function() {
+  describe('unbind', function() {
 
     it('should not call the callback when the combination has been unbound', function() {
       kontra.keys.bind('a', function() {
@@ -222,7 +119,7 @@ describe('', function() {
 
       kontra.keys.unbind('a');
 
-      simulateEvent('keydown', {keyCode: 65});
+      simulateEvent('keydown', {which: 65});
     });
 
     it('should accept an array of key combinations to unbind', function() {
@@ -233,8 +130,8 @@ describe('', function() {
 
       kontra.keys.unbind(['a', 'b']);
 
-      simulateEvent('keydown', {keyCode: 65});
-      simulateEvent('keydown', {keyCode: 66});
+      simulateEvent('keydown', {which: 65});
+      simulateEvent('keydown', {which: 66});
     });
 
   });

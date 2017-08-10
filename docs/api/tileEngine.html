@@ -207,7 +207,7 @@ img.onload = function() {
 <code-output width="576" height="576">
 kontra.assets.load('/imgs/mapPack_tilesheet.png', '/data/tile_engine_basic.json')
   .then(function() {
-    var tileEngine = kontra.tileEngine(kontra.data['/data/tile_engine_basic']);
+    var tileEngine = kontra.tileEngine(kontra.assets.data['/data/tile_engine_basic']);
     /* exclude:start */
     tileEngine.context = context;
     /* exclude:end */
@@ -232,7 +232,7 @@ kontra.assets.load('/imgs/mapPack_tilesheet.png', '/data/tile_engine_basic.json'
 <code-output width="576" height="576">
 kontra.assets.load('/imgs/mapPack_tilesheet.png', '/data/tile_engine_camera.json')
   .then(function() {
-    var tileEngine = kontra.tileEngine(kontra.data['/data/tile_engine_camera']);
+    var tileEngine = kontra.tileEngine(kontra.assets.data['/data/tile_engine_camera']);
     /* exclude:start */
     tileEngine.context = context;
     /* exclude:end */

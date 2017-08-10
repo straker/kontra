@@ -7,16 +7,21 @@ var jshint = require('gulp-jshint');
 var rename = require('gulp-rename');
 var size = require('gulp-size');
 var uglify = require('gulp-uglify');
+var changed = require('gulp-changed');
+var plumber = require('gulp-plumber');
+
 var Server = require('karma').Server;
 
 var package = require('./package.json');
 
-function swallowError(error) {
-  // print error so we know that uglify task didn't complete
-  console.log(error.toString());
-
-  this.emit('end');
-}
+var iifeMap = {
+  core: ['document', 'Object', 'Array', 'Error'],
+  assets: ['Promise'],
+  gameLoop: ['performance', 'requestAnimationFrame'],
+  sprite: ['Math', 'Infinity'],
+  store: ['localStorage'],
+  tileEngine: ['Math']
+};
 
 gulp.task('lint', function() {
   return gulp.src('src/*.js')
@@ -25,22 +30,38 @@ gulp.task('lint', function() {
 });
 
 gulp.task('scripts', function() {
-  return gulp.src(['node_modules/kontra-asset-loader/kontraAssetLoader.js', 'src/core.js', 'src/*.js'])
+  return gulp.src(['src/core.js', 'src/*.js'])
     .pipe(concat('kontra.js'))
-    .pipe(size())
     .pipe(gulp.dest('.'))
     .pipe(gulp.dest('./docs/js'))
+    .pipe(plumber())
     .pipe(uglify())
-    .on('error', swallowError)  // prevent uglify task from crashing watch on error
+    .pipe(plumber.stop())
     .pipe(rename('kontra.min.js'))
-    .pipe(size())
+    .pipe(size({
+      showFiles: true
+    }))
+    .pipe(size({
+      showFiles: true,
+      gzip: true
+    }))
     .pipe(gulp.dest('.'))
     .pipe(connect.reload());
 });
 
 gulp.task('dist', function() {
   return gulp.src('src/*.js')
+    .pipe(changed('./dist'))
+    .pipe(plumber())
     .pipe(uglify())
+    .pipe(plumber.stop())
+    .pipe(size({
+      showFiles: true
+    }))
+    .pipe(size({
+      showFiles: true,
+      gzip: true
+    }))
     .pipe(gulp.dest('./dist'));
 });
 
@@ -140,7 +161,7 @@ gulp.task('connect', function() {
 });
 
 gulp.task('watch', function() {
-  gulp.watch('src/*.js', ['lint', 'scripts']);
+  gulp.watch('src/*.js', ['dist', 'scripts']);
 });
 
 gulp.task('test', function(done) {

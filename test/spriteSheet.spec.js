@@ -1,8 +1,16 @@
 // --------------------------------------------------
 // kontra.animation
 // --------------------------------------------------
-describe('', function() {
+describe('kontra.animation', function() {
   var animation;
+
+  before(function() {
+    if (!kontra.canvas) {
+      var canvas = document.createElement('canvas');
+      canvas.width = canvas.height = 600;
+      kontra.init(canvas);
+    }
+  });
 
   beforeEach(function() {
     animation = kontra.animation({
@@ -23,7 +31,7 @@ describe('', function() {
   // --------------------------------------------------
   // kontra.animation.init
   // --------------------------------------------------
-  describe('kontra.animation.init', function() {
+  describe('init', function() {
 
     it('should set properties on the animation', function() {
       expect(animation.frames).to.eql([1,2,3,4]);
@@ -41,12 +49,12 @@ describe('', function() {
   // --------------------------------------------------
   // kontra.animation.update
   // --------------------------------------------------
-  describe('kontra.animation.update', function() {
+  describe('update', function() {
 
     it('should not update the current frame if not enough time has passed', function() {
       animation.update();
 
-      expect(animation.currentFrame).to.equal(0);
+      expect(animation._frame).to.equal(0);
     });
 
     it('should take no parameter and update the current frame correctly', function() {
@@ -54,13 +62,13 @@ describe('', function() {
         animation.update();
       }
 
-      expect(animation.currentFrame).to.equal(1);
+      expect(animation._frame).to.equal(1);
     });
 
     it('should take dt as a parameter and update the current frame correctly', function() {
       animation.update(1/30);
 
-      expect(animation.currentFrame).to.equal(1);
+      expect(animation._frame).to.equal(1);
     });
 
     it('should restart the animation when finished', function() {
@@ -68,11 +76,11 @@ describe('', function() {
         animation.update();
       }
 
-      expect(animation.currentFrame).to.equal(3);
+      expect(animation._frame).to.equal(3);
 
       animation.update();
 
-      expect(animation.currentFrame).to.equal(0);
+      expect(animation._frame).to.equal(0);
     });
 
   });
@@ -84,7 +92,7 @@ describe('', function() {
   // --------------------------------------------------
   // kontra.animation.draw
   // --------------------------------------------------
-  describe('kontra.animation.draw', function() {
+  describe('draw', function() {
 
     it('should draw the spriteSheet at its initial frame', function() {
       var context = {drawImage: sinon.stub()};
@@ -118,7 +126,7 @@ describe('', function() {
     it('should draw the spriteSheet in the middle of the animation', function() {
       var context = {drawImage: sinon.stub()};
 
-      animation.currentFrame = 2;
+      animation._frame = 2;
 
       animation.render({
         x: 10,
@@ -135,60 +143,6 @@ describe('', function() {
 
   });
 
-
-
-
-
-  // --------------------------------------------------
-  // kontra.animation.stop
-  // --------------------------------------------------
-  describe('kontra.animation.stop', function() {
-
-    it('should continue the animation', function() {
-      animation.stop();
-
-      expect(animation.update).to.equal(kontra._noop);
-      expect(animation.render).to.equal(kontra._noop);
-    });
-
-  });
-
-
-
-
-
-  // --------------------------------------------------
-  // kontra.animation.pause
-  // --------------------------------------------------
-  describe('kontra.animation.pause', function() {
-
-    it('should continue the animation', function() {
-      animation.pause();
-
-      expect(animation.update).to.equal(kontra._noop);
-      expect(animation.render).to.equal(animation._draw);
-    });
-
-  });
-
-
-
-
-  // --------------------------------------------------
-  // kontra.animation.play
-  // --------------------------------------------------
-  describe('kontra.animation.play', function() {
-
-    it('should continue the animation', function() {
-      animation.stop();
-      animation.play();
-
-      expect(animation.update).to.equal(animation._advance);
-      expect(animation.render).to.equal(animation._draw);
-    });
-
-  });
-
 });
 
 
@@ -198,21 +152,15 @@ describe('', function() {
 // --------------------------------------------------
 // kontra.spriteSheet
 // --------------------------------------------------
-describe('', function() {
+describe('kontra.spriteSheet', function() {
 
   // --------------------------------------------------
   // kontra.spriteSheet.init
   // --------------------------------------------------
-  describe('kontra.spriteSheet.init', function() {
+  describe('init', function() {
 
     it('should log an error if no image is provided', function() {
-      sinon.stub(kontra, '_logError', kontra._noop);
-
-      kontra.spriteSheet();
-
-      expect(kontra._logError.called).to.be.ok;
-
-      kontra._logError.restore();
+      expect(kontra.spriteSheet).to.throw();
     });
 
     it('should initialize properties on the spriteSheet when passed an image', function() {
@@ -251,7 +199,7 @@ describe('', function() {
   // --------------------------------------------------
   // kontra.spriteSheet.createAnimations
   // --------------------------------------------------
-  describe('kontra.spriteSheet.createAnimations', function() {
+  describe('createAnimations', function() {
     var spriteSheet;
 
     beforeEach(function() {
@@ -262,36 +210,14 @@ describe('', function() {
       });
     })
 
-    it('should log an error if no animations object was passed', function() {
-      sinon.stub(kontra, '_logError', kontra._noop);
-
-      spriteSheet.createAnimations();
-
-      expect(kontra._logError.called).to.be.ok;
-
-      kontra._logError.restore();
-    });
-
-    it('should log an error if the animations object was empty', function() {
-      sinon.stub(kontra, '_logError', kontra._noop);
-
-      spriteSheet.createAnimations({});
-
-      expect(kontra._logError.called).to.be.ok;
-
-      kontra._logError.restore();
-    });
-
     it('should log an error if no frames property was passed', function() {
-      sinon.stub(kontra, '_logError', kontra._noop);
+      function func() {
+        spriteSheet.createAnimations({
+          'walk': {}
+        });
+      }
 
-      spriteSheet.createAnimations({
-        'walk': {}
-      });
-
-      expect(kontra._logError.called).to.be.ok;
-
-      kontra._logError.restore();
+      expect(func).to.throw();
     });
 
     it('should accept a single frame', function() {
@@ -358,20 +284,6 @@ describe('', function() {
 
       expect(spriteSheet.animations.walk).to.exist;
       expect(spriteSheet.animations.walk.frames).to.eql([1,2,3,4,5,4,3,2,1]);
-    });
-
-    it('should log an error if passed an improper frames property', function() {
-      sinon.stub(kontra, '_logError', kontra._noop);
-
-      spriteSheet.createAnimations({
-        walk: {
-          frames: {}
-        }
-      });
-
-      expect(kontra._logError.called).to.be.ok;
-
-      kontra._logError.restore();
     });
 
   });

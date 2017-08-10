@@ -1,13 +1,13 @@
 // --------------------------------------------------
 // kontra.pool
 // --------------------------------------------------
-describe('', function() {
+describe('kontra.pool', function() {
 
   var sprite = function() {
     return {
       render: kontra._noop,
       update: function() {
-        this.timeToLive--;
+        this.ttl--;
       },
       init: function(properties) {
         this.alive = properties.alive;
@@ -17,7 +17,7 @@ describe('', function() {
         }
       },
       isAlive: function() {
-        return this.alive || this.timeToLive > 0;
+        return this.alive || this.ttl > 0;
       },
     };
   };
@@ -29,81 +29,30 @@ describe('', function() {
   // --------------------------------------------------
   // kontra.pool.init
   // --------------------------------------------------
-  describe('kontra.pool.init', function() {
+  describe('init', function() {
 
     it('should log an error if the create function is not passed', function() {
-      sinon.stub(kontra, '_logError', kontra._noop);
-
-      kontra.pool();
-
-      expect(kontra._logError.called).to.be.ok;
-
-      kontra._logError.restore();
+      expect(kontra.pool).to.throw();
     });
 
     it('should log an error if the create function did not return an object', function() {
-      sinon.stub(kontra, '_logError', kontra._noop);
+      function func() {
+        kontra.pool({create:kontra._noop});
+      }
 
-      kontra.pool({create:kontra._noop});
-
-      expect(kontra._logError.called).to.be.ok;
-
-      kontra._logError.restore();
+      expect(func).to.throw();
     });
 
     it('should log an error if the create function returned an object with missing functions', function() {
-      sinon.stub(kontra, '_logError', kontra._noop);
+      function func() {
+        kontra.pool({create: function() {
+          return {
+            render: kontra._noop
+          }
+        }});
+      }
 
-      kontra.pool({create: function() {
-        return {
-          render: kontra._noop
-        }
-      }});
-
-      expect(kontra._logError.called).to.be.ok;
-
-      kontra._logError.restore();
-    });
-
-    it('should fill the pool when passed the fill property', function() {
-      var pool = kontra.pool({
-        create: sprite,
-        maxSize: 10,
-        fill: true
-      });
-
-      expect(pool.objects.length).to.equal(10);
-      expect(pool.size).to.equal(pool.objects.length);
-      expect(pool.lastIndex).to.equal(9);
-    });
-
-    it('should log an error if you try to fill the pool with a default maxSize', function() {
-      sinon.stub(kontra, '_logError', kontra._noop);
-
-      kontra.pool({
-        create: sprite,
-        fill: true
-      });
-
-      expect(kontra._logError.called).to.be.ok;
-
-      kontra._logError.restore();
-    });
-
-    it('should call the create function and pass it createProperties', function() {
-      sinon.stub(kontra, '_logError', kontra._noop);
-
-      var spy = sinon.spy();
-      var props = {foo: 'bar'};
-
-      kontra.pool({
-        create: spy,
-        createProperties: props
-      });
-
-      expect(spy.calledWith(props)).to.be.ok;
-
-      kontra._logError.restore();
+      expect(func).to.throw();
     });
 
   });
@@ -115,7 +64,7 @@ describe('', function() {
   // --------------------------------------------------
   // kontra.pool.get
   // --------------------------------------------------
-  describe('kontra.pool.get', function() {
+  describe('get', function() {
 
     it('should call the objects init function', function() {
       var pool = kontra.pool({
@@ -129,12 +78,42 @@ describe('', function() {
       expect(spy.called).to.be.ok;
     });
 
+    it('should pass the properties to the objects init function', function() {
+      var pool = kontra.pool({
+        create: sprite
+      });
+
+      var args = {
+        x: 1
+      };
+
+      var spy = sinon.spy(pool.objects[0], 'init');
+
+      pool.get(args);
+
+      expect(spy.calledWith(args)).to.be.ok;
+    });
+
     it('should use the first object in the pool and move it to the back of the pool', function() {
       var pool = kontra.pool({
         create: sprite,
         maxSize: 5,
-        fill: true
       });
+
+      // fill the pool
+      pool.get({alive: true});
+      pool.get({alive: true});
+      pool.get({alive: true});
+      pool.get({alive: true});
+      pool.get({alive: true});
+
+      // kill objects in the pool
+      for (var i = 0; i < 5; i++) {
+        pool.objects[i].alive = false;
+      }
+
+      // update pool position
+      pool.update();
 
       var expected = [
         pool.objects[1],
@@ -167,21 +146,7 @@ describe('', function() {
       expect(pool.size).to.not.equal(1);
     });
 
-    it('should not increase the size of the pool if it is full', function() {
-      var pool = kontra.pool({
-        create: sprite,
-        maxSize: 5,
-        fill: true
-      });
-
-      for (var i = 0; i < 10; i++) {
-        pool.get({alive: true});
-      }
-
-      expect(pool.size).to.equal(5);
-    });
-
-    it('should not increase the size of the pool past the max sizes', function() {
+    it('should not increase the size of the pool past the max size', function() {
       var pool = kontra.pool({
         create: sprite,
         maxSize: 5
@@ -194,19 +159,6 @@ describe('', function() {
       expect(pool.size).to.equal(5);
     });
 
-    it('should call the create function and pass it createProperties when increasing the size of the pool', function() {
-      var props = {foo: 'bar'};
-
-      var pool = kontra.pool({
-        create: function(properties) {
-          expect(properties).to.equal(props);
-
-          return sprite();
-        },
-        createProperties: props
-      });
-    });
-
   });
 
 
@@ -216,7 +168,7 @@ describe('', function() {
   // --------------------------------------------------
   // kontra.pool.getAliveObjects
   // --------------------------------------------------
-  describe('kontra.pool.getAliveObjects', function() {
+  describe('getAliveObjects', function() {
 
     it('should return only alive objects', function() {
       var id = 0;
@@ -267,7 +219,7 @@ describe('', function() {
   // --------------------------------------------------
   // kontra.pool.update
   // --------------------------------------------------
-  describe('kontra.pool.update', function() {
+  describe('update', function() {
 
     it('should call each alive objects update function', function() {
       var count = 0;
@@ -283,8 +235,7 @@ describe('', function() {
             isAlive: function() { return this.alive; },
           }
         },
-        maxSize: 5,
-        fill: true
+        maxSize: 5
       });
 
       for (var i = 0; i < 3; i++) {
@@ -303,9 +254,9 @@ describe('', function() {
       });
 
       for (var i = 0; i < 5; i++) {
-        pool.get({timeToLive: 2});
+        pool.get({ttl: 2});
       }
-      pool.objects[2].timeToLive = 1;
+      pool.objects[2].ttl = 1;
 
       var expected = [
         pool.objects[2],
@@ -339,7 +290,7 @@ describe('', function() {
   // --------------------------------------------------
   // kontra.pool.render
   // --------------------------------------------------
-  describe('kontra.pool.render', function() {
+  describe('render', function() {
 
     it('should call each alive objects render function', function() {
       var count = 0;
@@ -355,8 +306,7 @@ describe('', function() {
             isAlive: function() { return this.alive; },
           }
         },
-        maxSize: 5,
-        fill: true
+        maxSize: 5
       });
 
       for (var i = 0; i < 3; i++) {
@@ -377,14 +327,17 @@ describe('', function() {
   // --------------------------------------------------
   // kontra.pool.clear
   // --------------------------------------------------
-  describe('kontra.pool.clear', function() {
+  describe('clear', function() {
 
     it('should empty the pool', function() {
       var pool = kontra.pool({
         create: sprite,
-        maxSize: 20,
-        fill: true
+        maxSize: 20
       });
+
+      for (var i = 0; i < 20; i++) {
+        pool.get({alive: true});
+      }
 
       pool.clear();
 

@@ -1,4 +1,4 @@
-// (function() {
+(function() {
   var cache = {};
   var totalSize = 0;
 
@@ -211,4 +211,4 @@
 
     })(compression);
   }
-// })();
+})();

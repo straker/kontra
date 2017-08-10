@@ -1,29 +1,7 @@
 /**
- * localStorage can be a bit of a pain to work with since it stores everything as strings:
- * localStorage.setItem('item', 1);  //=> '1'
- * localStorage.setItem('item', false);  //=> 'false'
- * localStorage.setItem('item', [1,2,3]);  //=> '1,2,3'
- * localStorage.setItem('item', {a:'b'});  //=> '[object Object]'
- * localStorage.setItem('item', undefinedVariable);  //=> 'undefined'
- *
- * @fileoverview A simple wrapper for localStorage to make it easier to work with.
- * Based on store.js {@see https://github.com/marcuswestin/store.js}
+ * Object for using localStorage.
  */
-var kontra = (function(kontra, window, localStorage, undefined) {
-  'use strict';
-
-  // check if the browser can use localStorage
-  kontra.canUse = kontra.canUse || {};
-  kontra.canUse.localStorage = 'localStorage' in window && window.localStorage !== null;
-
-  if (!kontra.canUse.localStorage) {
-    return kontra;
-  }
-
-  /**
-   * Object for using localStorage.
-   */
-  kontra.store = {};
+kontra.store = {
 
   /**
    * Save an item to localStorage.
@@ -32,14 +10,14 @@ var kontra = (function(kontra, window, localStorage, undefined) {
    * @param {string} key - Name to store the item as.
    * @param {*} value - Item to store.
    */
-  kontra.store.set = function setStoreItem(key, value) {
+  set: function setStoreItem(key, value) {
     if (value === undefined) {
-      this.remove(key);
+      localStorage.removeItem(key);
     }
     else {
       localStorage.setItem(key, JSON.stringify(value));
     }
-  };
+  },
 
   /**
    * Retrieve an item from localStorage and convert it back to it's original type.
@@ -49,7 +27,7 @@ var kontra = (function(kontra, window, localStorage, undefined) {
    *
    * @returns {*}
    */
-  kontra.store.get = function getStoreItem(key) {
+  get: function getStoreItem(key) {
     var value = localStorage.getItem(key);
 
     try {
@@ -58,25 +36,5 @@ var kontra = (function(kontra, window, localStorage, undefined) {
     catch(e) {}
 
     return value;
-  };
-
-  /**
-   * Remove an item from localStorage.
-   * @memberof kontra.store
-   *
-   * @param {string} key - Name of the item.
-   */
-  kontra.store.remove = function removeStoreItem(key) {
-    localStorage.removeItem(key);
-  };
-
-  /**
-   * Clear all keys from localStorage.
-   * @memberof kontra.store
-   */
-  kontra.store.clear = function clearStore() {
-    localStorage.clear();
-  };
-
-  return kontra;
-})(kontra || {}, window, window.localStorage);
+  }
+};

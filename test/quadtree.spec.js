@@ -1,12 +1,20 @@
 // --------------------------------------------------
 // kontra.quadtree
 // --------------------------------------------------
-describe('', function() {
+describe('kontra.quadtree', function() {
+
+  before(function() {
+    if (!kontra.canvas) {
+      var canvas = document.createElement('canvas');
+      canvas.width = canvas.height = 600;
+      kontra.init(canvas);
+    }
+  });
 
   // --------------------------------------------------
   // kontra.quadtree.init
   // --------------------------------------------------
-  describe('kontra.quadtree.init', function() {
+  describe('init', function() {
 
     it('should create an initial bounding box', function() {
       var quadtree = kontra.quadtree();
@@ -37,7 +45,7 @@ describe('', function() {
   // --------------------------------------------------
   // kontra.quadtree.add
   // --------------------------------------------------
-  describe('kontra.quadtree.add', function() {
+  describe('add', function() {
     var quadtree;
 
     beforeEach(function() {
@@ -164,7 +172,7 @@ describe('', function() {
   // --------------------------------------------------
   // kontra.quadtree.clear
   // --------------------------------------------------
-  describe('kontra.quadtree.clear', function() {
+  describe('clear', function() {
     var quadtree;
 
     beforeEach(function() {
@@ -212,7 +220,7 @@ describe('', function() {
   // --------------------------------------------------
   // kontra.quadtree.get
   // --------------------------------------------------
-  describe('kontra.quadtree.get', function() {
+  describe('get', function() {
 
     beforeEach(function() {
       quadtree = kontra.quadtree({

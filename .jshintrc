@@ -12,7 +12,7 @@
     "plusplus"      : false,    // Prohibit use of `++` & `--`.
     "regexp"        : true,     // Prohibit `.` and `[^...]` in regular expressions.
     "undef"         : false,    // Require all non-global variables be declared before they are used.
-    "strict"        : true,     // Require `use strict` pragma in every file.
+    "strict"        : false,     // Require `use strict` pragma in every file.
     "trailing"      : true,     // Prohibit trailing whitespaces.
     "browser"       : true,     // Standard browser globals e.g. `window`, `document`.
     "boss"          : true      // Suppress warnings about assignments in comparisons

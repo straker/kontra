@@ -1,0 +1,11 @@
+{
+  "bundles" : [{
+    "name" : "level1",
+    "assets" : ["./imgs/bullet.png"]
+  },
+  {
+    "name" : "level2",
+    "assets" : ["./imgs/bullet.jpg"]
+  }],
+  "loadBundles" : ["level1", "level2"]
+}

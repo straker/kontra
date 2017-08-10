@@ -1,15 +1,15 @@
 // --------------------------------------------------
 // kontra.vector
 // --------------------------------------------------
-describe('', function() {
+describe('kontra.vector', function() {
 
   // --------------------------------------------------
   // kontra.vector.init
   // --------------------------------------------------
-  describe('kontra.vector.init', function() {
+  describe('init', function() {
 
     it('should set x and y', function() {
-      var vec = kontra.vector({x: 10, y: 20});
+      var vec = kontra.vector(10, 20);
 
       expect(vec.x).to.equal(10);
       expect(vec.y).to.equal(20);
@@ -24,11 +24,11 @@ describe('', function() {
   // --------------------------------------------------
   // kontra.vector.add
   // --------------------------------------------------
-  describe('kontra.vector.add', function() {
+  describe('add', function() {
 
     it('should add one vector to another', function() {
-      var vec1 = kontra.vector({x: 10, y: 20});
-      var vec2 = kontra.vector({x: 5, y: 10});
+      var vec1 = kontra.vector(10, 20);
+      var vec2 = kontra.vector(5, 10);
 
       vec1.add(vec2)
 
@@ -39,13 +39,13 @@ describe('', function() {
   });
 
   it('should incorporate dt if passed', function() {
-    var vec1 = kontra.vector({x: 10, y: 20});
-      var vec2 = kontra.vector({x: 5, y: 10});
+    var vec1 = kontra.vector(10, 20);
+    var vec2 = kontra.vector(5, 10);
 
-      vec1.add(vec2, 2)
+    vec1.add(vec2, 2)
 
-      expect(vec1.x).to.eql(20);
-      expect(vec1.y).to.eql(40);
+    expect(vec1.x).to.eql(20);
+    expect(vec1.y).to.eql(40);
   });
 
 
@@ -55,11 +55,11 @@ describe('', function() {
   // --------------------------------------------------
   // kontra.vector.clamp
   // --------------------------------------------------
-  describe('kontra.vector.clamp', function() {
+  describe('clamp', function() {
     var vec;
 
     beforeEach(function() {
-      vec = kontra.vector({x: 10, y: 20});
+      vec = kontra.vector(10, 20);
       vec.clamp(0, 10, 50, 75);
     })
 
@@ -94,12 +94,20 @@ describe('', function() {
 // --------------------------------------------------
 // kontra.sprite
 // --------------------------------------------------
-describe('', function() {
+describe('kontra.sprite', function() {
+
+  before(function() {
+    if (!kontra.canvas) {
+      var canvas = document.createElement('canvas');
+      canvas.width = canvas.height = 600;
+      kontra.init(canvas);
+    }
+  });
 
   // --------------------------------------------------
   // kontra.sprite.init
   // --------------------------------------------------
-  describe('kontra.sprite.init', function() {
+  describe('init', function() {
 
     it('should set default properties on the sprite when passed no arguments', function() {
       var sprite = kontra.sprite();
@@ -124,8 +132,8 @@ describe('', function() {
       expect(sprite.color).to.equal('red');
       expect(sprite.width).to.equal(5);
       expect(sprite.height).to.equal(15);
-      expect(sprite.advance).to.equal(sprite._advanceSprite);
-      expect(sprite.draw).to.equal(sprite._drawRect);
+      expect(sprite.advance).to.equal(sprite._advance);
+      expect(sprite.draw).to.equal(sprite.draw);
     });
 
     it('should set properties of velocity, acceleration, and a different context', function() {
@@ -176,8 +184,8 @@ describe('', function() {
       expect(sprite.image).to.equal(img);
       expect(sprite.width).to.equal(10);
       expect(sprite.height).to.equal(20);
-      expect(sprite.advance).to.equal(sprite._advanceSprite);
-      expect(sprite.draw).to.equal(sprite._drawImage);
+      expect(sprite.advance).to.equal(sprite._advance);
+      expect(sprite.draw).to.equal(sprite._drawImg);
     });
 
     it('should set the width and height of the sprite to an animation if passed', function() {
@@ -193,12 +201,12 @@ describe('', function() {
         animations: animations
       });
 
-      expect(sprite.animations).to.equal(animations);
+      expect(sprite.animations).to.eql(animations);
       expect(sprite.currentAnimation).to.equal(animations.walk);
       expect(sprite.width).to.equal(10);
       expect(sprite.height).to.equal(20);
-      expect(sprite.advance).to.equal(sprite._advanceAnimation);
-      expect(sprite.draw).to.equal(sprite._drawAnimation);
+      expect(sprite.advance).to.equal(sprite._advanceAnim);
+      expect(sprite.draw).to.equal(sprite._drawAnim);
     });
 
     it('should set all additional properties on the sprite', function() {
@@ -220,7 +228,7 @@ describe('', function() {
   // --------------------------------------------------
   // kontra.sprite.update
   // --------------------------------------------------
-  describe('kontra.sprite.update', function() {
+  describe('update', function() {
 
     it('should move a rect sprite by its velocity and acceleration', function() {
       var sprite = kontra.sprite({
@@ -300,12 +308,12 @@ describe('', function() {
   // --------------------------------------------------
   // kontra.sprite.render
   // --------------------------------------------------
-  describe('kontra.sprite.render', function() {
+  describe('render', function() {
 
     it('should draw a rect sprite', function() {
       var sprite = kontra.sprite({
         x: 10,
-        y: 20,
+        y: 20
       });
 
       sinon.stub(sprite.context, 'fillRect', kontra._noop);
@@ -372,7 +380,7 @@ describe('', function() {
   // --------------------------------------------------
   // kontra.sprite.collidesWith
   // --------------------------------------------------
-  describe('kontra.sprite.collidesWith', function() {
+  describe('collidesWith', function() {
 
     it('should correctly detect collision between two objects', function() {
       var sprite1 = kontra.sprite({
@@ -421,18 +429,18 @@ describe('', function() {
   // --------------------------------------------------
   // kontra.sprite.isAlive
   // --------------------------------------------------
-  describe('kontra.sprite.isAlive', function() {
+  describe('isAlive', function() {
 
     it('should return true when the sprite is alive', function() {
       var sprite = kontra.sprite();
 
       expect(sprite.isAlive()).to.be.false;
 
-      sprite.timeToLive = 1;
+      sprite.ttl = 1;
 
       expect(sprite.isAlive()).to.be.true;
 
-      sprite.timeToLive = -0;
+      sprite.ttl = -0;
 
       expect(sprite.isAlive()).to.be.false;
     });
@@ -446,7 +454,7 @@ describe('', function() {
   // --------------------------------------------------
   // kontra.sprite.playAnimation
   // --------------------------------------------------
-  describe('kontra.sprite.playAnimation', function() {
+  describe('playAnimation', function() {
 
     it('should set the animation to play', function() {
       var animations = {

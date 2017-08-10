@@ -1,200 +1,120 @@
 // --------------------------------------------------
-// kontra.timestamp
+// kontra.gameloop
 // --------------------------------------------------
-describe('kontra.timestamp', function() {
+describe('kontra.gameLoop', function() {
+  var loop;
 
-  it('should return a timestamp function that returns a number', function() {
-    expect(kontra.timestamp).to.exist
-    expect(typeof kontra.timestamp).to.equal('function');
-    expect(typeof kontra.timestamp()).to.equal('number');
+  afterEach(function() {
+    loop && loop.stop();
   });
 
-});
+  // --------------------------------------------------
+  // kontra.gameLoop.init
+  // --------------------------------------------------
+  describe('init', function() {
 
-
-
-
-
-// --------------------------------------------------
-// kontra.gameLoop.init
-// --------------------------------------------------
-describe('kontra.gameLoop.init', function() {
-
-  it('should log an error if not passed required functions', function() {
-    sinon.stub(kontra, '_logError', kontra._noop);
-
-    kontra.gameLoop();
-
-    expect(kontra._logError.called).to.be.ok;
-
-    kontra._logError.restore();
-  });
-
-  it('should let you prevent clearing the canvas', function() {
-    var loop = kontra.gameLoop({
-      update: kontra._noop,
-      render: kontra._noop,
-      clearCanvas: false
+    it('should log an error if not passed required functions', function() {
+      expect(kontra.gameLoop).to.throw();
     });
 
-    expect(loop._clearCanvas).to.equal(kontra._noop);
   });
 
-});
 
 
 
 
+  // --------------------------------------------------
+  // kontra.gameLoop.stop
+  // --------------------------------------------------
+  describe('stop', function() {
+    it('should call cancelAnimationFrame', function() {
+      sinon.stub(window, 'cancelAnimationFrame', kontra._noop);
 
-// --------------------------------------------------
-// kontra.gameLoop.start
-// --------------------------------------------------
-describe('kontra.gameLoop.start', function() {
-  var requestAnimFrame;
+      loop = kontra.gameLoop({
+        update: kontra._noop,
+        render: kontra._noop,
+        clearCanvas: false
+      });
 
-  it('should call requestAnimationFrame', function() {
-    requestAnimFrame = sinon.stub(window, 'requestAnimationFrame', kontra._noop);
+      loop.stop();
 
-    var loop = kontra.gameLoop({
-      update: kontra._noop,
-      render: kontra._noop
-    })
+      expect(window.cancelAnimationFrame.called).to.be.ok;
 
-    loop.start();
-
-    expect(window.requestAnimationFrame.called).to.be.ok;
-
-    window.requestAnimationFrame.restore();
-  });
-
-});
-
-
-
-
-
-// --------------------------------------------------
-// kontra.gameLoop.stop
-// --------------------------------------------------
-describe('kontra.gameLoop.stop', function() {
-  var requestAnimFrame;
-
-  it('should call cancelAnimationFrame', function() {
-    requestAnimFrame = sinon.stub(window, 'cancelAnimationFrame', kontra._noop);
-
-    var loop = kontra.gameLoop({
-      update: kontra._noop,
-      render: kontra._noop
-    })
-
-    loop.stop();
-
-    expect(window.cancelAnimationFrame.called).to.be.ok;
-
-    window.cancelAnimationFrame.restore();
-  });
-
-});
-
-
-
-
-
-// --------------------------------------------------
-// kontra.gameLoop._frame
-// --------------------------------------------------
-describe('kontra.gameLoop._frame', function() {
-
-  it('should call the update function and pass it dt', function() {
-    requestAnimFrame = sinon.stub(window, 'requestAnimationFrame', kontra._noop);
-
-    var count = 0;
-    var dt = 0;
-
-    var loop = kontra.gameLoop({
-      update: function(time) {
-        count++;
-        dt = time;
-      },
-      render: kontra._noop
+      window.cancelAnimationFrame.restore();
     });
 
-    // fake the first call to requestAnimationFrame, waiting 1 frame
-    loop.start();
-    loop._last -= loop._delta;
-    loop._frame();
-
-    expect(count).to.equal(1);
-    expect(dt).to.be.above(0);
-
-    window.requestAnimationFrame.restore();
   });
 
-  it('should call the render function', function() {
-    requestAnimFrame = sinon.stub(window, 'requestAnimationFrame', kontra._noop);
 
-    var count = 0;
 
-    var loop = kontra.gameLoop({
-      update: kontra._noop,
-      render: function() {
-        count++;
-      }
+
+
+  // --------------------------------------------------
+  // kontra.gameLoop.frame
+  // --------------------------------------------------
+  describe('frame', function() {
+
+    it('should call the update function and pass it dt', function(done) {
+      loop = kontra.gameLoop({
+        update: sinon.spy(),
+        render: kontra._noop,
+        clearCanvas: false
+      });
+
+      loop.start();
+
+      setTimeout(function() {
+        expect(loop.update.called).to.be.ok;
+        expect(loop.update.getCall(0).args[0]).to.equal(1/60);
+        done();
+      }, 250);
     });
 
-    // fake the first call to requestAnimationFrame
-    loop.start();
-    loop._frame();
+    it('should call the render function', function(done) {
+      loop = kontra.gameLoop({
+        update: kontra._noop,
+        render: sinon.spy(),
+        clearCanvas: false
+      });
 
-    expect(count).to.equal(1);
+      loop.start();
 
-    window.requestAnimationFrame.restore();
-  });
-
-  it('should exit early if time elapsed is greater than 1000ms', function() {
-    requestAnimFrame = sinon.stub(window, 'requestAnimationFrame', kontra._noop);
-
-    var count = 0;
-
-    var loop = kontra.gameLoop({
-      update: function(time) {
-        count++;
-      },
-      render: function() {
-        count++;
-      }
+      setTimeout(function() {
+        expect(loop.render.called).to.be.ok;
+        done();
+      }, 250);
     });
 
-    // fake the first call to requestAnimationFrame
-    loop.start();
-    loop._last -= 1500;
-    loop._frame();
+    it('should exit early if time elapsed is greater than 1000ms', function() {
+      var count = 0;
 
-    expect(count).to.equal(0);
+      loop = kontra.gameLoop({
+        update: function(time) { count++; },
+        render: kontra._noop,
+        clearCanvas: false
+      });
 
-    window.requestAnimationFrame.restore();
-  });
+      loop._last = performance.now() - 1500;
+      loop._frame();
 
-  it('should make multiple calls to the update function if enough time has elapsed', function() {
-    requestAnimFrame = sinon.stub(window, 'requestAnimationFrame', kontra._noop);
-
-    var count = 0;
-
-    var loop = kontra.gameLoop({
-      update: function(time) {
-        count++;
-      },
-      render: kontra._noop
+      expect(count).to.equal(0);
     });
 
-    // fake the first call to requestAnimationFrame
-    loop.start();
-    loop._last -= loop._delta * 2.5;
-    loop._frame();
+    it('should make multiple calls to the update function if enough time has elapsed', function() {
+      var count = 0;
 
-    expect(count).to.equal(2);
+      loop = kontra.gameLoop({
+        update: function(time) { count++; },
+        render: kontra._noop,
+        clearCanvas: false
+      });
 
-    window.requestAnimationFrame.restore();
+      loop._last = performance.now() - (1E3/60) * 2;
+      loop._frame();
+
+      expect(count).to.equal(2);
+    });
+
   });
 
 });

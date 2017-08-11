@@ -9,17 +9,20 @@ module.exports = function(config) {
     frameworks: ['mocha', 'chai', 'sinon'],
     files: [
       // assets
-      {pattern: 'test/audio/*.*', included: false, served: true },
-      {pattern: 'test/css/*.*', included: false, served: true },
       {pattern: 'test/imgs/*.*', included: false, served: true },
-      {pattern: 'test/js/*.*', included: false, served: true },
-      {pattern: 'test/json/*.*', included: false, served: true },
+      {pattern: 'test/audio/*.*', included: false, served: true },
+      {pattern: 'test/data/*.*', included: false, served: true },
 
       'src/core.js',
       'src/*.js',
       'test/*.js',
     ],
     browsers: ['Chrome'],
+    proxies: {
+      '/imgs': '/base/test/imgs',
+      '/audio': '/base/test/audio',
+      '/data': '/base/test/data'
+    }
     // reporters: ['progress', 'coverage'],
     // preprocessors: {
     //   'src/*.js': ['coverage']

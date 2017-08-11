@@ -488,9 +488,7 @@
       },
 
       // expose properties for testing
-      get _layerOrder() {
-        return layerOrder;
-      }
+      _layerOrder: layerOrder
     };
 
     // set here so we use setter function

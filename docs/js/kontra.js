@@ -115,9 +115,27 @@ this.kontra = {
   };
 
   /**
+   * Join a path with proper separators.
+   * @see https://stackoverflow.com/a/43888647/2124254
+   */
+  function joinPath() {
+    var path = [], i = 0;
+
+    for (; i < arguments.length; i++) {
+      if (arguments[i]) {
+
+        // replace slashes at the beginning or end of a path
+        // replace 2 or more slashes at the beginning of the first path to
+        // preserve root routes (/root)
+        path.push( arguments[i].trim().replace(new RegExp('(^[\/]{' + (path[0] ? 1 : 2) + ',}|[\/]*$)', 'g'), '') );
+      }
+    }
+
+    return path.join('/');
+  }
+
+  /**
    * Get the extension of an asset.
-   * @memberOf kontra
-   * @private
    *
    * @param {string} url - The URL to the asset.
    *
@@ -129,15 +147,16 @@ this.kontra = {
 
   /**
    * Get the name of an asset.
-   * @memberOf kontra
-   * @private
    *
    * @param {string} url - The URL to the asset.
    *
    * @returns {string}
    */
   function getName(url) {
-    return url.replace('.' + getExtension(url), '');
+    var name = url.replace('.' + getExtension(url), '');
+
+    // remove slash if there is no folder in the path
+    return (name.indexOf('/') == 0 && name.lastIndexOf('/') == 0 ? name.substr(1) : name);
   }
 
   /**
@@ -146,7 +165,7 @@ this.kontra = {
   kontra.assets = {
     // all assets are stored by name as well as by URL
     images: {},
-    audios: {},
+    audio: {},
     data: {},
 
     // base asset path for determining asset URLs
@@ -193,7 +212,7 @@ this.kontra = {
     },
 
     /**
-     * Load an Image file. Uses assetPaths.assets to resolve URL.
+     * Load an Image file. Uses imagePath to resolve URL.
      * @memberOf kontra.assets
      *
      * @param {string} url - The URL to the Image file.
@@ -209,7 +228,7 @@ this.kontra = {
       var image = new Image();
       var imageAssets = this.images;
 
-      url = this.imagePath + url;
+      url = joinPath(this.imagePath, url);
 
       return new Promise(function(resolve, reject) {
         image.onload = function loadImageOnLoad() {
@@ -227,7 +246,7 @@ this.kontra = {
 
     /**
      * Load an Audio file. Supports loading multiple audio formats which will be resolved by
-     * the browser in the order listed. Uses assetPaths.audios to resolve URL.
+     * the browser in the order listed. Uses audioPath to resolve URL.
      * @memberOf kontra.assets
      *
      * @param {string|string[]} url - The URL to the Audio file.
@@ -258,7 +277,7 @@ this.kontra = {
      * (http://jsfiddle.net/straker/5dsm6jgt/)
      */
     loadAudio: function loadAudio(url) {
-      var audioAssets = this.audios;
+      var audioAssets = this.audio;
       var audioPath = this.audioPath;
       var source, name, playableSource, audio, i;
 
@@ -281,7 +300,7 @@ this.kontra = {
         else {
           name = getName(playableSource);
           audio = new Audio();
-          source = audioPath + playableSource;
+          source = joinPath(audioPath, playableSource);
 
           audio.addEventListener('canplay', function loadAudioOnLoad() {
             audioAssets[name] = audioAssets[source] = this;
@@ -299,7 +318,7 @@ this.kontra = {
     },
 
     /**
-     * Load a data file (be it text or JSON). Uses assetPaths.data to resolve URL.
+     * Load a data file (be it text or JSON). Uses dataPath to resolve URL.
      * @memberOf kontra.assets
      *
      * @param {string} url - The URL to the data file.
@@ -311,10 +330,10 @@ this.kontra = {
      * kontra.loadData('dialog.txt');
      */
     loadData: function loadData(url) {
-      var req = new XMLHttpRequest();
       var name = getName(url);
-      var dataUrl = this.dataPath + url;
+      var dataUrl = joinPath(this.dataPath, url);
       var dataAssets = this.data;
+      var req = new XMLHttpRequest();
 
       return new Promise(function(resolve, reject) {
         req.addEventListener('load', function loadDataOnLoad() {
@@ -336,7 +355,10 @@ this.kontra = {
         req.open('GET', dataUrl, true);
         req.send();
       });
-    }
+    },
+
+    // expose properties for testing
+    _canUse: canUse
   };
 })(Promise);
 (function(kontra, requestAnimationFrame, performance) {
@@ -2256,9 +2278,7 @@ kontra.store = {
       },
 
       // expose properties for testing
-      get _layerOrder() {
-        return layerOrder;
-      }
+      _layerOrder: layerOrder
     };
 
     // set here so we use setter function

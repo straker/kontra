@@ -164,6 +164,9 @@
       tileWidth: tileWidth,
       tileHeight: tileHeight,
 
+      mapWidth: mapWidth,
+      mapHeight: mapHeight,
+
       context: context,
 
       x: properties.x || 0,

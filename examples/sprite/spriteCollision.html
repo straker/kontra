@@ -23,7 +23,7 @@
 
     // create a second basic sprite
     window.sprite2 = kontra.sprite({
-      x: kontra.game.width - 100 - 60,
+      x: kontra.canvas.width - 100 - 60,
       y: 180,
       dx: -3,
       dy: 0,
@@ -50,11 +50,11 @@
         }
 
         // reset the sprites position when it reaches the edge of the game
-        if (sprite1.x > kontra.game.width) {
+        if (sprite1.x > kontra.canvas.width) {
           sprite1.x = -sprite1.width;
         }
         if (sprite2.x < -sprite2.width) {
-          sprite2.x = kontra.game.width;
+          sprite2.x = kontra.canvas.width;
         }
       },
       render: function() {

@@ -1161,12 +1161,6 @@ this.kontra = {
    */
   kontra.sprite = function(properties) {
     var sprite = Object.create(kontra.sprite.prototype);
-
-    // one time setup
-    sprite.position = kontra.vector();
-    sprite.velocity = kontra.vector();
-    sprite.acceleration = kontra.vector();
-
     sprite.init(properties);
 
     return sprite;
@@ -1206,6 +1200,11 @@ this.kontra = {
     init: function init(properties) {
       var temp, animation, firstAnimation, self = this;
       properties = properties || {};
+
+      // create the vectors if they don't exist or use the existing ones if they do
+      self.position = (self.position || kontra.vector());
+      self.velocity = (self.velocity || kontra.vector());
+      self.acceleration = (self.acceleration || kontra.vector());
 
       self.position._init(properties.x, properties.y);
       self.velocity._init(properties.dx, properties.dy);
@@ -1943,6 +1942,9 @@ kontra.store = {
 
       tileWidth: tileWidth,
       tileHeight: tileHeight,
+
+      mapWidth: mapWidth,
+      mapHeight: mapHeight,
 
       context: context,
 

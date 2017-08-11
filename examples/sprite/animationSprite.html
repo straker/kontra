@@ -11,14 +11,14 @@
     kontra.init();
 
     // set image path so we don't have to reference the sprite sheet by it's path
-    kontra.assetPaths.images = '../imgs/';
+    kontra.assets.imagePath = '../imgs/';
 
     // load the sprite sheet
-    kontra.loadImage('character_walk_sheet.png').then(function() {
+    kontra.assets.loadImage('character_walk_sheet.png').then(function() {
 
       // create the sprite sheet and its animation
       window.spriteSheet = kontra.spriteSheet({
-        image: kontra.images.character_walk_sheet,
+        image: kontra.assets.images.character_walk_sheet,
         frameWidth: 72,
         frameHeight: 97,
         animations: {

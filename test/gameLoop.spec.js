@@ -4,6 +4,14 @@
 describe('kontra.gameLoop', function() {
   var loop;
 
+  before(function() {
+    if (!kontra.canvas) {
+      var canvas = document.createElement('canvas');
+      canvas.width = canvas.height = 600;
+      kontra.init(canvas);
+    }
+  });
+
   afterEach(function() {
     loop && loop.stop();
   });
@@ -14,7 +22,11 @@ describe('kontra.gameLoop', function() {
   describe('init', function() {
 
     it('should log an error if not passed required functions', function() {
-      expect(kontra.gameLoop).to.throw();
+      function func() {
+        kontra.gameLoop();
+      }
+
+      expect(func).to.throw();
     });
 
   });
@@ -113,6 +125,22 @@ describe('kontra.gameLoop', function() {
       loop._frame();
 
       expect(count).to.equal(2);
+    });
+
+    it('should call clearCanvas by default', function() {
+      loop = kontra.gameLoop({
+        update: kontra._noop,
+        render: kontra._noop
+      });
+
+      sinon.stub(kontra.context, 'clearRect', kontra._noop);
+
+      loop._last = performance.now() - (1E3/60);
+      loop._frame();
+
+      expect(kontra.context.clearRect.called).to.be.true;
+
+      kontra.context.clearRect.restore();
     });
 
   });

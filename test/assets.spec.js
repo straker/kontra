@@ -235,6 +235,16 @@ describe('kontra.assets', function() {
       });
     });
 
+    it('should throw an error if no audio source can be played', function(done) {
+      kontra.assets.loadAudio('cantPlay.aaa').then(function(audio) {
+        // should not get here
+        done('no error thrown');
+      })
+      .catch(function(e) {
+        done();
+      });
+    });
+
   });
 
 

@@ -22,17 +22,17 @@ module.exports = function(config) {
       '/imgs': '/base/test/imgs',
       '/audio': '/base/test/audio',
       '/data': '/base/test/data'
+    },
+    reporters: ['progress', 'coverage'],
+    preprocessors: {
+      'src/*.js': ['coverage']
+    },
+    coverageReporter: {
+      dir : 'coverage/',
+      reporters: [
+        {type: 'lcov', subdir: '.'},
+        {type: 'text-summary'}
+      ]
     }
-    // reporters: ['progress', 'coverage'],
-    // preprocessors: {
-    //   'src/*.js': ['coverage']
-    // },
-    // coverageReporter: {
-    //   dir : 'coverage/',
-    //   reporters: [
-    //     {type: 'lcov', subdir: '.'},
-    //     {type: 'text-summary'}
-    //   ]
-    // }
   });
 };

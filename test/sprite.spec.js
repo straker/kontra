@@ -36,16 +36,29 @@ describe('kontra.vector', function() {
       expect(vec1.y).to.eql(30);
     });
 
-  });
+    it('should incorporate dt if passed', function() {
+      var vec1 = kontra.vector(10, 20);
+      var vec2 = kontra.vector(5, 10);
 
-  it('should incorporate dt if passed', function() {
-    var vec1 = kontra.vector(10, 20);
-    var vec2 = kontra.vector(5, 10);
+      vec1.add(vec2, 2)
 
-    vec1.add(vec2, 2)
+      expect(vec1.x).to.eql(20);
+      expect(vec1.y).to.eql(40);
+    });
 
-    expect(vec1.x).to.eql(20);
-    expect(vec1.y).to.eql(40);
+    it('should default vector to 0 with empty parameters', function() {
+      var vec1 = kontra.vector(10, 20);
+
+      vec1.add({x: 10});
+
+      expect(vec1.y).to.eql(20);
+
+      vec1 = kontra.vector(10, 20);
+      vec1.add({y: 10});
+
+      expect(vec1.x).to.eql(10);
+    });
+
   });
 
 
@@ -81,6 +94,16 @@ describe('kontra.vector', function() {
       vec.y = 100;
 
       expect(vec.y).to.equal(75);
+    });
+
+    it('should default to infinity for any missing parameters', function() {
+      vec = kontra.vector(10, 20);
+      vec.clamp();
+
+      expect(vec._xMin).to.eql(-Infinity);
+      expect(vec._xMax).to.eql(Infinity);
+      expect(vec._yMin).to.eql(-Infinity);
+      expect(vec._xMax).to.eql(Infinity);
     });
 
   });
@@ -207,6 +230,27 @@ describe('kontra.sprite', function() {
       expect(sprite.height).to.equal(20);
       expect(sprite.advance).to.equal(sprite._advanceAnim);
       expect(sprite.draw).to.equal(sprite._drawAnim);
+    });
+
+    it('should clone any animations to prevent frame corruption', function() {
+
+      var animations = {
+        'walk': {
+          width: 10,
+          height: 20,
+          clone: function() {
+            return animations.walk;
+          }
+        }
+      };
+
+      sinon.spy(animations.walk, 'clone');
+
+      var sprite = kontra.sprite({
+        animations: animations
+      });
+
+      expect(animations.walk.clone.called).to.be.true;
     });
 
     it('should set all additional properties on the sprite', function() {

@@ -376,6 +376,7 @@
        * @memberof kontra.tileEngine
        */
       render: function render() {
+        /* istanbul ignore next */
         tileEngine.context.drawImage(
           offscreenCanvas,
           tileEngine.sx, tileEngine.sy, canvasWidth, canvasHeight,

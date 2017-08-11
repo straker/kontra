@@ -163,6 +163,26 @@ describe('kontra.quadtree', function() {
       expect(subnode[0]).to.equal(object);
     });
 
+    it('shouldn\'t split a quadtree node twice after clearing', function() {
+      // cause the tree to split
+      for (var i = 0; i < 6; i++) {
+        quadtree.add({id: i});
+      }
+
+      var subnodes = quadtree.subnodes;
+
+      quadtree.clear();
+
+      // cause to split again
+      for (var i = 0; i < 6; i++) {
+        quadtree.add({id: i});
+      }
+
+      // since splitting overrides the subnodes with new values this should
+      // test that the subnodes were left alone after the 2nd split
+      expect(quadtree.subnodes).to.equal(subnodes);
+    });
+
   });
 
 

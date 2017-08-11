@@ -1,7 +1,7 @@
 // --------------------------------------------------
 // kontra
 // --------------------------------------------------
-describe('kontra', function() {
+describe.only('kontra', function() {
 
   // --------------------------------------------------
   // kontra.init
@@ -10,7 +10,11 @@ describe('kontra', function() {
     var canvas;
 
     it('should log an error if no canvas element exists', function() {
-      expect(kontra.init).to.throw();
+      function func() {
+        kontra.init();
+      }
+
+      expect(func).to.throw();
     });
 
     it('should select the first canvas element on the page when no query parameters are passed', function() {

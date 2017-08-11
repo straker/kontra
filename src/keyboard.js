@@ -63,12 +63,6 @@
     keyMap[111+i] = 'f'+i;
   }
 
-  // aliases modifier keys to their actual key for keyup event
-  var aliases = {
-    'leftwindow': 'meta',  // mac
-    'select': 'meta'       // mac
-  };
-
   var addEventListener = window.addEventListener;
   addEventListener('keydown', keydownEventHandler);
   addEventListener('keyup', keyupEventHandler);
@@ -98,10 +92,6 @@
   function keyupEventHandler(e) {
     var key = keyMap[e.which];
     pressedKeys[key] = false;
-
-    if (aliases[key]) {
-      pressedKeys[ aliases[key] ] = false;
-    }
   }
 
   /**

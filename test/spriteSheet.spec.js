@@ -47,6 +47,24 @@ describe('kontra.animation', function() {
 
 
   // --------------------------------------------------
+  // kontra.animation.clone
+  // --------------------------------------------------
+  describe('clone', function() {
+
+    it('should return a new animation with the same properties', function() {
+      var anim = animation.clone();
+
+      expect(anim).to.not.equal(animation);
+      expect(anim).to.eql(animation);
+    });
+
+  });
+
+
+
+
+
+  // --------------------------------------------------
   // kontra.animation.update
   // --------------------------------------------------
   describe('update', function() {
@@ -160,7 +178,11 @@ describe('kontra.spriteSheet', function() {
   describe('init', function() {
 
     it('should log an error if no image is provided', function() {
-      expect(kontra.spriteSheet).to.throw();
+      function func() {
+        kontra.spriteSheet();
+      }
+
+      expect(func).to.throw();
     });
 
     it('should initialize properties on the spriteSheet when passed an image', function() {

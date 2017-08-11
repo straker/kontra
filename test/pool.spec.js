@@ -32,7 +32,11 @@ describe('kontra.pool', function() {
   describe('init', function() {
 
     it('should log an error if the create function is not passed', function() {
-      expect(kontra.pool).to.throw();
+      function func() {
+        kontra.pool();
+      }
+
+      expect(func).to.throw();
     });
 
     it('should log an error if the create function did not return an object', function() {

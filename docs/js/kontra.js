@@ -521,12 +521,6 @@ this.kontra = {
     keyMap[111+i] = 'f'+i;
   }
 
-  // aliases modifier keys to their actual key for keyup event
-  var aliases = {
-    'leftwindow': 'meta',  // mac
-    'select': 'meta'       // mac
-  };
-
   var addEventListener = window.addEventListener;
   addEventListener('keydown', keydownEventHandler);
   addEventListener('keyup', keyupEventHandler);
@@ -556,10 +550,6 @@ this.kontra = {
   function keyupEventHandler(e) {
     var key = keyMap[e.which];
     pressedKeys[key] = false;
-
-    if (aliases[key]) {
-      pressedKeys[ aliases[key] ] = false;
-    }
   }
 
   /**
@@ -2166,6 +2156,7 @@ kontra.store = {
        * @memberof kontra.tileEngine
        */
       render: function render() {
+        /* istanbul ignore next */
         tileEngine.context.drawImage(
           offscreenCanvas,
           tileEngine.sx, tileEngine.sy, canvasWidth, canvasHeight,

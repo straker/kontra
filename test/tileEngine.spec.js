@@ -17,7 +17,11 @@ describe('kontra.tileEngine', function() {
   describe('init', function() {
 
     it('should log an error if no dimensions are passed', function() {
-      expect(kontra.tileEngine).to.throw();
+      function func() {
+        kontra.tileEngine();
+      }
+
+      expect(func).to.throw();
     });
 
     it('should initialize properties on the tile engine', function() {
@@ -34,6 +38,22 @@ describe('kontra.tileEngine', function() {
 
       expect(tileEngine.mapWidth).to.equal(1000);
       expect(tileEngine.mapHeight).to.equal(1500);
+    });
+
+    it('should accept lowercase tilewidth and tileheight', function() {
+      var tileEngine = kontra.tileEngine({
+        tilewidth: 10,
+        tileheight: 10,
+        width: 100,
+        height: 150,
+        properties: {
+          mapWidth: 1000,
+          mapHeight: 1500
+        }
+      });
+
+      expect(tileEngine.tileWidth).to.equal(10);
+      expect(tileEngine.tileHeight).to.equal(10);
     });
 
     it('should call addLayers() and addTilesets() if passed', function() {
@@ -77,7 +97,11 @@ describe('kontra.tileEngine', function() {
     });
 
     it('should log an error if no image is provided', function() {
-      expect(tileEngine.addTilesets).to.throw();
+      function func() {
+        tileEngine.addTilesets({});
+      }
+
+      expect(func).to.throw();
     });
 
     it('should accept an array of tilesets', function() {

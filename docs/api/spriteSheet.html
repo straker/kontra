@@ -36,7 +36,7 @@
           <dt><strong>properties.frameMargin</strong> <em>{number}</em></dt>
           <dd>Optional. The amount of whitespace between each frame. Defaults to 0.</dd>
           <dt><strong>properties.animations</strong> <em>{object}</em></dt>
-          <dd><a href="animation.html">kontra.animations</a> to create from the sprite sheet. Passed directly into the sprite sheets <a href="#createAnimations">createAnimations(animations)</a> function.</dd>
+          <dd><a href="animation">kontra.animations</a> to create from the sprite sheet. Passed directly into the sprite sheets <a href="#createAnimations">createAnimations(animations)</a> function.</dd>
         </dl>
 
         <p>A sprite sheet to animate a sequence of images.</p>
@@ -48,7 +48,7 @@
           <figcaption>Sprite sheet image courtesy of <a href="https://kenney.nl/assets">Kenny</a>.</figcaption>
         </figure>
 
-        <p>Typically you create a sprite sheet just to create <a href="animation.html">animations</a> and then use the animations for your <a href="sprite.html">sprite</a>.</p>
+        <p>Typically you create a sprite sheet just to create <a href="animation">animations</a> and then use the animations for your <a href="sprite">sprite</a>.</p>
 
         <pre><code class="language-javascript">var image = new Image();
 image.src = '../imgs/character_walk_sheet.png';
@@ -110,7 +110,7 @@ var sprite = kontra.sprite({
 
           <p><em>{object}</em></p>
 
-          <p>An object of named <a href="animation.html">kontra.animation</a> objects. Typically you pass this object into <a href="sprite.html">kontra.sprite</a> to create an <a href="sprite.html#animation-sprite">animation sprite</a>.</p>
+          <p>An object of named <a href="animation">kontra.animation</a> objects. Typically you pass this object into <a href="sprite">kontra.sprite</a> to create an <a href="sprite#animation-sprite">animation sprite</a>.</p>
 
         </section>
 
@@ -132,7 +132,7 @@ var sprite = kontra.sprite({
 
           <p>Create animations from the sprite sheet. Called from <code>kontra.spriteSheet</code> automatically if the <code>animations</code> property is passed in.</p>
 
-          <p>This function populates the sprite sheets <a href="#animations">animations</a> object with <a href="animation.html">kontra.animation</a> objects. Each animation is accessible by their name.</p>
+          <p>This function populates the sprite sheets <a href="#animations">animations</a> object with <a href="animation">kontra.animation</a> objects. Each animation is accessible by their name.</p>
 
 <code-output>
 var image = new Image();

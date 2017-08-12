@@ -47,7 +47,7 @@
           <dt><strong>properties.sy</strong> <em>{number}</em></dt>
           <dd>Optional. Y coordinate of the tile map camera. Defaults to 0.</dd>
           <dt><strong>properties.context</strong> <em>{CanvasRenderingContext2D}</em></dt>
-          <dd>Optional. The context the tile map should draw to. Defaults <a href="kontra.html#context">kontra.context</a>.</dd>
+          <dd>Optional. The context the tile map should draw to. Defaults <a href="kontra#context">kontra.context</a>.</dd>
         </dl>
 
         <p>A tile engine for managing and drawing tilesets.</p>
@@ -202,7 +202,7 @@ img.onload = function() {
         <section>
           <h2 id="advance-use"><a href="#advance-use" class="section-link">Advance Use<span aria-hidden="true">#</span></a></h2>
 
-          <p>Adding all the tileset images and layers to a tile engine can be tedious, especially if you have multiple layers. If you want a simpler way to create a tile engine, Kontra has been written to work directly with the JSON output of the <a href="http://www.mapeditor.org/">Tiled Map Editor</a>. The one requirement is that you must preload all of the tileset images using <a href="assets.html#load">kontra.assets.load()</a> before you create the tile engine.</p>
+          <p>Adding all the tileset images and layers to a tile engine can be tedious, especially if you have multiple layers. If you want a simpler way to create a tile engine, Kontra has been written to work directly with the JSON output of the <a href="http://www.mapeditor.org/">Tiled Map Editor</a>. The one requirement is that you must preload all of the tileset images using <a href="assets#load">kontra.assets.load()</a> before you create the tile engine.</p>
 
 <code-output width="576" height="576">
 kontra.assets.load('../imgs/mapPack_tilesheet.png', '../data/tile_engine_basic.json')
@@ -330,7 +330,7 @@ tileEngine.addLayers({
             <dd>A single tileset or array of tilesets to add. Each tileset has the following properties:
               <dl aria-label="Tileset properties">
                 <dt><strong>image</strong> <em>{HTMLImageElement | HTMLCanvasElement | string}</em></dt>
-                <dd>The tileset image or path to the tileset image. If it's an image path, it will look for the path in <a href="assets.html#images">kontra.assets.images</a>. This means you must load the tileset image using <a href="assets.html#load">kontra.assets.load()</a> before you call this function if you are using Tiled JSON output.</dd>
+                <dd>The tileset image or path to the tileset image. If it's an image path, it will look for the path in <a href="assets#images">kontra.assets.images</a>. This means you must load the tileset image using <a href="assets#load">kontra.assets.load()</a> before you call this function if you are using Tiled JSON output.</dd>
                 <dt><strong>firstGrid</strong> <em>{number}</em></dt>
                 <dd>The first tile grid index of the tileset. If using a single tileset this will be <code>0</code>, but when using multiple tilesets the first grid index of the new tileset is typically the last grid index + 1 of the previous tileset (when loaded in order).</dd>
               </dl>
@@ -438,7 +438,7 @@ kontra.assets.load('../imgs/mapPack_tilesheet.png')
             <dd>The object to check collision against.</dd>
           </dl>
 
-          <p>Check if the object collides with the layer (shares a gird coordinate with any positive tile index in layers data). The object being checked must have the properties <code>x</code>, <code>y</code>, <code>width</code>, and <code>height</code> so that its position in the grid can be calculated. <a href="sprite.html">kontra.sprite</a> defines these properties for you.</p>
+          <p>Check if the object collides with the layer (shares a gird coordinate with any positive tile index in layers data). The object being checked must have the properties <code>x</code>, <code>y</code>, <code>width</code>, and <code>height</code> so that its position in the grid can be calculated. <a href="sprite">kontra.sprite</a> defines these properties for you.</p>
 
           <pre><code class="language-javascript">var tileEngine = kontra.tileEngine({
   tileWidth: 32,

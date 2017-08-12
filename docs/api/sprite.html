@@ -40,13 +40,13 @@
           <dt><strong>properties.ddy</strong> <em>{number}</em></dt>
           <dd>Optional. Sprites y acceleration. Defaults to 0.</dd>
           <dt><strong>properties.ttl</strong> <em>{number}</em></dt>
-          <dd>Optional. How many frames the sprite should be alive. Used by <a href="pool.html">kontra.pool</a>. Defaults to 0.</dd>
+          <dd>Optional. How many frames the sprite should be alive. Used by <a href="pool">kontra.pool</a>. Defaults to 0.</dd>
           <dt><strong>properties.context</strong> <em>{CanvasRenderingContext2D}</em></dt>
-          <dd>Optional. The context the sprite should draw to. Defaults <a href="kontra.html#context">kontra.context</a>.</dd>
+          <dd>Optional. The context the sprite should draw to. Defaults <a href="kontra#context">kontra.context</a>.</dd>
           <dt><strong>properties.image</strong> <em>{HTMLImageElement | HTMLCanvasElement}</em></dt>
           <dd>Optional. Use an image to draw the sprite.</dd>
           <dt><strong>properties.animations</strong> <em>{object}</em></dt>
-          <dd>Optional. An object of <a href="animation.html">kontra.animations</a> from a <a href="spriteSheet.html">kontra.spritesheet</a> to animate the sprite.</dd>
+          <dd>Optional. An object of <a href="animation">kontra.animations</a> from a <a href="spriteSheet">kontra.spritesheet</a> to animate the sprite.</dd>
           <dt><strong>properties.color</strong> <em>{string}</em></dt>
           <dd>Optional. Fill color for the sprite if no image or animation is provided.</dd>
           <dt><strong>properties.width</strong> <em>{number}</em></dt>
@@ -180,7 +180,7 @@ image.onload = function() {
 
           <p>A sprite can use a spritesheet animation as well. To create an animation sprite, use the <a href="#animations">animations</a> property. The size of the sprite will automatically be set as the <code>width</code> and <code>height</code> of a frame of the spritesheet.</p>
 
-          <p>A sprite can have multiple named animations. The easiest way to create animations is to use <a href="spriteSheet.html">kontra.spriteSheet</a>. All animations will automatically be <a href="animation.html#clone">cloned</a> so no two sprites update the same animation.</p>
+          <p>A sprite can have multiple named animations. The easiest way to create animations is to use <a href="spriteSheet">kontra.spriteSheet</a>. All animations will automatically be <a href="animation#clone">cloned</a> so no two sprites update the same animation.</p>
 
 <code-output>
 var image = new Image();
@@ -272,7 +272,7 @@ sprite.render();
         <section>
           <h2 id="acceleration"><a href="#acceleration" class="section-link">kontra.sprite.acceleration<span aria-hidden="true">#</span></a></h2>
 
-          <p><em>{<a href="vector.html">kontra.vector</a>}</em></p>
+          <p><em>{<a href="vector">kontra.vector</a>}</em></p>
 
           <p>X and Y values of the sprites acceleration vector.</p>
 
@@ -325,7 +325,7 @@ sprite.render();
 
           <p><em>{object}</em></p>
 
-          <p>An object of <a href="animation.html">kontra.animations</a> from a <a href="spriteSheet.html">kontra.spritesheet</a> to animate the sprite. Each animation is named so that it can can be used by name for the sprites <a href="#playAnimation">playAnimation()</a> function.</p>
+          <p>An object of <a href="animation">kontra.animations</a> from a <a href="spriteSheet">kontra.spritesheet</a> to animate the sprite. Each animation is named so that it can can be used by name for the sprites <a href="#playAnimation">playAnimation()</a> function.</p>
 
           <pre><code class="language-javascript">var spriteSheet = kontra.spriteSheet({
   /* ... */,
@@ -447,7 +447,7 @@ sprite.collidesWith(sprite2);  //=> true</code></pre>
         <section>
           <h2 id="currentAnimation"><a href="#currentAnimation" class="section-link">kontra.sprite.currentAnimation<span aria-hidden="true">#</span></a></h2>
 
-          <p><em>{<a href="animation.html">kontra.animation</a>}</em></p>
+          <p><em>{<a href="animation">kontra.animation</a>}</em></p>
 
           <p>The currently playing animation object.</p>
 
@@ -576,7 +576,7 @@ sprite.render();
             <dd>Properties of the sprite.</dd>
           </dl>
 
-          <p>Use this function to reinitialize a sprite. It takes the same properties object as <a href="sprite.html">kontra.sprite()</a>. Useful it you want to repurpose a sprite.</p>
+          <p>Use this function to reinitialize a sprite. It takes the same properties object as <a href="sprite">kontra.sprite()</a>. Useful it you want to repurpose a sprite.</p>
 
         </section>
 
@@ -587,7 +587,7 @@ sprite.render();
         <section>
           <h2 id="isAlive"><a href="#isAlive" class="section-link">kontra.sprite.isAlive()<span aria-hidden="true">#</span></a></h2>
 
-          <p>Returns true if the sprites <a href="#ttl">ttl</a> is greater than 0. Primarily used by <a href="pool.html">kontra.pool</a> to know when to recycle an object.</p>
+          <p>Returns true if the sprites <a href="#ttl">ttl</a> is greater than 0. Primarily used by <a href="pool">kontra.pool</a> to know when to recycle an object.</p>
 
         </section>
 
@@ -635,7 +635,7 @@ sprite.playAnimation('idle');</code></pre>
         <section>
           <h2 id="position"><a href="#position" class="section-link">kontra.sprite.position<span aria-hidden="true">#</span></a></h2>
 
-          <p><em>{<a href="vector.html">kontra.vector</a>}</em></p>
+          <p><em>{<a href="vector">kontra.vector</a>}</em></p>
 
           <p>X and Y values of the sprites position vector.</p>
 
@@ -661,7 +661,7 @@ sprite.playAnimation('idle');</code></pre>
 
           <p><em>{number}</em></p>
 
-          <p>How may frames the sprite should be alive. Primarily used by <a href="pool.html">kontra.pool</a> to know when to recycle an object.</p>
+          <p>How may frames the sprite should be alive. Primarily used by <a href="pool">kontra.pool</a> to know when to recycle an object.</p>
 
         </section>
 
@@ -688,7 +688,7 @@ sprite.playAnimation('idle');</code></pre>
         <section>
           <h2 id="velocity"><a href="#velocity" class="section-link">kontra.sprite.velocity<span aria-hidden="true">#</span></a></h2>
 
-          <p><em>{<a href="vector.html">kontra.vector</a>}</em></p>
+          <p><em>{<a href="vector">kontra.vector</a>}</em></p>
 
           <p>X and Y values of the sprites velocity vector.</p>
 

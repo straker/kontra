@@ -76,11 +76,11 @@
        <section>
           <h2 id="basic-use"><a href="#basic-use" class="section-link">Basic Use<span aria-hidden="true">#</span></a></h2>
 
-          <p>To use the pool, you must pass the <code>create()</code> function, which should return a new <a href="sprite.html">kontra.sprite</a> or object. This object will be added to the pool every time there are no more objects to reuse.</p>
+          <p>To use the pool, you must pass the <code>create()</code> function, which should return a new <a href="sprite">kontra.sprite</a> or object. This object will be added to the pool every time there are no more objects to reuse.</p>
 
-          <p>The object must implement the functions <code>update(dt)</code>, <code>init(properties)</code>, and <code>isAlive()</code>. If one of these functions is missing the pool will throw an error. <a href="sprite.html">kontra.sprite</a> defines these functions for you.</p>
+          <p>The object must implement the functions <code>update(dt)</code>, <code>init(properties)</code>, and <code>isAlive()</code>. If one of these functions is missing the pool will throw an error. <a href="sprite">kontra.sprite</a> defines these functions for you.</p>
 
-          <p>An object is available for reuse when it's <a href="sprite.html#isAlive">isAlive()</a> function returns false. For a sprite, this is typically when it's <a href="sprite.html#ttl">ttl</a> is 0.</p>
+          <p>An object is available for reuse when it's <a href="sprite#isAlive">isAlive()</a> function returns false. For a sprite, this is typically when it's <a href="sprite#ttl">ttl</a> is 0.</p>
 
           <p>When you need an object from the pool, use the pools <a href="#get">get()</a> function and pass it any properties you want the reused object to have.</p>
 
@@ -133,7 +133,7 @@ pool.get({
             <dd>Optional. Properties to pass to the objects <code>init(properties)</code> function.</dd>
           </dl>
 
-          <p>Get an object from the pool. The <code>properties</code> parameter will be passed directly to the objects <code>init(properties)</code> function. If you're using <a href="sprite.html">kontra.sprite</a>, you should also pass the <a href="sprite.html#ttl">ttl</a> property to designate how many frames you want the object to be alive for.</p>
+          <p>Get an object from the pool. The <code>properties</code> parameter will be passed directly to the objects <code>init(properties)</code> function. If you're using <a href="sprite">kontra.sprite</a>, you should also pass the <a href="sprite#ttl">ttl</a> property to designate how many frames you want the object to be alive for.</p>
 
           <p>If you want to control when the sprite is ready for reuse, pass <code>Infinity</code> for <code>ttl</code>. You'll need to set the sprites <code>ttl</code> to <code>0</code> when you're ready for the sprite to be reused.</p>
 
@@ -159,7 +159,7 @@ pool.get({
         <section>
           <h2 id="getAliveObjects"><a href="#getAliveObjects" class="section-link">kontra.pool.getAliveObjects()<span aria-hidden="true">#</span></a></h2>
 
-          <p>Returns an array of all objects currently in use. Useful if you need to do special processing on all in use objects outside of the pool, such as add all alive objects to a <a href="quadtree.html">quadtree</a>.</p>
+          <p>Returns an array of all objects currently in use. Useful if you need to do special processing on all in use objects outside of the pool, such as add all alive objects to a <a href="quadtree">quadtree</a>.</p>
 
         </section>
 

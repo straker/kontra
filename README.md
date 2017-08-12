@@ -13,7 +13,7 @@
 <p>Kontra.js prides itself in being:</p>
 
 <ul>
-  <li><strong>lightweight</strong>: 14 kB minified (5.5 kB gzipped) for the entire library. The basic bundle is 4.5 kB minified (2 Kb gzipped).</li>
+  <li><strong>lightweight</strong>: 14 kB minified (5.5 kB gzipped) for the entire library. The basic bundle is 4.5 kB minified (2 kB gzipped).</li>
   <li><strong>modular</strong>: pick and choose what modules you want when you <a href="https://straker.github.io/kontra/download.html">download</a>. No inter-dependencies.</li>
   <li><strong>extensible</strong>: everything is customizable and can be extended.</li>
   <li><strong>fast</strong>: all logic has been removed from the update and render cycles.</li>

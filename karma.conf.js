@@ -18,7 +18,7 @@ module.exports = function(config) {
       'src/*.js',
       'test/*.js',
     ],
-    browsers: ['Chrome'],
+    browsers: ['ChromeHeadless'],
     proxies: {
       '/imgs': '/base/test/imgs',
       '/audio': '/base/test/audio',

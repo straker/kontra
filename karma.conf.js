@@ -6,6 +6,7 @@ module.exports = function(config) {
     basePath: '',
     singleRun: false,
     autoWatch: true,
+    concurrency: Infinity,
     frameworks: ['mocha', 'chai', 'sinon'],
     files: [
       // assets

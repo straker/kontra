@@ -360,7 +360,7 @@ describe('kontra.sprite', function() {
         y: 20
       });
 
-      sinon.stub(sprite.context, 'fillRect', kontra._noop);
+      sinon.stub(sprite.context, 'fillRect').callsFake(kontra._noop);
 
       sprite.render();
 
@@ -380,7 +380,7 @@ describe('kontra.sprite', function() {
         image: img
       });
 
-      sinon.stub(sprite.context, 'drawImage', kontra._noop);
+      sinon.stub(sprite.context, 'drawImage').callsFake(kontra._noop);
 
       sprite.render();
 
@@ -406,7 +406,7 @@ describe('kontra.sprite', function() {
         animations: animations
       });
 
-      sinon.stub(sprite.currentAnimation, 'render', kontra._noop);
+      sinon.stub(sprite.currentAnimation, 'render').callsFake(kontra._noop);
 
       sprite.render();
 

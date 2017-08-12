@@ -258,7 +258,7 @@ describe('kontra.assets', function() {
 
 
     // all
-    it('should call the correct load function for all passed assets', function() {
+    it('should call the correct load function for all passed assets', function(done) {
       kontra.assets.load('/imgs/bullet.png', ['/audio/shoot.mp3', '/audio/shoot.ogg'], '/data/test.json')
         .then(function(assets) {
           var image = assets[0];
@@ -268,6 +268,11 @@ describe('kontra.assets', function() {
           expect(kontra.assets.images['/imgs/bullet']).to.equal(image);
           expect(kontra.assets.audio['/audio/shoot']).to.equal(audio);
           expect(kontra.assets.data['/data/test']).to.equal(data);
+
+          done();
+        })
+        .catch(function(e) {
+          done(e);
         });
 
     });

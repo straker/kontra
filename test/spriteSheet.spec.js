@@ -198,7 +198,7 @@ describe('kontra.spriteSheet', function() {
     });
 
     it('should create animations if passed an animation object', function() {
-      sinon.stub(kontra.spriteSheet.prototype, 'createAnimations', kontra._noop);
+      sinon.stub(kontra.spriteSheet.prototype, 'createAnimations').callsFake(kontra._noop);
 
       var spriteSheet = kontra.spriteSheet({
         image: new Image(100, 200),

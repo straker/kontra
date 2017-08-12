@@ -40,7 +40,7 @@ describe('kontra.gameLoop', function() {
   // --------------------------------------------------
   describe('stop', function() {
     it('should call cancelAnimationFrame', function() {
-      sinon.stub(window, 'cancelAnimationFrame', kontra._noop);
+      sinon.stub(window, 'cancelAnimationFrame').callsFake(kontra._noop);
 
       loop = kontra.gameLoop({
         update: kontra._noop,
@@ -133,7 +133,7 @@ describe('kontra.gameLoop', function() {
         render: kontra._noop
       });
 
-      sinon.stub(kontra.context, 'clearRect', kontra._noop);
+      sinon.stub(kontra.context, 'clearRect').callsFake(kontra._noop);
 
       loop._last = performance.now() - (1E3/60);
       loop._frame();

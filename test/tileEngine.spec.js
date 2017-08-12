@@ -458,7 +458,7 @@ describe('kontra.tileEngine', function() {
         image: image
       });
 
-      sinon.stub(tileEngine.context, 'drawImage', kontra._noop);
+      sinon.stub(tileEngine.context, 'drawImage').callsFake(kontra._noop);
 
       tileEngine.addLayers({
         name: 'test',
@@ -497,7 +497,7 @@ describe('kontra.tileEngine', function() {
         image: image
       });
 
-      sinon.stub(tileEngine.context, 'drawImage', kontra._noop);
+      sinon.stub(tileEngine.context, 'drawImage').callsFake(kontra._noop);
 
       tileEngine.addLayers({
         name: 'test',

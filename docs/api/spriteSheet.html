@@ -7,14 +7,14 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/webcomponentsjs/0.7.22/webcomponents-lite.min.js"></script>
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/themes/prism.min.css">
-  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="../styles.css">
 
-  <link rel="import" href="/components/main-nav.html">
-  <link rel="import" href="/components/code-output.html">
+  <link rel="import" href="../components/main-nav.html">
+  <link rel="import" href="../components/code-output.html">
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/prism.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/components/prism-javascript.min.js"></script>
-  <script src="/js/kontra.js"></script>
+  <script src="../js/kontra.js"></script>
 </head>
 <body>
   <div class="content">
@@ -36,22 +36,22 @@
           <dt><strong>properties.frameMargin</strong> <em>{number}</em></dt>
           <dd>Optional. The amount of whitespace between each frame. Defaults to 0.</dd>
           <dt><strong>properties.animations</strong> <em>{object}</em></dt>
-          <dd><a href="/api/animation.html">kontra.animations</a> to create from the sprite sheet. Passed directly into the sprite sheets <a href="#createAnimations">createAnimations(animations)</a> function.</dd>
+          <dd><a href="animation.html">kontra.animations</a> to create from the sprite sheet. Passed directly into the sprite sheets <a href="#createAnimations">createAnimations(animations)</a> function.</dd>
         </dl>
 
         <p>A sprite sheet to animate a sequence of images.</p>
 
         <figure>
-          <a href="/imgs/character_walk_sheet.png">
-            <img src="/imgs/character_walk_sheet.png" alt="11 frames of a walking teal pill-like person wearing a space helmet."/>
+          <a href="../imgs/character_walk_sheet.png">
+            <img src="../imgs/character_walk_sheet.png" alt="11 frames of a walking teal pill-like person wearing a space helmet."/>
           </a>
           <figcaption>Sprite sheet image courtesy of <a href="https://kenney.nl/assets">Kenny</a>.</figcaption>
         </figure>
 
-        <p>Typically you create a sprite sheet just to create <a href="/api/animation.html">animations</a> and then use the animations for your <a href="/api/sprite.html">sprite</a>.</p>
+        <p>Typically you create a sprite sheet just to create <a href="animation.html">animations</a> and then use the animations for your <a href="sprite.html">sprite</a>.</p>
 
         <pre><code class="language-javascript">var image = new Image();
-image.src = '/imgs/character_walk_sheet.png';
+image.src = '../imgs/character_walk_sheet.png';
 
 var spriteSheet = kontra.spriteSheet({
   image: image,
@@ -110,7 +110,7 @@ var sprite = kontra.sprite({
 
           <p><em>{object}</em></p>
 
-          <p>An object of named <a href="/api/animation.html">kontra.animation</a> objects. Typically you pass this object into <a href="/api/sprite.html">kontra.sprite</a> to create an <a href="/api/sprite.html#animation-sprite">animation sprite</a>.</p>
+          <p>An object of named <a href="animation.html">kontra.animation</a> objects. Typically you pass this object into <a href="sprite.html">kontra.sprite</a> to create an <a href="sprite.html#animation-sprite">animation sprite</a>.</p>
 
         </section>
 
@@ -132,11 +132,11 @@ var sprite = kontra.sprite({
 
           <p>Create animations from the sprite sheet. Called from <code>kontra.spriteSheet</code> automatically if the <code>animations</code> property is passed in.</p>
 
-          <p>This function populates the sprite sheets <a href="#animations">animations</a> object with <a href="/api/animation.html">kontra.animation</a> objects. Each animation is accessible by their name.</p>
+          <p>This function populates the sprite sheets <a href="#animations">animations</a> object with <a href="animation.html">kontra.animation</a> objects. Each animation is accessible by their name.</p>
 
 <code-output>
 var image = new Image();
-image.src = '/imgs/character_walk_sheet.png';
+image.src = '../imgs/character_walk_sheet.png';
 
 image.onload = function() {
 

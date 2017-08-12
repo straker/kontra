@@ -7,14 +7,14 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/webcomponentsjs/0.7.22/webcomponents-lite.min.js"></script>
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/themes/prism.min.css">
-  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="../styles.css">
 
-  <link rel="import" href="/components/main-nav.html">
-  <link rel="import" href="/components/code-output.html">
+  <link rel="import" href="../components/main-nav.html">
+  <link rel="import" href="../components/code-output.html">
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/prism.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/components/prism-javascript.min.js"></script>
-  <script src="/js/kontra.js"></script>
+  <script src="../js/kontra.js"></script>
 </head>
 <body>
   <div class="content">
@@ -27,7 +27,7 @@
         <dl>
           <dt><strong>properties</strong> <em>{object}</em></dt>
           <dd>Properties of the animation.</dd>
-          <dt><strong>properties.spriteSheet</strong> <em>{<a href="/api/spriteSheet.html">kontra.spriteSheet</a>}</em></dt>
+          <dt><strong>properties.spriteSheet</strong> <em>{<a href="spriteSheet.html">kontra.spriteSheet</a>}</em></dt>
           <dd>The sprite sheet to use for the animation.</dd>
           <dt><strong>properties.frames</strong> <em>{number[]}</em></dt>
           <dd>Sequence of frames to use from the sprite sheet.</dd>
@@ -40,9 +40,9 @@
 
         <p>An animation defines the sequence of <a href="#frames">frames</a> to use from a sprite sheet. It also defines at what speed the animation should run using <a href="#frameRate">frameRate</a>.</p>
 
-        <p>Typically you don't create a <code>kontra.animation</code> directly, but instead would create them through <a href="/api/spriteSheet.html">kontra.spriteSheet</a>.</p>
+        <p>Typically you don't create a <code>kontra.animation</code> directly, but instead would create them through <a href="spriteSheet.html">kontra.spriteSheet</a>.</p>
 
-        <p>Added to the <code>kontra</code> object when <a href="/api/spriteSheet.html">kontra.spriteSheet</a> is installed.</p>
+        <p>Added to the <code>kontra</code> object when <a href="spriteSheet.html">kontra.spriteSheet</a> is installed.</p>
 
         <pre><code class="language-javascript">var spriteSheet = kontra.spriteSheet({/* ... */});
 
@@ -89,7 +89,7 @@ var animation = kontra.animation({
         <section>
           <h2 id="clone"><a href="#clone" class="section-link">kontra.animation.clone()<span aria-hidden="true">#</span></a></h2>
 
-          <p>Clone an animation so it can be used more than once. If multiple <a href="/api/sprite.html">sprites</a> share an animation, it must be cloned for each sprite otherwise all sprites would update the same animation, causing it to update at an accelerated speed.</p>
+          <p>Clone an animation so it can be used more than once. If multiple <a href="sprite.html">sprites</a> share an animation, it must be cloned for each sprite otherwise all sprites would update the same animation, causing it to update at an accelerated speed.</p>
 
           <pre><code class="language-javascript">var sprite = kontra.sprite({
   x: 200,
@@ -176,7 +176,7 @@ var sprite2 = kontra.sprite({
             <dt><strong>properties.y</strong> <em>{number}</em></dt>
             <dd>Y coordinate to render the animation.</dd>
             <dt><strong>properties.context</strong> <em>{CanvasRenderingContext2D}</em></dt>
-            <dd>Optional. The context the animation should draw to. Defaults <a href="/api/kontra.html#context">kontra.context</a>.</dd>
+            <dd>Optional. The context the animation should draw to. Defaults <a href="kontra.html#context">kontra.context</a>.</dd>
           </dl>
 
           <p>Render the current frame to the <code>x</code>, <code>y</code> position.</p>
@@ -190,7 +190,7 @@ var sprite2 = kontra.sprite({
         <section>
           <h2 id="spriteSheet"><a href="#spriteSheet" class="section-link">kontra.animation.spriteSheet<span aria-hidden="true">#</span></a></h2>
 
-          <p><em>{<a href="/api/spriteSheet.html">kontra.spriteSheet</a>}</em></p>
+          <p><em>{<a href="spriteSheet.html">kontra.spriteSheet</a>}</em></p>
 
           <p>The sprite sheet to use for the animation.</p>
 

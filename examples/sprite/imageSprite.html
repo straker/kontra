@@ -11,16 +11,16 @@
     kontra.init();
 
     // set image path so we don't have to reference the image by it's path
-    kontra.assetPaths.images = '../imgs/';
+    kontra.assets.imagePath = '../imgs/';
 
     // load the image
-    kontra.loadImage('character.png').then(function() {
+    kontra.assets.loadImage('character.png').then(function() {
 
       // pass the image to the sprite
       window.sprite = kontra.sprite({
         x: 267,
         y: 154,
-        image: kontra.images.character
+        image: kontra.assets.images.character
       });
 
       // render the sprite

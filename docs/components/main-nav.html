@@ -1,0 +1,56 @@
+<template id="main-nav">
+  <nav>
+    <h1 style="color: white; border-bottom-color: white">Kontra</h1>
+
+    <a href="#main">Skip navigation</a>
+
+    <a href="/">Introduction</a>
+    <a href="/getting-started.html">Getting Started</a>
+    <a href="/download.html">Download</a>
+
+    <!-- <section>
+      <strong>Tutorials</strong>
+      <a href="/tutorials/basic-game.html">Basic Game</a>
+    </section> -->
+
+    <section>
+      <strong>APIs</strong>
+      <a href="/api/assets.html">Asset Loading</a>
+      <a href="/api/gameLoop.html">Game Loop</a>
+      <a href="/api/keyboard.html">Keyboard</a>
+      <a href="/api/kontra.html">Kontra</a>
+      <a href="/api/pool.html">Object Pool</a>
+      <a href="/api/quadtree.html">Quadtree</a>
+      <a href="/api/sprite.html">Sprite</a>
+      <a href="/api/animation.html">Spritesheet Animation</a>
+      <a href="/api/spriteSheet.html">Spritesheet</a>
+      <a href="/api/store.html">Store</a>
+      <a href="/api/tileEngine.html">Tile Engine</a>
+      <a href="/api/vector.html">Vector</a>
+    </section>
+  </nav>
+</template>
+
+<script>
+  (function() {
+    var doc = (document._currentScript || document.currentScript).ownerDocument;
+    var template = doc.querySelector('#main-nav');
+    var mainNavProto = Object.create(HTMLElement.prototype);
+
+    mainNavProto.createdCallback = function() {
+      this.appendChild(document.importNode(template.content, true));
+    };
+
+    mainNavProto.attachedCallback = function() {
+      var currentNav = this.querySelector('[href*="'+window.location.pathname+'"]');
+
+      if (currentNav) {
+        currentNav.setAttribute('aria-current', 'page');
+      }
+    };
+
+    document.registerElement('main-nav', {
+      prototype: mainNavProto
+    });
+  })();
+</script>

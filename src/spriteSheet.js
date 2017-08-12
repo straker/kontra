@@ -1,15 +1,16 @@
-var kontra = (function(kontra, undefined) {
-  'use strict';
-
+(function(kontra) {
   /**
    * Single animation from a sprite sheet.
    * @memberof kontra
    *
-   * @see kontra.pool.prototype.init for list of parameters.
+   * @param {object} properties - Properties of the animation.
+   * @param {object} properties.spriteSheet - Sprite sheet for the animation.
+   * @param {number[]} properties.frames - List of frames of the animation.
+   * @param {number}  properties.frameRate - Number of frames to display in one second.
    */
   kontra.animation = function(properties) {
     var animation = Object.create(kontra.animation.prototype);
-    animation.init(properties);
+    animation._init(properties);
 
     return animation;
   };
@@ -18,60 +19,27 @@ var kontra = (function(kontra, undefined) {
     /**
      * Initialize properties on the animation.
      * @memberof kontra.animation
+     * @private
      *
      * @param {object} properties - Properties of the animation.
      * @param {object} properties.spriteSheet - Sprite sheet for the animation.
      * @param {number[]} properties.frames - List of frames of the animation.
      * @param {number}  properties.frameRate - Number of frames to display in one second.
      */
-    init: function init(properties) {
+    _init: function init(properties) {
       properties = properties || {};
 
       this.spriteSheet = properties.spriteSheet;
       this.frames = properties.frames;
       this.frameRate = properties.frameRate;
 
-      this.width = properties.spriteSheet.frame.width;
-      this.height = properties.spriteSheet.frame.height;
+      var frame = properties.spriteSheet.frame;
+      this.width = frame.width;
+      this.height = frame.height;
+      this.margin = frame.margin || 0;
 
-      this.currentFrame = 0;
-      this._accumulator = 0;
-
-      // set update and render so we can noop them later to stop the animation
-      this.update = this._advance;
-      this.render = this._draw;
-    },
-
-    /**
-     * Play the animation.
-     * @memberof kontra.animation
-     */
-    play: function play() {
-      // restore references to update and render functions only if overridden
-      this.update = this._advance;
-      this.render = this._draw;
-    },
-
-    /**
-     * Stop the animation and prevent update and render.
-     * @memberof kontra.animation
-     */
-    stop: function stop() {
-
-      // instead of putting an if statement in both render/update functions that checks
-      // a variable to determine whether to render or update, we can just reassign the
-      // functions to noop and save processing time in the game loop.
-      // @see http://jsperf.com/boolean-check-vs-noop
-      this.update = kontra.noop;
-      this.render = kontra.noop;
-    },
-
-    /**
-     * Pause the animation and prevent update.
-     * @memberof kontra.animation
-     */
-    pause: function pause() {
-      this.update = kontra.noop;
+      this._frame = 0;
+      this._accum = 0;
     },
 
     /**
@@ -91,16 +59,16 @@ var kontra = (function(kontra, undefined) {
      *
      * @param {number} [dt=1/60] - Time since last update.
      */
-    _advance: function advance(dt) {
+    update: function advance(dt) {
       dt = dt || 1 / 60;
 
-      this._accumulator += dt;
+      this._accum += dt;
 
       // update to the next frame if it's time
-      while (this._accumulator * this.frameRate >= 1) {
-        this.currentFrame = ++this.currentFrame % this.frames.length;
+      while (this._accum * this.frameRate >= 1) {
+        this._frame = ++this._frame % this.frames.length;
 
-        this._accumulator -= 1 / this.frameRate;
+        this._accum -= 1 / this.frameRate;
       }
     },
 
@@ -114,21 +82,22 @@ var kontra = (function(kontra, undefined) {
      * @param {number} properties.y - Y position to draw.
      * @param {Context} [properties.context=kontra.context] - Provide a context for the sprite to draw on.
      */
-    _draw: function draw(properties) {
+    render: function draw(properties) {
       properties = properties || {};
 
       var context = properties.context || kontra.context;
 
       // get the row and col of the frame
-      var row = this.frames[this.currentFrame] / this.spriteSheet.framesPerRow | 0;
-      var col = this.frames[this.currentFrame] % this.spriteSheet.framesPerRow | 0;
+      var row = this.frames[this._frame] / this.spriteSheet.framesPerRow | 0;
+      var col = this.frames[this._frame] % this.spriteSheet.framesPerRow | 0;
 
       context.drawImage(
         this.spriteSheet.image,
-        col * this.spriteSheet.frame.width, row * this.spriteSheet.frame.height,
-        this.spriteSheet.frame.width, this.spriteSheet.frame.height,
+        col * this.width + (col * 2 + 1) * this.margin,
+        row * this.height + (row * 2 + 1) * this.margin,
+        this.width, this.height,
         properties.x, properties.y,
-        this.spriteSheet.frame.width, this.spriteSheet.frame.height
+        this.width, this.height
       );
     }
   };
@@ -142,11 +111,16 @@ var kontra = (function(kontra, undefined) {
    * Create a sprite sheet from an image.
    * @memberof kontra
    *
-   * @see kontra.spriteSheet.prototype.init for list of parameters.
+   * @param {object} properties - Properties of the sprite sheet.
+   * @param {Image|Canvas} properties.image - Image for the sprite sheet.
+   * @param {number} properties.frameWidth - Width (in px) of each frame.
+   * @param {number} properties.frameHeight - Height (in px) of each frame.
+   * @param {number} properties.frameMargin - Margin (in px) between each frame.
+   * @param {object} properties.animations - Animations to create from the sprite sheet.
    */
   kontra.spriteSheet = function(properties) {
     var spriteSheet = Object.create(kontra.spriteSheet.prototype);
-    spriteSheet.init(properties);
+    spriteSheet._init(properties);
 
     return spriteSheet;
   };
@@ -155,36 +129,33 @@ var kontra = (function(kontra, undefined) {
     /**
      * Initialize properties on the spriteSheet.
      * @memberof kontra
+     * @private
      *
      * @param {object} properties - Properties of the sprite sheet.
      * @param {Image|Canvas} properties.image - Image for the sprite sheet.
      * @param {number} properties.frameWidth - Width (in px) of each frame.
      * @param {number} properties.frameHeight - Height (in px) of each frame.
+     * @param {number} properties.frameMargin - Margin (in px) between each frame.
      * @param {object} properties.animations - Animations to create from the sprite sheet.
      */
-    init: function init(properties) {
+    _init: function init(properties) {
       properties = properties || {};
 
+      if (!kontra._isImage(properties.image)) {
+        throw Erorr('You must provide an Image for the SpriteSheet');
+      }
+
       this.animations = {};
+      this.image = properties.image;
+      this.frame = {
+        width: properties.frameWidth,
+        height: properties.frameHeight,
+        margin: properties.frameMargin
+      };
 
-      if (kontra.isImage(properties.image) || kontra.isCanvas(properties.image)) {
-        this.image = properties.image;
-        this.frame = {
-          width: properties.frameWidth,
-          height: properties.frameHeight
-        };
+      this.framesPerRow = properties.image.width / properties.frameWidth | 0;
 
-        this.framesPerRow = properties.image.width / properties.frameWidth | 0;
-      }
-      else {
-        var error = new SyntaxError('Invalid image.');
-        kontra.logError(error, 'You must provide an Image for the SpriteSheet.');
-        return;
-      }
-
-      if (properties.animations) {
-        this.createAnimations(properties.animations);
-      }
+      this.createAnimations(properties.animations);
     },
 
     /**
@@ -220,21 +191,9 @@ var kontra = (function(kontra, undefined) {
      * });
      */
     createAnimations: function createAnimations(animations) {
-      var error;
-
-      if (!animations || Object.keys(animations).length === 0) {
-        error = new ReferenceError('No animations found.');
-        kontra.logError(error, 'You must provide at least one named animation to create an Animation.');
-        return;
-      }
-
-      // create each animation by parsing the frames
       var animation, frames, frameRate, sequence;
-      for (var name in animations) {
-        if (!animations.hasOwnProperty(name)) {
-          continue;
-        }
 
+      for (var name in animations) {
         animation = animations[name];
         frames = animation.frames;
         frameRate = animation.frameRate;
@@ -243,39 +202,16 @@ var kontra = (function(kontra, undefined) {
         sequence = [];
 
         if (frames === undefined) {
-          error = new ReferenceError('No animation frames found.');
-          kontra.logError(error, 'Animation ' + name + ' must provide a frames property.');
-          return;
+          throw Error('Animation ' + name + ' must provide a frames property');
         }
 
-        // single frame
-        if (kontra.isNumber(frames)) {
-          sequence.push(frames);
+        if (!Array.isArray(frames)) {
+          frames = [frames];
         }
-        // consecutive frames
-        else if (kontra.isString(frames)) {
-          sequence = this._parseFrames(frames);
-        }
-        // non-consecutive frames
-        else if (Array.isArray(frames)) {
-          for (var i = 0, frame; frame = frames[i]; i++) {
 
-            // consecutive frames
-            if (kontra.isString(frame)) {
-
-              // add new frames to the end of the array
-              sequence.push.apply(sequence, this._parseFrames(frame));
-            }
-            // single frame
-            else {
-              sequence.push(frame);
-            }
-          }
-        }
-        else {
-          error = new SyntaxError('Improper frames value');
-          kontra.logError(error, 'The frames property must be a number, string, or array.');
-          return;
+        for (var i = 0, frame; frame = frames[i]; i++) {
+          // add new frames to the end of the array
+          sequence.push.apply(sequence, this._parse(frame));
         }
 
         this.animations[name] = kontra.animation({
@@ -295,23 +231,28 @@ var kontra = (function(kontra, undefined) {
      *
      * @returns {number[]} List of frames.
      */
-    _parseFrames: function parseFrames(frames) {
-      var sequence = [];
-      var consecutiveFrames = frames.split('..').map(Number);
+    _parse: function parse(consecutiveFrames) {
+      if (kontra._isNumber(consecutiveFrames)) {
+        return [consecutiveFrames];
+      }
 
-      // determine which direction to loop
-      var direction = (consecutiveFrames[0] < consecutiveFrames[1] ? 1 : -1);
-      var i;
+      var sequence = [];
+      var frames = consecutiveFrames.split('..');
+
+      // coerce string to number
+      // @see https://github.com/jed/140bytes/wiki/Byte-saving-techniques#coercion-to-test-for-types
+      var start = i = +frames[0];
+      var end = +frames[1];
 
       // ascending frame order
-      if (direction === 1) {
-        for (i = consecutiveFrames[0]; i <= consecutiveFrames[1]; i++) {
+      if (start < end) {
+        for (; i <= end; i++) {
           sequence.push(i);
         }
       }
       // descending order
       else {
-        for (i = consecutiveFrames[0]; i >= consecutiveFrames[1]; i--) {
+        for (; i >= end; i--) {
           sequence.push(i);
         }
       }
@@ -319,6 +260,4 @@ var kontra = (function(kontra, undefined) {
       return sequence;
     }
   };
-
-  return kontra;
-})(kontra || {});
+})(kontra);

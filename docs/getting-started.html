@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Kontra.js – Getting Started</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/webcomponentsjs/0.7.22/webcomponents-lite.min.js"></script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/themes/prism.min.css">
+  <link rel="stylesheet" href="/styles.css">
+
+  <link rel="import" href="/components/main-nav.html">
+  <link rel="import" href="/components/code-output.html">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/components/prism-javascript.min.js"></script>
+  <script src="/js/kontra.js"></script>
+</head>
+<body>
+  <div class="content">
+    <main-nav></main-nav>
+
+    <main id="main" tabindex="0">
+      <div>
+        <h1>Getting Started</h1>
+
+        <h2>Download</h2>
+
+        <ul>
+          <li><a href="/download.html">Production and development versions</a></li>
+          <li><code>$ bower install kontra</code></li>
+        </ul>
+
+        <h2>Initialize</h2>
+
+        <p>Initialize the game by calling <a href="api/kontra.html#init">kontra.init()</a> to create the drawing context. By default, it will use the first canvas element on the page, but you can also pass it the ID of the canvas or a Canvas element.</p>
+
+        <pre><code class="language-javascript">kontra.init();</code></pre>
+
+        <h2>Create</h2>
+
+        <p>Once the game is initialized, you can create a simple <a href="api/sprite.html">sprite</a> and <a href="api/gameLoop.html">game loop</a> in just a few lines of code.</p>
+
+<code-output>
+var sprite = kontra.sprite({
+  x: 100,        // starting x,y position of the sprite
+  y: 80,
+  color: 'red',  // fill color of the sprite rectangle
+  width: 20,     // width and height of the sprite rectangle
+  height: 40,
+  dx: 2          // move the sprite 2px to the right every frame
+});
+
+var loop = kontra.gameLoop({  // create the main game loop
+  update: function() {        // update the game state
+    sprite.update();
+
+    // wrap the sprites position when it reaches
+    // the edge of the screen
+    if (sprite.x > kontra.canvas.width) {
+      sprite.x = -sprite.width;
+    }
+  },
+  render: function() {        // render the game state
+    sprite.render();
+  }
+});
+
+loop.start();    // start the game
+</code-output>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

@@ -1,21 +1,27 @@
 // --------------------------------------------------
 // kontra.tileEngine
 // --------------------------------------------------
-describe('', function() {
+describe('kontra.tileEngine', function() {
+
+  before(function() {
+    if (!kontra.canvas) {
+      var canvas = document.createElement('canvas');
+      canvas.width = canvas.height = 600;
+      kontra.init(canvas);
+    }
+  });
 
   // --------------------------------------------------
   // kontra.tileEngine.init
   // --------------------------------------------------
-  describe('kontra.tileEngine.init', function() {
+  describe('init', function() {
 
     it('should log an error if no dimensions are passed', function() {
-      sinon.stub(kontra, 'logError', kontra.noop);
+      function func() {
+        kontra.tileEngine();
+      }
 
-      kontra.tileEngine();
-
-      expect(kontra.logError.called).to.be.ok;
-
-      kontra.logError.restore();
+      expect(func).to.throw();
     });
 
     it('should initialize properties on the tile engine', function() {
@@ -23,11 +29,50 @@ describe('', function() {
         tileWidth: 10,
         tileHeight: 10,
         width: 100,
-        height: 150
+        height: 150,
+        properties: {
+          mapWidth: 1000,
+          mapHeight: 1500
+        }
       });
 
       expect(tileEngine.mapWidth).to.equal(1000);
       expect(tileEngine.mapHeight).to.equal(1500);
+    });
+
+    it('should accept lowercase tilewidth and tileheight', function() {
+      var tileEngine = kontra.tileEngine({
+        tilewidth: 10,
+        tileheight: 10,
+        width: 100,
+        height: 150,
+        properties: {
+          mapWidth: 1000,
+          mapHeight: 1500
+        }
+      });
+
+      expect(tileEngine.tileWidth).to.equal(10);
+      expect(tileEngine.tileHeight).to.equal(10);
+    });
+
+    it('should call addLayers() and addTilesets() if passed', function() {
+      tileEngine = kontra.tileEngine({
+        tileWidth: 10,
+        tileHeight: 10,
+        width: 50,
+        height: 50,
+        tilesets: [{
+          image: new Image()
+        }],
+        layers: [{
+          name: 'test',
+          data: [0,0,1,0,0]
+        }]
+      });
+
+      expect(tileEngine.layers.test).to.exist;
+      expect(tileEngine.tilesets.length).to.equal(1);
     });
 
   });
@@ -37,9 +82,9 @@ describe('', function() {
 
 
   // --------------------------------------------------
-  // kontra.tileEngine.addTileset
+  // kontra.tileEngine.addTilesets
   // --------------------------------------------------
-  describe('kontra.tileEngine.addTileset', function() {
+  describe('addTilesets', function() {
     var tileEngine;
 
     beforeEach(function() {
@@ -52,17 +97,58 @@ describe('', function() {
     });
 
     it('should log an error if no image is provided', function() {
-      sinon.stub(kontra, 'logError', kontra.noop);
+      function func() {
+        tileEngine.addTilesets({});
+      }
 
-      tileEngine.addTileset();
+      expect(func).to.throw();
+    });
 
-      expect(kontra.logError.called).to.be.ok;
+    it('should accept an array of tilesets', function() {
+      tileEngine.addTilesets([{
+        image: new Image(100, 100),
+        firstGrid: 0
+      },
+      {
+        image: new Image(100, 100),
+        firstGrid: 17
+      }]);
 
-      kontra.logError.restore();
+      expect(tileEngine.tilesets.length).to.equal(2);
+    });
+
+    it('should check for the image in kontra.assets.images if it\'s a string', function() {
+      kontra.assets.images.car = new Image(100, 100);
+
+      tileEngine.addTilesets({
+        image: 'car'
+      });
+
+      expect(tileEngine.tilesets[0].image).to.equal(kontra.assets.images.car);
+    });
+
+    it('should check a deep image path in kontra.assets.images if it\'s a string', function() {
+      kontra.assets.images['/path/to/image/car'] = new Image(100, 100);
+
+      tileEngine.addTilesets({
+        image: '/path/to/image/car'
+      });
+
+      expect(tileEngine.tilesets[0].image).to.equal(kontra.assets.images['/path/to/image/car']);
+    });
+
+    it('should check for relative paths in kontra.assets.images if it\'s a string', function() {
+      kontra.assets.images['/path/to/image/car'] = new Image(100, 100);
+
+      tileEngine.addTilesets({
+        image: '../../root/path/to/image/car'
+      });
+
+      expect(tileEngine.tilesets[0].image).to.equal(kontra.assets.images['/path/to/image/car']);
     });
 
     it('should use firstGrid if passed', function() {
-      tileEngine.addTileset({
+      tileEngine.addTilesets({
         image: new Image(100, 100),
         firstGrid: 17
       });
@@ -72,7 +158,7 @@ describe('', function() {
     });
 
     it('should calculate first and last grid number correctly', function() {
-      tileEngine.addTileset({
+      tileEngine.addTilesets({
         image: new Image(100, 100)
       });
 
@@ -81,11 +167,11 @@ describe('', function() {
     });
 
     it('should calculate first and last grid number when there is a tileset already added', function() {
-      tileEngine.addTileset({
+      tileEngine.addTilesets({
         image: new Image(100, 100)
       });
 
-      tileEngine.addTileset({
+      tileEngine.addTilesets({
         image: new Image(100, 100)
       });
 
@@ -94,15 +180,15 @@ describe('', function() {
     });
 
     it('should calculate first and last grid number correctly for multiple tilesets', function() {
-      tileEngine.addTileset({
+      tileEngine.addTilesets({
         image: new Image(200, 200)
       });
 
-      tileEngine.addTileset({
+      tileEngine.addTilesets({
         image: new Image(150, 150)
       });
 
-      tileEngine.addTileset({
+      tileEngine.addTilesets({
         image: new Image(32, 64)
       });
 
@@ -123,9 +209,9 @@ describe('', function() {
 
 
   // --------------------------------------------------
-  // kontra.tileEngine.addLayer
+  // kontra.tileEngine.addLayers
   // --------------------------------------------------
-  describe('kontra.tileEngine.addLayer', function() {
+  describe('addLayers', function() {
     var tileEngine;
 
     beforeEach(function() {
@@ -136,54 +222,78 @@ describe('', function() {
         height: 3
       });
 
-      sinon.stub(kontra.tileEngine.prototype, '_preRenderImage', kontra.noop);
+      tileEngine.addTilesets({
+        image: new Image()
+      })
     });
 
-    afterEach(function() {
-      kontra.tileEngine.prototype._preRenderImage.restore();
-    });
-
-    it('should set default properties on the layer', function() {
-      tileEngine.addLayer({
+    it('should accept a 1d array', function() {
+      tileEngine.addLayers({
         name: 'test',
-        data: [0,0,1,0,0],
+        data: [0,0,1,0,0]
       });
 
-      expect(tileEngine.layers.test[0]).to.equal(0);
-      expect(tileEngine.layers.test[1]).to.equal(0);
-      expect(tileEngine.layers.test[2]).to.equal(1);
-      expect(tileEngine.layers.test[3]).to.equal(0);
-      expect(tileEngine.layers.test[4]).to.equal(0);
+      expect(tileEngine.layers.test.data[0]).to.equal(0);
+      expect(tileEngine.layers.test.data[1]).to.equal(0);
+      expect(tileEngine.layers.test.data[2]).to.equal(1);
+      expect(tileEngine.layers.test.data[3]).to.equal(0);
+      expect(tileEngine.layers.test.data[4]).to.equal(0);
     });
 
     it('should flatten a 2d tile data array', function() {
-      tileEngine.addLayer({
+      tileEngine.addLayers({
         name: 'test',
-        data: [[0,0],[1,0,0]],
+        data: [[0,0],[1,0,0]]
       });
 
-      expect(tileEngine.layers.test[0]).to.equal(0);
-      expect(tileEngine.layers.test[1]).to.equal(0);
-      expect(tileEngine.layers.test[2]).to.equal(0);
-      expect(tileEngine.layers.test[3]).to.equal(1);
-      expect(tileEngine.layers.test[4]).to.equal(0);
-      expect(tileEngine.layers.test[5]).to.equal(0);
+      expect(tileEngine.layers.test.data[0]).to.equal(0);
+      expect(tileEngine.layers.test.data[1]).to.equal(0);
+      expect(tileEngine.layers.test.data[2]).to.equal(0);
+      expect(tileEngine.layers.test.data[3]).to.equal(1);
+      expect(tileEngine.layers.test.data[4]).to.equal(0);
+      expect(tileEngine.layers.test.data[5]).to.equal(0);
+    });
+
+    it('should accept an array of layers', function() {
+      tileEngine.addLayers([{
+        name: 'test',
+        data: [0,0,1,0,0]
+      },
+      {
+        name: 'collision',
+        data: [1,1,0,1,1]
+      }]);
+
+      expect(tileEngine.layers.test).to.exist;
+      expect(tileEngine.layers.collision).to.exist;
+    });
+
+    it('should add properties from the tileset', function() {
+      tileEngine.addLayers({
+        name: 'test',
+        data: [0,0,1,0,0],
+        properties: {
+          foo: 'bar'
+        }
+      });
+
+      expect(tileEngine.layers.test.foo).to.equal('bar');
     });
 
     it('should add the tileset in the correct order', function() {
-      tileEngine.addLayer({
+      tileEngine.addLayers({
         name: 'test',
         data: [0,0,1,0,0],
         zIndex: 1
       });
 
-      tileEngine.addLayer({
+      tileEngine.addLayers({
         name: 'test2',
         data: [0,0,1,0,0],
         zIndex: -1
       });
 
-      tileEngine.addLayer({
+      tileEngine.addLayers({
         name: 'test3',
         data: [0,0,1,0,0],
         zIndex: 10
@@ -195,7 +305,7 @@ describe('', function() {
     });
 
     it('should not order the tileset if it is not being rendered', function() {
-      tileEngine.addLayer({
+      tileEngine.addLayers({
         name: 'test',
         data: [0,0,1,0,0],
         render: false
@@ -213,7 +323,7 @@ describe('', function() {
   // --------------------------------------------------
   // kontra.tileEngine.layerCollidesWith
   // --------------------------------------------------
-  describe('kontra.tileEngine.layerCollidesWith', function() {
+  describe('layerCollidesWith', function() {
     var tileEngine;
 
     beforeEach(function() {
@@ -224,16 +334,14 @@ describe('', function() {
         height: 50
       });
 
-      sinon.stub(kontra.tileEngine.prototype, '_preRenderImage', kontra.noop);
+      tileEngine.addTilesets({
+        image: new Image()
+      });
 
-      tileEngine.addLayer({
+      tileEngine.addLayers({
         name: 'test',
         data: [0,0,1,0,0]
       });
-    });
-
-    afterEach(function() {
-      kontra.tileEngine.prototype._preRenderImage.restore();
     });
 
     it('should return false if the object does not collide', function() {
@@ -278,7 +386,7 @@ describe('', function() {
   // --------------------------------------------------
   // kontra.tileEngine.tileAtLayer
   // --------------------------------------------------
-  describe('kontra.tileEngine.tileAtLayer', function() {
+  describe('tileAtLayer', function() {
     var tileEngine;
 
     beforeEach(function() {
@@ -289,16 +397,14 @@ describe('', function() {
         height: 50
       });
 
-      sinon.stub(kontra.tileEngine.prototype, '_preRenderImage', kontra.noop);
+      tileEngine.addTilesets({
+        image: new Image()
+      });
 
-      tileEngine.addLayer({
+      tileEngine.addLayers({
         name: 'test',
         data: [0,0,1,0,0]
       });
-    });
-
-    afterEach(function() {
-      kontra.tileEngine.prototype._preRenderImage.restore();
     });
 
     it('should return the correct tile using x, y coordinates', function() {
@@ -328,72 +434,9 @@ describe('', function() {
 
 
   // --------------------------------------------------
-  // kontra.tileEngine.render
-  // --------------------------------------------------
-  describe('kontra.tileEngine.render', function() {
-
-    it('should correctly render all layers', function() {
-      canvas = document.createElement('canvas');
-      canvas.width = 20;
-      canvas.height = 30;
-
-      var context = canvas.getContext('2d');
-      var image = new Image(100, 100);
-
-      var tileEngine = kontra.tileEngine({
-        tileWidth: 10,
-        tileHeight: 10,
-        width: 2,
-        height: 3,
-        context: context
-      });
-
-      sinon.stub(tileEngine._offscreenContext, 'drawImage', kontra.noop);
-      sinon.stub(tileEngine.context, 'drawImage', kontra.noop);
-
-      tileEngine.addTileset({
-        image: image
-      });
-
-      tileEngine.addLayer({
-        name: 'test',
-        data: [0,0,1,0,0]
-      });
-
-      // _preRenderImage should have been called and looped through the layer
-      // since there are 4 empty tiles, the drawImage function should only have
-      // been called once
-      expect(tileEngine._offscreenContext.drawImage.calledOnce).to.be.ok;
-
-      expect(tileEngine._offscreenContext.drawImage.calledWith(
-        image,
-        0, 0, 10, 10,
-        0, 10, 10, 10
-      )).to.be.ok;
-
-      tileEngine.render();
-
-      expect(tileEngine.context.drawImage.called).to.be.ok;
-      expect(tileEngine.context.drawImage.calledWith(
-        tileEngine._offscreenCanvas,
-        0, 0, 20, 30,
-        0, 0, 20, 30
-      )).to.be.ok;
-
-      tileEngine._offscreenContext.drawImage.restore();
-      tileEngine.context.drawImage.restore();
-    });
-
-  });
-
-
-
-
-
-  // --------------------------------------------------
   // kontra.tileEngine.renderLayer
   // --------------------------------------------------
-  describe('kontra.tileEngine.renderLayer', function() {
+  describe('renderLayer', function() {
 
     it('should correctly render a layer', function() {
       var canvas = document.createElement('canvas');
@@ -411,14 +454,13 @@ describe('', function() {
         context: context
       });
 
-      tileEngine.addTileset({
+      tileEngine.addTilesets({
         image: image
       });
 
-      sinon.stub(kontra.tileEngine.prototype, '_preRenderImage', kontra.noop);
-      sinon.stub(tileEngine.context, 'drawImage', kontra.noop);
+      sinon.stub(tileEngine.context, 'drawImage').callsFake(kontra._noop);
 
-      tileEngine.addLayer({
+      tileEngine.addLayers({
         name: 'test',
         data: [0,0,1,0,0]
       });
@@ -432,7 +474,6 @@ describe('', function() {
         0, 10, 10, 10
       )).to.be.ok;
 
-      kontra.tileEngine.prototype._preRenderImage.restore();
       tileEngine.context.drawImage.restore();
     });
 
@@ -452,14 +493,13 @@ describe('', function() {
         context: context
       });
 
-      tileEngine.addTileset({
+      tileEngine.addTilesets({
         image: image
       });
 
-      sinon.stub(kontra.tileEngine.prototype, '_preRenderImage', kontra.noop);
-      sinon.stub(tileEngine.context, 'drawImage', kontra.noop);
+      sinon.stub(tileEngine.context, 'drawImage').callsFake(kontra._noop);
 
-      tileEngine.addLayer({
+      tileEngine.addLayers({
         name: 'test',
         data: [
           [],
@@ -487,7 +527,6 @@ describe('', function() {
         20, 20, 10, 10
       )).to.be.ok;
 
-      kontra.tileEngine.prototype._preRenderImage.restore();
       tileEngine.context.drawImage.restore();
     });
 

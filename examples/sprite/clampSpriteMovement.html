@@ -44,7 +44,7 @@
     });
 
     // clamp sprites movement to the game between x1, y1, and x2, y2
-    sprite.position.clamp(0, 0, kontra.game.width - sprite.width, kontra.game.height - sprite.height);
+    sprite.position.clamp(0, 0, kontra.canvas.width - sprite.width, kontra.canvas.height - sprite.height);
 
     // create the game loop to update and render the sprite
     window.loop = kontra.gameLoop({

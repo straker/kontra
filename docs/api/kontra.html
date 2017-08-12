@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Kontra.js – Kontra</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/webcomponentsjs/0.7.22/webcomponents-lite.min.js"></script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/themes/prism.min.css">
+  <link rel="stylesheet" href="/styles.css">
+
+  <link rel="import" href="/components/main-nav.html">
+  <link rel="import" href="/components/code-output.html">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/components/prism-javascript.min.js"></script>
+  <script src="/js/kontra.js"></script>
+</head>
+<body>
+  <div class="content">
+    <main-nav></main-nav>
+
+    <main id="main">
+      <div>
+        <h1>Kontra</h1>
+
+        <p>The kontra library object. Typically you will call <a href="#init">kontra.init()</a> as the first thing and give it the canvas to use. This will allow all kontra objects to reference the canvas when created.</p>
+
+        <pre><code class="language-javascript">kontra.init();</code></pre>
+
+
+
+
+
+        <section class="toc">
+          <h2 id="toc"><a href="#toc" class="section-link">Table of Contents<span aria-hidden="true">#</span></a></h2>
+
+          <ul aria-labeledby="toc">
+            <li>
+              <h3 id="properties">Properties</h3>
+              <ul aria-labeledby="properties">
+                <li><a href="#canvas">kontra.canvas</a></li>
+                <li><a href="#context">kontra.context</a></li>
+                <li><a href="/api/assets.html">kontra.assets</a></li>
+                <li><a href="/api/keyboard.html">kontra.keys</a></li>
+                <li><a href="/api/store.html">kontra.store</a></li>
+              </ul>
+            </li>
+
+            <li>
+              <h3 id="methods">Methods</h3>
+              <ul aria-labeledby="methods">
+                <li><a href="#init">kontra.init([canvas])</a></li>
+                <li><a href="/api/animation.html">kontra.animation(properties)</a></li>
+                <li><a href="/api/gameLoop.html">kontra.gameLoop(properties)</a></li>
+                <li><a href="/api/pool.html">kontra.pool(properties)</a></li>
+                <li><a href="/api/quadtree.html">kontra.quadtree(properties)</a></li>
+                <li><a href="/api/sprite.html">kontra.sprite(properties)</a></li>
+                <li><a href="/api/spriteSheet.html">kontra.spriteSheet(properties)</a></li>
+                <li><a href="/api/tileEngine.html">kontra.tileEngine(properties)</a></li>
+                <li><a href="/api/vector.html">kontra.vector(properties)</a></li>
+              </ul>
+            </li>
+          </ul>
+        </section>
+
+
+
+
+
+        <section>
+          <h2 id="canvas"><a href="#canvas" class="section-link">kontra.canvas<span aria-hidden="true">#</span></a></h2>
+
+          <p>The main game canvas. By default, all kontra objects will use this canvas.</p>
+
+        </section>
+
+
+
+
+
+        <section>
+          <h2 id="context"><a href="#context" class="section-link">kontra.context<span aria-hidden="true">#</span></a></h2>
+
+          <p>The main game context. By default, all kontra objects will render to this context.</p>
+
+        </section>
+
+
+
+
+
+        <section>
+          <h2 id="init"><a href="#init" class="section-link">kontra.init([canvas])<span aria-hidden="true">#</span></a></h2>
+
+          <dl>
+            <dt><strong>canvas</strong> <em>{string | HTMLCanvasElement}</em></dt>
+            <dd>The canvas for kontra to use. Can either be the id of the canvas element or the canvas element itself. Defaults to using the first canvas element on the page.</dd>
+          </dl>
+
+          <p>Initialize the library and set up the canvas. You should call this function first before creating any kontra objects.</p>
+
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+</body>
+</html>

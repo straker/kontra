@@ -1,11 +1,11 @@
 kontra.init();
 
 // set default asset paths
-kontra.assetPaths.images = 'imgs/';
-kontra.assetPaths.audios = 'sounds/';
+kontra.assets.imagePath = 'imgs/';
+kontra.assets.audioPath = 'sounds/';
 
 // load assets
-kontra.loadAssets(
+kontra.assets.load(
   // images
   'ship.png', 'bg.png', 'bullet_enemy.png', 'bullet.png', 'enemy.png',
   // audios
@@ -15,7 +15,7 @@ kontra.loadAssets(
   var score = document.getElementById('score');
   var playerScore = 0;
 
-  kontra.audios.kick_shock.loop = true;
+  kontra.assets.audio.kick_shock.loop = true;
 
   /*
    * Audio pools
@@ -25,8 +25,10 @@ kontra.loadAssets(
     isAlive: function() {
       return !this.audio.ended;
     },
-    init: function() {
-      this.audio.play();
+    init: function(properties) {
+      if (properties.play !== false) {
+        this.audio.play();
+      }
     },
     // set required properties
     render: function() {},
@@ -61,24 +63,29 @@ kontra.loadAssets(
 
   // create audio pools
   var laserPool = kontra.pool({
-    create: create,
-    createProperties: {
-      audio: kontra.audios.laser
+    create: function() {
+      return create({audio: kontra.assets.audio.laser})
     },
     fill: true,
     maxSize: 5
   });
   laserPool.toggleVolume = toggleVolume;
 
+  for (var i = 0; i < 5; i++) {
+    laserPool.get({'play': false});
+  }
+
   var explosionPool = kontra.pool({
-    create: create,
-    createProperties: {
-      audio: kontra.audios.explosion
+    create: function() {
+      return create({audio: kontra.assets.audio.explosion})
     },
-    fill: true,
     maxSize: 10
   });
   explosionPool.toggleVolume = toggleVolume;
+
+  for (var i = 0; i < 5; i++) {
+    explosionPool.get({'play': false});
+  }
 
   /*
    * object pools
@@ -106,18 +113,18 @@ kontra.loadAssets(
   // panning background
   var background = kontra.sprite({
     dy: 1,
-    image: kontra.images.bg,
+    image: kontra.assets.images.bg,
     update: function() {
       this.advance();
 
-      if (this.y >= kontra.game.height) {
+      if (this.y >= kontra.canvas.height) {
         this.y = 0;
       }
     },
     render: function() {
       this.draw();
 
-      this.context.drawImage(this.image, this.x, this.y - kontra.game.height);
+      this.context.drawImage(this.image, this.x, this.y - kontra.canvas.height);
     }
   });
 
@@ -125,7 +132,7 @@ kontra.loadAssets(
   var player = kontra.sprite({
     x: 280,
     y: 270,
-    image: kontra.images.ship,
+    image: kontra.assets.images.ship,
     counter: 15,
     update: function() {
       this.counter++;
@@ -146,13 +153,12 @@ kontra.loadAssets(
 
       if (kontra.keys.pressed('space') && this.counter >= 15) {
         for (var i = 0; i < 2; i++) {
-          console.log('get');
           bullets.get({
             x: this.x + 6 + (i * 27),
             y: this.y,
             dy: -3,
-            image: kontra.images.bullet,
-            timeToLive: 130,
+            image: kontra.assets.images.bullet,
+            ttl: 130,
             type: 'friendly'
           });
         }
@@ -166,17 +172,17 @@ kontra.loadAssets(
 
   // clamp player position to lower third of the screen
   player.position.clamp(
-    0, kontra.game.height * 2 / 3,
-    kontra.game.width - player.width, kontra.game.height - player.height
+    0, kontra.canvas.height * 2 / 3,
+    kontra.canvas.width - player.width, kontra.canvas.height - player.height
   );
 
   /**
    * Spawn a new wave of enemies.
    */
   function spawnWave() {
-    var width = kontra.images.enemy.width;
+    var width = kontra.assets.images.enemy.width;
     var x = 100;
-    var y = -kontra.images.enemy.height;
+    var y = -kontra.assets.images.enemy.height;
     var spacer = y * 1.5;
 
     for (var i = 1; i <= 18; i++) {
@@ -184,8 +190,8 @@ kontra.loadAssets(
         x: x,
         y: y,
         dy: 2,
-        image: kontra.images.enemy,
-        timeToLive: Infinity,
+        image: kontra.assets.images.enemy,
+        ttl: Infinity,
         leftEdge: x - 90,
         rightEdge: x + 90 + width,
         bottomEdge: y + 140,
@@ -213,8 +219,8 @@ kontra.loadAssets(
               x: this.x + this.width / 2,
               y: this.y + this.height,
               dy: 2.5,
-              image: kontra.images.bullet_enemy,
-              timeToLive: 150,
+              image: kontra.assets.images.bullet_enemy,
+              ttl: 150,
               type: 'hostile'
             });
           }
@@ -264,8 +270,8 @@ kontra.loadAssets(
 
         for (var j = 0, obj; obj = objects[j]; j++) {
           if (obj.type === 'enemy' && obj.collidesWith(bullet)) {
-            bullet.timeToLive = 0;
-            obj.timeToLive = 0;
+            bullet.ttl = 0;
+            obj.ttl = 0;
 
             explosionPool.get();
 
@@ -276,7 +282,7 @@ kontra.loadAssets(
       }
 
       // spawn a new wave of enemies
-      if (enemies.inUse === 0) {
+      if (enemies.getAliveObjects().length === 0) {
         spawnWave();
       }
     },
@@ -296,11 +302,11 @@ kontra.loadAssets(
   kontra.keys.bind('p', function() {
     if (loop.isStopped) {
       loop.start();
-      kontra.audios.kick_shock.play();
+      kontra.assets.audio.kick_shock.play();
     }
     else {
       loop.stop();
-      kontra.audios.kick_shock.pause();
+      kontra.assets.audio.kick_shock.pause();
     }
   });
 
@@ -308,8 +314,8 @@ kontra.loadAssets(
    * Toggle the music on and off.
    */
   function toggleMusic() {
-    kontra.audios.kick_shock.muted = !kontra.audios.kick_shock.muted;
-    kontra.audios.game_over.muted = !kontra.audios.game_over.muted
+    kontra.assets.audio.kick_shock.muted = !kontra.assets.audio.kick_shock.muted;
+    kontra.assets.audio.game_over.muted = !kontra.assets.audio.game_over.muted
     laserPool.toggleVolume();
     explosionPool.toggleVolume();
   }
@@ -320,9 +326,9 @@ kontra.loadAssets(
   function gameOver() {
     loop.stop();
     document.getElementById('game-over').style.display = 'block';
-    kontra.audios.kick_shock.pause();
-    kontra.audios.game_over.currentTime = 0;
-    kontra.audios.game_over.play();
+    kontra.assets.audio.kick_shock.pause();
+    kontra.assets.audio.game_over.currentTime = 0;
+    kontra.assets.audio.game_over.play();
   }
 
   /**
@@ -338,11 +344,12 @@ kontra.loadAssets(
     score.innerHTML = 0;
 
     loop.start();
-    kontra.audios.game_over.pause();
-    kontra.audios.kick_shock.currentTime = 0;
-    kontra.audios.kick_shock.play();
+    kontra.assets.audio.game_over.pause();
+    kontra.assets.audio.kick_shock.currentTime = 0;
+    kontra.assets.audio.kick_shock.play();
 
-    player.position.init({x: 280, y: 270});
+    player.position.x = 280;
+    player.position.y = 270;
   };
 
   startGame();

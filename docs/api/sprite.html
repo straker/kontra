@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Kontra.js – Kontra.sprite</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/webcomponentsjs/0.7.22/webcomponents-lite.min.js"></script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/themes/prism.min.css">
+  <link rel="stylesheet" href="/styles.css">
+
+  <link rel="import" href="/components/main-nav.html">
+  <link rel="import" href="/components/code-output.html">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/components/prism-javascript.min.js"></script>
+  <script src="/js/kontra.js"></script>
+</head>
+<body>
+  <div class="content">
+    <main-nav></main-nav>
+
+    <main id="main">
+      <div>
+        <h1>Kontra.sprite(properties)</h1>
+
+        <dl>
+          <dt><strong>properties</strong> <em>{object}</em></dt>
+          <dd>Properties of the sprite.</dd>
+          <dt><strong>properties.x</strong> <em>{number}</em></dt>
+          <dd>Optional. Sprites x coordinate. Defaults to 0.</dd>
+          <dt><strong>properties.y</strong> <em>{number}</em></dt>
+          <dd>Optional. Sprites y coordinate. Defaults to 0.</dd>
+          <dt><strong>properties.dx</strong> <em>{number}</em></dt>
+          <dd>Optional. Sprites x velocity. Defaults to 0.</dd>
+          <dt><strong>properties.dy</strong> <em>{number}</em></dt>
+          <dd>Optional. Sprites y velocity. Defaults to 0.</dd>
+          <dt><strong>properties.ddx</strong> <em>{number}</em></dt>
+          <dd>Optional. Sprites x acceleration. Defaults to 0.</dd>
+          <dt><strong>properties.ddy</strong> <em>{number}</em></dt>
+          <dd>Optional. Sprites y acceleration. Defaults to 0.</dd>
+          <dt><strong>properties.ttl</strong> <em>{number}</em></dt>
+          <dd>Optional. How many frames the sprite should be alive. Used by <a href="/api/pool.html">kontra.pool</a>. Defaults to 0.</dd>
+          <dt><strong>properties.context</strong> <em>{CanvasRenderingContext2D}</em></dt>
+          <dd>Optional. The context the sprite should draw to. Defaults <a href="/api/kontra.html#context">kontra.context</a>.</dd>
+          <dt><strong>properties.image</strong> <em>{HTMLImageElement | HTMLCanvasElement}</em></dt>
+          <dd>Optional. Use an image to draw the sprite.</dd>
+          <dt><strong>properties.animations</strong> <em>{object}</em></dt>
+          <dd>Optional. An object of <a href="/api/animation.html">kontra.animations</a> from a <a href="/api/spriteSheet.html">kontra.spritesheet</a> to animate the sprite.</dd>
+          <dt><strong>properties.color</strong> <em>{string}</em></dt>
+          <dd>Optional. Fill color for the sprite if no image or animation is provided.</dd>
+          <dt><strong>properties.width</strong> <em>{number}</em></dt>
+          <dd>Optional. Width of the sprite if no image or animation is provided.</dd>
+          <dt><strong>properties.height</strong> <em>{number}</em></dt>
+          <dd>Optional. Height of the sprite if no image or animation is provided.</dd>
+          <dt><strong>properties.update</strong> <em>{function}</em></dt>
+          <dd>Optional. Function called every frame to update the sprite.</dd>
+          <dt><strong>properties.render</strong> <em>{function}</em></dt>
+          <dd>Optional. Function called every frame to render the sprite.</dd>
+          <dt><strong>properties.*</strong> <em>{*}</em></dt>
+          <dd>Optional. Any additional properties you need added to the sprite. For example, if you pass <code>properties.name = 'John'</code> then the sprite will also have a property of the same name and value. You can pass as many additional properties as you want.</dd>
+        </dl>
+
+        <p>A versatile way to update and draw your game objects. It can handle simple rectangles, images, and sprite sheet animations. It can be used for your main player object as well as tiny particles in a particle engine.</p>
+
+        <pre><code class="language-javascript">var sprite = kontra.sprite({x: 300, y: 100});</code></pre>
+
+
+
+
+
+        <section class="toc">
+          <h2 id="toc"><a href="#toc" class="section-link">Table of Contents<span aria-hidden="true">#</span></a></h2>
+
+          <ul aria-labeledby="toc">
+            <li>
+              <ul>
+                <li><a href="#rect-sprite">Rectangle Sprite</a></li>
+                <li><a href="#image-sprite">Image Sprite</a></li>
+                <li><a href="#animation-sprite">Animation Sprite</a></li>
+                <li><a href="#custom-properties">Custom Properties</a></li>
+              </ul>
+            </li>
+
+            <li>
+              <h3 id="properties">Properties</h3>
+              <ul aria-labeledby="properties">
+                <li><a href="#acceleration">kontra.sprite.acceleration</a></li>
+                <li><a href="#animations">kontra.sprite.animations</a></li>
+                <li><a href="#color">kontra.sprite.color</a></li>
+                <li><a href="#context">kontra.sprite.context</a></li>
+                <li><a href="#currentAnimation">kontra.sprite.currentAnimation</a></li>
+                <li><a href="#ddx">kontra.sprite.ddx</a></li>
+                <li><a href="#ddy">kontra.sprite.ddy</a></li>
+                <li><a href="#dx">kontra.sprite.dx</a></li>
+                <li><a href="#dy">kontra.sprite.dy</a></li>
+                <li><a href="#height">kontra.sprite.height</a></li>
+                <li><a href="#image">kontra.sprite.image</a></li>
+                <li><a href="#position">kontra.sprite.position</a></li>
+                <li><a href="#ttl">kontra.sprite.ttl</a></li>
+                <li><a href="#velocity">kontra.sprite.velocity</a></li>
+                <li><a href="#width">kontra.sprite.width</a></li>
+                <li><a href="#x">kontra.sprite.x</a></li>
+                <li><a href="#y">kontra.sprite.y</a></li>
+              </ul>
+            </li>
+
+            <li>
+              <h3 id="methods">Methods</h3>
+              <ul aria-labeledby="methods">
+                <li><a href="#advance">kontra.sprite.advance(dt)</a></li>
+                <li><a href="#collidesWith">kontra.sprite.collidesWith(sprite)</a></li>
+                <li><a href="#draw">kontra.sprite.draw()</a></li>
+                <li><a href="#init">kontra.sprite.init(properties)</a></li>
+                <li><a href="#isAlive">kontra.sprite.isAlive()</a></li>
+                <li><a href="#playAnimation">kontra.sprite.playAnimation(name)</a></li>
+                <li><a href="#render">kontra.sprite.render()</a></li>
+                <li><a href="#update">kontra.sprite.update(dt)</a></li>
+              </ul>
+            </li>
+          </ul>
+        </section>
+
+
+
+
+        <section>
+          <h2 id="rect-sprite"><a href="#rect-sprite" class="section-link">Rectangle Sprite<span aria-hidden="true">#</span></a></h2>
+
+          <p>In its most basic form, a sprite is a rectangle with a fill color. To create a rectangle sprite, pass the properties <a href="#width">width</a>, <a href="#height">height</a>, and <a href="#color">color</a>. A rectangle sprite is great for initial prototyping and particles.</p>
+
+<code-output>
+var sprite = kontra.sprite({
+  x: 290,
+  y: 80,
+
+  // required for a rectangle sprite
+  width: 20,
+  height: 40,
+  color: 'red'
+});
+
+sprite.render();
+</code-output>
+        </section>
+
+
+
+
+
+        <section>
+          <h2 id="image-sprite"><a href="#image-sprite" class="section-link">Image Sprite<span aria-hidden="true">#</span></a></h2>
+
+          <p>A sprite can use an image instead of drawing a rectangle. To create an image sprite, pass the <a href="#image">image</a> property. The size of the sprite will automatically be set as the <code>width</code> and <code>height</code> of the image.</p>
+
+<code-output>
+var image = new Image();
+image.src = '/imgs/character.png';
+
+var sprite = kontra.sprite({
+  x: 267,
+  y: 54,
+
+  // required for an image sprite
+  image: image
+});
+
+image.onload = function() {
+  sprite.render();
+};
+</code-output>
+        </section>
+
+
+
+
+
+        <section>
+          <h2 id="animation-sprite"><a href="#animation-sprite" class="section-link">Animation Sprite<span aria-hidden="true">#</span></a></h2>
+
+          <p>A sprite can use a spritesheet animation as well. To create an animation sprite, use the <a href="#animations">animations</a> property. The size of the sprite will automatically be set as the <code>width</code> and <code>height</code> of a frame of the spritesheet.</p>
+
+          <p>A sprite can have multiple named animations. The easiest way to create animations is to use <a href="/api/spriteSheet.html">kontra.spriteSheet</a>. All animations will automatically be <a href="/api/animation.html#clone">cloned</a> so no two sprites update the same animation.</p>
+
+<code-output>
+var image = new Image();
+image.src = '/imgs/character_walk_sheet.png';
+
+image.onload = function() {
+
+  // use kontra.spriteSheet to create animations from an image
+  var spriteSheet = kontra.spriteSheet({
+    image: image,
+    frameWidth: 72,
+    frameHeight: 97,
+    animations: {
+      // create a named animation: walk
+      walk: {
+        frames: '0..9',  // frames 0 through 9
+        frameRate: 30
+      }
+    }
+  });
+
+  var sprite = kontra.sprite({
+    x: 267,
+    y: 54,
+    /* exclude:start */
+    context: context,
+    /* exclude:end */
+
+    // required for an animation sprite
+    animations: spriteSheet.animations
+  });
+
+  // use kontra.gameLoop to play the animation
+  var loop = kontra.gameLoop({
+    /* exclude:start */
+    clearCanvas: false,
+    /* exclude:end */
+    update: function(dt) {
+      sprite.update();
+    },
+    render: function() {
+      /* exclude:start */
+      context.clearRect(0, 0, canvas.width, canvas.height);
+      /* exclude:end */
+      sprite.render();
+    }
+  });
+
+  loop.start();
+};
+</code-output>
+        </section>
+
+
+
+
+
+        <section>
+          <h2 id="custom-properties"><a href="#custom-properties" class="section-link">Custom Properties<span aria-hidden="true">#</span></a></h2>
+
+          <p>If you need to draw a different shape, such as a circle, you can pass in custom properties and a render function to handle drawing the sprite.</p>
+
+<code-output>
+var sprite = kontra.sprite({
+  x: 300,
+  y: 100,
+
+  color: 'red',
+
+  // custom properties
+  radius: 20,
+
+  render: function() {
+    this.context.fillStyle = this.color;
+
+    this.context.beginPath();
+    this.context.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
+    this.context.fill();
+  }
+});
+
+sprite.render();
+</code-output>
+        </section>
+
+
+
+
+        <section>
+          <h2 id="acceleration"><a href="#acceleration" class="section-link">kontra.sprite.acceleration<span aria-hidden="true">#</span></a></h2>
+
+          <p><em>{<a href="/api/vector.html">kontra.vector</a>}</em></p>
+
+          <p>X and Y values of the sprites acceleration vector.</p>
+
+        </section>
+
+
+
+
+
+        <section>
+          <h2 id="advance"><a href="#advance" class="section-link">kontra.sprite.advance(dt)<span aria-hidden="true">#</span></a></h2>
+
+          <dl>
+            <dt><strong>dt</strong> <em>{number}</em></dt>
+            <dd>Optional. Time since last update.</dd>
+          </dl>
+
+          <p>Move the sprite by it's acceleration and velocity. If the sprite is an <a href="#animation-sprite">animation sprite</a>, it also advances the animation every frame.</p>
+
+          <p>If you override the sprites <a href="#update">update()</a> function with your own update function, you can call this function to move the sprite using the sprites normal update function.</p>
+
+          <pre><code class="language-javascript">var sprite = kontra.sprite({
+  x: 100,
+  y: 200,
+  width: 20,
+  height: 40,
+  dx: 5,
+  dy: 2,
+  update: function() {
+    // move the sprite normally
+    sprite.advance();
+
+    // change the velocity at the edges of the canvas
+    if (this.x < 0 || this.x - this.width > kontra.canvas.width) {
+      this.dx = -this.dx;
+    }
+    if (this.y < 0 || this.y - this.height > kontra.canvas.height) {
+      this.dy = -this.dy;
+    }
+  }
+});</code></pre>
+       </section>
+
+
+
+
+
+       <section>
+          <h2 id="animations"><a href="#animations" class="section-link">kontra.sprite.animations<span aria-hidden="true">#</span></a></h2>
+
+          <p><em>{object}</em></p>
+
+          <p>An object of <a href="/api/animation.html">kontra.animations</a> from a <a href="/api/spriteSheet.html">kontra.spritesheet</a> to animate the sprite. Each animation is named so that it can can be used by name for the sprites <a href="#playAnimation">playAnimation()</a> function.</p>
+
+          <pre><code class="language-javascript">var spriteSheet = kontra.spriteSheet({
+  /* ... */,
+  animations: {
+    idle: {
+      frames: 1
+    },
+    walk: {
+      frames: [1,2,3]
+    }
+  }
+});
+
+var sprite = kontra.sprite({
+  x: 100,
+  y: 200,
+  animations: spriteSheet.animations
+});
+
+sprite.playAnimation('idle');</code></pre>
+        </section>
+
+
+
+
+
+        <section>
+          <h2 id="collidesWith"><a href="#collidesWith" class="section-link">kontra.sprite.collidesWith(object)<span aria-hidden="true">#</span></a></h2>
+
+          <dl>
+            <dt><strong>object</strong> <em>{object}</em></dt>
+            <dd>The object to check for collision against.</dd>
+          </dl>
+
+          <p>Check if the sprite collide with the object. Uses a simple <a href="https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection#Axis-Aligned_Bounding_Box">Axis-Aligned Bounding Box (AABB) collision check</a>.</p>
+
+          <pre><code class="language-javascript">var sprite = kontra.sprite({
+  x: 100,
+  y: 200,
+  width: 20,
+  height: 40
+});
+
+var sprite2 = kontra.sprite({
+  x: 150,
+  y: 200,
+  width: 20,
+  height: 20
+});
+
+sprite.collidesWith(sprite2);  //=> false
+
+sprite2.x = 115;
+
+sprite.collidesWith(sprite2);  //=> true</code></pre>
+
+          <p>If you need a different type of collision check, you can override this function by passing in a property of the same name to <code>kontra.sprite()</code>.</p>
+
+<pre><code class="language-javascript">// circle collision
+function collidesWith(object) {
+  var dx = this.x - object.x;
+  var dy = this.y - object.y;
+  var distance = Math.sqrt(dx * dx + dy * dy);
+
+  if (distance < this.radius + object.radius) {
+    return true;
+  }
+
+  return false;
+}
+
+var sprite = kontra.sprite({
+  x: 100,
+  y: 200,
+  radius: 25,
+  collidesWith: collidesWith
+});
+
+var sprite2 = kontra.sprite({
+  x: 150,
+  y: 200,
+  radius: 30,
+  collidesWith: collidesWith
+});
+
+sprite.collidesWith(sprite2);  //=> true</code></pre>
+       </section>
+
+
+
+
+
+        <section>
+          <h2 id="color"><a href="#color" class="section-link">kontra.sprite.color<span aria-hidden="true">#</span></a></h2>
+
+          <p><em>{string}</em></p>
+
+          <p>The color of the sprite if it was passed into <code>kontra.sprite()</code>.</p>
+
+        </section>
+
+
+
+
+
+        <section>
+          <h2 id="context"><a href="#context" class="section-link">kontra.sprite.context<span aria-hidden="true">#</span></a></h2>
+
+          <p><em>{CanvasRenderingContext2D}</em></p>
+
+          <p>The context the sprite will draw to.</p>
+
+        </section>
+
+
+
+
+
+        <section>
+          <h2 id="currentAnimation"><a href="#currentAnimation" class="section-link">kontra.sprite.currentAnimation<span aria-hidden="true">#</span></a></h2>
+
+          <p><em>{<a href="/api/animation.html">kontra.animation</a>}</em></p>
+
+          <p>The currently playing animation object.</p>
+
+        </section>
+
+
+
+
+
+        <section>
+          <h2 id="ddx"><a href="#ddx" class="section-link">kontra.sprite.ddx<span aria-hidden="true">#</span></a></h2>
+
+          <p><em>{number}</em></p>
+
+          <p>The X value of the sprites <a href="#acceleration">acceleration</a>.</p>
+
+        </section>
+
+
+
+
+
+        <section>
+          <h2 id="ddy"><a href="#ddy" class="section-link">kontra.sprite.ddy<span aria-hidden="true">#</span></a></h2>
+
+          <p><em>{number}</em></p>
+
+          <p>The Y value of the sprites <a href="#acceleration">acceleration</a>.</p>
+
+        </section>
+
+
+
+
+
+        <section>
+          <h2 id="draw"><a href="#draw" class="section-link">kontra.sprite.draw()<span aria-hidden="true">#</span></a></h2>
+
+          <p>Draw the sprite on its context at the its X and Y position. This function changes based on the type of the sprite. For a <a href="#rect-sprite">rectangle sprite</a>, it uses <code>context.fillRect()</code>, for an <a href="#image-sprite">image sprite</a> it uses <code>context.drawImage()</code>, and for an <a href="#animation-sprite">animation sprite</a> it uses <code>kontra.spriteSheet.render()</code>.</p>
+
+          <p>If you override the sprites <a href="#render">render()</a> function with your own render function, you can call this function to draw the sprite using the sprites normal drawing function.</p>
+
+<code-output>
+var sprite = kontra.sprite({
+  x: 290,
+  y: 80,
+  color: 'red',
+  width: 20,
+  height: 40,
+
+  render: function() {
+    // draw the rectangle sprite normally
+    this.draw();
+
+    // outline the sprite
+    this.context.strokeStyle = 'yellow';
+    this.context.strokeRect(this.x, this.y, this.width, this.height);
+  }
+});
+
+sprite.render();
+</code-output>
+        </section>
+
+
+
+
+
+        <section>
+          <h2 id="dx"><a href="#dx" class="section-link">kontra.sprite.dx<span aria-hidden="true">#</span></a></h2>
+
+          <p><em>{number}</em></p>
+
+          <p>The X value of the sprites <a href="#velocity">velocity</a>.</p>
+
+        </section>
+
+
+
+
+
+        <section>
+          <h2 id="dy"><a href="#dy" class="section-link">kontra.sprite.dy<span aria-hidden="true">#</span></a></h2>
+
+          <p><em>{number}</em></p>
+
+          <p>The Y value of the sprites <a href="#velocity">velocity</a>.</p>
+
+        </section>
+
+
+
+
+
+        <section>
+          <h2 id="height"><a href="#height" class="section-link">kontra.sprite.height<span aria-hidden="true">#</span></a></h2>
+
+          <p><em>{number}</em></p>
+
+          <p>The height of the sprite. If the sprite is a <a href="#rect-sprite">rectangle sprite</a>, it uses the value passed into <code>kontra.sprite()</code>, for an <a href="#image-sprite">image sprite</a> it is the height of the image, and for an <a href="#animation-sprite">animation sprite</a> it is the height of a single frame of the animation.</p>
+
+        </section>
+
+
+
+
+
+        <section>
+          <h2 id="image"><a href="#image" class="section-link">kontra.sprite.image<span aria-hidden="true">#</span></a></h2>
+
+          <p><em>{HTMLImageElement | HTMLCanvasElement}</em></p>
+
+          <p>The image the sprite will use when drawn if passed into <code>kontra.sprite()</code>.</p>
+
+        </section>
+
+
+
+
+
+        <section>
+          <h2 id="init"><a href="#init" class="section-link">kontra.sprite.init(properties)<span aria-hidden="true">#</span></a></h2>
+
+          <dl>
+            <dt><strong>properties</strong> <em>{object}</em></dt>
+            <dd>Properties of the sprite.</dd>
+          </dl>
+
+          <p>Use this function to reinitialize a sprite. It takes the same properties object as <a href="/api/sprite.html">kontra.sprite()</a>. Useful it you want to repurpose a sprite.</p>
+
+        </section>
+
+
+
+
+
+        <section>
+          <h2 id="isAlive"><a href="#isAlive" class="section-link">kontra.sprite.isAlive()<span aria-hidden="true">#</span></a></h2>
+
+          <p>Returns true if the sprites <a href="#ttl">ttl</a> is greater than 0. Primarily used by <a href="/api/pool.html">kontra.pool</a> to know when to recycle an object.</p>
+
+        </section>
+
+
+
+
+
+        <section>
+          <h2 id="playAnimation"><a href="#playAnimation" class="section-link">kontra.sprite.playAnimation(name)<span aria-hidden="true">#</span></a></h2>
+
+          <dl>
+            <dt><strong>name</strong> <em>{string}</em></dt>
+            <dd>Name of the animation to play.</dd>
+          </dl>
+
+          <p>Set the currently playing animation of an <a href="#animation-sprite">animation sprite</a>.</p>
+
+          <pre><code class="language-javascript">var spriteSheet = kontra.spriteSheet({
+  /* ... */,
+  animations: {
+    idle: {
+      frames: 1
+    },
+    walk: {
+      frames: [1,2,3]
+    }
+  }
+});
+
+var sprite = kontra.sprite({
+  x: 100,
+  y: 200,
+  animations: spriteSheet.animations
+});
+
+sprite.playAnimation('idle');</code></pre>
+
+        </section>
+
+
+
+
+
+
+        <section>
+          <h2 id="position"><a href="#position" class="section-link">kontra.sprite.position<span aria-hidden="true">#</span></a></h2>
+
+          <p><em>{<a href="/api/vector.html">kontra.vector</a>}</em></p>
+
+          <p>X and Y values of the sprites position vector.</p>
+
+        </section>
+
+
+
+
+
+        <section>
+          <h2 id="render"><a href="#render" class="section-link">kontra.sprite.render()<span aria-hidden="true">#</span></a></h2>
+
+          <p>Render the sprite to its context. Calls the sprites <a href="#draw">draw()</a> function.</p>
+
+        </section>
+
+
+
+
+
+        <section>
+          <h2 id="ttl"><a href="#ttl" class="section-link">kontra.sprite.ttl<span aria-hidden="true">#</span></a></h2>
+
+          <p><em>{number}</em></p>
+
+          <p>How may frames the sprite should be alive. Primarily used by <a href="/api/pool.html">kontra.pool</a> to know when to recycle an object.</p>
+
+        </section>
+
+
+
+
+
+        <section>
+          <h2 id="update"><a href="#update" class="section-link">kontra.sprite.update(dt)<span aria-hidden="true">#</span></a></h2>
+
+          <dl>
+            <dt><strong>dt</strong> <em>{number}</em></dt>
+            <dd>Optional. Time since last update.</dd>
+          </dl>
+
+          <p>Update the sprites position based on its velocity and acceleration. Calls the sprites <a href="#advance">advance()</a> function.</p>
+
+        </section>
+
+
+
+
+
+        <section>
+          <h2 id="velocity"><a href="#velocity" class="section-link">kontra.sprite.velocity<span aria-hidden="true">#</span></a></h2>
+
+          <p><em>{<a href="/api/vector.html">kontra.vector</a>}</em></p>
+
+          <p>X and Y values of the sprites velocity vector.</p>
+
+        </section>
+
+
+
+
+
+        <section>
+          <h2 id="width"><a href="#width" class="section-link">kontra.sprite.width<span aria-hidden="true">#</span></a></h2>
+
+          <p><em>{number}</em></p>
+
+          <p>The width of the sprite. If the sprite is a <a href="#rect-sprite">rectangle sprite</a>, it uses the value passed into <code>kontra.sprite()</code>, for an <a href="#image-sprite">image sprite</a> it is the width of the image, and for an <a href="#animation-sprite">animation sprite</a> it is the width of a single frame of the animation.</p>
+
+        </section>
+
+
+
+
+
+        <section>
+          <h2 id="x"><a href="#x" class="section-link">kontra.sprite.x<span aria-hidden="true">#</span></a></h2>
+
+          <p><em>{number}</em></p>
+
+          <p>The X value of the sprites <a href="#position">position</a>.</p>
+
+        </section>
+
+
+
+
+
+        <section>
+          <h2 id="y"><a href="#y" class="section-link">kontra.sprite.y<span aria-hidden="true">#</span></a></h2>
+
+          <p><em>{number}</em></p>
+
+          <p>The Y value of the sprites <a href="#position">position</a>.</p>
+
+        </section>
+      </div>
+    </main>
+  </div>
+
+</body>
+</html>

@@ -21,42 +21,48 @@
    */
   kontra.init();
 
-  kontra.loadAssets('terrain.json', 'man.png', 'terrain.png').then(function() {
-    var terrain = kontra.data.terrain;
+  kontra.assets.audioPath = '../audio/';
+
+  kontra.assets.load('terrain.json', 'man.png', 'terrain.png', ['Digital_Forest.mp3', 'Digital_Forest.mp3']).then(function() {
+    var terrain = kontra.assets.data.terrain;
 
     // setup tile engine
-    var tileEngine = kontra.tileEngine({
-      tileWidth: terrain.tilewidth,
-      tileHeight: terrain.tileheight,
-      width: terrain.width,
-      height: terrain.height,
+    var tileEngine = kontra.tileEngine(kontra.assets.data.terrain);
+    tileEngine.sx = terrain.width * terrain.tilewidth / 2 - kontra.canvas.width / 2,
+    tileEngine.sy = terrain.height * terrain.tileheight - kontra.canvas.height
 
-      // center the game world
-      sx: terrain.width * terrain.tilewidth / 2 - kontra.canvas.width / 2,
-      sy: terrain.height * terrain.tileheight - kontra.canvas.height
-    });
+    // var tileEngine = kontra.tileEngine({
+    //   tileWidth: terrain.tilewidth,
+    //   tileHeight: terrain.tileheight,
+    //   width: terrain.width,
+    //   height: terrain.height,
 
-    // add all tilesets
-    for (var i = 0, tileset; tileset = terrain.tilesets[i]; i++) {
-      tileEngine.addTileset({
-        image: kontra.images[tileset.image],
-        firstGrid: tileset.firstgrid
-      });
-    }
+    //   // center the game world
+    //   sx: terrain.width * terrain.tilewidth / 2 - kontra.canvas.width / 2,
+    //   sy: terrain.height * terrain.tileheight - kontra.canvas.height
+    // });
 
-    // add all layers
-    for (var i = 0, layer; layer = terrain.layers[i]; i++) {
-      tileEngine.addLayer({
-        name: layer.name,
-        data: layer.data,
-        render: (layer.properties ? JSON.parse(layer.properties.render) : true),
-        zIndex: i,
-      });
-    }
+    // // add all tilesets
+    // for (var i = 0, tileset; tileset = terrain.tilesets[i]; i++) {
+    //   tileEngine.addTileset({
+    //     image: kontra.images[tileset.image],
+    //     firstGrid: tileset.firstgrid
+    //   });
+    // }
+
+    // // add all layers
+    // for (var i = 0, layer; layer = terrain.layers[i]; i++) {
+    //   tileEngine.addLayer({
+    //     name: layer.name,
+    //     data: layer.data,
+    //     render: (layer.properties ? JSON.parse(layer.properties.render) : true),
+    //     zIndex: i,
+    //   });
+    // }
 
     // create the walking man sprite sheet and animations
     var spritesheet = kontra.spriteSheet({
-      image: kontra.images.man,
+      image: kontra.assets.images.man,
       frameWidth: 64,
       frameHeight: 64,
       animations: {
@@ -195,6 +201,8 @@
       }
     });
 
+    kontra.assets.audio.Digital_Forest.loop = true;
+    kontra.assets.audio.Digital_Forest.play();
     loop.start();
   });
   </script>

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Kontra.js – Kontra.assets</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/webcomponentsjs/0.7.22/webcomponents-lite.min.js"></script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/themes/prism.min.css">
+  <link rel="stylesheet" href="/styles.css">
+
+  <link rel="import" href="/components/main-nav.html">
+  <link rel="import" href="/components/code-output.html">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/components/prism-javascript.min.js"></script>
+  <script src="/js/kontra.js"></script>
+</head>
+<body>
+  <div class="content">
+    <main-nav></main-nav>
+
+    <main id="main">
+      <div>
+        <h1>Kontra.assets</h1>
+
+        <p>A promise based asset loader.</p>
+
+        <pre><code class="language-javascript">kontra.assets.load('/imgs/character.png', '/data/tile_engine_basic.json', ['/audio/music.ogg', '/audio/music.mp3'])
+  .then(function() {
+    // all assets have loaded
+  }).catch(function(err) {
+    // error loading an asset
+  });</code></pre>
+
+
+
+
+
+        <section class="toc">
+          <h2 id="toc"><a href="#toc" class="section-link">Table of Contents<span aria-hidden="true">#</span></a></h2>
+
+          <ul aria-labeledby="toc">
+             <li>
+              <h3 id="properties">Properties</h3>
+              <ul aria-labeledby="properties">
+                <li><a href="#audio">kontra.assets.audio</a></li>
+                <li><a href="#audioPath">kontra.assets.audioPath</a></li>
+                <li><a href="#data">kontra.assets.data</a></li>
+                <li><a href="#dataPath">kontra.assets.dataPath</a></li>
+                <li><a href="#images">kontra.assets.images</a></li>
+                <li><a href="#imagePath">kontra.assets.imagePath</a></li>
+              </ul>
+            </li>
+
+            <li>
+              <h3 id="methods">Methods</h3>
+              <ul aria-labeledby="methods">
+                <li><a href="#load">kontra.assets.load(url[, ...])</a></li>
+              </ul>
+            </li>
+          </ul>
+        </section>
+
+
+
+
+
+        <section>
+          <h2 id="audio"><a href="#audio" class="section-link">kontra.assets.audio<span aria-hidden="true">#</span></a></h2>
+
+          <p><em>{object}</em></p>
+
+          <p>Object of all loaded audio assets by both file name and path. If <a href="#audioPath">audioPath</a> was set before the audio was loaded, the file name and path will not include the audio base path.</p>
+
+          <pre><code class="language-javascript">kontra.assets.load('/audio/music.ogg')
+  .then(function() {
+    // Audio asset can be accessed at both
+    // name: kontra.assets.audio['/audio/music']
+    // path: kontra.assets.audio['/audio/music.ogg']
+  });
+
+kontra.assets.audioPath = '/audio';
+kontra.assets.load('sound.ogg')
+  .then(function() {
+    // Audio asset can be accessed at both
+    // name: kontra.assets.audio.sound
+    // path: kontra.assets.audio['sound.ogg']
+  }); </code></pre>
+
+        </section>
+
+
+
+
+
+        <section>
+          <h2 id="audioPath"><a href="#audioPath" class="section-link">kontra.assets.audioPath<span aria-hidden="true">#</span></a></h2>
+
+          <p><em>{string}</em></p>
+
+          <p>Base path for all audio assets. If a base path is set, all load calls for audio assets will prepend the base path to the URL.</p>
+
+          <pre><code class="language-javascript">kontra.assets.audioPath = '/audio';
+kontra.assets.load('music.ogg');  // loads /audio/music.ogg</code></pre>
+
+        </section>
+
+
+
+
+
+        <section>
+          <h2 id="data"><a href="#data" class="section-link">kontra.assets.data<span aria-hidden="true">#</span></a></h2>
+
+          <p><em>{object}</em></p>
+
+          <p>Object of all loaded data assets by both file name and path. If <a href="#dataPath">dataPath</a> was set before the data asset was loaded, the file name and path will not include the data base path.</p>
+
+          <p>If the data asset is a JSON file, it will automatically be parsed.</p>
+
+          <pre><code class="language-javascript">kontra.assets.load('/data/file.txt')
+  .then(function() {
+    // Data asset can be accessed at both
+    // name: kontra.assets.data['/data/file']
+    // path: kontra.assets.data['/data/file.txt']
+  });
+
+kontra.assets.dataPath = '/data';
+kontra.assets.load('info.json')
+  .then(function() {
+    // Data asset can be accessed at both
+    // name: kontra.assets.data.info
+    // path: kontra.assets.data['info.json']
+  }); </code></pre>
+
+        </section>
+
+
+
+
+
+        <section>
+          <h2 id="dataPath"><a href="#dataPath" class="section-link">kontra.assets.dataPath<span aria-hidden="true">#</span></a></h2>
+
+          <p><em>{string}</em></p>
+
+          <p>Base path for all data assets. If a base path is set, all load calls for data assets will prepend the base path to the URL.</p>
+
+          <pre><code class="language-javascript">kontra.assets.dataPath = '/data';
+kontra.assets.load('file.json');  // loads /data/file.json</code></pre>
+
+        </section>
+
+
+
+
+
+        <section>
+          <h2 id="images"><a href="#images" class="section-link">kontra.assets.images<span aria-hidden="true">#</span></a></h2>
+
+          <p><em>{object}</em></p>
+
+          <p>Object of all loaded image assets by both file name and path. If <a href="#imagePath">imagePath</a> was set before the image was loaded, the file name and path will not include the image base path.</p>
+
+          <pre><code class="language-javascript">kontra.assets.load('/imgs/character.png')
+  .then(function() {
+    // Image asset can be accessed at both
+    // name: kontra.assets.images['/imgs/character']
+    // path: kontra.assets.images['/imgs/character.png']
+  });
+
+kontra.assets.imagePath = '/imgs';
+kontra.assets.load('character_walk_sheet.png')
+  .then(function() {
+    // Image asset can be accessed at both
+    // name: kontra.assets.images.character_walk_sheet
+    // path: kontra.assets.images['character_walk_sheet.png']
+  }); </code></pre>
+
+        </section>
+
+
+
+
+
+        <section>
+          <h2 id="imagePath"><a href="#imagePath" class="section-link">kontra.assets.imagePath<span aria-hidden="true">#</span></a></h2>
+
+          <p><em>{string}</em></p>
+
+          <p>Base path for all image assets. If a base path is set, all load calls for image assets will prepend the base path to the URL.</p>
+
+          <pre><code class="language-javascript">kontra.assets.imagePath = '/imgs';
+kontra.assets.load('character.png');  // loads /imgs/character.png</code></pre>
+
+        </section>
+
+
+
+
+
+        <section>
+          <h2 id="load"><a href="#load" class="section-link">kontra.assets.load(url[, ...])<span aria-hidden="true">#</span></a></h2>
+
+          <dl>
+            <dt><strong>url</strong> <em>{string | string[]}</em></dt>
+            <dd>The path or paths to the file.</dd>
+          </dl>
+
+          <p>Load Image, Audio, or data assets using promises. You can pass it as many assets as you want.</p>
+
+          <p>Once an asset is loaded, it will be accessible by its file name and path from either the <a href="#audio">kontra.assets.audio</a>, <a href="#data">kontra.assets.data</a>, or <a href="#images">kontra.assets.images</a> objects, depending on its type.</p>
+
+          <p>You can specify multiple audio formats by putting them inside an array and the loader will determine which format to load based on the current browsers support. Order of the array designates audio preference.</p>
+
+          <p>Since the loader will determine which audio asset to use, you should only reference the audio by its name and not by its file path since there's no guarantee which asset was loaded.</p>
+
+          <pre><code class="language-javascript">kontra.assets.load('/imgs/character.png', '/data/tile_engine_basic.json', ['/audio/music.mp3', '/audio/music.ogg'])
+  .then(function() {
+
+    // access audio by its name only (not by its .mp3 or .ogg path)
+    kontra.assets.audio['/audio/music'].play();
+  })
+  .catch(function(err) {
+    // error loading an asset
+  });</code></pre>
+
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+</body>
+</html>

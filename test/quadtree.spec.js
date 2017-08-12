@@ -1,12 +1,20 @@
 // --------------------------------------------------
 // kontra.quadtree
 // --------------------------------------------------
-describe('', function() {
+describe('kontra.quadtree', function() {
+
+  before(function() {
+    if (!kontra.canvas) {
+      var canvas = document.createElement('canvas');
+      canvas.width = canvas.height = 600;
+      kontra.init(canvas);
+    }
+  });
 
   // --------------------------------------------------
   // kontra.quadtree.init
   // --------------------------------------------------
-  describe('kontra.quadtree.init', function() {
+  describe('init', function() {
 
     it('should create an initial bounding box', function() {
       var quadtree = kontra.quadtree();
@@ -14,8 +22,8 @@ describe('', function() {
       expect(typeof quadtree.bounds).to.equal('object');
       expect(quadtree.bounds.x).to.equal(0);
       expect(quadtree.bounds.y).to.equal(0);
-      expect(quadtree.bounds.width).to.equal(kontra.game.width);
-      expect(quadtree.bounds.height).to.equal(kontra.game.height);
+      expect(quadtree.bounds.width).to.equal(kontra.canvas.width);
+      expect(quadtree.bounds.height).to.equal(kontra.canvas.height);
     });
 
     it('should allow you to set the maxDepth and maxObject counts', function() {
@@ -37,7 +45,7 @@ describe('', function() {
   // --------------------------------------------------
   // kontra.quadtree.add
   // --------------------------------------------------
-  describe('kontra.quadtree.add', function() {
+  describe('add', function() {
     var quadtree;
 
     beforeEach(function() {
@@ -155,6 +163,26 @@ describe('', function() {
       expect(subnode[0]).to.equal(object);
     });
 
+    it('shouldn\'t split a quadtree node twice after clearing', function() {
+      // cause the tree to split
+      for (var i = 0; i < 6; i++) {
+        quadtree.add({id: i});
+      }
+
+      var subnodes = quadtree.subnodes;
+
+      quadtree.clear();
+
+      // cause to split again
+      for (var i = 0; i < 6; i++) {
+        quadtree.add({id: i});
+      }
+
+      // since splitting overrides the subnodes with new values this should
+      // test that the subnodes were left alone after the 2nd split
+      expect(quadtree.subnodes).to.equal(subnodes);
+    });
+
   });
 
 
@@ -164,7 +192,7 @@ describe('', function() {
   // --------------------------------------------------
   // kontra.quadtree.clear
   // --------------------------------------------------
-  describe('kontra.quadtree.clear', function() {
+  describe('clear', function() {
     var quadtree;
 
     beforeEach(function() {
@@ -212,7 +240,7 @@ describe('', function() {
   // --------------------------------------------------
   // kontra.quadtree.get
   // --------------------------------------------------
-  describe('kontra.quadtree.get', function() {
+  describe('get', function() {
 
     beforeEach(function() {
       quadtree = kontra.quadtree({

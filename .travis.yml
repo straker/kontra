@@ -1,4 +1,8 @@
 language: node_js
 node_js:
-  - "0.12"
+  - "6"
+dist: trusty
+sudo: false
+addons:
+  chrome: stable
 after_script: "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"

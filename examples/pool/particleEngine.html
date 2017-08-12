@@ -12,8 +12,6 @@
   var midX = kontra.canvas.width / 2;
   var midY = kontra.canvas.height / 2;
 
-  // you can animate about 5000 particles in 60PFS
-  // each field means you have to reduce the particle count about 1000 to remain under 60FPS
   var fields = [
     kontra.sprite({
       x: midX - 75,
@@ -82,7 +80,7 @@
           color: 'white',
           width: 1,
           height: 1,
-          timeToLive: Infinity
+          ttl: Infinity
         });
       }
 
@@ -95,6 +93,6 @@
 
   loop.start();
   </script>
-  <script src="prism/codeOutput.js"></script>
+  <script src="../prism/codeOutput.js"></script>
 </body>
 </html>

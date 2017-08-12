@@ -4,16 +4,26 @@
 module.exports = function(config) {
   config.set({
     basePath: '',
-    singleRun: true,
-    autoWatch: false,
+    singleRun: false,
+    autoWatch: true,
+    concurrency: Infinity,
     frameworks: ['mocha', 'chai', 'sinon'],
     files: [
       // assets
-      'test/phantom.polyfill.js',
+      {pattern: 'test/imgs/*.*', included: false, served: true },
+      {pattern: 'test/audio/*.*', included: false, served: true },
+      {pattern: 'test/data/*.*', included: false, served: true },
+
+      'src/core.js',
       'src/*.js',
-      'test/*.js'
+      'test/*.js',
     ],
-    browsers: ['PhantomJS'],
+    browsers: ['ChromeHeadless'],
+    proxies: {
+      '/imgs': '/base/test/imgs',
+      '/audio': '/base/test/audio',
+      '/data': '/base/test/data'
+    },
     reporters: ['progress', 'coverage'],
     preprocessors: {
       'src/*.js': ['coverage']

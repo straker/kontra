@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Kontra.js – Kontra.gameLoop</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/webcomponentsjs/0.7.22/webcomponents-lite.min.js"></script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/themes/prism.min.css">
+  <link rel="stylesheet" href="/styles.css">
+
+  <link rel="import" href="/components/main-nav.html">
+  <link rel="import" href="/components/code-output.html">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/components/prism-javascript.min.js"></script>
+  <script src="/js/kontra.js"></script>
+</head>
+<body>
+  <div class="content">
+    <main-nav></main-nav>
+
+    <main id="main">
+      <div>
+        <h1>Kontra.gameLoop(properties)</h1>
+
+        <dl>
+          <dt><strong>properties</strong> <em>{object}</em></dt>
+          <dd>Properties of the game loop.</dd>
+          <dt><strong>properties.update</strong> <em>{function}</em></dt>
+          <dd>Function called every frame to update the game.</dd>
+          <dt><strong>properties.render</strong> <em>{function}</em></dt>
+          <dd>Function called every frame to render the game.</dd>
+          <dt><strong>properties.fps</strong> <em>{number}</em></dt>
+          <dd>Optional. Desired frame rate. Defaults to 60.</dd>
+          <dt><strong>properties.clearCanvas</strong> <em>{boolean}</em></dt>
+          <dd>Optional. Clear the canvas every frame before the render function is called. Defaults true.</dd>
+        </dl>
+
+        <p>The game loop updates and renders the game every frame. The game loop is not run until the gameLoops <a href="#start">start()</a> function is called.</p>
+
+        <p>The game loop uses a time-based animation with a fixed dt to <a href="http://blog.sklambert.com/using-time-based-animation-implement/">avoid frame rate issues</a>. Each update call is guaranteed to equal 1/60 of a second.</p>
+
+        <p>This means that you can avoid having to do time based calculations in your update functions and instead do fixed updates.</p>
+
+        <pre><code class="language-javascript">var loop = kontra.gameLoop({
+  fps: 30,              // run the game at 30FPS
+  clearCanvas: false,   // don't clear the canvas each frame
+  update: function(dt) {
+    // no need to determine how many pixels you want to
+    // move every second and multiple by dt
+    // sprite.x += 180 * dt;
+
+    // instead just update by how many pixels you want
+    // to move every frame and the loop will ensure 60FPS
+    sprite.x += 3;
+  },
+  render: function() {
+    kontra.context.clearRect(0, 0, kontra.canvas.width, kontra.canvas.height);
+
+    sprite.render();
+  }
+});</code></pre>
+
+
+
+
+        <section class="toc">
+          <h2 id="toc"><a href="#toc" class="section-link">Table of Contents<span aria-hidden="true">#</span></a></h2>
+
+          <ul aria-labeledby="toc">
+            <li>
+              <h3 id="properties">Properties</h3>
+              <ul aria-labeledby="properties">
+                <li><a href="#isStopped">kontra.gameLoop.isStopped</a></li>
+              </ul>
+            </li>
+
+            <li>
+              <h3 id="methods">Methods</h3>
+              <ul aria-labeledby="methods">
+                <li><a href="#render">kontra.gameLoop.render()</a></li>
+                <li><a href="#start">kontra.gameLoop.start()</a></li>
+                <li><a href="#stop">kontra.gameLoop.stop()</a></li>
+                <li><a href="#update">kontra.gameLoop.update(dt)</a></li>
+              </ul>
+            </li>
+          </ul>
+        </section>
+
+
+
+
+
+        <section>
+          <h2 id="isStopped"><a href="#isStopped" class="section-link">kontra.gameLoop.isStopped<span aria-hidden="true">#</span></a></h2>
+
+          <p><em>{boolean}</em></p>
+
+          <p>If the game loop is currently stopped.</p>
+
+          <pre><code class="language-javascript">var loop = kontra.gameLoop({ /* ... */ });
+console.log(loop.isStopped);  //=> true
+
+loop.start();
+console.log(loop.isStopped);  //=> false
+
+loop.stop();
+console.log(loop.isStopped);  //=> true</code></pre>
+        </section>
+
+
+
+
+
+        <section>
+          <h2 id="render"><a href="#render" class="section-link">kontra.gameLoop.render()<span aria-hidden="true">#</span></a></h2>
+
+          <p>Called every frame to render the game. Put all of your games render logic here.</p>
+        </section>
+
+
+
+
+
+        <section>
+          <h2 id="start"><a href="#start" class="section-link">kontra.gameLoop.start()<span aria-hidden="true">#</span></a></h2>
+
+          <p>Start the game loop.</p>
+
+        </section>
+
+
+
+
+
+        <section>
+          <h2 id="stop"><a href="#stop" class="section-link">kontra.gameLoop.stop()<span aria-hidden="true">#</span></a></h2>
+
+          <p>Stop the game loop.</p>
+        </section>
+
+
+
+
+
+        <section>
+          <h2 id="update"><a href="#update" class="section-link">kontra.gameLoop.update(dt)<span aria-hidden="true">#</span></a></h2>
+
+          <dl>
+            <dt><strong>dt</strong> <em>{number}</em></dt>
+            <dd>The fixed dt time of 1/60 of a frame.</dd>
+          </dl>
+
+          <p>Called every frame to update the game. Put all of your games update logic here.</p>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+</body>
+</html>

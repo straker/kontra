@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Kontra.js – Kontra.vector</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/webcomponentsjs/0.7.22/webcomponents-lite.min.js"></script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/themes/prism.min.css">
+  <link rel="stylesheet" href="/styles.css">
+
+  <link rel="import" href="/components/main-nav.html">
+  <link rel="import" href="/components/code-output.html">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/components/prism-javascript.min.js"></script>
+  <script src="/js/kontra.js"></script>
+</head>
+<body>
+  <div class="content">
+    <main-nav></main-nav>
+
+    <main id="main">
+      <div>
+        <h1>Kontra.vector(properties)</h1>
+
+        <dl>
+          <dt><strong>properties</strong> <em>{object}</em></dt>
+          <dd>Properties of the vector.</dd>
+          <dt><strong>properties.x</strong> <em>{number}</em></dt>
+          <dd>Optional. X value. Defaults to 0.</dd>
+          <dt><strong>properties.y</strong> <em>{number}</em></dt>
+          <dd>Optional. Y value. Defaults to 0.</dd>
+        </dl>
+
+        <p>A simple 2d vector object.</p>
+
+        <p>Added to the <code>kontra</code> object when <a href="/api/sprite.html">kontra.sprite</a> is installed.</p>
+
+        <pre><code class="language-javascript">kontra.vector({x: 100, y: 150});</code></pre>
+
+
+
+
+
+        <section class="toc">
+          <h2 id="toc"><a href="#toc" class="section-link">Table of Contents<span aria-hidden="true">#</span></a></h2>
+
+          <ul aria-labeledby="toc">
+            <li>
+              <h3 id="properties">Properties</h3>
+              <ul aria-labeledby="properties">
+                <li><a href="#x">kontra.vector.x</a></li>
+                <li><a href="#y">kontra.vector.y</a></li>
+              </ul>
+            </li>
+
+            <li>
+              <h3 id="methods">Methods</h3>
+              <ul aria-labeledby="methods">
+                <li><a href="#add">kontra.vector.add(vector, dt)</a></li>
+                <li><a href="#clamp">kontra.vector.clamp(xMin, yMin, xMax, yMax)</a></li>
+              </ul>
+            </li>
+          </ul>
+        </section>
+
+
+
+
+
+        <section>
+          <h2 id="add"><a href="#add" class="section-link">kontra.vector.add(vector, dt)<span aria-hidden="true">#</span></a></h2>
+
+          <dl>
+            <dt><strong>vector</strong> <em>{kontra.vector}</em></dt>
+            <dd>Vector to add to the current vector.</dd>
+            <dt><strong>dt</strong> <em>{number}</em></dt>
+            <dd>Optional. Time since last update.</dd>
+          </dl>
+
+          <p>Add two vectors together. Pass dt to adjust how much of the vector gets added.</p>
+
+          <pre><code class="language-javascript">var vector = kontra.vector({x: 100, y: 200});
+var vector2 = kontra.vector({x: 50, y: 10});
+
+vector.add(vector2);
+console.log(vector);  //=> {x: 150, y: 210}
+
+vector.add(vector2, 0.1);
+console.log(vector);  //=> {x: 155, y: 211}</code></pre>
+
+       </section>
+
+
+
+
+
+        <section>
+          <h2 id="clamp"><a href="#clamp" class="section-link">kontra.vector.clamp(xMin, yMin, xMax, yMax)<span aria-hidden="true">#</span></a></h2>
+
+          <dl>
+            <dt><strong>xMin</strong> <em>{number}</em></dt>
+            <dd>Optional. Minimum x value. Defaults to -Infinity.</dd>
+            <dt><strong>yMin</strong> <em>{number}</em></dt>
+            <dd>Optional. Minimum y value. Defaults to -Infinity.</dd>
+            <dt><strong>xMax</strong> <em>{number}</em></dt>
+            <dd>Optional. Maximum x value. Defaults to Infinity.</dd>
+            <dt><strong>yMax</strong> <em>{number}</em></dt>
+            <dd>Optional. Maximum y value. Defaults to Infinity.</dd>
+          </dl>
+
+          <p>Clamp the vector between two points, preventing <code>x</code> and <code>y</code> from going below or above the minimum and maximum values. Perfect for keeping a sprite from going outside the game boundaries.</p>
+
+          <pre><code class="language-javascript">var vector = kontra.vector({x: 100, y: 200});
+
+vector.clamp(0, 0, 200, 300);
+
+vector.x += 200;
+console.log(vector.x);  //=> 200
+
+vector.y -= 300;
+console.log(vector.y);  //=> 0
+
+vector.add({x: -500, y: 500});
+console.log(vector);    //=> {x: 0, y: 300);</code></pre>
+
+        </section>
+
+
+
+
+
+        <section>
+          <h2 id="x"><a href="#x" class="section-link">kontra.vector.x<span aria-hidden="true">#</span></a></h2>
+
+          <p><em>{number}</em></p>
+
+          <p>X value of the vector.</p>
+
+        </section>
+
+
+
+
+
+        <section>
+          <h2 id="y"><a href="#y" class="section-link">kontra.vector.y<span aria-hidden="true">#</span></a></h2>
+
+          <p><em>{number}</em></p>
+
+          <p>Y value of the vector.</p>
+
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+</body>
+</html>

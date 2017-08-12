@@ -1,13 +1,16 @@
-var kontra = (function(kontra, undefined) {
-  'use strict';
-
+(function(kontra) {
   /**
    * A quadtree for 2D collision checking. The quadtree acts like an object pool in that it
    * will create subnodes as objects are needed but it won't clean up the subnodes when it
    * collapses to avoid garbage collection.
    * @memberof kontra
    *
-   * @see kontra.quadtree.prototype.init for list of parameters.
+   * @param {object} properties - Properties of the quadtree.
+   * @param {number} [properties.maxDepth=3] - Maximum node depths the quadtree can have.
+   * @param {number} [properties.maxObjects=25] - Maximum number of objects a node can support before splitting.
+   * @param {object} [properties.bounds] - The 2D space this node occupies.
+   * @param {object} [properties.parent] - Private. The node that contains this node.
+   * @param {number} [properties.depth=0] - Private. Current node depth.
    *
    * The quadrant indices are numbered as follows (following a z-order curve):
    *     |
@@ -18,7 +21,7 @@ var kontra = (function(kontra, undefined) {
    */
   kontra.quadtree = function(properties) {
     var quadtree = Object.create(kontra.quadtree.prototype);
-    quadtree.init(properties);
+    quadtree._init(properties);
 
     return quadtree;
   };
@@ -27,32 +30,32 @@ var kontra = (function(kontra, undefined) {
     /**
      * Initialize properties on the quadtree.
      * @memberof kontra.quadtree
+     * @private
      *
      * @param {object} properties - Properties of the quadtree.
-     * @param {number} [properties.depth=0] - Current node depth.
      * @param {number} [properties.maxDepth=3] - Maximum node depths the quadtree can have.
      * @param {number} [properties.maxObjects=25] - Maximum number of objects a node can support before splitting.
-     * @param {object} [properties.parentNode] - The node that contains this node.
      * @param {object} [properties.bounds] - The 2D space this node occupies.
+     * @param {object} [properties.parent] - Private. The node that contains this node.
+     * @param {number} [properties.depth=0] - Private. Current node depth.
      */
-    init: function init(properties) {
+    _init: function init(properties) {
       properties = properties || {};
 
-      this.depth = properties.depth || 0;
       this.maxDepth = properties.maxDepth || 3;
       this.maxObjects = properties.maxObjects || 25;
 
       // since we won't clean up any subnodes, we need to keep track of which nodes are
       // currently the leaf node so we know which nodes to add objects to
-      this.isBranchNode = false;
-
-      this.parentNode = properties.parentNode;
+      this._branch = false;
+      this._depth = properties.depth || 0;
+      this._parent = properties.parent;
 
       this.bounds = properties.bounds || {
         x: 0,
         y: 0,
-        width: kontra.game.width,
-        height: kontra.game.height
+        width: kontra.canvas.width,
+        height: kontra.canvas.height
       };
 
       this.objects = [];
@@ -64,13 +67,13 @@ var kontra = (function(kontra, undefined) {
      * @memberof kontra.quadtree
      */
     clear: function clear() {
-      if (this.isBranchNode) {
+      if (this._branch) {
         for (var i = 0; i < 4; i++) {
           this.subnodes[i].clear();
         }
       }
 
-      this.isBranchNode = false;
+      this._branch = false;
       this.objects.length = 0;
     },
 
@@ -84,24 +87,21 @@ var kontra = (function(kontra, undefined) {
      * @returns {object[]} A list of objects in the same leaf node as the object.
      */
     get: function get(object) {
-      var node = this;
       var objects = [];
-      var indices, index;
+      var indices, i;
 
       // traverse the tree until we get to a leaf node
-      while (node.subnodes.length && this.isBranchNode) {
+      while (this.subnodes.length && this._branch) {
         indices = this._getIndex(object);
 
-        for (var i = 0, length = indices.length; i < length; i++) {
-          index = indices[i];
-
-          objects.push.apply(objects, this.subnodes[index].get(object));
+        for (i = 0; i < indices.length; i++) {
+          objects.push.apply(objects, this.subnodes[ indices[i] ].get(object));
         }
 
         return objects;
       }
 
-      return node.objects;
+      return this.objects;
     },
 
     /**
@@ -117,9 +117,9 @@ var kontra = (function(kontra, undefined) {
      * kontra.quadtree().add([{id:1}, {id:2}], {id:3});
      */
     add: function add() {
-      var i, object, obj, indices, index;
+      var i, j, object, obj, indices, index;
 
-      for (var j = 0, length = arguments.length; j < length; j++) {
+      for (j = 0; j < arguments.length; j++) {
         object = arguments[j];
 
         // add a group of objects separately
@@ -130,8 +130,8 @@ var kontra = (function(kontra, undefined) {
         }
 
         // current node has subnodes, so we need to add this object into a subnode
-        if (this.subnodes.length && this.isBranchNode) {
-          this._addToSubnode(object);
+        if (this.subnodes.length && this._branch) {
+          this._add2Sub(object);
 
           continue;
         }
@@ -140,12 +140,12 @@ var kontra = (function(kontra, undefined) {
         this.objects.push(object);
 
         // split the node if there are too many objects
-        if (this.objects.length > this.maxObjects && this.depth < this.maxDepth) {
+        if (this.objects.length > this.maxObjects && this._depth < this.maxDepth) {
           this._split();
 
           // move all objects to their corresponding subnodes
-          for (i = 0; obj = this.objects[i]; i++) {
-            this._addToSubnode(obj);
+          for (i = 0; (obj = this.objects[i]); i++) {
+            this._add2Sub(obj);
           }
 
           this.objects.length = 0;
@@ -160,11 +160,12 @@ var kontra = (function(kontra, undefined) {
      *
      * @param {object} object - Object to add into a subnode
      */
-    _addToSubnode: function _addToSubnode(object) {
+    _add2Sub: function addToSubnode(object) {
       var indices = this._getIndex(object);
+      var i;
 
       // add the object to all subnodes it intersects
-      for (var i = 0, length = indices.length; i < length; i++) {
+      for (i = 0; i < indices.length; i++) {
         this.subnodes[ indices[i] ].add(object);
       }
     },
@@ -219,7 +220,7 @@ var kontra = (function(kontra, undefined) {
      * @private
      */
     _split: function split() {
-      this.isBranchNode = true;
+      this._branch = true;
 
       // only split if we haven't split before
       if (this.subnodes.length) {
@@ -237,10 +238,10 @@ var kontra = (function(kontra, undefined) {
             width: subWidth,
             height: subHeight
           },
-          depth: this.depth+1,
+          depth: this._depth+1,
           maxDepth: this.maxDepth,
           maxObjects: this.maxObjects,
-          parentNode: this
+          parent: this
         });
       }
     },
@@ -249,23 +250,20 @@ var kontra = (function(kontra, undefined) {
      * Draw the quadtree. Useful for visual debugging.
      * @memberof kontra.quadtree
      */
-    render: function() {
-      /* istanbul ignore next */
-      // don't draw empty leaf nodes, always draw branch nodes and the first node
-      if (this.objects.length || this.depth === 0 ||
-          (this.parentNode && this.parentNode.isBranchNode)) {
+    // render: function() {
+    //   // don't draw empty leaf nodes, always draw branch nodes and the first node
+    //   if (this.objects.length || this._depth === 0 ||
+    //       (this._parent && this._parent._branch)) {
 
-        kontra.context.strokeStyle = 'red';
-        kontra.context.strokeRect(this.bounds.x, this.bounds.y, this.bounds.width, this.bounds.height);
+    //     kontra.context.strokeStyle = 'red';
+    //     kontra.context.strokeRect(this.bounds.x, this.bounds.y, this.bounds.width, this.bounds.height);
 
-        if (this.subnodes.length) {
-          for (var i = 0; i < 4; i++) {
-            this.subnodes[i].render();
-          }
-        }
-      }
-    }
+    //     if (this.subnodes.length) {
+    //       for (var i = 0; i < 4; i++) {
+    //         this.subnodes[i].render();
+    //       }
+    //     }
+    //   }
+    // }
   };
-
-  return kontra;
-})(kontra || {});
+})(kontra);

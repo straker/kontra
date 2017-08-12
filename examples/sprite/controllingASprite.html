@@ -37,18 +37,18 @@
         }
 
         // reset the sprites position when it reaches the edge of the game
-        if (this.x > kontra.game.width) {
+        if (this.x > kontra.canvas.width) {
           this.x = -this.width;
         }
         else if (this.x < -this.width) {
-          this.x = kontra.game.width;
+          this.x = kontra.canvas.width;
         }
 
-        if (this.y > kontra.game.height) {
+        if (this.y > kontra.canvas.height) {
           this.y = -this.height;
         }
         else if (this.y < -this.height) {
-          this.y = kontra.game.height;
+          this.y = kontra.canvas.height;
         }
       }
     });

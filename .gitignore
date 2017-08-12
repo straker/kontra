@@ -1,7 +1,5 @@
 node_modules
 .DS_Store
-kontra.min.js.map
 kontra.build.js
 kontra.build.min.js
-index.html
 coverage

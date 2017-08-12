@@ -250,21 +250,20 @@
      * Draw the quadtree. Useful for visual debugging.
      * @memberof kontra.quadtree
      */
-    render: function() {
-      /* istanbul ignore next */
-      // don't draw empty leaf nodes, always draw branch nodes and the first node
-      if (this.objects.length || this._depth === 0 ||
-          (this._parent && this._parent._branch)) {
+    // render: function() {
+    //   // don't draw empty leaf nodes, always draw branch nodes and the first node
+    //   if (this.objects.length || this._depth === 0 ||
+    //       (this._parent && this._parent._branch)) {
 
-        kontra.context.strokeStyle = 'red';
-        kontra.context.strokeRect(this.bounds.x, this.bounds.y, this.bounds.width, this.bounds.height);
+    //     kontra.context.strokeStyle = 'red';
+    //     kontra.context.strokeRect(this.bounds.x, this.bounds.y, this.bounds.width, this.bounds.height);
 
-        if (this.subnodes.length) {
-          for (var i = 0; i < 4; i++) {
-            this.subnodes[i].render();
-          }
-        }
-      }
-    }
+    //     if (this.subnodes.length) {
+    //       for (var i = 0; i < 4; i++) {
+    //         this.subnodes[i].render();
+    //       }
+    //     }
+    //   }
+    // }
   };
 })(kontra);

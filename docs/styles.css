@@ -62,8 +62,10 @@ h2 {
 }
 
 h3 {
-  font-size: 1.375rem;   /* 26 / 16 */
+  margin-top: 1.312rem;
+  font-size: 1rem;
   line-height: 1.625rem;
+  font-weight: bold;
 }
 
 h4 {
@@ -85,7 +87,7 @@ p, ul, ol, dl, table, pre[class*=language-], canvas, form, figure {
   margin: 0 0 1.312rem;
 }
 
-ul {
+ul, dl {
   padding-left: 1.312rem;
 }
 
@@ -214,13 +216,6 @@ nav * {
 /* make the first level links line up with the nested links */
 .toc > ul > li > a {
   margin-left: 1.312rem;
-}
-
-.toc li > h3 {
-  margin-top: 1.312rem;
-  font-size: 1rem;
-  line-height: 1.625rem;
-  font-weight: bold;
 }
 
 section {

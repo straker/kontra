@@ -25,14 +25,14 @@
         <dl>
           <dt><strong>properties</strong> <em>{object}</em></dt>
           <dd>Properties of the game loop.</dd>
-          <dt><strong>properties.fps</strong> <em>{number}</em></dt>
-          <dd>Optional. Desired frame rate. Defaults to 60FPS.</dd>
-          <dt><strong>properties.clearCanvas</strong> <em>{boolean}</em></dt>
-          <dd>Optional. Clear the canvas every frame before the render function is called. Defaults true.</dd>
           <dt><strong>properties.update</strong> <em>{function}</em></dt>
           <dd>Function called every frame to update the game.</dd>
           <dt><strong>properties.render</strong> <em>{function}</em></dt>
           <dd>Function called every frame to render the game.</dd>
+          <dt><strong>properties.fps</strong> <em>{number}</em></dt>
+          <dd>Optional. Desired frame rate. Defaults to 60.</dd>
+          <dt><strong>properties.clearCanvas</strong> <em>{boolean}</em></dt>
+          <dd>Optional. Clear the canvas every frame before the render function is called. Defaults true.</dd>
         </dl>
 
         <p>The game loop updates and renders the game every frame. The game loop is not run until the gameLoops <a href="#start">start()</a> function is called.</p>
@@ -66,17 +66,17 @@
         <section class="toc">
           <h2 id="toc"><a href="#toc" class="section-link">Table of Contents<span aria-hidden="true">#</span></a></h2>
 
-          <ul>
+          <ul aria-labeledby="toc">
             <li>
-              <strong>Properties</strong>
-              <ul>
+              <h3 id="properties">Properties</h3>
+              <ul aria-labeledby="properties">
                 <li><a href="#isStopped">kontra.gameLoop.isStopped</a></li>
               </ul>
             </li>
 
             <li>
-              <strong>Methods</strong>
-              <ul>
+              <h3 id="methods">Methods</h3>
+              <ul aria-labeledby="methods">
                 <li><a href="#render">kontra.gameLoop.render()</a></li>
                 <li><a href="#start">kontra.gameLoop.start()</a></li>
                 <li><a href="#stop">kontra.gameLoop.stop()</a></li>

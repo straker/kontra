@@ -28,13 +28,7 @@
 
         <pre><code class="language-javascript">kontra.store.set('highScore', 100);
 
-kontra.store.get('highScore');  //=> 100
-
-kontra.store.remove('highScore');
-
-kontra.store.get('highScore');  //=> null
-
-kontra.store.clear();</code></pre>
+kontra.store.get('highScore');  //=> 100</code></pre>
 
 
 
@@ -43,28 +37,15 @@ kontra.store.clear();</code></pre>
         <section class="toc">
           <h2 id="toc"><a href="#toc" class="section-link">Table of Contents<span aria-hidden="true">#</span></a></h2>
 
-          <ul>
+          <ul aria-labeledby="toc">
             <li>
-              <strong>Methods</strong>
-              <ul>
-                <li><a href="#clear">kontra.store.clear()</a></li>
+              <h3 id="methods">Methods</h3>
+              <ul aria-labeledby="methods">
                 <li><a href="#get">kontra.store.get(key)</a></li>
-                <li><a href="#remove">kontra.store.remove(key)</a></li>
                 <li><a href="#set">kontra.store.set(key, value)</a></li>
               </ul>
             </li>
           </ul>
-        </section>
-
-
-
-
-
-        <section>
-          <h2 id="clear"><a href="#clear" class="section-link">kontra.store.clear()<span aria-hidden="true">#</span></a></h2>
-
-          <p>Empty all keys out of local storage.</p>
-
         </section>
 
 
@@ -88,22 +69,6 @@ kontra.store.clear();</code></pre>
 
 
         <section>
-          <h2 id="remove"><a href="#remove" class="section-link">kontra.store.remove(key)<span aria-hidden="true">#</span></a></h2>
-
-          <dl>
-            <dt><strong>key</strong> <em>{string}</em></dt>
-            <dd>Key to remove.</dd>
-          </dl>
-
-          <p>Remove a key from local storage.</p>
-
-        </section>
-
-
-
-
-
-        <section>
           <h2 id="set"><a href="#set" class="section-link">kontra.store.set(key, value)<span aria-hidden="true">#</span></a></h2>
 
           <dl>
@@ -116,7 +81,6 @@ kontra.store.clear();</code></pre>
           <p>Add or update a keys value in local storage.</p>
 
         </section>
-
 
       </div>
     </main>

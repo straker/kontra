@@ -26,14 +26,14 @@
         <dl aria-labeledby="tileEngine">
           <dt><strong>properties</strong> <em>{object}</em></dt>
           <dd>Properties of the tile engine.</dd>
-          <dt><strong>properties.tileWidth</strong> <em>{number}</em></dt>
-          <dd>Optional. Width of a single tile. Defaults to 32.</dd>
-          <dt><strong>properties.tileHeight</strong> <em>{number}</em></dt>
-          <dd>Optional. Height of a single tile. Defaults to 32.</dd>
           <dt><strong>properties.width</strong> <em>{number}</em></dt>
           <dd>Width of the tile map (in number of tiles).</dd>
           <dt><strong>properties.height</strong> <em>{number}</em></dt>
           <dd>Height of the tile map (in number of tiles).</dd>
+          <dt><strong>properties.tileWidth</strong> <em>{number}</em></dt>
+          <dd>Optional. Width of a single tile. Defaults to 32.</dd>
+          <dt><strong>properties.tileHeight</strong> <em>{number}</em></dt>
+          <dd>Optional. Height of a single tile. Defaults to 32.</dd>
           <dt><strong>properties.tilesets</strong> <em>{object[]}</em></dt>
           <dd>Optional. Array of tileset objects. Passed directly into the tile engines <a href="#addTilesets">addTilesets(tilesets)</a> function.</dd>
           <dt><strong>properties.layers</strong> <em>{object[]}</em></dt>
@@ -50,7 +50,7 @@
           <dd>Optional. The context the tile map should draw to. Defaults <a href="/api/kontra.html#context">kontra.context</a>.</dd>
         </dl>
 
-        <p>A tile engine for managing and drawing tilset.</p>
+        <p>A tile engine for managing and drawing tilesets.</p>
 
         <figure>
           <a href="/imgs/mapPack_tilesheet.png">
@@ -225,9 +225,9 @@ kontra.assets.load('/imgs/mapPack_tilesheet.png', '/data/tile_engine_basic.json'
         <section>
           <h2 id="camera"><a href="#camera" class="section-link">Moving the Camera<span aria-hidden="true">#</span></a></h2>
 
-          <p>If your tilemap is larger than the canvas size, you can move the tilemap camera to change how the tilemap is drawn. Use the tile engines <code>sx</code> and <code>sy</code> properties to move the camera. Just like drawing an image, the cameras coordinates are the top left corner.</p>
+          <p>If your tilemap is larger than the canvas size, you can move the tilemap camera to change how the tilemap is drawn. Use the tile engines <a href="#sx">sx</a> and <a href="#sy">sy</a> properties to move the camera. Just like drawing an image, the cameras coordinates are the top left corner.</p>
 
-          <p>The <code>sx</code> and <code>sy</code> coordinates will never draw the tile map below 0 or above the last row or column of the tile map.</p>
+          <p>The <code>sx</code> and <code>sy</code> coordinates will never draw the tile map below 0 or beyond the last row or column of the tile map.</p>
 
 <code-output width="576" height="576">
 kontra.assets.load('/imgs/mapPack_tilesheet.png', '/data/tile_engine_camera.json')
@@ -275,14 +275,14 @@ kontra.assets.load('/imgs/mapPack_tilesheet.png', '/data/tile_engine_camera.json
                 <dt><strong>render</strong> <em>{boolean}</em></dt>
                 <dd>Optional. If the layer should be drawn. Defaults to true.</dd>
                 <dt><strong>zIndex</strong> <em>{number}</em></dt>
-                <dd>Optional. Draw order for tile layer. Highest number is drawn last (i.e. on top of all other layers). Defaults to 0.</dd>
+                <dd>Optional. Draw order for tile layer. Highest number is drawn last (i.e. on top of all other layers). Layers with the same zIndex will be draw in the order they were added to the tile engine. Defaults to 0.</dd>
                 <dt><strong>properties</strong> <em>{object}</em></dt>
                 <dd>Optional. Layer properties, primarily used by Tiled. All properties will be merged back into the layer object itself. E.g. <code>layer.properties.render</code> will be added as <code>layer.render</code>.</dd>
               </dl>
             </dd>
           </dl>
 
-          <p>Add a layer to the tile engine. A layer data can either be a 2D array (an array of rows with nested column data) or a flattened array (row and column data in a single array). Called from <code>kontra.tielEngine</code> automatically if the <code>layers</code> property is passed in.</p>
+          <p>Add a layer to the tile engine. A layer data can either be a 2D array (an array of rows with nested column data) or a flattened array (row and column data in a single array). Called from <code>kontra.tileEngine</code> automatically if the <code>layers</code> property is passed in.</p>
 
           <p>If you don't want the layer to render when the tile engines <a href="#render">render()</a> function is called, set the <code>layers</code> render property to <code>false</code>. You'll have to call <a href="#renderLayer">renderLayer(name)</a> when you want the layer to render.</p>
 
@@ -330,14 +330,14 @@ tileEngine.addLayers({
             <dd>A single tileset or array of tilesets to add. Each tileset has the following properties:
               <dl aria-label="Tileset properties">
                 <dt><strong>image</strong> <em>{HTMLImageElement | HTMLCanvasElement | string}</em></dt>
-                <dd>The tileset image or path to the tileset image. If it's an image path, it will look for the path in <code>kontra.images</code>. This means you must load the tileset image using <a href="/api/assets.html#load">kontra.assets.load()</a> before you call this function if you are using Tiled JSON output.</dd>
+                <dd>The tileset image or path to the tileset image. If it's an image path, it will look for the path in <a href="/api/assets.html#images">kontra.assets.images</a>. This means you must load the tileset image using <a href="/api/assets.html#load">kontra.assets.load()</a> before you call this function if you are using Tiled JSON output.</dd>
                 <dt><strong>firstGrid</strong> <em>{number}</em></dt>
                 <dd>The first tile grid index of the tileset. If using a single tileset this will be <code>0</code>, but when using multiple tilesets the first grid index of the new tileset is typically the last grid index + 1 of the previous tileset (when loaded in order).</dd>
               </dl>
             </dd>
           </dl>
 
-          <p>Add a tileset image to the tile engine. Called from <code>kontra.spriteSheet</code> automatically if the <code>tilesets</code> property is passed in.</p>
+          <p>Add a tileset image to the tile engine. Called from <code>kontra.tileEngine</code> automatically if the <code>tilesets</code> property is passed in.</p>
 
           <pre><code class="language-javascript">var img document.createElement('img');
 img.src = '/imgs/mapPack_tilesheet.png',
@@ -388,7 +388,7 @@ kontra.assets.load('/imgs/mapPack_tilesheet.png')
 
           <dl>
             <dt><strong>y</strong> <em>{number}</em></dt>
-            <dd>Y coordinate in the tile engine.</dd>
+            <dd>Y coordinate.</dd>
           </dl>
 
           <p>Get the grid row from the y coordinate.</p>
@@ -404,7 +404,7 @@ kontra.assets.load('/imgs/mapPack_tilesheet.png')
 
           <dl>
             <dt><strong>x</strong> <em>{number}</em></dt>
-            <dd>X coordinate in the tile engine.</dd>
+            <dd>X coordinate.</dd>
           </dl>
 
           <p>Get the grid column from the x coordinate.</p>
@@ -612,6 +612,19 @@ tileEngine.tileAtLayer('collision', {row: 2, col: 1});  //=> 2</code></pre>
           <p><em>{number}</em></p>
 
           <p>The width of a tile.</p>
+
+        </section>
+
+
+
+
+
+        <section>
+          <h2 id="width"><a href="#width" class="section-link">kontra.tileEngine.width<span aria-hidden="true">#</span></a></h2>
+
+          <p><em>{number}</em></p>
+
+          <p>The width of the map in tiles.</p>
 
         </section>
 

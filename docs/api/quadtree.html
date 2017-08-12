@@ -42,18 +42,16 @@
         <section class="toc">
           <h2 id="toc"><a href="#toc" class="section-link">Table of Contents<span aria-hidden="true">#</span></a></h2>
 
-          <ul>
+          <ul aria-labeledby="toc">
             <li>
               <ul>
-                <li><a href="#what-is-a-quadtree">What is a Quadtree?</a></li>
-                <li><a href="#when-to-use">When to Use</a></li>
                 <li><a href="#basic-use">Basic Use</a></li>
               </ul>
             </li>
 
             <li>
-              <strong>Properties</strong>
-              <ul>
+              <h3 id="properties">Properties</h3>
+              <ul aria-labeledby="properties">
                 <li><a href="#bounds">kontra.quadtree.bounds</a></li>
                 <li><a href="#maxDepth">kontra.quadtree.maxDepth</a></li>
                 <li><a href="#maxObjects">kontra.quadtree.maxObjects</a></li>
@@ -61,12 +59,11 @@
             </li>
 
             <li>
-              <strong>Methods</strong>
-              <ul>
+              <h3 id="methods">Methods</h3>
+              <ul aria-labeledby="methods">
                 <li><a href="#add">kontra.quadtree.add(object[, ...])</a></li>
                 <li><a href="#clear">kontra.quadtree.clear()</a></li>
                 <li><a href="#get">kontra.quadtree.get(object)</a></li>
-                <li><a href="#render">kontra.quadtree.render()</a></li>
               </ul>
             </li>
           </ul>
@@ -77,41 +74,9 @@
 
 
         <section>
-          <h2 id="what-is-a-quadtree"><a href="#what-is-a-quadtree" class="section-link">What is an Quadtree?<span aria-hidden="true">#</span></a></h2>
-
-          <p>Collision detection can be a very costly operation. The more objects in the game that can collide, the more costly it gets.</p>
-
-          <p>One way to reduce the cost of collision detection is to reduce then number of collision checks that are made. Two objects on opposite sides of the screen will never collide, so there is no reason to check for collision between them. A quadtree can help ensure you only check collisions against objects that could potentially collide.</p>
-
-          <p>A <a href="https://gamedevelopment.tutsplus.com/tutorials/quick-tip-use-quadtrees-to-detect-likely-collisions-in-2d-space--gamedev-374">quadtree</a> is what's known as a <a href="http://gameprogrammingpatterns.com/spatial-partition.html">spatial partitioning</a> data structure. It groups objects together by their position. That way, when you want to check for collision, you only have to check the objects that belong to the same positioning group.</p>
-
-          <p>A quadtree starts off as a single node that encompasses the whole screen. When there are more objects in a node than the <a href="#maxObjects">maxObjects</a> of the node, the node splits into four subnodes. All objects are then reassigned into their corresponding subnode based on their position.</p>
-
-          <p>A quadtree will continue to split as more objects are added and nodes begin to fill up. <a href="#maxDepth">maxDepth</a> defines how many levels deep a quadtree can be. After maxDepth is reached, the last subnodes will keep filling up but won't split.</p>
-
-        </section>
-
-
-
-
-
-        <section>
-          <h2 id="when-to-use"><a href="#when-to-use" class="section-link">When to Use<span aria-hidden="true">#</span></a></h2>
-
-          <p>As a general rule of thumb, you should only use a quadtree when you need one. In other words, don't pre-optimize your game becuase you think you might need to.</p>
-
-          <p>Instead, build your game without the quadtree and if you notice that your game is slowing down due to things like collision detection, or finding which objects are closet, then bring in the quadtree to help. But not before.</p>
-
-        </section>
-
-
-
-
-
-        <section>
           <h2 id="basic-use"><a href="#basic-use" class="section-link">Basic Use<span aria-hidden="true">#</span></a></h2>
 
-          <p>To use a quadtree, you'll first create it using <code>kontra.quadtree()</code>. Then, every frame you'll remove all objects from the quadtree using its <a href="#clear">clear()</a> function and add all objects back using its <a href="#add">add()</a> function. You can add a single object or an array of objects, and as many objects as you need.</p>
+          <p>To use a quadtree, you'll first create it using <code>kontra.quadtree()</code>. Then, every frame you'll remove all objects from the quadtree using its <a href="#clear">clear()</a> function and add all objects back using its <a href="#add">add()</a> function. You can add a single object or an array of objects, and as many as you want.</p>
 
           <pre><code class="language-javascript">var quadtree = kontra.quadtree();
 
@@ -189,7 +154,7 @@ var loop = kontra.gameLoop({
         <section>
           <h2 id="clear"><a href="#clear" class="section-link">kontra.quadtree.clear()<span aria-hidden="true">#</span></a></h2>
 
-          <p>Clear the quadtree. Removes all objects from the quadtree. You should clear the quadtree every frame before adding all objects back into it.</p>
+          <p>Removes all objects from the quadtree. You should clear the quadtree every frame before adding all objects back into it.</p>
 
         </section>
 
@@ -205,7 +170,9 @@ var loop = kontra.gameLoop({
             <dd>Object to use for finding other objects.</dd>
           </dl>
 
-          <p>Get an array of all objects that belong to the same node as the passed in object. <strong>Note:</strong> if the passed in object is also part of the quadtree, it will be returned in the results.</p>
+          <p>Get an array of all objects that belong to the same node as the passed in object.</p>
+
+          <p><strong>Note:</strong> if the passed in object is also part of the quadtree, it will be returned in the results.</p>
 
           <pre><code class="language-javascript">var player = kontra.sprite({/* ... */});
 var enemy1 = kontra.sprite({/* ... */});
@@ -239,69 +206,6 @@ quadtree.get(player);  //=> [player, enemy1]</code></pre>
           <p><em>{number}</em></p>
 
           <p>The maximum number of objects a node can have before it splits.</p>
-
-        </section>
-
-
-
-
-
-        <section>
-          <h2 id="render"><a href="#render" class="section-link">kontra.quadtree.render()<span aria-hidden="true">#</span></a></h2>
-
-          <p>Render the bounds of each node in the quadtree. This is a very useful function for debugging problems with the quadtree.</p>
-
-<code-output height="400">
-var quadtree = kontra.quadtree({
-  maxObjects: 3,
-  maxDepth: 4
-});
-
-var pool = kontra.pool({
-  create: kontra.sprite,
-  maxSize: 50
-});
-
-for (var i = 0; i < pool.maxSize; i++) {
-  pool.get({/* ... *//* exclude:start */
-    x: Math.random() * kontra.canvas.width | 0,
-    y: Math.random() * kontra.canvas.height | 0,
-    dx: Math.random() * (Math.random() > 0.5 ? 1 : -1) * 3,
-    dy: Math.random() * (Math.random() > 0.5 ? 1 : -1) * 3,
-    color: 'blue',
-    width: 10,
-    height: 10,
-    timeToLive: Infinity,
-    update: function() {
-      this.advance();
-
-      if (this.x < 0 || this.x - this.width > kontra.canvas.width) {
-        this.dx = -this.dx;
-      }
-      else if (this.y < 0 || this.y - this.height > kontra.canvas.height) {
-        this.dy = -this.dy;
-      }
-    }
-  /* exclude:end */});
-}
-
-var loop = kontra.gameLoop({
-  update: function() {
-    pool.update();
-
-    quadtree.clear();
-    quadtree.add(pool.objects);
-  },
-  render: function() {
-    pool.render();
-    quadtree.render();
-  }
-});
-
-loop.start();
-</code-output>>
-
-        </section>
 
         </section>
 

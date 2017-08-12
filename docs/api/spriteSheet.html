@@ -33,10 +33,10 @@
           <dd>The width of a single frame.</dd>
           <dt><strong>properties.frameHeight</strong> <em>{number}</em></dt>
           <dd>The height of a single frame.</dd>
-          <dt><strong>properties.framePadding</strong> <em>{number}</em></dt>
-          <dd>Optional. The amount of whitespace inside each frame. The padding will be subtracted from the frame width and height when drawn so the resulting image does not contain the whitespace. Defaults to 0.</dd>
+          <dt><strong>properties.frameMargin</strong> <em>{number}</em></dt>
+          <dd>Optional. The amount of whitespace between each frame. Defaults to 0.</dd>
           <dt><strong>properties.animations</strong> <em>{object}</em></dt>
-          <dd><a href="/api/animations.html">kontra.animations</a> to create from the sprite sheet. Passed directly into the sprite sheets <a href="#createAnimations">createAnimations(animations)</a> function.</dd>
+          <dd><a href="/api/animation.html">kontra.animations</a> to create from the sprite sheet. Passed directly into the sprite sheets <a href="#createAnimations">createAnimations(animations)</a> function.</dd>
         </dl>
 
         <p>A sprite sheet to animate a sequence of images.</p>
@@ -48,7 +48,7 @@
           <figcaption>Sprite sheet image courtesy of <a href="https://kenney.nl/assets">Kenny</a>.</figcaption>
         </figure>
 
-        <p>Typically you don't use a sprite sheet itself. Instead you use it to create <a href="/api/animation.html">animations</a> and then use the animations in your <a href="/api/sprite.html">sprite</a>.</p>
+        <p>Typically you create a sprite sheet just to create <a href="/api/animation.html">animations</a> and then use the animations for your <a href="/api/sprite.html">sprite</a>.</p>
 
         <pre><code class="language-javascript">var image = new Image();
 image.src = '/imgs/character_walk_sheet.png';
@@ -81,10 +81,10 @@ var sprite = kontra.sprite({
         <section class="toc">
           <h2 id="toc"><a href="#toc" class="section-link">Table of Contents<span aria-hidden="true">#</span></a></h2>
 
-          <ul>
+          <ul aria-labeledby="toc">
             <li>
-              <strong>Properties</strong>
-              <ul>
+              <h3 id="properties">Properties</h3>
+              <ul aria-labeledby="properties">
                 <li><a href="#animations">kontra.spriteSheet.animations</a></li>
                 <li><a href="#frame">kontra.spriteSheet.frame</a></li>
                 <li><a href="#framesPerRow">kontra.spriteSheet.framesPerRow</a></li>
@@ -93,8 +93,8 @@ var sprite = kontra.sprite({
             </li>
 
             <li>
-              <strong>Methods</strong>
-              <ul>
+              <h3 id="methods">Methods</h3>
+              <ul aria-labeledby="methods">
                 <li><a href="#createAnimations">kontra.spriteSheet.createAnimations(animations)</a></li>
               </ul>
             </li>
@@ -125,7 +125,7 @@ var sprite = kontra.sprite({
             <dt><strong>animations</strong> <em>{object}</em></dt>
             <dd>Object of named animations to create from the sprite sheet.</dd>
             <dt><strong>animations.&lt;name&gt;.frames</strong> <em>{number | number[] | string}</em></dt>
-            <dd>The sequence of frames to use from the sprite sheet. It can either be a single frame (<em>number</em>), a sequence of frames (<em>number[]</em>), or a consecutive frame notation (<em>string</em>). Sprite sheet frames are 0 indexed.</dd>
+            <dd>The sequence of frames to use from the sprite sheet. It can either be a single frame (<em>number</em>), a sequence of frames (<em>number[]</em>), or a consecutive frame notation (<code>'1..4'</code>). Sprite sheet frames are 0 indexed.</dd>
             <dt><strong>animations.&lt;name&gt;.frameRate</strong> <em>{object}</em></dt>
             <dd>The number frames to display per second.</dd>
           </dl>
@@ -199,9 +199,9 @@ image.onload = function() {
 
           <p><em>{object}</em></p>
 
-          <p>An object that defines properties of a single frame in the sprite sheet. It has properties of <code>width</code>, <code>height</code>, and <code>padding</code>.</p>
+          <p>An object that defines properties of a single frame in the sprite sheet. It has properties of <code>width</code>, <code>height</code>, and <code>margin</code>.</p>
 
-          <p><code>width</code> and <code>height</code> define the width of a single frame, while <code>padding</code> defines the amount of whitespace inside each frame.</p>
+          <p><code>width</code> and <code>height</code> define the width of a single frame, while <code>margin</code> defines the amount of whitespace between each frame.</p>
 
         </section>
 

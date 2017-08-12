@@ -8,7 +8,6 @@
    * @param {object} properties - Properties of the pool.
    * @param {function} properties.create - Function that returns the object to use in the pool.
    * @param {number} properties.maxSize - The maximum size that the pool will grow to.
-   * @param {boolean} properties.fill - Fill the pool to max size instead of slowly growing.
    */
   kontra.pool = function(properties) {
     properties = properties || {};

@@ -22,17 +22,11 @@
       <div>
         <h1>Kontra.keys</h1>
 
-        <p>A keyboard API. You can use it move the main sprite or respond to a key press.</p>
-
-        <p>The keyboard API can handle key combinations, multiple keys that must be pressed together, by separating each key with a <code>+</code>. For example, the copy function <cmd>ctrl+c</cmd> can be a key combination written the same way.</p>
+        <p>A simple keyboard API. You can use it move the main sprite or respond to a key press.</p>
 
         <pre><code class="language-javascript">function update() {
   if (kontra.keys.pressed('left')) {
     // move left
-  }
-
-  if (kontra.keys.pressed('ctrl+c')) {
-    // copy
   }
 }</code></pre>
 
@@ -43,7 +37,7 @@
         <section class="toc">
           <h2 id="toc"><a href="#toc" class="section-link">Table of Contents<span aria-hidden="true">#</span></a></h2>
 
-          <ul>
+          <ul aria-labeledby="toc">
             <li>
               <ul>
                 <li><a href="#available-keys">Available keys</a></li>
@@ -51,8 +45,8 @@
             </li>
 
             <li>
-              <strong>Methods</strong>
-              <ul>
+              <h3 id="methods">Methods</h3>
+              <ul aria-labeledby="methods">
                 <li><a href="#bind">kontra.keys.bind(key, callback)</a></li>
                 <li><a href="#pressed">kontra.keys.pressed(key)</a></li>
                 <li><a href="#unbind">kontra.keys.unbind(key)</a></li>
@@ -68,18 +62,15 @@
         <section>
           <h2 id="available-keys"><a href="#available-keys" class="section-link">Available keys<span aria-hidden="true">#</span></a></h2>
 
-          <p>Below is a list of keys that you can use. If the key requires the <cmd>shift</cmd> key (such as <cmd>!</cmd>), the shift key will automatically be added as a required key combination (<cmd>shift+1</cmd>).</p>
-
-          <p>This means that any shift key is equivalent to the key combination of shift + the non-shift key (<cmd>!</cmd> is equivalent to <cmd>shift+1</cmd>).</p>
+          <p>Below is a list of keys that you can use.</p>
 
           <ul>
             <li>a-z</li>
             <li>0-9</li>
-            <li>f1-f20</li>
+            <li>f1-f19</li>
             <li>numpad0-numpad9</li>
             <li>backspace, tab, enter, shift, ctrl, alt, capslock, esc, space, pageup, pagedown, end, home ,left, up, right, down, insert, delete, leftwindow, rightwindow, select, numlock, scrolllock</li>
-            <li><code>*+-./;=,\`[]'</code></li>
-            <li><code>~!@#$%^&*(){}:"<>?</code></li>
+            <li><code>=/*-+.[]\;',./</code></li>
           </ul>
 
         </section>
@@ -93,18 +84,15 @@
 
           <dl>
             <dt><strong>key</strong> <em>{string | string[]}</em></dt>
-            <dd>Keys or key combinations to bind.</dd>
+            <dd>Keys to bind.</dd>
             <dt><strong>callback</strong> <em>{function}</em>
-            <dd>Function to call when the key or key combination is pressed.</dd>
+            <dd>Function to call when the key is pressed.</dd>
           </dl>
 
-          <p>Bind a set of keys or key combinations to a function when pressed. Takes a single key or key combination or an array of keys or key combinations.</p>
+          <p>Bind a set of keys to a function when pressed. Takes a single key or an array of keys.</p>
 
           <pre><code class="language-javascript">kontra.keys.bind('p', function() {
   // pause the game
-});
-kontra.keys.bind('ctrl+c', function() {
-  // copy
 });
 kontra.keys.bind(['enter', 'space'], function() {
   // fire gun
@@ -121,15 +109,12 @@ kontra.keys.bind(['enter', 'space'], function() {
 
           <dl>
             <dt><strong>key</strong> <em>{string}</em></dt>
-            <dd>Key or key combination.</dd>
+            <dd>Key name.</dd>
           </dl>
 
-          <p>Returns true if the key or key combination is pressed. Use during an <code>update()</code> function to perform actions each frame.</p>
+          <p>Returns true if the key is pressed. Use during an <code>update()</code> function to perform actions each frame.</p>
 
-          <pre><code class="language-javascript">kontra.keys.pressed('a');  //=> returns true if 'a' is pressed
-kontra.keys.pressed('ctrl+c');  //=> returns true if the 'ctrl' and 'c' keys are pressed
-
-kontra.sprite({
+          <pre><code class="language-javascript">kontra.sprite({
   update: function() {
     if (kontra.keys.pressed('left')){
       // left arrow pressed
@@ -158,13 +143,12 @@ kontra.sprite({
 
           <dl>
             <dt><strong>key</strong> <em>{string | string[]}</em></dt>
-            <dd>Keys or key combinations to unbind.</dd>
+            <dd>Keys to unbind.</dd>
           </dl>
 
-          <p>Unbind a bound set of keys or key combinations. The bound function will no longer be called when the keys are pressed. Takes a single key or key combination or an array of keys or key combinations.</p>
+          <p>Unbind a bound set of keys. The bound function will no longer be called when the keys are pressed. Takes a single key or an array of keys.</p>
 
           <pre><code class="language-javascript">kontra.keys.unbind('left');
-kontra.keys.unbind('ctrl+c');
 kontra.keys.unbind(['enter', 'space']);</code></pre>
 
         </section>

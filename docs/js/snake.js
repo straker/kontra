@@ -48,8 +48,8 @@
    */
   function reset() {
     snake.init({
-      x: 0 * grid,
-      y: 0 * grid,
+      x: 10 * grid,
+      y: 5 * grid,
       dx: grid,
       color: 'green',
       cells: [],

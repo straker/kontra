@@ -25,7 +25,7 @@
         <h2>Download</h2>
 
         <ul>
-          <li><a href="/download.html">Custom bundle</a></li>
+          <li><a href="/download.html">Production and development versions</a></li>
           <li><code>$ bower install kontra</code></li>
         </ul>
 
@@ -37,29 +37,34 @@
 
         <h2>Create</h2>
 
-        <p>Once the game is initialized, you can create a simple <a href="api/sprite.html">sprite</a> and <a href="api/gameLoop.html">game loop</a> in less than 20 lines of code.</p>
+        <p>Once the game is initialized, you can create a simple <a href="api/sprite.html">sprite</a> and <a href="api/gameLoop.html">game loop</a> in just a few lines of code.</p>
 
 <code-output>
 var sprite = kontra.sprite({
-  x: 100,
+  x: 100,        // starting x,y position of the sprite
   y: 80,
-  dx: 2,
-  color: 'red',
-  width: 20,
-  height: 40
+  color: 'red',  // fill color of the sprite rectangle
+  width: 20,     // width and height of the sprite rectangle
+  height: 40,
+  dx: 2          // move the sprite 2px to the right every frame
 });
 
-var loop = kontra.gameLoop({
-  update: function() {
+var loop = kontra.gameLoop({  // create the main game loop
+  update: function() {        // update the game state
     sprite.update();
 
+    // wrap the sprites position when it reaches
+    // the edge of the screen
     if (sprite.x > kontra.canvas.width) {
       sprite.x = -sprite.width;
     }
   },
-  render: function() { sprite.render(); }
+  render: function() {        // render the game state
+    sprite.render();
+  }
 });
-loop.start();
+
+loop.start();    // start the game
 </code-output>
       </div>
     </main>

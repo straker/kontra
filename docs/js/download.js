@@ -14,6 +14,7 @@
   var compressionEls = Array.prototype.slice.call(document.querySelectorAll('#compression input'));
   var codeEl = document.getElementById('code');
   var totalSizeEl = document.getElementById('total-filesize');
+  var gzipSizeEl = document.getElementById('gzip-size');
   var downloadEl = document.getElementById('download');
 
   // check files from url
@@ -204,7 +205,11 @@
                ' */' + code;
 
         codeEl.textContent = code;
-        // Prism.highlightElement(codeEl);  // really slow
+        gzipSizeEl.textContent = '(' + getKB(gzip.zip(code).length) + ' minified)';
+
+        if (window.location.host.indexOf('localhost') === -1) {
+          Prism.highlightElement(codeEl, true);
+        }
 
         downloadEl.href = 'data:application/octet-stream;charset=utf-8,' + encodeURIComponent(code);
       });

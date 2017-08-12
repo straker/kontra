@@ -27,15 +27,11 @@
           <dd>Properties of the pool.</dd>
           <dt><strong>properties.create</strong> <em>{function}</em></dt>
           <dd>Function that returns a new object to be added to the pool when there are no objects able to be reused.</dd>
-          <dt><strong>properties.createProperties</strong> <em>{object}</em></dt>
-          <dd>Optional. Properties that the new object should have when created.</dd>
           <dt><strong>properties.maxSize</strong> <em>{number}</em></dt>
           <dd>Optional. The maximum number of objects allowed in the pool. The pool will never grow beyond this size. Defaults to Infinity.</dd>
-          <dt><strong>properties.fill</strong> <em>{boolean}</em></dt>
-          <dd>Optional. If the pool should start filled instead of slowly growing. Defaults to false.</dd>
         </dl>
 
-        <p>A fast and memory efficient object pool for sprite reuse, perfect for particle systems or SHUMPs.</p>
+        <p>A fast and memory efficient object pool for sprite reuse. Perfect for particle systems or SHUMPs.</p>
 
 
 
@@ -44,18 +40,16 @@
         <section class="toc">
           <h2 id="toc"><a href="#toc" class="section-link">Table of Contents<span aria-hidden="true">#</span></a></h2>
 
-          <ul>
+          <ul aria-labeledby="toc">
             <li>
               <ul>
-                <li><a href="what-is-an-object-pool">What is an Object Pool?</a></li>
-                <li><a href="#when-to-use">When to Use</a></li>
                 <li><a href="#basic-use">Basic Use</a></li>
               </ul>
             </li>
 
             <li>
-              <strong>Properties</strong>
-              <ul>
+              <h3 id="properties">Properties</h3>
+              <ul aria-labeledby="properties">
                 <li><a href="#maxSize">kontra.pool.maxSize</a></li>
                 <li><a href="#objects">kontra.pool.objects</a></li>
                 <li><a href="#size">kontra.pool.size</a></li>
@@ -63,8 +57,8 @@
             </li>
 
             <li>
-              <strong>Methods</strong>
-              <ul>
+              <h3 id="methods">Methods</h3>
+              <ul aria-labeledby="methods">
                 <li><a href="#clear">kontra.pool.clear()</a></li>
                 <li><a href="#get">kontra.pool.get(properties)</a></li>
                 <li><a href="#getAliveObjects">kontra.pool.getAliveObjects()</a></li>
@@ -79,42 +73,14 @@
 
 
 
-        <section>
-          <h2 id="what-is-an-object-pool"><a href="#what-is-an-object-pool" class="section-link">What is an Object Pool?<span aria-hidden="true">#</span></a></h2>
-
-          <p>Typically when you create an object, such as a particle, you'd use it for a short amount of time and then destroy it when it's done. Every time you need a new object, you have to create a new one and then destroy it. If creating the new object is costly (slow, takes lots of memory, etc.) or garbage collection becomes costly for so many destroyed objects, an object pool may help performance.</p>
-
-          <p><a href="https://gamedevelopment.tutsplus.com/tutorials/object-pools-help-you-reduce-lag-in-resource-intensive-games--gamedev-651">Object pools</a> are arrays of preallocated objects (they've already been created). When you need a new object, you ask the pool for it. If there is an object not currently in use, it gives you that object. If all objects in the pool are currently in use, then the pool will create a new object to add to the pool, and give you that object.</p>
-
-          <p>The object pool will start with just one object, but it will double in size every time there isn't an object available for reuse. This helps to keep the memory use low while giving you room to grow. The pool will continue to double in size as objects are needed until it reaches its <a href="#maxSize">maxSize</a>.</p>
-
-        </section>
-
-
-
-
-
-        <section>
-          <h2 id="when-to-use"><a href="#when-to-use" class="section-link">When to Use<span aria-hidden="true">#</span></a></h2>
-
-          <p>You should use an object pool when the cost of creating new objects is high or if you're frequently creating and destroying lots of objects. As a general rule of thumb, you should only use an object pool when you need one. In other words, don't pre-optimize your game becuase you think you might need to.</p>
-
-          <p>Instead, build your game without the object pool and if you notice that your game is slowing down due to things such as creaing lots of objects or when the garbage collection hits, then bring in the object pool to help. But not before.</p>
-
-        </section>
-
-
-
-
-
-        <section>
+       <section>
           <h2 id="basic-use"><a href="#basic-use" class="section-link">Basic Use<span aria-hidden="true">#</span></a></h2>
 
           <p>To use the pool, you must pass the <code>create()</code> function, which should return a new <a href="/api/sprite.html">kontra.sprite</a> or object. This object will be added to the pool every time there are no more objects to reuse.</p>
 
-          <p>The object must implement the functions <code>update(dt)</code>, <code>render()</code>, <code>init(properties)</code>, and <code>isAlive()</code>. If one of these functions is missing the pool will throw an error. <a href="/api/sprite.html">kontra.sprite</a> defines these functions for you.</p>
+          <p>The object must implement the functions <code>update(dt)</code>, <code>init(properties)</code>, and <code>isAlive()</code>. If one of these functions is missing the pool will throw an error. <a href="/api/sprite.html">kontra.sprite</a> defines these functions for you.</p>
 
-          <p>An object is available for reuse when it's <a href="/api/sprite.html#isAlive">isAlive()</a> function returns false. For a sprite, this is typically when it's <a href="/api/sprite.html#timeToLive">timeToLive</a> is 0.</p>
+          <p>An object is available for reuse when it's <a href="/api/sprite.html#isAlive">isAlive()</a> function returns false. For a sprite, this is typically when it's <a href="/api/sprite.html#ttl">ttl</a> is 0.</p>
 
           <p>When you need an object from the pool, use the pools <a href="#get">get()</a> function and pass it any properties you want the reused object to have.</p>
 
@@ -128,7 +94,7 @@ pool.get({
   width: 20,
   height: 40,
   color: 'red',
-  timeToLive: 60
+  ttl: 60
 });</code></pre>
 
           <p>Notice that the <a href="#get">get()</a> function doesn't return an object. This is because the object pool keeps track of all objects internally. When you need to update or render all in use objects in the pool, use the pools <a href="#update">update()</a> and <a href="#render">render()</a> functions.</p>
@@ -164,12 +130,12 @@ pool.get({
 
           <dl>
             <dt><strong>properties</strong> <em>{object}</em></dt>
-            <dd>Optional. Any properties you want the reused object to have.</dd>
+            <dd>Optional. Properties to pass to the objects <code>init(properties)</code> function.</dd>
           </dl>
 
-          <p>Get an object from the pool. Pass it any properties you need the object to have. If you're using <a href="/api/sprite.html">kontra.sprite</a>, you should also pass the <a href="/api/sprite.html#timeToLive">timeToLive</a> property to designate how many frames you want the object to be alive for.</p>
+          <p>Get an object from the pool. The <code>properties</code> parameter will be passed directly to the objects <code>init(properties)</code> function. If you're using <a href="/api/sprite.html">kontra.sprite</a>, you should also pass the <a href="/api/sprite.html#ttl">ttl</a> property to designate how many frames you want the object to be alive for.</p>
 
-          <p>If you want to control when the sprite is ready for reuse, pass <code>Infinity</code> for <code>timeToLive</code>. You'll need to set the sprites <code>timeToLive</code> to <code>0</code> when you're ready for the sprite to be reused.</p>
+          <p>If you want to control when the sprite is ready for reuse, pass <code>Infinity</code> for <code>ttl</code>. You'll need to set the sprites <code>ttl</code> to <code>0</code> when you're ready for the sprite to be reused.</p>
 
           <pre><code class="language-javascript">pool.get({
   // the object will get these properties and values
@@ -179,9 +145,9 @@ pool.get({
   height: 40,
   color: 'red',
 
-  // pass Infinity for timeToLive to prevent the object from being reused
+  // pass Infinity for ttl to prevent the object from being reused
   // until you set it back to 0
-  timeToLive: Infinity
+  ttl: Infinity
 });</code></pre>
 
         </section>

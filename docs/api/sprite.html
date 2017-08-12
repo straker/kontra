@@ -39,7 +39,7 @@
           <dd>Optional. Sprites x acceleration. Defaults to 0.</dd>
           <dt><strong>properties.ddy</strong> <em>{number}</em></dt>
           <dd>Optional. Sprites y acceleration. Defaults to 0.</dd>
-          <dt><strong>properties.timeToLive</strong> <em>{number}</em></dt>
+          <dt><strong>properties.ttl</strong> <em>{number}</em></dt>
           <dd>Optional. How many frames the sprite should be alive. Used by <a href="/api/pool.html">kontra.pool</a>. Defaults to 0.</dd>
           <dt><strong>properties.context</strong> <em>{CanvasRenderingContext2D}</em></dt>
           <dd>Optional. The context the sprite should draw to. Defaults <a href="/api/kontra.html#context">kontra.context</a>.</dd>
@@ -72,7 +72,7 @@
         <section class="toc">
           <h2 id="toc"><a href="#toc" class="section-link">Table of Contents<span aria-hidden="true">#</span></a></h2>
 
-          <ul>
+          <ul aria-labeledby="toc">
             <li>
               <ul>
                 <li><a href="#rect-sprite">Rectangle Sprite</a></li>
@@ -83,8 +83,8 @@
             </li>
 
             <li>
-              <strong>Properties</strong>
-              <ul>
+              <h3 id="properties">Properties</h3>
+              <ul aria-labeledby="properties">
                 <li><a href="#acceleration">kontra.sprite.acceleration</a></li>
                 <li><a href="#animations">kontra.sprite.animations</a></li>
                 <li><a href="#color">kontra.sprite.color</a></li>
@@ -97,7 +97,7 @@
                 <li><a href="#height">kontra.sprite.height</a></li>
                 <li><a href="#image">kontra.sprite.image</a></li>
                 <li><a href="#position">kontra.sprite.position</a></li>
-                <li><a href="#timeToLive">kontra.sprite.timeToLive</a></li>
+                <li><a href="#ttl">kontra.sprite.ttl</a></li>
                 <li><a href="#velocity">kontra.sprite.velocity</a></li>
                 <li><a href="#width">kontra.sprite.width</a></li>
                 <li><a href="#x">kontra.sprite.x</a></li>
@@ -106,8 +106,8 @@
             </li>
 
             <li>
-              <strong>Methods</strong>
-              <ul>
+              <h3 id="methods">Methods</h3>
+              <ul aria-labeledby="methods">
                 <li><a href="#advance">kontra.sprite.advance(dt)</a></li>
                 <li><a href="#collidesWith">kontra.sprite.collidesWith(sprite)</a></li>
                 <li><a href="#draw">kontra.sprite.draw()</a></li>
@@ -151,7 +151,7 @@ sprite.render();
         <section>
           <h2 id="image-sprite"><a href="#image-sprite" class="section-link">Image Sprite<span aria-hidden="true">#</span></a></h2>
 
-          <p>A sprite can use an image instead of drawing a rectangle. To create an image sprite, use the <a href="#image">image</a> property. The size of the sprite will automatically be set as the <code>width</code> and <code>height</code> of the image.</p>
+          <p>A sprite can use an image instead of drawing a rectangle. To create an image sprite, pass the <a href="#image">image</a> property. The size of the sprite will automatically be set as the <code>width</code> and <code>height</code> of the image.</p>
 
 <code-output>
 var image = new Image();
@@ -180,7 +180,7 @@ image.onload = function() {
 
           <p>A sprite can use a spritesheet animation as well. To create an animation sprite, use the <a href="#animations">animations</a> property. The size of the sprite will automatically be set as the <code>width</code> and <code>height</code> of a frame of the spritesheet.</p>
 
-          <p>A sprite can have multiple named animations so you can easily switch between an idle and a running animation. The easiest way to create animations is to use <a href="/api/spriteSheet.html">kontra.spriteSheet</a>.</p>
+          <p>A sprite can have multiple named animations. The easiest way to create animations is to use <a href="/api/spriteSheet.html">kontra.spriteSheet</a>. All animations will automatically be <a href="/api/animation.html#clone">cloned</a> so no two sprites update the same animation.</p>
 
 <code-output>
 var image = new Image();
@@ -229,7 +229,6 @@ image.onload = function() {
     }
   });
 
-  // start the loop
   loop.start();
 };
 </code-output>
@@ -242,7 +241,7 @@ image.onload = function() {
         <section>
           <h2 id="custom-properties"><a href="#custom-properties" class="section-link">Custom Properties<span aria-hidden="true">#</span></a></h2>
 
-          <p>If you need to draw a different shape, such as a circle, you can pass in your own properties and render function to handle drawing the sprite.</p>
+          <p>If you need to draw a different shape, such as a circle, you can pass in custom properties and a render function to handle drawing the sprite.</p>
 
 <code-output>
 var sprite = kontra.sprite({
@@ -354,14 +353,14 @@ sprite.playAnimation('idle');</code></pre>
 
 
         <section>
-          <h2 id="collidesWith"><a href="#collidesWith" class="section-link">kontra.sprite.collidesWith(sprite)<span aria-hidden="true">#</span></a></h2>
+          <h2 id="collidesWith"><a href="#collidesWith" class="section-link">kontra.sprite.collidesWith(object)<span aria-hidden="true">#</span></a></h2>
 
           <dl>
-            <dt><strong>sprite</strong> <em>{object}</em></dt>
+            <dt><strong>object</strong> <em>{object}</em></dt>
             <dd>The object to check for collision against.</dd>
           </dl>
 
-          <p>Check if two sprites collide with each other. Uses a simple <a href="https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection#Axis-Aligned_Bounding_Box">Axis-Aligned Bounding Box (AABB) collision check</a>.</p>
+          <p>Check if the sprite collide with the object. Uses a simple <a href="https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection#Axis-Aligned_Bounding_Box">Axis-Aligned Bounding Box (AABB) collision check</a>.</p>
 
           <pre><code class="language-javascript">var sprite = kontra.sprite({
   x: 100,
@@ -588,7 +587,7 @@ sprite.render();
         <section>
           <h2 id="isAlive"><a href="#isAlive" class="section-link">kontra.sprite.isAlive()<span aria-hidden="true">#</span></a></h2>
 
-          <p>Returns true if the sprites <a href="#timeToLive">timeToLive</a> is greater than 0. Primarily used by <a href="/api/pool.html">kontra.pool</a> to know when to recycle an object.</p>
+          <p>Returns true if the sprites <a href="#ttl">ttl</a> is greater than 0. Primarily used by <a href="/api/pool.html">kontra.pool</a> to know when to recycle an object.</p>
 
         </section>
 
@@ -658,7 +657,7 @@ sprite.playAnimation('idle');</code></pre>
 
 
         <section>
-          <h2 id="timeToLive"><a href="#timeToLive" class="section-link">kontra.sprite.timeToLive<span aria-hidden="true">#</span></a></h2>
+          <h2 id="ttl"><a href="#ttl" class="section-link">kontra.sprite.ttl<span aria-hidden="true">#</span></a></h2>
 
           <p><em>{number}</em></p>
 

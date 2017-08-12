@@ -33,8 +33,10 @@
       this.frames = properties.frames;
       this.frameRate = properties.frameRate;
 
-      this.width = properties.spriteSheet.frame.width;
-      this.height = properties.spriteSheet.frame.height;
+      var frame = properties.spriteSheet.frame;
+      this.width = frame.width;
+      this.height = frame.height;
+      this.margin = frame.margin || 0;
 
       this._frame = 0;
       this._accum = 0;
@@ -91,7 +93,8 @@
 
       context.drawImage(
         this.spriteSheet.image,
-        col * this.width, row * this.height,
+        col * this.width + (col * 2 + 1) * this.margin,
+        row * this.height + (row * 2 + 1) * this.margin,
         this.width, this.height,
         properties.x, properties.y,
         this.width, this.height
@@ -112,6 +115,7 @@
    * @param {Image|Canvas} properties.image - Image for the sprite sheet.
    * @param {number} properties.frameWidth - Width (in px) of each frame.
    * @param {number} properties.frameHeight - Height (in px) of each frame.
+   * @param {number} properties.frameMargin - Margin (in px) between each frame.
    * @param {object} properties.animations - Animations to create from the sprite sheet.
    */
   kontra.spriteSheet = function(properties) {
@@ -131,6 +135,7 @@
      * @param {Image|Canvas} properties.image - Image for the sprite sheet.
      * @param {number} properties.frameWidth - Width (in px) of each frame.
      * @param {number} properties.frameHeight - Height (in px) of each frame.
+     * @param {number} properties.frameMargin - Margin (in px) between each frame.
      * @param {object} properties.animations - Animations to create from the sprite sheet.
      */
     _init: function init(properties) {
@@ -144,7 +149,8 @@
       this.image = properties.image;
       this.frame = {
         width: properties.frameWidth,
-        height: properties.frameHeight
+        height: properties.frameHeight,
+        margin: properties.frameMargin
       };
 
       this.framesPerRow = properties.image.width / properties.frameWidth | 0;

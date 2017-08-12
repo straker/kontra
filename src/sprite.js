@@ -59,8 +59,8 @@
     clamp: function clamp(xMin, yMin, xMax, yMax) {
       this._clamp = true;
       this._xMin = (xMin !== undefined ? xMin : -Infinity);
-      this._xMax = (xMax !== undefined ? xMax : Infinity);
       this._yMin = (yMin !== undefined ? yMin : -Infinity);
+      this._xMax = (xMax !== undefined ? xMax : Infinity);
       this._yMax = (yMax !== undefined ? yMax : Infinity);
     },
 

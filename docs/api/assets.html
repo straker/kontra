@@ -24,7 +24,7 @@
 
         <p>A promise based asset loader.</p>
 
-        <pre><code class="language-javascript">kontra.assets.load('/imgs/character.png', '/data/tile_engine_basic.json', ['/audio/music.ogg', '/audio/music.mp3'])
+        <pre><code class="language-javascript">kontra.assets.load('../imgs/character.png', '../data/tile_engine_basic.json', ['/audio/music.ogg', '/audio/music.mp3'])
   .then(function() {
     // all assets have loaded
   }).catch(function(err) {
@@ -117,11 +117,11 @@ kontra.assets.load('music.ogg');  // loads /audio/music.ogg</code></pre>
 
           <p>If the data asset is a JSON file, it will automatically be parsed.</p>
 
-          <pre><code class="language-javascript">kontra.assets.load('/data/file.txt')
+          <pre><code class="language-javascript">kontra.assets.load('../data/file.txt')
   .then(function() {
     // Data asset can be accessed at both
-    // name: kontra.assets.data['/data/file']
-    // path: kontra.assets.data['/data/file.txt']
+    // name: kontra.assets.data['../data/file']
+    // path: kontra.assets.data['../data/file.txt']
   });
 
 kontra.assets.dataPath = '/data';
@@ -146,7 +146,7 @@ kontra.assets.load('info.json')
           <p>Base path for all data assets. If a base path is set, all load calls for data assets will prepend the base path to the URL.</p>
 
           <pre><code class="language-javascript">kontra.assets.dataPath = '/data';
-kontra.assets.load('file.json');  // loads /data/file.json</code></pre>
+kontra.assets.load('file.json');  // loads ../data/file.json</code></pre>
 
         </section>
 
@@ -161,11 +161,11 @@ kontra.assets.load('file.json');  // loads /data/file.json</code></pre>
 
           <p>Object of all loaded image assets by both file name and path. If <a href="#imagePath">imagePath</a> was set before the image was loaded, the file name and path will not include the image base path.</p>
 
-          <pre><code class="language-javascript">kontra.assets.load('/imgs/character.png')
+          <pre><code class="language-javascript">kontra.assets.load('../imgs/character.png')
   .then(function() {
     // Image asset can be accessed at both
-    // name: kontra.assets.images['/imgs/character']
-    // path: kontra.assets.images['/imgs/character.png']
+    // name: kontra.assets.images['../imgs/character']
+    // path: kontra.assets.images['../imgs/character.png']
   });
 
 kontra.assets.imagePath = '/imgs';
@@ -190,7 +190,7 @@ kontra.assets.load('character_walk_sheet.png')
           <p>Base path for all image assets. If a base path is set, all load calls for image assets will prepend the base path to the URL.</p>
 
           <pre><code class="language-javascript">kontra.assets.imagePath = '/imgs';
-kontra.assets.load('character.png');  // loads /imgs/character.png</code></pre>
+kontra.assets.load('character.png');  // loads ../imgs/character.png</code></pre>
 
         </section>
 
@@ -214,7 +214,7 @@ kontra.assets.load('character.png');  // loads /imgs/character.png</code></pre>
 
           <p>Since the loader will determine which audio asset to use, you should only reference the audio by its name and not by its file path since there's no guarantee which asset was loaded.</p>
 
-          <pre><code class="language-javascript">kontra.assets.load('/imgs/character.png', '/data/tile_engine_basic.json', ['/audio/music.mp3', '/audio/music.ogg'])
+          <pre><code class="language-javascript">kontra.assets.load('../imgs/character.png', '../data/tile_engine_basic.json', ['/audio/music.mp3', '/audio/music.ogg'])
   .then(function() {
 
     // access audio by its name only (not by its .mp3 or .ogg path)

@@ -205,9 +205,9 @@ img.onload = function() {
           <p>Adding all the tileset images and layers to a tile engine can be tedious, especially if you have multiple layers. If you want a simpler way to create a tile engine, Kontra has been written to work directly with the JSON output of the <a href="http://www.mapeditor.org/">Tiled Map Editor</a>. The one requirement is that you must preload all of the tileset images using <a href="assets.html#load">kontra.assets.load()</a> before you create the tile engine.</p>
 
 <code-output width="576" height="576">
-kontra.assets.load('../imgs/mapPack_tilesheet.png', '/data/tile_engine_basic.json')
+kontra.assets.load('../imgs/mapPack_tilesheet.png', '../data/tile_engine_basic.json')
   .then(function() {
-    var tileEngine = kontra.tileEngine(kontra.assets.data['/data/tile_engine_basic']);
+    var tileEngine = kontra.tileEngine(kontra.assets.data['../data/tile_engine_basic']);
     /* exclude:start */
     tileEngine.context = context;
     /* exclude:end */
@@ -230,9 +230,9 @@ kontra.assets.load('../imgs/mapPack_tilesheet.png', '/data/tile_engine_basic.jso
           <p>The <code>sx</code> and <code>sy</code> coordinates will never draw the tile map below 0 or beyond the last row or column of the tile map.</p>
 
 <code-output width="576" height="576">
-kontra.assets.load('../imgs/mapPack_tilesheet.png', '/data/tile_engine_camera.json')
+kontra.assets.load('../imgs/mapPack_tilesheet.png', '../data/tile_engine_camera.json')
   .then(function() {
-    var tileEngine = kontra.tileEngine(kontra.assets.data['/data/tile_engine_camera']);
+    var tileEngine = kontra.tileEngine(kontra.assets.data['../data/tile_engine_camera']);
     /* exclude:start */
     tileEngine.context = context;
     /* exclude:end */

@@ -51,7 +51,7 @@ h1 {
   line-height: 3.25rem;  /* 1.625 * 2 */
   font-weight: bold;
   padding-bottom: 0.8125rem;
-  border-bottom: 1px solid #333331;
+  border-bottom: 1px solid currentColor;
   margin: 0 0 1.312rem 0;
 }
 
@@ -59,6 +59,7 @@ h2 {
   font-size: 1.875rem;   /* 30 / 16 */
   line-height: 2.25rem;
   margin-bottom: 1rem;
+  padding-right: 1.312rem;
 }
 
 h3 {
@@ -99,6 +100,14 @@ dd + dt {
   margin-top: 1rem;
 }
 
+dd {
+  margin-left: 1.312rem;
+}
+
+dt {
+  margin-bottom: 0.382rem;
+}
+
 a {
   color: #3e76c2;
   text-decoration: none;
@@ -121,6 +130,7 @@ a:visited {
 }
 
 canvas {
+  max-width: 100%;
   background: #333331;
 }
 
@@ -134,13 +144,13 @@ main {
 }
 
 main > div {
-  max-width: 600px;
+  max-width: 33.333rem;
 }
 
 main-nav {
   background: #333333;
   padding: 1.325rem;
-  width: 250px;
+  width: 13.8889rem;
   flex-shrink: 0;
   overflow-y: auto;
 }
@@ -149,11 +159,20 @@ nav {
   padding-right: 14.6%;
 }
 
+main-nav h1 {
+  color: white;
+}
+
+main-nav section:first-child {
+  margin-top: 0;
+}
+
 main-nav a {
   color: #fdfdfd;
   display: block;
-  line-height: 1.625rem;
+  line-height: 1.25rem;
   margin: 0 0 0.382rem 0;
+  padding: 0.4rem 0;
   text-decoration: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -213,6 +232,12 @@ nav * {
   background: #fdfdfd;
 }
 
+.toc li a {
+  line-height: 1rem;
+  display: block;
+  margin: 0.1rem 0;
+}
+
 /* make the first level links line up with the nested links */
 .toc > ul > li > a {
   margin-left: 1.312rem;
@@ -244,7 +269,7 @@ h3 [aria-hidden=true] {
 }
 
 code[class*=language-], pre[class*=language-] {
-  font-size: 16px;
+  font-size: 0.889rem;
 }
 
 
@@ -331,4 +356,40 @@ code-output {
 
 dd > dl {
   margin-top: 1.312rem;
+}
+
+@media (max-width: 768px) {
+  html {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 620px) {
+  .content {
+    flex-direction: column;
+    height: auto;
+  }
+
+  main-nav {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  nav {
+    padding-right: 0;
+    max-width: 33.333rem;
+    display: flex;
+  }
+
+  main-nav section {
+    flex: 1;
+    margin-top: 0;
+  }
+
+  main-nav strong {
+    height: 3.25rem;
+    padding-bottom: 0.8125rem;
+    margin: 0 0 1.312rem 0;
+    line-height: 4.25rem;
+  }
 }

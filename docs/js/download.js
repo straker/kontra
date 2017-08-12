@@ -207,9 +207,10 @@
         codeEl.textContent = code;
         gzipSizeEl.textContent = '(' + getKB(gzip.zip(code).length) + ' minified)';
 
-        if (window.location.host.indexOf('localhost') === -1) {
-          Prism.highlightElement(codeEl, true);
-        }
+        // this doesn't work and is slow without the true
+        // if (window.location.host.indexOf('localhost') === -1) {
+        //   Prism.highlightElement(codeEl, true);
+        // }
 
         downloadEl.href = 'data:application/octet-stream;charset=utf-8,' + encodeURIComponent(code);
       });

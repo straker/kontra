@@ -32,7 +32,7 @@
 
 ## Documentation
 
-All the documentation can be found on the [github page](http://straker.github.io/kontra/).
+All the documentation can be found on the [github page](https://straker.github.io/kontra/).
 
 ## Community tutorials
 

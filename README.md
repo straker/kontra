@@ -14,7 +14,7 @@
 
 <ul>
   <li><strong>lightweight</strong>: 14 kB minified (5.5 kB gzipped) for the entire library. The basic bundle is 4.5 kB minified (2 kB gzipped).</li>
-  <li><strong>modular</strong>: pick and choose what modules you want when you <a href="https://straker.github.io/kontra/download.html">download</a>. No inter-dependencies.</li>
+  <li><strong>modular</strong>: pick and choose what modules you want when you <a href="https://straker.github.io/kontra/download">download</a>. No inter-dependencies.</li>
   <li><strong>extensible</strong>: everything is customizable and can be extended.</li>
   <li><strong>fast</strong>: all logic has been removed from the update and render cycles.</li>
   <li><strong>memory conscious</strong>: takes up as little memory as needed and tries not to be wasteful about the memory it does take up.</li>

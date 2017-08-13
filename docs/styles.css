@@ -407,6 +407,11 @@ dd > dl {
   line-height: 1.625rem;
 }
 
+.menu-button[aria-expanded="true"] {
+  background: #fdfdfd;
+  color: #242729;
+}
+
 .menu-button[aria-expanded="true"] + #menu {
   visibility: visible;
 }

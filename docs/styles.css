@@ -462,4 +462,10 @@ h1 {
   .menu-button {
     display: none;
   }
+
+  .main-nav h1 {
+    padding-bottom: 0.8125rem;
+    border-bottom: 1px solid #fdfdfd;
+    margin: 0 0 1.312rem 0;
+  }
 }

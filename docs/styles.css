@@ -172,7 +172,7 @@ main-nav a {
   display: block;
   line-height: 1.25rem;
   margin: 0 0 0.382rem 0;
-  padding: 0.4rem 0;
+  padding: 0.4rem 0 0.4rem 0.382rem;
   text-decoration: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -358,13 +358,13 @@ dd > dl {
   margin-top: 1.312rem;
 }
 
-@media (max-width: 768px) {
+@media screen and (max-width: 768px) {
   html {
     font-size: 14px;
   }
 }
 
-@media (max-width: 620px) {
+@media screen and (max-width: 620px) {
   .content {
     flex-direction: column;
     height: auto;

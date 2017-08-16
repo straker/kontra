@@ -14,20 +14,11 @@ var Server = require('karma').Server;
 
 var package = require('./package.json');
 
-var iifeMap = {
-  core: ['document', 'Object', 'Array', 'Error'],
-  assets: ['Promise'],
-  gameLoop: ['performance', 'requestAnimationFrame'],
-  sprite: ['Math', 'Infinity'],
-  store: ['localStorage'],
-  tileEngine: ['Math']
-};
-
-gulp.task('lint', function() {
-  return gulp.src('src/*.js')
-    .pipe(jshint())
-    .pipe(jshint.reporter( 'jshint-stylish' ))
-});
+// gulp.task('lint', function() {
+//   return gulp.src('src/*.js')
+//     .pipe(jshint())
+//     .pipe(jshint.reporter( 'jshint-stylish' ))
+// });
 
 gulp.task('scripts', function() {
   return gulp.src(['src/core.js', 'src/*.js'])
@@ -69,9 +60,7 @@ gulp.task('build', function() {
   // output files that can be built
   if (!argv.files) {
     var files = [
-      '       assets - Load images, audio, and data assets (' + 'qLite'.blue + ')',
-      '  assetBundle - List of assets to be loaded later (' + 'assets'.blue + ')',
-      'assetManifest - File that defines all assets and bundles (' + 'assetBundle'.blue + ')',
+      '       assets - Load images, audio, and data assets',
       '     gameLoop - Update and render the game',
       '     keyboard - Keyboard input handler',
       '         pool - Object pool for object reuse',
@@ -79,15 +68,14 @@ gulp.task('build', function() {
       '       sprite - Object for drawing rectangles, images, and sprite sheet animations',
       '  spriteSheet - Sprite sheets and sprite animations',
       '   tileEngine - Tile engine for rendering tilesets',
-      '        store - Local Storage interface for ease of use',
-      '        qLite - Promise library'
+      '        store - Local Storage interface for ease of use'
     ];
 
     console.log('\n================================='.blue);
     console.log('    Custom Build of Kontra.js'.blue);
     console.log('================================='.blue);
     console.log('\nUse'.white, '--files'.cyan, 'to select which modules to build:'.white);
-    console.log('(modules shown in parentheses are a dependency of the module and will be automatically installed)\n')
+    // console.log('(modules shown in parentheses are a dependency of the module and will be automatically installed)\n')
 
     // output the file name in a different color
     for (var i = 0, file; file = files[i]; i++) {
@@ -107,30 +95,7 @@ gulp.task('build', function() {
 
   // normalize files to include full path and extension
   for (var i = 0; i < src.length; i++) {
-    // add required dependencies
-    switch (src[i]) {
-    case 'qLite':
-      src[i] = 'node_modules/kontra-asset-loader/node_modules/qLite/qLite.js';
-      break;
-
-    case 'assets':
-      src[i] = 'node_modules/kontra-asset-loader/src/assets.js';
-      src.push('qLite');
-      break;
-
-    case 'assetBundle':
-      src[i] = 'node_modules/kontra-asset-loader/src/bundles.js';
-      src.push('assets');
-      break;
-
-    case 'assetManifest':
-      src[i] = 'node_modules/kontra-asset-loader/src/manifest.js';
-      src.push('assetBundle');
-      break;
-
-    default:
-      src[i] = 'src/' + src[i] + '.js';
-    }
+    src[i] = 'src/' + src[i] + '.js';
   }
 
   // create header for unminified build
@@ -178,4 +143,4 @@ gulp.task('test', function(done) {
   }, done).start();
 });
 
-gulp.task('default', ['lint', 'scripts', 'connect', 'watch']);
+gulp.task('default', ['scripts', 'connect', 'watch']);

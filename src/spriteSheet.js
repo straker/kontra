@@ -149,7 +149,7 @@
       properties = properties || {};
 
       if (!kontra._isImage(properties.image)) {
-        throw Erorr('You must provide an Image for the SpriteSheet');
+        throw new Error('You must provide an Image for the SpriteSheet');
       }
 
       this.animations = {};

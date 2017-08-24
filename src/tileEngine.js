@@ -185,7 +185,7 @@
        */
       addTilesets: function addTilesets(tilesets) {
         if (!Array.isArray(tilesets)) {
-          tilesets = [tilesets]
+          tilesets = [tilesets];
         }
 
         tilesets.forEach(function(tileset) {
@@ -263,7 +263,7 @@
        */
       addLayers: function addLayers(layers) {
         if (!Array.isArray(layers)) {
-          layers = [layers]
+          layers = [layers];
         }
 
         layers.forEach(function(layer) {

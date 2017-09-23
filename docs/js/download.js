@@ -205,7 +205,7 @@
                ' */' + code;
 
         codeEl.textContent = code;
-        gzipSizeEl.textContent = '(' + getKB(gzip.zip(code).length) + ' minified)';
+        gzipSizeEl.textContent = '(' + getKB(gzip.zip(code).length) + ' gzipped)';
 
         // this doesn't work and is slow without the true
         // if (window.location.host.indexOf('localhost') === -1) {

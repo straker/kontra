@@ -37,3 +37,7 @@ All the documentation can be found on the [github page](https://straker.github.i
 ## Community tutorials
 
 - [js13kGames Video Tutorial Series by Zenva](https://gamedevacademy.org/js13kgames-tutorial-video-series/)
+
+## Games made with Kontra
+
+- [A Day In The Life](http://js13kgames.com/entries/a-day-in-the-life) by [Mattia Fortunati](https://twitter.com/MattiaFortunati)

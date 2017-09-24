@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+  <script src="kontra.js"></script>
+  <style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+  }
+
+  body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #333331;
+  }
+
+  canvas {
+    border: 1px solid black;
+    background: white;
+  }
+  </style>
+</head>
+<body>
+  <canvas width=640 height=640></canvas>
+  <script>
+    kontra.init();
+
+    var dt = 0;
+    var debounce = 3;
+    var bubbles = [];
+    var colors = [
+      'white',
+      'blue',
+      'green',
+      'red',
+      'yellow',
+      'purple',
+      'orange',
+      'pink'
+    ]
+    var down = false;
+    var hoverTarget;
+    var startX, startY;
+
+    // random int
+    function getRandomInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    // circle collision
+    function collidesWith(object1, object2) {
+      var dx = object1.x - object2.x;
+      var dy = object1.y - object2.y;
+      var distance = Math.sqrt(dx * dx + dy * dy);
+
+      if (distance < object1.radius + object2.radius) {
+        return true;
+      }
+
+      return false;
+    }
+
+    kontra.canvas.addEventListener('mousedown', function(e) {
+      down = true;
+      var x = e.clientX - kontra.canvas.offsetLeft;
+      var y = e.clientY - kontra.canvas.offsetTop;
+
+      startX = x;
+      startY = y;
+
+      // pop bubble
+      for (var i = bubbles.length - 1; (bubble = bubbles[i]); i--) {
+        if (collidesWith({
+              x: x,
+              y: y,
+              radius: 2
+            }, bubble)) {
+          bubbles.splice(i, 1);
+          break;
+        }
+      }
+    });
+
+    kontra.canvas.addEventListener('mousemove', function(e) {
+      dt += 1;
+
+      var x = e.clientX - kontra.canvas.offsetLeft;
+      var y = e.clientY - kontra.canvas.offsetTop;
+
+      // make sure the mouse has moved enough and is not just a small move while
+      // trying to execute a click
+      if (dt >= debounce && down && Math.abs(x - startX) > 5 && Math.abs(y - startY) > 5) {
+        console.log('hi');
+        dt = 0;
+
+        x = getRandomInt(x-20, x+20);
+        y = getRandomInt(y-20, y+20);
+        r = getRandomInt(20, 30)
+
+        bubbles.push({
+          x: x,
+          y: y,
+          radius: r,
+          color: 'white'
+        });
+      }
+
+      else {
+        if (hoverTarget && !collidesWith({
+              x: x,
+              y: y,
+              radius: 2
+            }, hoverTarget)) {
+          hoverTarget = null;
+        }
+
+        for (var i = bubbles.length - 1; (bubble = bubbles[i]); i--) {
+
+          if (collidesWith({
+                x: x,
+                y: y,
+                radius: 2
+              }, bubble)) {
+
+            if (hoverTarget === bubble) {
+              break;
+            }
+
+            hoverTarget = bubble;
+
+            if (!bubble.hover) {
+              var color;
+
+              do {
+                color = colors[ getRandomInt(0, colors.length-1) ]
+              } while (color === bubble.color);
+
+              bubble.color = color;
+              bubble.hover = true;
+            }
+          }
+          else {
+            bubble.hover = false;
+          }
+        }
+      }
+    });
+
+    window.addEventListener('mouseup', function() {
+      down = false;
+    });
+
+    var loop = kontra.gameLoop({
+      update: kontra._noop,
+      render: function() {
+        bubbles.forEach(function(bubble) {
+          kontra.context.fillStyle = bubble.color;
+
+          kontra.context.beginPath();
+          kontra.context.arc(bubble.x, bubble.y, bubble.radius, 0, 2*Math.PI);
+          kontra.context.fill();
+          kontra.context.stroke();
+        });
+      }
+    });
+
+    loop.start();
+  </script>
+</body>
+</html>

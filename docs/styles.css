@@ -138,6 +138,7 @@ main {
   padding: 1.325rem;
   flex-grow: 1;
   position: relative;
+  overflow-y: scroll;
   height: 100%;
   box-sizing: border-box;
 }
@@ -461,10 +462,6 @@ h1 {
 @media screen and (min-width: 620px) {
   #menu {
     visibility: visible;
-  }
-
-  main {
-    overflow-y: scroll;
   }
 
   .menu-button {

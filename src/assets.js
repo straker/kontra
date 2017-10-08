@@ -55,7 +55,7 @@
     var name = url.replace('.' + getExtension(url), '');
 
     // remove slash if there is no folder in the path
-    return (name.indexOf('/') == 0 && name.lastIndexOf('/') == 0 ? name.substr(1) : name);
+    return (name.indexOf('/') === 0 && name.lastIndexOf('/') === 0 ? name.substr(1) : name);
   }
 
   /**

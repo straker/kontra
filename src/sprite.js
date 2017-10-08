@@ -376,13 +376,27 @@
     },
 
     /**
-     * Play an animation.
+     * Play an animation (a single time).
      * @memberof kontra.sprite
      *
      * @param {string} name - Name of the animation to play.
      */
     playAnimation: function playAnimation(name) {
       this.currentAnimation = this.animations[name];
+      this.currentAnimation.loop = false;
+      this.currentAnimation._frame = 0;
+    },
+
+    /**
+     * Play an animation (in a endless loop).
+     * @memberof kontra.sprite
+     *
+     * @param {string} name - Name of the animation to play.
+     */
+    loopAnimation: function loopAnimation(name) {
+      this.currentAnimation = this.animations[name];
+      this.currentAnimation.loop = true;
+      this.currentAnimation._frame = 0;
     },
 
     /**

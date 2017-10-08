@@ -32,6 +32,7 @@
       this.spriteSheet = properties.spriteSheet;
       this.frames = properties.frames;
       this.frameRate = properties.frameRate;
+      this.loop = properties.loop || true;
 
       var frame = properties.spriteSheet.frame;
       this.width = frame.width;
@@ -60,6 +61,12 @@
      * @param {number} [dt=1/60] - Time since last update.
      */
     update: function advance(dt) {
+      // If the animation should not be looped, we stop if the last
+      // frame is played and leave it there (animation stops).
+      if (!this.loop && this._frame === this.frames.length-1) {
+        return;
+      }
+
       dt = dt || 1 / 60;
 
       this._accum += dt;
@@ -142,7 +149,7 @@
       properties = properties || {};
 
       if (!kontra._isImage(properties.image)) {
-        throw Erorr('You must provide an Image for the SpriteSheet');
+        throw new Error('You must provide an Image for the SpriteSheet');
       }
 
       this.animations = {};

@@ -493,6 +493,35 @@ describe('kontra.sprite', function() {
 
 
 
+  // --------------------------------------------------
+  // kontra.sprite.loopAnimation
+  // --------------------------------------------------
+  describe('loopAnimation', function() {
+
+    it('should set the animation to loop', function() {
+      var animations = {
+        'walk': {
+          width: 10,
+          height: 20
+        },
+        'idle': {
+          width: 10,
+          height: 20
+        }
+      };
+
+      var sprite = kontra.sprite({
+        animations: animations
+      });
+
+      expect(sprite.currentAnimation).to.equal(animations.walk);
+
+      sprite.loopAnimation('idle');
+
+      expect(sprite.currentAnimation).to.equal(animations.idle);
+    });
+
+  });
 
 
   // --------------------------------------------------

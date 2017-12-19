@@ -141,9 +141,11 @@
     _init: function init(properties) {
       properties = properties || {};
 
+      // @if DEBUG
       if (!kontra._isImage(properties.image)) {
-        throw Erorr('You must provide an Image for the SpriteSheet');
+        throw Error('You must provide an Image for the SpriteSheet');
       }
+      // @endif
 
       this.animations = {};
       this.image = properties.image;
@@ -201,9 +203,11 @@
         // array that holds the order of the animation
         sequence = [];
 
+        // @if DEBUG
         if (frames === undefined) {
           throw Error('Animation ' + name + ' must provide a frames property');
         }
+        // @endif
 
         if (!Array.isArray(frames)) {
           frames = [frames];

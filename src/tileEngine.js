@@ -20,9 +20,11 @@
     properties = properties || {};
 
     // size of the map (in tiles)
+    // @if DEBUG
     if (!properties.width || !properties.height) {
       throw Error('You must provide width and height properties');
     }
+    // @endif
 
     /**
      * Get the index of the x, y or row, col.
@@ -212,9 +214,11 @@
             }
           }
 
+          // @if DEBUG
           if (!image) {
             throw Error('You must provide an Image for the tileset');
           }
+          // @endif
 
           firstGrid = tileset.firstGrid;
 

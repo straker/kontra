@@ -14,9 +14,11 @@ this.kontra = {
                                  canvas ||
                                  document.querySelector('canvas');
 
+    // @if DEBUG
     if (!this._isCanvas(canvasEl)) {
       throw Error('You must provide a canvas element for the game');
     }
+    // @endif
 
     this.context = canvasEl.getContext('2d');
   },
@@ -68,9 +70,11 @@ this.kontra = {
    *
    * @returns {boolean}
    */
+  // @if DEBUG
   _isFunc: function isFunction(value) {
     return typeof value === 'function';
   },
+  // @endif
 
   /**
    * Determine if a value is an Image. An image can also be a canvas element for

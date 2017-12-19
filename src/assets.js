@@ -10,7 +10,7 @@
     wav: '',
     mp3: audio.canPlayType('audio/mpeg;').replace(noRegex,''),
     ogg: audio.canPlayType('audio/ogg; codecs="vorbis"').replace(noRegex,''),
-    aac: audio.canPlayType('audio/aac;').replace(noRegex,''),
+    aac: audio.canPlayType('audio/aac;').replace(noRegex,'')
   };
 
   /**
@@ -87,7 +87,7 @@
       };
 
       image.onerror = function loadImageOnError() {
-        reject('Unable to load image ' + url);
+        reject(/* @if DEBUG */ 'Unable to load image ' + /* @endif */ url);
       };
 
       image.src = url;
@@ -128,7 +128,7 @@
       }
 
       if (!playableSource) {
-        reject('cannot play any of the audio formats provided');
+        reject(/* @if DEBUG */ 'cannot play any of the audio formats provided' + /* @endif */ '');
       }
       else {
         name = getName(playableSource);
@@ -141,7 +141,7 @@
         });
 
         audio.onerror = function loadAudioOnError() {
-          reject('Unable to load audio ' + source);
+          reject(/* @if DEBUG */ 'Unable to load audio ' + /* @endif */ source);
         };
 
         audio.src = source;
@@ -247,6 +247,6 @@
     },
 
     // expose properties for testing
-    _canUse: canUse,
+    _canUse: canUse
   };
 })(Promise);

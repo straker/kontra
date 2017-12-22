@@ -32,6 +32,7 @@
     "gulp-connect": "^2.2.0",
     "gulp-jshint": "^1.9.2",
     "gulp-plumber": "^1.1.0",
+    "gulp-preprocess": "^2.0.0",
     "gulp-rename": "^1.2.0",
     "gulp-size": "^1.2.1",
     "gulp-uglify": "^1.1.0",

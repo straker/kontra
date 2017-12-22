@@ -14,9 +14,11 @@ this.kontra = {
                                  canvas ||
                                  document.querySelector('canvas');
 
+    // @if DEBUG
     if (!this._isCanvas(canvasEl)) {
       throw Error('You must provide a canvas element for the game');
     }
+    // @endif
 
     this.context = canvasEl.getContext('2d');
   },
@@ -68,9 +70,11 @@ this.kontra = {
    *
    * @returns {boolean}
    */
+  // @if DEBUG
   _isFunc: function isFunction(value) {
     return typeof value === 'function';
   },
+  // @endif
 
   /**
    * Determine if a value is an Image. An image can also be a canvas element for
@@ -111,7 +115,7 @@ this.kontra = {
     wav: '',
     mp3: audio.canPlayType('audio/mpeg;').replace(noRegex,''),
     ogg: audio.canPlayType('audio/ogg; codecs="vorbis"').replace(noRegex,''),
-    aac: audio.canPlayType('audio/aac;').replace(noRegex,''),
+    aac: audio.canPlayType('audio/aac;').replace(noRegex,'')
   };
 
   /**
@@ -188,7 +192,7 @@ this.kontra = {
       };
 
       image.onerror = function loadImageOnError() {
-        reject('Unable to load image ' + url);
+        reject(/* @if DEBUG */ 'Unable to load image ' + /* @endif */ url);
       };
 
       image.src = url;
@@ -229,7 +233,7 @@ this.kontra = {
       }
 
       if (!playableSource) {
-        reject('cannot play any of the audio formats provided');
+        reject(/* @if DEBUG */ 'cannot play any of the audio formats provided' + /* @endif */ '');
       }
       else {
         name = getName(playableSource);
@@ -242,7 +246,7 @@ this.kontra = {
         });
 
         audio.onerror = function loadAudioOnError() {
-          reject('Unable to load audio ' + source);
+          reject(/* @if DEBUG */ 'Unable to load audio ' + /* @endif */ source);
         };
 
         audio.src = source;
@@ -348,7 +352,7 @@ this.kontra = {
     },
 
     // expose properties for testing
-    _canUse: canUse,
+    _canUse: canUse
   };
 })(Promise);
 (function(kontra, requestAnimationFrame, performance) {
@@ -367,9 +371,11 @@ this.kontra = {
     properties = properties || {};
 
     // check for required functions
+    // @if DEBUG
     if ( !(kontra._isFunc(properties.update) && kontra._isFunc(properties.render)) ) {
       throw Error('You must provide update() and render() functions');
     }
+    // @endif
 
     // animation variables
     var fps = properties.fps || 60;
@@ -617,6 +623,7 @@ this.kontra = {
 
     // check for the correct structure of the objects added to pools so we know that the
     // rest of the pool code will work without errors
+    // @if DEBUG
     if (!kontra._isFunc(properties.create) ||
         ( !( obj = properties.create() ) ||
           !( kontra._isFunc(obj.update) && kontra._isFunc(obj.init) &&
@@ -624,6 +631,7 @@ this.kontra = {
        )) {
       throw Error('Must provide create() function which returns an object with init(), update(), and isAlive() functions');
     }
+    // @endif
 
     return {
       create: properties.create,
@@ -1004,21 +1012,23 @@ this.kontra = {
      * Draw the quadtree. Useful for visual debugging.
      * @memberof kontra.quadtree
      */
-    // render: function() {
-    //   // don't draw empty leaf nodes, always draw branch nodes and the first node
-    //   if (this.objects.length || this._depth === 0 ||
-    //       (this._parent && this._parent._branch)) {
+     /* @if VISUAL_DEBUG **
+     render: function() {
+       // don't draw empty leaf nodes, always draw branch nodes and the first node
+       if (this.objects.length || this._depth === 0 ||
+           (this._parent && this._parent._branch)) {
 
-    //     kontra.context.strokeStyle = 'red';
-    //     kontra.context.strokeRect(this.bounds.x, this.bounds.y, this.bounds.width, this.bounds.height);
+         kontra.context.strokeStyle = 'red';
+         kontra.context.strokeRect(this.bounds.x, this.bounds.y, this.bounds.width, this.bounds.height);
 
-    //     if (this.subnodes.length) {
-    //       for (var i = 0; i < 4; i++) {
-    //         this.subnodes[i].render();
-    //       }
-    //     }
-    //   }
-    // }
+         if (this.subnodes.length) {
+           for (var i = 0; i < 4; i++) {
+             this.subnodes[i].render();
+           }
+         }
+       }
+     }
+     /* @endif */
   };
 })(kontra);
 (function(kontra, Math, Infinity) {
@@ -1611,9 +1621,11 @@ this.kontra = {
     _init: function init(properties) {
       properties = properties || {};
 
+      // @if DEBUG
       if (!kontra._isImage(properties.image)) {
-        throw Erorr('You must provide an Image for the SpriteSheet');
+        throw Error('You must provide an Image for the SpriteSheet');
       }
+      // @endif
 
       this.animations = {};
       this.image = properties.image;
@@ -1671,9 +1683,11 @@ this.kontra = {
         // array that holds the order of the animation
         sequence = [];
 
+        // @if DEBUG
         if (frames === undefined) {
           throw Error('Animation ' + name + ' must provide a frames property');
         }
+        // @endif
 
         if (!Array.isArray(frames)) {
           frames = [frames];
@@ -1793,9 +1807,11 @@ kontra.store = {
     properties = properties || {};
 
     // size of the map (in tiles)
+    // @if DEBUG
     if (!properties.width || !properties.height) {
       throw Error('You must provide width and height properties');
     }
+    // @endif
 
     /**
      * Get the index of the x, y or row, col.
@@ -1985,9 +2001,11 @@ kontra.store = {
             }
           }
 
+          // @if DEBUG
           if (!image) {
             throw Error('You must provide an Image for the tileset');
           }
+          // @endif
 
           firstGrid = tileset.firstGrid;
 

@@ -9,10 +9,18 @@ var size = require('gulp-size');
 var uglify = require('gulp-uglify');
 var changed = require('gulp-changed');
 var plumber = require('gulp-plumber');
+var preprocess = require('gulp-preprocess');
 
 var Server = require('karma').Server;
 
 var package = require('./package.json');
+
+
+// Enables/Disables visual debugging in Kontra
+var VISUAL_DEBUG = false;
+
+// Enables/Disables DEBUG mode in Kontra
+var DEBUG = false;
 
 // gulp.task('lint', function() {
 //   return gulp.src('src/*.js')
@@ -25,6 +33,7 @@ gulp.task('scripts', function() {
     .pipe(concat('kontra.js'))
     .pipe(gulp.dest('.'))
     .pipe(gulp.dest('./docs/js'))
+    .pipe(preprocess({context: { DEBUG: DEBUG, VISUAL_DEBUG:VISUAL_DEBUG}}))
     .pipe(plumber())
     .pipe(uglify())
     .pipe(plumber.stop())
@@ -42,6 +51,7 @@ gulp.task('scripts', function() {
 
 gulp.task('dist', function() {
   return gulp.src('src/*.js')
+    .pipe(preprocess({context: { DEBUG: DEBUG, VISUAL_DEBUG: VISUAL_DEBUG}}))
     .pipe(changed('./dist'))
     .pipe(plumber())
     .pipe(uglify())
@@ -105,10 +115,11 @@ gulp.task('build', function() {
     ' * Kontra.js v' + package.version + ' (Custom Build on ' + date + ') | MIT',
     ' * Build: --files ' + originalSrc,
     ' */\n'
-  ]
+  ];
 
   return gulp.src(src)
     .pipe(concat('kontra.build.js'))
+    .pipe(preprocess({context: { DEBUG: DEBUG, VISUAL_DEBUG:VISUAL_DEBUG}}))
     .pipe(concat.header(header.join('\n') + '\n'))
     .pipe(size())
     .pipe(gulp.dest('.'))

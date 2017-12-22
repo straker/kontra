@@ -14,9 +14,11 @@
     properties = properties || {};
 
     // check for required functions
+    // @if DEBUG
     if ( !(kontra._isFunc(properties.update) && kontra._isFunc(properties.render)) ) {
       throw Error('You must provide update() and render() functions');
     }
+    // @endif
 
     // animation variables
     var fps = properties.fps || 60;

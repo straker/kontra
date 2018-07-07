@@ -49,6 +49,7 @@
         return;
       }
 
+      kontra._tick();
       accumulator += dt;
 
       while (accumulator >= delta) {

@@ -5,10 +5,10 @@
 
   var prisimcss = document.createElement('link');
   prisimcss.setAttribute('rel', 'stylesheet');
-  prisimcss.href = '/examples/prism/prism.css';
+  prisimcss.href = 'https://cdnjs.cloudflare.com/ajax/libs/prism/1.15.0/themes/prism.min.css';
   document.head.appendChild(prisimcss);
 
   var prisimjs = document.createElement('script');
-  prisimjs.src = '/examples/prism/prism.js';
+  prisimjs.src = 'https://cdnjs.cloudflare.com/ajax/libs/prism/1.15.0/prism.min.js';
   document.body.appendChild(prisimjs);
 })();

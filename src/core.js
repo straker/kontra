@@ -101,5 +101,13 @@ this.kontra = {
    */
   _isCanvas: function isCanvas(value) {
     return !!value && value.nodeName === 'CANVAS';
-  }
+  },
+
+  /**
+   * Dispatch event to any part of the code that needs to know when
+   * a new frame has started. Will be filled out in pointer events.
+   * @memberOf kontra
+   * @private
+   */
+  _tick: new Function
 };

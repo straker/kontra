@@ -21,7 +21,11 @@ gulp.task('scripts', function() {
   return gulp.src(['src/core.js', 'src/*.js'])
     .pipe(concat('kontra.js'))
     .pipe(gulp.dest('.'))
+<<<<<<< Updated upstream
     .pipe(gulp.dest('./docs/js'))
+=======
+    // .pipe(gulp.dest('./docs/js'))
+>>>>>>> Stashed changes
     .pipe(preprocess({context: { DEBUG: DEBUG, VISUAL_DEBUG: VISUAL_DEBUG}}))
     .pipe(plumber())
     .pipe(uglify())

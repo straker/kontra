@@ -17,8 +17,8 @@
   addEventListener('touchstart', pointerDownHandler);
   // addEventListener('mouseup', pointerUpHandler);
   // addEventListener('touchend', pointerUpHandler);
-  addEventListener('mousemove', debounce(pointerOverHandler, 25));
-  // addEventListener('mousemove', debounce(pointerOutHandler, 50));
+  addEventListener('mousemove', debounce(pointerOverHandler, 50));
+  addEventListener('mousemove', debounce(pointerOutHandler, 50));
 
   function debounce(func, wait, immediate) {
     var timeout;

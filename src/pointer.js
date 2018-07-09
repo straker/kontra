@@ -4,7 +4,7 @@
   // save each object as they are rendered to determine which object
   // is on top when multiple objects are the target of an event.
   // we'll always use the last frame's object order so we know
-  // the finalized order of all objects, otherwise a object could ask
+  // the finalized order of all objects, otherwise an object could ask
   // if it's being hovered when it's rendered first even if other objects
   // would block it later in the render order
   var thisFrameRenderOrder = [];

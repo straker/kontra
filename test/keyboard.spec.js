@@ -1,38 +1,38 @@
-/**
- * Simulate a keyboard event.
- * @param {string} type - Type of keyboard event.
- * @param {object} [config] - Additional settings for the event.
- * @param {boolean} [config.ctrlKey=false]
- * @param {boolean} [config.shiftKey=false]
- * @param {boolean} [config.altKey=false]
- * @param {boolean} [config.metaKey=false]
- * @param {boolean} [config.keyCode=0]
- */
-function simulateEvent(type, config) {
-  var evt;
-
-  // PhantomJS <2.0.0 throws an error for the `new Event` call, so we need to supply an
-  // alternative form of creating an event just for PhantomJS
-  // @see https://github.com/ariya/phantomjs/issues/11289#issuecomment-38880333
-  try {
-    evt = new Event(type);
-  } catch(e) {
-    evt = document.createEvent('Event');
-    evt.initEvent(type, true, false);
-  }
-
-  var config = config || {};
-  for (var prop in config) {
-    evt[prop] = config[prop];
-  }
-
-  window.dispatchEvent(evt);
-}
-
 // --------------------------------------------------
 // kontra.keys
 // --------------------------------------------------
 describe('kontra.keys', function() {
+
+  /**
+   * Simulate a keyboard event.
+   * @param {string} type - Type of keyboard event.
+   * @param {object} [config] - Additional settings for the event.
+   * @param {boolean} [config.ctrlKey=false]
+   * @param {boolean} [config.shiftKey=false]
+   * @param {boolean} [config.altKey=false]
+   * @param {boolean} [config.metaKey=false]
+   * @param {boolean} [config.keyCode=0]
+   */
+  function simulateEvent(type, config) {
+    var evt;
+
+    // PhantomJS <2.0.0 throws an error for the `new Event` call, so we need to supply an
+    // alternative form of creating an event just for PhantomJS
+    // @see https://github.com/ariya/phantomjs/issues/11289#issuecomment-38880333
+    try {
+      evt = new Event(type);
+    } catch(e) {
+      evt = document.createEvent('Event');
+      evt.initEvent(type, true, false);
+    }
+
+    var config = config || {};
+    for (var prop in config) {
+      evt[prop] = config[prop];
+    }
+
+    window.dispatchEvent(evt);
+  }
 
   // reset pressed keys before each test
   beforeEach(function() {

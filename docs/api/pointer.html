@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Kontra.js – Kontra.pointer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/webcomponentsjs/0.7.22/webcomponents-lite.min.js"></script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/themes/prism.min.css">
+  <link rel="stylesheet" href="../styles.css">
+
+  <link rel="import" href="../components/main-nav.html">
+  <link rel="import" href="../components/code-output.html">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/components/prism-javascript.min.js"></script>
+  <script src="../js/kontra.js"></script>
+</head>
+<body>
+  <div class="content">
+    <main-nav></main-nav>
+
+    <main id="main">
+      <div>
+        <h1>Kontra&#8203;.pointer</h1>
+
+        <p>A simple pointer API. You can use it move the main sprite or respond to a pointer event. Works with both mouse and touch events.</p>
+
+        <p>Pointer events can be added on a global level or on individual sprites or objects. Before an object can receive pointer events, you must tell the pointer which objects to track and the object must haven been rendered to the canvas using <code>object.render()</code>.</p>
+
+        <p>After an object is tracked and rendered, you can assign it an <code>onDown</code>, <code>onUp</code>, or <code>onOver</code> functions which will be called whenever a pointer down, up, or over event happens on the object.</p>
+
+        <pre><code class="language-javascript">var sprite = kontra.sprite({
+  onDown: function() {
+    // handle on down events on the sprite
+  },
+  onUp: function() {
+    // handle on up events on the sprite
+  },
+  onOver: function() {
+    // handle on over events on the sprite
+  }
+});
+kontra.pointer.track(sprite);
+sprite.render();</code></pre>
+
+        <p>By default, the pointer is treated as a circle and will check for collisions against objects assuming they are rectangular (have a <code>width</code> and <code>height</code> property).</p>
+
+        <p>If you need to perform a different type of collision detection, assign the object a <code>collidesWithPointer(pointer)</code> function and it will be called instead, passing the current pointer object. Use this function to determine how the pointer circle should collide with the object.</p>
+
+        <pre><code class="language-javascript">var sprite = kontra.sprite({
+  x: 10,
+  y: 10,
+  radius: 10
+  collidesWithPointer: function(pointer) {
+    // perform a circle v circle collision test
+    var dx = pointer.x - this.x;
+    var dy = pointer.y - this.y;
+    return Math.sqrt(dx * dx + dy * dy) < this.radius;
+  });</code></pre>
+
+
+
+
+
+        <section class="toc">
+          <h2 id="toc"><a href="#toc" class="section-link">Table of Contents<span aria-hidden="true">#</span></a></h2>
+
+          <ul aria-labeledby="toc">
+            <li>
+              <ul>
+                <li><a href="#available-buttons">Available buttons</a></li>
+              </ul>
+            </li>
+
+            <li>
+              <h3 id="properties">Properties</h3>
+              <ul aria-labeledby="properties">
+                <li><a href="#radius">kontra.pointer&#8203;.radius</a></li>
+                <li><a href="#x">kontra.pointer&#8203;.x</a></li>
+                <li><a href="#y">kontra.pointer&#8203;.y</a></li>
+              </ul>
+            </li>
+
+            <li>
+              <h3 id="methods">Methods</h3>
+              <ul aria-labeledby="methods">
+                <li><a href="#onDown">kontra.pointer&#8203;.onDown(callback)</a></li>
+                <li><a href="#onUp">kontra.pointer&#8203;.onUp(callback)</a></li>
+                <li><a href="#over">kontra.pointer&#8203;.over(object)</a></li>
+                <li><a href="#pressed">kontra.pointer&#8203;.pressed(button)</a></li>
+                <li><a href="#track">kontra.pointer&#8203;.track(object)</a></li>
+                <li><a href="#untrack">kontra.pointer&#8203;.untrack(object)</a></li>
+              </ul>
+            </li>
+          </ul>
+        </section>
+
+
+
+
+
+        <section>
+          <h2 id="available-buttons"><a href="#available-buttons" class="section-link">Available buttons<span aria-hidden="true">#</span></a></h2>
+
+          <p>Below is a list of buttons that you can use.</p>
+
+          <ul>
+            <li>left, middle, right</li>
+          </ul>
+
+        </section>
+
+
+
+
+
+        <section>
+          <h2 id="onDown"><a href="#onDown" class="section-link">kontra.pointer&#8203;.onDown(callback)<span aria-hidden="true">#</span></a></h2>
+
+          <dl>
+            <dt><strong>callback</strong> <em>{function}</em></dt>
+            <dd>Function to call on pointer down.</dd>
+          </dl>
+
+          <p>Register a function to be called on all pointer down events. Will be passed the original Event and the target object (if there is one).</p>
+
+          <pre><code class="language-javascript">kontra.pointer.onDown(function(event, object) {
+  // do something on pointer down
+});</code></pre>
+
+        </section>
+
+
+
+
+
+        <section>
+          <h2 id="onUp"><a href="#onUp" class="section-link">kontra.pointer&#8203;.onUp(callback)<span aria-hidden="true">#</span></a></h2>
+
+          <dl>
+            <dt><strong>callback</strong> <em>{function}</em></dt>
+            <dd>Function to call on pointer up.</dd>
+          </dl>
+
+          <p>Register a function to be called on all pointer up events. Will be passed the original Event and the target object (if there is one).</p>
+
+          <pre><code class="language-javascript">kontra.pointer.onDown(function(event, object) {
+  // do something on pointer up
+});</code></pre>
+
+        </section>
+
+
+
+
+
+        <section>
+          <h2 id="over"><a href="#over" class="section-link">kontra.pointer&#8203;.over(object)<span aria-hidden="true">#</span></a></h2>
+
+          <dl>
+            <dt><strong>object</strong> <em>{object}</em></dt>
+            <dd>The object to check if the pointer is over.</dd>
+          </dl>
+
+          <p>Check to see if the pointer is currently over the object. Since multiple objects may be rendered on top of one another, only the top most object under the pointer will return <code>true</code>.</p>
+
+          <pre><code class="language-javascript">var sprite1 = kontra.sprite({
+  x: 10,
+  y: 10,
+  width: 10,
+  height: 10
+});
+var sprite2 = kontra.sprite({
+  x: 15,
+  y: 10,
+  width: 10,
+  height: 10
+});
+
+kontra.pointer.track([sprite1, sprite2]);
+
+sprite1.render();
+sprite2.render();
+
+kontra.pointer.x = 14;
+kontra.pointer.y = 15;
+
+console.log(kontra.pointer.over(sprite1));  //=> false
+console.log(kontra.pointer.over(sprite2));  //=> true</code></pre>
+
+        </section>
+
+
+
+
+
+        <section>
+          <h2 id="pressed"><a href="#pressed" class="section-link">kontra.pointer&#8203;.pressed(button)<span aria-hidden="true">#</span></a></h2>
+
+          <dl>
+            <dt><strong>button</strong> <em>{string}</em></dt>
+            <dd>button name.</dd>
+          </dl>
+
+          <p>Returns true if the button is pressed. Use during an <code>update()</code> function to perform actions each frame.</p>
+
+          <pre><code class="language-javascript">kontra.sprite({
+  update: function() {
+    if (kontra.pointer.pressed('left')){
+      // left mouse button pressed
+    }
+    else if (kontra.keys.pressed('right')) {
+      // right mouse button pressed
+    }
+  }
+});</code></pre>
+
+        </section>
+
+
+
+
+
+        <section>
+          <h2 id="radius"><a href="#radius" class="section-link">kontra.pointer&#8203;.radius<span aria-hidden="true">#</span></a></h2>
+
+          <p><em>{number}</em></p>
+
+          <p>The radius of the virtual pointer. Defaults to 5.</p>
+
+        </section>
+
+
+
+
+
+        <section>
+          <h2 id="track"><a href="#track" class="section-link">kontra.pointer&#8203;.track(object)<span aria-hidden="true">#</span></a></h2>
+
+          <dl>
+            <dt><strong>object</strong> <em>{object | object[]}</em></dt>
+            <dd>Objects to track.</dd>
+          </dl>
+
+          <p>Begin tracking pointer events for a set of objects. Takes a single object or an array of objects.</p>
+
+        </section>
+
+
+
+
+
+        <section>
+          <h2 id="untrack"><a href="#untrack" class="section-link">kontra.pointer&#8203;.untrack(object)<span aria-hidden="true">#</span></a></h2>
+
+          <dl>
+            <dt><strong>object</strong> <em>{object | object[]}</em></dt>
+            <dd>Objects to untrack.</dd>
+          </dl>
+
+          <p>Stop tracking pointer events for a set of objects. Takes a single object or an array of objects.</p>
+
+        </section>
+
+
+
+
+
+        <section>
+          <h2 id="x"><a href="#x" class="section-link">kontra.pointer&#8203;.x<span aria-hidden="true">#</span></a></h2>
+
+          <p><em>{number}</em></p>
+
+          <p>The current x position of the pointer.</p>
+
+        </section>
+
+
+
+
+
+        <section>
+          <h2 id="y"><a href="#y" class="section-link">kontra.pointer&#8203;.y<span aria-hidden="true">#</span></a></h2>
+
+          <p><em>{number}</em></p>
+
+          <p>The current y position of the pointer.</p>
+
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+</body>
+</html>

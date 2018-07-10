@@ -121,7 +121,7 @@ describe('kontra.gameLoop', function() {
         clearCanvas: false
       });
 
-      loop._last = performance.now() - (1E3/60) * 2;
+      loop._last = performance.now() - (1E3/60) * 2.5;
       loop._frame();
 
       expect(count).to.equal(2);

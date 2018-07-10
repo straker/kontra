@@ -21,7 +21,7 @@ describe('kontra.assets', function() {
   // --------------------------------------------------
   // kontra.assets.load
   // --------------------------------------------------
-  describe.only('load', function() {
+  describe('load', function() {
 
     // images
     it('should load an image and resolve with it', function(done) {

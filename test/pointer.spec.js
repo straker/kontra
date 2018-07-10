@@ -232,6 +232,21 @@ describe('kontra.pointer', function() {
       expect(kontra.pointer.y).to.equal(50);
     });
 
+    it('should call the objects onOver function if it is the target', function(done) {
+      object.onOver = sinon.spy();
+
+      // the mousemove event is throttled so have to wait for it to finish
+      setTimeout(function() {
+        simulateEvent('mousemove', {clientX: 105, clientY: 55});
+
+        // the mousemove event is also async
+        setTimeout(function() {
+          expect(object.onOver.called).to.be.ok;
+          done();
+        }, 50);
+      });
+    });
+
   });
 
 

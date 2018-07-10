@@ -26,9 +26,9 @@
 
         <p>A simple pointer API. You can use it move the main sprite or respond to a pointer event. Works with both mouse and touch events.</p>
 
-        <p>Pointer events can be added on a global level or on individual objects. Before an object can have pointer events, you must tell the pointer which objects to track and the object must be rendered to the canvas using <code>object.render()</code>.</p>
+        <p>Pointer events can be added on a global level or on individual sprites or objects. Before an object can receive pointer events, you must tell the pointer which objects to track and the object must haven been rendered to the canvas using <code>object.render()</code>.</p>
 
-        <p>After an object is tracked and rendered, you can assign it an <code>onDown</code> or <code>onUp</code> functions which will be called whenever a pointer down or pointer up event happens on the object.</p>
+        <p>After an object is tracked and rendered, you can assign it an <code>onDown</code>, <code>onUp</code>, or <code>onOver</code> functions which will be called whenever a pointer down, up, or over event happens on the object.</p>
 
         <pre><code class="language-javascript">var sprite = kontra.sprite({
   onDown: function() {
@@ -36,12 +36,17 @@
   },
   onUp: function() {
     // handle on up events on the sprite
+  },
+  onOver: function() {
+    // handle on over events on the sprite
   }
 });
 kontra.pointer.track(sprite);
 sprite.render();</code></pre>
 
-        <p>By default, the pointer is treated as a circle and will check for collisions against objects assuming they are rectangular (have a <code>width</code> and <code>height</code> property). If you need to perform a different type of collision detection, assign the object a <code>collidesWithPointer(pointer)</code> function and it will be called instead. Use this function to determine how the pointer circle should collide with the object.</p>
+        <p>By default, the pointer is treated as a circle and will check for collisions against objects assuming they are rectangular (have a <code>width</code> and <code>height</code> property).</p>
+
+        <p>If you need to perform a different type of collision detection, assign the object a <code>collidesWithPointer(pointer)</code> function and it will be called instead, passing the current pointer object. Use this function to determine how the pointer circle should collide with the object.</p>
 
         <pre><code class="language-javascript">var sprite = kontra.sprite({
   x: 10,
@@ -118,7 +123,11 @@ sprite.render();</code></pre>
             <dd>Function to call on pointer down.</dd>
           </dl>
 
-          <p>Register a function to be called on pointer down.</p>
+          <p>Register a function to be called on all pointer down events. Will be passed the original Event and the target object (if there is one).</p>
+
+          <pre><code class="language-javascript">kontra.pointer.onDown(function(event, object) {
+  // do something on pointer down
+});</code></pre>
 
         </section>
 
@@ -134,7 +143,11 @@ sprite.render();</code></pre>
             <dd>Function to call on pointer up.</dd>
           </dl>
 
-          <p>Register a function to be called on pointer up.</p>
+          <p>Register a function to be called on all pointer up events. Will be passed the original Event and the target object (if there is one).</p>
+
+          <pre><code class="language-javascript">kontra.pointer.onDown(function(event, object) {
+  // do something on pointer up
+});</code></pre>
 
         </section>
 
@@ -151,8 +164,6 @@ sprite.render();</code></pre>
           </dl>
 
           <p>Check to see if the pointer is currently over the object. Since multiple objects may be rendered on top of one another, only the top most object under the pointer will return <code>true</code>.</p>
-
-          <p><strong>Note: </strong> Touchscreen users will not be able to hover over an object unless they touch it, so don't rely on <code>kontra.pointer.over()</code> for important functionality that a touch user would need.</p>
 
           <pre><code class="language-javascript">var sprite1 = kontra.sprite({
   x: 10,
@@ -175,6 +186,7 @@ sprite2.render();
 kontra.pointer.x = 14;
 kontra.pointer.y = 15;
 
+console.log(kontra.pointer.over(sprite1));  //=> false
 console.log(kontra.pointer.over(sprite2));  //=> true</code></pre>
 
         </section>

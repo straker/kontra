@@ -12,7 +12,7 @@
 
   var callbacks = {};
   var trackedObjects = [];
-  var pressedButtons = {}
+  var pressedButtons = {};
 
   var buttonMap = {
     0: 'left',
@@ -80,7 +80,7 @@
   function getCurrentObject() {
 
     // if pointer events are required on the very first frame or without a game loop,
-    // use the first frame
+    // use the current frame order array
     var frameOrder = (lastFrameRenderOrder.length ? lastFrameRenderOrder : thisFrameRenderOrder);
 
     var length = frameOrder.length - 1;

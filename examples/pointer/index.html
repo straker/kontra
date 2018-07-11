@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Pointer</title>
+  <script src="../../kontra.js"></script>
+</head>
+<body>
+  <canvas id="game" width="600" height="400" style="background: #333331"></canvas>
+  <script id="code">
+    // initialize the game and setup the canvas
+    kontra.init();
+
+    // create a sprite
+    window.sprite = kontra.sprite({
+      x: 290,
+      y: 180,
+      width: 20,
+      height: 40,
+      color: 'red',
+      update: function() {
+
+        // move sprite center to pointer
+        this.x = kontra.pointer.x - this.width / 2;
+        this.y = kontra.pointer.y - this.height / 2;
+
+        // clamp position of the sprite to remain inside the canvas
+        if (this.x < 0) {
+          this.x = 0;
+        }
+        else if (this.x >= kontra.canvas.width - this.width) {
+          this.x = kontra.canvas.width - this.width;
+        }
+
+        if (this.y < 0) {
+          this.y = 0;
+        }
+        else if (this.y >= kontra.canvas.height - this.height) {
+          this.y = kontra.canvas.height - this.height;
+        }
+      },
+
+      // change size of sprite on click
+      onDown: function() {
+        if (this.width === 20) {
+          this.width = 40;
+          this.height = 80;
+        }
+        else {
+          this.width = 20;
+          this.height = 40;
+        }
+      }
+    });
+
+    // render and track pointer events on the sprite
+    sprite.render();
+    kontra.pointer.track(sprite);
+
+    // create the game loop to update and render the sprite
+    window.loop = kontra.gameLoop({
+      update: function() {
+        sprite.update();
+      },
+      render: function() {
+        sprite.render();
+      }
+    });
+
+    // start the loop
+    loop.start();
+  </script>
+  <script src="../prism/codeOutput.js"></script>
+</body>
+</html>

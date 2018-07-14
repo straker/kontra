@@ -38,6 +38,7 @@ describe('kontra.animation', function() {
       expect(animation.frameRate).to.equal(30);
       expect(animation.width).to.equal(5);
       expect(animation.height).to.equal(5);
+      expect(animation.loop).to.equal(true);
     });
 
   });
@@ -99,6 +100,20 @@ describe('kontra.animation', function() {
       animation.update();
 
       expect(animation._frame).to.equal(0);
+    });
+
+    it('should not reset the animation if loop is false', function() {
+      animation.loop = false;
+
+      for (var i = 0; i < 7; i++) {
+        animation.update();
+      }
+
+      expect(animation._frame).to.equal(3);
+
+      animation.update();
+
+      expect(animation._frame).to.equal(3);
     });
 
   });

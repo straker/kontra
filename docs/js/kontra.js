@@ -1348,7 +1348,7 @@ this.kontra = {
      /* @endif */
   };
 })(kontra);
-(function(kontra, Math, Infinity) {
+(function(kontra, Math, Infinity, undefined) {
 
   /**
    * A vector for 2D space.
@@ -1730,9 +1730,12 @@ this.kontra = {
      * @memberof kontra.sprite
      *
      * @param {string} name - Name of the animation to play.
+     * @param {boolean} [loop=true] - If the animation should loop.
      */
-    playAnimation: function playAnimation(name) {
+    playAnimation: function playAnimation(name, loop) {
       this.currentAnimation = this.animations[name];
+      this.currentAnimation.loop = (loop == undefined ? true : loop);
+      this.currentAnimation._frame = 0;
     },
 
     /**
@@ -1795,7 +1798,7 @@ this.kontra = {
     }
   };
 })(kontra, Math, Infinity);
-(function(kontra) {
+(function(kontra, undefined) {
   /**
    * Single animation from a sprite sheet.
    * @memberof kontra
@@ -1822,6 +1825,7 @@ this.kontra = {
      * @param {object} properties.spriteSheet - Sprite sheet for the animation.
      * @param {number[]} properties.frames - List of frames of the animation.
      * @param {number}  properties.frameRate - Number of frames to display in one second.
+     * @param {boolean} properties.loop=true - If the animation should loop.
      */
     _init: function init(properties) {
       properties = properties || {};
@@ -1829,6 +1833,7 @@ this.kontra = {
       this.spriteSheet = properties.spriteSheet;
       this.frames = properties.frames;
       this.frameRate = properties.frameRate;
+      this.loop = (properties.loop == undefined ? true : properties.loop);
 
       var frame = properties.spriteSheet.frame;
       this.width = frame.width;
@@ -1857,6 +1862,9 @@ this.kontra = {
      * @param {number} [dt=1/60] - Time since last update.
      */
     update: function advance(dt) {
+      // if the animation doesn't loop we stop at the lat frame
+      if (!this.loop && this._frame == this.frames.length -1) return;
+
       dt = dt || 1 / 60;
 
       this._accum += dt;
@@ -2291,7 +2299,7 @@ kontra.store = {
        */
       addTilesets: function addTilesets(tilesets) {
         if (!Array.isArray(tilesets)) {
-          tilesets = [tilesets]
+          tilesets = [tilesets];
         }
 
         tilesets.forEach(function(tileset) {
@@ -2371,7 +2379,7 @@ kontra.store = {
        */
       addLayers: function addLayers(layers) {
         if (!Array.isArray(layers)) {
-          layers = [layers]
+          layers = [layers];
         }
 
         layers.forEach(function(layer) {

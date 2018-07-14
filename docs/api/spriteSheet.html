@@ -35,6 +35,8 @@
           <dd>The height of a single frame.</dd>
           <dt><strong>properties.frameMargin</strong> <em>{number}</em></dt>
           <dd>Optional. The amount of whitespace between each frame. Defaults to 0.</dd>
+          <dt><strong>properties.loop</strong> <em>{boolean}</em></dt>
+          <dd>Optional. If the animation should loop once finished. Defaults to true.</dd>
           <dt><strong>properties.animations</strong> <em>{object}</em></dt>
           <dd><a href="animation">kontra.animations</a> to create from the sprite sheet. Passed directly into the sprite sheets <a href="#createAnimations">createAnimations(animations)</a> function.</dd>
         </dl>
@@ -89,6 +91,7 @@ var sprite = kontra.sprite({
                 <li><a href="#frame">kontra.spriteSheet&#8203;.frame</a></li>
                 <li><a href="#framesPerRow">kontra.spriteSheet&#8203;.framesPerRow</a></li>
                 <li><a href="#image">kontra.spriteSheet&#8203;.image</a></li>
+                <li><a href="#loop">kontra.spriteSheet&#8203;.loop</a></li>
               </ul>
             </li>
 
@@ -228,6 +231,19 @@ image.onload = function() {
           <p><em>{HTMLImageElement | HTMLCanvasElement}</em></p>
 
           <p>The sprite sheet image.</p>
+
+        </section>
+
+
+
+
+
+        <section>
+          <h2 id="loop"><a href="#loop" class="section-link">kontra.spriteSheet&#8203;.loop<span aria-hidden="true">#</span></a></h2>
+
+          <p><em>{boolean}</em></p>
+
+          <p>If the animation should loop once finished.</p>
 
         </section>
 

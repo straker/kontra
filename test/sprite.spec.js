@@ -525,4 +525,23 @@ describe('kontra.sprite', function() {
 
   });
 
+  it('should set the animation loop property', function() {
+    var animations = {
+      'walk': {
+        width: 10,
+        height: 20
+      }
+    };
+
+    var sprite = kontra.sprite({
+      animations: animations
+    });
+
+    sprite.playAnimation('walk');
+    expect(sprite.currentAnimation.loop).to.equal(true);
+
+    sprite.playAnimation('walk', false);
+    expect(sprite.currentAnimation.loop).to.equal(false);
+  });
+
 });

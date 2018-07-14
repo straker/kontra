@@ -1,4 +1,4 @@
-(function(kontra) {
+(function(kontra, undefined) {
   /**
    * Single animation from a sprite sheet.
    * @memberof kontra
@@ -25,6 +25,7 @@
      * @param {object} properties.spriteSheet - Sprite sheet for the animation.
      * @param {number[]} properties.frames - List of frames of the animation.
      * @param {number}  properties.frameRate - Number of frames to display in one second.
+     * @param {boolean} properties.loop=true - If the animation should loop.
      */
     _init: function init(properties) {
       properties = properties || {};
@@ -32,6 +33,7 @@
       this.spriteSheet = properties.spriteSheet;
       this.frames = properties.frames;
       this.frameRate = properties.frameRate;
+      this.loop = (properties.loop == undefined ? true : properties.loop);
 
       var frame = properties.spriteSheet.frame;
       this.width = frame.width;
@@ -60,6 +62,9 @@
      * @param {number} [dt=1/60] - Time since last update.
      */
     update: function advance(dt) {
+      // if the animation doesn't loop we stop at the lat frame
+      if (!this.loop && this._frame == this.frames.length -1) return;
+
       dt = dt || 1 / 60;
 
       this._accum += dt;

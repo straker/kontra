@@ -1,4 +1,4 @@
-(function(kontra, Math, Infinity) {
+(function(kontra, Math, Infinity, undefined) {
 
   /**
    * A vector for 2D space.
@@ -380,9 +380,12 @@
      * @memberof kontra.sprite
      *
      * @param {string} name - Name of the animation to play.
+     * @param {boolean} [loop=true] - If the animation should loop.
      */
-    playAnimation: function playAnimation(name) {
+    playAnimation: function playAnimation(name, loop) {
       this.currentAnimation = this.animations[name];
+      this.currentAnimation.loop = (loop == undefined ? true : loop);
+      this.currentAnimation._frame = 0;
     },
 
     /**

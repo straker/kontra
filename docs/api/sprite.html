@@ -113,7 +113,7 @@
                 <li><a href="#draw">kontra.sprite.draw()</a></li>
                 <li><a href="#init">kontra.sprite.init(properties)</a></li>
                 <li><a href="#isAlive">kontra.sprite.isAlive()</a></li>
-                <li><a href="#playAnimation">kontra.sprite.playAnimation(name)</a></li>
+                <li><a href="#playAnimation">kontra.sprite.playAnimation(name, loop)</a></li>
                 <li><a href="#render">kontra.sprite.render()</a></li>
                 <li><a href="#update">kontra.sprite.update(dt)</a></li>
               </ul>
@@ -597,11 +597,13 @@ sprite.render();
 
 
         <section>
-          <h2 id="playAnimation"><a href="#playAnimation" class="section-link">kontra.sprite&#8203;.playAnimation(name)<span aria-hidden="true">#</span></a></h2>
+          <h2 id="playAnimation"><a href="#playAnimation" class="section-link">kontra.sprite&#8203;.playAnimation(name, loop)<span aria-hidden="true">#</span></a></h2>
 
           <dl>
             <dt><strong>name</strong> <em>{string}</em></dt>
             <dd>Name of the animation to play.</dd>
+            <dt><strong>loop</strong> <em>{boolean}</em></dt>
+            <dd>If the animation should loop once finished. Defaults to true.</dd>
           </dl>
 
           <p>Set the currently playing animation of an <a href="#animation-sprite">animation sprite</a>.</p>

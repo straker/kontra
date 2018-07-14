@@ -35,8 +35,6 @@
           <dd>The height of a single frame.</dd>
           <dt><strong>properties.frameMargin</strong> <em>{number}</em></dt>
           <dd>Optional. The amount of whitespace between each frame. Defaults to 0.</dd>
-          <dt><strong>properties.loop</strong> <em>{boolean}</em></dt>
-          <dd>Optional. If the animation should loop once finished. Defaults to true.</dd>
           <dt><strong>properties.animations</strong> <em>{object}</em></dt>
           <dd><a href="animation">kontra.animations</a> to create from the sprite sheet. Passed directly into the sprite sheets <a href="#createAnimations">createAnimations(animations)</a> function.</dd>
         </dl>
@@ -91,7 +89,6 @@ var sprite = kontra.sprite({
                 <li><a href="#frame">kontra.spriteSheet&#8203;.frame</a></li>
                 <li><a href="#framesPerRow">kontra.spriteSheet&#8203;.framesPerRow</a></li>
                 <li><a href="#image">kontra.spriteSheet&#8203;.image</a></li>
-                <li><a href="#loop">kontra.spriteSheet&#8203;.loop</a></li>
               </ul>
             </li>
 
@@ -131,6 +128,8 @@ var sprite = kontra.sprite({
             <dd>The sequence of frames to use from the sprite sheet. It can either be a single frame (<em>number</em>), a sequence of frames (<em>number[]</em>), or a consecutive frame notation (<code>'1..4'</code>). Sprite sheet frames are 0 indexed.</dd>
             <dt><strong>animations.&lt;name&gt;.frameRate</strong> <em>{object}</em></dt>
             <dd>The number frames to display per second.</dd>
+            <dt><strong>animations.&lt;name&gt;.loop</strong> <em>{boolean}</em></dt>
+            <dd>Optional. If the animation should loop back to the beginning once completed.</dd>
           </dl>
 
           <p>Create animations from the sprite sheet. Called from <code>kontra.spriteSheet</code> automatically if the <code>animations</code> property is passed in.</p>
@@ -161,7 +160,8 @@ image.onload = function() {
     // create 4 animations: jump, walk, moonWalk, attack
     jump: {
       frames: [1, 10, 1],  // sequence of frames (can be non-consecutive)
-      frameRate: 10
+      frameRate: 10,
+      loop: false,  // don't loop the animation
     },
     walk: {
       frames: '0..9',  // ascending consecutive frame notation (frames 2-6, inclusive)
@@ -173,7 +173,8 @@ image.onload = function() {
     },
     attack: {
       frames: ['8..10', 13, '10..8'],  // you can also mix and match, in this case frames [8,9,10,13,10,9,8]
-      frameRate: 10
+      frameRate: 10,
+      loop: false,  // don't loop the animation
     }
   });
 
@@ -231,19 +232,6 @@ image.onload = function() {
           <p><em>{HTMLImageElement | HTMLCanvasElement}</em></p>
 
           <p>The sprite sheet image.</p>
-
-        </section>
-
-
-
-
-
-        <section>
-          <h2 id="loop"><a href="#loop" class="section-link">kontra.spriteSheet&#8203;.loop<span aria-hidden="true">#</span></a></h2>
-
-          <p><em>{boolean}</em></p>
-
-          <p>If the animation should loop once finished.</p>
 
         </section>
 

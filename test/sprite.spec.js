@@ -504,11 +504,13 @@ describe('kontra.sprite', function() {
       var animations = {
         'walk': {
           width: 10,
-          height: 20
+          height: 20,
+          reset: sinon.spy()
         },
         'idle': {
           width: 10,
-          height: 20
+          height: 20,
+          reset: sinon.spy()
         }
       };
 
@@ -525,11 +527,13 @@ describe('kontra.sprite', function() {
 
   });
 
-  it('should set the animation loop property', function() {
+  it('should reset the animation if it doesn\'t loop', function() {
     var animations = {
       'walk': {
         width: 10,
-        height: 20
+        height: 20,
+        loop: false,
+        reset: sinon.spy()
       }
     };
 
@@ -538,44 +542,8 @@ describe('kontra.sprite', function() {
     });
 
     sprite.playAnimation('walk');
-    expect(sprite.currentAnimation.loop).to.equal(true);
 
-    sprite.playAnimation('walk', false);
-    expect(sprite.currentAnimation.loop).to.equal(false);
-  });
-
-  it('should not reset the frame property if looping', function() {
-    var animations = {
-      'walk': {
-        width: 10,
-        height: 20
-      }
-    };
-
-    var sprite = kontra.sprite({
-      animations: animations
-    });
-    sprite.currentAnimation._frame = 2
-
-    sprite.playAnimation('walk');
-    expect(sprite.currentAnimation._frame).to.equal(2);
-  });
-
-  it('should reset the frame property if not looping', function() {
-    var animations = {
-      'walk': {
-        width: 10,
-        height: 20
-      }
-    };
-
-    var sprite = kontra.sprite({
-      animations: animations
-    });
-    sprite.currentAnimation._frame = 2
-
-    sprite.playAnimation('walk', false);
-    expect(sprite.currentAnimation._frame).to.equal(0);
+    expect(animations.walk.reset.called).to.be.true;
   });
 
 });

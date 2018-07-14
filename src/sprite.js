@@ -380,18 +380,13 @@
      * @memberof kontra.sprite
      *
      * @param {string} name - Name of the animation to play.
-     * @param {boolean} [loop=true] - If the animation should loop.
      */
-    playAnimation: function playAnimation(name, loop) {
-      loop = (loop == undefined ? true : loop);
-
+    playAnimation: function playAnimation(name) {
       this.currentAnimation = this.animations[name];
-      this.currentAnimation.loop = loop;
 
-      // reset the frame if we shouldn't loop the animation, that way
-      // changing animations on keydown doesn't constantly reset the
-      // frame
-      if (!loop) this.currentAnimation._frame = 0;
+      if (!this.currentAnimation.loop) {
+        this.currentAnimation.reset();
+      }
     },
 
     /**

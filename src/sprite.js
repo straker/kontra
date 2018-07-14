@@ -383,9 +383,15 @@
      * @param {boolean} [loop=true] - If the animation should loop.
      */
     playAnimation: function playAnimation(name, loop) {
+      loop = (loop == undefined ? true : loop);
+
       this.currentAnimation = this.animations[name];
-      this.currentAnimation.loop = (loop == undefined ? true : loop);
-      this.currentAnimation._frame = 0;
+      this.currentAnimation.loop = loop;
+
+      // reset the frame if we shouldn't loop the animation, that way
+      // changing animations on keydown doesn't constantly reset the
+      // frame
+      if (!loop) this.currentAnimation._frame = 0;
     },
 
     /**

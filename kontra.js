@@ -1863,7 +1863,7 @@ this.kontra = {
      */
     update: function advance(dt) {
       // if the animation doesn't loop we stop at the lat frame
-      if (!this.loop && this._frame == this.frames.length -1) return;
+      if (!this.loop && this._frame == this.frames.length-1) return;
 
       dt = dt || 1 / 60;
 

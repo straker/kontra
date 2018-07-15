@@ -504,11 +504,13 @@ describe('kontra.sprite', function() {
       var animations = {
         'walk': {
           width: 10,
-          height: 20
+          height: 20,
+          reset: sinon.spy()
         },
         'idle': {
           width: 10,
-          height: 20
+          height: 20,
+          reset: sinon.spy()
         }
       };
 
@@ -523,6 +525,25 @@ describe('kontra.sprite', function() {
       expect(sprite.currentAnimation).to.equal(animations.idle);
     });
 
+  });
+
+  it('should reset the animation if it doesn\'t loop', function() {
+    var animations = {
+      'walk': {
+        width: 10,
+        height: 20,
+        loop: false,
+        reset: sinon.spy()
+      }
+    };
+
+    var sprite = kontra.sprite({
+      animations: animations
+    });
+
+    sprite.playAnimation('walk');
+
+    expect(animations.walk.reset.called).to.be.true;
   });
 
 });

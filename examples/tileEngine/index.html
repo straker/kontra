@@ -11,6 +11,7 @@
 </head>
 <body>
   <canvas width="600" height="600"></canvas>
+  <p>M - Mute</p>
   <script id="code">
   /**
    * ATTRIBUTION:
@@ -201,7 +202,12 @@
       }
     });
 
+    kontra.keys.bind('m', function() {
+      kontra.assets.audio.Digital_Forest.muted = !kontra.assets.audio.Digital_Forest.muted;
+    });
+
     kontra.assets.audio.Digital_Forest.loop = true;
+    kontra.assets.audio.Digital_Forest.volume = 0.5;
     kontra.assets.audio.Digital_Forest.play();
     loop.start();
   });

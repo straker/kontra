@@ -1,4 +1,4 @@
-(function(kontra, Math, Infinity) {
+(function(kontra, Math, Infinity, undefined) {
 
   /**
    * A vector for 2D space.
@@ -383,6 +383,10 @@
      */
     playAnimation: function playAnimation(name) {
       this.currentAnimation = this.animations[name];
+
+      if (!this.currentAnimation.loop) {
+        this.currentAnimation.reset();
+      }
     },
 
     /**

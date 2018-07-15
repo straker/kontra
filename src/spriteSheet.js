@@ -1,4 +1,4 @@
-(function(kontra) {
+(function(kontra, undefined) {
   /**
    * Single animation from a sprite sheet.
    * @memberof kontra
@@ -25,6 +25,7 @@
      * @param {object} properties.spriteSheet - Sprite sheet for the animation.
      * @param {number[]} properties.frames - List of frames of the animation.
      * @param {number}  properties.frameRate - Number of frames to display in one second.
+     * @param {boolean} [properties.loop=true] - If the animation should loop.
      */
     _init: function init(properties) {
       properties = properties || {};
@@ -32,6 +33,7 @@
       this.spriteSheet = properties.spriteSheet;
       this.frames = properties.frames;
       this.frameRate = properties.frameRate;
+      this.loop = (properties.loop === undefined ? true : properties.loop);
 
       var frame = properties.spriteSheet.frame;
       this.width = frame.width;
@@ -53,6 +55,15 @@
     },
 
     /**
+     * Reset an animation to the first frame.
+     * @memberof kontra.animation
+     */
+    reset: function reset() {
+      this._frame = 0;
+      this._accum = 0;
+    },
+
+    /**
      * Update the animation. Used when the animation is not paused or stopped.
      * @memberof kontra.animation
      * @private
@@ -60,6 +71,10 @@
      * @param {number} [dt=1/60] - Time since last update.
      */
     update: function advance(dt) {
+
+      // if the animation doesn't loop we stop at the last frame
+      if (!this.loop && this._frame == this.frames.length-1) return;
+
       dt = dt || 1 / 60;
 
       this._accum += dt;
@@ -184,11 +199,13 @@
      *   },
      *   jump: {
      *     frames: [7, 12, 2],  // non-consecutive frame animation
-     *     frameRate: 3
+     *     frameRate: 3,
+     *     loop: false
      *   },
      *   attack: {
      *     frames: ['8..10', 13, '10..8'],  // you can also mix and match, in this case frames [8,9,10,13,10,9,8]
-     *     frameRate: 2
+     *     frameRate: 2,
+     *     loop: false
      *   }
      * });
      */
@@ -221,7 +238,8 @@
         this.animations[name] = kontra.animation({
           spriteSheet: this,
           frames: sequence,
-          frameRate: frameRate
+          frameRate: frameRate,
+          loop: animation.loop
         });
       }
     },

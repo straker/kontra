@@ -33,6 +33,8 @@
           <dd>Sequence of frames to use from the sprite sheet.</dd>
           <dt><strong>properties.frameRate</strong> <em>{number}</em></dt>
           <dd>Number of frames to display per second.</dd>
+          <dt><strong>properties.loop</strong> <em>{boolean}</em></dt>
+          <dd>If the animation should loop. Defaults to true.</dd>
 
         </dl>
 
@@ -66,6 +68,7 @@ var animation = kontra.animation({
                 <li><a href="#frameRate">kontra.animation&#8203;.frameRate</a></li>
                 <li><a href="#frames">kontra.animation&#8203;.frames</a></li>
                 <li><a href="#height">kontra.animation&#8203;.height</a></li>
+                <li><a href="#loop">kontra.animation&#8203;.loop</a></li>
                 <li><a href="#margin">kontra.animation&#8203;.margin</a></li>
                 <li><a href="#spriteSheet">kontra.animation&#8203;.spriteSheet</a></li>
                 <li><a href="#width">kontra.animation&#8203;.width</a></li>
@@ -77,6 +80,7 @@ var animation = kontra.animation({
               <ul aria-labeledby="methods">
                 <li><a href="#clone">kontra.animation&#8203;.clone()</a></li>
                 <li><a href="#render">kontra.animation&#8203;.render(properties)</a></li>
+                <li><a href="#reset">kontra.animation&#8203;.reset()</a></li>
                 <li><a href="#update">kontra.animation&#8203;.update(dt)</a></li>
               </ul>
             </li>
@@ -153,6 +157,19 @@ var sprite2 = kontra.sprite({
 
 
         <section>
+          <h2 id="loop"><a href="#loop" class="section-link">kontra.animation&#8203;.loop<span aria-hidden="true">#</span></a></h2>
+
+          <p><em>{boolean}</em></p>
+
+          <p>If the animation should loop back to the beginning once completed.</p>
+
+        </section>
+
+
+
+
+
+        <section>
           <h2 id="margin"><a href="#margin" class="section-link">kontra.animation&#8203;.margin<span aria-hidden="true">#</span></a></h2>
 
           <p><em>{number}</em></p>
@@ -180,6 +197,17 @@ var sprite2 = kontra.sprite({
           </dl>
 
           <p>Render the current frame to the <code>x</code>, <code>y</code> position.</p>
+
+        </section>
+
+
+
+
+
+        <section>
+          <h2 id="reset"><a href="#reset" class="section-link">kontra.animation&#8203;.reset()<span aria-hidden="true">#</span></a></h2>
+
+          <p>Reset the animation back to the beginning.</p>
 
         </section>
 

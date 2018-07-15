@@ -1834,7 +1834,7 @@ this.kontra = {
       this.spriteSheet = properties.spriteSheet;
       this.frames = properties.frames;
       this.frameRate = properties.frameRate;
-      this.loop = (properties.loop == undefined ? true : properties.loop);
+      this.loop = (properties.loop === undefined ? true : properties.loop);
 
       var frame = properties.spriteSheet.frame;
       this.width = frame.width;
@@ -1872,7 +1872,8 @@ this.kontra = {
      * @param {number} [dt=1/60] - Time since last update.
      */
     update: function advance(dt) {
-      // if the animation doesn't loop we stop at the lat frame
+
+      // if the animation doesn't loop we stop at the last frame
       if (!this.loop && this._frame == this.frames.length-1) return;
 
       dt = dt || 1 / 60;

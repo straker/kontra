@@ -50,7 +50,8 @@ describe('kontra.pointer', function() {
       x: 100,
       y: 50,
       width: 10,
-      height: 20
+      height: 20,
+      render: sinon.spy()
     };
     kontra.pointer.track(object);
     object.render();
@@ -106,7 +107,7 @@ describe('kontra.pointer', function() {
       kontra.pointer.track(obj);
 
       expect(obj.render).to.not.equal(kontra._noop);
-      expect(obj._render).to.exist;
+      expect(obj._r).to.exist;
     });
 
     it('should take multiple objects', function() {
@@ -115,9 +116,9 @@ describe('kontra.pointer', function() {
       kontra.pointer.track([obj, obj2]);
 
       expect(obj.render).to.not.equal(kontra._noop);
-      expect(obj._render).to.exist;
+      expect(obj._r).to.exist;
       expect(obj2.render).to.not.equal(kontra._noop);
-      expect(obj2._render).to.exist;
+      expect(obj2._r).to.exist;
     });
 
     it('should call the objects original render function', function() {
@@ -136,12 +137,12 @@ describe('kontra.pointer', function() {
       function func() {
         kontra.pointer.track(obj);
 
-        render = obj._render;
+        render = obj._r;
 
         kontra.pointer.track(obj);
       }
 
-      expect(render).to.equal(obj._render);
+      expect(render).to.equal(obj._r);
       expect(func).to.not.throw();
     });
 
@@ -162,7 +163,7 @@ describe('kontra.pointer', function() {
       kontra.pointer.untrack(obj);
 
       expect(obj.render).to.equal(kontra._noop);
-      expect(obj._render).to.not.exist;
+      expect(obj._r).to.not.exist;
     });
 
     it('should take multiple objects', function() {
@@ -172,9 +173,9 @@ describe('kontra.pointer', function() {
       kontra.pointer.untrack([obj, obj2]);
 
       expect(obj.render).to.equal(kontra._noop);
-      expect(obj._render).to.not.exist;
+      expect(obj._r).to.not.exist;
       expect(obj2.render).to.equal(kontra._noop);
-      expect(obj2._render).to.not.exist;
+      expect(obj2._r).to.not.exist;
     });
 
     it('should do nothing if the object was never tracked', function() {
@@ -400,7 +401,8 @@ describe('kontra.pointer', function() {
         x: 110,
         y: 50,
         width: 10,
-        height: 20
+        height: 20,
+        render: sinon.spy()
       };
       kontra.pointer.track(obj);
       kontra._tick();

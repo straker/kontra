@@ -1,4 +1,4 @@
-(function(kontra, undefined) {
+(function() {
   /**
    * Single animation from a sprite sheet.
    * @memberof kontra
@@ -10,7 +10,7 @@
    */
   kontra.animation = function(properties) {
     var animation = Object.create(kontra.animation.prototype);
-    animation._init(properties);
+    animation._i(properties);
 
     return animation;
   };
@@ -27,7 +27,8 @@
      * @param {number}  properties.frameRate - Number of frames to display in one second.
      * @param {boolean} [properties.loop=true] - If the animation should loop.
      */
-    _init: function init(properties) {
+    // @see https://github.com/jed/140bytes/wiki/Byte-saving-techniques#use-placeholder-arguments-instead-of-var
+    _i: function init(properties, frame) {
       properties = properties || {};
 
       this.spriteSheet = properties.spriteSheet;
@@ -35,13 +36,14 @@
       this.frameRate = properties.frameRate;
       this.loop = (properties.loop === undefined ? true : properties.loop);
 
-      var frame = properties.spriteSheet.frame;
+      frame = properties.spriteSheet.frame;
       this.width = frame.width;
       this.height = frame.height;
       this.margin = frame.margin || 0;
 
-      this._frame = 0;
-      this._accum = 0;
+      // f = frame, a = accumulator
+      this._f = 0;
+      this._a = 0;
     },
 
     /**
@@ -59,8 +61,8 @@
      * @memberof kontra.animation
      */
     reset: function reset() {
-      this._frame = 0;
-      this._accum = 0;
+      this._f = 0;
+      this._a = 0;
     },
 
     /**
@@ -73,17 +75,16 @@
     update: function advance(dt) {
 
       // if the animation doesn't loop we stop at the last frame
-      if (!this.loop && this._frame == this.frames.length-1) return;
+      if (!this.loop && this._f == this.frames.length-1) return;
 
       dt = dt || 1 / 60;
 
-      this._accum += dt;
+      this._a += dt;
 
       // update to the next frame if it's time
-      while (this._accum * this.frameRate >= 1) {
-        this._frame = ++this._frame % this.frames.length;
-
-        this._accum -= 1 / this.frameRate;
+      while (this._a * this.frameRate >= 1) {
+        this._f = ++this._f % this.frames.length;
+        this._a -= 1 / this.frameRate;
       }
     },
 
@@ -103,8 +104,8 @@
       var context = properties.context || kontra.context;
 
       // get the row and col of the frame
-      var row = this.frames[this._frame] / this.spriteSheet.framesPerRow | 0;
-      var col = this.frames[this._frame] % this.spriteSheet.framesPerRow | 0;
+      var row = this.frames[this._f] / this.spriteSheet._f | 0;
+      var col = this.frames[this._f] % this.spriteSheet._f | 0;
 
       context.drawImage(
         this.spriteSheet.image,
@@ -135,7 +136,7 @@
    */
   kontra.spriteSheet = function(properties) {
     var spriteSheet = Object.create(kontra.spriteSheet.prototype);
-    spriteSheet._init(properties);
+    spriteSheet._i(properties);
 
     return spriteSheet;
   };
@@ -153,11 +154,11 @@
      * @param {number} properties.frameMargin - Margin (in px) between each frame.
      * @param {object} properties.animations - Animations to create from the sprite sheet.
      */
-    _init: function init(properties) {
+    _i: function init(properties) {
       properties = properties || {};
 
       // @if DEBUG
-      if (!kontra._isImage(properties.image)) {
+      if (!properties.image) {
         throw Error('You must provide an Image for the SpriteSheet');
       }
       // @endif
@@ -170,7 +171,8 @@
         margin: properties.frameMargin
       };
 
-      this.framesPerRow = properties.image.width / properties.frameWidth | 0;
+      // f = framesPerRow
+      this._f = properties.image.width / properties.frameWidth | 0;
 
       this.createAnimations(properties.animations);
     },
@@ -210,12 +212,11 @@
      * });
      */
     createAnimations: function createAnimations(animations) {
-      var animation, frames, frameRate, sequence;
+      var animation, frames, frameRate, sequence, name;
 
-      for (var name in animations) {
+      for (name in animations) {
         animation = animations[name];
         frames = animation.frames;
-        frameRate = animation.frameRate;
 
         // array that holds the order of the animation
         sequence = [];
@@ -226,19 +227,15 @@
         }
         // @endif
 
-        if (!Array.isArray(frames)) {
-          frames = [frames];
-        }
-
-        for (var i = 0, frame; frame = frames[i]; i++) {
-          // add new frames to the end of the array
-          sequence.push.apply(sequence, this._parse(frame));
-        }
+        // add new frames to the end of the array
+        [].concat(frames).map(function(frame) {
+          sequence = sequence.concat(this._p(frame));
+        }, this);
 
         this.animations[name] = kontra.animation({
           spriteSheet: this,
           frames: sequence,
-          frameRate: frameRate,
+          frameRate: animation.frameRate,
           loop: animation.loop
         });
       }
@@ -249,13 +246,14 @@
      * @memberof kontra.spriteSheet
      * @private
      *
-     * @param {string} frames - Start and end frame.
+     * @param {number|string} frames - Start and end frame.
      *
      * @returns {number[]} List of frames.
      */
-    _parse: function parse(consecutiveFrames) {
-      if (kontra._isNumber(consecutiveFrames)) {
-        return [consecutiveFrames];
+    _p: function parse(consecutiveFrames) {
+      // @see https://github.com/jed/140bytes/wiki/Byte-saving-techniques#coercion-to-test-for-types
+      if (+consecutiveFrames === consecutiveFrames) {
+        return consecutiveFrames;
       }
 
       var sequence = [];
@@ -282,4 +280,4 @@
       return sequence;
     }
   };
-})(kontra);
+})();

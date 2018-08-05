@@ -18,7 +18,7 @@ describe('kontra.animation', function() {
       frameRate: 30,
       spriteSheet: {
         image: new Image(),
-        framesPerRow: 2,
+        _f: 2,
         frame: {
           width: 5,
           height: 5
@@ -73,7 +73,7 @@ describe('kontra.animation', function() {
     it('should not update the current frame if not enough time has passed', function() {
       animation.update();
 
-      expect(animation._frame).to.equal(0);
+      expect(animation._f).to.equal(0);
     });
 
     it('should take no parameter and update the current frame correctly', function() {
@@ -81,13 +81,13 @@ describe('kontra.animation', function() {
         animation.update();
       }
 
-      expect(animation._frame).to.equal(1);
+      expect(animation._f).to.equal(1);
     });
 
     it('should take dt as a parameter and update the current frame correctly', function() {
       animation.update(1/30);
 
-      expect(animation._frame).to.equal(1);
+      expect(animation._f).to.equal(1);
     });
 
     it('should restart the animation when finished', function() {
@@ -95,11 +95,11 @@ describe('kontra.animation', function() {
         animation.update();
       }
 
-      expect(animation._frame).to.equal(3);
+      expect(animation._f).to.equal(3);
 
       animation.update();
 
-      expect(animation._frame).to.equal(0);
+      expect(animation._f).to.equal(0);
     });
 
     it('should not reset the animation if loop is false', function() {
@@ -109,11 +109,11 @@ describe('kontra.animation', function() {
         animation.update();
       }
 
-      expect(animation._frame).to.equal(3);
+      expect(animation._f).to.equal(3);
 
       animation.update();
 
-      expect(animation._frame).to.equal(3);
+      expect(animation._f).to.equal(3);
     });
 
   });
@@ -159,7 +159,7 @@ describe('kontra.animation', function() {
     it('should draw the spriteSheet in the middle of the animation', function() {
       var context = {drawImage: sinon.stub()};
 
-      animation._frame = 2;
+      animation._f = 2;
 
       animation.render({
         x: 10,
@@ -209,7 +209,7 @@ describe('kontra.spriteSheet', function() {
 
       expect(spriteSheet.frame.width).to.equal(10);
       expect(spriteSheet.frame.height).to.equal(10);
-      expect(spriteSheet.framesPerRow).to.equal(10);
+      expect(spriteSheet._f).to.equal(10);
     });
 
     it('should create animations if passed an animation object', function() {

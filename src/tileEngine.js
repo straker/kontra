@@ -1,4 +1,4 @@
-(function(kontra, Math, Array) {
+(function() {
   // save Math.min and Math.max to variable and use that instead
 
   /**
@@ -186,19 +186,12 @@
        * @param {number} tileset.firstGrid - The first tile grid to start the image.
        */
       addTilesets: function addTilesets(tilesets) {
-        if (!Array.isArray(tilesets)) {
-          tilesets = [tilesets];
-        }
-
-        tilesets.forEach(function(tileset) {
+        [].concat(tilesets).map(function(tileset) {
           var tilesetImage = tileset.image;
           var image, firstGrid, numTiles, lastTileset, tiles;
 
-          if (kontra._isImage(tilesetImage)) {
-            image = tilesetImage;
-          }
-          // see if the image path is in kontra.assets.images
-          else if (kontra._isString(tilesetImage)) {
+          // @see https://github.com/jed/140bytes/wiki/Byte-saving-techniques#coercion-to-test-for-types
+          if (''+tilesetImage === tilesetImage) {
             var i = Infinity;
 
             while (i >= 0) {
@@ -213,19 +206,16 @@
               i--;
             }
           }
-
-          // @if DEBUG
-          if (!image) {
-            throw Error('You must provide an Image for the tileset');
+          else {
+            image = tilesetImage;
           }
-          // @endif
 
           firstGrid = tileset.firstGrid;
 
           // if the width or height of the provided image is smaller than the tile size,
           // default calculation to 1
           numTiles = ( (image.width / tileWidth | 0) || 1 ) *
-                         ( (image.height / tileHeight | 0) || 1 );
+                     ( (image.height / tileHeight | 0) || 1 );
 
           if (!firstGrid) {
             // only calculate the first grid if the tile map has a tileset already
@@ -266,11 +256,7 @@
        * @param {number} [properties.zIndex] - Draw order for tile layer. Highest number is drawn last (i.e. on top of all other layers).
        */
       addLayers: function addLayers(layers) {
-        if (!Array.isArray(layers)) {
-          layers = [layers];
-        }
-
-        layers.forEach(function(layer) {
+        [].concat(layers).map(function(layer) {
           layer.render = (layer.render === undefined ? true : layer.render);
 
           var data, r, row, c, prop, value;
@@ -496,7 +482,9 @@
       },
 
       // expose properties for testing
+      // @if DEBUG
       _layerOrder: layerOrder
+      // @endif
     };
 
     // set here so we use setter function
@@ -530,4 +518,4 @@
 
     return tileEngine;
   };
-})(kontra, Math, Array);
+})();

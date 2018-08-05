@@ -4,48 +4,13 @@
 
   var keyMap = {
     // named keys
-    8: 'backspace',
-    9: 'tab',
     13: 'enter',
-    16: 'shift',
-    17: 'ctrl',
-    18: 'alt',
-    20: 'capslock',
     27: 'esc',
     32: 'space',
-    33: 'pageup',
-    34: 'pagedown',
-    35: 'end',
-    36: 'home',
     37: 'left',
     38: 'up',
     39: 'right',
-    40: 'down',
-    45: 'insert',
-    46: 'delete',
-    91: 'leftwindow',
-    92: 'rightwindow',
-    93: 'select',
-    144: 'numlock',
-    145: 'scrolllock',
-
-    // special characters
-    106: '*',
-    107: '+',
-    109: '-',
-    110: '.',
-    111: '/',
-    186: ';',
-    187: '=',
-    188: ',',
-    189: '-',
-    190: '.',
-    191: '/',
-    192: '`',
-    219: '[',
-    220: '\\',
-    221: ']',
-    222: '\''
+    40: 'down'
   };
 
   // alpha keys
@@ -53,17 +18,11 @@
   for (var i = 0; i < 26; i++) {
     keyMap[65+i] = (10 + i).toString(36);
   }
-  // numeric keys and keypad
+  // numeric keys
   for (i = 0; i < 10; i++) {
     keyMap[48+i] = ''+i;
-    keyMap[96+i] = 'numpad'+i;
-  }
-  // f keys
-  for (i = 1; i < 20; i++) {
-    keyMap[111+i] = 'f'+i;
   }
 
-  var addEventListener = window.addEventListener;
   addEventListener('keydown', keydownEventHandler);
   addEventListener('keyup', keyupEventHandler);
   addEventListener('blur', blurEventHandler);
@@ -90,8 +49,7 @@
    * @param {Event} e
    */
   function keyupEventHandler(e) {
-    var key = keyMap[e.which];
-    pressedKeys[key] = false;
+    pressedKeys[ keyMap[e.which] ] = false;
   }
 
   /**
@@ -115,11 +73,10 @@
      * @param {string|string[]} keys - key or keys to bind.
      */
     bind: function bindKey(keys, callback) {
-      keys = (Array.isArray(keys) ? keys : [keys]);
-
-      for (var i = 0, key; key = keys[i]; i++) {
+      // smaller than doing `Array.isArray(keys) ? keys : [keys]`
+      [].concat(keys).map(function(key) {
         callbacks[key] = callback;
-      }
+      })
     },
 
     /**
@@ -128,12 +85,10 @@
      *
      * @param {string|string[]} keys - key or keys to unbind.
      */
-    unbind: function unbindKey(keys) {
-      keys = (Array.isArray(keys) ? keys : [keys]);
-
-      for (var i = 0, key; key = keys[i]; i++) {
-        callbacks[key] = null;
-      }
+    unbind: function unbindKey(keys, undefined) {
+      [].concat(keys).map(function(key) {
+        callbacks[key] = undefined;
+      })
     },
 
     /**

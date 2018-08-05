@@ -1,4 +1,4 @@
-(function(kontra) {
+(function() {
 
   /**
    * Object pool. The pool will grow in size to accommodate as many objects as are needed.
@@ -19,10 +19,10 @@
     // check for the correct structure of the objects added to pools so we know that the
     // rest of the pool code will work without errors
     // @if DEBUG
-    if (!kontra._isFunc(properties.create) ||
+    if (!properties.create ||
         ( !( obj = properties.create() ) ||
-          !( kontra._isFunc(obj.update) && kontra._isFunc(obj.init) &&
-             kontra._isFunc(obj.isAlive) )
+          !( obj.update && obj.init &&
+             obj.isAlive )
        )) {
       throw Error('Must provide create() function which returns an object with init(), update(), and isAlive() functions');
     }
@@ -154,4 +154,4 @@
       }
     };
   };
-})(kontra);
+})();

@@ -1,4 +1,4 @@
-(function(kontra, Math, Infinity, undefined) {
+(function() {
 
   /**
    * A vector for 2D space.
@@ -43,25 +43,25 @@
      * @param {number} dt=1 - Time since last update.
      */
     add: function add(vector, dt) {
-      this._x += (vector.x || 0) * (dt || 1);
-      this._y += (vector.y || 0) * (dt || 1);
+      this.x += (vector.x || 0) * (dt || 1);
+      this.y += (vector.y || 0) * (dt || 1);
     },
 
     /**
      * Clamp the vector between two points that form a rectangle.
      * @memberof kontra.vector
      *
-     * @param {number} [xMin=-Infinity] - Min x value.
-     * @param {number} [yMin=Infinity] - Min y value.
-     * @param {number} [xMax=-Infinity] - Max x value.
-     * @param {number} [yMax=Infinity] - Max y value.
+     * @param {number} xMin - Min x value.
+     * @param {number} yMin - Min y value.
+     * @param {number} xMax - Max x value.
+     * @param {number} yMax - Max y value.
      */
     clamp: function clamp(xMin, yMin, xMax, yMax) {
-      this._clamp = true;
-      this._xMin = (xMin !== undefined ? xMin : -Infinity);
-      this._yMin = (yMin !== undefined ? yMin : -Infinity);
-      this._xMax = (xMax !== undefined ? xMax : Infinity);
-      this._yMax = (yMax !== undefined ? yMax : Infinity);
+      this._c = true;
+      this._a = xMin;
+      this._b = yMin;
+      this._d = xMax;
+      this._e = yMax;
     },
 
     /**
@@ -85,11 +85,11 @@
     },
 
     set x(value) {
-      this._x = (this._clamp ? Math.min( Math.max(this._xMin, value), this._xMax ) : value);
+      this._x = (this._c ? Math.min( Math.max(this._a, value), this._d ) : value);
     },
 
     set y(value) {
-      this._y = (this._clamp ? Math.min( Math.max(this._yMin, value), this._yMax ) : value);
+      this._y = (this._c ? Math.min( Math.max(this._b, value), this._e ) : value);
     }
   };
 
@@ -124,8 +124,9 @@
    * @param {function} [properties.update] - Function to use to update the sprite.
    * @param {function} [properties.render] - Function to use to render the sprite.
    */
-  kontra.sprite = function(properties) {
-    var sprite = Object.create(kontra.sprite.prototype);
+  // @see https://github.com/jed/140bytes/wiki/Byte-saving-techniques#use-placeholder-arguments-instead-of-var
+  kontra.sprite = function(properties, sprite) {
+    sprite = Object.create(kontra.sprite.prototype);
     sprite.init(properties);
 
     return sprite;
@@ -162,63 +163,50 @@
      * decide when to kill it, you can set <code>ttl</code> to <code>Infinity</code>.
      * Just be sure to set <code>ttl</code> to 0 when you want the sprite to die.
      */
-    init: function init(properties) {
-      var temp, animation, firstAnimation, self = this;
+    // @see https://github.com/jed/140bytes/wiki/Byte-saving-techniques#use-placeholder-arguments-instead-of-var
+    init: function init(properties, prop, temp, firstAnimation) {
       properties = properties || {};
 
-      // create the vectors if they don't exist or use the existing ones if they do
-      self.position = (self.position || kontra.vector());
-      self.velocity = (self.velocity || kontra.vector());
-      self.acceleration = (self.acceleration || kontra.vector());
+      this.position = kontra.vector(properties.x, properties.y);
+      this.velocity = kontra.vector(properties.dx, properties.dy);
+      this.acceleration = kontra.vector(properties.ddx, properties.ddy);
 
-      self.position._init(properties.x, properties.y);
-      self.velocity._init(properties.dx, properties.dy);
-      self.acceleration._init(properties.ddx, properties.ddy);
-
-      // default width and height to 0 if not passed in
-      self.width = self.height = 0;
+      // defaults
+      this.width = this.height = 0;
+      this.context = kontra.context;
+      this.advance = this._a;
+      this.draw = this._c;
 
       // loop through properties before overrides
-      for (var prop in properties) {
-        self[prop] = properties[prop];
+      for (prop in properties) {
+        this[prop] = properties[prop];
       }
 
-      self.ttl = properties.ttl || 0;
-      self.context = properties.context || kontra.context;
-
-      // default to rect sprite
-      self.advance = self._advance;
-      self.draw = self._draw;
-
       // image sprite
-      if (kontra._isImage(temp = properties.image)) {
-        self.image = temp;
-        self.width = temp.width;
-        self.height = temp.height;
+      if (temp = properties.image) {
+        this.image = temp;
+        this.width = temp.width;
+        this.height = temp.height;
 
-        self.draw = self._drawImg;
+        this.draw = this._d;
       }
       // animation sprite
       else if (temp = properties.animations) {
-        self.animations = {};
 
         // clone each animation so no sprite shares an animation
-        for (var name in temp) {
-          animation = temp[name];
-          self.animations[name] = (animation.clone ? animation.clone() : animation);
+        for (prop in temp) {
+          this.animations[prop] = temp[prop].clone();
 
           // default the current animation to the first one in the list
-          if (!firstAnimation) {
-            firstAnimation = self.animations[name];
-          }
+          firstAnimation = firstAnimation || temp[prop];
         }
 
-        self.currentAnimation = firstAnimation;
-        self.width = firstAnimation.width;
-        self.height = firstAnimation.height;
+        this._ca = firstAnimation;
+        this.width = firstAnimation.width;
+        this.height = firstAnimation.height;
 
-        self.advance = self._advanceAnim;
-        self.draw = self._drawAnim;
+        this.advance = this._b;
+        this.draw = this._e;
       }
     },
 
@@ -382,10 +370,10 @@
      * @param {string} name - Name of the animation to play.
      */
     playAnimation: function playAnimation(name) {
-      this.currentAnimation = this.animations[name];
+      this._ca = this.animations[name];
 
-      if (!this.currentAnimation.loop) {
-        this.currentAnimation.reset();
+      if (!this._ca.loop) {
+        this._ca.reset();
       }
     },
 
@@ -396,7 +384,7 @@
      *
      * @param {number} dt - Time since last update.
      */
-    _advance: function advanceSprite(dt) {
+    _a: function advanceSprite(dt) {
       this.velocity.add(this.acceleration, dt);
       this.position.add(this.velocity, dt);
 
@@ -410,10 +398,10 @@
      *
      * @param {number} dt - Time since last update.
      */
-    _advanceAnim: function advanceAnimation(dt) {
-      this._advance(dt);
+    _b: function advanceAnimation(dt) {
+      this._a(dt);
 
-      this.currentAnimation.update(dt);
+      this._ca.update(dt);
     },
 
     /**
@@ -421,7 +409,7 @@
      * @memberof kontra.sprite
      * @private
      */
-    _draw: function drawRect() {
+    _c: function drawRect() {
       this.context.fillStyle = this.color;
       this.context.fillRect(this.x, this.y, this.width, this.height);
     },
@@ -431,7 +419,7 @@
      * @memberof kontra.sprite
      * @private
      */
-    _drawImg: function drawImage() {
+    _d: function drawImage() {
       this.context.drawImage(this.image, this.x, this.y);
     },
 
@@ -440,12 +428,8 @@
      * @memberof kontra.sprite
      * @private
      */
-    _drawAnim: function drawAnimation() {
-      this.currentAnimation.render({
-        context: this.context,
-        x: this.x,
-        y: this.y
-      });
+    _e: function drawAnimation() {
+      this._ca.render(this);
     }
   };
-})(kontra, Math, Infinity);
+})();

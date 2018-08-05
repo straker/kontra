@@ -1,1 +1,1 @@
-this.kontra={init:function(n){var t=this.canvas=document.getElementById(n)||n||document.querySelector("canvas");this.context=t.getContext("2d")},_noop:new Function,_isString:function(n){return""+n===n},_isNumber:function(n){return+n===n},_isImage:function(n){return!!n&&"IMG"===n.nodeName||this._isCanvas(n)},_isCanvas:function(n){return!!n&&"CANVAS"===n.nodeName},_tick:new Function};
+this.kontra={init:function(t){var n=this.canvas=document.getElementById(t)||t||document.querySelector("canvas");this.context=n.getContext("2d")},_noop:new Function,_tick:new Function};

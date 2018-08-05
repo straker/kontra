@@ -1,4 +1,4 @@
-(function(kontra, requestAnimationFrame, performance) {
+(function() {
 
   /**
    * Game loop that updates and renders the game every frame.
@@ -15,7 +15,7 @@
 
     // check for required functions
     // @if DEBUG
-    if ( !(kontra._isFunc(properties.update) && kontra._isFunc(properties.render)) ) {
+    if ( !(properties.update && properties.render) ) {
       throw Error('You must provide update() and render() functions');
     }
     // @endif
@@ -87,12 +87,14 @@
       },
 
       // expose properties for testing
+      // @if DEBUG
       _frame: frame,
       set _last(value) {
         last = value;
       }
+      // @endif
     };
 
     return gameLoop;
   };
-})(kontra, requestAnimationFrame, performance);
+})();

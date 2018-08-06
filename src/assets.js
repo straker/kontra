@@ -1,7 +1,9 @@
-(function(Promise) {
+(function() {
   var imageRegex = /(jpeg|jpg|gif|png)$/;
   var audioRegex = /(wav|mp3|ogg|aac)$/;
   var noRegex = /^no$/;
+  var leadingSlash = /^\//;
+  var trailingSlash = /\/$/;
 
   // audio playability
   // @see https://github.com/Modernizr/Modernizr/blob/master/feature-detects/audio.js
@@ -14,23 +16,15 @@
   };
 
   /**
-   * Join a path with proper separators.
-   * @see https://stackoverflow.com/a/43888647/2124254
+   * Join a base path and asset path.
+   *
+   * @param {string} base - The asset base path.
+   * @param {string} url - The URL to the asset.
+   *
+   * @returns {string}
    */
-  function joinPath() {
-    var path = [], i = 0;
-
-    for (; i < arguments.length; i++) {
-      if (arguments[i]) {
-
-        // replace slashes at the beginning or end of a path
-        // replace 2 or more slashes at the beginning of the first path to
-        // preserve root routes (/root)
-        path.push( arguments[i].trim().replace(new RegExp('(^[\/]{' + (path[0] ? 1 : 2) + ',}|[\/]*$)', 'g'), '') );
-      }
-    }
-
-    return path.join('/');
+  function joinPath(base, url) {
+    return [base.replace(trailingSlash, ''), url.replace(leadingSlash, '')].join('/')
   }
 
   /**
@@ -54,8 +48,9 @@
   function getName(url) {
     var name = url.replace('.' + getExtension(url), '');
 
-    // remove slash if there is no folder in the path
-    return (name.indexOf('/') == 0 && name.lastIndexOf('/') == 0 ? name.substr(1) : name);
+    // remove leading slash if there is no folder in the path
+    // @see https://stackoverflow.com/a/50592629/2124254
+    return name.split('/').length == 2 ? name.replace(leadingSlash, '') : name;
   }
 
   /**
@@ -71,18 +66,13 @@
    * kontra.loadImage('car.png');
    * kontra.loadImage('autobots/truck.png');
    */
-  function loadImage(url) {
-    var name = getName(url);
-    var image = new Image();
-
-    var self = kontra.assets;
-    var imageAssets = self.images;
-
-    url = joinPath(self.imagePath, url);
-
+  function loadImage(originalUrl, url) {
     return new Promise(function(resolve, reject) {
+      var image = new Image();
+      url = joinPath(assets.imagePath, originalUrl);
+
       image.onload = function loadImageOnLoad() {
-        imageAssets[name] = imageAssets[url] = this;
+        assets.images[ getName(originalUrl) ] = assets.images[url] = this;
         resolve(this);
       };
 
@@ -108,43 +98,31 @@
    * kontra.loadAudio('sound_effects/laser.mp3');
    * kontra.loadAudio(['explosion.mp3', 'explosion.m4a', 'explosion.ogg']);
    */
-  function loadAudio(url) {
-    var self = kontra.assets;
-    var audioAssets = self.audio;
-    var audioPath = self.audioPath;
-    var source, name, playableSource, audio, i;
-
-    if (!Array.isArray(url)) {
-      url = [url];
-    }
-
+  function loadAudio(originalUrl, url, undefined) {
     return new Promise(function(resolve, reject) {
-      // determine which audio format the browser can play
-      for (i = 0; (source = url[i]); i++) {
-        if ( canUse[getExtension(source)] ) {
-          playableSource = source;
-          break;
-        }
-      }
 
-      if (!playableSource) {
-        reject(/* @if DEBUG */ 'cannot play any of the audio formats provided' + /* @endif */ '');
+      // determine which audio format the browser can play
+      originalUrl = [].concat(originalUrl).reduce(function(a, source) {
+        return canUse[ getExtension(source) ] ? source : a
+      }, undefined);
+
+      if (!originalUrl) {
+        reject(/* @if DEBUG */ 'cannot play any of the audio formats provided' + /* @endif */ originalUrl);
       }
       else {
-        name = getName(playableSource);
-        audio = new Audio();
-        source = joinPath(audioPath, playableSource);
+        var audio = new Audio();
+        url = joinPath(assets.audioPath, originalUrl);
 
         audio.addEventListener('canplay', function loadAudioOnLoad() {
-          audioAssets[name] = audioAssets[source] = this;
+          assets.audio[ getName(originalUrl) ] = assets.audio[url] = this;
           resolve(this);
         });
 
         audio.onerror = function loadAudioOnError() {
-          reject(/* @if DEBUG */ 'Unable to load audio ' + /* @endif */ source);
+          reject(/* @if DEBUG */ 'Unable to load audio ' + /* @endif */ url);
         };
 
-        audio.src = source;
+        audio.src = url;
         audio.load();
       }
     });
@@ -163,41 +141,22 @@
    * kontra.loadData('bio.json');
    * kontra.loadData('dialog.txt');
    */
-  function loadData(url) {
-    var name = getName(url);
-    var req = new XMLHttpRequest();
+  function loadData(originalUrl, url) {
+    url = joinPath(assets.dataPath, originalUrl);
 
-    var self = kontra.assets;
-    var dataAssets = self.data;
-
-    url = joinPath(self.dataPath, url);
-
-    return new Promise(function(resolve, reject) {
-      req.addEventListener('load', function loadDataOnLoad() {
-        var data = req.responseText;
-
-        if (req.status !== 200) {
-          return reject(data);
-        }
-
-        try {
-          data = JSON.parse(data);
-        }
-        catch(e) {}
-
-        dataAssets[name] = dataAssets[url] = data;
-        resolve(data);
-      });
-
-      req.open('GET', url, true);
-      req.send();
+    return fetch(url).then(function(response) {
+      if (!response.ok) throw response;
+      return response.clone().json().catch(function() { return response.text() })
+    }).then(function(data) {
+      assets.data[ getName(originalUrl) ] = assets.data[url] = data;
+      return data;
     });
   }
 
   /**
    * Object for loading assets.
    */
-  kontra.assets = {
+  var assets = kontra.assets = {
     // all assets are stored by name as well as by URL
     images: {},
     audio: {},
@@ -227,7 +186,7 @@
       var url, extension, asset, i, promise;
 
       for (i = 0; (asset = arguments[i]); i++) {
-        url = (Array.isArray(asset) ? asset[0] : asset);
+        url = [].concat(asset)[0];
 
         extension = getExtension(url);
         if (extension.match(imageRegex)) {
@@ -247,6 +206,8 @@
     },
 
     // expose properties for testing
+    /* @if DEBUG */
     _canUse: canUse
+    /* @endif */
   };
-})(Promise);
+})();

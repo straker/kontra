@@ -8,7 +8,7 @@
 
   var compression;
   var version;
-  var rawGitUrl = 'https://raw.githubusercontent.com/straker/kontra/master/';
+  var rawGitUrl = 'https://raw.githubusercontent.com/straker/kontra/v4/';
 
   var fileInputEls = Array.prototype.slice.call(document.querySelectorAll('#files input'));
   var compressionEls = Array.prototype.slice.call(document.querySelectorAll('#compression input'));
@@ -51,7 +51,7 @@
     });
 
   // get all file sizes
-  fetch('https://api.github.com/repos/straker/kontra/git/trees/master?recursive=1')
+  fetch('https://api.github.com/repos/straker/kontra/git/trees/v4?recursive=1')
     .then(function(response) {
       return response.json();
     })

@@ -18,7 +18,7 @@ var VISUAL_DEBUG = false;
 var DEBUG = false;
 
 gulp.task('scripts', function() {
-  return gulp.src(['src/core.js', 'src/keyboard.js', 'src/sprite.js', 'src/gameLoop.js'])
+  return gulp.src(['src/core.js', 'src/*.js'])
     .pipe(concat('kontra.js'))
     .pipe(gulp.dest('.'))
     .pipe(gulp.dest('./docs/js'))

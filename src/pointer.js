@@ -1,5 +1,5 @@
 (function() {
-  var pointer;
+  let pointer;
 
   // save each object as they are rendered to determine which object
   // is on top when multiple objects are the target of an event.
@@ -7,14 +7,14 @@
   // the finalized order of all objects, otherwise an object could ask
   // if it's being hovered when it's rendered first even if other objects
   // would block it later in the render order
-  var thisFrameRenderOrder = [];
-  var lastFrameRenderOrder = [];
+  let thisFrameRenderOrder = [];
+  let lastFrameRenderOrder = [];
 
-  var callbacks = {};
-  var trackedObjects = [];
-  var pressedButtons = {};
+  let callbacks = {};
+  let trackedObjects = [];
+  let pressedButtons = {};
 
-  var buttonMap = {
+  let buttonMap = {
     0: 'left',
     1: 'middle',
     2: 'right'
@@ -35,8 +35,8 @@
    * @param {object} object - Object to check collision against.
    */
   function circleRectCollision(object) {
-    var dx = pointer.x - Math.max(object.x, Math.min(pointer.x, object.x + object.width));
-    var dy = pointer.y - Math.max(object.y, Math.min(pointer.y, object.y + object.height));
+    let dx = pointer.x - Math.max(object.x, Math.min(pointer.x, object.x + object.width));
+    let dy = pointer.y - Math.max(object.y, Math.min(pointer.y, object.y + object.height));
     return (dx * dx + dy * dy) < (pointer.radius * pointer.radius);
   }
 
@@ -50,11 +50,11 @@
 
     // if pointer events are required on the very first frame or without a game loop,
     // use the current frame order array
-    var frameOrder = (lastFrameRenderOrder.length ? lastFrameRenderOrder : thisFrameRenderOrder);
-    var length = frameOrder.length - 1;
-    var object, collides;
+    let frameOrder = (lastFrameRenderOrder.length ? lastFrameRenderOrder : thisFrameRenderOrder);
+    let length = frameOrder.length - 1;
+    let object, collides;
 
-    for (var i = length; i >= 0; i--) {
+    for (let i = length; i >= 0; i--) {
       object = frameOrder[i];
 
       if (object.collidesWithPointer) {
@@ -122,7 +122,7 @@
   function pointerHandler(e, event) {
     if (!kontra.canvas) return;
 
-    var clientX, clientY;
+    let clientX, clientY;
 
     if (e.type.indexOf('mouse') !== -1) {
       clientX = e.clientX;
@@ -138,7 +138,7 @@
     pointer.x = clientX - kontra.canvas.offsetLeft;
     pointer.y = clientY - kontra.canvas.offsetTop;
 
-    var object;
+    let object;
     if (e.target === kontra.canvas) {
       object = getCurrentObject();
       if (object && object[event]) {
@@ -154,7 +154,7 @@
   /**
    * Object for using the pointer.
    */
-  var pointer = kontra.pointer = {
+  pointer = kontra.pointer = {
     x: 0,
     y: 0,
     radius: 5,  // arbitrary size
@@ -165,7 +165,7 @@
      *
      * @param {object|object[]} objects - Object or objects to track.
      */
-    track: function track(objects) {
+    track(objects) {
       [].concat(objects).map(function(object) {
 
         // override the objects render function to keep track of render order
@@ -188,14 +188,14 @@
      *
      * @param {object|object[]} objects - Object or objects to stop tracking.
      */
-    untrack: function untrack(objects, undefined) {
+    untrack(objects, undefined) {
       [].concat(objects).map(function(object) {
 
         // restore original render function to no longer track render order
         object.render = object._r;
         object._r = undefined;
 
-        var index = trackedObjects.indexOf(object);
+        let index = trackedObjects.indexOf(object);
         if (index !== -1) {
           trackedObjects.splice(index, 1);
         }
@@ -210,7 +210,7 @@
      *
      * @returns {boolean}
      */
-    over: function onOver(object) {
+    over(object) {
       if (trackedObjects.indexOf(object) === -1) return false;
 
       return getCurrentObject() === object;
@@ -222,7 +222,7 @@
      *
      * @param {function} callback - Function to execute
      */
-    onDown: function onDown(callback) {
+    onDown(callback) {
       callbacks.onDown = callback;
     },
 
@@ -232,7 +232,7 @@
      *
      * @param {function} callback - Function to execute
      */
-    onUp: function onUp(callback) {
+    onUp(callback) {
       callbacks.onUp = callback;
     },
 
@@ -244,7 +244,7 @@
      *
      * @returns {boolean}
      */
-    pressed: function pointerPressed(button) {
+    pressed(button) {
       return !!pressedButtons[button]
     }
   };

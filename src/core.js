@@ -6,7 +6,7 @@ this.kontra = {
    *
    * @param {string|HTMLCanvasElement} canvas - Main canvas ID or Element for the game.
    */
-  init: function init(canvas) {
+  init(canvas) {
 
     // check if canvas is a string first, an element next, or default to getting
     // first canvas on page

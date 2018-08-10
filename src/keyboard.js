@@ -1,8 +1,8 @@
 (function() {
-  var callbacks = {};
-  var pressedKeys = {};
+  let callbacks = {};
+  let pressedKeys = {};
 
-  var keyMap = {
+  let keyMap = {
     // named keys
     13: 'enter',
     27: 'esc',
@@ -15,7 +15,7 @@
 
   // alpha keys
   // @see https://stackoverflow.com/a/43095772/2124254
-  for (var i = 0; i < 26; i++) {
+  for (let i = 0; i < 26; i++) {
     keyMap[65+i] = (10 + i).toString(36);
   }
   // numeric keys
@@ -34,7 +34,7 @@
    * @param {Event} e
    */
   function keydownEventHandler(e) {
-    var key = keyMap[e.which];
+    let key = keyMap[e.which];
     pressedKeys[key] = true;
 
     if (callbacks[key]) {
@@ -72,7 +72,7 @@
      *
      * @param {string|string[]} keys - key or keys to bind.
      */
-    bind: function bindKey(keys, callback) {
+    bind(keys, callback) {
       // smaller than doing `Array.isArray(keys) ? keys : [keys]`
       [].concat(keys).map(function(key) {
         callbacks[key] = callback;
@@ -85,7 +85,7 @@
      *
      * @param {string|string[]} keys - key or keys to unbind.
      */
-    unbind: function unbindKey(keys, undefined) {
+    unbind(keys, undefined) {
       [].concat(keys).map(function(key) {
         callbacks[key] = undefined;
       })
@@ -99,7 +99,7 @@
      *
      * @returns {boolean}
      */
-    pressed: function keyPressed(key) {
+    pressed(key) {
       return !!pressedKeys[key];
     }
   };

@@ -12,12 +12,12 @@
   kontra.pool = function(properties) {
     properties = properties || {};
 
-    var inUse = 0;
+    let inUse = 0;
 
     // check for the correct structure of the objects added to pools so we know that the
     // rest of the pool code will work without errors
     // @if DEBUG
-    var obj;
+    let obj;
     if (!properties.create ||
         ( !( obj = properties.create() ) ||
           !( obj.update && obj.init &&
@@ -41,7 +41,7 @@
        *
        * @param {object} properties - Properties to pass to object.init().
        */
-      get: function get(properties) {
+      get(properties) {
         properties = properties || {};
 
         // the pool is out of objects if the first object is in use and it can't grow
@@ -51,7 +51,7 @@
           }
           // double the size of the array by filling it with twice as many objects
           else {
-            for (var x = 0; x < this.size && this.objects.length < this.maxSize; x++) {
+            for (let x = 0; x < this.size && this.objects.length < this.maxSize; x++) {
               this.objects.unshift(this._c());
             }
 
@@ -60,7 +60,7 @@
         }
 
         // save off first object in pool to reassign to last object after unshift
-        var obj = this.objects.shift();
+        let obj = this.objects.shift();
         obj.init(properties);
         this.objects.push(obj);
         inUse++;
@@ -72,7 +72,7 @@
        *
        * @returns {object[]}
        */
-      getAliveObjects: function getAliveObjects() {
+      getAliveObjects() {
         return this.objects.slice(this.objects.length - inUse);
       },
 
@@ -80,7 +80,7 @@
        * Clear the object pool.
        * @memberof kontra.pool
        */
-      clear: function clear() {
+      clear() {
         inUse = this.objects.length = 0;
         this.size = 1;
         this.objects.push(this._c());
@@ -92,9 +92,9 @@
        *
        * @param {number} dt - Time since last update.
        */
-      update: function update(dt) {
-        var i = this.size - 1;
-        var obj;
+      update(dt) {
+        let i = this.size - 1;
+        let obj;
 
         // If the user kills an object outside of the update cycle, the pool won't know of
         // the change until the next update and inUse won't be decremented. If the user then
@@ -104,7 +104,7 @@
         // I don't like having to go through the pool to kill an object as it forces you to
         // know which object came from which pool. Instead, we'll just prevent the index from
         // going below 0 and accept the fact that inUse may be out of sync for a frame.
-        var index = Math.max(this.objects.length - inUse, 0);
+        let index = Math.max(this.objects.length - inUse, 0);
 
         // only iterate over the objects that are alive
         while (i >= index) {
@@ -128,10 +128,10 @@
        * render all alive pool objects.
        * @memberof kontra.pool
        */
-      render: function render() {
-        var index = Math.max(this.objects.length - inUse, 0);
+      render() {
+        let index = Math.max(this.objects.length - inUse, 0);
 
-        for (var i = this.size - 1; i >= index; i--) {
+        for (let i = this.size - 1; i >= index; i--) {
           this.objects[i].render();
         }
       }

@@ -126,9 +126,11 @@ describe('kontra.sprite', function() {
       var sprite = kontra.sprite();
 
       expect(sprite.context).to.equal(kontra.context);
-      expect(sprite.position instanceof kontra.vector).to.be.true;
-      expect(sprite.velocity instanceof kontra.vector).to.be.true;
-      expect(sprite.acceleration instanceof kontra.vector).to.be.true;
+      expect(sprite.width).to.equal(0);
+      expect(sprite.height).to.equal(0);
+      expect(sprite.position.constructor.name).to.equal('Vector');
+      expect(sprite.velocity.constructor.name).to.equal('Vector');
+      expect(sprite.acceleration.constructor.name).to.equal('Vector');
     });
 
     it('should set basic properties of width, height, color, x, and y', function() {
@@ -145,8 +147,6 @@ describe('kontra.sprite', function() {
       expect(sprite.color).to.equal('red');
       expect(sprite.width).to.equal(5);
       expect(sprite.height).to.equal(15);
-      expect(sprite.advance).to.equal(sprite._a);
-      expect(sprite.draw).to.equal(sprite.draw);
     });
 
     it('should set properties of velocity, acceleration, and a different context', function() {
@@ -197,8 +197,6 @@ describe('kontra.sprite', function() {
       expect(sprite.image).to.equal(img);
       expect(sprite.width).to.equal(10);
       expect(sprite.height).to.equal(20);
-      expect(sprite.advance).to.equal(sprite._a);
-      expect(sprite.draw).to.equal(sprite._d);
     });
 
     it('should set the width and height of the sprite to an animation if passed', function() {
@@ -221,8 +219,6 @@ describe('kontra.sprite', function() {
       expect(sprite._ca).to.equal(animations.walk);
       expect(sprite.width).to.equal(10);
       expect(sprite.height).to.equal(20);
-      expect(sprite.advance).to.equal(sprite._b);
-      expect(sprite.draw).to.equal(sprite._e);
     });
 
     it('should clone any animations to prevent frame corruption', function() {

@@ -1,21 +1,6 @@
 (function() {
-  /**
-   * Single animation from a sprite sheet.
-   * @memberof kontra
-   *
-   * @param {object} properties - Properties of the animation.
-   * @param {object} properties.spriteSheet - Sprite sheet for the animation.
-   * @param {number[]} properties.frames - List of frames of the animation.
-   * @param {number}  properties.frameRate - Number of frames to display in one second.
-   */
-  kontra.animation = function(properties) {
-    var animation = Object.create(kontra.animation.prototype);
-    animation._i(properties);
 
-    return animation;
-  };
-
-  kontra.animation.prototype = {
+  class Animation {
     /**
      * Initialize properties on the animation.
      * @memberof kontra.animation
@@ -28,7 +13,7 @@
      * @param {boolean} [properties.loop=true] - If the animation should loop.
      */
     // @see https://github.com/jed/140bytes/wiki/Byte-saving-techniques#use-placeholder-arguments-instead-of-var
-    _i: function init(properties, frame) {
+    constructor(properties, frame) {
       properties = properties || {};
 
       this.spriteSheet = properties.spriteSheet;
@@ -44,7 +29,7 @@
       // f = frame, a = accumulator
       this._f = 0;
       this._a = 0;
-    },
+    }
 
     /**
      * Clone an animation to be used more than once.
@@ -52,18 +37,18 @@
      *
      * @returns {object}
      */
-    clone: function clone() {
+    clone() {
       return kontra.animation(this);
-    },
+    }
 
     /**
      * Reset an animation to the first frame.
      * @memberof kontra.animation
      */
-    reset: function reset() {
+    reset() {
       this._f = 0;
       this._a = 0;
-    },
+    }
 
     /**
      * Update the animation. Used when the animation is not paused or stopped.
@@ -72,7 +57,7 @@
      *
      * @param {number} [dt=1/60] - Time since last update.
      */
-    update: function advance(dt) {
+    update(dt) {
 
       // if the animation doesn't loop we stop at the last frame
       if (!this.loop && this._f == this.frames.length-1) return;
@@ -86,7 +71,7 @@
         this._f = ++this._f % this.frames.length;
         this._a -= 1 / this.frameRate;
       }
-    },
+    }
 
     /**
      * Draw the current frame. Used when the animation is not stopped.
@@ -98,16 +83,14 @@
      * @param {number} properties.y - Y position to draw.
      * @param {Context} [properties.context=kontra.context] - Provide a context for the sprite to draw on.
      */
-    render: function draw(properties) {
+    render(properties) {
       properties = properties || {};
 
-      var context = properties.context || kontra.context;
-
       // get the row and col of the frame
-      var row = this.frames[this._f] / this.spriteSheet._f | 0;
-      var col = this.frames[this._f] % this.spriteSheet._f | 0;
+      let row = this.frames[this._f] / this.spriteSheet._f | 0;
+      let col = this.frames[this._f] % this.spriteSheet._f | 0;
 
-      context.drawImage(
+      (properties.context || kontra.context).drawImage(
         this.spriteSheet.image,
         col * this.width + (col * 2 + 1) * this.margin,
         row * this.height + (row * 2 + 1) * this.margin,
@@ -116,32 +99,27 @@
         this.width, this.height
       );
     }
-  };
-
-
-
-
-
+  }
 
   /**
-   * Create a sprite sheet from an image.
+   * Single animation from a sprite sheet.
    * @memberof kontra
    *
-   * @param {object} properties - Properties of the sprite sheet.
-   * @param {Image|Canvas} properties.image - Image for the sprite sheet.
-   * @param {number} properties.frameWidth - Width (in px) of each frame.
-   * @param {number} properties.frameHeight - Height (in px) of each frame.
-   * @param {number} properties.frameMargin - Margin (in px) between each frame.
-   * @param {object} properties.animations - Animations to create from the sprite sheet.
+   * @param {object} properties - Properties of the animation.
+   * @param {object} properties.spriteSheet - Sprite sheet for the animation.
+   * @param {number[]} properties.frames - List of frames of the animation.
+   * @param {number}  properties.frameRate - Number of frames to display in one second.
    */
-  kontra.spriteSheet = function(properties) {
-    var spriteSheet = Object.create(kontra.spriteSheet.prototype);
-    spriteSheet._i(properties);
-
-    return spriteSheet;
+  kontra.animation = function(properties) {
+    return new Animation(properties);
   };
+  kontra.animation.prototype = Animation.prototype;
 
-  kontra.spriteSheet.prototype = {
+
+
+
+
+  class SpriteSheet {
     /**
      * Initialize properties on the spriteSheet.
      * @memberof kontra
@@ -154,7 +132,7 @@
      * @param {number} properties.frameMargin - Margin (in px) between each frame.
      * @param {object} properties.animations - Animations to create from the sprite sheet.
      */
-    _i: function init(properties) {
+    constructor(properties) {
       properties = properties || {};
 
       // @if DEBUG
@@ -175,7 +153,7 @@
       this._f = properties.image.width / properties.frameWidth | 0;
 
       this.createAnimations(properties.animations);
-    },
+    }
 
     /**
      * Create animations from the sprite sheet.
@@ -186,7 +164,7 @@
      * @param {number} animations.animationName.frameRate - Number of frames to display in one second.
      *
      * @example
-     * var sheet = kontra.spriteSheet({image: img, frameWidth: 16, frameHeight: 16});
+     * let sheet = kontra.spriteSheet({image: img, frameWidth: 16, frameHeight: 16});
      * sheet.createAnimations({
      *   idle: {
      *     frames: 1  // single frame animation
@@ -211,8 +189,8 @@
      *   }
      * });
      */
-    createAnimations: function createAnimations(animations) {
-      var animation, frames, frameRate, sequence, name;
+    createAnimations(animations) {
+      let animation, frames, frameRate, sequence, name;
 
       for (name in animations) {
         animation = animations[name];
@@ -239,7 +217,7 @@
           loop: animation.loop
         });
       }
-    },
+    }
 
     /**
      * Parse a string of consecutive frames.
@@ -250,19 +228,19 @@
      *
      * @returns {number[]} List of frames.
      */
-    _p: function parse(consecutiveFrames) {
+    _p(consecutiveFrames, i) {
       // @see https://github.com/jed/140bytes/wiki/Byte-saving-techniques#coercion-to-test-for-types
       if (+consecutiveFrames === consecutiveFrames) {
         return consecutiveFrames;
       }
 
-      var sequence = [];
-      var frames = consecutiveFrames.split('..');
+      let sequence = [];
+      let frames = consecutiveFrames.split('..');
 
       // coerce string to number
       // @see https://github.com/jed/140bytes/wiki/Byte-saving-techniques#coercion-to-test-for-types
-      var start = i = +frames[0];
-      var end = +frames[1];
+      let start = i = +frames[0];
+      let end = +frames[1];
 
       // ascending frame order
       if (start < end) {
@@ -279,5 +257,21 @@
 
       return sequence;
     }
+  }
+
+  /**
+   * Create a sprite sheet from an image.
+   * @memberof kontra
+   *
+   * @param {object} properties - Properties of the sprite sheet.
+   * @param {Image|Canvas} properties.image - Image for the sprite sheet.
+   * @param {number} properties.frameWidth - Width (in px) of each frame.
+   * @param {number} properties.frameHeight - Height (in px) of each frame.
+   * @param {number} properties.frameMargin - Margin (in px) between each frame.
+   * @param {object} properties.animations - Animations to create from the sprite sheet.
+   */
+  kontra.spriteSheet = function(properties) {
+    return new SpriteSheet(properties);
   };
+  kontra.spriteSheet.prototype = SpriteSheet.prototype;
 })();

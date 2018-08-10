@@ -1,14 +1,15 @@
 (function() {
-  var imageRegex = /(jpeg|jpg|gif|png)$/;
-  var audioRegex = /(wav|mp3|ogg|aac)$/;
-  var noRegex = /^no$/;
-  var leadingSlash = /^\//;
-  var trailingSlash = /\/$/;
+  let imageRegex = /(jpeg|jpg|gif|png)$/;
+  let audioRegex = /(wav|mp3|ogg|aac)$/;
+  let noRegex = /^no$/;
+  let leadingSlash = /^\//;
+  let trailingSlash = /\/$/;
+  let assets;
 
   // audio playability
   // @see https://github.com/Modernizr/Modernizr/blob/master/feature-detects/audio.js
-  var audio = new Audio();
-  var canUse = {
+  let audio = new Audio();
+  let canUse = {
     wav: '',
     mp3: audio.canPlayType('audio/mpeg;').replace(noRegex,''),
     ogg: audio.canPlayType('audio/ogg; codecs="vorbis"').replace(noRegex,''),
@@ -46,7 +47,7 @@
    * @returns {string}
    */
   function getName(url) {
-    var name = url.replace('.' + getExtension(url), '');
+    let name = url.replace('.' + getExtension(url), '');
 
     // remove leading slash if there is no folder in the path
     // @see https://stackoverflow.com/a/50592629/2124254
@@ -68,7 +69,7 @@
    */
   function loadImage(originalUrl, url) {
     return new Promise(function(resolve, reject) {
-      var image = new Image();
+      let image = new Image();
       url = joinPath(assets.imagePath, originalUrl);
 
       image.onload = function loadImageOnLoad() {
@@ -110,7 +111,7 @@
         reject(/* @if DEBUG */ 'cannot play any of the audio formats provided' + /* @endif */ originalUrl);
       }
       else {
-        var audio = new Audio();
+        let audio = new Audio();
         url = joinPath(assets.audioPath, originalUrl);
 
         audio.addEventListener('canplay', function loadAudioOnLoad() {
@@ -156,7 +157,7 @@
   /**
    * Object for loading assets.
    */
-  var assets = kontra.assets = {
+  assets = kontra.assets = {
     // all assets are stored by name as well as by URL
     images: {},
     audio: {},
@@ -181,9 +182,9 @@
      * kontra.loadAsset('bio.json');
      * kontra.loadAsset('car.png', ['explosion.mp3', 'explosion.ogg'], 'bio.json');
      */
-    load: function loadAsset() {
-      var promises = [];
-      var url, extension, asset, i, promise;
+    load() {
+      let promises = [];
+      let url, extension, asset, i, promise;
 
       for (i = 0; (asset = arguments[i]); i++) {
         url = [].concat(asset)[0];

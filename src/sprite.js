@@ -1,25 +1,6 @@
 (function() {
 
-  /**
-   * A vector for 2D space.
-   *
-   * Because each sprite has 3 vectors and there could possibly be hundreds of
-   * sprites at once, we can't return a new object with new functions every time
-   * (which saves on having to use `this` everywhere). Instead, we'll use a
-   * prototype so vectors only take up an x and y value and share functions.
-   * @memberof kontra
-   *
-   * @param {number} [x=0] - X coordinate.
-   * @param {number} [y=0] - Y coordinate.
-   */
-  kontra.vector = function(x, y) {
-    var vector = Object.create(kontra.vector.prototype);
-    vector._init(x, y);
-
-    return vector;
-  };
-
-  kontra.vector.prototype = {
+  class Vector {
     /**
      * Initialize the vectors x and y position.
      * @memberof kontra.vector
@@ -30,10 +11,10 @@
      *
      * @returns {vector}
      */
-    _init: function init(x, y) {
+    constructor(x, y) {
       this._x = x || 0;
       this._y = y || 0;
-    },
+    }
 
     /**
      * Add a vector to this vector.
@@ -42,10 +23,10 @@
      * @param {vector} vector - Vector to add.
      * @param {number} dt=1 - Time since last update.
      */
-    add: function add(vector, dt) {
+    add(vector, dt) {
       this.x += (vector.x || 0) * (dt || 1);
       this.y += (vector.y || 0) * (dt || 1);
-    },
+    }
 
     /**
      * Clamp the vector between two points that form a rectangle.
@@ -56,13 +37,13 @@
      * @param {number} xMax - Max x value.
      * @param {number} yMax - Max y value.
      */
-    clamp: function clamp(xMin, yMin, xMax, yMax) {
+    clamp(xMin, yMin, xMax, yMax) {
       this._c = true;
       this._a = xMin;
       this._b = yMin;
       this._d = xMax;
       this._e = yMax;
-    },
+    }
 
     /**
      * Vector x
@@ -72,7 +53,7 @@
      */
     get x() {
       return this._x;
-    },
+    }
 
     /**
      * Vector y
@@ -82,57 +63,34 @@
      */
     get y() {
       return this._y;
-    },
+    }
 
     set x(value) {
       this._x = (this._c ? Math.min( Math.max(this._a, value), this._d ) : value);
-    },
+    }
 
     set y(value) {
       this._y = (this._c ? Math.min( Math.max(this._b, value), this._e ) : value);
     }
-  };
-
-
-
-
+  }
 
   /**
-   * A sprite with a position, velocity, and acceleration.
+   * A vector for 2D space.
    * @memberof kontra
-   * @requires kontra.vector
    *
-   * @param {object} properties - Properties of the sprite.
-   * @param {number} properties.x - X coordinate of the sprite.
-   * @param {number} properties.y - Y coordinate of the sprite.
-   * @param {number} [properties.dx] - Change in X position.
-   * @param {number} [properties.dy] - Change in Y position.
-   * @param {number} [properties.ddx] - Change in X velocity.
-   * @param {number} [properties.ddy] - Change in Y velocity.
-   *
-   * @param {number} [properties.ttl=0] - How may frames the sprite should be alive.
-   * @param {Context} [properties.context=kontra.context] - Provide a context for the sprite to draw on.
-   *
-   * @param {Image|Canvas} [properties.image] - Image for the sprite.
-   *
-   * @param {object} [properties.animations] - Animations for the sprite instead of an image.
-   *
-   * @param {string} [properties.color] - If no image or animation is provided, use color to draw a rectangle for the sprite.
-   * @param {number} [properties.width] - Width of the sprite for drawing a rectangle.
-   * @param {number} [properties.height] - Height of the sprite for drawing a rectangle.
-   *
-   * @param {function} [properties.update] - Function to use to update the sprite.
-   * @param {function} [properties.render] - Function to use to render the sprite.
+   * @param {number} [x=0] - X coordinate.
+   * @param {number} [y=0] - Y coordinate.
    */
-  // @see https://github.com/jed/140bytes/wiki/Byte-saving-techniques#use-placeholder-arguments-instead-of-var
-  kontra.sprite = function(properties, sprite) {
-    sprite = Object.create(kontra.sprite.prototype);
-    sprite.init(properties);
-
-    return sprite;
+  kontra.vector = (x, y) => {
+    return new Vector(x, y);
   };
+  kontra.vector.prototype = Vector.prototype;
 
-  kontra.sprite.prototype = {
+
+
+
+
+  class Sprite {
     /**
      * Initialize properties on the sprite.
      * @memberof kontra.sprite
@@ -164,7 +122,7 @@
      * Just be sure to set <code>ttl</code> to 0 when you want the sprite to die.
      */
     // @see https://github.com/jed/140bytes/wiki/Byte-saving-techniques#use-placeholder-arguments-instead-of-var
-    init: function init(properties, prop, temp, firstAnimation) {
+    constructor(properties, prop, temp, firstAnimation) {
       properties = properties || {};
 
       this.position = kontra.vector(properties.x, properties.y);
@@ -174,8 +132,6 @@
       // defaults
       this.width = this.height = 0;
       this.context = kontra.context;
-      this.advance = this._a;
-      this.draw = this._c;
 
       // loop through properties before overrides
       for (prop in properties) {
@@ -187,8 +143,6 @@
         this.image = temp;
         this.width = temp.width;
         this.height = temp.height;
-
-        this.draw = this._d;
       }
       // animation sprite
       else if (temp = properties.animations) {
@@ -204,11 +158,8 @@
         this._ca = firstAnimation;
         this.width = firstAnimation.width;
         this.height = firstAnimation.height;
-
-        this.advance = this._b;
-        this.draw = this._e;
       }
-    },
+    }
 
     // define getter and setter shortcut functions to make it easier to work with the
     // position, velocity, and acceleration vectors.
@@ -221,7 +172,7 @@
      */
     get x() {
       return this.position.x;
-    },
+    }
 
     /**
      * Sprite position.y
@@ -231,7 +182,7 @@
      */
     get y() {
       return this.position.y;
-    },
+    }
 
     /**
      * Sprite velocity.x
@@ -241,7 +192,7 @@
      */
     get dx() {
       return this.velocity.x;
-    },
+    }
 
     /**
      * Sprite velocity.y
@@ -251,7 +202,7 @@
      */
     get dy() {
       return this.velocity.y;
-    },
+    }
 
     /**
      * Sprite acceleration.x
@@ -261,7 +212,7 @@
      */
     get ddx() {
       return this.acceleration.x;
-    },
+    }
 
     /**
      * Sprite acceleration.y
@@ -271,26 +222,26 @@
      */
     get ddy() {
       return this.acceleration.y;
-    },
+    }
 
     set x(value) {
       this.position.x = value;
-    },
+    }
     set y(value) {
       this.position.y = value;
-    },
+    }
     set dx(value) {
       this.velocity.x = value;
-    },
+    }
     set dy(value) {
       this.velocity.y = value;
-    },
+    }
     set ddx(value) {
       this.acceleration.x = value;
-    },
+    }
     set ddy(value) {
       this.acceleration.y = value;
-    },
+    }
 
     /**
      * Determine if the sprite is alive.
@@ -298,9 +249,9 @@
      *
      * @returns {boolean}
      */
-    isAlive: function isAlive() {
+    isAlive() {
       return this.ttl > 0;
-    },
+    }
 
     /**
      * Simple bounding box collision test.
@@ -310,12 +261,12 @@
      *
      * @returns {boolean} True if the objects collide, false otherwise.
      */
-    collidesWith: function collidesWith(object) {
+    collidesWith(object) {
       return this.x < object.x + object.width &&
              this.x + this.width > object.x &&
              this.y < object.y + object.height &&
              this.y + this.height > object.y;
-    },
+    }
 
     /**
      * Update the sprites velocity and position.
@@ -337,9 +288,9 @@
      *   }
      * });
      */
-    update: function update(dt) {
+    update(dt) {
       this.advance(dt);
-    },
+    }
 
     /**
      * Render the sprite.
@@ -359,9 +310,9 @@
      *   }
      * });
      */
-    render: function render() {
+    render() {
       this.draw();
-    },
+    }
 
     /**
      * Play an animation.
@@ -369,67 +320,79 @@
      *
      * @param {string} name - Name of the animation to play.
      */
-    playAnimation: function playAnimation(name) {
+    playAnimation(name) {
       this._ca = this.animations[name];
 
       if (!this._ca.loop) {
         this._ca.reset();
       }
-    },
+    }
 
     /**
-     * Move the sprite by its velocity.
+     * Advance the sprites position, velocity, and current animation (if it
+     * has one).
      * @memberof kontra.sprite
-     * @private
      *
      * @param {number} dt - Time since last update.
      */
-    _a: function advanceSprite(dt) {
+    advance(dt) {
       this.velocity.add(this.acceleration, dt);
       this.position.add(this.velocity, dt);
 
       this.ttl--;
-    },
+
+      if (this._ca) {
+        this._ca.update(dt);
+      }
+    }
 
     /**
-     * Update the currently playing animation. Used when animations are passed to the sprite.
+     * Draw the sprite to the canvas.
      * @memberof kontra.sprite
-     * @private
-     *
-     * @param {number} dt - Time since last update.
      */
-    _b: function advanceAnimation(dt) {
-      this._a(dt);
-
-      this._ca.update(dt);
-    },
-
-    /**
-     * Draw a simple rectangle. Useful for prototyping.
-     * @memberof kontra.sprite
-     * @private
-     */
-    _c: function drawRect() {
-      this.context.fillStyle = this.color;
-      this.context.fillRect(this.x, this.y, this.width, this.height);
-    },
-
-    /**
-     * Draw the sprite.
-     * @memberof kontra.sprite
-     * @private
-     */
-    _d: function drawImage() {
-      this.context.drawImage(this.image, this.x, this.y);
-    },
-
-    /**
-     * Draw the currently playing animation. Used when animations are passed to the sprite.
-     * @memberof kontra.sprite
-     * @private
-     */
-    _e: function drawAnimation() {
-      this._ca.render(this);
+    draw() {
+      if (this.image) {
+        this.context.drawImage(this.image, this.x, this.y);
+      }
+      else if (this._ca) {
+        this._ca.render(this);
+      }
+      else {
+        this.context.fillStyle = this.color;
+        this.context.fillRect(this.x, this.y, this.width, this.height);
+      }
     }
   };
+
+  /**
+   * A sprite with a position, velocity, and acceleration.
+   * @memberof kontra
+   * @requires kontra.vector
+   *
+   * @param {object} properties - Properties of the sprite.
+   * @param {number} properties.x - X coordinate of the sprite.
+   * @param {number} properties.y - Y coordinate of the sprite.
+   * @param {number} [properties.dx] - Change in X position.
+   * @param {number} [properties.dy] - Change in Y position.
+   * @param {number} [properties.ddx] - Change in X velocity.
+   * @param {number} [properties.ddy] - Change in Y velocity.
+   *
+   * @param {number} [properties.ttl=0] - How may frames the sprite should be alive.
+   * @param {Context} [properties.context=kontra.context] - Provide a context for the sprite to draw on.
+   *
+   * @param {Image|Canvas} [properties.image] - Image for the sprite.
+   *
+   * @param {object} [properties.animations] - Animations for the sprite instead of an image.
+   *
+   * @param {string} [properties.color] - If no image or animation is provided, use color to draw a rectangle for the sprite.
+   * @param {number} [properties.width] - Width of the sprite for drawing a rectangle.
+   * @param {number} [properties.height] - Height of the sprite for drawing a rectangle.
+   *
+   * @param {function} [properties.update] - Function to use to update the sprite.
+   * @param {function} [properties.render] - Function to use to render the sprite.
+   */
+  kontra.sprite = (properties) => {
+    return new Sprite(properties);
+  };
+  kontra.sprite.prototype = Sprite.prototype;
 })();

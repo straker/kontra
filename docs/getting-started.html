@@ -31,6 +31,12 @@
           <li><code>$ npm install kontra</code></li>
         </ul>
 
+        <h2>Load</h2>
+
+        <p>Load the library by adding it as a script tag to the page. Kontra does not support  module loading at this time (CommonJS, es6, etc.).</p>
+
+        <pre><code class="language-html">&lt;script src="kontra.js"&gt;&lt;/script &gt;</code></pre>
+
         <h2>Initialize</h2>
 
         <p>Initialize the game by calling <a href="api/kontra#init">kontra.init()</a> to create the drawing context. By default, it will use the first canvas element on the page, but you can also pass it the ID of the canvas or a Canvas element.</p>

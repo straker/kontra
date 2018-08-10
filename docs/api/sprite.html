@@ -79,6 +79,7 @@
                 <li><a href="#image-sprite">Image Sprite</a></li>
                 <li><a href="#animation-sprite">Animation Sprite</a></li>
                 <li><a href="#custom-properties">Custom Properties</a></li>
+                <li><a href="#extending-functionality">Extending Functionality</a></li>
               </ul>
             </li>
 
@@ -265,6 +266,43 @@ var sprite = kontra.sprite({
 sprite.render();
 </code-output>
         </section>
+
+
+
+
+        <section>
+          <h2 id="extending-functionality"><a href="#extending-functionality" class="section-link">Extending Functionality<span aria-hidden="true">#</span></a></h2>
+
+          <p>Sprites are very flexible and easy to extend. If you need to modify or add functionality to the sprite, you can modify or add to <code>kontra.sprite.prototype</code>.</p>
+
+<code-output>
+// make all sprites a triangle
+kontra.sprite.prototype.render = function() {
+  this.context.fillStyle = this.color;
+
+  var halfHeight = this.height / 2;
+  var halfWidth = this.width / 2;
+
+  this.context.translate(this.x, this.y + halfHeight);
+  this.context.lineTo(halfWidth, halfHeight);
+  this.context.lineTo(0, -this.height);
+  this.context.lineTo(-halfWidth, halfHeight);
+
+  this.context.fill();
+}
+
+var sprite = kontra.sprite({
+  x: 300,
+  y: 100,
+  color: 'red',
+  width: 20,
+  height: 20
+});
+
+sprite.render();
+</code-output>
+        </section>
+
 
 
 

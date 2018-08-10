@@ -252,6 +252,13 @@ describe('kontra.sprite', function() {
       expect(sprite.alive).to.be.true;
     });
 
+    it('should have required properties for kontra.pool', function() {
+      var sprite = kontra.sprite();
+      expect(typeof sprite.init).to.equal('function');
+      expect(typeof sprite.update).to.equal('function');
+      expect(typeof sprite.isAlive).to.equal('function');
+    });
+
   });
 
 

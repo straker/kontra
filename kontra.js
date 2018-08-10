@@ -68,7 +68,9 @@ this.kontra = {
    * @returns {string}
    */
   function joinPath(base, url) {
-    return [base.replace(trailingSlash, ''), url.replace(leadingSlash, '')].join('/')
+    return [base.replace(trailingSlash, ''), base ? url.replace(leadingSlash, '') : url]
+      .filter(s => s)
+      .join('/')
   }
 
   /**
@@ -1244,7 +1246,7 @@ this.kontra = {
      * Just be sure to set <code>ttl</code> to 0 when you want the sprite to die.
      */
     // @see https://github.com/jed/140bytes/wiki/Byte-saving-techniques#use-placeholder-arguments-instead-of-var
-    constructor(properties, prop, temp, firstAnimation) {
+    init(properties, prop, temp, firstAnimation) {
       properties = properties || {};
 
       this.position = kontra.vector(properties.x, properties.y);
@@ -1281,6 +1283,8 @@ this.kontra = {
         this.width = firstAnimation.width;
         this.height = firstAnimation.height;
       }
+
+      return this;
     }
 
     // define getter and setter shortcut functions to make it easier to work with the
@@ -1514,7 +1518,7 @@ this.kontra = {
    * @param {function} [properties.render] - Function to use to render the sprite.
    */
   kontra.sprite = (properties) => {
-    return new Sprite(properties);
+    return (new Sprite()).init(properties);
   };
   kontra.sprite.prototype = Sprite.prototype;
 })();

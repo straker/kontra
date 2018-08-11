@@ -43,7 +43,7 @@
 
         <p>This means that you can avoid having to do time based calculations in your update functions and instead do fixed updates.</p>
 
-        <pre><code class="language-javascript">var loop = kontra.gameLoop({
+        <pre><code class="language-javascript">let loop = kontra.gameLoop({
   fps: 30,              // run the game at 30FPS
   clearCanvas: false,   // don't clear the canvas each frame
   update: function(dt) {
@@ -99,7 +99,7 @@
 
           <p>If the game loop is currently stopped.</p>
 
-          <pre><code class="language-javascript">var loop = kontra.gameLoop({ /* ... */ });
+          <pre><code class="language-javascript">let loop = kontra.gameLoop({ /* ... */ });
 console.log(loop.isStopped);  //=> true
 
 loop.start();

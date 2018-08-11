@@ -124,7 +124,7 @@
 
           <p>To set up the tile engine, you'll need to pass it the width and height of a tile and the width and height of the map (in number of tiles).</p>
 
-          <pre><code class="language-javascript">var tileEngine = kontra.tileEngine({
+          <pre><code class="language-javascript">let tileEngine = kontra.tileEngine({
   // tile size
   tileWidth: 64,
   tileHeight: 64,
@@ -138,7 +138,7 @@
 
           <p>Once the tile engine is set up, you'll need to add at least one tileset image.</p>
 
-          <pre><code class="language-javascript">var img = document.createElement('img');
+          <pre><code class="language-javascript">let img = document.createElement('img');
 img.src = '../imgs/mapPack_tilesheet.png';
 
 img.onload = function() {
@@ -167,7 +167,7 @@ img.onload = function() {
           <p>Once all tileset images and all layers have been added, you can render the tile engine by calling its <a href="#render">render()</a> function.</p>
 
 <code-output width="576" height="576">
-/* exclude:start */var tileEngine = kontra.tileEngine({
+/* exclude:start */let tileEngine = kontra.tileEngine({
   // tile size
   tileWidth: 64,
   tileHeight: 64,
@@ -176,7 +176,7 @@ img.onload = function() {
   width: 9,
   height: 9
 });
-var img = document.createElement('img');
+let img = document.createElement('img');
 img.src = '../imgs/mapPack_tilesheet.png';
 
 img.onload = function() {
@@ -208,7 +208,7 @@ img.onload = function() {
 <code-output width="576" height="576">
 kontra.assets.load('../imgs/mapPack_tilesheet.png', '../data/tile_engine_basic.json')
   .then(function() {
-    var tileEngine = kontra.tileEngine(kontra.assets.data['../data/tile_engine_basic']);
+    let tileEngine = kontra.tileEngine(kontra.assets.data['../data/tile_engine_basic']);
     /* exclude:start */
     tileEngine.context = context;
     /* exclude:end */
@@ -233,13 +233,13 @@ kontra.assets.load('../imgs/mapPack_tilesheet.png', '../data/tile_engine_basic.j
 <code-output width="576" height="576">
 kontra.assets.load('../imgs/mapPack_tilesheet.png', '../data/tile_engine_camera.json')
   .then(function() {
-    var tileEngine = kontra.tileEngine(kontra.assets.data['../data/tile_engine_camera']);
+    let tileEngine = kontra.tileEngine(kontra.assets.data['../data/tile_engine_camera']);
     /* exclude:start */
     tileEngine.context = context;
     /* exclude:end */
 
-    var sx = 1;
-    var loop = kontra.gameLoop({
+    let sx = 1;
+    let loop = kontra.gameLoop({
       update: function() {
         tileEngine.sx += sx;
 
@@ -288,18 +288,18 @@ kontra.assets.load('../imgs/mapPack_tilesheet.png', '../data/tile_engine_camera.
           <p>If you don't want the layer to render when the tile engines <a href="#render">render()</a> function is called, set the <code>layers</code> render property to <code>false</code>. You'll have to call <a href="#renderLayer">renderLayer(name)</a> when you want the layer to render.</p>
 
           <pre><code class="language-javascript">// 2D array
-var 2dData = [ [0,0,0,0],
+let 2dData = [ [0,0,0,0],
                [0,1,2,0],
                [0,3,4,0],
                [0,0,0,0] ];
 
 // flattened array
-var 1dData = [  0,0,0,0,
+let 1dData = [  0,0,0,0,
                 0,0,6,0,
                 0,7,0,0,
                 0,0,0,0  ];
 
-var tileEngine = kontra.tileEngine({
+let tileEngine = kontra.tileEngine({
   tileWidth: 62,
   tileHeight: 62,
   width: 9,
@@ -340,10 +340,10 @@ tileEngine.addLayers({
 
           <p>Add a tileset image to the tile engine. Called from <code>kontra.tileEngine</code> automatically if the <code>tilesets</code> property is passed in.</p>
 
-          <pre><code class="language-javascript">var img document.createElement('img');
+          <pre><code class="language-javascript">let img document.createElement('img');
 img.src = '../imgs/mapPack_tilesheet.png',
 
-var tileEngine = kontra.tileEngine({
+let tileEngine = kontra.tileEngine({
   tileWidth: 62,
   tileHeight: 62,
   width: 9,
@@ -441,7 +441,7 @@ kontra.assets.load('../imgs/mapPack_tilesheet.png')
 
           <p>Check if the object collides with the layer (shares a gird coordinate with any positive tile index in layers data). The object being checked must have the properties <code>x</code>, <code>y</code>, <code>width</code>, and <code>height</code> so that its position in the grid can be calculated. <a href="sprite">kontra.sprite</a> defines these properties for you.</p>
 
-          <pre><code class="language-javascript">var tileEngine = kontra.tileEngine({
+          <pre><code class="language-javascript">let tileEngine = kontra.tileEngine({
   tileWidth: 32,
   tileHeight: 32,
   width: 4,
@@ -458,7 +458,7 @@ tileEngine.addLayers({
           0,0,0,0 ]
 });
 
-var sprite = kontra.sprite({
+let sprite = kontra.sprite({
   x: 50,
   y: 20,
   width: 5,
@@ -555,7 +555,7 @@ tileEngine.layerCollidesWith('collision', sprite);  //=> true</code></pre>
 
           <p>Get the tile at the specified layer using either x and y coordinates or row and column coordinates.</p>
 
-          <pre><code class="language-javascript">var tileEngine = kontra.tileEngine({
+          <pre><code class="language-javascript">let tileEngine = kontra.tileEngine({
   tileWidth: 32,
   tileHeight: 32,
   width: 4,

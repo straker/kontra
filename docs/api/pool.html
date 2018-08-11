@@ -86,7 +86,7 @@
 
           <p>When you need an object from the pool, use the pools <a href="#get">get()</a> function and pass it any properties you want the reused object to have.</p>
 
-          <pre><code class="language-javascript">var pool = kontra.pool({
+          <pre><code class="language-javascript">let pool = kontra.pool({
   create: kontra.sprite  // create a new sprite every time the pool needs new objects
 });
 
@@ -101,7 +101,7 @@ pool.get({
 
           <p>Notice that the <a href="#get">get()</a> function doesn't return an object. This is because the object pool keeps track of all objects internally. When you need to update or render all in use objects in the pool, use the pools <a href="#update">update()</a> and <a href="#render">render()</a> functions.</p>
 
-          <pre><code class="language-javascript">var loop = kontra.gameLoop({
+          <pre><code class="language-javascript">let loop = kontra.gameLoop({
   update: function() {
     pool.update();
   },

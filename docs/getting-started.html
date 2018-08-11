@@ -50,7 +50,7 @@
         <p>Once the game is initialized, you can create a simple <a href="api/sprite">sprite</a> and <a href="api/gameLoop">game loop</a> in just a few lines of code.</p>
 
 <code-output>
-var sprite = kontra.sprite({
+let sprite = kontra.sprite({
   x: 100,        // starting x,y position of the sprite
   y: 80,
   color: 'red',  // fill color of the sprite rectangle
@@ -59,7 +59,7 @@ var sprite = kontra.sprite({
   dx: 2          // move the sprite 2px to the right every frame
 });
 
-var loop = kontra.gameLoop({  // create the main game loop
+let loop = kontra.gameLoop({  // create the main game loop
   update: function() {        // update the game state
     sprite.update();
 

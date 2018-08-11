@@ -63,7 +63,7 @@
 
         <p>A versatile way to update and draw your game objects. It can handle simple rectangles, images, and sprite sheet animations. It can be used for your main player object as well as tiny particles in a particle engine.</p>
 
-        <pre><code class="language-javascript">var sprite = kontra.sprite({x: 300, y: 100, type: 'player'});
+        <pre><code class="language-javascript">let sprite = kontra.sprite({x: 300, y: 100, type: 'player'});
 
 console.log(sprite.type);  //=> 'player'</code></pre>
 
@@ -132,7 +132,7 @@ console.log(sprite.type);  //=> 'player'</code></pre>
           <p>In its most basic form, a sprite is a rectangle with a fill color. To create a rectangle sprite, pass the properties <a href="#width">width</a>, <a href="#height">height</a>, and <a href="#color">color</a>. A rectangle sprite is great for initial prototyping and particles.</p>
 
 <code-output>
-var sprite = kontra.sprite({
+let sprite = kontra.sprite({
   x: 290,
   y: 80,
 
@@ -156,10 +156,10 @@ sprite.render();
           <p>A sprite can use an image instead of drawing a rectangle. To create an image sprite, pass the <a href="#image">image</a> property. The size of the sprite will automatically be set as the <code>width</code> and <code>height</code> of the image.</p>
 
 <code-output>
-var image = new Image();
+let image = new Image();
 image.src = '../imgs/character.png';
 
-var sprite = kontra.sprite({
+let sprite = kontra.sprite({
   x: 267,
   y: 54,
 
@@ -185,13 +185,13 @@ image.onload = function() {
           <p>A sprite can have multiple named animations. The easiest way to create animations is to use <a href="spriteSheet">kontra.spriteSheet</a>. All animations will automatically be <a href="animation#clone">cloned</a> so no two sprites update the same animation.</p>
 
 <code-output>
-var image = new Image();
+let image = new Image();
 image.src = '../imgs/character_walk_sheet.png';
 
 image.onload = function() {
 
   // use kontra.spriteSheet to create animations from an image
-  var spriteSheet = kontra.spriteSheet({
+  let spriteSheet = kontra.spriteSheet({
     image: image,
     frameWidth: 72,
     frameHeight: 97,
@@ -204,7 +204,7 @@ image.onload = function() {
     }
   });
 
-  var sprite = kontra.sprite({
+  let sprite = kontra.sprite({
     x: 267,
     y: 54,
     /* exclude:start */
@@ -216,7 +216,7 @@ image.onload = function() {
   });
 
   // use kontra.gameLoop to play the animation
-  var loop = kontra.gameLoop({
+  let loop = kontra.gameLoop({
     /* exclude:start */
     clearCanvas: false,
     /* exclude:end */
@@ -246,7 +246,7 @@ image.onload = function() {
           <p>If you need to draw a different shape, such as a circle, you can pass in custom properties and a render function to handle drawing the sprite.</p>
 
 <code-output>
-var sprite = kontra.sprite({
+let sprite = kontra.sprite({
   x: 300,
   y: 100,
 
@@ -284,8 +284,8 @@ let render = kontra.sprite.prototype.render;
 kontra.sprite.prototype.render = function() {
   this.context.fillStyle = this.color;
 
-  var halfHeight = this.height / 2;
-  var halfWidth = this.width / 2;
+  let halfHeight = this.height / 2;
+  let halfWidth = this.width / 2;
 
   this.context.translate(this.x, this.y + halfHeight);
   this.context.lineTo(halfWidth, halfHeight);
@@ -295,7 +295,7 @@ kontra.sprite.prototype.render = function() {
   this.context.fill();
 }
 
-var sprite = kontra.sprite({
+let sprite = kontra.sprite({
   x: 300,
   y: 100,
   color: 'red',
@@ -339,7 +339,7 @@ kontra.sprite.prototype.render = render;
 
           <p>If you override the sprites <a href="#update">update()</a> function with your own update function, you can call this function to move the sprite using the sprites normal update function.</p>
 
-          <pre><code class="language-javascript">var sprite = kontra.sprite({
+          <pre><code class="language-javascript">let sprite = kontra.sprite({
   x: 100,
   y: 200,
   width: 20,
@@ -372,7 +372,7 @@ kontra.sprite.prototype.render = render;
 
           <p>An object of <a href="animation">kontra.animations</a> from a <a href="spriteSheet">kontra.spritesheet</a> to animate the sprite. Each animation is named so that it can can be used by name for the sprites <a href="#playAnimation">playAnimation()</a> function.</p>
 
-          <pre><code class="language-javascript">var spriteSheet = kontra.spriteSheet({
+          <pre><code class="language-javascript">let spriteSheet = kontra.spriteSheet({
   /* ... */,
   animations: {
     idle: {
@@ -385,7 +385,7 @@ kontra.sprite.prototype.render = render;
   }
 });
 
-var sprite = kontra.sprite({
+let sprite = kontra.sprite({
   x: 100,
   y: 200,
   animations: spriteSheet.animations
@@ -408,14 +408,14 @@ sprite.playAnimation('idle');</code></pre>
 
           <p>Check if the sprite collide with the object. Uses a simple <a href="https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection#Axis-Aligned_Bounding_Box">Axis-Aligned Bounding Box (AABB) collision check</a>.</p>
 
-          <pre><code class="language-javascript">var sprite = kontra.sprite({
+          <pre><code class="language-javascript">let sprite = kontra.sprite({
   x: 100,
   y: 200,
   width: 20,
   height: 40
 });
 
-var sprite2 = kontra.sprite({
+let sprite2 = kontra.sprite({
   x: 150,
   y: 200,
   width: 20,
@@ -432,21 +432,21 @@ sprite.collidesWith(sprite2);  //=> true</code></pre>
 
 <pre><code class="language-javascript">// circle collision
 function collidesWith(object) {
-  var dx = this.x - object.x;
-  var dy = this.y - object.y;
-  var distance = Math.sqrt(dx * dx + dy * dy);
+  let dx = this.x - object.x;
+  let dy = this.y - object.y;
+  let distance = Math.sqrt(dx * dx + dy * dy);
 
   return distance < this.radius + object.radius;
 }
 
-var sprite = kontra.sprite({
+let sprite = kontra.sprite({
   x: 100,
   y: 200,
   radius: 25,
   collidesWith: collidesWith
 });
 
-var sprite2 = kontra.sprite({
+let sprite2 = kontra.sprite({
   x: 150,
   y: 200,
   radius: 30,
@@ -520,7 +520,7 @@ sprite.collidesWith(sprite2);  //=> true</code></pre>
           <p>If you override the sprites <a href="#render">render()</a> function with your own render function, you can call this function to draw the sprite using the sprites normal drawing function.</p>
 
 <code-output>
-var sprite = kontra.sprite({
+let sprite = kontra.sprite({
   x: 290,
   y: 80,
   color: 'red',
@@ -635,7 +635,7 @@ sprite.render();
 
           <p>Set the currently playing animation of an <a href="#animation-sprite">animation sprite</a>.</p>
 
-          <pre><code class="language-javascript">var spriteSheet = kontra.spriteSheet({
+          <pre><code class="language-javascript">let spriteSheet = kontra.spriteSheet({
   /* ... */,
   animations: {
     idle: {
@@ -647,7 +647,7 @@ sprite.render();
   }
 });
 
-var sprite = kontra.sprite({
+let sprite = kontra.sprite({
   x: 100,
   y: 200,
   animations: spriteSheet.animations

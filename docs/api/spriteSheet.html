@@ -50,10 +50,10 @@
 
         <p>Typically you create a sprite sheet just to create <a href="animation">animations</a> and then use the animations for your <a href="sprite">sprite</a>.</p>
 
-        <pre><code class="language-javascript">var image = new Image();
+        <pre><code class="language-javascript">let image = new Image();
 image.src = '../imgs/character_walk_sheet.png';
 
-var spriteSheet = kontra.spriteSheet({
+let spriteSheet = kontra.spriteSheet({
   image: image,
   frameWidth: 72,
   frameHeight: 97,
@@ -66,7 +66,7 @@ var spriteSheet = kontra.spriteSheet({
   }
 });
 
-var sprite = kontra.sprite({
+let sprite = kontra.sprite({
   x: 200,
   y: 100,
 
@@ -136,12 +136,12 @@ var sprite = kontra.sprite({
           <p>This function populates the sprite sheets <a href="#animations">animations</a> object with <a href="animation">kontra.animation</a> objects. Each animation is accessible by their name.</p>
 
 <code-output>
-var image = new Image();
+let image = new Image();
 image.src = '../imgs/character_walk_sheet.png';
 
 image.onload = function() {
 
-  var spriteSheet = kontra.spriteSheet({
+  let spriteSheet = kontra.spriteSheet({
     image: image,
     frameWidth: 72,
     frameHeight: 97,
@@ -178,7 +178,7 @@ image.onload = function() {
   });
 
   // update and render the walk animation every frame
-  var loop = kontra.gameLoop({
+  let loop = kontra.gameLoop({
     update: function() {
       spriteSheet.animations.walk.update();
     },

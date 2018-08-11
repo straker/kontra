@@ -85,7 +85,7 @@ kontra.vector.prototype.magnitude = function() {
   return Math.sqrt(this.x * this.x + this.y * this.y);
 }
 
-var vector = kontra.vector(100, 200);
+let vector = kontra.vector(100, 200);
 console.log(vector.magnitude());  // => ~223.61
 </code></pre>
         </section>
@@ -106,8 +106,8 @@ console.log(vector.magnitude());  // => ~223.61
 
           <p>Add two vectors together. Pass dt to adjust how much of the vector gets added.</p>
 
-          <pre><code class="language-javascript">var vector = kontra.vector(100, 200);
-var vector2 = kontra.vector(50, 10);
+          <pre><code class="language-javascript">let vector = kontra.vector(100, 200);
+let vector2 = kontra.vector(50, 10);
 
 vector.add(vector2);
 console.log(vector);  //=> {x: 150, 210}
@@ -137,7 +137,7 @@ console.log(vector);  //=> {x: 155, 211}</code></pre>
 
           <p>Clamp the vector between two points, preventing <code>x</code> and <code>y</code> from going below or above the minimum and maximum values. Perfect for keeping a sprite from going outside the game boundaries.</p>
 
-          <pre><code class="language-javascript">var vector = kontra.vector(100, 200);
+          <pre><code class="language-javascript">let vector = kontra.vector(100, 200);
 
 vector.clamp(0, 0, 200, 300);
 

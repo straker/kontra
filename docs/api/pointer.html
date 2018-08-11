@@ -30,7 +30,7 @@
 
         <p>After an object is tracked and rendered, you can assign it an <code>onDown</code>, <code>onUp</code>, or <code>onOver</code> functions which will be called whenever a pointer down, up, or over event happens on the object.</p>
 
-        <pre><code class="language-javascript">var sprite = kontra.sprite({
+        <pre><code class="language-javascript">let sprite = kontra.sprite({
   onDown: function() {
     // handle on down events on the sprite
   },
@@ -48,14 +48,14 @@ sprite.render();</code></pre>
 
         <p>If you need to perform a different type of collision detection, assign the object a <code>collidesWithPointer(pointer)</code> function and it will be called instead, passing the current pointer object. Use this function to determine how the pointer circle should collide with the object.</p>
 
-        <pre><code class="language-javascript">var sprite = kontra.sprite({
+        <pre><code class="language-javascript">let sprite = kontra.sprite({
   x: 10,
   y: 10,
   radius: 10
   collidesWithPointer: function(pointer) {
     // perform a circle v circle collision test
-    var dx = pointer.x - this.x;
-    var dy = pointer.y - this.y;
+    let dx = pointer.x - this.x;
+    let dy = pointer.y - this.y;
     return Math.sqrt(dx * dx + dy * dy) < this.radius;
   });</code></pre>
 
@@ -165,13 +165,13 @@ sprite.render();</code></pre>
 
           <p>Check to see if the pointer is currently over the object. Since multiple objects may be rendered on top of one another, only the top most object under the pointer will return <code>true</code>.</p>
 
-          <pre><code class="language-javascript">var sprite1 = kontra.sprite({
+          <pre><code class="language-javascript">let sprite1 = kontra.sprite({
   x: 10,
   y: 10,
   width: 10,
   height: 10
 });
-var sprite2 = kontra.sprite({
+let sprite2 = kontra.sprite({
   x: 15,
   y: 10,
   width: 10,

@@ -80,12 +80,12 @@
 
           <p>To use a quadtree, you'll first create it using <code>kontra.quadtree()</code>. Then, every frame you'll remove all objects from the quadtree using its <a href="#clear">clear()</a> function and add all objects back using its <a href="#add">add()</a> function. You can add a single object or an array of objects, and as many as you want.</p>
 
-          <pre><code class="language-javascript">var quadtree = kontra.quadtree();
+          <pre><code class="language-javascript">let quadtree = kontra.quadtree();
 
-var player = kontra.sprite({/* ... */});
-var enemy = kontra.sprite({/* ... */})
+let player = kontra.sprite({/* ... */});
+let enemy = kontra.sprite({/* ... */})
 
-var loop = kontra.gameLoop({
+let loop = kontra.gameLoop({
   update: function() {
     quadtree.clear();
     quadtree.add(player, enemy);
@@ -98,7 +98,7 @@ var loop = kontra.gameLoop({
 
           <p>When you need to get all objects in the same node as another object, use the quadtrees <a href="#get">get()</a> function.</p>
 
-          <pre><code class="language-javascript">var objects = quadtree.get(player);  //=> [player, enemy]</code></pre>
+          <pre><code class="language-javascript">let objects = quadtree.get(player);  //=> [player, enemy]</code></pre>
 
         </section>
 
@@ -116,18 +116,18 @@ var loop = kontra.gameLoop({
 
           <p>Add objects to the quadtree and group them by their position. Can take a single object, a comma separated list of objects, and an array of objects.</p>
 
-          <pre><code class="language-javascript">var player = kontra.sprite({/* ... */});
-var enemy = kontra.sprite({/* ... */});
-var bulletPool = kontra.quadtree({
+          <pre><code class="language-javascript">let player = kontra.sprite({/* ... */});
+let enemy = kontra.sprite({/* ... */});
+let bulletPool = kontra.quadtree({
   create: kontra.sprite
 });
 
 // create some bullets
-for (var i = 0; i < 100; i++) {
+for (let i = 0; i < 100; i++) {
   bulletPool.get({/* ... */});
 }
 
-var loop = kontra.gameLoop({
+let loop = kontra.gameLoop({
   update: function() {
     quadtree.clear();
     quadtree.add(player, enemy, bulletPool.getAliveObjects());
@@ -176,9 +176,9 @@ var loop = kontra.gameLoop({
 
           <p><strong>Note:</strong> if the passed in object is also part of the quadtree, it will be returned in the results.</p>
 
-          <pre><code class="language-javascript">var player = kontra.sprite({/* ... */});
-var enemy1 = kontra.sprite({/* ... */});
-var enemy2 = kontra.sprite({/* .. */});
+          <pre><code class="language-javascript">let player = kontra.sprite({/* ... */});
+let enemy1 = kontra.sprite({/* ... */});
+let enemy2 = kontra.sprite({/* .. */});
 
 quadtree.add(player, enemy1, enemy2);
 quadtree.get(player);  //=> [player, enemy1]</code></pre>

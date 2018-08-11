@@ -6,14 +6,14 @@
 
 <p>The goal of Kontra.js is not to implement everything you could possibly need to make a game. There are already libraries out there that do that (like <a href="http://phaser.io/">Phaser</a> or <a href="http://jawsjs.com/">Jaws</a>).</p>
 
-<p>Instead, Kontra.js aims to implement basic game requirements like asset loading, keyboard input, the game loop, and spites to keep the library very small and focused. This allows it to be used when your game size is limited (a la Js13k).</p>
+<p>Instead, Kontra.js aims to implement basic game requirements like asset loading, keyboard input, the game loop, and sprites to keep the library very small and focused. This allows it to be used when your game size is limited (a la Js13k).</p>
 
 <p>Kontra.js does provide some more advance data structures like object pools and quadtrees that have been fine tuned to be small, fast, and memory efficient.</p>
 
 <p>Kontra.js prides itself in being:</p>
 
 <ul>
-  <li><strong>lightweight</strong>: 14 kB minified (5.5 kB gzipped) for the entire library. The basic bundle is 4.5 kB minified (2 kB gzipped).</li>
+  <li><strong>lightweight</strong>: 12.5 kB minified (4.9 kB gzipped) for the entire library. The basic bundle is 3 kB minified (1.3 kB gzipped).</li>
   <li><strong>modular</strong>: pick and choose what modules you want when you <a href="https://straker.github.io/kontra/download">download</a>. No inter-dependencies.</li>
   <li><strong>extensible</strong>: everything is customizable and can be extended.</li>
   <li><strong>fast</strong>: all logic has been removed from the update and render cycles.</li>

@@ -58,12 +58,14 @@
           <dt><strong>properties.render</strong> <em>{function}</em></dt>
           <dd>Optional. Function called every frame to render the sprite.</dd>
           <dt><strong>properties.*</strong> <em>{*}</em></dt>
-          <dd>Optional. Any additional properties you need added to the sprite. For example, if you pass <code>properties.name = 'John'</code> then the sprite will also have a property of the same name and value. You can pass as many additional properties as you want.</dd>
+          <dd>Optional. Any additional properties you need added to the sprite. For example, if you pass <code>kontra.sprite({type: 'player'})</code> then the sprite will also have a property of the same name and value. You can pass as many additional properties as you want.</dd>
         </dl>
 
         <p>A versatile way to update and draw your game objects. It can handle simple rectangles, images, and sprite sheet animations. It can be used for your main player object as well as tiny particles in a particle engine.</p>
 
-        <pre><code class="language-javascript">var sprite = kontra.sprite({x: 300, y: 100});</code></pre>
+        <pre><code class="language-javascript">var sprite = kontra.sprite({x: 300, y: 100, type: 'player'});
+
+console.log(sprite.type);  //=> 'player'</code></pre>
 
 
 
@@ -90,7 +92,6 @@
                 <li><a href="#animations">kontra.sprite&#8203;.animations</a></li>
                 <li><a href="#color">kontra.sprite&#8203;.color</a></li>
                 <li><a href="#context">kontra.sprite&#8203;.context</a></li>
-                <li><a href="#currentAnimation">kontra.sprite&#8203;.currentAnimation</a></li>
                 <li><a href="#ddx">kontra.sprite&#8203;.ddx</a></li>
                 <li><a href="#ddy">kontra.sprite&#8203;.ddy</a></li>
                 <li><a href="#dx">kontra.sprite&#8203;.dx</a></li>
@@ -276,6 +277,9 @@ sprite.render();
           <p>Sprites are very flexible and easy to extend. If you need to modify or add functionality to the sprite, you can modify or add to <code>kontra.sprite.prototype</code>.</p>
 
 <code-output>
+/* exclude:start */
+let render = kontra.sprite.prototype.render;
+/* exclude:end */
 // make all sprites a triangle
 kontra.sprite.prototype.render = function() {
   this.context.fillStyle = this.color;
@@ -300,6 +304,9 @@ var sprite = kontra.sprite({
 });
 
 sprite.render();
+/* exclude:start */
+kontra.sprite.prototype.render = render;
+/* exclude:end */
 </code-output>
         </section>
 
@@ -369,7 +376,8 @@ sprite.render();
   /* ... */,
   animations: {
     idle: {
-      frames: 1
+      frames: 1,
+      loop: false,
     },
     walk: {
       frames: [1,2,3]
@@ -428,11 +436,7 @@ function collidesWith(object) {
   var dy = this.y - object.y;
   var distance = Math.sqrt(dx * dx + dy * dy);
 
-  if (distance < this.radius + object.radius) {
-    return true;
-  }
-
-  return false;
+  return distance < this.radius + object.radius;
 }
 
 var sprite = kontra.sprite({
@@ -475,19 +479,6 @@ sprite.collidesWith(sprite2);  //=> true</code></pre>
           <p><em>{CanvasRenderingContext2D}</em></p>
 
           <p>The context the sprite will draw to.</p>
-
-        </section>
-
-
-
-
-
-        <section>
-          <h2 id="currentAnimation"><a href="#currentAnimation" class="section-link">kontra.sprite&#8203;.currentAnimation<span aria-hidden="true">#</span></a></h2>
-
-          <p><em>{<a href="animation">kontra.animation</a>}</em></p>
-
-          <p>The currently playing animation object.</p>
 
         </section>
 

@@ -37,7 +37,7 @@
 
         <p>Added to the <code>kontra</code> object when <a href="sprite">kontra.sprite</a> is installed.</p>
 
-        <pre><code class="language-javascript">kontra.vector({x: 100, y: 150});</code></pre>
+        <pre><code class="language-javascript">kontra.vector(100, 150);</code></pre>
 
 
 
@@ -47,6 +47,12 @@
           <h2 id="toc"><a href="#toc" class="section-link">Table of Contents<span aria-hidden="true">#</span></a></h2>
 
           <ul aria-labeledby="toc">
+            <li>
+              <ul>
+                <li><a href="#extending-functionality">Extending Functionality</a></li>
+              </ul>
+            </li>
+
             <li>
               <h3 id="properties">Properties</h3>
               <ul aria-labeledby="properties">
@@ -70,6 +76,25 @@
 
 
         <section>
+          <h2 id="extending-functionality"><a href="#extending-functionality" class="section-link">Extending Functionality<span aria-hidden="true">#</span></a></h2>
+
+          <p>Vectors are very flexible and easy to extend. If you need to modify or add functionality to the vector, you can modify or add to <code>kontra.vector.prototype</code>.</p>
+
+<pre><code class="language-javascript">// add magnitude to all vectors
+kontra.vector.prototype.magnitude = function() {
+  return Math.sqrt(this.x * this.x + this.y * this.y);
+}
+
+var vector = kontra.vector(100, 200);
+console.log(vector.magnitude());  // => ~223.61
+</code></pre>
+        </section>
+
+
+
+
+
+        <section>
           <h2 id="add"><a href="#add" class="section-link">kontra.vector&#8203;.add(vector, dt)<span aria-hidden="true">#</span></a></h2>
 
           <dl>
@@ -81,14 +106,14 @@
 
           <p>Add two vectors together. Pass dt to adjust how much of the vector gets added.</p>
 
-          <pre><code class="language-javascript">var vector = kontra.vector({x: 100, y: 200});
-var vector2 = kontra.vector({x: 50, y: 10});
+          <pre><code class="language-javascript">var vector = kontra.vector(100, 200);
+var vector2 = kontra.vector(50, 10);
 
 vector.add(vector2);
-console.log(vector);  //=> {x: 150, y: 210}
+console.log(vector);  //=> {x: 150, 210}
 
 vector.add(vector2, 0.1);
-console.log(vector);  //=> {x: 155, y: 211}</code></pre>
+console.log(vector);  //=> {x: 155, 211}</code></pre>
 
        </section>
 
@@ -112,7 +137,7 @@ console.log(vector);  //=> {x: 155, y: 211}</code></pre>
 
           <p>Clamp the vector between two points, preventing <code>x</code> and <code>y</code> from going below or above the minimum and maximum values. Perfect for keeping a sprite from going outside the game boundaries.</p>
 
-          <pre><code class="language-javascript">var vector = kontra.vector({x: 100, y: 200});
+          <pre><code class="language-javascript">var vector = kontra.vector(100, 200);
 
 vector.clamp(0, 0, 200, 300);
 
@@ -122,8 +147,8 @@ console.log(vector.x);  //=> 200
 vector.y -= 300;
 console.log(vector.y);  //=> 0
 
-vector.add({x: -500, y: 500});
-console.log(vector);    //=> {x: 0, y: 300);</code></pre>
+vector.add({x: -500, 500);
+console.log(vector);    //=> {x: 0, y: 300}</code></pre>
 
         </section>
 

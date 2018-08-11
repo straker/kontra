@@ -1,4 +1,4 @@
-(function(kontra, Math, Array) {
+(function() {
   // save Math.min and Math.max to variable and use that instead
 
   /**
@@ -39,7 +39,7 @@
      * @return {number} Returns the tile index or -1 if the x, y or row, col is outside the dimensions of the tile engine.
      */
     function getIndex(position) {
-      var row, col;
+      let row, col;
 
       if (typeof position.x !== 'undefined' && typeof position.y !== 'undefined') {
         row = tileEngine.getRow(position.y);
@@ -68,9 +68,9 @@
      * @return {object}
      */
     function getTileset(tile) {
-      var min = 0;
-      var max = tileEngine.tilesets.length - 1;
-      var index, currTile;
+      let min = 0;
+      let max = tileEngine.tilesets.length - 1;
+      let index, currTile;
 
       while (min <= max) {
         index = (min + max) / 2 | 0;
@@ -94,11 +94,11 @@
      * @private
      */
     function preRenderImage() {
-      var tile, tileset, image, x, y, sx, sy, tileOffset, w;
+      let tile, tileset, image, x, y, sx, sy, tileOffset, w;
 
       // draw each layer in order
-      for (var i = 0, layer; layer = tileEngine.layers[layerOrder[i]]; i++) {
-        for (var j = 0, len = layer.data.length; j < len; j++) {
+      for (let i = 0, layer; layer = tileEngine.layers[layerOrder[i]]; i++) {
+        for (let j = 0, len = layer.data.length; j < len; j++) {
           tile = layer.data[j];
 
           // skip empty tiles (0)
@@ -127,39 +127,39 @@
       }
     }
 
-    var width = properties.width;
-    var height = properties.height;
+    let width = properties.width;
+    let height = properties.height;
 
     // size of the tiles. Most common tile size on opengameart.org seems to be 32x32,
     // followed by 16x16
     // Tiled names the property tilewidth and tileheight
-    var tileWidth = properties.tileWidth || properties.tilewidth || 32;
-    var tileHeight = properties.tileHeight || properties.tileheight || 32;
+    let tileWidth = properties.tileWidth || properties.tilewidth || 32;
+    let tileHeight = properties.tileHeight || properties.tileheight || 32;
 
-    var mapWidth = width * tileWidth;
-    var mapHeight = height * tileHeight;
+    let mapWidth = width * tileWidth;
+    let mapHeight = height * tileHeight;
 
-    var context = properties.context || kontra.context;
-    var canvasWidth = context.canvas.width;
-    var canvasHeight = context.canvas.height;
+    let context = properties.context || kontra.context;
+    let canvasWidth = context.canvas.width;
+    let canvasHeight = context.canvas.height;
 
     // create an off-screen canvas for pre-rendering the map
     // @see http://jsperf.com/render-vs-prerender
-    var offscreenCanvas = document.createElement('canvas');
-    var offscreenContext = offscreenCanvas.getContext('2d');
+    let offscreenCanvas = document.createElement('canvas');
+    let offscreenContext = offscreenCanvas.getContext('2d');
 
     // when clipping an image, sx and sy must within the image region, otherwise
     // Firefox and Safari won't draw it.
     // @see http://stackoverflow.com/questions/19338032/canvas-indexsizeerror-index-or-size-is-negative-or-greater-than-the-allowed-a
-    var sxMax = Math.max(0, mapWidth - canvasWidth);
-    var syMax = Math.max(0, mapHeight - canvasHeight);
+    let sxMax = Math.max(0, mapWidth - canvasWidth);
+    let syMax = Math.max(0, mapHeight - canvasHeight);
 
-    var _sx, _sy;
+    let _sx, _sy;
 
     // draw order of layers (by name)
-    var layerOrder = [];
+    let layerOrder = [];
 
-    var tileEngine = {
+    let tileEngine = {
       width: width,
       height: height,
 
@@ -186,24 +186,17 @@
        * @param {number} tileset.firstGrid - The first tile grid to start the image.
        */
       addTilesets: function addTilesets(tilesets) {
-        if (!Array.isArray(tilesets)) {
-          tilesets = [tilesets];
-        }
+        [].concat(tilesets).map(function(tileset) {
+          let tilesetImage = tileset.image;
+          let image, firstGrid, numTiles, lastTileset, tiles;
 
-        tilesets.forEach(function(tileset) {
-          var tilesetImage = tileset.image;
-          var image, firstGrid, numTiles, lastTileset, tiles;
-
-          if (kontra._isImage(tilesetImage)) {
-            image = tilesetImage;
-          }
-          // see if the image path is in kontra.assets.images
-          else if (kontra._isString(tilesetImage)) {
-            var i = Infinity;
+          // @see https://github.com/jed/140bytes/wiki/Byte-saving-techniques#coercion-to-test-for-types
+          if (''+tilesetImage === tilesetImage) {
+            let i = Infinity;
 
             while (i >= 0) {
               i = tilesetImage.lastIndexOf('/', i);
-              var path = (i < 0 ? tilesetImage : tilesetImage.substr(i));
+              let path = (i < 0 ? tilesetImage : tilesetImage.substr(i));
 
               if (kontra.assets.images[path]) {
                 image = kontra.assets.images[path];
@@ -213,19 +206,16 @@
               i--;
             }
           }
-
-          // @if DEBUG
-          if (!image) {
-            throw Error('You must provide an Image for the tileset');
+          else {
+            image = tilesetImage;
           }
-          // @endif
 
           firstGrid = tileset.firstGrid;
 
           // if the width or height of the provided image is smaller than the tile size,
           // default calculation to 1
           numTiles = ( (image.width / tileWidth | 0) || 1 ) *
-                         ( (image.height / tileHeight | 0) || 1 );
+                     ( (image.height / tileHeight | 0) || 1 );
 
           if (!firstGrid) {
             // only calculate the first grid if the tile map has a tileset already
@@ -266,14 +256,10 @@
        * @param {number} [properties.zIndex] - Draw order for tile layer. Highest number is drawn last (i.e. on top of all other layers).
        */
       addLayers: function addLayers(layers) {
-        if (!Array.isArray(layers)) {
-          layers = [layers];
-        }
-
-        layers.forEach(function(layer) {
+        [].concat(layers).map(function(layer) {
           layer.render = (layer.render === undefined ? true : layer.render);
 
-          var data, r, row, c, prop, value;
+          let data, r, row, c, prop, value;
 
           // flatten a 2D array into a single array
           if (Array.isArray(layer.data[0])) {
@@ -336,16 +322,16 @@
        */
       layerCollidesWith: function layerCollidesWith(name, object) {
         // calculate all tiles that the object can collide with
-        var row = tileEngine.getRow(object.y);
-        var col = tileEngine.getCol(object.x);
+        let row = tileEngine.getRow(object.y);
+        let col = tileEngine.getCol(object.x);
 
-        var endRow = tileEngine.getRow(object.y + object.height);
-        var endCol = tileEngine.getCol(object.x + object.width);
+        let endRow = tileEngine.getRow(object.y + object.height);
+        let endCol = tileEngine.getCol(object.x + object.width);
 
         // check all tiles
-        var index;
-        for (var r = row; r <= endRow; r++) {
-          for (var c = col; c <= endCol; c++) {
+        let index;
+        for (let r = row; r <= endRow; r++) {
+          for (let c = col; c <= endCol; c++) {
             index = getIndex({row: r, col: c});
 
             if (tileEngine.layers[name].data[index]) {
@@ -371,7 +357,7 @@
        * @returns {number}
        */
       tileAtLayer: function tileAtLayer(name, position) {
-        var index = getIndex(position);
+        let index = getIndex(position);
 
         if (index >= 0) {
           return tileEngine.layers[name].data[index];
@@ -398,24 +384,24 @@
        * @param {string} name - Name of the layer to render.
        */
       renderLayer: function renderLayer(name) {
-        var layer = tileEngine.layers[name];
+        let layer = tileEngine.layers[name];
 
         // calculate the starting tile
-        var row = tileEngine.getRow();
-        var col = tileEngine.getCol();
-        var index = getIndex({row: row, col: col});
+        let row = tileEngine.getRow();
+        let col = tileEngine.getCol();
+        let index = getIndex({row: row, col: col});
 
         // calculate where to start drawing the tile relative to the drawing canvas
-        var startX = col * tileWidth - tileEngine.sx;
-        var startY = row * tileHeight - tileEngine.sy;
+        let startX = col * tileWidth - tileEngine.sx;
+        let startY = row * tileHeight - tileEngine.sy;
 
         // calculate how many tiles the drawing canvas can hold
-        var viewWidth = Math.min(Math.ceil(canvasWidth / tileWidth) + 1, width);
-        var viewHeight = Math.min(Math.ceil(canvasHeight / tileHeight) + 1, height);
-        var numTiles = viewWidth * viewHeight;
+        let viewWidth = Math.min(Math.ceil(canvasWidth / tileWidth) + 1, width);
+        let viewHeight = Math.min(Math.ceil(canvasHeight / tileHeight) + 1, height);
+        let numTiles = viewWidth * viewHeight;
 
-        var count = 0;
-        var x, y, tile, tileset, image, tileOffset, w, sx, sy;
+        let count = 0;
+        let x, y, tile, tileset, image, tileOffset, w, sx, sy;
 
         // draw just enough of the layer to fit inside the drawing canvas
         while (count < numTiles) {
@@ -496,7 +482,9 @@
       },
 
       // expose properties for testing
+      // @if DEBUG
       _layerOrder: layerOrder
+      // @endif
     };
 
     // set here so we use setter function
@@ -508,8 +496,8 @@
     offscreenCanvas.height = mapHeight;
 
     // merge properties of the tile engine onto the tile engine itself
-    for (var prop in properties.properties) {
-      var value = properties.properties[prop];
+    for (let prop in properties.properties) {
+      let value = properties.properties[prop];
 
       try {
         value = JSON.parse(value);
@@ -530,4 +518,4 @@
 
     return tileEngine;
   };
-})(kontra, Math, Array);
+})();

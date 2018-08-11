@@ -52,6 +52,19 @@ describe('kontra.assets', function() {
       });
     });
 
+    it('should correctly join a relative image path', function(done) {
+      kontra.assets.load('../imgs/bullet.png').then(function(assets) {
+        var image = assets[0];
+        expect(kontra.assets.images['../imgs/bullet.png']).to.equal(image);
+        expect(kontra.assets.images['../imgs/bullet']).to.equal(image);
+
+        done();
+      })
+      .catch(function(e) {
+        done(e);
+      });
+    });
+
     it('should correctly join an image path', function(done) {
       kontra.assets.imagePath = '/imgs/';
 

@@ -96,16 +96,6 @@ describe('kontra.vector', function() {
       expect(vec.y).to.equal(75);
     });
 
-    it('should default to infinity for any missing parameters', function() {
-      vec = kontra.vector(10, 20);
-      vec.clamp();
-
-      expect(vec._xMin).to.eql(-Infinity);
-      expect(vec._xMax).to.eql(Infinity);
-      expect(vec._yMin).to.eql(-Infinity);
-      expect(vec._xMax).to.eql(Infinity);
-    });
-
   });
 
 });
@@ -136,9 +126,11 @@ describe('kontra.sprite', function() {
       var sprite = kontra.sprite();
 
       expect(sprite.context).to.equal(kontra.context);
-      expect(sprite.position instanceof kontra.vector).to.be.true;
-      expect(sprite.velocity instanceof kontra.vector).to.be.true;
-      expect(sprite.acceleration instanceof kontra.vector).to.be.true;
+      expect(sprite.width).to.equal(0);
+      expect(sprite.height).to.equal(0);
+      expect(sprite.position.constructor.name).to.equal('Vector');
+      expect(sprite.velocity.constructor.name).to.equal('Vector');
+      expect(sprite.acceleration.constructor.name).to.equal('Vector');
     });
 
     it('should set basic properties of width, height, color, x, and y', function() {
@@ -155,8 +147,6 @@ describe('kontra.sprite', function() {
       expect(sprite.color).to.equal('red');
       expect(sprite.width).to.equal(5);
       expect(sprite.height).to.equal(15);
-      expect(sprite.advance).to.equal(sprite._advance);
-      expect(sprite.draw).to.equal(sprite.draw);
     });
 
     it('should set properties of velocity, acceleration, and a different context', function() {
@@ -207,8 +197,6 @@ describe('kontra.sprite', function() {
       expect(sprite.image).to.equal(img);
       expect(sprite.width).to.equal(10);
       expect(sprite.height).to.equal(20);
-      expect(sprite.advance).to.equal(sprite._advance);
-      expect(sprite.draw).to.equal(sprite._drawImg);
     });
 
     it('should set the width and height of the sprite to an animation if passed', function() {
@@ -216,7 +204,10 @@ describe('kontra.sprite', function() {
       var animations = {
         'walk': {
           width: 10,
-          height: 20
+          height: 20,
+          clone: function() {
+            return this;
+          }
         }
       };
 
@@ -225,11 +216,9 @@ describe('kontra.sprite', function() {
       });
 
       expect(sprite.animations).to.eql(animations);
-      expect(sprite.currentAnimation).to.equal(animations.walk);
+      expect(sprite._ca).to.equal(animations.walk);
       expect(sprite.width).to.equal(10);
       expect(sprite.height).to.equal(20);
-      expect(sprite.advance).to.equal(sprite._advanceAnim);
-      expect(sprite.draw).to.equal(sprite._drawAnim);
     });
 
     it('should clone any animations to prevent frame corruption', function() {
@@ -239,7 +228,7 @@ describe('kontra.sprite', function() {
           width: 10,
           height: 20,
           clone: function() {
-            return animations.walk;
+            return this;
           }
         }
       };
@@ -261,6 +250,13 @@ describe('kontra.sprite', function() {
 
       expect(sprite.foo).to.equal('bar');
       expect(sprite.alive).to.be.true;
+    });
+
+    it('should have required properties for kontra.pool', function() {
+      var sprite = kontra.sprite();
+      expect(typeof sprite.init).to.equal('function');
+      expect(typeof sprite.update).to.equal('function');
+      expect(typeof sprite.isAlive).to.equal('function');
     });
 
   });
@@ -321,7 +317,10 @@ describe('kontra.sprite', function() {
         'walk': {
           width: 10,
           height: 20,
-          update: kontra._noop
+          update: kontra._noop,
+          clone: function() {
+            return this;
+          }
         }
       };
 
@@ -396,7 +395,10 @@ describe('kontra.sprite', function() {
           width: 10,
           height: 20,
           update: kontra._noop,
-          render: kontra._noop
+          render: kontra._noop,
+          clone: function() {
+            return this;
+          }
         }
       };
 
@@ -406,13 +408,13 @@ describe('kontra.sprite', function() {
         animations: animations
       });
 
-      sinon.stub(sprite.currentAnimation, 'render').callsFake(kontra._noop);
+      sinon.stub(sprite._ca, 'render').callsFake(kontra._noop);
 
       sprite.render();
 
-      expect(sprite.currentAnimation.render.called).to.be.ok;
+      expect(sprite._ca.render.called).to.be.ok;
 
-      sprite.currentAnimation.render.restore();
+      sprite._ca.render.restore();
     });
 
   });
@@ -505,12 +507,18 @@ describe('kontra.sprite', function() {
         'walk': {
           width: 10,
           height: 20,
-          reset: sinon.spy()
+          reset: sinon.spy(),
+          clone: function() {
+            return this;
+          }
         },
         'idle': {
           width: 10,
           height: 20,
-          reset: sinon.spy()
+          reset: sinon.spy(),
+          clone: function() {
+            return this;
+          }
         }
       };
 
@@ -518,11 +526,11 @@ describe('kontra.sprite', function() {
         animations: animations
       });
 
-      expect(sprite.currentAnimation).to.equal(animations.walk);
+      expect(sprite._ca).to.equal(animations.walk);
 
       sprite.playAnimation('idle');
 
-      expect(sprite.currentAnimation).to.equal(animations.idle);
+      expect(sprite._ca).to.equal(animations.idle);
     });
 
   });
@@ -533,7 +541,10 @@ describe('kontra.sprite', function() {
         width: 10,
         height: 20,
         loop: false,
-        reset: sinon.spy()
+        reset: sinon.spy(),
+        clone: function() {
+          return this;
+        }
       }
     };
 

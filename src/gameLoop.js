@@ -1,4 +1,4 @@
-(function(kontra, requestAnimationFrame, performance) {
+(function() {
 
   /**
    * Game loop that updates and renders the game every frame.
@@ -15,23 +15,23 @@
 
     // check for required functions
     // @if DEBUG
-    if ( !(kontra._isFunc(properties.update) && kontra._isFunc(properties.render)) ) {
+    if ( !(properties.update && properties.render) ) {
       throw Error('You must provide update() and render() functions');
     }
     // @endif
 
     // animation variables
-    var fps = properties.fps || 60;
-    var accumulator = 0;
-    var delta = 1E3 / fps;  // delta between performance.now timings (in ms)
-    var step = 1 / fps;
+    let fps = properties.fps || 60;
+    let accumulator = 0;
+    let delta = 1E3 / fps;  // delta between performance.now timings (in ms)
+    let step = 1 / fps;
 
-    var clear = (properties.clearCanvas === false ?
+    let clear = (properties.clearCanvas === false ?
                 kontra._noop :
                 function clear() {
                   kontra.context.clearRect(0,0,kontra.canvas.width,kontra.canvas.height);
                 });
-    var last, rAF, now, dt;
+    let last, rAF, now, dt;
 
     /**
      * Called every frame of the game loop.
@@ -63,7 +63,7 @@
     }
 
     // game loop object
-    var gameLoop = {
+    let gameLoop = {
       update: properties.update,
       render: properties.render,
       isStopped: true,
@@ -72,7 +72,7 @@
        * Start the game loop.
        * @memberof kontra.gameLoop
        */
-      start: function start() {
+      start() {
         last = performance.now();
         this.isStopped = false;
         requestAnimationFrame(frame);
@@ -81,18 +81,20 @@
       /**
        * Stop the game loop.
        */
-      stop: function stop() {
+      stop() {
         this.isStopped = true;
         cancelAnimationFrame(rAF);
       },
 
       // expose properties for testing
+      // @if DEBUG
       _frame: frame,
       set _last(value) {
         last = value;
       }
+      // @endif
     };
 
     return gameLoop;
   };
-})(kontra, requestAnimationFrame, performance);
+})();

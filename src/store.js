@@ -10,7 +10,7 @@ kontra.store = {
    * @param {string} key - Name to store the item as.
    * @param {*} value - Item to store.
    */
-  set: function setStoreItem(key, value) {
+  set(key, value) {
     if (value === undefined) {
       localStorage.removeItem(key);
     }
@@ -27,8 +27,8 @@ kontra.store = {
    *
    * @returns {*}
    */
-  get: function getStoreItem(key) {
-    var value = localStorage.getItem(key);
+  get(key) {
+    let value = localStorage.getItem(key);
 
     try {
       value = JSON.parse(value);

@@ -42,5 +42,8 @@
     "karma-sinon": "^1.0.5",
     "mocha": "^5.2.0",
     "sinon": "^6.1.0"
+  },
+  "dependencies": {
+    "gulp-terser": "^1.0.1"
   }
 }

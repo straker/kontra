@@ -1,5 +1,5 @@
-(function(kontra, addEventListener) {
-  var pointer;
+(function() {
+  let pointer;
 
   // save each object as they are rendered to determine which object
   // is on top when multiple objects are the target of an event.
@@ -7,14 +7,14 @@
   // the finalized order of all objects, otherwise an object could ask
   // if it's being hovered when it's rendered first even if other objects
   // would block it later in the render order
-  var thisFrameRenderOrder = [];
-  var lastFrameRenderOrder = [];
+  let thisFrameRenderOrder = [];
+  let lastFrameRenderOrder = [];
 
-  var callbacks = {};
-  var trackedObjects = [];
-  var pressedButtons = {};
+  let callbacks = {};
+  let trackedObjects = [];
+  let pressedButtons = {};
 
-  var buttonMap = {
+  let buttonMap = {
     0: 'left',
     1: 'middle',
     2: 'right'
@@ -25,38 +25,7 @@
   addEventListener('mouseup', pointerUpHandler);
   addEventListener('touchend', pointerUpHandler);
   addEventListener('blur', blurEventHandler);
-
-  // update ~once every two frames
-  addEventListener('mousemove', throttle(mouseMoveHandler, 32));
-
-  /**
-   * Throttle a function to only fire once every time limit.
-   * @see https://codeburst.io/throttling-and-debouncing-in-javascript-b01cad5c8edf
-   * @private
-   *
-   * @param {function} func - Function to throttle.
-   * @param {number} limit - Milliseconds to throttle.
-   */
-  /* istanbul ignore next */
-  function throttle(func, limit) {
-    var lastFunc, lastRan;
-    return function() {
-      var context = this;
-      var args = arguments;
-      if (!lastRan) {
-        func.apply(context, args);
-        lastRan = Date.now();
-      } else {
-        clearTimeout(lastFunc);
-        lastFunc = setTimeout(function() {;
-          if ((Date.now() - lastRan) >= limit) {
-            func.apply(context, args);
-            lastRan = Date.now();
-          }
-        }, limit - (Date.now() - lastRan));
-      }
-    }
-  }
+  addEventListener('mousemove', mouseMoveHandler);
 
   /**
    * Detection collision between a rectangle and a circle.
@@ -66,8 +35,8 @@
    * @param {object} object - Object to check collision against.
    */
   function circleRectCollision(object) {
-    var dx = pointer.x - Math.max(object.x, Math.min(pointer.x, object.x + object.width));
-    var dy = pointer.y - Math.max(object.y, Math.min(pointer.y, object.y + object.height));
+    let dx = pointer.x - Math.max(object.x, Math.min(pointer.x, object.x + object.width));
+    let dy = pointer.y - Math.max(object.y, Math.min(pointer.y, object.y + object.height));
     return (dx * dx + dy * dy) < (pointer.radius * pointer.radius);
   }
 
@@ -81,12 +50,12 @@
 
     // if pointer events are required on the very first frame or without a game loop,
     // use the current frame order array
-    var frameOrder = (lastFrameRenderOrder.length ? lastFrameRenderOrder : thisFrameRenderOrder);
+    let frameOrder = (lastFrameRenderOrder.length ? lastFrameRenderOrder : thisFrameRenderOrder);
+    let length = frameOrder.length - 1;
+    let object, collides;
 
-    var length = frameOrder.length - 1;
-    for (var i = length; i >= 0; i--) {
-      var object = frameOrder[i];
-      var collides;
+    for (let i = length; i >= 0; i--) {
+      object = frameOrder[i];
 
       if (object.collidesWithPointer) {
         collides = object.collidesWithPointer(pointer);
@@ -108,8 +77,7 @@
    * @param {Event} e
    */
   function pointerDownHandler(e) {
-    var button = buttonMap[e.button];
-    pressedButtons[button] = true;
+    pressedButtons[ buttonMap[e.button] ] = true;
     pointerHandler(e, 'onDown');
   }
 
@@ -120,8 +88,7 @@
    * @param {Event} e
    */
   function pointerUpHandler(e) {
-    var button = buttonMap[e.button];
-    pressedButtons[button] = false;
+    pressedButtons[ buttonMap[e.button] ] = false;
     pointerHandler(e, 'onUp');
   }
 
@@ -155,7 +122,7 @@
   function pointerHandler(e, event) {
     if (!kontra.canvas) return;
 
-    var clientX, clientY;
+    let clientX, clientY;
 
     if (e.type.indexOf('mouse') !== -1) {
       clientX = e.clientX;
@@ -171,7 +138,7 @@
     pointer.x = clientX - kontra.canvas.offsetLeft;
     pointer.y = clientY - kontra.canvas.offsetTop;
 
-    var object;
+    let object;
     if (e.target === kontra.canvas) {
       object = getCurrentObject();
       if (object && object[event]) {
@@ -187,7 +154,7 @@
   /**
    * Object for using the pointer.
    */
-  var pointer = kontra.pointer = {
+  pointer = kontra.pointer = {
     x: 0,
     y: 0,
     radius: 5,  // arbitrary size
@@ -198,24 +165,21 @@
      *
      * @param {object|object[]} objects - Object or objects to track.
      */
-    track: function track(objects) {
-      objects = (Array.isArray(objects) ? objects : [objects]);
+    track(objects) {
+      [].concat(objects).map(function(object) {
 
-      for (var i = 0, object; object = objects[i]; i++) {
         // override the objects render function to keep track of render order
-        if (!object._render) {
-          object._render = object.render;
+        if (!object._r) {
+          object._r = object.render;
 
           object.render = function() {
             thisFrameRenderOrder.push(this);
-            if (this._render) this._render();
+            this._r();
           };
-        }
 
-        if (trackedObjects.indexOf(object) === -1) {
           trackedObjects.push(object);
         }
-      }
+      });
     },
 
     /**
@@ -224,28 +188,18 @@
      *
      * @param {object|object[]} objects - Object or objects to stop tracking.
      */
-    untrack: function untrack(objects) {
-      objects = (Array.isArray(objects) ? objects : [objects]);
-
-      for (var i = 0, object; object = objects[i]; i++) {
+    untrack(objects, undefined) {
+      [].concat(objects).map(function(object) {
 
         // restore original render function to no longer track render order
-        object.render = object._render;
-        object._render = null;
+        object.render = object._r;
+        object._r = undefined;
 
-        var index = trackedObjects.indexOf(object);
+        let index = trackedObjects.indexOf(object);
         if (index !== -1) {
-
-          // remove an object from the array without returning a new array
-          // through Array#splice to avoid garbage collection of the old array
-          // @see http://jsperf.com/object-pools-array-vs-loop
-          for (var j = index; j <= trackedObjects.length - 2; j++) {
-            trackedObjects[j] = trackedObjects[j+1];
-          }
-
-          trackedObjects.length--;
+          trackedObjects.splice(index, 1);
         }
-      }
+      })
     },
 
     /**
@@ -256,7 +210,7 @@
      *
      * @returns {boolean}
      */
-    over: function onOver(object) {
+    over(object) {
       if (trackedObjects.indexOf(object) === -1) return false;
 
       return getCurrentObject() === object;
@@ -268,7 +222,7 @@
      *
      * @param {function} callback - Function to execute
      */
-    onDown: function onDown(callback) {
+    onDown(callback) {
       callbacks.onDown = callback;
     },
 
@@ -278,7 +232,7 @@
      *
      * @param {function} callback - Function to execute
      */
-    onUp: function onUp(callback) {
+    onUp(callback) {
       callbacks.onUp = callback;
     },
 
@@ -290,7 +244,7 @@
      *
      * @returns {boolean}
      */
-    pressed: function pointerPressed(button) {
+    pressed(button) {
       return !!pressedButtons[button]
     }
   };
@@ -299,10 +253,10 @@
   kontra._tick = function() {
     lastFrameRenderOrder.length = 0;
 
-    thisFrameRenderOrder.forEach(function(object) {
+    thisFrameRenderOrder.map(function(object) {
       lastFrameRenderOrder.push(object);
     });
 
     thisFrameRenderOrder.length = 0;
   };
-})(kontra, window.addEventListener);
+})();

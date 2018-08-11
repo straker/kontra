@@ -93,23 +93,7 @@ var animation = kontra.animation({
         <section>
           <h2 id="clone"><a href="#clone" class="section-link">kontra.animation&#8203;.clone()<span aria-hidden="true">#</span></a></h2>
 
-          <p>Clone an animation so it can be used more than once. If multiple <a href="sprite">sprites</a> share an animation, it must be cloned for each sprite otherwise all sprites would update the same animation, causing it to update at an accelerated speed.</p>
-
-          <pre><code class="language-javascript">var sprite = kontra.sprite({
-  x: 200,
-  y: 100,
-  animations: {
-    'walk': animation.clone()
-  }
-});
-
-var sprite2 = kontra.sprite({
-  x: 300,
-  y: 50,
-  animations: {
-    'walk': animation.clone()
-  }
-});</code></pre>
+          <p>Clone an animation so it can be used more than once. By default animations passed to <a href="sprite#animation-sprite">kontra.sprite</a> will be cloned so no two sprites update the same animation. Otherwise two sprites who shared the same animation would make it update twice as fast.</p>
 
         </section>
 

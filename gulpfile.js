@@ -3,7 +3,7 @@ var concat = require('gulp-concat-util');
 var connect = require('gulp-connect');
 var rename = require('gulp-rename');
 var size = require('gulp-size');
-var uglify = require('gulp-uglify');
+var terser = require('gulp-terser');
 var changed = require('gulp-changed');
 var plumber = require('gulp-plumber');
 var preprocess = require('gulp-preprocess');
@@ -24,7 +24,7 @@ gulp.task('scripts', function() {
     .pipe(gulp.dest('./docs/js'))
     .pipe(preprocess({context: { DEBUG: DEBUG, VISUAL_DEBUG: VISUAL_DEBUG}}))
     .pipe(plumber())
-    .pipe(uglify())
+    .pipe(terser())
     .pipe(plumber.stop())
     .pipe(rename('kontra.min.js'))
     .pipe(size({
@@ -43,7 +43,7 @@ gulp.task('dist', function() {
     .pipe(preprocess({context: { DEBUG: DEBUG, VISUAL_DEBUG: VISUAL_DEBUG}}))
     .pipe(changed('./dist'))
     .pipe(plumber())
-    .pipe(uglify())
+    .pipe(terser())
     .pipe(plumber.stop())
     .pipe(size({
       showFiles: true

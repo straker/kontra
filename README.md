@@ -37,6 +37,7 @@ All the documentation can be found on the [github page](https://straker.github.i
 ## Community tutorials
 
 - [js13kGames Video Tutorial Series by Zenva](https://gamedevacademy.org/js13kgames-tutorial-video-series/)
+- [Making Asteroids with Kontra.js and Web Maker](https://medium.com/web-maker/making-asteroids-with-kontra-js-and-web-maker-95559d39b45f)
 
 ## Games made with Kontra
 

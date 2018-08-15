@@ -4,7 +4,9 @@
   "description": "Kontra HTML5 game development library",
   "main": "kontra.js",
   "scripts": {
-    "test": "./node_modules/.bin/karma start --single-run"
+    "test": "gulp test",
+    "dist": "gulp dist",
+    "scripts": "gulp scripts"
   },
   "repository": {
     "type": "git",

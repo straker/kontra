@@ -1,4 +1,4 @@
-this.kontra = {
+kontra = {
 
   /**
    * Initialize the canvas.

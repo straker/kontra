@@ -340,14 +340,14 @@ tileEngine.addLayers({
 
           <p>Add a tileset image to the tile engine. Called from <code>kontra.tileEngine</code> automatically if the <code>tilesets</code> property is passed in.</p>
 
-          <pre><code class="language-javascript">let img document.createElement('img');
+          <pre><code class="language-javascript">let img = document.createElement('img');
 img.src = '../imgs/mapPack_tilesheet.png',
 
 let tileEngine = kontra.tileEngine({
   tileWidth: 62,
   tileHeight: 62,
   width: 9,
-  height: 9
+  height: 9,
 
   // this will also call addTilesets()
   tilesets: [{

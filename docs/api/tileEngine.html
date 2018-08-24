@@ -151,18 +151,27 @@ img.onload = function() {
 
           <p>Lastly, you'll need to add at least one layer to the tile engine. A layer will tell the tile engine which tiles from the tileset image to use at what position on the map.</p>
 
-          <pre><code class="language-javascript">tileEngine.addLayers({
-  name: 'ground',
-  data: [ 0,  0,  0,  0,  0,  0,  0,  0,  0,
-          0,  0,  6,  7,  7,  8,  0,  0,  0,
-          0,  6,  27, 24, 24, 25, 0,  0,  0,
-          0,  23, 24, 24, 24, 26, 8,  0,  0,
-          0,  23, 24, 24, 24, 24, 26, 8,  0,
-          0,  23, 24, 24, 24, 24, 24, 25, 0,
-          0,  40, 41, 41, 10, 24, 24, 25, 0,
-          0,  0,  0,  0,  40, 41, 41, 42, 0,
-          0,  0,  0,  0,  0,  0,  0,  0,  0 ]
-});</code></pre>
+          <pre><code class="language-javascript">img.onload = function() {
+  tileEngine.addTilesets({
+    image: img
+  });
+  
+  // Add the following:
+  tileEngine.addLayers({
+    name: 'ground',
+    data: [ 0,  0,  0,  0,  0,  0,  0,  0,  0,
+            0,  0,  6,  7,  7,  8,  0,  0,  0,
+            0,  6,  27, 24, 24, 25, 0,  0,  0,
+            0,  23, 24, 24, 24, 26, 8,  0,  0,
+            0,  23, 24, 24, 24, 24, 26, 8,  0,
+            0,  23, 24, 24, 24, 24, 24, 25, 0,
+            0,  40, 41, 41, 10, 24, 24, 25, 0,
+            0,  0,  0,  0,  40, 41, 41, 42, 0,
+            0,  0,  0,  0,  0,  0,  0,  0,  0 ]
+
+  });
+}
+</code></pre>
 
           <p>Once all tileset images and all layers have been added, you can render the tile engine by calling its <a href="#render">render()</a> function.</p>
 

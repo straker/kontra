@@ -88,12 +88,13 @@
             <dd>Function to call when the key is pressed.</dd>
           </dl>
 
-          <p>Bind a set of keys to a function when pressed. Takes a single key or an array of keys.</p>
+          <p>Bind a set of keys to a function when pressed. Takes a single key or an array of keys. Passes the original event as a parameter.</p>
 
           <pre><code class="language-javascript">kontra.keys.bind('p', function() {
   // pause the game
 });
-kontra.keys.bind(['enter', 'space'], function() {
+kontra.keys.bind(['enter', 'space'], function(e) {
+  e.preventDefault();
   // fire gun
 });</code></pre>
 

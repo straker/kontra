@@ -31,8 +31,12 @@
 
       // pass the animations to the sprite
       window.sprite = kontra.sprite({
-        x: 267,
-        y: 154,
+        anchor: {
+          x: 0.5,
+          y: 0.5,
+        },
+        x: 300,
+        y: 200,
         animations: spriteSheet.animations
       });
 

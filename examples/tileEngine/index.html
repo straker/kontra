@@ -28,7 +28,7 @@
     var terrain = kontra.assets.data.terrain;
 
     // setup tile engine
-    var tileEngine = kontra.tileEngine(kontra.assets.data.terrain);
+    window.tileEngine = kontra.tileEngine(kontra.assets.data.terrain);
     tileEngine.sx = terrain.width * terrain.tilewidth / 2 - kontra.canvas.width / 2,
     tileEngine.sy = terrain.height * terrain.tileheight - kontra.canvas.height
 

@@ -75,7 +75,8 @@
       url = joinPath(assets.imagePath, originalUrl);
 
       image.onload = function loadImageOnLoad() {
-        assets.images[ getName(originalUrl) ] = assets.images[url] = this;
+        let fullUrl = assets._u(url, window.location.href);
+        assets.images[ getName(originalUrl) ] = assets.images[url] = assets.images[fullUrl] = this;
         resolve(this);
       };
 
@@ -117,7 +118,8 @@
         url = joinPath(assets.audioPath, originalUrl);
 
         audio.addEventListener('canplay', function loadAudioOnLoad() {
-          assets.audio[ getName(originalUrl) ] = assets.audio[url] = this;
+          let fullUrl = assets._u(url, window.location.href);
+          assets.audio[ getName(originalUrl) ] = assets.audio[url] = assets.audio[fullUrl] = this;
           resolve(this);
         });
 
@@ -151,7 +153,12 @@
       if (!response.ok) throw response;
       return response.clone().json().catch(function() { return response.text() })
     }).then(function(data) {
-      assets.data[ getName(originalUrl) ] = assets.data[url] = data;
+      let fullUrl = assets._u(url, window.location.href);
+      if (typeof data === 'object') {
+        assets._d.set(data, fullUrl);
+      }
+
+      assets.data[ getName(originalUrl) ] = assets.data[url] = assets.data[fullUrl] = data;
       return data;
     });
   }
@@ -164,6 +171,10 @@
     images: {},
     audio: {},
     data: {},
+    _d: new WeakMap(),
+    _u(url, base) {
+      return new URL(url, base).href;
+    },
 
     // base asset path for determining asset URLs
     imagePath: '',

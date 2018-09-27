@@ -149,7 +149,7 @@ img.onload = function() {
 
           <h3 id="add-layers"><a href="#add-layers" class="section-link">Adding Layers to the Tile Engine<span aria-hidden="true">#</span></a></h3>
 
-          <p>Lastly, you'll need to add at least one layer to the tile engine. A layer will tell the tile engine which tiles from the tileset image to use at what position on the map.</p>
+          <p>Lastly, you'll need to add at least one layer to the tile engine. A layer will tell the tile engine which tiles from the tileset image to use at what position on the map. Layer data is 1 indexed, meaning that <code>0</code> represents an empty tile.</p>
 
           <pre><code class="language-javascript">tileEngine.addLayers({
   name: 'ground',

@@ -14,7 +14,7 @@
 */
 
 html {
-  font-size: 18px;
+  font-size: 20px;
 }
 
 html, body {
@@ -355,6 +355,29 @@ code-output {
 
 dd > dl {
   margin-top: 1.312rem;
+}
+
+/**
+ * Games made with kontra.js page
+ */
+.games {
+  display: grid;
+  grid-gap: 1.312rem;
+  grid-template-columns: repeat(2, 1fr);
+  text-align: center;
+  list-style: none;
+}
+
+.games li {
+  position: relative;
+}
+
+.games img {
+  width: 100%;
+}
+
+.games span {
+  display: block;
 }
 
 @media screen and (max-width: 768px) {

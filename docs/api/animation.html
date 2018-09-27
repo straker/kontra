@@ -79,7 +79,7 @@ let animation = kontra.animation({
               <h3 id="methods">Methods</h3>
               <ul aria-labeledby="methods">
                 <li><a href="#clone">kontra.animation&#8203;.clone()</a></li>
-                <li><a href="#render">kontra.animation&#8203;.render(properties)</a></li>
+                <li><a href="#render">kontra.animation&#8203;.render(x, y, context)</a></li>
                 <li><a href="#reset">kontra.animation&#8203;.reset()</a></li>
                 <li><a href="#update">kontra.animation&#8203;.update(dt)</a></li>
               </ul>
@@ -167,16 +167,14 @@ let animation = kontra.animation({
 
 
         <section>
-          <h2 id="render"><a href="#render" class="section-link">kontra.animation&#8203;.render(properties)<span aria-hidden="true">#</span></a></h2>
+          <h2 id="render"><a href="#render" class="section-link">kontra.animation&#8203;.render(x, y, context)<span aria-hidden="true">#</span></a></h2>
 
           <dl>
-            <dt><strong>properties</strong> <em>{object}</em></dt>
-            <dd>How the animation should be rendered.</dd>
-            <dt><strong>properties.x</strong> <em>{number}</em></dt>
+            <dt><strong>x</strong> <em>{number}</em></dt>
             <dd>X coordinate to render the animation.</dd>
-            <dt><strong>properties.y</strong> <em>{number}</em></dt>
+            <dt><strong>y</strong> <em>{number}</em></dt>
             <dd>Y coordinate to render the animation.</dd>
-            <dt><strong>properties.context</strong> <em>{CanvasRenderingContext2D}</em></dt>
+            <dt><strong>context</strong> <em>{CanvasRenderingContext2D}</em></dt>
             <dd>Optional. The context the animation should draw to. Defaults <a href="kontra#context">kontra.context</a>.</dd>
           </dl>
 

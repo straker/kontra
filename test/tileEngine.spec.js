@@ -37,8 +37,8 @@ describe('kontra.tileEngine', function() {
       expect(tileEngine.height).to.equal(data.height);
       expect(tileEngine.tilesets).to.equal(data.tilesets);
       expect(tileEngine.layers).to.equal(data.layers);
-      expect(tileEngine.mapWidth).to.equal(500);
-      expect(tileEngine.mapHeight).to.equal(500);
+      expect(tileEngine.mapwidth).to.equal(500);
+      expect(tileEngine.mapheight).to.equal(500);
     });
 
     it('should resolve tileset image', function() {

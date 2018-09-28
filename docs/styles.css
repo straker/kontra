@@ -271,6 +271,11 @@ code[class*=language-], pre[class*=language-] {
   font-size: 0.889rem;
 }
 
+.object-prop {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid;
+}
 
 
 

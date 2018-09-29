@@ -12,6 +12,8 @@
       <li><a href="">Introduction</a></li>
       <li><a href="getting-started">Getting Started</a></li>
       <li><a href="download">Download</a></li>
+      <li><a href="tutorials">Tutorials</a></li>
+      <li><a href="made-with-kontra">Made With Kontra</a></li>
 
       <li>
         <h2 id="api">API</h2>
@@ -33,6 +35,8 @@
       </li>
     </ul>
   </nav>
+
+  <div class="scroll-indicator" aria-hidden="true"><span>^</span></div>
 </template>
 
 <script>
@@ -42,7 +46,7 @@
     var mainNavProto = Object.create(HTMLElement.prototype);
 
     mainNavProto.attachedCallback = function() {
-      this.classList.add('main-nav');
+      this.classList.add('main-nav', 'showScroll');
 
       var nav = document.importNode(template.content, true);
       var anchorEls = nav.querySelectorAll('a');
@@ -59,6 +63,14 @@
       }
 
       this.appendChild(nav);
+      this.addEventListener('scroll', function(e) {
+        if (this.offsetHeight + this.scrollTop >= this.scrollHeight) {
+          this.classList.remove('showScroll');
+        }
+        else {
+          this.classList.add('showScroll');
+        }
+      }.bind(this));
 
       var currentNav = this.querySelector('[href*="'+window.location.pathname+'"]');
 

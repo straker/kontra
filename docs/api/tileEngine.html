@@ -31,24 +31,39 @@
           <dd>Width of the tile map (in number of tiles).</dd>
           <dt><strong>properties.height</strong> <em>{number}</em></dt>
           <dd>Height of the tile map (in number of tiles).</dd>
-          <dt><strong>properties.tileWidth</strong> <em>{number}</em></dt>
-          <dd>Optional. Width of a single tile. Defaults to 32.</dd>
-          <dt><strong>properties.tileHeight</strong> <em>{number}</em></dt>
-          <dd>Optional. Height of a single tile. Defaults to 32.</dd>
-          <dt><strong>properties.tilesets</strong> <em>{object[]}</em></dt>
-          <dd>Optional. Array of tileset objects. Passed directly into the tile engines <a href="#addTilesets">addTilesets(tilesets)</a> function.</dd>
-          <dt><strong>properties.layers</strong> <em>{object[]}</em></dt>
-          <dd>Optional. Array of layer objects. Passed directly into the tile engines <a href="#addLayers">addLayers(layers)</a> function.</dd>
-          <dt><strong>properties.x</strong> <em>{number}</em></dt>
-          <dd>Optional. X coordinate of the canvas to start drawing the tile map. Defaults to 0.</dd>
-          <dt><strong>properties.y</strong> <em>{number}</em></dt>
-          <dd>Optional. Y coordinate of the canvas to start drawing the tile map. Defaults to 0.</dd>
-          <dt><strong>properties.sx</strong> <em>{number}</em></dt>
-          <dd>Optional. X coordinate of the tile map camera. Defaults to 0.</dd>
-          <dt><strong>properties.sy</strong> <em>{number}</em></dt>
-          <dd>Optional. Y coordinate of the tile map camera. Defaults to 0.</dd>
-          <dt><strong>properties.context</strong> <em>{CanvasRenderingContext2D}</em></dt>
-          <dd>Optional. The context the tile map should draw to. Defaults <a href="kontra#context">kontra.context</a>.</dd>
+          <dt><strong>properties.tilewidth</strong> <em>{number}</em></dt>
+          <dd>Width of a single tile (in pixels).</dd>
+          <dt><strong>properties.tileheight</strong> <em>{number}</em></dt>
+          <dd>Height of a single tile (in pixels).</dd>
+
+          <dt class="object-prop"><strong>properties.tilesets</strong> <em>{object[]}</em></dt>
+          <dd>Array of tileset objects.</dd>
+          <dt><strong>properties.tilesets.firstgid</strong> <em>{number}</em></dt>
+          <dd>First tile index of the tileset. The first tileset will have a firstgid> of 1 as 0 represents an empty tile.</dd>
+          <dt><strong>properties.tilesets.image</strong> <em>{string | HTMLImageElement}</em></dt>
+          <dd>Relative path to the HTMLImageElement or an HTMLImageElement.</dd>
+          <dt><strong>properties.tilesets.margin</strong> <em>{number}</em></dt>
+          <dd>Optional. The amount of whitespace between each tile. Defaults to 0.</dd>
+          <dt><strong>properties.tilesets.tilewidth</strong> <em>{number}</em></dt>
+          <dd>Optional. Width of the tileset (in number of tiles). Defaults to <a href="#tilewidth">tilewidth</a>.</dd>
+          <dt><strong>properties.tilesets.tileheight</strong> <em>{number}</em></dt>
+          <dd>Optional. Height of the tileset (in number of tiles). Defaults to <a href="#tileheight">tileheight</a>.</dd>
+          <dt><strong>properties.tilesets.source</strong> <em>{string}</em></dt>
+          <dd>Optional. Relative path to the tileset JSON file.</dd>
+          <dt><strong>properties.tilesets.columns</strong> <em>{number}</em></dt>
+          <dd>Optional. Number of columns in the tileset image.</dd>
+
+          <dt class="object-prop"><strong>properties.layers</strong> <em>{object[]}</em></dt>
+          <dd>Array of layer objects.</dd>
+          <dt><strong>properties.layers.name</strong> <em>{string}</em></dt>
+          <dd>Unique name of the layer.</dd>
+          <dt><strong>properties.layers.data</strong> <em>{number[]}</em></dt>
+          <dd>1D array of tile indices.</dd>
+          <dt><strong>properties.layers.visible</strong> <em>{boolean}</em></dt>
+          <dd>Optional. If the layer should be drawn or not. Defaults to true.</dd>
+          <dt><strong>properties.layers.opacity</strong> <em>{number}</em></dt>
+          <dd>Optional. Percent opacity of the layer. Defaults to 1.</dd>
+
         </dl>
 
         <p>A tile engine for managing and drawing tilesets.</p>
@@ -78,24 +93,20 @@
                 <li><a href="#context">kontra.tileEngine&#8203;.context</a></li>
                 <li><a href="#height">kontra.tileEngine&#8203;.height</a></li>
                 <li><a href="#layers">kontra.tileEngine&#8203;.layers</a></li>
+                <li><a href="#mapheight">kontra.tileEngine&#8203;.mapheight</a></li>
+                <li><a href="#mapwidth">kontra.tileEngine&#8203;.mapwidth</a></li>
                 <li><a href="#sx">kontra.tileEngine&#8203;.sx</a></li>
                 <li><a href="#sy">kontra.tileEngine&#8203;.sy</a></li>
-                <li><a href="#tileHeight">kontra.tileEngine&#8203;.tileHeight</a></li>
+                <li><a href="#tileheight">kontra.tileEngine&#8203;.tileheight</a></li>
                 <li><a href="#tilesets">kontra.tileEngine&#8203;.tilesets</a></li>
-                <li><a href="#tileWidth">kontra.tileEngine&#8203;.tileWidth</a></li>
+                <li><a href="#tilewidth">kontra.tileEngine&#8203;.tilewidth</a></li>
                 <li><a href="#width">kontra.tileEngine&#8203;.width</a></li>
-                <li><a href="#x">kontra.tileEngine&#8203;.x</a></li>
-                <li><a href="#y">kontra.tileEngine&#8203;.y</a></li>
               </ul>
             </li>
 
             <li>
               <h3 id="methods">Methods</h3>
               <ul aria-labeledby="methods">
-                <li><a href="#addLayers">kontra.tileEngine&#8203;.addLayers(layers)</a></li>
-                <li><a href="#addTilesets">kontra.tileEngine&#8203;.addTilesets(tilesets)</a></li>
-                <li><a href="#getCol">kontra.tileEngine&#8203;.getCol(x)</a></li>
-                <li><a href="#getRow">kontra.tileEngine&#8203;.getRow(y)</a></li>
                 <li><a href="#layerCollidesWith">kontra.tileEngine&#8203;.layerCollidesWith(name, object)</a></li>
                 <li><a href="#render">kontra.tileEngine&#8203;.render()</a></li>
                 <li><a href="#renderLayer">kontra.tileEngine&#8203;.renderLayer(name)</a></li>
@@ -115,92 +126,57 @@
           <p>Creating a tile map requires three things:</p>
 
           <ol>
-            <li>Setting up the tile engine</li>
-            <li>Adding images to the tile engine</li>
-            <li>Adding layers to the tile engine</li>
+            <li>Dimensions of the tile map and a tile</li>
+            <li>At least one tileset with an image</li>
+            <li>At least one layer with data</li>
           </ol>
 
-          <h3 id="setting-up"><a href="#setting-up" class="section-link">Setting Up the Tile Engine<span aria-hidden="true">#</span></a></h3>
+          <p>To set up the tile engine, you'll need to pass it the width and height of a tile (in pixels) and the width and height of the map (in number of tiles).</p>
 
-          <p>To set up the tile engine, you'll need to pass it the width and height of a tile and the width and height of the map (in number of tiles).</p>
+          <p>You'll then need to add at least one tileset with an image as well as firstgid, or fist tile index of the tileset. The first tileset will always have a firstgid of 1 as <code>0</code> represents an empty tile.</p>
 
-          <pre><code class="language-javascript">let tileEngine = kontra.tileEngine({
-  // tile size
-  tileWidth: 64,
-  tileHeight: 64,
-
-  // map size in tiles
-  width: 9,
-  height: 9
-});</code></pre>
-
-          <h3 id="add-images"><a href="#add-images" class="section-link">Adding Images to the Tile Engine<span aria-hidden="true">#</span></a></h3>
-
-          <p>Once the tile engine is set up, you'll need to add at least one tileset image.</p>
-
-          <pre><code class="language-javascript">let img = document.createElement('img');
-img.src = '../imgs/mapPack_tilesheet.png';
-
-img.onload = function() {
-  tileEngine.addTilesets({
-    image: img
-  });
-};</code></pre>
-
-          <h3 id="add-layers"><a href="#add-layers" class="section-link">Adding Layers to the Tile Engine<span aria-hidden="true">#</span></a></h3>
-
-          <p>Lastly, you'll need to add at least one layer to the tile engine. A layer will tell the tile engine which tiles from the tileset image to use at what position on the map.</p>
-
-          <pre><code class="language-javascript">img.onload = function() {
-  tileEngine.addTilesets({
-    image: img
-  });
-  
-  // Add the following:
-  tileEngine.addLayers({
-    name: 'ground',
-    data: [ 0,  0,  0,  0,  0,  0,  0,  0,  0,
-            0,  0,  6,  7,  7,  8,  0,  0,  0,
-            0,  6,  27, 24, 24, 25, 0,  0,  0,
-            0,  23, 24, 24, 24, 26, 8,  0,  0,
-            0,  23, 24, 24, 24, 24, 26, 8,  0,
-            0,  23, 24, 24, 24, 24, 24, 25, 0,
-            0,  40, 41, 41, 10, 24, 24, 25, 0,
-            0,  0,  0,  0,  40, 41, 41, 42, 0,
-            0,  0,  0,  0,  0,  0,  0,  0,  0 ]
-
-  });
-}
-</code></pre>
+          <p>Lastly, you'll need to add at least one named layer with data. A layer tells the tile engine which tiles from the tileset image to use at what position on the map.</p>
 
           <p>Once all tileset images and all layers have been added, you can render the tile engine by calling its <a href="#render">render()</a> function.</p>
 
 <code-output width="576" height="576">
-/* exclude:start */let tileEngine = kontra.tileEngine({
-  // tile size
-  tileWidth: 64,
-  tileHeight: 64,
-
-  // map size in tiles
-  width: 9,
-  height: 9
-});
 let img = document.createElement('img');
 img.src = '../imgs/mapPack_tilesheet.png';
 
 img.onload = function() {
-  tileEngine.addTilesets({
-    image: img
+  let tileEngine = kontra.tileEngine({
+    // tile size
+    tilewidth: 64,
+    tileheight: 64,
+
+    // map size in tiles
+    width: 9,
+    height: 9,
+
+    tilesets: [{
+      firstgid: 1,
+      image: img
+    }],
+
+    layers: [{
+      name: 'ground',
+      data: [ 0,  0,  0,  0,  0,  0,  0,  0,  0,
+              0,  0,  6,  7,  7,  8,  0,  0,  0,
+              0,  6,  27, 24, 24, 25, 0,  0,  0,
+              0,  23, 24, 24, 24, 26, 8,  0,  0,
+              0,  23, 24, 24, 24, 24, 26, 8,  0,
+              0,  23, 24, 24, 24, 24, 24, 25, 0,
+              0,  40, 41, 41, 10, 24, 24, 25, 0,
+              0,  0,  0,  0,  40, 41, 41, 42, 0,
+              0,  0,  0,  0,  0,  0,  0,  0,  0 ]
+    }]
   });
 
-  tileEngine.addLayers({
-    name: 'ground',
-    data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 7, 7, 8, 0, 0, 0, 0, 6, 27, 24, 24, 25, 0, 0, 0, 0, 23, 24, 24, 24, 26, 8, 0, 0, 0, 23, 24, 24, 24, 24, 26, 8, 0, 0, 23, 24, 24, 24, 24, 24, 25, 0, 0, 40, 41, 41, 10, 24, 24, 25, 0, 0, 0, 0, 0, 40, 41, 41, 42, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-  });
-
-/* exclude:end */tileEngine.render();/* exclude:start */
-};
-/* exclude:end */
+  /* exclude:start */
+  tileEngine.context = context;
+  /* exclude:end */
+  tileEngine.render();
+}
 </code-output>
 
         </section>
@@ -212,7 +188,9 @@ img.onload = function() {
         <section>
           <h2 id="advance-use"><a href="#advance-use" class="section-link">Advance Use<span aria-hidden="true">#</span></a></h2>
 
-          <p>Adding all the tileset images and layers to a tile engine can be tedious, especially if you have multiple layers. If you want a simpler way to create a tile engine, Kontra has been written to work directly with the JSON output of the <a href="http://www.mapeditor.org/">Tiled Map Editor</a>. The one requirement is that you must preload all of the tileset images using <a href="assets#load">kontra.assets.load()</a> before you create the tile engine.</p>
+          <p>Adding all the tileset images and layers to a tile engine can be tedious, especially if you have multiple layers. If you want a simpler way to create a tile engine, Kontra has been written to work directly with the JSON output of the <a href="http://www.mapeditor.org/">Tiled Map Editor</a>.</p>
+
+          <p>The one requirement is that you must preload all of the tileset images and tileset sources using <a href="assets#load">kontra.assets.load()</a> before you create the tile engine.</p>
 
 <code-output width="576" height="576">
 kontra.assets.load('../imgs/mapPack_tilesheet.png', '../data/tile_engine_basic.json')
@@ -272,152 +250,11 @@ kontra.assets.load('../imgs/mapPack_tilesheet.png', '../data/tile_engine_camera.
 
 
         <section>
-          <h2 id="addLayers"><a href="#addLayers" class="section-link">kontra.tileEngine&#8203;.addLayers(layers)<span aria-hidden="true">#</span></a></h2>
-
-          <dl>
-            <dt><strong>layers</strong> <em>{object | object[]}</em></dt>
-            <dd>A single layer or array of layers to add. Each layer has the following properties:
-              <dl aria-label="Layer properties">
-                <dt><strong>name</strong> <em>{string}</em></dt>
-                <dd>Name of the layer.</dd>
-                <dt><strong>data</strong> <em>{number[]}</em></dt>
-                <dd>Tile layer data. Can either be a 2D array (an array of rows with nested arrays for columns), or a flattened 1D array (all rows and columns in a single list).</dd>
-                <dt><strong>render</strong> <em>{boolean}</em></dt>
-                <dd>Optional. If the layer should be drawn. Defaults to true.</dd>
-                <dt><strong>zIndex</strong> <em>{number}</em></dt>
-                <dd>Optional. Draw order for tile layer. Highest number is drawn last (i.e. on top of all other layers). Layers with the same zIndex will be draw in the order they were added to the tile engine. Defaults to 0.</dd>
-                <dt><strong>properties</strong> <em>{object}</em></dt>
-                <dd>Optional. Layer properties, primarily used by Tiled. All properties will be merged back into the layer object itself. E.g. <code>layer.properties.render</code> will be added as <code>layer.render</code>.</dd>
-              </dl>
-            </dd>
-          </dl>
-
-          <p>Add a layer to the tile engine. A layer data can either be a 2D array (an array of rows with nested column data) or a flattened array (row and column data in a single array). Called from <code>kontra.tileEngine</code> automatically if the <code>layers</code> property is passed in.</p>
-
-          <p>If you don't want the layer to render when the tile engines <a href="#render">render()</a> function is called, set the <code>layers</code> render property to <code>false</code>. You'll have to call <a href="#renderLayer">renderLayer(name)</a> when you want the layer to render.</p>
-
-          <pre><code class="language-javascript">// 2D array
-let 2dData = [ [0,0,0,0],
-               [0,1,2,0],
-               [0,3,4,0],
-               [0,0,0,0] ];
-
-// flattened array
-let 1dData = [  0,0,0,0,
-                0,0,6,0,
-                0,7,0,0,
-                0,0,0,0  ];
-
-let tileEngine = kontra.tileEngine({
-  tileWidth: 62,
-  tileHeight: 62,
-  width: 9,
-  height: 9
-
-  // this will also call addLayers()
-  layers: [{
-    name: 'base',
-    data: 2dData,
-  }]
-});
-
-tileEngine.addLayers({
-  name: 'grass',
-  data: 1dData
-});</code></pre>
-
-        </section>
-
-
-
-
-
-        <section>
-          <h2 id="addTilesets"><a href="#addTilesets" class="section-link">kontra.tileEngine&#8203;.addTilesets(tilesets)<span aria-hidden="true">#</span></a></h2>
-
-          <dl aria-labeledby="addTilesets">
-            <dt><strong>tilesets</strong> <em>{object | object[]}</em></dt>
-            <dd>A single tileset or array of tilesets to add. Each tileset has the following properties:
-              <dl aria-label="Tileset properties">
-                <dt><strong>image</strong> <em>{HTMLImageElement | HTMLCanvasElement | string}</em></dt>
-                <dd>The tileset image or path to the tileset image. If it's an image path, it will look for the path in <a href="assets#images">kontra.assets.images</a>. This means you must load the tileset image using <a href="assets#load">kontra.assets.load()</a> before you call this function if you are using Tiled JSON output.</dd>
-                <dt><strong>firstGrid</strong> <em>{number}</em></dt>
-                <dd>The first tile grid index of the tileset. If using a single tileset this will be <code>0</code>, but when using multiple tilesets the first grid index of the new tileset is typically the last grid index + 1 of the previous tileset (when loaded in order).</dd>
-              </dl>
-            </dd>
-          </dl>
-
-          <p>Add a tileset image to the tile engine. Called from <code>kontra.tileEngine</code> automatically if the <code>tilesets</code> property is passed in.</p>
-
-          <pre><code class="language-javascript">let img = document.createElement('img');
-img.src = '../imgs/mapPack_tilesheet.png',
-
-let tileEngine = kontra.tileEngine({
-  tileWidth: 62,
-  tileHeight: 62,
-  width: 9,
-  height: 9,
-
-  // this will also call addTilesets()
-  tilesets: [{
-    image: img,
-    firstGrid: 0
-  }]
-});
-
-// load the image before we use a path
-kontra.assets.load('../imgs/mapPack_tilesheet.png')
-  .then(function() {
-    tileEngine.addTilesets({
-      image: '../imgs/mapPack_tilesheet.png',
-      firstGrid: 50
-    });
-  });</code></pre>
-
-        </section>
-
-
-
-
-
-        <section>
           <h2 id="context"><a href="#context" class="section-link">kontra.tileEngine&#8203;.context<span aria-hidden="true">#</span></a></h2>
 
           <p><em>{CanvasRenderingContext2D}</em></p>
 
           <p>The context the tile engine will draw to.</p>
-
-        </section>
-
-
-
-
-
-        <section>
-          <h2 id="getRow"><a href="#getRow" class="section-link">kontra.tileEngine&#8203;.getRow(y)<span aria-hidden="true">#</span></a></h2>
-
-          <dl>
-            <dt><strong>y</strong> <em>{number}</em></dt>
-            <dd>Y coordinate.</dd>
-          </dl>
-
-          <p>Get the grid row from the y coordinate.</p>
-
-        </section>
-
-
-
-
-
-        <section>
-          <h2 id="getCol"><a href="#getCol" class="section-link">kontra.tileEngine&#8203;.getCol(x)<span aria-hidden="true">#</span></a></h2>
-
-          <dl>
-            <dt><strong>x</strong> <em>{number}</em></dt>
-            <dd>X coordinate.</dd>
-          </dl>
-
-          <p>Get the grid column from the x coordinate.</p>
 
         </section>
 
@@ -451,20 +288,18 @@ kontra.assets.load('../imgs/mapPack_tilesheet.png')
           <p>Check if the object collides with the layer (shares a gird coordinate with any positive tile index in layers data). The object being checked must have the properties <code>x</code>, <code>y</code>, <code>width</code>, and <code>height</code> so that its position in the grid can be calculated. <a href="sprite">kontra.sprite</a> defines these properties for you.</p>
 
           <pre><code class="language-javascript">let tileEngine = kontra.tileEngine({
-  tileWidth: 32,
-  tileHeight: 32,
+  tilewidth: 32,
+  tileheight: 32,
   width: 4,
-  height: 4
-});
-
-tileEngine.addTilesets({/* ... */});
-
-tileEngine.addLayers({
-  name: 'collision',
-  data: [ 0,0,0,0,
-          0,1,4,0,
-          0,2,5,0,
-          0,0,0,0 ]
+  height: 4,
+  tilesets: [{/* ... */}],
+  layers: [{
+    name: 'collision',
+    data: [ 0,0,0,0,
+            0,1,4,0,
+            0,2,5,0,
+            0,0,0,0 ]
+  }]
 });
 
 let sprite = kontra.sprite({
@@ -491,7 +326,33 @@ tileEngine.layerCollidesWith('collision', sprite);  //=> true</code></pre>
 
           <p><em>{object[]}</em></p>
 
-          <p>Array of all layers added to the tile engine.</p>
+          <p>Array of all layers of the tile engine.</p>
+
+        </section>
+
+
+
+
+
+        <section>
+          <h2 id="mapheight"><a href="#mapheight" class="section-link">kontra.tileEngine&#8203;.mapheight<span aria-hidden="true">#</span></a></h2>
+
+          <p><em>{number}</em></p>
+
+          <p>The height of a tile map in pixels.</p>
+
+        </section>
+
+
+
+
+
+        <section>
+          <h2 id="mapwidth"><a href="#mapwidth" class="section-link">kontra.tileEngine&#8203;.mapwidth<span aria-hidden="true">#</span></a></h2>
+
+          <p><em>{number}</em></p>
+
+          <p>The width of a tile map in pixels.</p>
 
         </section>
 
@@ -502,7 +363,7 @@ tileEngine.layerCollidesWith('collision', sprite);  //=> true</code></pre>
         <section>
           <h2 id="render"><a href="#render" class="section-link">kontra.tileEngine&#8203;.render()<span aria-hidden="true">#</span></a></h2>
 
-          <p>Render all layers whose <code>render</code> property is set to <code>true</code>.</p>
+          <p>Render all visible layers.</p>
 
         </section>
 
@@ -565,20 +426,18 @@ tileEngine.layerCollidesWith('collision', sprite);  //=> true</code></pre>
           <p>Get the tile at the specified layer using either x and y coordinates or row and column coordinates.</p>
 
           <pre><code class="language-javascript">let tileEngine = kontra.tileEngine({
-  tileWidth: 32,
-  tileHeight: 32,
+  tilewidth: 32,
+  tileheight: 32,
   width: 4,
-  height: 4
-});
-
-tileEngine.addTilesets({/* ... */});
-
-tileEngine.addLayers({
-  name: 'collision',
-  data: [ 0,0,0,0,
-          0,1,4,0,
-          0,2,5,0,
-          0,0,0,0 ]
+  height: 4,
+  tilesets: [{/* ... */}],
+  layers: [{
+    name: 'collision',
+    data: [ 0,0,0,0,
+            0,1,4,0,
+            0,2,5,0,
+            0,0,0,0 ]
+  }]
 });
 
 tileEngine.tileAtLayer('collision', {x: 50, y: 50});  //=> 1
@@ -591,7 +450,7 @@ tileEngine.tileAtLayer('collision', {row: 2, col: 1});  //=> 2</code></pre>
 
 
         <section>
-          <h2 id="tileHeight"><a href="#tileHeight" class="section-link">kontra.tileEngine&#8203;.tileHeight<span aria-hidden="true">#</span></a></h2>
+          <h2 id="tileheight"><a href="#tileheight" class="section-link">kontra.tileEngine&#8203;.tileheight<span aria-hidden="true">#</span></a></h2>
 
           <p><em>{number}</em></p>
 
@@ -608,7 +467,7 @@ tileEngine.tileAtLayer('collision', {row: 2, col: 1});  //=> 2</code></pre>
 
           <p><em>{object[]}</em></p>
 
-          <p>Array of all tilesets added to the tile engine.</p>
+          <p>Array of all tilesets of the tile engine.</p>
 
         </section>
 
@@ -617,7 +476,7 @@ tileEngine.tileAtLayer('collision', {row: 2, col: 1});  //=> 2</code></pre>
 
 
         <section>
-          <h2 id="tileWidth"><a href="#tileWidth" class="section-link">kontra.tileEngine&#8203;.tileWidth<span aria-hidden="true">#</span></a></h2>
+          <h2 id="tilewidth"><a href="#tilewidth" class="section-link">kontra.tileEngine&#8203;.tilewidth<span aria-hidden="true">#</span></a></h2>
 
           <p><em>{number}</em></p>
 
@@ -637,34 +496,7 @@ tileEngine.tileAtLayer('collision', {row: 2, col: 1});  //=> 2</code></pre>
           <p>The width of the map in tiles.</p>
 
         </section>
-
-
-
-
-
-        <section>
-          <h2 id="x"><a href="#x" class="section-link">kontra.tileEngine&#8203;.x<span aria-hidden="true">#</span></a></h2>
-
-          <p><em>{number}</em></p>
-
-          <p>X coordinate of the canvas to start drawing the tile map.</p>
-
-        </section>
-
-
-
-
-
-        <section>
-          <h2 id="y"><a href="#y" class="section-link">kontra.tileEngine&#8203;.y<span aria-hidden="true">#</span></a></h2>
-
-          <p><em>{number}</em></p>
-
-          <p>Y coordinate of the canvas to start drawing the tile map.</p>
-
-        </section>
-
-      </div>
+       </div>
     </main>
   </div>
 

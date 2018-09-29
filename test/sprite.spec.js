@@ -417,6 +417,114 @@ describe('kontra.sprite', function() {
       sprite._ca.render.restore();
     });
 
+    it('should rotate the sprite', function() {
+      var sprite = kontra.sprite({
+        x: 10,
+        y: 20,
+        rotation: Math.PI
+      });
+
+      sinon.stub(sprite.context, 'rotate').callsFake(kontra._noop);
+
+      sprite.render();
+
+      expect(sprite.context.rotate.called).to.be.ok;
+
+      sprite.context.rotate.restore();
+    });
+
+    it('should draw a rect sprite and take into account sprite.anchor', function() {
+      var sprite = kontra.sprite({
+        x: 10,
+        y: 20,
+        width: 100,
+        height: 50,
+        anchor: {
+          x: 0.5,
+          y: 0.5
+        }
+      });
+
+      sinon.stub(sprite.context, 'fillRect').callsFake(kontra._noop);
+
+      sprite.render();
+
+      expect(sprite.context.fillRect.calledWith(-50, -25, 100, 50)).to.be.ok;
+
+      sprite.anchor = {x: 1, y: 1};
+      sprite.render();
+
+      expect(sprite.context.fillRect.calledWith(-100, -50, 100, 50)).to.be.ok;
+
+      sprite.context.fillRect.restore();
+    });
+
+    it('should draw an image sprite and take into account sprite.anchor', function() {
+      var img = new Image();
+      img.width = 10;
+      img.height = 20;
+
+      var sprite = kontra.sprite({
+        x: 10,
+        y: 20,
+        image: img,
+        anchor: {
+          x: 0.5,
+          y: 0.5
+        }
+      });
+
+      sinon.stub(sprite.context, 'drawImage').callsFake(kontra._noop);
+
+      sprite.render();
+
+      expect(sprite.context.drawImage.calledWith(img, -5, -10)).to.be.ok;
+
+      sprite.anchor = {x: 1, y: 1};
+      sprite.render();
+
+      expect(sprite.context.drawImage.calledWith(img, -10, -20)).to.be.ok;
+
+      sprite.context.drawImage.restore();
+    });
+
+    it('should draw an animation sprite and take into account sprite.anchor', function() {
+      var animations = {
+        'walk': {
+          width: 10,
+          height: 20,
+          update: kontra._noop,
+          render: kontra._noop,
+          clone: function() {
+            return this;
+          }
+        }
+      };
+
+      var sprite = kontra.sprite({
+        x: 10,
+        y: 20,
+        animations: animations,
+        anchor: {
+          x: 0.5,
+          y: 0.5
+        }
+      });
+
+      sinon.stub(sprite._ca, 'render').callsFake(kontra._noop);
+
+      sprite.render();
+
+      expect(sprite._ca.render.calledWithMatch({x: -5, y: -10, context: sprite.context})).to.be.ok;
+
+      sprite.anchor = {x: 1, y: 1};
+      sprite.render();
+
+      expect(sprite._ca.render.calledWithMatch({x: -10, y: -20, context: sprite.context})).to.be.ok;
+
+      sprite._ca.render.restore();
+    });
+
   });
 
 
@@ -466,6 +574,36 @@ describe('kontra.sprite', function() {
       expect(sprite1.collidesWith(sprite2)).to.be.false;
     });
 
+    it('should take into account sprite.anchor', function() {
+      var sprite1 = kontra.sprite({
+        x: 10,
+        y: 20,
+        width: 10,
+        height: 20,
+        anchor: {
+          x: 0.5,
+          y: 0.5
+        }
+      });
+
+      var sprite2 = kontra.sprite({
+        x: 10,
+        y: 20,
+        width: 10,
+        height: 20
+      });
+
+      expect(sprite1.collidesWith(sprite2)).to.be.true;
+
+      sprite1.anchor = {x: 1, y: 0};
+
+      expect(sprite1.collidesWith(sprite2)).to.be.false;
+
+      sprite2.anchor = {x: 1, y: 0};
+
+      expect(sprite1.collidesWith(sprite2)).to.be.true;
+    });
+
   });
 
 
@@ -480,7 +618,7 @@ describe('kontra.sprite', function() {
     it('should return true when the sprite is alive', function() {
       var sprite = kontra.sprite();
 
-      expect(sprite.isAlive()).to.be.false;
+      expect(sprite.isAlive()).to.be.true;
 
       sprite.ttl = 1;
 

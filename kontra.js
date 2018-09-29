@@ -118,7 +118,8 @@ kontra = {
       url = joinPath(assets.imagePath, originalUrl);
 
       image.onload = function loadImageOnLoad() {
-        assets.images[ getName(originalUrl) ] = assets.images[url] = this;
+        let fullUrl = assets._u(url, window.location.href);
+        assets.images[ getName(originalUrl) ] = assets.images[url] = assets.images[fullUrl] = this;
         resolve(this);
       };
 
@@ -160,7 +161,8 @@ kontra = {
         url = joinPath(assets.audioPath, originalUrl);
 
         audio.addEventListener('canplay', function loadAudioOnLoad() {
-          assets.audio[ getName(originalUrl) ] = assets.audio[url] = this;
+          let fullUrl = assets._u(url, window.location.href);
+          assets.audio[ getName(originalUrl) ] = assets.audio[url] = assets.audio[fullUrl] = this;
           resolve(this);
         });
 
@@ -194,7 +196,12 @@ kontra = {
       if (!response.ok) throw response;
       return response.clone().json().catch(function() { return response.text() })
     }).then(function(data) {
-      assets.data[ getName(originalUrl) ] = assets.data[url] = data;
+      let fullUrl = assets._u(url, window.location.href);
+      if (typeof data === 'object') {
+        assets._d.set(data, fullUrl);
+      }
+
+      assets.data[ getName(originalUrl) ] = assets.data[url] = assets.data[fullUrl] = data;
       return data;
     });
   }
@@ -207,6 +214,10 @@ kontra = {
     images: {},
     audio: {},
     data: {},
+    _d: new WeakMap(),
+    _u(url, base) {
+      return new URL(url, base).href;
+    },
 
     // base asset path for determining asset URLs
     imagePath: '',
@@ -587,21 +598,35 @@ kontra = {
   function pointerHandler(e, event) {
     if (!kontra.canvas) return;
 
-    let clientX, clientY;
+    let pageX, pageY;
 
     if (e.type.indexOf('mouse') !== -1) {
-      clientX = e.clientX;
-      clientY = e.clientY;
+      pageX = e.pageX;
+      pageY = e.pageY;
     }
     else {
       // touchstart uses touches while touchend uses changedTouches
       // @see https://stackoverflow.com/questions/17957593/how-to-capture-touchend-coordinates
-      clientX = (e.touches[0] || e.changedTouches[0]).clientX;
-      clientY = (e.touches[0] || e.changedTouches[0]).clientY;
+      pageX = (e.touches[0] || e.changedTouches[0]).pageX;
+      pageY = (e.touches[0] || e.changedTouches[0]).pageY;
     }
 
-    pointer.x = clientX - kontra.canvas.offsetLeft;
-    pointer.y = clientY - kontra.canvas.offsetTop;
+    let x = pageX - kontra.canvas.offsetLeft;
+    let y = pageY - kontra.canvas.offsetTop;
+    let el = kontra.canvas;
+
+    while ( (el = el.offsetParent) ) {
+      x -= el.offsetLeft;
+      y -= el.offsetTop;
+    }
+
+    // take into account the canvas scale
+    let scale = kontra.canvas.offsetHeight / kontra.canvas.height;
+    x /= scale;
+    y /= scale;
+
+    pointer.x = x;
+    pointer.y = y;
 
     let object;
     if (e.target === kontra.canvas) {
@@ -1227,7 +1252,9 @@ kontra = {
      * @param {number} [properties.ddx] - Change in X velocity.
      * @param {number} [properties.ddy] - Change in Y velocity.
      *
-     * @param {number} [properties.ttl=0] - How may frames the sprite should be alive.
+     * @param {number} [properties.ttl=Infinity] - How may frames the sprite should be alive.
+     * @param {number} [properties.rotation=0] - Rotation in radians of the sprite.
+     * @param {number} [properties.anchor={x:0,y:0}] - The x and y origin of the sprite. {0,0} is the top left corner of the sprite, {1,1} is the bottom right corner.
      * @param {Context} [properties.context=kontra.context] - Provide a context for the sprite to draw on.
      *
      * @param {Image|Canvas} [properties.image] - Image for the sprite.
@@ -1254,7 +1281,9 @@ kontra = {
       this.acceleration = kontra.vector(properties.ddx, properties.ddy);
 
       // defaults
-      this.width = this.height = 0;
+      this.width = this.height = this.rotation = 0;
+      this.ttl = Infinity;
+      this.anchor = {x: 0, y: 0};
       this.context = kontra.context;
 
       // loop through properties before overrides
@@ -1381,17 +1410,33 @@ kontra = {
 
     /**
      * Simple bounding box collision test.
+     * NOTE: Does not take into account sprite rotation. If you need collision
+     * detection between rotated sprites you will need to implement your own
+     * CollidesWith() function. I suggest looking at the Separate Axis Theorem.
      * @memberof kontra.sprite
      *
      * @param {object} object - Object to check collision against.
      *
-     * @returns {boolean} True if the objects collide, false otherwise.
+     * @returns {boolean|null} True if the objects collide, false otherwise.
      */
     collidesWith(object) {
-      return this.x < object.x + object.width &&
-             this.x + this.width > object.x &&
-             this.y < object.y + object.height &&
-             this.y + this.height > object.y;
+      if (this.rotation || object.rotation) return null;
+
+      // take into account sprite anchors
+      let x = this.x - this.width * this.anchor.x;
+      let y = this.y - this.height * this.anchor.y;
+
+      let objX = object.x;
+      let objY = object.y;
+      if (object.anchor) {
+        objX -= object.width * object.anchor.x;
+        objY -= object.height * object.anchor.y;
+      }
+
+      return x < objX + object.width &&
+             x + this.width > objX &&
+             y < objY + object.height &&
+             y + this.height > objY;
     }
 
     /**
@@ -1477,16 +1522,32 @@ kontra = {
      * @memberof kontra.sprite
      */
     draw() {
+      let anchorWidth = -this.width * this.anchor.x;
+      let anchorHeight = -this.height * this.anchor.y;
+
+      this.context.save();
+      this.context.translate(this.x, this.y);
+
+      if (this.rotation) {
+        this.context.rotate(this.rotation);
+      }
+
       if (this.image) {
-        this.context.drawImage(this.image, this.x, this.y);
+        this.context.drawImage(this.image, anchorWidth, anchorHeight);
       }
       else if (this._ca) {
-        this._ca.render(this);
+        this._ca.render({
+          x: anchorWidth,
+          y: anchorHeight,
+          context: this.context
+        });
       }
       else {
         this.context.fillStyle = this.color;
-        this.context.fillRect(this.x, this.y, this.width, this.height);
+        this.context.fillRect(anchorWidth, anchorHeight, this.width, this.height);
       }
+
+      this.context.restore();
     }
   };
 
@@ -1840,312 +1901,76 @@ kontra.store = {
   }
 };
 (function() {
-  // save Math.min and Math.max to variable and use that instead
-
-  /**
-   * A tile engine for rendering tilesets. Works well with the tile engine program Tiled.
-   * @memberof kontra
-   *
-   * @param {object} properties - Properties of the tile engine.
-   * @param {number} [properties.tileWidth=32] - Width of a tile.
-   * @param {number} [properties.tileHeight=32] - Height of a tile.
-   * @param {number} properties.width - Width of the map (in tiles).
-   * @param {number} properties.height - Height of the map (in tiles).
-   * @param {number} [properties.x=0] - X position to draw.
-   * @param {number} [properties.y=0] - Y position to draw.
-   * @param {number} [properties.sx=0] - X position to clip the tileset.
-   * @param {number} [properties.sy=0] - Y position to clip the tileset.
-   * @param {Context} [properties.context=kontra.context] - Provide a context for the tile engine to draw on.
-   */
   kontra.tileEngine = function(properties) {
-    properties = properties || {};
-
-    // size of the map (in tiles)
-    // @if DEBUG
-    if (!properties.width || !properties.height) {
-      throw Error('You must provide width and height properties');
-    }
-    // @endif
-
-    /**
-     * Get the index of the x, y or row, col.
-     * @memberof kontra.tileEngine
-     * @private
-     *
-     * @param {number} position.x - X coordinate of the tile.
-     * @param {number} position.y - Y coordinate of the tile.
-     * @param {number} position.row - Row of the tile.
-     * @param {number} position.col - Col of the tile.
-     *
-     * @return {number} Returns the tile index or -1 if the x, y or row, col is outside the dimensions of the tile engine.
-     */
-    function getIndex(position) {
-      let row, col;
-
-      if (typeof position.x !== 'undefined' && typeof position.y !== 'undefined') {
-        row = tileEngine.getRow(position.y);
-        col = tileEngine.getCol(position.x);
-      }
-      else {
-        row = position.row;
-        col = position.col;
-      }
-
-      // don't calculate out of bound numbers
-      if (row < 0 || col < 0 || row >= height || col >= width) {
-        return -1;
-      }
-
-      return col + row * width;
-    }
-
-    /**
-     * Modified binary search that will return the tileset associated with the tile
-     * @memberof kontra.tileEngine
-     * @private
-     *
-     * @param {number} tile - Tile grid.
-     *
-     * @return {object}
-     */
-    function getTileset(tile) {
-      let min = 0;
-      let max = tileEngine.tilesets.length - 1;
-      let index, currTile;
-
-      while (min <= max) {
-        index = (min + max) / 2 | 0;
-        currTile = tileEngine.tilesets[index];
-
-        if (tile >= currTile.firstGrid && tile <= currTile.lastGrid) {
-          return currTile;
-        }
-        else if (currTile.lastGrid < tile) {
-          min = index + 1;
-        }
-        else {
-          max = index - 1;
-        }
-      }
-    }
-
-    /**
-     * Pre-render the tiles to make drawing fast.
-     * @memberof kontra.tileEngine
-     * @private
-     */
-    function preRenderImage() {
-      let tile, tileset, image, x, y, sx, sy, tileOffset, w;
-
-      // draw each layer in order
-      for (let i = 0, layer; layer = tileEngine.layers[layerOrder[i]]; i++) {
-        for (let j = 0, len = layer.data.length; j < len; j++) {
-          tile = layer.data[j];
-
-          // skip empty tiles (0)
-          if (!tile) {
-            continue;
-          }
-
-          tileset = getTileset(tile);
-          image = tileset.image;
-
-          x = (j % width) * tileWidth;
-          y = (j / width | 0) * tileHeight;
-
-          tileOffset = tile - tileset.firstGrid;
-          w = image.width / tileWidth;
-
-          sx = (tileOffset % w) * tileWidth;
-          sy = (tileOffset / w | 0) * tileHeight;
-
-          offscreenContext.drawImage(
-            image,
-            sx, sy, tileWidth, tileHeight,
-            x, y, tileWidth, tileHeight
-          );
-        }
-      }
-    }
-
-    let width = properties.width;
-    let height = properties.height;
-
-    // size of the tiles. Most common tile size on opengameart.org seems to be 32x32,
-    // followed by 16x16
-    // Tiled names the property tilewidth and tileheight
-    let tileWidth = properties.tileWidth || properties.tilewidth || 32;
-    let tileHeight = properties.tileHeight || properties.tileheight || 32;
-
-    let mapWidth = width * tileWidth;
-    let mapHeight = height * tileHeight;
-
-    let context = properties.context || kontra.context;
-    let canvasWidth = context.canvas.width;
-    let canvasHeight = context.canvas.height;
+    let mapwidth = properties.width * properties.tilewidth;
+    let mapheight = properties.height * properties.tileheight
 
     // create an off-screen canvas for pre-rendering the map
     // @see http://jsperf.com/render-vs-prerender
     let offscreenCanvas = document.createElement('canvas');
     let offscreenContext = offscreenCanvas.getContext('2d');
+    offscreenCanvas.width = mapwidth;
+    offscreenCanvas.height = mapheight;
 
-    // when clipping an image, sx and sy must within the image region, otherwise
-    // Firefox and Safari won't draw it.
-    // @see http://stackoverflow.com/questions/19338032/canvas-indexsizeerror-index-or-size-is-negative-or-greater-than-the-allowed-a
-    let sxMax = Math.max(0, mapWidth - canvasWidth);
-    let syMax = Math.max(0, mapHeight - canvasHeight);
+    // map layer names to data
+    let layerMap = {};
+    let layerCanvases = {};
 
-    let _sx, _sy;
+    let tileEngine = Object.assign({
+      mapwidth: mapwidth,
+      mapheight: mapheight,
+      _sx: 0,
+      _sy: 0,
 
-    // draw order of layers (by name)
-    let layerOrder = [];
+      get sx() {
+        return this._sx;
+      },
 
-    let tileEngine = {
-      width: width,
-      height: height,
+      get sy() {
+        return this._sy;
+      },
 
-      tileWidth: tileWidth,
-      tileHeight: tileHeight,
+      // when clipping an image, sx and sy must within the image region, otherwise
+      // Firefox and Safari won't draw it.
+      // @see http://stackoverflow.com/questions/19338032/canvas-indexsizeerror-index-or-size-is-negative-or-greater-than-the-allowed-a
+      set sx(value) {
+        this._sx = Math.min( Math.max(0, value), mapwidth - kontra.canvas.width );
+      },
 
-      mapWidth: mapWidth,
-      mapHeight: mapHeight,
-
-      context: context,
-
-      x: properties.x || 0,
-      y: properties.y || 0,
-
-      tilesets: [],
-      layers: {},
-
-      /**
-       * Add an tileset for the tile engine to use.
-       * @memberof kontra.tileEngine
-       *
-       * @param {object|object[]} tileset - Properties of the image to add.
-       * @param {Image|Canvas} tileset.image - Path to the image or Image object.
-       * @param {number} tileset.firstGrid - The first tile grid to start the image.
-       */
-      addTilesets: function addTilesets(tilesets) {
-        [].concat(tilesets).map(function(tileset) {
-          let tilesetImage = tileset.image;
-          let image, firstGrid, numTiles, lastTileset, tiles;
-
-          // @see https://github.com/jed/140bytes/wiki/Byte-saving-techniques#coercion-to-test-for-types
-          if (''+tilesetImage === tilesetImage) {
-            let i = Infinity;
-
-            while (i >= 0) {
-              i = tilesetImage.lastIndexOf('/', i);
-              let path = (i < 0 ? tilesetImage : tilesetImage.substr(i));
-
-              if (kontra.assets.images[path]) {
-                image = kontra.assets.images[path];
-                break;
-              }
-
-              i--;
-            }
-          }
-          else {
-            image = tilesetImage;
-          }
-
-          firstGrid = tileset.firstGrid;
-
-          // if the width or height of the provided image is smaller than the tile size,
-          // default calculation to 1
-          numTiles = ( (image.width / tileWidth | 0) || 1 ) *
-                     ( (image.height / tileHeight | 0) || 1 );
-
-          if (!firstGrid) {
-            // only calculate the first grid if the tile map has a tileset already
-            if (tileEngine.tilesets.length > 0) {
-              lastTileset = tileEngine.tilesets[tileEngine.tilesets.length - 1];
-              tiles = (lastTileset.image.width / tileWidth | 0) *
-                      (lastTileset.image.height / tileHeight | 0);
-
-              firstGrid = lastTileset.firstGrid + tiles;
-            }
-            // otherwise this is the first tile added to the tile map
-            else {
-              firstGrid = 1;
-            }
-          }
-
-          tileEngine.tilesets.push({
-            firstGrid: firstGrid,
-            lastGrid: firstGrid + numTiles - 1,
-            image: image
-          });
-
-          // sort the tile map so we can perform a binary search when drawing
-          tileEngine.tilesets.sort(function(a, b) {
-            return a.firstGrid - b.firstGrid;
-          });
-        });
+      set sy(value) {
+        this._sy = Math.min( Math.max(0, value), mapheight - kontra.canvas.height );
       },
 
       /**
-       * Add a layer to the tile engine.
+       * Render the pre-rendered canvas.
+       * @memberof kontra.tileEngine
+       */
+      render() {
+        render(offscreenCanvas);
+      },
+
+      /**
+       * Render a specific layer by name.
        * @memberof kontra.tileEngine
        *
-       * @param {object} properties - Properties of the layer to add.
-       * @param {string} properties.name - Name of the layer.
-       * @param {number[]} properties.data - Tile layer data.
-       * @param {boolean} [properties.render=true] - If the layer should be drawn.
-       * @param {number} [properties.zIndex] - Draw order for tile layer. Highest number is drawn last (i.e. on top of all other layers).
+       * @param {string} name - Name of the layer to render.
        */
-      addLayers: function addLayers(layers) {
-        [].concat(layers).map(function(layer) {
-          layer.render = (layer.render === undefined ? true : layer.render);
+      renderLayer(name) {
+        let canvas = layerCanvases[name];
+        let layer = layerMap[name];
 
-          let data, r, row, c, prop, value;
+        if (!canvas) {
+          // cache the rendered layer so we can render it again without redrawing
+          // all tiles
+          canvas = document.createElement('canvas');
+          canvas.width = mapwidth;
+          canvas.height = mapheight;
 
-          // flatten a 2D array into a single array
-          if (Array.isArray(layer.data[0])) {
-            data = [];
+          layerCanvases[name] = canvas;
+          tileEngine._r(layer, canvas.getContext('2d'));
+        }
 
-            for (r = 0; row = layer.data[r]; r++) {
-              for (c = 0; c < width; c++) {
-                data.push(row[c] || 0);
-              }
-            }
-          }
-          else {
-            data = layer.data;
-          }
-
-          tileEngine.layers[layer.name] = {
-            data: data,
-            zIndex: layer.zIndex || 0,
-            render: layer.render
-          };
-
-          // merge properties of layer onto layer object
-          for (prop in layer.properties) {
-            value = layer.properties[prop];
-
-            try {
-              value = JSON.parse(value);
-            }
-            catch(e) {}
-
-            tileEngine.layers[layer.name][prop] = value;
-          }
-
-          // only add the layer to the layer order if it should be drawn
-          if (tileEngine.layers[layer.name].render) {
-            layerOrder.push(layer.name);
-
-            layerOrder.sort(function(a, b) {
-              return tileEngine.layers[a].zIndex - tileEngine.layers[b].zIndex;
-            });
-
-          }
-        });
-
-        preRenderImage();
+        render(canvas);
       },
 
       /**
@@ -2161,21 +1986,18 @@ kontra.store = {
        *
        * @returns {boolean} True if the object collides with a tile, false otherwise.
        */
-      layerCollidesWith: function layerCollidesWith(name, object) {
-        // calculate all tiles that the object can collide with
-        let row = tileEngine.getRow(object.y);
-        let col = tileEngine.getCol(object.x);
+      layerCollidesWith(name, object) {
+        let row = getRow(object.y);
+        let col = getCol(object.x);
+        let endRow = getRow(object.y + object.height);
+        let endCol = getCol(object.x + object.width);
 
-        let endRow = tileEngine.getRow(object.y + object.height);
-        let endCol = tileEngine.getCol(object.x + object.width);
+        let layer = layerMap[name];
 
         // check all tiles
-        let index;
         for (let r = row; r <= endRow; r++) {
           for (let c = col; c <= endCol; c++) {
-            index = getIndex({row: r, col: c});
-
-            if (tileEngine.layers[name].data[index]) {
+            if (layer.data[c + r * this.width]) {
               return true;
             }
           }
@@ -2197,166 +2019,175 @@ kontra.store = {
        *
        * @returns {number}
        */
-      tileAtLayer: function tileAtLayer(name, position) {
-        let index = getIndex(position);
+      tileAtLayer(name, position) {
+        let row = position.row || getRow(position.y);
+        let col = position.col || getCol(position.x);
 
-        if (index >= 0) {
-          return tileEngine.layers[name].data[index];
+        if (layerMap[name]) {
+          return layerMap[name].data[col + row * tileEngine.width];
         }
+
+        return -1;
       },
 
-      /**
-       * Render the pre-rendered canvas.
-       * @memberof kontra.tileEngine
-       */
-      render: function render() {
-        /* istanbul ignore next */
-        tileEngine.context.drawImage(
-          offscreenCanvas,
-          tileEngine.sx, tileEngine.sy, canvasWidth, canvasHeight,
-          tileEngine.x, tileEngine.y, canvasWidth, canvasHeight
-        );
-      },
+      // expose for testing
+      _r: renderLayer,
 
-      /**
-       * Render a specific layer.
-       * @memberof kontra.tileEngine
-       *
-       * @param {string} name - Name of the layer to render.
-       */
-      renderLayer: function renderLayer(name) {
-        let layer = tileEngine.layers[name];
-
-        // calculate the starting tile
-        let row = tileEngine.getRow();
-        let col = tileEngine.getCol();
-        let index = getIndex({row: row, col: col});
-
-        // calculate where to start drawing the tile relative to the drawing canvas
-        let startX = col * tileWidth - tileEngine.sx;
-        let startY = row * tileHeight - tileEngine.sy;
-
-        // calculate how many tiles the drawing canvas can hold
-        let viewWidth = Math.min(Math.ceil(canvasWidth / tileWidth) + 1, width);
-        let viewHeight = Math.min(Math.ceil(canvasHeight / tileHeight) + 1, height);
-        let numTiles = viewWidth * viewHeight;
-
-        let count = 0;
-        let x, y, tile, tileset, image, tileOffset, w, sx, sy;
-
-        // draw just enough of the layer to fit inside the drawing canvas
-        while (count < numTiles) {
-          tile = layer.data[index];
-
-          if (tile) {
-            tileset = getTileset(tile);
-            image = tileset.image;
-
-            x = startX + (count % viewWidth) * tileWidth;
-            y = startY + (count / viewWidth | 0) * tileHeight;
-
-            tileOffset = tile - tileset.firstGrid;
-            w = image.width / tileWidth;
-
-            sx = (tileOffset % w) * tileWidth;
-            sy = (tileOffset / w | 0) * tileHeight;
-
-            tileEngine.context.drawImage(
-              image,
-              sx, sy, tileWidth, tileHeight,
-              x, y, tileWidth, tileHeight
-            );
-          }
-
-          if (++count % viewWidth === 0) {
-            index = col + (++row * width);
-          }
-          else {
-            index++;
-          }
-        }
-      },
-
-      /**
-       * Get the row from the y coordinate.
-       * @memberof kontra.tileEngine
-       *
-       * @param {number} y - Y coordinate.
-       *
-       * @return {number}
-       */
-      getRow: function getRow(y) {
-        y = y || 0;
-
-        return (tileEngine.sy + y) / tileHeight | 0;
-      },
-
-      /**
-       * Get the col from the x coordinate.
-       * @memberof kontra.tileEngine
-       *
-       * @param {number} x - X coordinate.
-       *
-       * @return {number}
-       */
-      getCol: function getCol(x) {
-        x = x || 0;
-
-        return (tileEngine.sx + x) / tileWidth | 0;
-      },
-
-      get sx() {
-        return _sx;
-      },
-
-      get sy() {
-        return _sy;
-      },
-
-      // ensure sx and sy are within the image region
-      set sx(value) {
-        _sx = Math.min( Math.max(0, value), sxMax );
-      },
-
-      set sy(value) {
-        _sy = Math.min( Math.max(0, value), syMax );
-      },
-
-      // expose properties for testing
       // @if DEBUG
-      _layerOrder: layerOrder
+      layerCanvases: layerCanvases
       // @endif
-    };
+    }, properties);
 
-    // set here so we use setter function
-    tileEngine.sx = properties.sx || 0;
-    tileEngine.sy = properties.sy || 0;
+    // resolve linked files (source, image)
+    tileEngine.tilesets.forEach(tileset => {
+      let url = (kontra.assets ? kontra.assets._d.get(properties) : '') || window.location.href;
 
-    // make the off-screen canvas the full size of the map
-    offscreenCanvas.width = mapWidth;
-    offscreenCanvas.height = mapHeight;
+      if (tileset.source) {
+        // @if DEBUG
+        if (!kontra.assets) {
+          throw Error(`You must use "kontra.assets" to resolve tileset.source`);
+        }
+        // @endif
 
-    // merge properties of the tile engine onto the tile engine itself
-    for (let prop in properties.properties) {
-      let value = properties.properties[prop];
+        let source = kontra.assets.data[kontra.assets._u(tileset.source, url)];
 
-      try {
-        value = JSON.parse(value);
+        // @if DEBUG
+        if (!source) {
+          throw Error(`You must load the tileset source "${tileset.source}" before loading the tileset`);
+        }
+        // @endif
+
+        Object.keys(source).forEach(key => {
+          tileset[key] = source[key];
+        });
       }
-      catch(e) {}
 
-      // passed in properties override properties.properties
-      tileEngine[prop] = tileEngine[prop] || value;
+      if (''+tileset.image === tileset.image) {
+        // @if DEBUG
+        if (!kontra.assets) {
+          throw Error(`You must use "kontra.assets" to resolve tileset.image`);
+        }
+        // @endif
+
+        let image = kontra.assets.images[kontra.assets._u(tileset.image, url)];
+
+        // @if DEBUG
+        if (!image) {
+          throw Error(`You must load the image "${tileset.image}" before loading the tileset`);
+        }
+        // @endif
+
+        tileset.image = image;
+      }
+    });
+
+    /**
+     * Get the row from the y coordinate.
+     * @private
+     *
+     * @param {number} y - Y coordinate.
+     *
+     * @return {number}
+     */
+    function getRow(y) {
+      return (tileEngine.sy + y) / tileEngine.tileheight | 0;
     }
 
-    if (properties.tilesets) {
-      tileEngine.addTilesets(properties.tilesets);
+    /**
+     * Get the col from the x coordinate.
+     * @private
+     *
+     * @param {number} x - X coordinate.
+     *
+     * @return {number}
+     */
+    function getCol(x) {
+      return (tileEngine.sx + x) / tileEngine.tilewidth | 0;
     }
 
-    if (properties.layers) {
-      tileEngine.addLayers(properties.layers);
+    /**
+     * Render a layer.
+     * @private
+     *
+     * @param {object} layer - Layer data.
+     * @param {Context} context - Context to draw layer to.
+     */
+    function renderLayer(layer, context) {
+      context.save();
+      context.globalAlpha = layer.opacity;
+
+      layer.data.forEach((tile, index) => {
+
+        // skip empty tiles (0)
+        if (!tile) return;
+
+        // find the tileset the tile belongs to
+        // assume tilesets are ordered by firstgid
+        let tileset;
+        for (let i = tileEngine.tilesets.length-1; i >= 0; i--) {
+          tileset = tileEngine.tilesets[i];
+
+          if (tile / tileset.firstgid >= 1) {
+            break;
+          }
+        }
+
+        let tilewidth = tileset.tilewidth || tileEngine.tilewidth;
+        let tileheight = tileset.tileheight || tileEngine.tileheight;
+        let margin = tileset.margin || 0;
+
+        let image = tileset.image;
+
+        let offset = tile - tileset.firstgid;
+        let cols = tileset.columns ||
+          image.width / (tilewidth + margin) | 0;
+
+        let x = (index % tileEngine.width) * tilewidth;
+        let y = (index / tileEngine.width | 0) * tileheight;
+        let sx = (offset % cols) * (tilewidth + margin);
+        let sy = (offset / cols | 0) * (tileheight + margin);
+
+        context.drawImage(
+          image,
+          sx, sy, tilewidth, tileheight,
+          x, y, tilewidth, tileheight
+        );
+      });
+
+      context.restore();
     }
 
+    /**
+     * Pre-render the tiles to make drawing fast.
+     * @private
+     */
+    function prerender() {
+      if (tileEngine.layers) {
+        tileEngine.layers.forEach(layer => {
+          layerMap[layer.name] = layer;
+
+          if (layer.visible !== false) {
+            tileEngine._r(layer, offscreenContext);
+          }
+        });
+      }
+    }
+
+    /**
+     * Render a tile engine canvas.
+     * @private
+     *
+     * @param {HTMLCanvasElement} canvas - Tile engine canvas to draw.
+     */
+    function render(canvas) {
+      (tileEngine.context || kontra.context).drawImage(
+        canvas,
+        tileEngine.sx, tileEngine.sy, kontra.canvas.width, kontra.canvas.height,
+        0, 0, kontra.canvas.width, kontra.canvas.height
+      );
+    }
+
+    prerender();
     return tileEngine;
   };
 })();

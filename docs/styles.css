@@ -14,7 +14,7 @@
 */
 
 html {
-  font-size: 18px;
+  font-size: 20px;
 }
 
 html, body {
@@ -131,7 +131,7 @@ a:visited {
 
 canvas {
   max-width: 100%;
-  background: #333331;
+  background: #333333;
 }
 
 main {
@@ -271,6 +271,11 @@ code[class*=language-], pre[class*=language-] {
   font-size: 0.889rem;
 }
 
+.object-prop {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid;
+}
 
 
 
@@ -278,7 +283,12 @@ code[class*=language-], pre[class*=language-] {
  * Customized bundle
  */
 label {
-  display: block;
+  display: flex;
+  align-items: center;
+}
+
+label input {
+  margin-right: 0.5rem;
 }
 
 .filesize:before {
@@ -339,7 +349,7 @@ figure {
 }
 
 figure img {
-  background: #333331;
+  background: #333333;
   max-width: 100%;
 }
 
@@ -355,6 +365,30 @@ code-output {
 
 dd > dl {
   margin-top: 1.312rem;
+}
+
+/**
+ * Games made with kontra.js page
+ */
+.games {
+  padding: 0;
+  display: grid;
+  grid-gap: 1.312rem;
+  grid-template-columns: repeat(2, 1fr);
+  text-align: center;
+  list-style: none;
+}
+
+.games li {
+  position: relative;
+}
+
+.games img {
+  width: 100%;
+}
+
+.games span {
+  display: block;
 }
 
 @media screen and (max-width: 768px) {
@@ -475,5 +509,34 @@ h1 {
     padding-bottom: 0.8125rem;
     border-bottom: 1px solid #fdfdfd;
     margin: 0 0 1.312rem 0;
+  }
+
+  .scroll-indicator {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    opacity: 0;
+    visibility: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 1.325rem;
+    width: 13.8889rem;
+    height: 1.5rem;
+    background: rgba(255,255,255,0.5);
+    color: #242729;
+    font-weight: bold;
+    transform: rotate(180deg);
+    font-size: 2rem;
+    transition: opacity 300ms ease, visibility 300ms ease;
+  }
+
+  .showScroll .scroll-indicator {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .scroll-indicator span {
+    margin-top: 0.5rem;
   }
 }

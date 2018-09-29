@@ -7,11 +7,11 @@
     background: black;
   }
   </style>
-  <script type="text/javascript" src="../../kontra.js"></script>
+  <script type="text/javascript" src="../../../kontra.js"></script>
 </head>
 <body>
   <canvas width="600" height="600"></canvas>
-  <p>M - Mute</p>
+  <p>M - Mute/Unmute</p>
   <script id="code">
   /**
    * ATTRIBUTION:
@@ -22,13 +22,13 @@
    */
   kontra.init();
 
-  kontra.assets.audioPath = '../audio/';
+  kontra.assets.audioPath = '../../audio/';
 
   kontra.assets.load('terrain.json', 'man.png', 'terrain.png', ['Digital_Forest.mp3', 'Digital_Forest.mp3']).then(function() {
     var terrain = kontra.assets.data.terrain;
 
     // setup tile engine
-    var tileEngine = kontra.tileEngine(kontra.assets.data.terrain);
+    window.tileEngine = kontra.tileEngine(kontra.assets.data.terrain);
     tileEngine.sx = terrain.width * terrain.tilewidth / 2 - kontra.canvas.width / 2,
     tileEngine.sy = terrain.height * terrain.tileheight - kontra.canvas.height
 
@@ -138,7 +138,7 @@
             return;
           }
 
-          if (tileEngine.sy < tileEngine.mapHeight - kontra.canvas.height &&
+          if (tileEngine.sy < tileEngine.mapheight - kontra.canvas.height &&
               this.y >= this.startY) {
             tileEngine.sy += this.speed;
           }
@@ -175,7 +175,7 @@
             return;
           }
 
-          if (tileEngine.sx < tileEngine.mapWidth - kontra.canvas.width &&
+          if (tileEngine.sx < tileEngine.mapwidth - kontra.canvas.width &&
               this.x >= this.startX) {
             tileEngine.sx += this.speed;
           }
@@ -207,6 +207,7 @@
     });
 
     kontra.assets.audio.Digital_Forest.loop = true;
+    kontra.assets.audio.Digital_Forest.muted = true;
     kontra.assets.audio.Digital_Forest.volume = 0.5;
     kontra.assets.audio.Digital_Forest.play();
     loop.start();

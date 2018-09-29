@@ -103,7 +103,9 @@
      * @param {number} [properties.ddx] - Change in X velocity.
      * @param {number} [properties.ddy] - Change in Y velocity.
      *
-     * @param {number} [properties.ttl=0] - How may frames the sprite should be alive.
+     * @param {number} [properties.ttl=Infinity] - How may frames the sprite should be alive.
+     * @param {number} [properties.rotation=0] - Rotation in radians of the sprite.
+     * @param {number} [properties.anchor={x:0,y:0}] - The x and y origin of the sprite. {0,0} is the top left corner of the sprite, {1,1} is the bottom right corner.
      * @param {Context} [properties.context=kontra.context] - Provide a context for the sprite to draw on.
      *
      * @param {Image|Canvas} [properties.image] - Image for the sprite.
@@ -130,7 +132,9 @@
       this.acceleration = kontra.vector(properties.ddx, properties.ddy);
 
       // defaults
-      this.width = this.height = 0;
+      this.width = this.height = this.rotation = 0;
+      this.ttl = Infinity;
+      this.anchor = {x: 0, y: 0};
       this.context = kontra.context;
 
       // loop through properties before overrides
@@ -257,17 +261,33 @@
 
     /**
      * Simple bounding box collision test.
+     * NOTE: Does not take into account sprite rotation. If you need collision
+     * detection between rotated sprites you will need to implement your own
+     * CollidesWith() function. I suggest looking at the Separate Axis Theorem.
      * @memberof kontra.sprite
      *
      * @param {object} object - Object to check collision against.
      *
-     * @returns {boolean} True if the objects collide, false otherwise.
+     * @returns {boolean|null} True if the objects collide, false otherwise.
      */
     collidesWith(object) {
-      return this.x < object.x + object.width &&
-             this.x + this.width > object.x &&
-             this.y < object.y + object.height &&
-             this.y + this.height > object.y;
+      if (this.rotation || object.rotation) return null;
+
+      // take into account sprite anchors
+      let x = this.x - this.width * this.anchor.x;
+      let y = this.y - this.height * this.anchor.y;
+
+      let objX = object.x;
+      let objY = object.y;
+      if (object.anchor) {
+        objX -= object.width * object.anchor.x;
+        objY -= object.height * object.anchor.y;
+      }
+
+      return x < objX + object.width &&
+             x + this.width > objX &&
+             y < objY + object.height &&
+             y + this.height > objY;
     }
 
     /**
@@ -353,16 +373,32 @@
      * @memberof kontra.sprite
      */
     draw() {
+      let anchorWidth = -this.width * this.anchor.x;
+      let anchorHeight = -this.height * this.anchor.y;
+
+      this.context.save();
+      this.context.translate(this.x, this.y);
+
+      if (this.rotation) {
+        this.context.rotate(this.rotation);
+      }
+
       if (this.image) {
-        this.context.drawImage(this.image, this.x, this.y);
+        this.context.drawImage(this.image, anchorWidth, anchorHeight);
       }
       else if (this._ca) {
-        this._ca.render(this);
+        this._ca.render({
+          x: anchorWidth,
+          y: anchorHeight,
+          context: this.context
+        });
       }
       else {
         this.context.fillStyle = this.color;
-        this.context.fillRect(this.x, this.y, this.width, this.height);
+        this.context.fillRect(anchorWidth, anchorHeight, this.width, this.height);
       }
+
+      this.context.restore();
     }
   };
 

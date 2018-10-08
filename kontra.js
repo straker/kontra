@@ -502,6 +502,7 @@ kontra = {
   addEventListener('touchend', pointerUpHandler);
   addEventListener('blur', blurEventHandler);
   addEventListener('mousemove', mouseMoveHandler);
+  addEventListener('touchmove', mouseMoveHandler);
 
   /**
    * Detection collision between a rectangle and a circle.
@@ -511,8 +512,15 @@ kontra = {
    * @param {object} object - Object to check collision against.
    */
   function circleRectCollision(object) {
-    let dx = pointer.x - Math.max(object.x, Math.min(pointer.x, object.x + object.width));
-    let dy = pointer.y - Math.max(object.y, Math.min(pointer.y, object.y + object.height));
+    let x = object.x;
+    let y = object.y;
+    if (object.anchor) {
+      x -= object.width * object.anchor.x;
+      y -= object.height * object.anchor.y;
+    }
+
+    let dx = pointer.x - Math.max(x, Math.min(pointer.x, x + object.width));
+    let dy = pointer.y - Math.max(y, Math.min(pointer.y, y + object.height));
     return (dx * dx + dy * dy) < (pointer.radius * pointer.radius);
   }
 
@@ -553,7 +561,10 @@ kontra = {
    * @param {Event} e
    */
   function pointerDownHandler(e) {
-    pressedButtons[ buttonMap[e.button] ] = true;
+
+    // touchstart should be treated like a left mouse button
+    let button = e.button !== undefined ? e.button : 'left';
+    pressedButtons[button] = true;
     pointerHandler(e, 'onDown');
   }
 
@@ -564,7 +575,8 @@ kontra = {
    * @param {Event} e
    */
   function pointerUpHandler(e) {
-    pressedButtons[ buttonMap[e.button] ] = false;
+    let button = e.button !== undefined ? e.button : 'left';
+    pressedButtons[button] = false;
     pointerHandler(e, 'onUp');
   }
 
@@ -750,6 +762,7 @@ kontra = {
     thisFrameRenderOrder.length = 0;
   };
 })();
+
 (function() {
 
   /**

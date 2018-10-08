@@ -87,7 +87,7 @@
   function pointerDownHandler(e) {
 
     // touchstart should be treated like a left mouse button
-    let button = e.button !== undefined ? e.button : 'left';
+    let button = e.button !== undefined ? buttonMap[e.button] : 'left';
     pressedButtons[button] = true;
     pointerHandler(e, 'onDown');
   }
@@ -99,7 +99,7 @@
    * @param {Event} e
    */
   function pointerUpHandler(e) {
-    let button = e.button !== undefined ? e.button : 'left';
+    let button = e.button !== undefined ? buttonMap[e.button] : 'left';
     pressedButtons[button] = false;
     pointerHandler(e, 'onUp');
   }

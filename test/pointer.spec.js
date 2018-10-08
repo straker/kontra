@@ -91,6 +91,19 @@ describe('kontra.pointer', function() {
       expect(kontra.pointer.pressed('right')).to.be.not.ok;
     });
 
+    it('should return true for touchstart', function() {
+      simulateEvent('touchstart', {touches: [{pageX: 100, pageY: 50}]});
+
+      expect(kontra.pointer.pressed('left')).to.be.true;
+    });
+
+    it('should return false for a touchend', function() {
+      simulateEvent('touchstart', {touches: [{pageX: 100, pageY: 50}]});
+      simulateEvent('touchend', {touches: [{pageX: 100, pageY: 50}]});
+
+      expect(kontra.pointer.pressed('left')).to.be.not.ok;
+    });
+
   });
 
 
@@ -193,6 +206,62 @@ describe('kontra.pointer', function() {
 
 
   // --------------------------------------------------
+  // getCurrentObject
+  // --------------------------------------------------
+  describe('getCurrentObject', function() {
+
+    it('should correctly return the object under the pointer', function() {
+      var obj = {
+        x: 110,
+        y: 50,
+        width: 10,
+        height: 20,
+        render: sinon.spy()
+      };
+      kontra.pointer.track(obj);
+      kontra._tick();
+
+      object.render();
+      obj.render();
+      kontra._tick();
+
+      kontra.pointer.x = 100;
+      kontra.pointer.y = 50;
+
+      expect(kontra.pointer.over(object)).to.equal(true);
+
+      kontra.pointer.x = 108;
+
+      // object rendered first so obj is on top
+      expect(kontra.pointer.over(obj)).to.equal(true);
+    });
+
+    it('should take into account object anchor', function() {
+      object.anchor = {
+        x: 0.5,
+        y: 0.5
+      };
+
+      kontra.pointer.x = 95;
+      kontra.pointer.y = 55;
+
+      expect(kontra.pointer.over(object)).to.equal(true);
+    });
+
+    it('should call the objects collidesWithPointer function', function() {
+      object.collidesWithPointer = sinon.spy();
+      kontra.pointer.over(object);
+
+      expect(object.collidesWithPointer.called).to.be.ok;
+    });
+
+  });
+
+
+
+
+
+  // --------------------------------------------------
   // kontra.pointer.over
   // --------------------------------------------------
   describe('over', function() {
@@ -233,19 +302,26 @@ describe('kontra.pointer', function() {
       expect(kontra.pointer.y).to.equal(50);
     });
 
-    it('should call the objects onOver function if it is the target', function(done) {
+    it('should call the objects onOver function if it is the target', function() {
       object.onOver = sinon.spy();
+      simulateEvent('mousemove', {pageX: 105, pageY: 55});
 
-      // the mousemove event is throttled so have to wait for it to finish
-      setTimeout(function() {
-        simulateEvent('mousemove', {pageX: 105, pageY: 55});
+      expect(object.onOver.called).to.be.ok;
+    });
 
-        // the mousemove event is also async
-        setTimeout(function() {
-          expect(object.onOver.called).to.be.ok;
-          done();
-        }, 50);
-      });
+    it('should take into account object anchor', function () {
+      object.anchor = {
+        x: 0.5,
+        y: 0.5
+      };
+      object.onOver = sinon.spy();
+      simulateEvent('mousemove', {pageX: 110, pageY: 55});
+
+      expect(object.onOver.called).to.not.be.ok;
+
+      simulateEvent('mousemove', {pageX: 95, pageY: 55});
+
+      expect(object.onOver.called).to.be.ok;
     });
 
   });
@@ -278,6 +354,21 @@ describe('kontra.pointer', function() {
     it('should call the objects onDown function if it is the target', function() {
       object.onDown = sinon.spy();
       simulateEvent('mousedown', {pageX: 105, pageY: 55});
+
+      expect(object.onDown.called).to.be.ok;
+    });
+
+    it('should take into account object anchor', function () {
+      object.anchor = {
+        x: 0.5,
+        y: 0.5
+      };
+      object.onDown = sinon.spy();
+      simulateEvent('mousedown', {pageX: 110, pageY: 55});
+
+      expect(object.onDown.called).to.not.be.ok;
+
+      simulateEvent('mousedown', {pageX: 95, pageY: 55});
 
       expect(object.onDown.called).to.be.ok;
     });
@@ -317,6 +408,21 @@ describe('kontra.pointer', function() {
       expect(object.onDown.called).to.be.ok;
     });
 
+    it('should take into account object anchor', function () {
+      object.anchor = {
+        x: 0.5,
+        y: 0.5
+      };
+      object.onDown = sinon.spy();
+      simulateEvent('touchstart', {touches: [{pageX: 110, pageY: 55}]});
+
+      expect(object.onDown.called).to.not.be.ok;
+
+      simulateEvent('touchstart', {touches: [{pageX: 95, pageY: 55}]});
+
+      expect(object.onDown.called).to.be.ok;
+    });
+
   });
 
 
@@ -347,6 +453,21 @@ describe('kontra.pointer', function() {
     it('should call the objects onUp function if it is the target', function() {
       object.onUp = sinon.spy();
       simulateEvent('mouseup', {pageX: 105, pageY: 55});
+
+      expect(object.onUp.called).to.be.ok;
+    });
+
+    it('should take into account object anchor', function () {
+      object.anchor = {
+        x: 0.5,
+        y: 0.5
+      };
+      object.onUp = sinon.spy();
+      simulateEvent('mouseup', {pageX: 110, pageY: 55});
+
+      expect(object.onUp.called).to.not.be.ok;
+
+      simulateEvent('mouseup', {pageX: 95, pageY: 55});
 
       expect(object.onUp.called).to.be.ok;
     });
@@ -385,48 +506,19 @@ describe('kontra.pointer', function() {
       expect(object.onUp.called).to.be.ok;
     });
 
-  });
-
-
-
-
-
-  // --------------------------------------------------
-  // getCurrentObject
-  // --------------------------------------------------
-  describe('getCurrentObject', function() {
-
-    it('should correctly return the object under the pointer', function() {
-      var obj = {
-        x: 110,
-        y: 50,
-        width: 10,
-        height: 20,
-        render: sinon.spy()
+    it('should take into account object anchor', function () {
+      object.anchor = {
+        x: 0.5,
+        y: 0.5
       };
-      kontra.pointer.track(obj);
-      kontra._tick();
+      object.onUp = sinon.spy();
+      simulateEvent('touchend', {touches: [{pageX: 110, pageY: 55}]});
 
-      object.render();
-      obj.render();
-      kontra._tick();
+      expect(object.onUp.called).to.not.be.ok;
 
-      kontra.pointer.x = 100;
-      kontra.pointer.y = 50;
+      simulateEvent('touchend', {touches: [{pageX: 95, pageY: 55}]});
 
-      expect(kontra.pointer.over(object)).to.equal(true);
-
-      kontra.pointer.x = 108;
-
-      // object rendered first so obj is on top
-      expect(kontra.pointer.over(obj)).to.equal(true);
-    });
-
-    it('should call the objects collidesWithPointer function', function() {
-      object.collidesWithPointer = sinon.spy();
-      kontra.pointer.over(object);
-
-      expect(object.collidesWithPointer.called).to.be.ok;
+      expect(object.onUp.called).to.be.ok;
     });
 
   });

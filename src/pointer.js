@@ -26,6 +26,7 @@
   addEventListener('touchend', pointerUpHandler);
   addEventListener('blur', blurEventHandler);
   addEventListener('mousemove', mouseMoveHandler);
+  addEventListener('touchmove', mouseMoveHandler);
 
   /**
    * Detection collision between a rectangle and a circle.

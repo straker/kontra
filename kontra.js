@@ -642,9 +642,10 @@ kontra = {
 
     let object;
     if (e.target === kontra.canvas) {
+      e.preventDefault();
       object = getCurrentObject();
       if (object && object[event]) {
-        object[event]();
+        object[event](e);
       }
     }
 

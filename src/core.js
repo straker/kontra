@@ -21,6 +21,7 @@ kontra = {
     // @endif
 
     this.context = canvasEl.getContext('2d');
+    this._init();
   },
 
   /**
@@ -39,5 +40,13 @@ kontra = {
    * @memberOf kontra
    * @private
    */
-  _tick: new Function
+  _tick: new Function,
+
+  /**
+   * Dispatch event to any part of the code that needs to know when
+   * kontra has initialized. Will be filled out in pointer events.
+   * @memberOf kontra
+   * @private
+   */
+  _init: new Function
 };

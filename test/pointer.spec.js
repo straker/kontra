@@ -44,6 +44,7 @@ describe('kontra.pointer', function() {
     // set up and take down the canvas before each test so it doesn't leak
     // the canvas element for the kontra.core.init tests
     kontra.canvas = canvas;
+    kontra._init();
     document.body.appendChild(canvas);
 
     object = {

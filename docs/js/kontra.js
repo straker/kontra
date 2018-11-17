@@ -21,6 +21,7 @@ kontra = {
     // @endif
 
     this.context = canvasEl.getContext('2d');
+    this._init();
   },
 
   /**
@@ -39,7 +40,15 @@ kontra = {
    * @memberOf kontra
    * @private
    */
-  _tick: new Function
+  _tick: new Function,
+
+  /**
+   * Dispatch event to any part of the code that needs to know when
+   * kontra has initialized. Will be filled out in pointer events.
+   * @memberOf kontra
+   * @private
+   */
+  _init: new Function
 };
 (function() {
   let imageRegex = /(jpeg|jpg|gif|png)$/;
@@ -496,14 +505,6 @@ kontra = {
     2: 'right'
   };
 
-  addEventListener('mousedown', pointerDownHandler);
-  addEventListener('touchstart', pointerDownHandler);
-  addEventListener('mouseup', pointerUpHandler);
-  addEventListener('touchend', pointerUpHandler);
-  addEventListener('blur', blurEventHandler);
-  addEventListener('mousemove', mouseMoveHandler);
-  addEventListener('touchmove', mouseMoveHandler);
-
   /**
    * Detection collision between a rectangle and a circle.
    * @see https://yal.cc/rectangle-circle-intersection-test/
@@ -762,6 +763,17 @@ kontra = {
 
     thisFrameRenderOrder.length = 0;
   };
+
+  // After the canvas is chosen, add events to it
+  kontra._init = function() {
+    kontra.canvas.addEventListener('mousedown', pointerDownHandler);
+    kontra.canvas.addEventListener('touchstart', pointerDownHandler);
+    kontra.canvas.addEventListener('mouseup', pointerUpHandler);
+    kontra.canvas.addEventListener('touchend', pointerUpHandler);
+    kontra.canvas.addEventListener('blur', blurEventHandler);
+    kontra.canvas.addEventListener('mousemove', mouseMoveHandler);
+    kontra.canvas.addEventListener('touchmove', mouseMoveHandler);
+  }
 })();
 
 (function() {

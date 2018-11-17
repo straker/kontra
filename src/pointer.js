@@ -20,14 +20,6 @@
     2: 'right'
   };
 
-  addEventListener('mousedown', pointerDownHandler);
-  addEventListener('touchstart', pointerDownHandler);
-  addEventListener('mouseup', pointerUpHandler);
-  addEventListener('touchend', pointerUpHandler);
-  addEventListener('blur', blurEventHandler);
-  addEventListener('mousemove', mouseMoveHandler);
-  addEventListener('touchmove', mouseMoveHandler);
-
   /**
    * Detection collision between a rectangle and a circle.
    * @see https://yal.cc/rectangle-circle-intersection-test/
@@ -286,4 +278,15 @@
 
     thisFrameRenderOrder.length = 0;
   };
+
+  // After the canvas is chosen, add events to it
+  kontra._init = function() {
+    kontra.canvas.addEventListener('mousedown', pointerDownHandler);
+    kontra.canvas.addEventListener('touchstart', pointerDownHandler);
+    kontra.canvas.addEventListener('mouseup', pointerUpHandler);
+    kontra.canvas.addEventListener('touchend', pointerUpHandler);
+    kontra.canvas.addEventListener('blur', blurEventHandler);
+    kontra.canvas.addEventListener('mousemove', mouseMoveHandler);
+    kontra.canvas.addEventListener('touchmove', mouseMoveHandler);
+  }
 })();

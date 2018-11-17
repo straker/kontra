@@ -21,11 +21,11 @@ gulp.task('scripts', function() {
   return gulp.src(['src/core.js', 'src/*.js'])
     .pipe(concat('kontra.js'))
     .pipe(gulp.dest('.'))
-    .pipe(gulp.dest('./docs/js'))
     .pipe(preprocess({context: { DEBUG: DEBUG, VISUAL_DEBUG: VISUAL_DEBUG}}))
     .pipe(plumber())
     .pipe(terser())
     .pipe(plumber.stop())
+    .pipe(gulp.dest('./docs/js'))
     .pipe(rename('kontra.min.js'))
     .pipe(size({
       showFiles: true

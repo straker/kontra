@@ -2,7 +2,7 @@
 
   /**
    * Object pool. The pool will grow in size to accommodate as many objects as are needed.
-   * Unused items are at the front of the pool and in use items are at the of the pool.
+   * Unused items are at the front of the pool and in use items are at the end of the pool.
    * @memberof kontra
    *
    * @param {object} properties - Properties of the pool.

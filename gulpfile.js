@@ -55,14 +55,8 @@ gulp.task('dist', function() {
     .pipe(gulp.dest('./dist'));
 });
 
-gulp.task('connect', function() {
-  connect.server({
-    livereload: true
-  });
-});
-
 gulp.task('watch', function() {
-  gulp.watch('src/*.js', ['dist', 'scripts']);
+  gulp.watch('src/*.js', gulp.series('dist', 'scripts'));
 });
 
 gulp.task('test', function(done) {
@@ -79,4 +73,4 @@ gulp.task('test', function(done) {
   }, done).start();
 });
 
-gulp.task('default', ['scripts', 'connect', 'watch']);
+gulp.task('default', gulp.series('scripts', 'watch'));

@@ -25,27 +25,24 @@
   },
   "homepage": "https://github.com/straker/kontra",
   "devDependencies": {
-    "chai": "^4.1.2",
+    "chai": "^4.2.0",
     "coveralls": "^3.0.2",
-    "gulp": "^3.9.1",
+    "gulp": "^4.0.0",
     "gulp-changed": "^3.2.0",
     "gulp-concat-util": "^0.5.5",
-    "gulp-connect": "^5.5.0",
-    "gulp-plumber": "^1.2.0",
-    "gulp-preprocess": "^2.0.0",
-    "gulp-rename": "^1.3.0",
+    "gulp-connect": "^5.7.0",
+    "gulp-plumber": "^1.2.1",
+    "gulp-preprocess": "^3.0.1",
+    "gulp-rename": "^1.4.0",
     "gulp-size": "^3.0.0",
-    "gulp-uglify": "^3.0.0",
-    "karma": "^2.0.4",
+    "gulp-terser": "^1.1.7",
+    "karma": "^3.1.4",
     "karma-chai": "^0.1.0",
     "karma-chrome-launcher": "^2.2.0",
     "karma-coverage": "^1.1.2",
     "karma-mocha": "^1.3.0",
     "karma-sinon": "^1.0.5",
     "mocha": "^5.2.0",
-    "sinon": "^6.1.0"
-  },
-  "dependencies": {
-    "gulp-terser": "^1.0.1"
+    "sinon": "^7.2.2"
   }
 }

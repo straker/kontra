@@ -33,7 +33,7 @@
       // start the pool with an object
       objects: [properties.create()],
       size: 1,
-      maxSize: properties.maxSize || Infinity,
+      maxSize: properties.maxSize || 1024,
 
       /**
        * Get an object from the pool.

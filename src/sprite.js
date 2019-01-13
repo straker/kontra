@@ -103,7 +103,7 @@
      * @param {number} [properties.ddx] - Change in X velocity.
      * @param {number} [properties.ddy] - Change in Y velocity.
      *
-     * @param {number} [properties.ttl=Infinity] - How may frames the sprite should be alive.
+     * @param {number} [properties.ttl=0] - How may frames the sprite should be alive.
      * @param {number} [properties.rotation=0] - Rotation in radians of the sprite.
      * @param {number} [properties.anchor={x:0,y:0}] - The x and y origin of the sprite. {0,0} is the top left corner of the sprite, {1,1} is the bottom right corner.
      * @param {Context} [properties.context=kontra.context] - Provide a context for the sprite to draw on.
@@ -133,7 +133,7 @@
 
       // defaults
       this.width = this.height = this.rotation = 0;
-      this.ttl = Infinity;
+      this.ttl = 0;
       this.anchor = {x: 0, y: 0};
       this.context = kontra.context;
 

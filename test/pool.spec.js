@@ -19,6 +19,7 @@ describe('kontra.pool', function() {
       isAlive: function() {
         return this.alive || this.ttl > 0;
       },
+      ttl: 0
     };
   };
 
@@ -161,6 +162,22 @@ describe('kontra.pool', function() {
       }
 
       expect(pool.size).to.equal(5);
+    });
+
+    it('should not continue making objects if not needed', function() {
+      var pool = kontra.pool({
+        create: sprite,
+        maxSize: 500
+      });
+
+      for (var i = 0; i < 129; i++) {
+        pool.get({
+          ttl: 1
+        });
+      }
+
+      expect(pool.size).to.not.equal(pool.maxSize);
+      expect(pool.size).to.be.equal(256);
     });
 
   });

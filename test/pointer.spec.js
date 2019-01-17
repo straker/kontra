@@ -93,14 +93,14 @@ describe('kontra.pointer', function() {
     });
 
     it('should return true for touchstart', function() {
-      simulateEvent('touchstart', {touches: [{pageX: 100, pageY: 50}]});
+      simulateEvent('touchstart', {touches: [{clientX: 100, clientY: 50}]});
 
       expect(kontra.pointer.pressed('left')).to.be.true;
     });
 
     it('should return false for a touchend', function() {
-      simulateEvent('touchstart', {touches: [{pageX: 100, pageY: 50}]});
-      simulateEvent('touchend', {touches: [{pageX: 100, pageY: 50}]});
+      simulateEvent('touchstart', {touches: [{clientX: 100, clientY: 50}]});
+      simulateEvent('touchend', {touches: [{clientX: 100, clientY: 50}]});
 
       expect(kontra.pointer.pressed('left')).to.be.not.ok;
     });
@@ -297,7 +297,7 @@ describe('kontra.pointer', function() {
 
     it('should update the x and y pointer coordinates', function() {
       kontra.pointer.x = kontra.pointer.y = 0;
-      simulateEvent('mousemove', {pageX: 100, pageY: 50});
+      simulateEvent('mousemove', {clientX: 100, clientY: 50});
 
       expect(kontra.pointer.x).to.equal(100);
       expect(kontra.pointer.y).to.equal(50);
@@ -305,7 +305,7 @@ describe('kontra.pointer', function() {
 
     it('should call the objects onOver function if it is the target', function() {
       object.onOver = sinon.spy();
-      simulateEvent('mousemove', {pageX: 105, pageY: 55});
+      simulateEvent('mousemove', {clientX: 105, clientY: 55});
 
       expect(object.onOver.called).to.be.ok;
     });
@@ -316,11 +316,11 @@ describe('kontra.pointer', function() {
         y: 0.5
       };
       object.onOver = sinon.spy();
-      simulateEvent('mousemove', {pageX: 110, pageY: 55});
+      simulateEvent('mousemove', {clientX: 110, clientY: 55});
 
       expect(object.onOver.called).to.not.be.ok;
 
-      simulateEvent('mousemove', {pageX: 95, pageY: 55});
+      simulateEvent('mousemove', {clientX: 95, clientY: 55});
 
       expect(object.onOver.called).to.be.ok;
     });
@@ -338,7 +338,7 @@ describe('kontra.pointer', function() {
 
     it('should update the x and y pointer coordinates', function() {
       kontra.pointer.x = kontra.pointer.y = 0;
-      simulateEvent('mousedown', {pageX: 100, pageY: 50});
+      simulateEvent('mousedown', {clientX: 100, clientY: 50});
 
       expect(kontra.pointer.x).to.equal(100);
       expect(kontra.pointer.y).to.equal(50);
@@ -347,14 +347,14 @@ describe('kontra.pointer', function() {
     it('should call the onDown function', function () {
       var onDown = sinon.spy();
       kontra.pointer.onDown(onDown);
-      simulateEvent('mousedown', {pageX: 100, pageY: 50});
+      simulateEvent('mousedown', {clientX: 100, clientY: 50});
 
       expect(onDown.called).to.be.ok;
     });
 
     it('should call the objects onDown function if it is the target', function() {
       object.onDown = sinon.spy();
-      simulateEvent('mousedown', {pageX: 105, pageY: 55});
+      simulateEvent('mousedown', {clientX: 105, clientY: 55});
 
       expect(object.onDown.called).to.be.ok;
     });
@@ -365,11 +365,11 @@ describe('kontra.pointer', function() {
         y: 0.5
       };
       object.onDown = sinon.spy();
-      simulateEvent('mousedown', {pageX: 110, pageY: 55});
+      simulateEvent('mousedown', {clientX: 110, clientY: 55});
 
       expect(object.onDown.called).to.not.be.ok;
 
-      simulateEvent('mousedown', {pageX: 95, pageY: 55});
+      simulateEvent('mousedown', {clientX: 95, clientY: 55});
 
       expect(object.onDown.called).to.be.ok;
     });
@@ -388,7 +388,7 @@ describe('kontra.pointer', function() {
 
     it('should update the x and y pointer coordinates', function() {
       kontra.pointer.x = kontra.pointer.y = 0;
-      simulateEvent('touchstart', {touches: [{pageX: 100, pageY: 50}]});
+      simulateEvent('touchstart', {touches: [{clientX: 100, clientY: 50}]});
 
       expect(kontra.pointer.x).to.equal(100);
       expect(kontra.pointer.y).to.equal(50);
@@ -397,14 +397,14 @@ describe('kontra.pointer', function() {
     it('should call the onDown function', function () {
       var onDown = sinon.spy();
       kontra.pointer.onDown(onDown);
-      simulateEvent('touchstart', {touches: [{pageX: 100, pageY: 50}]});
+      simulateEvent('touchstart', {touches: [{clientX: 100, clientY: 50}]});
 
       expect(onDown.called).to.be.ok;
     });
 
     it('should call the objects onDown function if it is the target', function() {
       object.onDown = sinon.spy();
-      simulateEvent('touchstart', {touches: [{pageX: 105, pageY: 55}]});
+      simulateEvent('touchstart', {touches: [{clientX: 105, clientY: 55}]});
 
       expect(object.onDown.called).to.be.ok;
     });
@@ -415,11 +415,11 @@ describe('kontra.pointer', function() {
         y: 0.5
       };
       object.onDown = sinon.spy();
-      simulateEvent('touchstart', {touches: [{pageX: 110, pageY: 55}]});
+      simulateEvent('touchstart', {touches: [{clientX: 110, clientY: 55}]});
 
       expect(object.onDown.called).to.not.be.ok;
 
-      simulateEvent('touchstart', {touches: [{pageX: 95, pageY: 55}]});
+      simulateEvent('touchstart', {touches: [{clientX: 95, clientY: 55}]});
 
       expect(object.onDown.called).to.be.ok;
     });
@@ -437,7 +437,7 @@ describe('kontra.pointer', function() {
 
     it('should update the x and y pointer coordinates', function() {
       kontra.pointer.x = kontra.pointer.y = 0;
-      simulateEvent('mouseup', {pageX: 100, pageY: 50});
+      simulateEvent('mouseup', {clientX: 100, clientY: 50});
 
       expect(kontra.pointer.x).to.equal(100);
       expect(kontra.pointer.y).to.equal(50);
@@ -446,14 +446,14 @@ describe('kontra.pointer', function() {
     it('should call the onUp function', function () {
       var onUp = sinon.spy();
       kontra.pointer.onUp(onUp);
-      simulateEvent('mouseup', {pageX: 100, pageY: 50});
+      simulateEvent('mouseup', {clientX: 100, clientY: 50});
 
       expect(onUp.called).to.be.ok;
     });
 
     it('should call the objects onUp function if it is the target', function() {
       object.onUp = sinon.spy();
-      simulateEvent('mouseup', {pageX: 105, pageY: 55});
+      simulateEvent('mouseup', {clientX: 105, clientY: 55});
 
       expect(object.onUp.called).to.be.ok;
     });
@@ -464,11 +464,11 @@ describe('kontra.pointer', function() {
         y: 0.5
       };
       object.onUp = sinon.spy();
-      simulateEvent('mouseup', {pageX: 110, pageY: 55});
+      simulateEvent('mouseup', {clientX: 110, clientY: 55});
 
       expect(object.onUp.called).to.not.be.ok;
 
-      simulateEvent('mouseup', {pageX: 95, pageY: 55});
+      simulateEvent('mouseup', {clientX: 95, clientY: 55});
 
       expect(object.onUp.called).to.be.ok;
     });
@@ -486,7 +486,7 @@ describe('kontra.pointer', function() {
 
     it('should update the x and y pointer coordinates', function() {
       kontra.pointer.x = kontra.pointer.y = 0;
-      simulateEvent('touchend', {touches: [], changedTouches: [{pageX: 100, pageY: 50}]});
+      simulateEvent('touchend', {touches: [], changedTouches: [{clientX: 100, clientY: 50}]});
 
       expect(kontra.pointer.x).to.equal(100);
       expect(kontra.pointer.y).to.equal(50);
@@ -495,14 +495,14 @@ describe('kontra.pointer', function() {
     it('should call the onUp function', function () {
       var onUp = sinon.spy();
       kontra.pointer.onUp(onUp);
-      simulateEvent('touchend', {touches: [], changedTouches: [{pageX: 100, pageY: 50}]});
+      simulateEvent('touchend', {touches: [], changedTouches: [{clientX: 100, clientY: 50}]});
 
       expect(onUp.called).to.be.ok;
     });
 
     it('should call the objects onUp function if it is the target', function() {
       object.onUp = sinon.spy();
-      simulateEvent('touchend', {touches: [], changedTouches: [{pageX: 105, pageY: 55}]});
+      simulateEvent('touchend', {touches: [], changedTouches: [{clientX: 105, clientY: 55}]});
 
       expect(object.onUp.called).to.be.ok;
     });
@@ -513,11 +513,11 @@ describe('kontra.pointer', function() {
         y: 0.5
       };
       object.onUp = sinon.spy();
-      simulateEvent('touchend', {touches: [{pageX: 110, pageY: 55}]});
+      simulateEvent('touchend', {touches: [{clientX: 110, clientY: 55}]});
 
       expect(object.onUp.called).to.not.be.ok;
 
-      simulateEvent('touchend', {touches: [{pageX: 95, pageY: 55}]});
+      simulateEvent('touchend', {touches: [{clientX: 95, clientY: 55}]});
 
       expect(object.onUp.called).to.be.ok;
     });

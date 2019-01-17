@@ -126,32 +126,20 @@
   function pointerHandler(e, event) {
     if (!kontra.canvas) return;
 
-    let pageX, pageY;
+    let clientX, clientY;
 
-    if (e.type.indexOf('mouse') !== -1) {
-      pageX = e.pageX;
-      pageY = e.pageY;
-    }
-    else {
-      // touchstart uses touches while touchend uses changedTouches
-      // @see https://stackoverflow.com/questions/17957593/how-to-capture-touchend-coordinates
-      pageX = (e.touches[0] || e.changedTouches[0]).pageX;
-      pageY = (e.touches[0] || e.changedTouches[0]).pageY;
+    if (['touchstart', 'touchmove', 'touchend'].indexOf(e.type) !== -1) {
+      clientX = (e.touches[0] || e.changedTouches[0]).clientX;
+      clientY = (e.touches[0] || e.changedTouches[0]).clientY;
+    } else {
+      clientX = e.clientX;
+      clientY = e.clientY;
     }
 
-    let x = pageX - kontra.canvas.offsetLeft;
-    let y = pageY - kontra.canvas.offsetTop;
-    let el = kontra.canvas;
-
-    while ( (el = el.offsetParent) ) {
-      x -= el.offsetLeft;
-      y -= el.offsetTop;
-    }
-
-    // take into account the canvas scale
-    let scale = kontra.canvas.offsetHeight / kontra.canvas.height;
-    x /= scale;
-    y /= scale;
+    let ratio = kontra.canvas.height / kontra.canvas.offsetHeight;
+    let rect = kontra.canvas.getBoundingClientRect();
+    let x = (clientX - rect.left) * ratio;
+    let y = (clientY - rect.top) * ratio;
 
     pointer.x = x;
     pointer.y = y;

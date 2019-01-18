@@ -30,7 +30,7 @@
           <dt><strong>properties.create</strong> <em>{function}</em></dt>
           <dd>Function that returns a new object to be added to the pool when there are no objects able to be reused.</dd>
           <dt><strong>properties.maxSize</strong> <em>{number}</em></dt>
-          <dd>Optional. The maximum number of objects allowed in the pool. The pool will never grow beyond this size. Defaults to Infinity.</dd>
+          <dd>Optional. The maximum number of objects allowed in the pool. The pool will never grow beyond this size. Defaults to 1024.</dd>
         </dl>
 
         <p>A fast and memory efficient object pool for sprite reuse. Perfect for particle systems or SHUMPs.</p>
@@ -82,7 +82,7 @@
 
           <p>The object must implement the functions <code>update(dt)</code>, <code>init(properties)</code>, and <code>isAlive()</code>. If one of these functions is missing the pool will throw an error. <a href="sprite">kontra.sprite</a> defines these functions for you.</p>
 
-          <p>An object is available for reuse when it's <a href="sprite#isAlive">isAlive()</a> function returns false. For a sprite, this is typically when it's <a href="sprite#ttl">ttl</a> is 0.</p>
+          <p>An object is available for reuse when its <a href="sprite#isAlive">isAlive()</a> function returns false. For a sprite, this is typically when its <a href="sprite#ttl">ttl</a> is 0.</p>
 
           <p>When you need an object from the pool, use the pools <a href="#get">get()</a> function and pass it any properties you want the reused object to have.</p>
 

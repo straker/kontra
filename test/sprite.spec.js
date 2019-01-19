@@ -478,13 +478,12 @@ describe('kontra.sprite', function() {
       sinon.stub(sprite.context, 'drawImage').callsFake(kontra._noop);
 
       sprite.render();
-
-      expect(sprite.context.drawImage.calledWith(img, -5, -10)).to.be.ok;
+      expect(sprite.context.drawImage.calledWith(img, 0, 0, 10, 20, -5, -10, 10, 20)).to.be.ok;
 
       sprite.anchor = {x: 1, y: 1};
       sprite.render();
 
-      expect(sprite.context.drawImage.calledWith(img, -10, -20)).to.be.ok;
+      expect(sprite.context.drawImage.calledWith(img, 0, 0, 10, 20, -10, -20, 10, 20)).to.be.ok;
 
       sprite.context.drawImage.restore();
     });

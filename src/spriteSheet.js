@@ -91,7 +91,8 @@
       // get the row and col of the frame
       let row = this.frames[this._f] / this.spriteSheet._f | 0;
       let col = this.frames[this._f] % this.spriteSheet._f | 0;
-
+      let width = (properties.width !== undefined) ? properties.width : this.spriteSheet.frame.width
+      let height = (properties.height !== undefined) ? properties.height : this.spriteSheet.frame.height
       let context = (properties.context || kontra.context)
       context.drawImage(
         this.spriteSheet.image,
@@ -99,7 +100,7 @@
         row * this.spriteSheet.frame.height + (row * 2 + 1) * this.margin,
         this.spriteSheet.frame.width, this.spriteSheet.frame.height,
         properties.x, properties.y,
-        properties.width, properties.height
+        width, height
       );
     }
   }

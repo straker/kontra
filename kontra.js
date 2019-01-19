@@ -1310,8 +1310,8 @@ kontra = {
       // image sprite
       if (temp = properties.image) {
         this.image = temp;
-        this.width = this.width || temp.width;
-        this.height = this.height || temp.height;
+        this.width = (properties.width !== undefined) ? properties.width : temp.width;
+        this.height = (properties.height !== undefined) ? properties.height : temp.height;
       }
       // animation sprite
       else if (temp = properties.animations) {

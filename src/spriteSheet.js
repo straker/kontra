@@ -81,6 +81,8 @@
      * @param {object} properties - How to draw the animation.
      * @param {number} properties.x - X position to draw.
      * @param {number} properties.y - Y position to draw.
+     * @param {number} properties.width - width of the sprite.
+     * @param {number} properties.height - height of the sprit.
      * @param {Context} [properties.context=kontra.context] - Provide a context for the sprite to draw on.
      */
     render(properties) {
@@ -90,13 +92,14 @@
       let row = this.frames[this._f] / this.spriteSheet._f | 0;
       let col = this.frames[this._f] % this.spriteSheet._f | 0;
 
-      (properties.context || kontra.context).drawImage(
+      let context = (properties.context || kontra.context)
+      context.drawImage(
         this.spriteSheet.image,
-        col * this.width + (col * 2 + 1) * this.margin,
-        row * this.height + (row * 2 + 1) * this.margin,
-        this.width, this.height,
+        col * this.spriteSheet.frame.width + (col * 2 + 1) * this.margin,
+        row * this.spriteSheet.frame.height + (row * 2 + 1) * this.margin,
+        this.spriteSheet.frame.width, this.spriteSheet.frame.height,
         properties.x, properties.y,
-        this.width, this.height
+        properties.width, properties.height
       );
     }
   }

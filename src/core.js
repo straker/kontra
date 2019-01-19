@@ -21,6 +21,7 @@ kontra = {
     // @endif
 
     this.context = canvasEl.getContext('2d');
+    this.context.imageSmoothingEnabled = false;
     this._init();
   },
 

@@ -806,12 +806,13 @@ kontra = {
        * @memberof kontra.pool
        *
        * @param {object} properties - Properties to pass to object.init().
+       *
+       * @returns {object}
        */
       get(properties) {
         properties = properties || {};
-
         // the pool is out of objects if the first object is in use and it can't grow
-        if (this.objects[0].isAlive()) {
+        if (this.objects.length == inUse) {
           if (this.size === this.maxSize) {
             return;
           }
@@ -830,6 +831,7 @@ kontra = {
         obj.init(properties);
         this.objects.push(obj);
         inUse++;
+        return obj
       },
 
       /**
@@ -1297,7 +1299,7 @@ kontra = {
 
       // defaults
       this.width = this.height = this.rotation = 0;
-      this.ttl = 0;
+      this.ttl = Infinity;
       this.anchor = {x: 0, y: 0};
       this.context = kontra.context;
 

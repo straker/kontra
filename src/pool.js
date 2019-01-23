@@ -40,12 +40,13 @@
        * @memberof kontra.pool
        *
        * @param {object} properties - Properties to pass to object.init().
+       *
+       * @returns {object}
        */
       get(properties) {
         properties = properties || {};
-
         // the pool is out of objects if the first object is in use and it can't grow
-        if (this.objects[0].isAlive()) {
+        if (this.objects.length == inUse) {
           if (this.size === this.maxSize) {
             return;
           }
@@ -64,6 +65,7 @@
         obj.init(properties);
         this.objects.push(obj);
         inUse++;
+        return obj
       },
 
       /**

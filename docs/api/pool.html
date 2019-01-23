@@ -135,11 +135,11 @@ pool.get({
             <dd>Optional. Properties to pass to the objects <code>init(properties)</code> function.</dd>
           </dl>
 
-          <p>Get an object from the pool. The <code>properties</code> parameter will be passed directly to the objects <code>init(properties)</code> function. If you're using <a href="sprite">kontra.sprite</a>, you should also pass the <a href="sprite#ttl">ttl</a> property to designate how many frames you want the object to be alive for.</p>
+          <p>Get and return an object from the pool. The <code>properties</code> parameter will be passed directly to the objects <code>init(properties)</code> function. If you're using <a href="sprite">kontra.sprite</a>, you should also pass the <a href="sprite#ttl">ttl</a> property to designate how many frames you want the object to be alive for.</p>
 
           <p>If you want to control when the sprite is ready for reuse, pass <code>Infinity</code> for <code>ttl</code>. You'll need to set the sprites <code>ttl</code> to <code>0</code> when you're ready for the sprite to be reused.</p>
 
-          <pre><code class="language-javascript">pool.get({
+          <pre><code class="language-javascript">let sprite = pool.get({
   // the object will get these properties and values
   x: 100,
   y: 200,

@@ -66,6 +66,9 @@
    * Object for using the keyboard.
    */
   kontra.keys = {
+
+    _map: keyMap,
+
     /**
      * Register a function to be called on a key press.
      * @memberof kontra.keys

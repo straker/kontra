@@ -131,7 +131,7 @@ describe('kontra.sprite', function() {
       expect(sprite.position.constructor.name).to.equal('Vector');
       expect(sprite.velocity.constructor.name).to.equal('Vector');
       expect(sprite.acceleration.constructor.name).to.equal('Vector');
-      expect(sprite.ttl).to.equal(0);
+      expect(sprite.ttl).to.equal(Infinity);
     });
 
     it('should set basic properties of width, height, color, x, and y', function() {
@@ -623,7 +623,7 @@ describe('kontra.sprite', function() {
     it('should return true when the sprite is alive', function() {
       var sprite = kontra.sprite();
 
-      expect(sprite.isAlive()).to.be.false;
+      expect(sprite.isAlive()).to.be.true;
 
       sprite.ttl = 1;
 

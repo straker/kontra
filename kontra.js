@@ -446,6 +446,8 @@ kontra = {
    * Object for using the keyboard.
    */
   kontra.keys = {
+    map: keyMap,
+
     /**
      * Register a function to be called on a key press.
      * @memberof kontra.keys
@@ -807,12 +809,13 @@ kontra = {
        * @memberof kontra.pool
        *
        * @param {object} properties - Properties to pass to object.init().
+       *
+       * @returns {object}
        */
       get(properties) {
         properties = properties || {};
-
         // the pool is out of objects if the first object is in use and it can't grow
-        if (this.objects[0].isAlive()) {
+        if (this.objects.length == inUse) {
           if (this.size === this.maxSize) {
             return;
           }
@@ -831,6 +834,7 @@ kontra = {
         obj.init(properties);
         this.objects.push(obj);
         inUse++;
+        return obj
       },
 
       /**
@@ -1268,7 +1272,7 @@ kontra = {
      * @param {number} [properties.ddx] - Change in X velocity.
      * @param {number} [properties.ddy] - Change in Y velocity.
      *
-     * @param {number} [properties.ttl=0] - How may frames the sprite should be alive.
+     * @param {number} [properties.ttl=Infinity] - How may frames the sprite should be alive.
      * @param {number} [properties.rotation=0] - Rotation in radians of the sprite.
      * @param {number} [properties.anchor={x:0,y:0}] - The x and y origin of the sprite. {0,0} is the top left corner of the sprite, {1,1} is the bottom right corner.
      * @param {Context} [properties.context=kontra.context] - Provide a context for the sprite to draw on.
@@ -1298,7 +1302,7 @@ kontra = {
 
       // defaults
       this.width = this.height = this.rotation = 0;
-      this.ttl = 0;
+      this.ttl = Infinity;
       this.anchor = {x: 0, y: 0};
       this.context = kontra.context;
 
@@ -1586,7 +1590,7 @@ kontra = {
    * @param {number} [properties.ddx] - Change in X velocity.
    * @param {number} [properties.ddy] - Change in Y velocity.
    *
-   * @param {number} [properties.ttl=0] - How may frames the sprite should be alive.
+   * @param {number} [properties.ttl=Infinity] - How may frames the sprite should be alive.
    * @param {Context} [properties.context=kontra.context] - Provide a context for the sprite to draw on.
    *
    * @param {Image|Canvas} [properties.image] - Image for the sprite.

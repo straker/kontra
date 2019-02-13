@@ -47,6 +47,13 @@
             </li>
 
             <li>
+              <h3 id="properties">Properties</h3>
+              <ul aria-labeledby="properties">
+                <li><a href="#map">kontra.keys&#8203;.map</a></li>
+              </ul>
+            </li>
+
+            <li>
               <h3 id="methods">Methods</h3>
               <ul aria-labeledby="methods">
                 <li><a href="#bind">kontra.keys&#8203;.bind(key, callback)</a></li>
@@ -64,7 +71,7 @@
         <section>
           <h2 id="available-keys"><a href="#available-keys" class="section-link">Available keys<span aria-hidden="true">#</span></a></h2>
 
-          <p>Below is a list of keys that you can use.</p>
+          <p>Below is a list of keys that are provided by default. If you need to extend this list, you can use the <a href="#map">kontra.keys.map</a> property.</p>
 
           <ul>
             <li>a-z</li>
@@ -98,6 +105,24 @@ kontra.keys.bind(['enter', 'space'], function(e) {
   // fire gun
 });</code></pre>
 
+        </section>
+
+
+
+
+
+        <section>
+          <h2 id="map"><a href="#map" class="section-link">kontra.keys&#8203;.map<span aria-hidden="true">#</span></a></h2>
+
+          <p><em>{object}</em></p>
+
+          <p>A map of keycodes to key names used in biding and unbinding. Add to this object to expand the list of <a href="#available-keys">available keys</a>.</p>
+
+          <pre><code class="language-javascript">kontra.keys.map[34] = 'pageDown';
+
+kontra.keys.bind('pageDown', function(e) {
+  // handle pageDown key
+});</code></pre>
         </section>
 
 

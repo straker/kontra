@@ -21,6 +21,7 @@ kontra = {
     // @endif
 
     this.context = canvasEl.getContext('2d');
+    this.context.imageSmoothingEnabled = false;
     this._init();
   },
 
@@ -1313,8 +1314,8 @@ kontra = {
       // image sprite
       if (temp = properties.image) {
         this.image = temp;
-        this.width = temp.width;
-        this.height = temp.height;
+        this.width = (properties.width !== undefined) ? properties.width : temp.width;
+        this.height = (properties.height !== undefined) ? properties.height : temp.height;
       }
       // animation sprite
       else if (temp = properties.animations) {
@@ -1328,8 +1329,8 @@ kontra = {
         }
 
         this._ca = firstAnimation;
-        this.width = firstAnimation.width;
-        this.height = firstAnimation.height;
+        this.width = this.width || firstAnimation.width;
+        this.height = this.height || firstAnimation.height;
       }
 
       return this;
@@ -1552,12 +1553,18 @@ kontra = {
       }
 
       if (this.image) {
-        this.context.drawImage(this.image, anchorWidth, anchorHeight);
+        this.context.drawImage(
+          this.image,
+          0, 0, this.image.width, this.image.height,
+          anchorWidth, anchorHeight, this.width, this.height
+        );
       }
       else if (this._ca) {
         this._ca.render({
           x: anchorWidth,
           y: anchorHeight,
+          width: this.width,
+          height: this.height,
           context: this.context
         });
       }
@@ -1685,6 +1692,8 @@ kontra = {
      * @param {object} properties - How to draw the animation.
      * @param {number} properties.x - X position to draw.
      * @param {number} properties.y - Y position to draw.
+     * @param {number} properties.width - width of the sprite.
+     * @param {number} properties.height - height of the sprit.
      * @param {Context} [properties.context=kontra.context] - Provide a context for the sprite to draw on.
      */
     render(properties) {
@@ -1693,14 +1702,16 @@ kontra = {
       // get the row and col of the frame
       let row = this.frames[this._f] / this.spriteSheet._f | 0;
       let col = this.frames[this._f] % this.spriteSheet._f | 0;
-
-      (properties.context || kontra.context).drawImage(
+      let width = (properties.width !== undefined) ? properties.width : this.width
+      let height = (properties.height !== undefined) ? properties.height : this.height
+      let context = (properties.context || kontra.context)
+      context.drawImage(
         this.spriteSheet.image,
         col * this.width + (col * 2 + 1) * this.margin,
         row * this.height + (row * 2 + 1) * this.margin,
         this.width, this.height,
         properties.x, properties.y,
-        this.width, this.height
+        width, height
       );
     }
   }

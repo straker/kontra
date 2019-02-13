@@ -460,7 +460,7 @@ describe('kontra.sprite', function() {
       sprite.context.fillRect.restore();
     });
 
-    it('should draw an image sprite and take into account sprite.anchor', function() {
+    it('should draw an image sprite and take into account sprite.anchor and custom width', function() {
       var img = new Image();
       img.width = 10;
       img.height = 20;
@@ -478,13 +478,17 @@ describe('kontra.sprite', function() {
       sinon.stub(sprite.context, 'drawImage').callsFake(kontra._noop);
 
       sprite.render();
-
-      expect(sprite.context.drawImage.calledWith(img, -5, -10)).to.be.ok;
+      expect(sprite.context.drawImage.calledWith(img, 0, 0, 10, 20, -5, -10, 10, 20)).to.be.ok;
 
       sprite.anchor = {x: 1, y: 1};
       sprite.render();
 
-      expect(sprite.context.drawImage.calledWith(img, -10, -20)).to.be.ok;
+      expect(sprite.context.drawImage.calledWith(img, 0, 0, 10, 20, -10, -20, 10, 20)).to.be.ok;
+
+      sprite.width = 20;
+      sprite.render();
+
+      expect(sprite.context.drawImage.calledWith(img, 0, 0, 10, 20, -20, -20, 20, 20)).to.be.ok;
 
       sprite.context.drawImage.restore();
     });

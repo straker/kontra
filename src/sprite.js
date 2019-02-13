@@ -145,8 +145,8 @@
       // image sprite
       if (temp = properties.image) {
         this.image = temp;
-        this.width = temp.width;
-        this.height = temp.height;
+        this.width = (properties.width !== undefined) ? properties.width : temp.width;
+        this.height = (properties.height !== undefined) ? properties.height : temp.height;
       }
       // animation sprite
       else if (temp = properties.animations) {
@@ -160,8 +160,8 @@
         }
 
         this._ca = firstAnimation;
-        this.width = firstAnimation.width;
-        this.height = firstAnimation.height;
+        this.width = this.width || firstAnimation.width;
+        this.height = this.height || firstAnimation.height;
       }
 
       return this;
@@ -384,12 +384,18 @@
       }
 
       if (this.image) {
-        this.context.drawImage(this.image, anchorWidth, anchorHeight);
+        this.context.drawImage(
+          this.image,
+          0, 0, this.image.width, this.image.height,
+          anchorWidth, anchorHeight, this.width, this.height
+        );
       }
       else if (this._ca) {
         this._ca.render({
           x: anchorWidth,
           y: anchorHeight,
+          width: this.width,
+          height: this.height,
           context: this.context
         });
       }

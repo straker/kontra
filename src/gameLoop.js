@@ -49,7 +49,7 @@
         return;
       }
 
-      kontra._tick();
+      kontra.emit('tick');
       accumulator += dt;
 
       while (accumulator >= delta) {

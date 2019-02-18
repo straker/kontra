@@ -257,7 +257,7 @@
   };
 
   // reset object render order on every new frame
-  kontra._tick = function() {
+  kontra.on('tick', () => {
     lastFrameRenderOrder.length = 0;
 
     thisFrameRenderOrder.map(function(object) {
@@ -265,10 +265,10 @@
     });
 
     thisFrameRenderOrder.length = 0;
-  };
+  });
 
   // After the canvas is chosen, add events to it
-  kontra._init = function() {
+  kontra.on('init', () => {
     kontra.canvas.addEventListener('mousedown', pointerDownHandler);
     kontra.canvas.addEventListener('touchstart', pointerDownHandler);
     kontra.canvas.addEventListener('mouseup', pointerUpHandler);
@@ -276,5 +276,5 @@
     kontra.canvas.addEventListener('blur', blurEventHandler);
     kontra.canvas.addEventListener('mousemove', mouseMoveHandler);
     kontra.canvas.addEventListener('touchmove', mouseMoveHandler);
-  }
+  });
 })();

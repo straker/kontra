@@ -14,6 +14,8 @@
     constructor(x, y) {
       this._x = x || 0;
       this._y = y || 0;
+
+      kontra.emit('vector.init', this);
     }
 
     /**
@@ -22,10 +24,14 @@
      *
      * @param {vector} vector - Vector to add.
      * @param {number} dt=1 - Time since last update.
+     *
+     * @returns {vector}
      */
     add(vector, dt) {
-      this.x += (vector.x || 0) * (dt || 1);
-      this.y += (vector.y || 0) * (dt || 1);
+      return kontra.vector(
+        this.x + (vector.x || 0) * (dt || 1),
+        this.y + (vector.y || 0) * (dt || 1)
+      );
     }
 
     /**
@@ -164,6 +170,7 @@
         this.height = this.height || firstAnimation.height;
       }
 
+      kontra.emit('sprite.init', this);
       return this;
     }
 
@@ -358,8 +365,8 @@
      * @param {number} dt - Time since last update.
      */
     advance(dt) {
-      this.velocity.add(this.acceleration, dt);
-      this.position.add(this.velocity, dt);
+      this.velocity = this.velocity.add(this.acceleration, dt);
+      this.position = this.position.add(this.velocity, dt);
 
       this.ttl--;
 

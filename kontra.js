@@ -1,56 +1,55 @@
-kontra = {
+(function() {
+  let callbacks = {};
 
-  /**
-   * Initialize the canvas.
-   * @memberof kontra
-   *
-   * @param {string|HTMLCanvasElement} canvas - Main canvas ID or Element for the game.
-   */
-  init(canvas) {
+  window.kontra = {
 
-    // check if canvas is a string first, an element next, or default to getting
-    // first canvas on page
-    var canvasEl = this.canvas = document.getElementById(canvas) ||
-                                 canvas ||
-                                 document.querySelector('canvas');
+    /**
+     * Initialize the canvas.
+     * @memberof kontra
+     *
+     * @param {string|HTMLCanvasElement} canvas - Main canvas ID or Element for the game.
+     */
+    init(canvas) {
 
-    // @if DEBUG
-    if (!canvasEl) {
-      throw Error('You must provide a canvas element for the game');
-    }
-    // @endif
+      // check if canvas is a string first, an element next, or default to getting
+      // first canvas on page
+      let canvasEl = this.canvas = document.getElementById(canvas) ||
+                                   canvas ||
+                                   document.querySelector('canvas');
 
-    this.context = canvasEl.getContext('2d');
-    this.context.imageSmoothingEnabled = false;
-    this._init();
-  },
+      // @if DEBUG
+      if (!canvasEl) {
+        throw Error('You must provide a canvas element for the game');
+      }
+      // @endif
 
-  /**
-   * Noop function.
-   * @see https://stackoverflow.com/questions/21634886/what-is-the-javascript-convention-for-no-operation#comment61796464_33458430
-   * @memberof kontra
-   * @private
-   *
-   * The new operator is required when using sinon.stub to replace with the noop.
-   */
-  _noop: new Function,
+      this.context = canvasEl.getContext('2d');
+      this.context.imageSmoothingEnabled = false;
 
-  /**
-   * Dispatch event to any part of the code that needs to know when
-   * a new frame has started. Will be filled out in pointer events.
-   * @memberOf kontra
-   * @private
-   */
-  _tick: new Function,
+      this.emit('init', this);
+    },
 
-  /**
-   * Dispatch event to any part of the code that needs to know when
-   * kontra has initialized. Will be filled out in pointer events.
-   * @memberOf kontra
-   * @private
-   */
-  _init: new Function
-};
+    on(event, fn) {
+      callbacks[event] = callbacks[event] || [];
+      callbacks[event].push(fn);
+    },
+
+    emit(event, ...args) {
+      if (!callbacks[event]) return;
+      callbacks[event].forEach(fn => fn(...args));
+    },
+
+    /**
+     * Noop function.
+     * @see https://stackoverflow.com/questions/21634886/what-is-the-javascript-convention-for-no-operation#comment61796464_33458430
+     * @memberof kontra
+     * @private
+     *
+     * The new operator is required when using sinon.stub to replace with the noop.
+     */
+    _noop: new Function
+  };
+})();
 (function() {
   let imageRegex = /(jpeg|jpg|gif|png)$/;
   let audioRegex = /(wav|mp3|ogg|aac)$/;
@@ -329,7 +328,7 @@ kontra = {
         return;
       }
 
-      kontra._tick();
+      kontra.emit('tick');
       accumulator += dt;
 
       while (accumulator >= delta) {
@@ -745,7 +744,7 @@ kontra = {
   };
 
   // reset object render order on every new frame
-  kontra._tick = function() {
+  kontra.on('tick', () => {
     lastFrameRenderOrder.length = 0;
 
     thisFrameRenderOrder.map(function(object) {
@@ -753,10 +752,10 @@ kontra = {
     });
 
     thisFrameRenderOrder.length = 0;
-  };
+  });
 
   // After the canvas is chosen, add events to it
-  kontra._init = function() {
+  kontra.on('init', () => {
     kontra.canvas.addEventListener('mousedown', pointerDownHandler);
     kontra.canvas.addEventListener('touchstart', pointerDownHandler);
     kontra.canvas.addEventListener('mouseup', pointerUpHandler);
@@ -764,7 +763,7 @@ kontra = {
     kontra.canvas.addEventListener('blur', blurEventHandler);
     kontra.canvas.addEventListener('mousemove', mouseMoveHandler);
     kontra.canvas.addEventListener('touchmove', mouseMoveHandler);
-  }
+  });
 })();
 
 (function() {
@@ -1183,6 +1182,8 @@ kontra = {
     constructor(x, y) {
       this._x = x || 0;
       this._y = y || 0;
+
+      kontra.emit('vector.init', this);
     }
 
     /**
@@ -1191,10 +1192,14 @@ kontra = {
      *
      * @param {vector} vector - Vector to add.
      * @param {number} dt=1 - Time since last update.
+     *
+     * @returns {vector}
      */
     add(vector, dt) {
-      this.x += (vector.x || 0) * (dt || 1);
-      this.y += (vector.y || 0) * (dt || 1);
+      return kontra.vector(
+        this.x + (vector.x || 0) * (dt || 1),
+        this.y + (vector.y || 0) * (dt || 1)
+      );
     }
 
     /**
@@ -1333,6 +1338,7 @@ kontra = {
         this.height = this.height || firstAnimation.height;
       }
 
+      kontra.emit('sprite.init', this);
       return this;
     }
 
@@ -1527,8 +1533,8 @@ kontra = {
      * @param {number} dt - Time since last update.
      */
     advance(dt) {
-      this.velocity.add(this.acceleration, dt);
-      this.position.add(this.velocity, dt);
+      this.velocity = this.velocity.add(this.acceleration, dt);
+      this.position = this.position.add(this.velocity, dt);
 
       this.ttl--;
 

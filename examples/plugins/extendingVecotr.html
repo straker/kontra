@@ -42,17 +42,6 @@
       distance
     });
 
-    let myPlugin = {
-      beforeAdd(vector, param) {
-        console.log(`adding {${param.x}, ${param.y}} vector to {${vector.x}, ${vector.y}}`);
-      },
-      afterAdd(vector, result, param) {
-        console.log(`result of add was: {${result.x}, ${result.y}}`);
-      }
-    }
-
-    kontra.plugin.register('vector', myPlugin);
-
 
 
 

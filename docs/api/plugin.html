@@ -26,7 +26,7 @@
 
         <p>A minimal plugin architecture to enable sharing of common functionality. The plugin system is designed after the Interceptor Pattern and allows you to write functions that can be run before and after any Kontra object function.</p>
 
-        <p>The plugin architecture also allows you to safely extend Kontra objects. This allows you to safely add additional properties without overriding ones that already may exist.</p>
+        <p>The plugin architecture also allows you to safely extend Kontra objects. This allows you to safely add additional properties without overriding ones that may already exist.</p>
 
         <pre><code class="language-javascript">let myPlugin = {
   beforeAdd(vector, vecToAdd) {
@@ -75,6 +75,7 @@ kontra.plugin.register('vector', myPlugin);</code></pre>
             <li>Export your plugin object for the consumer to use.</li>
             <li>You should not register the plugin yourself. Instead, you should expect the consumer of your plugin to register it. This way the consumer can determine the order in which plugins should run.</li>
             <li>In your plugin docs, remind the user to register the plugin themselves.</li>
+            <li>Gracefully handle errors in in your plugin code. As an idea, you could return <code>null</code> on an error so your plugin does not break the rest of the plugin chain.</li>
           </ul>
 
           <pre><code class="language-javascript">(function() {
@@ -154,7 +155,7 @@ kontra.plugin.register('vector', myPlugin);</code></pre>
 
           <p>Before functions can modify the arguments passed to the intercepted function. To do this, you'll need to return an array that represents the new arguments. You can modify or pass through any argument in this way. If your function does not modify the arguments, you can return <code>null</code>.</p>
 
-          <p>If multiple before functions are registered, they will be run in the order they were registered and will be passed the arguments from the previous before function.</p>
+          <p>If multiple before functions are registered for the same intercepted function, they will be run in the order they were registered and will be passed the arguments from the previous before function.</p>
 
           <pre><code class="language-javascript">let logPlugin = {
   // `vector` is the vector the `add` function was called on
@@ -189,7 +190,7 @@ let passThroughArgsPlugin = {
 
           <p>After functions can modify the result of the intercepted function. To do this, you return a new value as the result. If your function does not modify the result, you can return <code>null</code>.</p>
 
-          <p>If multiple after functions are registered, they will be run in the order they were registered and will be passed the arguments from the previous after function.</p>
+          <p>If multiple after functions are registered for the same intercepted function, they will be run in the order they were registered and will be passed the result from the previous after function.</p>
 
           <pre><code class="language-javascript">let logPlugin = {
   // `vector` is the vector the `add` function was called on
@@ -225,7 +226,7 @@ let modifyResultPlugin = {
             <dd>Plugin object with before and after functions.</dd>
           </dl>
 
-          <p>Unregister a plugin and remove all intercepted before and after functions.</p>
+          <p>Unregister a plugin and remove all its before and after functions from the intercepted Kontra object.</p>
 
         </section>
 

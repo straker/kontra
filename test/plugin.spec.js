@@ -104,8 +104,13 @@ describe('kontra.plugin', function() {
 
 
     describe('intercepted method', () => {
+      let spy;
+      afterEach(() => {
+        spy.restore && spy.restore();
+      });
+
       it('should call the original method', () => {
-        let spy = sinon.spy(kontra.foobar, '_oadd');
+        spy = sinon.spy(kontra.foobar, '_oadd');
         kontra.foobar.add(1, 2);
 
         expect(spy.called).to.be.ok;
@@ -119,6 +124,39 @@ describe('kontra.plugin', function() {
 
         expect(stub.called).to.be.ok;
         expect(stub.calledWith(kontra.foobar, 1, 2)).to.be.ok;
+      });
+
+      it('should pass the modified arguments from one before plugin to the next', () => {
+        spy = sinon.spy(kontra.foobar, '_oadd');
+        let stub = sinon.stub().callsFake(function fakeFn(context, p1, p2) {
+          return [5, 6];
+        });
+        kontra.foobar._inc.add.before[0] = stub;
+
+        kontra.foobar.add(1, 2);
+        expect(stub.calledWith(kontra.foobar, 1, 2)).to.be.ok;
+        expect(spy.calledWith(5, 6)).to.be.ok;
+      });
+
+      it('should pass the previous result if before plugin returns null', () => {
+        spy = sinon.spy(kontra.foobar, '_oadd');
+        let stub1 = sinon.stub().callsFake(function fakeFn(context, p1, p2) {
+          return null;
+        });
+        let stub2 = sinon.stub().callsFake(function fakeFn(context, p1, p2) {
+          return [5, 6];
+        });
+        kontra.plugin.register('foobar', {
+          beforeAdd: stub1
+        });
+        kontra.plugin.register('foobar', {
+          beforeAdd: stub2
+        });
+
+        kontra.foobar.add(1, 2);
+
+        expect(stub2.calledWith(kontra.foobar, 1, 2)).to.be.ok;
+        expect(spy.calledWith(5, 6)).to.be.ok;
       });
 
       it('should call any after methods', () => {
@@ -244,6 +282,50 @@ describe('kontra.plugin', function() {
       expect(fn).to.not.throw();
       expect(kontra.foobar._inc.add.before.length).to.equal(1);
       expect(kontra.foobar._inc.add.after.length).to.equal(1);
+    });
+  });
+
+
+
+
+
+  // --------------------------------------------------
+  // kontra.plugin.extend
+  // --------------------------------------------------
+  describe('extend', function() {
+
+    it('should add properties onto the object', () => {
+      let properties = {
+        number: 1,
+        string: 'hello',
+        fn: function() {},
+        object: {}
+      };
+
+      kontra.plugin.extend('foobar', properties);
+
+      expect(kontra.foobar.number).to.equal(properties.number);
+      expect(kontra.foobar.string).to.equal(properties.string);
+      expect(kontra.foobar.fn).to.equal(properties.fn);
+      expect(kontra.foobar.object).to.equal(properties.object);
+    });
+
+    it('should not add properties onto the object that already exist', () => {
+      let properties = {
+        number: 1,
+        string: 'hello',
+        fn: function() {},
+        object: {}
+      };
+
+      let override = {
+        number: 20
+      };
+
+      kontra.plugin.extend('foobar', properties);
+      kontra.plugin.extend('foobar', override);
+
+      expect(kontra.foobar.number).to.equal(properties.number);
     });
   });
 });

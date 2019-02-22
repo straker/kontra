@@ -14,8 +14,6 @@
     constructor(x, y) {
       this._x = x || 0;
       this._y = y || 0;
-
-      kontra.emit('vector.init', this);
     }
 
     /**
@@ -170,7 +168,6 @@
         this.height = this.height || firstAnimation.height;
       }
 
-      kontra.emit('sprite.init', this);
       return this;
     }
 

@@ -30,33 +30,33 @@ describe('kontra.vector', function() {
       var vec1 = kontra.vector(10, 20);
       var vec2 = kontra.vector(5, 10);
 
-      vec1.add(vec2)
+      let vec = vec1.add(vec2)
 
-      expect(vec1.x).to.eql(15);
-      expect(vec1.y).to.eql(30);
+      expect(vec.x).to.eql(15);
+      expect(vec.y).to.eql(30);
     });
 
     it('should incorporate dt if passed', function() {
       var vec1 = kontra.vector(10, 20);
       var vec2 = kontra.vector(5, 10);
 
-      vec1.add(vec2, 2)
+      let vec = vec1.add(vec2, 2)
 
-      expect(vec1.x).to.eql(20);
-      expect(vec1.y).to.eql(40);
+      expect(vec.x).to.eql(20);
+      expect(vec.y).to.eql(40);
     });
 
     it('should default vector to 0 with empty parameters', function() {
       var vec1 = kontra.vector(10, 20);
 
-      vec1.add({x: 10});
+      let vec = vec1.add({x: 10});
 
-      expect(vec1.y).to.eql(20);
+      expect(vec.y).to.eql(20);
 
       vec1 = kontra.vector(10, 20);
-      vec1.add({y: 10});
+      vec = vec1.add({y: 10});
 
-      expect(vec1.x).to.eql(10);
+      expect(vec.x).to.eql(10);
     });
 
   });

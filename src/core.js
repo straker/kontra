@@ -29,11 +29,38 @@
       this.emit('init', this);
     },
 
-    on(event, fn) {
+    /**
+     * Register a callback for an event.
+     * @memberof kontra
+     *
+     * @param {string} event - Name of the event
+     * @param {function} callback - Function callback
+     */
+    on(event, callback) {
       callbacks[event] = callbacks[event] || [];
-      callbacks[event].push(fn);
+      callbacks[event].push(callback);
     },
 
+    /**
+     * Remove a callback for an event.
+     * @memberof kontra
+     *
+     * @param {string} event - Name of the event
+     * @param {function} callback - Function callback
+     */
+    // @see https://github.com/jed/140bytes/wiki/Byte-saving-techniques#use-placeholder-arguments-instead-of-var
+    off(event, callback, index) {
+      if (!callbacks[event] || (index = callbacks[event].indexOf(callback)) < 0) return;
+      callbacks[event].splice(index, 1);
+    },
+
+    /**
+     * Call all callback functions for the event.
+     * @memberof kontra
+     *
+     * @param {string} event - Name of the event
+     * @param {...*} args - Arguments passed to all callbacks
+     */
     emit(event, ...args) {
       if (!callbacks[event]) return;
       callbacks[event].forEach(fn => fn(...args));
@@ -47,6 +74,9 @@
      *
      * The new operator is required when using sinon.stub to replace with the noop.
      */
-    _noop: new Function
+    _noop: new Function,
+
+    // expose for testing
+    _callbacks: callbacks
   };
 })();

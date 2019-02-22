@@ -44,7 +44,7 @@ describe('kontra.pointer', function() {
     // set up and take down the canvas before each test so it doesn't leak
     // the canvas element for the kontra.core.init tests
     kontra.canvas = canvas;
-    kontra._init();
+    kontra.emit('init');
     document.body.appendChild(canvas);
 
     object = {
@@ -56,7 +56,7 @@ describe('kontra.pointer', function() {
     };
     kontra.pointer.track(object);
     object.render();
-    kontra._tick();
+    kontra.emit('tick');
   });
 
   afterEach(function() {
@@ -220,11 +220,11 @@ describe('kontra.pointer', function() {
         render: sinon.spy()
       };
       kontra.pointer.track(obj);
-      kontra._tick();
+      kontra.emit('tick');
 
       object.render();
       obj.render();
-      kontra._tick();
+      kontra.emit('tick');
 
       kontra.pointer.x = 100;
       kontra.pointer.y = 50;

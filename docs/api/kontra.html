@@ -37,12 +37,19 @@
 
           <ul aria-labeledby="toc">
             <li>
+              <ul>
+                <li><a href="#lifecycle">Lifecycle Events</a></li></li>
+              </ul>
+            </li>
+
+            <li>
               <h3 id="properties">Properties</h3>
               <ul aria-labeledby="properties">
                 <li><a href="#canvas">kontra&#8203;.canvas</a></li>
                 <li><a href="#context">kontra&#8203;.context</a></li>
                 <li><a href="assets">kontra&#8203;.assets</a></li>
                 <li><a href="keyboard">kontra&#8203;.keys</a></li>
+                <li><a href="plugin">kontra&#8203;.plugin</a></li>
                 <li><a href="pointer">kontra&#8203;.pointer</a></li>
                 <li><a href="store">kontra&#8203;.store</a></li>
               </ul>
@@ -51,7 +58,10 @@
             <li>
               <h3 id="methods">Methods</h3>
               <ul aria-labeledby="methods">
+                <li><a href="#emit">kontra&#8203;.emit(event[, ...args])</a></li>
                 <li><a href="#init">kontra&#8203;.init([canvas])</a></li>
+                <li><a href="#off">kontra&#8203;.off(event, callback)</a></li>
+                <li><a href="#on">kontra&#8203;.on(event, callback)</a></li>
                 <li><a href="animation">kontra&#8203;.animation(properties)</a></li>
                 <li><a href="gameLoop">kontra&#8203;.gameLoop(properties)</a></li>
                 <li><a href="pool">kontra&#8203;.pool(properties)</a></li>
@@ -63,6 +73,20 @@
               </ul>
             </li>
           </ul>
+        </section>
+
+
+
+
+
+        <section>
+          <h2 id="lifecycle"><a href="#lifecycle" class="section-link">Lifecycle Events<span aria-hidden="true">#</span></a></h2>
+
+          <p>When Kontra is initialized, it will emit an <code>init</code> event.</p>
+
+          <pre><code class="language-javascript">kontra.on('init', (canvas) => {
+  // run code when Kontra is initialized
+});</code></pre>
         </section>
 
 
@@ -92,6 +116,24 @@
 
 
         <section>
+          <h2 id="emit"><a href="#emit" class="section-link">kontra&#8203;.emit(event[, ...args])<span aria-hidden="true">#</span></a></h2>
+
+          <dl>
+            <dt><strong>event</strong> <em>{string}</em></dt>
+            <dd>The name of the event to emit.</dd>
+            <dt><strong>args</strong> <em>{...*}</em></dt>
+            <dd>Arguments passed to all callbacks</dd>
+          </dl>
+
+          <p>Emit an event and run all its callbacks, passing it any arguments.</p>
+
+        </section>
+
+
+
+
+
+        <section>
           <h2 id="init"><a href="#init" class="section-link">kontra.init([canvas])<span aria-hidden="true">#</span></a></h2>
 
           <dl>
@@ -103,6 +145,41 @@
 
         </section>
 
+
+
+
+
+        <section>
+          <h2 id="off"><a href="#off" class="section-link">kontra&#8203;.off(event, callback)<span aria-hidden="true">#</span></a></h2>
+
+          <dl>
+            <dt><strong>event</strong> <em>{string}</em></dt>
+            <dd>The name of the event to emit.</dd>
+            <dt><strong>callback</strong> <em>{function}</em></dt>
+            <dd>Function callback</dd>
+          </dl>
+
+          <p>Remove the callback from the event so it will not be run when the event is emitted.</p>
+
+        </section>
+
+
+
+
+
+        <section>
+          <h2 id="on"><a href="#on" class="section-link">kontra&#8203;.on(event, callback)<span aria-hidden="true">#</span></a></h2>
+
+          <dl>
+            <dt><strong>event</strong> <em>{string}</em></dt>
+            <dd>The name of the event to emit.</dd>
+            <dt><strong>callback</strong> <em>{function}</em></dt>
+            <dd>Function callback</dd>
+          </dl>
+
+          <p>Add the callback to the event so it will be run when the event is emitted.</p>
+
+        </section>
       </div>
     </main>
   </div>

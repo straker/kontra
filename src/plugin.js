@@ -28,7 +28,8 @@
   }
 
   /**
-   * Object for registering plugins
+   * Object for registering plugins. Based on interceptor pattern.
+   * @see https://blog.kiprosh.com/javascript-method-interceptors/
    */
   kontra.plugin = {
 
@@ -36,7 +37,7 @@
      * Register a plugin to run before or after methods.
      * @memberof kontra.plugin
      *
-     * @param {string} object - Kontra object to override
+     * @param {string} object - Kontra object to attach plugin to
      * @param {object} plugin - Plugin object
      *
      * @example
@@ -49,9 +50,10 @@
       if (!kontraObjectProto._inc) {
         kontraObjectProto._inc = {};
         kontraObjectProto._bInc = function beforePlugins(context, method, ...args) {
-          this._inc[method].before.forEach(fn => {
-            fn(context, ...args);
-          });
+          return this._inc[method].before.reduce((acc, fn) => {
+            let newArgs = fn(context, ...acc);
+            return newArgs ? newArgs : acc;
+          }, args);
         };
         kontraObjectProto._aInc = function afterPlugins(context, method, result, ...args) {
           return this._inc[method].after.reduce((acc, fn) => {
@@ -74,9 +76,9 @@
           kontraObjectProto[method] = function interceptedFn(...args) {
 
             // call before interceptors
-            this._bInc(this, method, ...args);
+            let alteredArgs = this._bInc(this, method, ...args);
 
-            let result = kontraObjectProto['_o' + method].call(this, ...args);
+            let result = kontraObjectProto['_o' + method].call(this, ...alteredArgs);
 
             // call after interceptors
             return this._aInc(this, method, result, ...args);
@@ -104,7 +106,7 @@
      * Unregister a plugin
      * @memberof kontra.plugin
      *
-     * @param {string} object - Kontra object to override
+     * @param {string} object - Kontra object to attach plugin to
      * @param {object} plugin - Plugin object
      *
      * @example
@@ -124,6 +126,23 @@
         }
         else if (methodName.startsWith('after')) {
           removeInterceptor(kontraObjectProto._inc[method].after, plugin[methodName]);
+        }
+      });
+    },
+
+    /**
+     * Safely extend functionality of a kontra object.
+     * @memberof kontra.plugin
+     *
+     * @param {string} object - Kontra object to extend
+     * @param {object} properties - Properties to add
+     */
+    extend(object, properties) {
+      const kontraObjectProto = kontra[object].prototype || kontra[object];
+
+      Object.getOwnPropertyNames(properties).forEach(prop => {
+        if (!kontraObjectProto[prop]) {
+          kontraObjectProto[prop] = properties[prop];
         }
       });
     }

@@ -51,30 +51,28 @@
       return Math.sqrt(dx * dx + dy * dy) <= circle1.radius + circle2.radius;
     }
 
-    let collidesWith = function(object) {
-      let obj1 = accountForAnchor(this);
-      let obj2 = accountForAnchor(object);
+    advacedCollisionPlugin = {
+      afterCollidesWith(sprite, result, object) {
+        let obj1 = accountForAnchor(sprite);
+        let obj2 = accountForAnchor(object);
 
-      if (obj1.shape === RECTANGLE) {
-        if (obj2.shape === RECTANGLE) {
-          return recVsRec(obj1, obj2);
+        if (obj1.shape === RECTANGLE) {
+          if (obj2.shape === RECTANGLE) {
+            return recVsRec(obj1, obj2);
+          }
+          else {
+            return recVsCircle(obj1, obj2);
+          }
+        }
+        else if (obj2.shape === RECTANGLE) {
+          return recVsCircle(obj2, obj1);
         }
         else {
-          return recVsCircle(obj1, obj2);
+          return circleVsCircle(obj1, obj2);
         }
-      }
-      else if (obj2.shape === RECTANGLE) {
-        return recVsCircle(obj2, obj1);
-      }
-      else {
-        return circleVsCircle(obj1, obj2);
       }
     }
 
-
-    kontra.on('sprite.init', sprite => {
-      sprite.collidesWith = collidesWith;
-    });
 
 
 
@@ -83,6 +81,10 @@
     // code
     // initialize the game and setup the canvas
     kontra.init();
+
+    // register the plugin
+    kontra.plugin.register('sprite', advacedCollisionPlugin);
+
     let sprites = [];
 
     // rec sprite

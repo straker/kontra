@@ -127,6 +127,8 @@
 
           <p>Emit an event and run all its callbacks, passing it any arguments.</p>
 
+          <pre><code class="language-javascript">kontra.emit('myEvent', 1, 2, 'three');</code></pre>
+
         </section>
 
 
@@ -177,7 +179,13 @@
             <dd>Function callback.</dd>
           </dl>
 
-          <p>Add the callback to the event so it will run when the event is emitted.</p>
+          <p>Add the callback to the event so it will run when the event is emitted. The callback function will be passed all arguments passed to the <a href="#emit">emit</a> function.</p>
+
+           <pre><code class="language-javascript">kontra.on('myEvent', (param1, param2, param3) => {
+  // ...
+ });
+
+kontra.emit('myEvent', 1, 2, 'three');</code></pre>
 
         </section>
       </div>

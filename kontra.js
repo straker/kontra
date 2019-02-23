@@ -515,7 +515,7 @@
     }
   };
 })();
-(function() {
+(function(kontra, getOwnPropertyNames) {
 
   /**
    * Get the kontra object method name from the plugin.
@@ -545,6 +545,18 @@
   }
 
   /**
+   * Get the object or class prototype.
+   * @private
+   *
+   * @param {object} Kontra object
+   *
+   * @returns {object}
+   */
+  function getObjectProto(object) {
+    return kontra[object].prototype || kontra[object];
+  }
+
+  /**
    * Object for registering plugins. Based on interceptor pattern.
    * @see https://blog.kiprosh.com/javascript-method-interceptors/
    */
@@ -561,7 +573,7 @@
      * kontra.plugin.register('sprite', myPluginObject)
      */
     register(object, plugin) {
-      const kontraObjectProto = kontra[object].prototype || kontra[object];
+      const kontraObjectProto = getObjectProto(object);
 
       // create interceptor list and functions
       if (!kontraObjectProto._inc) {
@@ -581,7 +593,7 @@
       }
 
       // add plugin to interceptors
-      Object.getOwnPropertyNames(plugin).forEach(methodName => {
+      getOwnPropertyNames(plugin).forEach(methodName => {
         let method = getMethod(methodName);
 
         if (!kontraObjectProto[method]) return;
@@ -630,12 +642,12 @@
      * kontra.plugin.unregister('sprite', myPluginObject)
      */
     unregister(object, plugin) {
-      const kontraObjectProto = kontra[object].prototype || kontra[object];
+      const kontraObjectProto = getObjectProto(object);
 
       if (!kontraObjectProto._inc) return;
 
       // remove plugin from interceptors
-      Object.getOwnPropertyNames(plugin).forEach(methodName => {
+      getOwnPropertyNames(plugin).forEach(methodName => {
         let method = getMethod(methodName);
 
         if (methodName.startsWith('before')) {
@@ -655,16 +667,16 @@
      * @param {object} properties - Properties to add
      */
     extend(object, properties) {
-      const kontraObjectProto = kontra[object].prototype || kontra[object];
+      const kontraObjectProto = getObjectProto(object);
 
-      Object.getOwnPropertyNames(properties).forEach(prop => {
+      getOwnPropertyNames(properties).forEach(prop => {
         if (!kontraObjectProto[prop]) {
           kontraObjectProto[prop] = properties[prop];
         }
       });
     }
   };
-})();
+})(kontra, Object.getOwnPropertyNames);
 (function() {
   let pointer;
 

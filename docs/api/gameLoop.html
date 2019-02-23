@@ -70,6 +70,12 @@
 
           <ul aria-labeledby="toc">
             <li>
+              <ul>
+                <li><a href="#lifecycle">Lifecycle Events</a></li></li>
+              </ul>
+            </li>
+
+            <li>
               <h3 id="properties">Properties</h3>
               <ul aria-labeledby="properties">
                 <li><a href="#isStopped">kontra.gameLoop&#8203;.isStopped</a></li>
@@ -86,6 +92,20 @@
               </ul>
             </li>
           </ul>
+        </section>
+
+
+
+
+
+        <section>
+          <h2 id="lifecycle"><a href="#lifecycle" class="section-link">Lifecycle Events<span aria-hidden="true">#</span></a></h2>
+
+          <p>Every frame it will emit a <code>tick</code> event.</p>
+
+          <pre><code class="language-javascript">kontra.on('tick', () => {
+  // run code every frame
+});</code></pre>
         </section>
 
 

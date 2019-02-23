@@ -143,6 +143,22 @@ describe('kontra.gameLoop', function() {
       kontra.context.clearRect.restore();
     });
 
+    it('should emit the tick event', () => {
+      let stub = sinon.stub(kontra, 'emit');
+
+      loop = kontra.gameLoop({
+        update: kontra._noop,
+        render: kontra._noop
+      });
+      loop._last = performance.now() - (1E3/60);
+      loop._frame();
+
+      expect(stub.called).to.equal(true);
+      expect(stub.calledWith('tick')).to.equal(true);
+
+      stub.restore();
+    });
+
   });
 
 });

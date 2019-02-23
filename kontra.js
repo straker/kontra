@@ -1,56 +1,85 @@
-kontra = {
+(function() {
+  let callbacks = {};
 
-  /**
-   * Initialize the canvas.
-   * @memberof kontra
-   *
-   * @param {string|HTMLCanvasElement} canvas - Main canvas ID or Element for the game.
-   */
-  init(canvas) {
+  window.kontra = {
 
-    // check if canvas is a string first, an element next, or default to getting
-    // first canvas on page
-    var canvasEl = this.canvas = document.getElementById(canvas) ||
-                                 canvas ||
-                                 document.querySelector('canvas');
+    /**
+     * Initialize the canvas.
+     * @memberof kontra
+     *
+     * @param {string|HTMLCanvasElement} canvas - Main canvas ID or Element for the game.
+     */
+    init(canvas) {
 
-    // @if DEBUG
-    if (!canvasEl) {
-      throw Error('You must provide a canvas element for the game');
-    }
-    // @endif
+      // check if canvas is a string first, an element next, or default to getting
+      // first canvas on page
+      let canvasEl = this.canvas = document.getElementById(canvas) ||
+                                   canvas ||
+                                   document.querySelector('canvas');
 
-    this.context = canvasEl.getContext('2d');
-    this.context.imageSmoothingEnabled = false;
-    this._init();
-  },
+      // @if DEBUG
+      if (!canvasEl) {
+        throw Error('You must provide a canvas element for the game');
+      }
+      // @endif
 
-  /**
-   * Noop function.
-   * @see https://stackoverflow.com/questions/21634886/what-is-the-javascript-convention-for-no-operation#comment61796464_33458430
-   * @memberof kontra
-   * @private
-   *
-   * The new operator is required when using sinon.stub to replace with the noop.
-   */
-  _noop: new Function,
+      this.context = canvasEl.getContext('2d');
+      this.context.imageSmoothingEnabled = false;
 
-  /**
-   * Dispatch event to any part of the code that needs to know when
-   * a new frame has started. Will be filled out in pointer events.
-   * @memberOf kontra
-   * @private
-   */
-  _tick: new Function,
+      this.emit('init', this);
+    },
 
-  /**
-   * Dispatch event to any part of the code that needs to know when
-   * kontra has initialized. Will be filled out in pointer events.
-   * @memberOf kontra
-   * @private
-   */
-  _init: new Function
-};
+    /**
+     * Register a callback for an event.
+     * @memberof kontra
+     *
+     * @param {string} event - Name of the event
+     * @param {function} callback - Function callback
+     */
+    on(event, callback) {
+      callbacks[event] = callbacks[event] || [];
+      callbacks[event].push(callback);
+    },
+
+    /**
+     * Remove a callback for an event.
+     * @memberof kontra
+     *
+     * @param {string} event - Name of the event
+     * @param {function} callback - Function callback
+     */
+    // @see https://github.com/jed/140bytes/wiki/Byte-saving-techniques#use-placeholder-arguments-instead-of-var
+    off(event, callback, index) {
+      if (!callbacks[event] || (index = callbacks[event].indexOf(callback)) < 0) return;
+      callbacks[event].splice(index, 1);
+    },
+
+    /**
+     * Call all callback functions for the event.
+     * @memberof kontra
+     *
+     * @param {string} event - Name of the event
+     * @param {...*} args - Arguments passed to all callbacks
+     */
+    emit(event, ...args) {
+      if (!callbacks[event]) return;
+      callbacks[event].forEach(fn => fn(...args));
+    },
+
+    /**
+     * Noop function.
+     * @see https://stackoverflow.com/questions/21634886/what-is-the-javascript-convention-for-no-operation#comment61796464_33458430
+     * @memberof kontra
+     * @private
+     *
+     * The new operator is required when using sinon.stub to replace with the noop.
+     */
+    _noop: new Function,
+
+    // expose for testing
+    _callbacks: callbacks
+  };
+})();
 (function() {
   let imageRegex = /(jpeg|jpg|gif|png)$/;
   let audioRegex = /(wav|mp3|ogg|aac)$/;
@@ -329,7 +358,7 @@ kontra = {
         return;
       }
 
-      kontra._tick();
+      kontra.emit('tick');
       accumulator += dt;
 
       while (accumulator >= delta) {
@@ -486,6 +515,168 @@ kontra = {
     }
   };
 })();
+(function(kontra, getOwnPropertyNames) {
+
+  /**
+   * Get the kontra object method name from the plugin.
+   * @private
+   *
+   * @param {string} methodName - Before/After function name
+   *
+   * @returns {string}
+   */
+  function getMethod(methodName) {
+    let methodTitle = methodName.substr( methodName.search(/[A-Z]/) );
+    return methodTitle[0].toLowerCase() + methodTitle.substr(1);
+  }
+
+  /**
+   * Remove an interceptor.
+   * @private
+   *
+   * @param {function[]} interceptors - Before/After interceptor list
+   * @param {function} fn - Interceptor function
+   */
+  function removeInterceptor(interceptors, fn) {
+    let index = interceptors.indexOf(fn);
+    if (index !== -1) {
+      interceptors.splice(index, 1);
+    }
+  }
+
+  /**
+   * Get the object or class prototype.
+   * @private
+   *
+   * @param {object} Kontra object
+   *
+   * @returns {object}
+   */
+  function getObjectProto(object) {
+    return kontra[object].prototype || kontra[object];
+  }
+
+  /**
+   * Object for registering plugins. Based on interceptor pattern.
+   * @see https://blog.kiprosh.com/javascript-method-interceptors/
+   */
+  kontra.plugin = {
+
+    /**
+     * Register a plugin to run before or after methods.
+     * @memberof kontra.plugin
+     *
+     * @param {string} object - Kontra object to attach plugin to
+     * @param {object} plugin - Plugin object
+     *
+     * @example
+     * kontra.plugin.register('sprite', myPluginObject)
+     */
+    register(object, plugin) {
+      const kontraObjectProto = getObjectProto(object);
+
+      // create interceptor list and functions
+      if (!kontraObjectProto._inc) {
+        kontraObjectProto._inc = {};
+        kontraObjectProto._bInc = function beforePlugins(context, method, ...args) {
+          return this._inc[method].before.reduce((acc, fn) => {
+            let newArgs = fn(context, ...acc);
+            return newArgs ? newArgs : acc;
+          }, args);
+        };
+        kontraObjectProto._aInc = function afterPlugins(context, method, result, ...args) {
+          return this._inc[method].after.reduce((acc, fn) => {
+            let newResult = fn(context, acc, ...args);
+            return newResult ? newResult : acc;
+          }, result);
+        };
+      }
+
+      // add plugin to interceptors
+      getOwnPropertyNames(plugin).forEach(methodName => {
+        let method = getMethod(methodName);
+
+        if (!kontraObjectProto[method]) return;
+
+        // override original method
+        if (!kontraObjectProto['_o' + method]) {
+          kontraObjectProto['_o' + method] = kontraObjectProto[method];
+
+          kontraObjectProto[method] = function interceptedFn(...args) {
+
+            // call before interceptors
+            let alteredArgs = this._bInc(this, method, ...args);
+
+            let result = kontraObjectProto['_o' + method].call(this, ...alteredArgs);
+
+            // call after interceptors
+            return this._aInc(this, method, result, ...args);
+          };
+        }
+
+        // create interceptors for the method
+        if (!kontraObjectProto._inc[method]) {
+          kontraObjectProto._inc[method] = {
+            before: [],
+            after: []
+          };
+        }
+
+        if (methodName.startsWith('before')) {
+          kontraObjectProto._inc[method].before.push(plugin[methodName]);
+        }
+        else if (methodName.startsWith('after')) {
+          kontraObjectProto._inc[method].after.push(plugin[methodName]);
+        }
+      });
+    },
+
+    /**
+     * Unregister a plugin
+     * @memberof kontra.plugin
+     *
+     * @param {string} object - Kontra object to attach plugin to
+     * @param {object} plugin - Plugin object
+     *
+     * @example
+     * kontra.plugin.unregister('sprite', myPluginObject)
+     */
+    unregister(object, plugin) {
+      const kontraObjectProto = getObjectProto(object);
+
+      if (!kontraObjectProto._inc) return;
+
+      // remove plugin from interceptors
+      getOwnPropertyNames(plugin).forEach(methodName => {
+        let method = getMethod(methodName);
+
+        if (methodName.startsWith('before')) {
+          removeInterceptor(kontraObjectProto._inc[method].before, plugin[methodName]);
+        }
+        else if (methodName.startsWith('after')) {
+          removeInterceptor(kontraObjectProto._inc[method].after, plugin[methodName]);
+        }
+      });
+    },
+
+    /**
+     * Safely extend functionality of a kontra object.
+     * @memberof kontra.plugin
+     *
+     * @param {string} object - Kontra object to extend
+     * @param {object} properties - Properties to add
+     */
+    extend(object, properties) {
+      const kontraObjectProto = getObjectProto(object);
+
+      getOwnPropertyNames(properties).forEach(prop => {
+        if (!kontraObjectProto[prop]) {
+          kontraObjectProto[prop] = properties[prop];
+        }
+      });
+    }
+  };
+})(kontra, Object.getOwnPropertyNames);
 (function() {
   let pointer;
 
@@ -745,7 +936,7 @@ kontra = {
   };
 
   // reset object render order on every new frame
-  kontra._tick = function() {
+  kontra.on('tick', () => {
     lastFrameRenderOrder.length = 0;
 
     thisFrameRenderOrder.map(function(object) {
@@ -753,10 +944,10 @@ kontra = {
     });
 
     thisFrameRenderOrder.length = 0;
-  };
+  });
 
   // After the canvas is chosen, add events to it
-  kontra._init = function() {
+  kontra.on('init', () => {
     kontra.canvas.addEventListener('mousedown', pointerDownHandler);
     kontra.canvas.addEventListener('touchstart', pointerDownHandler);
     kontra.canvas.addEventListener('mouseup', pointerUpHandler);
@@ -764,7 +955,7 @@ kontra = {
     kontra.canvas.addEventListener('blur', blurEventHandler);
     kontra.canvas.addEventListener('mousemove', mouseMoveHandler);
     kontra.canvas.addEventListener('touchmove', mouseMoveHandler);
-  }
+  });
 })();
 
 (function() {
@@ -1191,10 +1382,14 @@ kontra = {
      *
      * @param {vector} vector - Vector to add.
      * @param {number} dt=1 - Time since last update.
+     *
+     * @returns {vector}
      */
     add(vector, dt) {
-      this.x += (vector.x || 0) * (dt || 1);
-      this.y += (vector.y || 0) * (dt || 1);
+      return kontra.vector(
+        this.x + (vector.x || 0) * (dt || 1),
+        this.y + (vector.y || 0) * (dt || 1)
+      );
     }
 
     /**
@@ -1533,8 +1728,8 @@ kontra = {
      * @param {number} dt - Time since last update.
      */
     advance(dt) {
-      this.velocity.add(this.acceleration, dt);
-      this.position.add(this.velocity, dt);
+      this.velocity = this.velocity.add(this.acceleration, dt);
+      this.position = this.position.add(this.velocity, dt);
 
       this.ttl--;
 

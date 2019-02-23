@@ -1317,22 +1317,6 @@ kontra = {
         this.width = (properties.width !== undefined) ? properties.width : temp.width;
         this.height = (properties.height !== undefined) ? properties.height : temp.height;
       }
-      // animation sprite
-      else if (temp = properties.animations) {
-        this.animations = {}; // don't copy memory reference of animation object
-
-        // clone each animation so no sprite shares an animation
-        for (prop in temp) {
-          this.animations[prop] = temp[prop].clone();
-
-          // default the current animation to the first one in the list
-          firstAnimation = firstAnimation || this.animations[prop];
-        }
-
-        this.currentAnimation = firstAnimation;
-        this.width = this.width || firstAnimation.width;
-        this.height = this.height || firstAnimation.height;
-      }
 
       return this;
     }
@@ -1400,6 +1384,10 @@ kontra = {
       return this.acceleration.y;
     }
 
+    get animations() {
+      return this.anims
+    }
+
     set x(value) {
       this.position.x = value;
     }
@@ -1417,6 +1405,23 @@ kontra = {
     }
     set ddy(value) {
       this.acceleration.y = value;
+    }
+
+    set animations(value) {
+      let prop, firstAnimation
+      this.anims = {}
+
+      // clone each animation so no sprite shares an animation
+      for (prop in value) {
+        this.anims[prop] = value[prop].clone()
+
+        // default the current animation to the first one in the list
+        firstAnimation = firstAnimation || this.anims[prop]
+      }
+
+      this.currentAnimation = firstAnimation
+      this.width = this.width || firstAnimation.width
+      this.height = this.height || firstAnimation.height
     }
 
     /**

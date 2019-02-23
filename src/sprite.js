@@ -152,21 +152,6 @@
         this.width = (properties.width !== undefined) ? properties.width : temp.width;
         this.height = (properties.height !== undefined) ? properties.height : temp.height;
       }
-      // animation sprite
-      else if (temp = properties.animations) {
-
-        // clone each animation so no sprite shares an animation
-        for (prop in temp) {
-          this.animations[prop] = temp[prop].clone();
-
-          // default the current animation to the first one in the list
-          firstAnimation = firstAnimation || temp[prop];
-        }
-
-        this._ca = firstAnimation;
-        this.width = this.width || firstAnimation.width;
-        this.height = this.height || firstAnimation.height;
-      }
 
       return this;
     }
@@ -234,6 +219,10 @@
       return this.acceleration.y;
     }
 
+    get animations() {
+      return this.anims
+    }
+
     set x(value) {
       this.position.x = value;
     }
@@ -251,6 +240,23 @@
     }
     set ddy(value) {
       this.acceleration.y = value;
+    }
+
+    set animations(value) {
+      let prop, firstAnimation
+      this.anims = {}
+
+      // clone each animation so no sprite shares an animation
+      for (prop in value) {
+        this.anims[prop] = value[prop].clone()
+
+        // default the current animation to the first one in the list
+        firstAnimation = firstAnimation || this.anims[prop]
+      }
+
+      this.currentAnimation = firstAnimation
+      this.width = this.width || firstAnimation.width
+      this.height = this.height || firstAnimation.height
     }
 
     /**
@@ -347,10 +353,10 @@
      * @param {string} name - Name of the animation to play.
      */
     playAnimation(name) {
-      this._ca = this.animations[name];
+      this.currentAnimation = this.animations[name];
 
-      if (!this._ca.loop) {
-        this._ca.reset();
+      if (!this.currentAnimation.loop) {
+        this.currentAnimation.reset();
       }
     }
 
@@ -367,8 +373,8 @@
 
       this.ttl--;
 
-      if (this._ca) {
-        this._ca.update(dt);
+      if (this.currentAnimation) {
+        this.currentAnimation.update(dt);
       }
     }
 
@@ -394,8 +400,8 @@
           anchorWidth, anchorHeight, this.width, this.height
         );
       }
-      else if (this._ca) {
-        this._ca.render({
+      else if (this.currentAnimation) {
+        this.currentAnimation.render({
           x: anchorWidth,
           y: anchorHeight,
           width: this.width,

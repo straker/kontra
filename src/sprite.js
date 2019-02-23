@@ -150,16 +150,17 @@
       }
       // animation sprite
       else if (temp = properties.animations) {
+        this.animations = {}; // don't copy memory reference of animation object
 
         // clone each animation so no sprite shares an animation
         for (prop in temp) {
           this.animations[prop] = temp[prop].clone();
 
           // default the current animation to the first one in the list
-          firstAnimation = firstAnimation || temp[prop];
+          firstAnimation = firstAnimation || this.animations[prop];
         }
 
-        this._ca = firstAnimation;
+        this.currentAnimation = firstAnimation;
         this.width = this.width || firstAnimation.width;
         this.height = this.height || firstAnimation.height;
       }
@@ -343,10 +344,10 @@
      * @param {string} name - Name of the animation to play.
      */
     playAnimation(name) {
-      this._ca = this.animations[name];
+      this.currentAnimation = this.animations[name];
 
-      if (!this._ca.loop) {
-        this._ca.reset();
+      if (!this.currentAnimation.loop) {
+        this.currentAnimation.reset();
       }
     }
 
@@ -363,8 +364,8 @@
 
       this.ttl--;
 
-      if (this._ca) {
-        this._ca.update(dt);
+      if (this.currentAnimation) {
+        this.currentAnimation.update(dt);
       }
     }
 
@@ -390,8 +391,8 @@
           anchorWidth, anchorHeight, this.width, this.height
         );
       }
-      else if (this._ca) {
-        this._ca.render({
+      else if (this.currentAnimation) {
+        this.currentAnimation.render({
           x: anchorWidth,
           y: anchorHeight,
           width: this.width,

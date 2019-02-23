@@ -217,7 +217,7 @@ describe('kontra.sprite', function() {
       });
 
       expect(sprite.animations).to.eql(animations);
-      expect(sprite._ca).to.equal(animations.walk);
+      expect(sprite.currentAnimation).to.equal(animations.walk);
       expect(sprite.width).to.equal(10);
       expect(sprite.height).to.equal(20);
     });
@@ -409,13 +409,13 @@ describe('kontra.sprite', function() {
         animations: animations
       });
 
-      sinon.stub(sprite._ca, 'render').callsFake(kontra._noop);
+      sinon.stub(sprite.currentAnimation, 'render').callsFake(kontra._noop);
 
       sprite.render();
 
-      expect(sprite._ca.render.called).to.be.ok;
+      expect(sprite.currentAnimation.render.called).to.be.ok;
 
-      sprite._ca.render.restore();
+      sprite.currentAnimation.render.restore();
     });
 
     it('should rotate the sprite', function() {
@@ -516,18 +516,18 @@ describe('kontra.sprite', function() {
         }
       });
 
-      sinon.stub(sprite._ca, 'render').callsFake(kontra._noop);
+      sinon.stub(sprite.currentAnimation, 'render').callsFake(kontra._noop);
 
       sprite.render();
 
-      expect(sprite._ca.render.calledWithMatch({x: -5, y: -10, context: sprite.context})).to.be.ok;
+      expect(sprite.currentAnimation.render.calledWithMatch({x: -5, y: -10, context: sprite.context})).to.be.ok;
 
       sprite.anchor = {x: 1, y: 1};
       sprite.render();
 
-      expect(sprite._ca.render.calledWithMatch({x: -10, y: -20, context: sprite.context})).to.be.ok;
+      expect(sprite.currentAnimation.render.calledWithMatch({x: -10, y: -20, context: sprite.context})).to.be.ok;
 
-      sprite._ca.render.restore();
+      sprite.currentAnimation.render.restore();
     });
 
   });
@@ -669,11 +669,11 @@ describe('kontra.sprite', function() {
         animations: animations
       });
 
-      expect(sprite._ca).to.equal(animations.walk);
+      expect(sprite.currentAnimation).to.equal(animations.walk);
 
       sprite.playAnimation('idle');
 
-      expect(sprite._ca).to.equal(animations.idle);
+      expect(sprite.currentAnimation).to.equal(animations.idle);
     });
 
   });

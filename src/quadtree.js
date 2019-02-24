@@ -1,5 +1,50 @@
-(function() {
+import kontra from './core.js'
 
+/**
+ * Determine which subnodes the object intersects with.
+ * @private
+ *
+ * @param {object} object - Object to check.
+ * @param {object} bounds - Bounds of the quadtree.
+ *
+ * @returns {number[]} List of all subnodes object intersects.
+ */
+function getIndices(object, bounds) {
+  let indices = [];
+
+  let verticalMidpoint = bounds.x + bounds.width / 2;
+  let horizontalMidpoint = bounds.y + bounds.height / 2;
+
+  // save off quadrant checks for reuse
+  let intersectsTopQuadrants = object.y < horizontalMidpoint && object.y + object.height >= bounds.y;
+  let intersectsBottomQuadrants = object.y + object.height >= horizontalMidpoint && object.y < bounds.y + bounds.height;
+
+  // object intersects with the left quadrants
+  if (object.x < verticalMidpoint && object.x + object.width >= bounds.x) {
+    if (intersectsTopQuadrants) {  // top left
+      indices.push(0);
+    }
+
+    if (intersectsBottomQuadrants) {  // bottom left
+      indices.push(2);
+    }
+  }
+
+  // object intersects with the right quadrants
+  if (object.x + object.width >= verticalMidpoint && object.x < bounds.x + bounds.width) {  // top right
+    if (intersectsTopQuadrants) {
+      indices.push(1);
+    }
+
+    if (intersectsBottomQuadrants) {  // bottom right
+      indices.push(3);
+    }
+  }
+
+  return indices;
+}
+
+class Quadtree {
   /**
    * A quadtree for 2D collision checking. The quadtree acts like an object pool in that it
    * will create subnodes as objects are needed but it won't clean up the subnodes when it
@@ -20,238 +65,197 @@
    *  2  |  3
    *     |
    */
-  kontra.quadtree = function(properties) {
+  constructor(properties) {
     properties = properties || {};
 
-    return {
-      maxDepth: properties.maxDepth || 3,
-      maxObjects: properties.maxObjects || 25,
+    this.maxDepth = properties.maxDepth || 3;
+    this.maxObjects = properties.maxObjects || 25;
 
-      // since we won't clean up any subnodes, we need to keep track of which nodes are
-      // currently the leaf node so we know which nodes to add objects to
-      // b = branch, d = depth, p = parent
-      _b: false,
-      _d: properties.depth || 0,
-      /* @if VISUAL_DEBUG */
-      _p: properties.parent,
-      /* @endif */
+    // since we won't clean up any subnodes, we need to keep track of which nodes are
+    // currently the leaf node so we know which nodes to add objects to
+    // b = branch, d = depth, p = parent
+    this._b = false;
+    this._d = properties.depth || 0;
+    /* @if VISUAL_DEBUG */
+    this._p = properties.parent;
+    /* @endif */
 
-      bounds: properties.bounds || {
-        x: 0,
-        y: 0,
-        width: kontra.canvas.width,
-        height: kontra.canvas.height
-      },
+    this.bounds = properties.bounds || {
+      x: 0,
+      y: 0,
+      width: kontra.canvas.width,
+      height: kontra.canvas.height
+    };
 
-      objects: [],
-      subnodes: [],
+    this.objects = []
+    this.subnodes = [];
+  }
 
-      /**
-       * Clear the quadtree
-       * @memberof kontra.quadtree
-       */
-      clear() {
-        this.subnodes.map(function(subnode) {
-          subnode.clear();
-        });
+  /**
+   * Clear the quadtree
+   * @memberof kontra.quadtree
+   */
+  clear() {
+    this.subnodes.map(function(subnode) {
+      subnode.clear();
+    });
 
-        this._b = false;
+    this._b = false;
+    this.objects.length = 0;
+  }
+
+  /**
+   * Find the leaf node the object belongs to and get all objects that are part of
+   * that node.
+   * @memberof kontra.quadtree
+   *
+   * @param {object} object - Object to use for finding the leaf node.
+   *
+   * @returns {object[]} A list of objects in the same leaf node as the object.
+   */
+  get(object) {
+    let objects = [];
+    let indices, i;
+
+    // traverse the tree until we get to a leaf node
+    while (this.subnodes.length && this._b) {
+      indices = getIndices(object, this.bounds);
+
+      for (i = 0; i < indices.length; i++) {
+        objects.push.apply(objects, this.subnodes[ indices[i] ].get(object));
+      }
+
+      return objects;
+    }
+
+    return this.objects;
+  }
+
+  /**
+   * Add an object to the quadtree. Once the number of objects in the node exceeds
+   * the maximum number of objects allowed, it will split and move all objects to their
+   * corresponding subnodes.
+   * @memberof kontra.quadtree
+   *
+   * @param {...object|object[]} Objects to add to the quadtree
+   *
+   * @example
+   * kontra.quadtree().add({id:1}, {id:2}, {id:3});
+   * kontra.quadtree().add([{id:1}, {id:2}], {id:3});
+   */
+  add() {
+    let i, j, object, obj, indices, index;
+
+    for (j = 0; j < arguments.length; j++) {
+      object = arguments[j];
+
+      // add a group of objects separately
+      if (Array.isArray(object)) {
+        this.add.apply(this, object);
+
+        continue;
+      }
+
+      // current node has subnodes, so we need to add this object into a subnode
+      if (this._b) {
+        this._a(object);
+
+        continue;
+      }
+
+      // this node is a leaf node so add the object to it
+      this.objects.push(object);
+
+      // split the node if there are too many objects
+      if (this.objects.length > this.maxObjects && this._d < this.maxDepth) {
+        this._s();
+
+        // move all objects to their corresponding subnodes
+        for (i = 0; (obj = this.objects[i]); i++) {
+          this._a(obj);
+        }
+
         this.objects.length = 0;
-      },
+      }
+    }
+  }
 
-      /**
-       * Find the leaf node the object belongs to and get all objects that are part of
-       * that node.
-       * @memberof kontra.quadtree
-       *
-       * @param {object} object - Object to use for finding the leaf node.
-       *
-       * @returns {object[]} A list of objects in the same leaf node as the object.
-       */
-      get(object) {
-        let objects = [];
-        let indices, i;
+  /**
+   * Add an object to a subnode.
+   * @memberof kontra.quadtree
+   * @private
+   *
+   * @param {object} object - Object to add into a subnode
+   */
+  // @see https://github.com/jed/140bytes/wiki/Byte-saving-techniques#use-placeholder-arguments-instead-of-var
+  _a(object, indices, i) {
+    indices = getIndices(object, this.bounds);
 
-        // traverse the tree until we get to a leaf node
-        while (this.subnodes.length && this._b) {
-          indices = this._g(object);
+    // add the object to all subnodes it intersects
+    for (i = 0; i < indices.length; i++) {
+      this.subnodes[ indices[i] ].add(object);
+    }
+  }
 
-          for (i = 0; i < indices.length; i++) {
-            objects.push.apply(objects, this.subnodes[ indices[i] ].get(object));
-          }
+  /**
+   * Split the node into four subnodes.
+   * @memberof kontra.quadtree
+   * @private
+   */
+  // @see https://github.com/jed/140bytes/wiki/Byte-saving-techniques#use-placeholder-arguments-instead-of-var
+  _s(subWidth, subHeight, i) {
+    this._b = true;
 
-          return objects;
-        }
+    // only split if we haven't split before
+    if (this.subnodes.length) {
+      return;
+    }
 
-        return this.objects;
-      },
+    subWidth = this.bounds.width / 2 | 0;
+    subHeight = this.bounds.height / 2 | 0;
 
-      /**
-       * Add an object to the quadtree. Once the number of objects in the node exceeds
-       * the maximum number of objects allowed, it will split and move all objects to their
-       * corresponding subnodes.
-       * @memberof kontra.quadtree
-       *
-       * @param {...object|object[]} Objects to add to the quadtree
-       *
-       * @example
-       * kontra.quadtree().add({id:1}, {id:2}, {id:3});
-       * kontra.quadtree().add([{id:1}, {id:2}], {id:3});
-       */
-      add() {
-        let i, j, object, obj, indices, index;
+    for (i = 0; i < 4; i++) {
+      this.subnodes[i] = QuadtreeFactory({
+        bounds: {
+          x: this.bounds.x + (i % 2 === 1 ? subWidth : 0),  // nodes 1 and 3
+          y: this.bounds.y + (i >= 2 ? subHeight : 0),      // nodes 2 and 3
+          width: subWidth,
+          height: subHeight
+        },
+        depth: this._d+1,
+        maxDepth: this.maxDepth,
+        maxObjects: this.maxObjects,
+        /* @if VISUAL_DEBUG */
+        parent: this
+        /* @endif */
+      });
+    }
+  }
 
-        for (j = 0; j < arguments.length; j++) {
-          object = arguments[j];
+  /**
+   * Draw the quadtree. Useful for visual debugging.
+   * @memberof kontra.quadtree
+   */
+   /* @if VISUAL_DEBUG **
+   render() {
+     // don't draw empty leaf nodes, always draw branch nodes and the first node
+     if (this.objects.length || this._d === 0 ||
+         (this._p && this._p._b)) {
 
-          // add a group of objects separately
-          if (Array.isArray(object)) {
-            this.add.apply(this, object);
+       kontra.context.strokeStyle = 'red';
+       kontra.context.strokeRect(this.bounds.x, this.bounds.y, this.bounds.width, this.bounds.height);
 
-            continue;
-          }
-
-          // current node has subnodes, so we need to add this object into a subnode
-          if (this._b) {
-            this._a(object);
-
-            continue;
-          }
-
-          // this node is a leaf node so add the object to it
-          this.objects.push(object);
-
-          // split the node if there are too many objects
-          if (this.objects.length > this.maxObjects && this._d < this.maxDepth) {
-            this._s();
-
-            // move all objects to their corresponding subnodes
-            for (i = 0; (obj = this.objects[i]); i++) {
-              this._a(obj);
-            }
-
-            this.objects.length = 0;
-          }
-        }
-      },
-
-      /**
-       * Add an object to a subnode.
-       * @memberof kontra.quadtree
-       * @private
-       *
-       * @param {object} object - Object to add into a subnode
-       */
-      // @see https://github.com/jed/140bytes/wiki/Byte-saving-techniques#use-placeholder-arguments-instead-of-var
-      _a(object, indices, i) {
-        indices = this._g(object);
-
-        // add the object to all subnodes it intersects
-        for (i = 0; i < indices.length; i++) {
-          this.subnodes[ indices[i] ].add(object);
-        }
-      },
-
-      /**
-       * Determine which subnodes the object intersects with.
-       * @memberof kontra.quadtree
-       * @private
-       *
-       * @param {object} object - Object to check.
-       *
-       * @returns {number[]} List of all subnodes object intersects.
-       */
-      _g(object) {
-        let indices = [];
-
-        let verticalMidpoint = this.bounds.x + this.bounds.width / 2;
-        let horizontalMidpoint = this.bounds.y + this.bounds.height / 2;
-
-        // save off quadrant checks for reuse
-        let intersectsTopQuadrants = object.y < horizontalMidpoint && object.y + object.height >= this.bounds.y;
-        let intersectsBottomQuadrants = object.y + object.height >= horizontalMidpoint && object.y < this.bounds.y + this.bounds.height;
-
-        // object intersects with the left quadrants
-        if (object.x < verticalMidpoint && object.x + object.width >= this.bounds.x) {
-          if (intersectsTopQuadrants) {  // top left
-            indices.push(0);
-          }
-
-          if (intersectsBottomQuadrants) {  // bottom left
-            indices.push(2);
-          }
-        }
-
-        // object intersects with the right quadrants
-        if (object.x + object.width >= verticalMidpoint && object.x < this.bounds.x + this.bounds.width) {  // top right
-          if (intersectsTopQuadrants) {
-            indices.push(1);
-          }
-
-          if (intersectsBottomQuadrants) {  // bottom right
-            indices.push(3);
-          }
-        }
-
-        return indices;
-      },
-
-      /**
-       * Split the node into four subnodes.
-       * @memberof kontra.quadtree
-       * @private
-       */
-      // @see https://github.com/jed/140bytes/wiki/Byte-saving-techniques#use-placeholder-arguments-instead-of-var
-      _s(subWidth, subHeight, i) {
-        this._b = true;
-
-        // only split if we haven't split before
-        if (this.subnodes.length) {
-          return;
-        }
-
-        subWidth = this.bounds.width / 2 | 0;
-        subHeight = this.bounds.height / 2 | 0;
-
-        for (i = 0; i < 4; i++) {
-          this.subnodes[i] = kontra.quadtree({
-            bounds: {
-              x: this.bounds.x + (i % 2 === 1 ? subWidth : 0),  // nodes 1 and 3
-              y: this.bounds.y + (i >= 2 ? subHeight : 0),      // nodes 2 and 3
-              width: subWidth,
-              height: subHeight
-            },
-            depth: this._d+1,
-            maxDepth: this.maxDepth,
-            maxObjects: this.maxObjects,
-            /* @if VISUAL_DEBUG */
-            parent: this
-            /* @endif */
-          });
-        }
-      },
-
-      /**
-       * Draw the quadtree. Useful for visual debugging.
-       * @memberof kontra.quadtree
-       */
-       /* @if VISUAL_DEBUG **
-       render() {
-         // don't draw empty leaf nodes, always draw branch nodes and the first node
-         if (this.objects.length || this._d === 0 ||
-             (this._p && this._p._b)) {
-
-           kontra.context.strokeStyle = 'red';
-           kontra.context.strokeRect(this.bounds.x, this.bounds.y, this.bounds.width, this.bounds.height);
-
-           if (this.subnodes.length) {
-             for (let i = 0; i < 4; i++) {
-               this.subnodes[i].render();
-             }
-           }
+       if (this.subnodes.length) {
+         for (let i = 0; i < 4; i++) {
+           this.subnodes[i].render();
          }
        }
-       /* @endif */
-    };
-  };
-})();
+     }
+   }
+   /* @endif */
+}
+
+export default function QuadtreeFactory(properties) {
+  return new Quadtree(properties);
+}
+QuadtreeFactory.prototype = Quadtree.prototype;

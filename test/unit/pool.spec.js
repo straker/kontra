@@ -1,9 +1,12 @@
-// --------------------------------------------------
-// kontra.pool
-// --------------------------------------------------
-describe('kontra.pool', function() {
+import kontra from '../../src/core.js'
+import poolFn from '../../src/pool.js'
 
-  var sprite = function() {
+// --------------------------------------------------
+// pool
+// --------------------------------------------------
+describe('pool', () => {
+
+  let sprite = function() {
     return {
       render: kontra._noop,
       update: function() {
@@ -12,7 +15,7 @@ describe('kontra.pool', function() {
       init: function(properties) {
         this.alive = properties.alive;
 
-        for(prop in properties) {
+        for (let prop in properties) {
           this[prop] = properties[prop];
         }
       },
@@ -28,29 +31,29 @@ describe('kontra.pool', function() {
 
 
   // --------------------------------------------------
-  // kontra.pool.init
+  // pool.init
   // --------------------------------------------------
-  describe('init', function() {
+  describe('init', () => {
 
-    it('should log an error if the create function is not passed', function() {
+    it('should log an error if the create function is not passed', () => {
       function func() {
-        kontra.pool();
+        poolFn();
       }
 
       expect(func).to.throw();
     });
 
-    it('should log an error if the create function did not return an object', function() {
+    it('should log an error if the create function did not return an object', () => {
       function func() {
-        kontra.pool({create:kontra._noop});
+        poolFn({create:kontra._noop});
       }
 
       expect(func).to.throw();
     });
 
-    it('should log an error if the create function returned an object with missing functions', function() {
+    it('should log an error if the create function returned an object with missing functions', () => {
       function func() {
-        kontra.pool({create: function() {
+        poolFn({create: function() {
           return {
             render: kontra._noop
           }
@@ -67,40 +70,40 @@ describe('kontra.pool', function() {
 
 
   // --------------------------------------------------
-  // kontra.pool.get
+  // pool.get
   // --------------------------------------------------
-  describe('get', function() {
+  describe('get', () => {
 
-    it('should call the objects init function', function() {
-      var pool = kontra.pool({
+    it('should call the objects init function', () => {
+      let pool = poolFn({
         create: sprite
       });
 
-      var spy = sinon.spy(pool.objects[0], 'init');
+      let spy = sinon.spy(pool.objects[0], 'init');
 
       pool.get();
 
       expect(spy.called).to.be.ok;
     });
 
-    it('should pass the properties to the objects init function', function() {
-      var pool = kontra.pool({
+    it('should pass the properties to the objects init function', () => {
+      let pool = poolFn({
         create: sprite
       });
 
-      var args = {
+      let args = {
         x: 1
       };
 
-      var spy = sinon.spy(pool.objects[0], 'init');
+      let spy = sinon.spy(pool.objects[0], 'init');
 
       pool.get(args);
 
       expect(spy.calledWith(args)).to.be.ok;
     });
 
-    it('should use the first object in the pool and move it to the back of the pool', function() {
-      var pool = kontra.pool({
+    it('should use the first object in the pool and move it to the back of the pool', () => {
+      let pool = poolFn({
         create: sprite,
         maxSize: 5,
       });
@@ -113,14 +116,14 @@ describe('kontra.pool', function() {
       pool.get({alive: true});
 
       // kill objects in the pool
-      for (var i = 0; i < 5; i++) {
+      for (let i = 0; i < 5; i++) {
         pool.objects[i].alive = false;
       }
 
       // update pool position
       pool.update();
 
-      var expected = [
+      let expected = [
         pool.objects[1],
         pool.objects[2],
         pool.objects[3],
@@ -137,8 +140,8 @@ describe('kontra.pool', function() {
       expect(pool.objects[4]).to.equal(expected[4]);
     });
 
-    it('should increase the size of the pool when there are no more objects', function() {
-      var pool = kontra.pool({
+    it('should increase the size of the pool when there are no more objects', () => {
+      let pool = poolFn({
         create: sprite
       });
 
@@ -151,26 +154,26 @@ describe('kontra.pool', function() {
       expect(pool.size).to.not.equal(1);
     });
 
-    it('should not increase the size of the pool past the max size', function() {
-      var pool = kontra.pool({
+    it('should not increase the size of the pool past the max size', () => {
+      let pool = poolFn({
         create: sprite,
         maxSize: 5
       });
 
-      for (var i = 0; i < 10; i++) {
+      for (let i = 0; i < 10; i++) {
         pool.get({alive: true});
       }
 
       expect(pool.size).to.equal(5);
     });
 
-    it('should not continue making objects if not needed', function() {
-      var pool = kontra.pool({
+    it('should not continue making objects if not needed', () => {
+      let pool = poolFn({
         create: sprite,
         maxSize: 500
       });
 
-      for (var i = 0; i < 129; i++) {
+      for (let i = 0; i < 129; i++) {
         pool.get({
           ttl: 1
         });
@@ -187,13 +190,13 @@ describe('kontra.pool', function() {
 
 
   // --------------------------------------------------
-  // kontra.pool.getAliveObjects
+  // pool.getAliveObjects
   // --------------------------------------------------
-  describe('getAliveObjects', function() {
+  describe('getAliveObjects', () => {
 
-    it('should return only alive objects', function() {
-      var id = 0;
-      var pool = kontra.pool({
+    it('should return only alive objects', () => {
+      let id = 0;
+      let pool = poolFn({
         create: sprite,
         maxSize: 5
       });
@@ -212,9 +215,9 @@ describe('kontra.pool', function() {
       expect(pool.getAliveObjects()[2].id).to.equal(2);
     });
 
-    it('should return only alive objects after an update', function() {
-      var id = 0;
-      var pool = kontra.pool({
+    it('should return only alive objects after an update', () => {
+      let id = 0;
+      let pool = poolFn({
         create: sprite,
         maxSize: 5
       });
@@ -238,14 +241,14 @@ describe('kontra.pool', function() {
 
 
   // --------------------------------------------------
-  // kontra.pool.update
+  // pool.update
   // --------------------------------------------------
-  describe('update', function() {
+  describe('update', () => {
 
-    it('should call each alive objects update function', function() {
-      var count = 0;
+    it('should call each alive objects update function', () => {
+      let count = 0;
 
-      var pool = kontra.pool({
+      let pool = poolFn({
         create: function() {
           return {
             render: kontra._noop,
@@ -259,7 +262,7 @@ describe('kontra.pool', function() {
         maxSize: 5
       });
 
-      for (var i = 0; i < 3; i++) {
+      for (let i = 0; i < 3; i++) {
         pool.get({alive: true});
       }
 
@@ -268,18 +271,18 @@ describe('kontra.pool', function() {
       expect(count).to.equal(3);
     });
 
-    it('should move a dead object to the front of the pool', function() {
-      var pool = kontra.pool({
+    it('should move a dead object to the front of the pool', () => {
+      let pool = poolFn({
         create: sprite,
         maxSize: 5
       });
 
-      for (var i = 0; i < 5; i++) {
+      for (let i = 0; i < 5; i++) {
         pool.get({ttl: 2});
       }
       pool.objects[2].ttl = 1;
 
-      var expected = [
+      let expected = [
         pool.objects[2],
         pool.objects[0],
         pool.objects[1],
@@ -309,14 +312,14 @@ describe('kontra.pool', function() {
 
 
   // --------------------------------------------------
-  // kontra.pool.render
+  // pool.render
   // --------------------------------------------------
-  describe('render', function() {
+  describe('render', () => {
 
-    it('should call each alive objects render function', function() {
-      var count = 0;
+    it('should call each alive objects render function', () => {
+      let count = 0;
 
-      var pool = kontra.pool({
+      let pool = poolFn({
         create: function() {
           return {
             update: kontra._noop,
@@ -330,7 +333,7 @@ describe('kontra.pool', function() {
         maxSize: 5
       });
 
-      for (var i = 0; i < 3; i++) {
+      for (let i = 0; i < 3; i++) {
         pool.get({alive: true});
       }
 
@@ -346,17 +349,17 @@ describe('kontra.pool', function() {
 
 
   // --------------------------------------------------
-  // kontra.pool.clear
+  // pool.clear
   // --------------------------------------------------
-  describe('clear', function() {
+  describe('clear', () => {
 
-    it('should empty the pool', function() {
-      var pool = kontra.pool({
+    it('should empty the pool', () => {
+      let pool = poolFn({
         create: sprite,
         maxSize: 20
       });
 
-      for (var i = 0; i < 20; i++) {
+      for (let i = 0; i < 20; i++) {
         pool.get({alive: true});
       }
 

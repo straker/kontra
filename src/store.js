@@ -1,7 +1,7 @@
 /**
  * Object for using localStorage.
  */
-kontra.store = {
+const store = {
 
   /**
    * Save an item to localStorage.
@@ -38,3 +38,5 @@ kontra.store = {
     return value;
   }
 };
+
+export default store

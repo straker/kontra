@@ -1,23 +1,26 @@
-// --------------------------------------------------
-// kontra.quadtree
-// --------------------------------------------------
-describe('kontra.quadtree', function() {
+import kontra from '../../src/core.js'
+import Quadtree from '../../src/quadtree.js'
 
-  before(function() {
+// --------------------------------------------------
+// quadtree
+// --------------------------------------------------
+describe('quadtree', () => {
+
+  before(() => {
     if (!kontra.canvas) {
-      var canvas = document.createElement('canvas');
+      let canvas = document.createElement('canvas');
       canvas.width = canvas.height = 600;
       kontra.init(canvas);
     }
   });
 
   // --------------------------------------------------
-  // kontra.quadtree.init
+  // quadtree.init
   // --------------------------------------------------
-  describe('init', function() {
+  describe('init', () => {
 
-    it('should create an initial bounding box', function() {
-      var quadtree = kontra.quadtree();
+    it('should create an initial bounding box', () => {
+      let quadtree = Quadtree();
 
       expect(typeof quadtree.bounds).to.equal('object');
       expect(quadtree.bounds.x).to.equal(0);
@@ -26,8 +29,8 @@ describe('kontra.quadtree', function() {
       expect(quadtree.bounds.height).to.equal(kontra.canvas.height);
     });
 
-    it('should allow you to set the maxDepth and maxObject counts', function() {
-      var quadtree = kontra.quadtree({
+    it('should allow you to set the maxDepth and maxObject counts', () => {
+      let quadtree = Quadtree({
         maxDepth: 1,
         maxObjects: 10
       });
@@ -43,13 +46,13 @@ describe('kontra.quadtree', function() {
 
 
   // --------------------------------------------------
-  // kontra.quadtree.add
+  // quadtree.add
   // --------------------------------------------------
-  describe('add', function() {
-    var quadtree;
+  describe('add', () => {
+    let quadtree;
 
-    beforeEach(function() {
-      quadtree = kontra.quadtree({
+    beforeEach(() => {
+      quadtree = Quadtree({
         maxObjects: 5,
         bounds: {
           x: 0,
@@ -60,30 +63,30 @@ describe('kontra.quadtree', function() {
       });
     });
 
-    afterEach(function() {
+    afterEach(() => {
       quadtree.clear();
     });
 
-    it('should add an object to the quadtree', function() {
+    it('should add an object to the quadtree', () => {
       quadtree.add({id: 1});
 
       expect(quadtree.objects.length).to.equal(1);
     });
 
-    it('should take multiple objects and add them to the quadtree', function() {
+    it('should take multiple objects and add them to the quadtree', () => {
       quadtree.add({id: 1}, {id: 2}, {id: 3});
 
       expect(quadtree.objects.length).to.equal(3);
     });
 
-    it('should take an array of objects and add them to the quadtree', function() {
+    it('should take an array of objects and add them to the quadtree', () => {
       quadtree.add([{id: 1}, {id: 2}], {id: 3});
 
       expect(quadtree.objects.length).to.equal(3);
     });
 
-    it('should split the quadtree if there are too many objects', function() {
-      for (var i = 0; i < 5; i++) {
+    it('should split the quadtree if there are too many objects', () => {
+      for (let i = 0; i < 5; i++) {
         quadtree.add({id: i});
       }
 
@@ -96,8 +99,8 @@ describe('kontra.quadtree', function() {
       expect(quadtree.subnodes.length).to.equal(4);
     });
 
-    it('should make each subnode 1/4 the size of the bounds when split', function() {
-      for (var i = 0; i < 6; i++) {
+    it('should make each subnode 1/4 the size of the bounds when split', () => {
+      for (let i = 0; i < 6; i++) {
         quadtree.add({id: i});
       }
 
@@ -107,9 +110,9 @@ describe('kontra.quadtree', function() {
       expect(quadtree.subnodes[3].bounds).to.eql({x: 50, y: 50, width: 50, height: 50});
     });
 
-    it('should add split objects to their correct subnodes', function() {
-      var subnode;
-      var objects = [
+    it('should add split objects to their correct subnodes', () => {
+      let subnode;
+      let objects = [
         {id: 0, x: 15, y: 10, width: 10, height: 10}, // quadrant 0
         {id: 1, x: 30, y: 20, width: 10, height: 10}, // quadrant 0
         {id: 2, x: 45, y: 30, width: 10, height: 10}, // quadrant 0,1
@@ -149,13 +152,13 @@ describe('kontra.quadtree', function() {
       expect(subnode.indexOf(objects[5])).to.not.equal(-1);
     });
 
-    it('should add an object to a subnode if the quadtree is already split', function() {
-      for (var i = 0; i < 6; i++) {
+    it('should add an object to a subnode if the quadtree is already split', () => {
+      for (let i = 0; i < 6; i++) {
         quadtree.add({id: i});
       }
 
-      var object = {x: 10, y: 10, width: 10, height: 10};
-      var subnode = quadtree.subnodes[0].objects;
+      let object = {x: 10, y: 10, width: 10, height: 10};
+      let subnode = quadtree.subnodes[0].objects;
 
       quadtree.add(object);
 
@@ -163,18 +166,18 @@ describe('kontra.quadtree', function() {
       expect(subnode[0]).to.equal(object);
     });
 
-    it('shouldn\'t split a quadtree node twice after clearing', function() {
+    it('shouldn\'t split a quadtree node twice after clearing', () => {
       // cause the tree to split
-      for (var i = 0; i < 6; i++) {
+      for (let i = 0; i < 6; i++) {
         quadtree.add({id: i});
       }
 
-      var subnodes = quadtree.subnodes;
+      let subnodes = quadtree.subnodes;
 
       quadtree.clear();
 
       // cause to split again
-      for (var i = 0; i < 6; i++) {
+      for (let i = 0; i < 6; i++) {
         quadtree.add({id: i});
       }
 
@@ -190,13 +193,13 @@ describe('kontra.quadtree', function() {
 
 
   // --------------------------------------------------
-  // kontra.quadtree.clear
+  // quadtree.clear
   // --------------------------------------------------
-  describe('clear', function() {
-    var quadtree;
+  describe('clear', () => {
+    let quadtree;
 
-    beforeEach(function() {
-      quadtree = kontra.quadtree({
+    beforeEach(() => {
+      quadtree = Quadtree({
         maxObjects: 5,
         bounds: {
           x: 0,
@@ -207,8 +210,8 @@ describe('kontra.quadtree', function() {
       });
     });
 
-    it('should clear all objects of the quadtree', function() {
-      for (var i = 0; i < 4; i++) {
+    it('should clear all objects of the quadtree', () => {
+      for (let i = 0; i < 4; i++) {
         quadtree.add({id: i, x: i*15, y: i*10, width: 10, height: 10});
       }
 
@@ -217,8 +220,8 @@ describe('kontra.quadtree', function() {
       expect(quadtree.objects.length).to.equal(0);
     });
 
-    it('should clear all objects in subnodes of the quadtree', function() {
-      for (var i = 0; i < 9; i++) {
+    it('should clear all objects in subnodes of the quadtree', () => {
+      for (let i = 0; i < 9; i++) {
         quadtree.add({id: i, x: i*10, y: i*10, width: 10, height: 10});
       }
 
@@ -238,12 +241,13 @@ describe('kontra.quadtree', function() {
 
 
   // --------------------------------------------------
-  // kontra.quadtree.get
+  // quadtree.get
   // --------------------------------------------------
-  describe('get', function() {
+  describe('get', () => {
+    let quadtree;
 
-    beforeEach(function() {
-      quadtree = kontra.quadtree({
+    beforeEach(() => {
+      quadtree = Quadtree({
         maxObjects: 5,
         bounds: {
           x: 0,
@@ -254,38 +258,38 @@ describe('kontra.quadtree', function() {
       });
     });
 
-    afterEach(function() {
+    afterEach(() => {
       quadtree.clear();
     });
 
-    it('should return an object in the same node as the passed object', function() {
-      var object = {x: 10, y: 10, width: 10, height: 10};
+    it('should return an object in the same node as the passed object', () => {
+      let object = {x: 10, y: 10, width: 10, height: 10};
 
       quadtree.add(object);
 
-      var getObjects = quadtree.get({x: 30, y: 30, width: 20, height: 20});
+      let getObjects = quadtree.get({x: 30, y: 30, width: 20, height: 20});
 
       expect(getObjects.length).to.equal(1);
       expect(getObjects[0]).to.equal(object);
     });
 
-    it('should return all objects in multiple subnodes if the object intercepts multiple subnodes', function() {
-      var objects = [
+    it('should return all objects in multiple subnodes if the object intercepts multiple subnodes', () => {
+      let objects = [
         {x: 10, y: 10, width: 10, height: 10},
         {x: 60, y: 10, width: 10, height: 10}
       ];
 
       quadtree.add(objects);
 
-      var getObjects = quadtree.get({x: 45, y: 25, width: 20, height: 20});
+      let getObjects = quadtree.get({x: 45, y: 25, width: 20, height: 20});
 
       expect(getObjects.length).to.equal(2);
       expect(getObjects[0]).to.equal(objects[0]);
       expect(getObjects[1]).to.equal(objects[1]);
     });
 
-    it('should return objects from leaf nodes', function() {
-      var objects = [
+    it('should return objects from leaf nodes', () => {
+      let objects = [
         {x: 0, y: 0, width: 10, height: 10},
         {x: 10, y: 10, width: 10, height: 10},
         {x: 20, y: 20, width: 10, height: 10},
@@ -297,7 +301,7 @@ describe('kontra.quadtree', function() {
 
       quadtree.add(objects);
 
-      var getObjects = quadtree.get({x: 5, y: 25, width: 20, height: 20});
+      let getObjects = quadtree.get({x: 5, y: 25, width: 20, height: 20});
 
       expect(getObjects.length).to.equal(5);
       expect(getObjects[0]).to.equal(objects[0]);

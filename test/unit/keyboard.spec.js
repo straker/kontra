@@ -1,7 +1,9 @@
+import keys from '../../src/keyboard.js'
+
 // --------------------------------------------------
-// kontra.keys
+// keys
 // --------------------------------------------------
-describe('kontra.keys', function() {
+describe('keys', () => {
 
   /**
    * Simulate a keyboard event.
@@ -14,7 +16,7 @@ describe('kontra.keys', function() {
    * @param {boolean} [config.keyCode=0]
    */
   function simulateEvent(type, config) {
-    var evt;
+    let evt;
 
     // PhantomJS <2.0.0 throws an error for the `new Event` call, so we need to supply an
     // alternative form of creating an event just for PhantomJS
@@ -26,8 +28,8 @@ describe('kontra.keys', function() {
       evt.initEvent(type, true, false);
     }
 
-    var config = config || {};
-    for (var prop in config) {
+    config = config || {};
+    for (let prop in config) {
       evt[prop] = config[prop];
     }
 
@@ -35,7 +37,7 @@ describe('kontra.keys', function() {
   }
 
   // reset pressed keys before each test
-  beforeEach(function() {
+  beforeEach(() => {
     simulateEvent('blur');
   });
 
@@ -44,27 +46,27 @@ describe('kontra.keys', function() {
 
 
   // --------------------------------------------------
-  // kontra.keys.pressed
+  // keys.pressed
   // --------------------------------------------------
-  describe('pressed', function() {
+  describe('pressed', () => {
 
-    it('should return false when a key is not pressed', function() {
-      expect(kontra.keys.pressed('a')).to.be.not.ok;
-      expect(kontra.keys.pressed('f1')).to.be.not.ok;
-      expect(kontra.keys.pressed('numpad0')).to.be.not.ok;
+    it('should return false when a key is not pressed', () => {
+      expect(keys.pressed('a')).to.be.not.ok;
+      expect(keys.pressed('f1')).to.be.not.ok;
+      expect(keys.pressed('numpad0')).to.be.not.ok;
     });
 
-    it('should return true for a single key', function() {
+    it('should return true for a single key', () => {
       simulateEvent('keydown', {which: 65});
 
-      expect(kontra.keys.pressed('a')).to.be.true;
+      expect(keys.pressed('a')).to.be.true;
     });
 
-    it('should return false if the key is no longer pressed', function() {
+    it('should return false if the key is no longer pressed', () => {
       simulateEvent('keydown', {which: 65});
       simulateEvent('keyup', {which: 65});
 
-      expect(kontra.keys.pressed('a')).to.be.not.ok;
+      expect(keys.pressed('a')).to.be.not.ok;
     });
 
   });
@@ -74,12 +76,12 @@ describe('kontra.keys', function() {
 
 
   // --------------------------------------------------
-  // kontra.keys.bind
+  // keys.bind
   // --------------------------------------------------
-  describe('bind', function() {
+  describe('bind', () => {
 
-    it('should call the callback when a single key combination is pressed', function(done) {
-      kontra.keys.bind('a', function() {
+    it('should call the callback when a single key combination is pressed', (done) => {
+      keys.bind('a', () => {
         done();
       });
 
@@ -89,8 +91,8 @@ describe('kontra.keys', function() {
       expect(false).to.be.true;
     });
 
-    it('should accept an array of key combinations to bind', function(done) {
-      kontra.keys.bind(['a', 'b'], function() {
+    it('should accept an array of key combinations to bind', (done) => {
+      keys.bind(['a', 'b'], () => {
         done();
       });
 
@@ -107,28 +109,28 @@ describe('kontra.keys', function() {
 
 
   // --------------------------------------------------
-  // kontra.keys.unbind
+  // keys.unbind
   // --------------------------------------------------
-  describe('unbind', function() {
+  describe('unbind', () => {
 
-    it('should not call the callback when the combination has been unbound', function() {
-      kontra.keys.bind('a', function() {
+    it('should not call the callback when the combination has been unbound', () => {
+      keys.bind('a', () => {
         // this should never be called since the key combination was unbound
         expect(false).to.be.true;
       });
 
-      kontra.keys.unbind('a');
+      keys.unbind('a');
 
       simulateEvent('keydown', {which: 65});
     });
 
-    it('should accept an array of key combinations to unbind', function() {
-      kontra.keys.bind(['a', 'b'], function() {
+    it('should accept an array of key combinations to unbind', () => {
+      keys.bind(['a', 'b'], () => {
         // this should never be called since the key combination was unbound
         expect(false).to.be.true;
       });
 
-      kontra.keys.unbind(['a', 'b']);
+      keys.unbind(['a', 'b']);
 
       simulateEvent('keydown', {which: 65});
       simulateEvent('keydown', {which: 66});

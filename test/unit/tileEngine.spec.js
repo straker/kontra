@@ -1,22 +1,32 @@
-// --------------------------------------------------
-// kontra.tileEngine
-// --------------------------------------------------
-describe('kontra.tileEngine', function() {
+import kontra from '../../src/core.js'
+import TileEngine from '../../src/tileEngine.js'
+import assets from '../../src/assets.js'
 
-  before(function() {
+// --------------------------------------------------
+// tileEngine
+// --------------------------------------------------
+describe('tileEngine', () => {
+
+  before(() => {
     if (!kontra.canvas) {
-      var canvas = document.createElement('canvas');
+      let canvas = document.createElement('canvas');
       canvas.width = canvas.height = 600;
       kontra.init(canvas);
     }
+
+    kontra.assets = assets;
+  });
+
+  after(() => {
+    delete kontra.assets;
   });
 
   // --------------------------------------------------
-  // kontra.tileEngine.init
+  // tileEngine.init
   // --------------------------------------------------
-  describe('init', function() {
-    it('should initialize properties on the tile engine', function() {
-      var data = {
+  describe('init', () => {
+    it('should initialize properties on the tile engine', () => {
+      let data = {
         tilewidth: 10,
         tileheight: 10,
         width: 50,
@@ -29,7 +39,7 @@ describe('kontra.tileEngine', function() {
           data: [0,0,1,0,0]
         }]
       }
-      var tileEngine = kontra.tileEngine(data);
+      let tileEngine = TileEngine(data);
 
       expect(tileEngine.tilewidth).to.equal(data.tilewidth);
       expect(tileEngine.tileheight).to.equal(data.tileheight);
@@ -41,12 +51,12 @@ describe('kontra.tileEngine', function() {
       expect(tileEngine.mapheight).to.equal(500);
     });
 
-    it('should resolve tileset image', function() {
+    it('should resolve tileset image', () => {
       let url = new URL('../../car.png', window.location.href);
       let image = new Image(100, 100);
       kontra.assets.images[url] = image
 
-      var tileEngine = kontra.tileEngine({
+      let tileEngine = TileEngine({
         tilesets: [{
           image: '../../car.png'
         }]
@@ -55,13 +65,13 @@ describe('kontra.tileEngine', function() {
       expect(tileEngine.tilesets[0].image).to.equal(image);
     });
 
-    it('should resolve tileset source', function() {
+    it('should resolve tileset source', () => {
       let url = new URL('/foo/bar/source.json', window.location.href);
       kontra.assets.data[url] = {
         foo: 'bar'
       };
 
-      var tileEngine = kontra.tileEngine({
+      let tileEngine = TileEngine({
         tilesets: [{
           source: '/foo/bar/source.json'
         }]
@@ -70,7 +80,7 @@ describe('kontra.tileEngine', function() {
       expect(tileEngine.tilesets[0].foo).to.equal('bar');
     });
 
-    it('should resolve tileset source and the image of the source', function() {
+    it('should resolve tileset source and the image of the source', () => {
       let sourceUrl = new URL('/foo/bar/source.json', window.location.href);
       let imageUrl = new URL('../../car.png', window.location.href);
       let image = new Image(100, 100);
@@ -80,7 +90,7 @@ describe('kontra.tileEngine', function() {
         image: '../../car.png'
       };
 
-      var tileEngine = kontra.tileEngine({
+      let tileEngine = TileEngine({
         tilesets: [{
           source: '/foo/bar/source.json'
         }]
@@ -95,11 +105,11 @@ describe('kontra.tileEngine', function() {
 
 
   // --------------------------------------------------
-  // kontra.tileEngine.render
+  // tileEngine.render
   // --------------------------------------------------
-  describe('render', function() {
-    it('renders the tileEngine', function() {
-      var tileEngine = kontra.tileEngine({
+  describe('render', () => {
+    it('renders the tileEngine', () => {
+      let tileEngine = TileEngine({
         tilewidth: 10,
         tileheight: 10,
         width: 50,
@@ -127,13 +137,13 @@ describe('kontra.tileEngine', function() {
 
 
   // --------------------------------------------------
-  // kontra.tileEngine.layerCollidesWith
+  // tileEngine.layerCollidesWith
   // --------------------------------------------------
-  describe('layerCollidesWith', function() {
-    var tileEngine;
+  describe('layerCollidesWith', () => {
+    let tileEngine;
 
-    beforeEach(function() {
-      tileEngine = kontra.tileEngine({
+    beforeEach(() => {
+      tileEngine = TileEngine({
         tilewidth: 10,
         tileheight: 10,
         width: 50,
@@ -148,8 +158,8 @@ describe('kontra.tileEngine', function() {
       });
     });
 
-    it('should return false if the object does not collide', function() {
-      var collides = tileEngine.layerCollidesWith('test', {
+    it('should return false if the object does not collide', () => {
+      let collides = tileEngine.layerCollidesWith('test', {
         x: 10,
         y: 10,
         height: 10,
@@ -159,8 +169,8 @@ describe('kontra.tileEngine', function() {
       expect(collides).to.equal(false);
     });
 
-    it('should return true if the object collides', function() {
-      var collides = tileEngine.layerCollidesWith('test', {
+    it('should return true if the object collides', () => {
+      let collides = tileEngine.layerCollidesWith('test', {
         x: 25,
         y: 5,
         height: 10,
@@ -170,8 +180,8 @@ describe('kontra.tileEngine', function() {
       expect(collides).to.equal(true);
     });
 
-    it('should handle sprites off the map', function() {
-      var collides = tileEngine.layerCollidesWith('test', {
+    it('should handle sprites off the map', () => {
+      let collides = tileEngine.layerCollidesWith('test', {
         x: 100,
         y: 100,
         height: 100,
@@ -188,13 +198,13 @@ describe('kontra.tileEngine', function() {
 
 
   // --------------------------------------------------
-  // kontra.tileEngine.tileAtLayer
+  // tileEngine.tileAtLayer
   // --------------------------------------------------
-  describe('tileAtLayer', function() {
-    var tileEngine;
+  describe('tileAtLayer', () => {
+    let tileEngine;
 
-    beforeEach(function() {
-      tileEngine = kontra.tileEngine({
+    beforeEach(() => {
+      tileEngine = TileEngine({
         tilewidth: 10,
         tileheight: 10,
         width: 50,
@@ -209,7 +219,7 @@ describe('kontra.tileEngine', function() {
       });
     });
 
-    it('should return the correct tile using x, y coordinates', function() {
+    it('should return the correct tile using x, y coordinates', () => {
       expect(tileEngine.tileAtLayer('test', {x: 0, y: 0})).to.equal(0);
       expect(tileEngine.tileAtLayer('test', {x: 10, y: 5})).to.equal(0);
       expect(tileEngine.tileAtLayer('test', {x: 20, y: 9})).to.equal(1);
@@ -217,7 +227,7 @@ describe('kontra.tileEngine', function() {
       expect(tileEngine.tileAtLayer('test', {x: 40, y: 1})).to.equal(0);
     });
 
-    it('should return the correct tile using row, col coordinates', function() {
+    it('should return the correct tile using row, col coordinates', () => {
       expect(tileEngine.tileAtLayer('test', {row: 0, col: 0})).to.equal(0);
       expect(tileEngine.tileAtLayer('test', {row: 0, col: 1})).to.equal(0);
       expect(tileEngine.tileAtLayer('test', {row: 0, col: 2})).to.equal(1);
@@ -225,7 +235,7 @@ describe('kontra.tileEngine', function() {
       expect(tileEngine.tileAtLayer('test', {row: 0, col: 4})).to.equal(0);
     });
 
-    it('should not process out of bound positions', function() {
+    it('should not process out of bound positions', () => {
       expect(tileEngine.tileAtLayer('test', {x: -10, y: 0})).to.equal(undefined);
     });
 
@@ -236,14 +246,14 @@ describe('kontra.tileEngine', function() {
 
 
   // --------------------------------------------------
-  // kontra.tileEngine.renderLayer
+  // tileEngine.renderLayer
   // --------------------------------------------------
-  describe('renderLayer', function() {
+  describe('renderLayer', () => {
 
-    it('should correctly render a layer', function() {
-     var image = new Image(100, 100);
+    it('should correctly render a layer', () => {
+     let image = new Image(100, 100);
 
-      var tileEngine = kontra.tileEngine({
+      let tileEngine = TileEngine({
         tilewidth: 10,
         tileheight: 10,
         width: 2,
@@ -270,10 +280,10 @@ describe('kontra.tileEngine', function() {
       kontra.context.drawImage.restore();
     });
 
-    it('should account for sx and sy', function() {
-    var image = new Image(50, 50);
+    it('should account for sx and sy', () => {
+    let image = new Image(50, 50);
 
-      var tileEngine = kontra.tileEngine({
+      let tileEngine = TileEngine({
         tilewidth: 10,
         tileheight: 10,
         width: 10,
@@ -315,10 +325,10 @@ describe('kontra.tileEngine', function() {
       kontra.context.drawImage.restore();
     });
 
-    it('only draws a layer once', function() {
-      var image = new Image(100, 100);
+    it('only draws a layer once', () => {
+      let image = new Image(100, 100);
 
-      var tileEngine = kontra.tileEngine({
+      let tileEngine = TileEngine({
         tilewidth: 10,
         tileheight: 10,
         width: 2,
@@ -343,11 +353,11 @@ describe('kontra.tileEngine', function() {
       tileEngine._r.restore();
     });
 
-    it('uses the correct tileset', function() {
-      var image = new Image(100, 100);
+    it('uses the correct tileset', () => {
+      let image = new Image(100, 100);
 
       let called = false;
-      var tileEngine = kontra.tileEngine({
+      let tileEngine = TileEngine({
         tilewidth: 10,
         tileheight: 10,
         width: 2,

@@ -1,9 +1,12 @@
+import kontra from '../../src/core.js'
+import pointer from '../../src/pointer.js'
+
 // --------------------------------------------------
-// kontra.pointer
+// pointer
 // --------------------------------------------------
-describe('kontra.pointer', function() {
-  var object;
-  var canvas = document.createElement('canvas');
+describe('pointer', () => {
+  let object;
+  let canvas = document.createElement('canvas');
 
   // reset canvas offsets
   canvas.style.position = 'absolute';
@@ -17,7 +20,7 @@ describe('kontra.pointer', function() {
    * @param {number} [config.button]
    */
   function simulateEvent(type, config) {
-    var evt;
+    let evt;
 
     // PhantomJS <2.0.0 throws an error for the `new Event` call, so we need to supply an
     // alternative form of creating an event just for PhantomJS
@@ -29,8 +32,8 @@ describe('kontra.pointer', function() {
       evt.initEvent(type, true, false);
     }
 
-    var config = config || {};
-    for (var prop in config) {
+    config = config || {};
+    for (let prop in config) {
       evt[prop] = config[prop];
     }
 
@@ -38,7 +41,7 @@ describe('kontra.pointer', function() {
   }
 
   // reset pressed buttons before each test
-  beforeEach(function() {
+  beforeEach(() => {
     simulateEvent('blur');
 
     // set up and take down the canvas before each test so it doesn't leak
@@ -54,13 +57,13 @@ describe('kontra.pointer', function() {
       height: 20,
       render: sinon.spy()
     };
-    kontra.pointer.track(object);
+    pointer.track(object);
     object.render();
     kontra.emit('tick');
   });
 
-  afterEach(function() {
-    kontra.pointer.untrack(object);
+  afterEach(() => {
+    pointer.untrack(object);
     canvas.remove();
   });
 
@@ -69,40 +72,40 @@ describe('kontra.pointer', function() {
 
 
   // --------------------------------------------------
-  // kontra.pointer.pressed
+  // pointer.pressed
   // --------------------------------------------------
-  describe('pressed', function() {
+  describe('pressed', () => {
 
-    it('should return false when a button is not pressed', function() {
-      expect(kontra.pointer.pressed('left')).to.be.not.ok;
-      expect(kontra.pointer.pressed('middle')).to.be.not.ok;
-      expect(kontra.pointer.pressed('right')).to.be.not.ok;
+    it('should return false when a button is not pressed', () => {
+      expect(pointer.pressed('left')).to.be.not.ok;
+      expect(pointer.pressed('middle')).to.be.not.ok;
+      expect(pointer.pressed('right')).to.be.not.ok;
     });
 
-    it('should return true for a button', function() {
+    it('should return true for a button', () => {
       simulateEvent('mousedown', {button: 1});
 
-      expect(kontra.pointer.pressed('middle')).to.be.true;
+      expect(pointer.pressed('middle')).to.be.true;
     });
 
-    it('should return false if the button is no longer pressed', function() {
+    it('should return false if the button is no longer pressed', () => {
       simulateEvent('mousedown', {button: 2});
       simulateEvent('mouseup', {button: 2});
 
-      expect(kontra.pointer.pressed('right')).to.be.not.ok;
+      expect(pointer.pressed('right')).to.be.not.ok;
     });
 
-    it('should return true for touchstart', function() {
+    it('should return true for touchstart', () => {
       simulateEvent('touchstart', {touches: [{clientX: 100, clientY: 50}]});
 
-      expect(kontra.pointer.pressed('left')).to.be.true;
+      expect(pointer.pressed('left')).to.be.true;
     });
 
-    it('should return false for a touchend', function() {
+    it('should return false for a touchend', () => {
       simulateEvent('touchstart', {touches: [{clientX: 100, clientY: 50}]});
       simulateEvent('touchend', {touches: [{clientX: 100, clientY: 50}]});
 
-      expect(kontra.pointer.pressed('left')).to.be.not.ok;
+      expect(pointer.pressed('left')).to.be.not.ok;
     });
 
   });
@@ -112,22 +115,22 @@ describe('kontra.pointer', function() {
 
 
   // --------------------------------------------------
-  // kontra.pointer.track
+  // pointer.track
   // --------------------------------------------------
-  describe('track', function() {
+  describe('track', () => {
 
-    it('should override the objects render function to track render order', function() {
-      var obj = { render: kontra._noop };
-      kontra.pointer.track(obj);
+    it('should override the objects render function to track render order', () => {
+      let obj = { render: kontra._noop };
+      pointer.track(obj);
 
       expect(obj.render).to.not.equal(kontra._noop);
       expect(obj._r).to.exist;
     });
 
-    it('should take multiple objects', function() {
-      var obj = { render: kontra._noop };
-      var obj2 = { render: kontra._noop };
-      kontra.pointer.track([obj, obj2]);
+    it('should take multiple objects', () => {
+      let obj = { render: kontra._noop };
+      let obj2 = { render: kontra._noop };
+      pointer.track([obj, obj2]);
 
       expect(obj.render).to.not.equal(kontra._noop);
       expect(obj._r).to.exist;
@@ -135,25 +138,25 @@ describe('kontra.pointer', function() {
       expect(obj2._r).to.exist;
     });
 
-    it('should call the objects original render function', function() {
-      var render = sinon.spy();
-      var obj = { render: render };
-      kontra.pointer.track(obj);
+    it('should call the objects original render function', () => {
+      let render = sinon.spy();
+      let obj = { render: render };
+      pointer.track(obj);
       obj.render();
 
       expect(render.called).to.be.ok;
     });
 
-    it('should do nothing if the object is already tracked', function() {
-      var obj = { render: kontra._noop };
-      var render;
+    it('should do nothing if the object is already tracked', () => {
+      let obj = { render: kontra._noop };
+      let render;
 
       function func() {
-        kontra.pointer.track(obj);
+        pointer.track(obj);
 
         render = obj._r;
 
-        kontra.pointer.track(obj);
+        pointer.track(obj);
       }
 
       expect(render).to.equal(obj._r);
@@ -167,24 +170,24 @@ describe('kontra.pointer', function() {
 
 
   // --------------------------------------------------
-  // kontra.pointer.untrack
+  // pointer.untrack
   // --------------------------------------------------
-  describe('untrack', function() {
+  describe('untrack', () => {
 
-    it('should restore the objects original render function', function() {
-      var obj = { render: kontra._noop };
-      kontra.pointer.track(obj);
-      kontra.pointer.untrack(obj);
+    it('should restore the objects original render function', () => {
+      let obj = { render: kontra._noop };
+      pointer.track(obj);
+      pointer.untrack(obj);
 
       expect(obj.render).to.equal(kontra._noop);
       expect(obj._r).to.not.exist;
     });
 
-    it('should take multiple objects', function() {
-      var obj = { render: kontra._noop };
-      var obj2 = { render: kontra._noop }
-      kontra.pointer.track([obj, obj2]);
-      kontra.pointer.untrack([obj, obj2]);
+    it('should take multiple objects', () => {
+      let obj = { render: kontra._noop };
+      let obj2 = { render: kontra._noop }
+      pointer.track([obj, obj2]);
+      pointer.untrack([obj, obj2]);
 
       expect(obj.render).to.equal(kontra._noop);
       expect(obj._r).to.not.exist;
@@ -192,9 +195,9 @@ describe('kontra.pointer', function() {
       expect(obj2._r).to.not.exist;
     });
 
-    it('should do nothing if the object was never tracked', function() {
+    it('should do nothing if the object was never tracked', () => {
       function func() {
-        kontra.pointer.untrack({foo: 1});
+        pointer.untrack({foo: 1});
       }
 
       expect(func).to.not.throw();
@@ -209,49 +212,49 @@ describe('kontra.pointer', function() {
   // --------------------------------------------------
   // getCurrentObject
   // --------------------------------------------------
-  describe('getCurrentObject', function() {
+  describe('getCurrentObject', () => {
 
-    it('should correctly return the object under the pointer', function() {
-      var obj = {
+    it('should correctly return the object under the pointer', () => {
+      let obj = {
         x: 110,
         y: 50,
         width: 10,
         height: 20,
         render: sinon.spy()
       };
-      kontra.pointer.track(obj);
+      pointer.track(obj);
       kontra.emit('tick');
 
       object.render();
       obj.render();
       kontra.emit('tick');
 
-      kontra.pointer.x = 100;
-      kontra.pointer.y = 50;
+      pointer.x = 100;
+      pointer.y = 50;
 
-      expect(kontra.pointer.over(object)).to.equal(true);
+      expect(pointer.over(object)).to.equal(true);
 
-      kontra.pointer.x = 108;
+      pointer.x = 108;
 
       // object rendered first so obj is on top
-      expect(kontra.pointer.over(obj)).to.equal(true);
+      expect(pointer.over(obj)).to.equal(true);
     });
 
-    it('should take into account object anchor', function() {
+    it('should take into account object anchor', () => {
       object.anchor = {
         x: 0.5,
         y: 0.5
       };
 
-      kontra.pointer.x = 95;
-      kontra.pointer.y = 55;
+      pointer.x = 95;
+      pointer.y = 55;
 
-      expect(kontra.pointer.over(object)).to.equal(true);
+      expect(pointer.over(object)).to.equal(true);
     });
 
-    it('should call the objects collidesWithPointer function', function() {
+    it('should call the objects collidesWithPointer function', () => {
       object.collidesWithPointer = sinon.spy();
-      kontra.pointer.over(object);
+      pointer.over(object);
 
       expect(object.collidesWithPointer.called).to.be.ok;
     });
@@ -263,25 +266,25 @@ describe('kontra.pointer', function() {
 
 
   // --------------------------------------------------
-  // kontra.pointer.over
+  // pointer.over
   // --------------------------------------------------
-  describe('over', function() {
-    it('should return false is object is not being tracked', function() {
-      expect(kontra.pointer.over()).to.equal(false);
+  describe('over', () => {
+    it('should return false is object is not being tracked', () => {
+      expect(pointer.over()).to.equal(false);
     });
 
-    it('should return false if the pointer is not over the object', function() {
-      kontra.pointer.x = 50;
-      kontra.pointer.y = 55;
+    it('should return false if the pointer is not over the object', () => {
+      pointer.x = 50;
+      pointer.y = 55;
 
-      expect(kontra.pointer.over(object)).to.equal(false);
+      expect(pointer.over(object)).to.equal(false);
     });
 
-    it('should return true if the pointer is over the object', function() {
-      kontra.pointer.x = 105;
-      kontra.pointer.y = 55;
+    it('should return true if the pointer is over the object', () => {
+      pointer.x = 105;
+      pointer.y = 55;
 
-      expect(kontra.pointer.over(object)).to.equal(true);
+      expect(pointer.over(object)).to.equal(true);
     });
 
   });
@@ -293,24 +296,24 @@ describe('kontra.pointer', function() {
   // --------------------------------------------------
   // mousemove
   // --------------------------------------------------
-  describe('mousemove', function() {
+  describe('mousemove', () => {
 
-    it('should update the x and y pointer coordinates', function() {
-      kontra.pointer.x = kontra.pointer.y = 0;
+    it('should update the x and y pointer coordinates', () => {
+      pointer.x = pointer.y = 0;
       simulateEvent('mousemove', {clientX: 100, clientY: 50});
 
-      expect(kontra.pointer.x).to.equal(100);
-      expect(kontra.pointer.y).to.equal(50);
+      expect(pointer.x).to.equal(100);
+      expect(pointer.y).to.equal(50);
     });
 
-    it('should call the objects onOver function if it is the target', function() {
+    it('should call the objects onOver function if it is the target', () => {
       object.onOver = sinon.spy();
       simulateEvent('mousemove', {clientX: 105, clientY: 55});
 
       expect(object.onOver.called).to.be.ok;
     });
 
-    it('should take into account object anchor', function () {
+    it('should take into account object anchor', () => {
       object.anchor = {
         x: 0.5,
         y: 0.5
@@ -334,32 +337,32 @@ describe('kontra.pointer', function() {
   // --------------------------------------------------
   // mousedown
   // --------------------------------------------------
-  describe('mousedown', function() {
+  describe('mousedown', () => {
 
-    it('should update the x and y pointer coordinates', function() {
-      kontra.pointer.x = kontra.pointer.y = 0;
+    it('should update the x and y pointer coordinates', () => {
+      pointer.x = pointer.y = 0;
       simulateEvent('mousedown', {clientX: 100, clientY: 50});
 
-      expect(kontra.pointer.x).to.equal(100);
-      expect(kontra.pointer.y).to.equal(50);
+      expect(pointer.x).to.equal(100);
+      expect(pointer.y).to.equal(50);
     });
 
-    it('should call the onDown function', function () {
-      var onDown = sinon.spy();
-      kontra.pointer.onDown(onDown);
+    it('should call the onDown function', () => {
+      let onDown = sinon.spy();
+      pointer.onDown(onDown);
       simulateEvent('mousedown', {clientX: 100, clientY: 50});
 
       expect(onDown.called).to.be.ok;
     });
 
-    it('should call the objects onDown function if it is the target', function() {
+    it('should call the objects onDown function if it is the target', () => {
       object.onDown = sinon.spy();
       simulateEvent('mousedown', {clientX: 105, clientY: 55});
 
       expect(object.onDown.called).to.be.ok;
     });
 
-    it('should take into account object anchor', function () {
+    it('should take into account object anchor', () => {
       object.anchor = {
         x: 0.5,
         y: 0.5
@@ -384,32 +387,32 @@ describe('kontra.pointer', function() {
   // --------------------------------------------------
   // touchstart
   // --------------------------------------------------
-  describe('touchstart', function() {
+  describe('touchstart', () => {
 
-    it('should update the x and y pointer coordinates', function() {
-      kontra.pointer.x = kontra.pointer.y = 0;
+    it('should update the x and y pointer coordinates', () => {
+      pointer.x = pointer.y = 0;
       simulateEvent('touchstart', {touches: [{clientX: 100, clientY: 50}]});
 
-      expect(kontra.pointer.x).to.equal(100);
-      expect(kontra.pointer.y).to.equal(50);
+      expect(pointer.x).to.equal(100);
+      expect(pointer.y).to.equal(50);
     });
 
-    it('should call the onDown function', function () {
-      var onDown = sinon.spy();
-      kontra.pointer.onDown(onDown);
+    it('should call the onDown function', () => {
+      let onDown = sinon.spy();
+      pointer.onDown(onDown);
       simulateEvent('touchstart', {touches: [{clientX: 100, clientY: 50}]});
 
       expect(onDown.called).to.be.ok;
     });
 
-    it('should call the objects onDown function if it is the target', function() {
+    it('should call the objects onDown function if it is the target', () => {
       object.onDown = sinon.spy();
       simulateEvent('touchstart', {touches: [{clientX: 105, clientY: 55}]});
 
       expect(object.onDown.called).to.be.ok;
     });
 
-    it('should take into account object anchor', function () {
+    it('should take into account object anchor', () => {
       object.anchor = {
         x: 0.5,
         y: 0.5
@@ -433,32 +436,32 @@ describe('kontra.pointer', function() {
   // --------------------------------------------------
   // mouseup
   // --------------------------------------------------
-  describe('mouseup', function() {
+  describe('mouseup', () => {
 
-    it('should update the x and y pointer coordinates', function() {
-      kontra.pointer.x = kontra.pointer.y = 0;
+    it('should update the x and y pointer coordinates', () => {
+      pointer.x = pointer.y = 0;
       simulateEvent('mouseup', {clientX: 100, clientY: 50});
 
-      expect(kontra.pointer.x).to.equal(100);
-      expect(kontra.pointer.y).to.equal(50);
+      expect(pointer.x).to.equal(100);
+      expect(pointer.y).to.equal(50);
     });
 
-    it('should call the onUp function', function () {
-      var onUp = sinon.spy();
-      kontra.pointer.onUp(onUp);
+    it('should call the onUp function', () => {
+      let onUp = sinon.spy();
+      pointer.onUp(onUp);
       simulateEvent('mouseup', {clientX: 100, clientY: 50});
 
       expect(onUp.called).to.be.ok;
     });
 
-    it('should call the objects onUp function if it is the target', function() {
+    it('should call the objects onUp function if it is the target', () => {
       object.onUp = sinon.spy();
       simulateEvent('mouseup', {clientX: 105, clientY: 55});
 
       expect(object.onUp.called).to.be.ok;
     });
 
-    it('should take into account object anchor', function () {
+    it('should take into account object anchor', () => {
       object.anchor = {
         x: 0.5,
         y: 0.5
@@ -482,32 +485,32 @@ describe('kontra.pointer', function() {
   // --------------------------------------------------
   // touchend
   // --------------------------------------------------
-  describe('touchend', function() {
+  describe('touchend', () => {
 
-    it('should update the x and y pointer coordinates', function() {
-      kontra.pointer.x = kontra.pointer.y = 0;
+    it('should update the x and y pointer coordinates', () => {
+      pointer.x = pointer.y = 0;
       simulateEvent('touchend', {touches: [], changedTouches: [{clientX: 100, clientY: 50}]});
 
-      expect(kontra.pointer.x).to.equal(100);
-      expect(kontra.pointer.y).to.equal(50);
+      expect(pointer.x).to.equal(100);
+      expect(pointer.y).to.equal(50);
     });
 
-    it('should call the onUp function', function () {
-      var onUp = sinon.spy();
-      kontra.pointer.onUp(onUp);
+    it('should call the onUp function', () => {
+      let onUp = sinon.spy();
+      pointer.onUp(onUp);
       simulateEvent('touchend', {touches: [], changedTouches: [{clientX: 100, clientY: 50}]});
 
       expect(onUp.called).to.be.ok;
     });
 
-    it('should call the objects onUp function if it is the target', function() {
+    it('should call the objects onUp function if it is the target', () => {
       object.onUp = sinon.spy();
       simulateEvent('touchend', {touches: [], changedTouches: [{clientX: 105, clientY: 55}]});
 
       expect(object.onUp.called).to.be.ok;
     });
 
-    it('should take into account object anchor', function () {
+    it('should take into account object anchor', () => {
       object.anchor = {
         x: 0.5,
         y: 0.5

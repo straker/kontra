@@ -1,108 +1,109 @@
-(function() {
-  let callbacks = {};
-  let pressedKeys = {};
+let callbacks = {};
+let pressedKeys = {};
 
-  let keyMap = {
-    // named keys
-    13: 'enter',
-    27: 'esc',
-    32: 'space',
-    37: 'left',
-    38: 'up',
-    39: 'right',
-    40: 'down'
-  };
+let keyMap = {
+  // named keys
+  13: 'enter',
+  27: 'esc',
+  32: 'space',
+  37: 'left',
+  38: 'up',
+  39: 'right',
+  40: 'down'
+};
 
-  // alpha keys
-  // @see https://stackoverflow.com/a/43095772/2124254
-  for (let i = 0; i < 26; i++) {
-    keyMap[65+i] = (10 + i).toString(36);
+// alpha keys
+// @see https://stackoverflow.com/a/43095772/2124254
+let i;
+for (i = 0; i < 26; i++) {
+  keyMap[65+i] = (10 + i).toString(36);
+}
+// numeric keys
+for (i = 0; i < 10; i++) {
+  keyMap[48+i] = ''+i;
+}
+
+addEventListener('keydown', keydownEventHandler);
+addEventListener('keyup', keyupEventHandler);
+addEventListener('blur', blurEventHandler);
+
+/**
+ * Execute a function that corresponds to a keyboard key.
+ * @private
+ *
+ * @param {Event} e
+ */
+function keydownEventHandler(e) {
+  let key = keyMap[e.which];
+  pressedKeys[key] = true;
+
+  if (callbacks[key]) {
+    callbacks[key](e);
   }
-  // numeric keys
-  for (i = 0; i < 10; i++) {
-    keyMap[48+i] = ''+i;
-  }
+}
 
-  addEventListener('keydown', keydownEventHandler);
-  addEventListener('keyup', keyupEventHandler);
-  addEventListener('blur', blurEventHandler);
+/**
+ * Set the released key to not being pressed.
+ * @private
+ *
+ * @param {Event} e
+ */
+function keyupEventHandler(e) {
+  pressedKeys[ keyMap[e.which] ] = false;
+}
+
+/**
+ * Reset pressed keys.
+ * @private
+ *
+ * @param {Event} e
+ */
+function blurEventHandler(e) {
+  pressedKeys = {};
+}
+
+/**
+ * Object for using the keyboard.
+ */
+const keys = {
+  map: keyMap,
 
   /**
-   * Execute a function that corresponds to a keyboard key.
-   * @private
+   * Register a function to be called on a key press.
+   * @memberof kontra.keys
    *
-   * @param {Event} e
+   * @param {string|string[]} keys - key or keys to bind.
    */
-  function keydownEventHandler(e) {
-    let key = keyMap[e.which];
-    pressedKeys[key] = true;
-
-    if (callbacks[key]) {
-      callbacks[key](e);
-    }
-  }
+  bind(keys, callback) {
+    // smaller than doing `Array.isArray(keys) ? keys : [keys]`
+    [].concat(keys).map(function(key) {
+      callbacks[key] = callback;
+    })
+  },
 
   /**
-   * Set the released key to not being pressed.
-   * @private
+   * Remove the callback function for a key.
+   * @memberof kontra.keys
    *
-   * @param {Event} e
+   * @param {string|string[]} keys - key or keys to unbind.
    */
-  function keyupEventHandler(e) {
-    pressedKeys[ keyMap[e.which] ] = false;
-  }
+  unbind(keys, undefined) {
+    [].concat(keys).map(function(key) {
+      callbacks[key] = undefined;
+    })
+  },
 
   /**
-   * Reset pressed keys.
-   * @private
+   * Returns whether a key is pressed.
+   * @memberof kontra.keys
    *
-   * @param {Event} e
+   * @param {string} key - Key to check for press.
+   *
+   * @returns {boolean}
    */
-  function blurEventHandler(e) {
-    pressedKeys = {};
+  pressed(key) {
+    return !!pressedKeys[key];
   }
+};
 
-  /**
-   * Object for using the keyboard.
-   */
-  kontra.keys = {
-    map: keyMap,
-
-    /**
-     * Register a function to be called on a key press.
-     * @memberof kontra.keys
-     *
-     * @param {string|string[]} keys - key or keys to bind.
-     */
-    bind(keys, callback) {
-      // smaller than doing `Array.isArray(keys) ? keys : [keys]`
-      [].concat(keys).map(function(key) {
-        callbacks[key] = callback;
-      })
-    },
-
-    /**
-     * Remove the callback function for a key.
-     * @memberof kontra.keys
-     *
-     * @param {string|string[]} keys - key or keys to unbind.
-     */
-    unbind(keys, undefined) {
-      [].concat(keys).map(function(key) {
-        callbacks[key] = undefined;
-      })
-    },
-
-    /**
-     * Returns whether a key is pressed.
-     * @memberof kontra.keys
-     *
-     * @param {string} key - Key to check for press.
-     *
-     * @returns {boolean}
-     */
-    pressed(key) {
-      return !!pressedKeys[key];
-    }
-  };
-})();
+export default keys

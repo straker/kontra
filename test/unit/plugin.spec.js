@@ -1,7 +1,10 @@
+import kontra from '../../src/core.js'
+import plugin from '../../src/plugin.js'
+
 // --------------------------------------------------
-// kontra.plugin
+// plugin
 // --------------------------------------------------
-describe('kontra.plugin', function() {
+describe('plugin', () => {
 
   let add = (p1, p2) => p1 + p2;
   let myPlugin = {
@@ -24,12 +27,12 @@ describe('kontra.plugin', function() {
 
 
   // --------------------------------------------------
-  // kontra.plugin.register
+  // plugin.register
   // --------------------------------------------------
-  describe('register', function() {
+  describe('register', () => {
 
     beforeEach(() => {
-      kontra.plugin.register('foobar', myPlugin);
+      plugin.register('foobar', myPlugin);
     });
 
     it('should create an interceptor list', () => {
@@ -66,7 +69,7 @@ describe('kontra.plugin', function() {
     });
 
     it('should not override interceptors if object is already intercepted', () => {
-      kontra.plugin.register('foobar', {});
+      plugin.register('foobar', {});
 
       expect(kontra.foobar._inc.add).to.be.ok;
       expect(kontra.foobar._inc.add.before.length).to.equal(1);
@@ -74,7 +77,7 @@ describe('kontra.plugin', function() {
     });
 
     it('should ignore functions that don\'t match the before/after syntax', () => {
-      kontra.plugin.register('foobar', {
+      plugin.register('foobar', {
         doAdd() {}
       });
 
@@ -83,7 +86,7 @@ describe('kontra.plugin', function() {
     });
 
     it('should do nothing if original method does not exist', () => {
-      kontra.plugin.register('foobar', {
+      plugin.register('foobar', {
         afterBaz() {},
         beforeBaz() {}
       });
@@ -93,7 +96,7 @@ describe('kontra.plugin', function() {
     });
 
     it('should allow multiple plugins to be registered for the same method', () => {
-      kontra.plugin.register('foobar', myPlugin);
+      plugin.register('foobar', myPlugin);
 
       expect(kontra.foobar._inc.add.before.length).to.equal(2);
       expect(kontra.foobar._inc.add.after.length).to.equal(2);
@@ -146,10 +149,10 @@ describe('kontra.plugin', function() {
         let stub2 = sinon.stub().callsFake(function fakeFn(context, p1, p2) {
           return [5, 6];
         });
-        kontra.plugin.register('foobar', {
+        plugin.register('foobar', {
           beforeAdd: stub1
         });
-        kontra.plugin.register('foobar', {
+        plugin.register('foobar', {
           beforeAdd: stub2
         });
 
@@ -178,7 +181,7 @@ describe('kontra.plugin', function() {
         let stub = sinon.stub().callsFake(function fakeFn(context, result, p1, p2) {
           return result + p1 * p2;
         });
-        kontra.plugin.register('foobar', {
+        plugin.register('foobar', {
           afterAdd: stub
         });
 
@@ -194,10 +197,10 @@ describe('kontra.plugin', function() {
         let stub2 = sinon.stub().callsFake(function fakeFn(context, result, p1, p2) {
           return result + p1 * p2;
         });
-        kontra.plugin.register('foobar', {
+        plugin.register('foobar', {
           afterAdd: stub1
         });
-        kontra.plugin.register('foobar', {
+        plugin.register('foobar', {
           afterAdd: stub2
         });
 
@@ -215,10 +218,10 @@ describe('kontra.plugin', function() {
         let stub2 = sinon.stub().callsFake(function fakeFn(context, result, p1, p2) {
           return result + p1 * p2;
         });
-        kontra.plugin.register('foobar', {
+        plugin.register('foobar', {
           afterAdd: stub1
         });
-        kontra.plugin.register('foobar', {
+        plugin.register('foobar', {
           afterAdd: stub2
         });
         kontra.foobar._inc.add.before[0] = stub;
@@ -226,6 +229,14 @@ describe('kontra.plugin', function() {
         kontra.foobar.add(1, 2);
 
         sinon.assert.callOrder(stub, stub1, stub2);
+      });
+
+      it('should do nothing if kontra object doesn\'t exist', () => {
+        let fn = () => {
+          plugin.register('baz', myPlugin);
+        }
+
+        expect(fn).to.not.throw();
       });
     });
   });
@@ -235,13 +246,13 @@ describe('kontra.plugin', function() {
 
 
   // --------------------------------------------------
-  // kontra.plugin.unregister
+  // plugin.unregister
   // --------------------------------------------------
-  describe('unregister', function() {
+  describe('unregister', () => {
 
     beforeEach(() => {
-      kontra.plugin.register('foobar', myPlugin);
-      kontra.plugin.unregister('foobar', myPlugin);
+      plugin.register('foobar', myPlugin);
+      plugin.unregister('foobar', myPlugin);
     });
 
     it('should remove the before method from the interceptor list', () => {
@@ -252,9 +263,19 @@ describe('kontra.plugin', function() {
       expect(kontra.foobar._inc.add.after.length).to.equal(0);
     });
 
-    it('should do nothing if object has not been overridden', () => {
+    it('should do nothing if kontra object doesn\'t exist', () => {
       let fn = () => {
-        kontra.plugin.unregister('sprite', myPlugin);
+        plugin.unregister('baz', myPlugin);
+      }
+
+      expect(fn).to.not.throw();
+    });
+
+    it('should do nothing if object has not been overridden', () => {
+      kontra.foobar = {};
+
+      let fn = () => {
+        plugin.unregister('foobar', myPlugin);
       }
 
       expect(fn).to.not.throw();
@@ -262,7 +283,7 @@ describe('kontra.plugin', function() {
 
     it('should ignore functions that don\'t match the before/after syntax', () => {
       let fn = () => {
-        kontra.plugin.unregister('foobar', {
+        plugin.unregister('foobar', {
           doAdd() {}
         });
       }
@@ -272,13 +293,13 @@ describe('kontra.plugin', function() {
 
     it('should not remove methods from other plugins', () => {
       let fn = () => {
-        kontra.plugin.unregister('foobar', {
+        plugin.unregister('foobar', {
           afterAdd() {},
           beforeAdd() {}
         });
       }
 
-      kontra.plugin.register('foobar', myPlugin);
+      plugin.register('foobar', myPlugin);
       expect(fn).to.not.throw();
       expect(kontra.foobar._inc.add.before.length).to.equal(1);
       expect(kontra.foobar._inc.add.after.length).to.equal(1);
@@ -290,9 +311,9 @@ describe('kontra.plugin', function() {
 
 
   // --------------------------------------------------
-  // kontra.plugin.extend
+  // plugin.extend
   // --------------------------------------------------
-  describe('extend', function() {
+  describe('extend', () => {
 
     it('should add properties onto the object', () => {
       let properties = {
@@ -302,7 +323,7 @@ describe('kontra.plugin', function() {
         object: {}
       };
 
-      kontra.plugin.extend('foobar', properties);
+      plugin.extend('foobar', properties);
 
       expect(kontra.foobar.number).to.equal(properties.number);
       expect(kontra.foobar.string).to.equal(properties.string);
@@ -322,10 +343,18 @@ describe('kontra.plugin', function() {
         number: 20
       };
 
-      kontra.plugin.extend('foobar', properties);
-      kontra.plugin.extend('foobar', override);
+      plugin.extend('foobar', properties);
+      plugin.extend('foobar', override);
 
       expect(kontra.foobar.number).to.equal(properties.number);
+    });
+
+    it('should do nothing if kontra object doesn\'t exist', () => {
+      let fn = () => {
+        plugin.extend('baz', myPlugin);
+      }
+
+      expect(fn).to.not.throw();
     });
   });
 });

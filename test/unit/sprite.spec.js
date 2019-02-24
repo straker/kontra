@@ -1,129 +1,26 @@
-// --------------------------------------------------
-// kontra.vector
-// --------------------------------------------------
-describe('kontra.vector', function() {
-
-  // --------------------------------------------------
-  // kontra.vector.init
-  // --------------------------------------------------
-  describe('init', function() {
-
-    it('should set x and y', function() {
-      var vec = kontra.vector(10, 20);
-
-      expect(vec.x).to.equal(10);
-      expect(vec.y).to.equal(20);
-    });
-
-  });
-
-
-
-
-
-  // --------------------------------------------------
-  // kontra.vector.add
-  // --------------------------------------------------
-  describe('add', function() {
-
-    it('should add one vector to another', function() {
-      var vec1 = kontra.vector(10, 20);
-      var vec2 = kontra.vector(5, 10);
-
-      let vec = vec1.add(vec2)
-
-      expect(vec.x).to.eql(15);
-      expect(vec.y).to.eql(30);
-    });
-
-    it('should incorporate dt if passed', function() {
-      var vec1 = kontra.vector(10, 20);
-      var vec2 = kontra.vector(5, 10);
-
-      let vec = vec1.add(vec2, 2)
-
-      expect(vec.x).to.eql(20);
-      expect(vec.y).to.eql(40);
-    });
-
-    it('should default vector to 0 with empty parameters', function() {
-      var vec1 = kontra.vector(10, 20);
-
-      let vec = vec1.add({x: 10});
-
-      expect(vec.y).to.eql(20);
-
-      vec1 = kontra.vector(10, 20);
-      vec = vec1.add({y: 10});
-
-      expect(vec.x).to.eql(10);
-    });
-
-  });
-
-
-
-
-
-  // --------------------------------------------------
-  // kontra.vector.clamp
-  // --------------------------------------------------
-  describe('clamp', function() {
-    var vec;
-
-    beforeEach(function() {
-      vec = kontra.vector(10, 20);
-      vec.clamp(0, 10, 50, 75);
-    })
-
-    it('should clamp the vectors x value', function() {
-      vec.x = -10;
-
-      expect(vec.x).to.equal(0);
-
-      vec.x = 100;
-
-      expect(vec.x).to.equal(50);
-    });
-
-    it('should clamp the vectors y value', function() {
-      vec.y = -10;
-
-      expect(vec.y).to.equal(10);
-
-      vec.y = 100;
-
-      expect(vec.y).to.equal(75);
-    });
-
-  });
-
-});
-
-
-
-
+import kontra from '../../src/core.js'
+import Sprite from '../../src/sprite.js'
 
 // --------------------------------------------------
-// kontra.sprite
+// sprite
 // --------------------------------------------------
-describe('kontra.sprite', function() {
+describe('sprite', () => {
 
-  before(function() {
+  before(() => {
     if (!kontra.canvas) {
-      var canvas = document.createElement('canvas');
+      let canvas = document.createElement('canvas');
       canvas.width = canvas.height = 600;
       kontra.init(canvas);
     }
   });
 
   // --------------------------------------------------
-  // kontra.sprite.init
+  // sprite.init
   // --------------------------------------------------
-  describe('init', function() {
+  describe('init', () => {
 
-    it('should set default properties on the sprite when passed no arguments', function() {
-      var sprite = kontra.sprite();
+    it('should set default properties on the sprite when passed no arguments', () => {
+      let sprite = Sprite();
 
       expect(sprite.context).to.equal(kontra.context);
       expect(sprite.width).to.equal(0);
@@ -134,8 +31,8 @@ describe('kontra.sprite', function() {
       expect(sprite.ttl).to.equal(Infinity);
     });
 
-    it('should set basic properties of width, height, color, x, and y', function() {
-      var sprite = kontra.sprite({
+    it('should set basic properties of width, height, color, x, and y', () => {
+      let sprite = Sprite({
         x: 10,
         y: 20,
         color: 'red',
@@ -150,10 +47,10 @@ describe('kontra.sprite', function() {
       expect(sprite.height).to.equal(15);
     });
 
-    it('should set properties of velocity, acceleration, and a different context', function() {
-      var context = {foo: 'bar'};
+    it('should set properties of velocity, acceleration, and a different context', () => {
+      let context = {foo: 'bar'};
 
-      var sprite = kontra.sprite({
+      let sprite = Sprite({
         dx: 2,
         dy: 1,
         ddx: 0.5,
@@ -168,8 +65,8 @@ describe('kontra.sprite', function() {
       expect(sprite.context).to.equal(context);
     });
 
-    it('should keep the position, velocity, and acceleration vectors in sync', function() {
-      var sprite = kontra.sprite();
+    it('should keep the position, velocity, and acceleration vectors in sync', () => {
+      let sprite = Sprite();
 
       sprite.x = 10;
       sprite.y = 20;
@@ -186,12 +83,12 @@ describe('kontra.sprite', function() {
       expect(sprite.acceleration.y).to.equal(0.2);
     });
 
-    it('should set the width and height of the sprite to an image if passed', function() {
-      var img = new Image();
+    it('should set the width and height of the sprite to an image if passed', () => {
+      let img = new Image();
       img.width = 10;
       img.height = 20;
 
-      var sprite = kontra.sprite({
+      let sprite = Sprite({
         image: img
       });
 
@@ -200,9 +97,9 @@ describe('kontra.sprite', function() {
       expect(sprite.height).to.equal(20);
     });
 
-    it('should set the width and height of the sprite to an animation if passed', function() {
-      // simple animation object from kontra.spriteSheet
-      var animations = {
+    it('should set the width and height of the sprite to an animation if passed', () => {
+      // simple animation object from spriteSheet
+      let animations = {
         'walk': {
           width: 10,
           height: 20,
@@ -212,7 +109,7 @@ describe('kontra.sprite', function() {
         }
       };
 
-      var sprite = kontra.sprite({
+      let sprite = Sprite({
         animations: animations
       });
 
@@ -222,9 +119,9 @@ describe('kontra.sprite', function() {
       expect(sprite.height).to.equal(20);
     });
 
-    it('should clone any animations to prevent frame corruption', function() {
+    it('should clone any animations to prevent frame corruption', () => {
 
-      var animations = {
+      let animations = {
         'walk': {
           width: 10,
           height: 20,
@@ -236,15 +133,15 @@ describe('kontra.sprite', function() {
 
       sinon.spy(animations.walk, 'clone');
 
-      var sprite = kontra.sprite({
+      let sprite = Sprite({
         animations: animations
       });
 
       expect(animations.walk.clone.called).to.be.true;
     });
 
-    it('should set all additional properties on the sprite', function() {
-      var sprite = kontra.sprite({
+    it('should set all additional properties on the sprite', () => {
+      let sprite = Sprite({
         foo: 'bar',
         alive: true
       });
@@ -253,8 +150,8 @@ describe('kontra.sprite', function() {
       expect(sprite.alive).to.be.true;
     });
 
-    it('should have required properties for kontra.pool', function() {
-      var sprite = kontra.sprite();
+    it('should have required properties for kontra.pool', () => {
+      let sprite = Sprite();
       expect(typeof sprite.init).to.equal('function');
       expect(typeof sprite.update).to.equal('function');
       expect(typeof sprite.isAlive).to.equal('function');
@@ -267,12 +164,12 @@ describe('kontra.sprite', function() {
 
 
   // --------------------------------------------------
-  // kontra.sprite.update
+  // sprite.update
   // --------------------------------------------------
-  describe('update', function() {
+  describe('update', () => {
 
-    it('should move a rect sprite by its velocity and acceleration', function() {
-      var sprite = kontra.sprite({
+    it('should move a rect sprite by its velocity and acceleration', () => {
+      let sprite = Sprite({
         x: 10,
         y: 20,
         dx: 2,
@@ -289,12 +186,12 @@ describe('kontra.sprite', function() {
       expect(sprite.y).to.equal(21.2);
     });
 
-    it('should move an image sprite by its velocity and acceleration', function() {
-      var img = new Image();
+    it('should move an image sprite by its velocity and acceleration', () => {
+      let img = new Image();
       img.width = 10;
       img.height = 20;
 
-      var sprite = kontra.sprite({
+      let sprite = Sprite({
         x: 10,
         y: 20,
         dx: 2,
@@ -312,9 +209,9 @@ describe('kontra.sprite', function() {
       expect(sprite.y).to.equal(21.2);
     });
 
-    it('should move an animation sprite by its velocity and acceleration', function() {
-      // simple animation object from kontra.spriteSheet
-      var animations = {
+    it('should move an animation sprite by its velocity and acceleration', () => {
+      // simple animation object from spriteSheet
+      let animations = {
         'walk': {
           width: 10,
           height: 20,
@@ -325,7 +222,7 @@ describe('kontra.sprite', function() {
         }
       };
 
-      var sprite = kontra.sprite({
+      let sprite = Sprite({
         x: 10,
         y: 20,
         dx: 2,
@@ -350,12 +247,12 @@ describe('kontra.sprite', function() {
 
 
   // --------------------------------------------------
-  // kontra.sprite.render
+  // sprite.render
   // --------------------------------------------------
-  describe('render', function() {
+  describe('render', () => {
 
-    it('should draw a rect sprite', function() {
-      var sprite = kontra.sprite({
+    it('should draw a rect sprite', () => {
+      let sprite = Sprite({
         x: 10,
         y: 20
       });
@@ -369,12 +266,12 @@ describe('kontra.sprite', function() {
       sprite.context.fillRect.restore();
     });
 
-    it('should draw an image sprite', function() {
-      var img = new Image();
+    it('should draw an image sprite', () => {
+      let img = new Image();
       img.width = 10;
       img.height = 20;
 
-      var sprite = kontra.sprite({
+      let sprite = Sprite({
         x: 10,
         y: 20,
         image: img
@@ -389,9 +286,9 @@ describe('kontra.sprite', function() {
       sprite.context.drawImage.restore();
     });
 
-    it('should draw an animation sprite', function() {
-      // simple animation object from kontra.spriteSheet
-      var animations = {
+    it('should draw an animation sprite', () => {
+      // simple animation object from spriteSheet
+      let animations = {
         'walk': {
           width: 10,
           height: 20,
@@ -403,7 +300,7 @@ describe('kontra.sprite', function() {
         }
       };
 
-      var sprite = kontra.sprite({
+      let sprite = Sprite({
         x: 10,
         y: 20,
         animations: animations
@@ -418,8 +315,8 @@ describe('kontra.sprite', function() {
       sprite.currentAnimation.render.restore();
     });
 
-    it('should rotate the sprite', function() {
-      var sprite = kontra.sprite({
+    it('should rotate the sprite', () => {
+      let sprite = Sprite({
         x: 10,
         y: 20,
         rotation: Math.PI
@@ -434,8 +331,8 @@ describe('kontra.sprite', function() {
       sprite.context.rotate.restore();
     });
 
-    it('should draw a rect sprite and take into account sprite.anchor', function() {
-      var sprite = kontra.sprite({
+    it('should draw a rect sprite and take into account sprite.anchor', () => {
+      let sprite = Sprite({
         x: 10,
         y: 20,
         width: 100,
@@ -460,12 +357,12 @@ describe('kontra.sprite', function() {
       sprite.context.fillRect.restore();
     });
 
-    it('should draw an image sprite and take into account sprite.anchor and custom width', function() {
-      var img = new Image();
+    it('should draw an image sprite and take into account sprite.anchor and custom width', () => {
+      let img = new Image();
       img.width = 10;
       img.height = 20;
 
-      var sprite = kontra.sprite({
+      let sprite = Sprite({
         x: 10,
         y: 20,
         image: img,
@@ -493,8 +390,8 @@ describe('kontra.sprite', function() {
       sprite.context.drawImage.restore();
     });
 
-    it('should draw an animation sprite and take into account sprite.anchor', function() {
-      var animations = {
+    it('should draw an animation sprite and take into account sprite.anchor', () => {
+      let animations = {
         'walk': {
           width: 10,
           height: 20,
@@ -506,7 +403,7 @@ describe('kontra.sprite', function() {
         }
       };
 
-      var sprite = kontra.sprite({
+      let sprite = Sprite({
         x: 10,
         y: 20,
         animations: animations,
@@ -537,19 +434,19 @@ describe('kontra.sprite', function() {
 
 
   // --------------------------------------------------
-  // kontra.sprite.collidesWith
+  // sprite.collidesWith
   // --------------------------------------------------
-  describe('collidesWith', function() {
+  describe('collidesWith', () => {
 
-    it('should correctly detect collision between two objects', function() {
-      var sprite1 = kontra.sprite({
+    it('should correctly detect collision between two objects', () => {
+      let sprite1 = Sprite({
         x: 10,
         y: 20,
         width: 10,
         height: 20
       });
 
-      var sprite2 = kontra.sprite({
+      let sprite2 = Sprite({
         x: 19,
         y: 39,
         width: 10,
@@ -579,8 +476,8 @@ describe('kontra.sprite', function() {
       expect(sprite1.collidesWith(sprite2)).to.be.false;
     });
 
-    it('should take into account sprite.anchor', function() {
-      var sprite1 = kontra.sprite({
+    it('should take into account sprite.anchor', () => {
+      let sprite1 = Sprite({
         x: 10,
         y: 20,
         width: 10,
@@ -591,7 +488,7 @@ describe('kontra.sprite', function() {
         }
       });
 
-      var sprite2 = kontra.sprite({
+      let sprite2 = Sprite({
         x: 10,
         y: 20,
         width: 10,
@@ -616,12 +513,12 @@ describe('kontra.sprite', function() {
 
 
   // --------------------------------------------------
-  // kontra.sprite.isAlive
+  // sprite.isAlive
   // --------------------------------------------------
-  describe('isAlive', function() {
+  describe('isAlive', () => {
 
-    it('should return true when the sprite is alive', function() {
-      var sprite = kontra.sprite();
+    it('should return true when the sprite is alive', () => {
+      let sprite = Sprite();
 
       expect(sprite.isAlive()).to.be.true;
 
@@ -641,12 +538,12 @@ describe('kontra.sprite', function() {
 
 
   // --------------------------------------------------
-  // kontra.sprite.playAnimation
+  // sprite.playAnimation
   // --------------------------------------------------
-  describe('playAnimation', function() {
+  describe('playAnimation', () => {
 
-    it('should set the animation to play', function() {
-      var animations = {
+    it('should set the animation to play', () => {
+      let animations = {
         'walk': {
           width: 10,
           height: 20,
@@ -665,7 +562,7 @@ describe('kontra.sprite', function() {
         }
       };
 
-      var sprite = kontra.sprite({
+      let sprite = Sprite({
         animations: animations
       });
 
@@ -678,8 +575,8 @@ describe('kontra.sprite', function() {
 
   });
 
-  it('should reset the animation if it doesn\'t loop', function() {
-    var animations = {
+  it('should reset the animation if it doesn\'t loop', () => {
+    let animations = {
       'walk': {
         width: 10,
         height: 20,
@@ -691,7 +588,7 @@ describe('kontra.sprite', function() {
       }
     };
 
-    var sprite = kontra.sprite({
+    let sprite = Sprite({
       animations: animations
     });
 

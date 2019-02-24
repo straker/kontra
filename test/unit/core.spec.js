@@ -1,22 +1,24 @@
+import kontra, { callbacks } from '../../src/core.js'
+
 // --------------------------------------------------
 // kontra
 // --------------------------------------------------
-describe('kontra', function() {
+describe('kontra', () => {
 
   // --------------------------------------------------
   // kontra.on
   // --------------------------------------------------
   describe('on', () => {
     afterEach(() => {
-      delete kontra._callbacks.foo;
+      delete callbacks.foo;
     });
 
     it('should add the event to the callbacks object', () => {
       function func() {}
       kontra.on('foo', func);
 
-      expect(kontra._callbacks.foo).to.be.an('array');
-      expect(kontra._callbacks.foo[0]).to.equal(func);
+      expect(callbacks.foo).to.be.an('array');
+      expect(callbacks.foo[0]).to.equal(func);
     });
 
     it('should append the event if it already exists', () => {
@@ -25,9 +27,9 @@ describe('kontra', function() {
       kontra.on('foo', func1);
       kontra.on('foo', func2);
 
-      expect(kontra._callbacks.foo).to.be.an('array');
-      expect(kontra._callbacks.foo[0]).to.equal(func1);
-      expect(kontra._callbacks.foo[1]).to.equal(func2);
+      expect(callbacks.foo).to.be.an('array');
+      expect(callbacks.foo[0]).to.equal(func1);
+      expect(callbacks.foo[1]).to.equal(func2);
     });
   });
 
@@ -46,13 +48,13 @@ describe('kontra', function() {
     });
 
     afterEach(() => {
-      delete kontra._callbacks.foo;
+      delete callbacks.foo;
     });
 
     it('should remove the callback from the event', () => {
       kontra.off('foo', func);
 
-      expect(kontra._callbacks.foo.length).to.equal(0);
+      expect(callbacks.foo.length).to.equal(0);
     });
 
     it('should only remove the callback', () => {
@@ -63,9 +65,9 @@ describe('kontra', function() {
 
       kontra.off('foo', func);
 
-      expect(kontra._callbacks.foo.length).to.equal(2);
-      expect(kontra._callbacks.foo[0]).to.equal(func1);
-      expect(kontra._callbacks.foo[1]).to.equal(func2);
+      expect(callbacks.foo.length).to.equal(2);
+      expect(callbacks.foo[0]).to.equal(func1);
+      expect(callbacks.foo[1]).to.equal(func2);
     });
 
     it('should not error if the callback was not added before', () => {
@@ -101,7 +103,7 @@ describe('kontra', function() {
     });
 
     afterEach(() => {
-      delete kontra._callbacks.foo;
+      delete callbacks.foo;
     });
 
     it('should call the callback', () => {
@@ -143,10 +145,10 @@ describe('kontra', function() {
   // --------------------------------------------------
   // kontra.init
   // --------------------------------------------------
-  describe('init', function() {
-    var canvas;
+  describe('init', () => {
+    let canvas;
 
-    it('should log an error if no canvas element exists', function() {
+    it('should log an error if no canvas element exists', () => {
       function func() {
         kontra.init();
       }
@@ -154,7 +156,7 @@ describe('kontra', function() {
       expect(func).to.throw();
     });
 
-    it('should select the first canvas element on the page when no query parameters are passed', function() {
+    it('should select the first canvas element on the page when no query parameters are passed', () => {
       canvas = document.createElement('canvas');
       canvas.width = 600;
       canvas.height = 600;
@@ -165,12 +167,12 @@ describe('kontra', function() {
       expect(kontra.canvas).to.equal(canvas);
     });
 
-    it('should set kontra.context to the canvas context', function() {
+    it('should set kontra.context to the canvas context', () => {
       expect(kontra.context.canvas).to.equal(canvas);
     });
 
-    it('should select a canvas that matches the passed id', function() {
-      var c = document.createElement('canvas');
+    it('should select a canvas that matches the passed id', () => {
+      let c = document.createElement('canvas');
       c.width = 600;
       c.height = 600;
       c.id = 'game';
@@ -181,8 +183,8 @@ describe('kontra', function() {
       expect(kontra.canvas).to.equal(c);
     });
 
-    it('should set the canvas when passed a canvas element', function() {
-      var c = document.createElement('canvas');
+    it('should set the canvas when passed a canvas element', () => {
+      let c = document.createElement('canvas');
       c.width = 600;
       c.height = 600;
       c.id = 'game2';

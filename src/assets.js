@@ -3,8 +3,8 @@ let audioRegex = /(wav|mp3|ogg|aac)$/;
 let noRegex = /^no$/;
 let leadingSlash = /^\//;
 let trailingSlash = /\/$/;
-let assets;
 let dataMap = new WeakMap();
+let assets;
 
 // audio playability
 // @see https://github.com/Modernizr/Modernizr/blob/master/feature-detects/audio.js
@@ -228,9 +228,7 @@ assets = {
   }
 };
 
-export default assets
+export default assets;
 
 // expose for testing
-export {
-  canUse
-}
+export { canUse };

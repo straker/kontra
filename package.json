@@ -50,5 +50,7 @@
     "sinon": "^7.2.4",
     "vinyl-source-stream": "^2.0.0"
   },
-  "dependencies": {}
+  "dependencies": {
+    "rollup": "^1.2.3"
+  }
 }

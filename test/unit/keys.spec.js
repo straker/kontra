@@ -1,4 +1,4 @@
-import keys from '../../src/keyboard.js'
+import keys from '../../src/keys.js'
 
 // --------------------------------------------------
 // keys

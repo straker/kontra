@@ -1,4 +1,4 @@
-import kontra from './core.js'
+import kontra from './core.js';
 
 class Animation {
   /**
@@ -105,7 +105,9 @@ class Animation {
   }
 }
 
-export default function AnimationFactory(properties) {
+function animation(properties) {
   return new Animation(properties);
 }
-AnimationFactory.prototype = Animation.prototype;
+animation.prototype = Animation.prototype;
+
+export default animation;

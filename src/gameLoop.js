@@ -1,3 +1,5 @@
+import { noop } from './utils.js'
+import { emit } from './events.js'
 import kontra from './core.js'
 
 /**
@@ -10,7 +12,7 @@ import kontra from './core.js'
  * @param {function} properties.update - Function called to update the game.
  * @param {function} properties.render - Function called to render the game.
  */
-function GameLoop(properties) {
+function gameLoop(properties) {
   properties = properties || {};
 
   // check for required functions
@@ -27,11 +29,11 @@ function GameLoop(properties) {
   let step = 1 / fps;
 
   let clear = (properties.clearCanvas === false ?
-              kontra._noop :
+              noop :
               function clear() {
                 kontra.context.clearRect(0,0,kontra.canvas.width,kontra.canvas.height);
               });
-  let last, rAF, now, dt;
+  let last, rAF, now, dt, loop;
 
   /**
    * Called every frame of the game loop.
@@ -49,21 +51,21 @@ function GameLoop(properties) {
       return;
     }
 
-    kontra.emit('tick');
+    emit('tick');
     accumulator += dt;
 
     while (accumulator >= delta) {
-      gameLoop.update(step);
+      loop.update(step);
 
       accumulator -= delta;
     }
 
     clear();
-    gameLoop.render();
+    loop.render();
   }
 
   // game loop object
-  let gameLoop = {
+  loop = {
     update: properties.update,
     render: properties.render,
     isStopped: true,
@@ -95,7 +97,7 @@ function GameLoop(properties) {
     // @endif
   };
 
-  return gameLoop;
+  return loop;
 };
 
-export default GameLoop
+export default gameLoop;

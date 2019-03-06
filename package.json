@@ -28,6 +28,8 @@
   "devDependencies": {
     "chai": "^4.2.0",
     "coveralls": "^3.0.3",
+    "eslint": "^5.14.1",
+    "eslint-plugin-tree-shaking": "^1.7.3",
     "gulp": "^4.0.0",
     "gulp-append-prepend": "^1.0.6",
     "gulp-changed": "^3.2.0",

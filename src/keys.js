@@ -1,31 +1,53 @@
 let callbacks = {};
 let pressedKeys = {};
 
-let keyMap = {
-  // named keys
-  13: 'enter',
-  27: 'esc',
-  32: 'space',
-  37: 'left',
-  38: 'up',
-  39: 'right',
-  40: 'down'
-};
+// let keyMap = (function() {
+//   let keys = {
+//     // named keys
+//     13: 'enter',
+//     27: 'esc',
+//     32: 'space',
+//     37: 'left',
+//     38: 'up',
+//     39: 'right',
+//     40: 'down'
+//   };
 
-// alpha keys
-// @see https://stackoverflow.com/a/43095772/2124254
-let i;
-for (i = 0; i < 26; i++) {
-  keyMap[65+i] = (10 + i).toString(36);
-}
-// numeric keys
-for (i = 0; i < 10; i++) {
-  keyMap[48+i] = ''+i;
-}
+//   // alpha keys
+//   // @see https://stackoverflow.com/a/43095772/2124254
+//   let i;
+//   for (i = 0; i < 26; i++) {
+//     keyMap[65+i] = (10 + i).toString(36);
+//   }
+//   // numeric keys
+//   for (i = 0; i < 10; i++) {
+//     keyMap[48+i] = ''+i;
+//   }
 
-addEventListener('keydown', keydownEventHandler);
-addEventListener('keyup', keyupEventHandler);
-addEventListener('blur', blurEventHandler);
+//   return keys;
+// })();
+
+// addEventListener('keydown', keydownEventHandler);
+// addEventListener('keyup', keyupEventHandler);
+// addEventListener('blur', blurEventHandler);
+
+function init(addEventListener) {
+  return {
+    // named keys
+    13: 'enter',
+    27: 'esc',
+    32: 'space',
+    37: 'left',
+    38: 'up',
+    39: 'right',
+    40: 'down'
+  };
+
+  addEventListener();
+}
+if (pressedKeys.foo) {
+  init();
+}
 
 /**
  * Execute a function that corresponds to a keyboard key.

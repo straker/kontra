@@ -2,6 +2,25 @@
 
 // console.log(_.add(1,2));
 
-import { emit } from '../src/kontra.js'
+import { assets } from '../src/kontra.js'
 
-emit('foo');
+assets.load('./out.js');
+
+// let loop = gameLoop({
+//   update() {
+
+//   },
+//   render() {
+
+//   }
+// });
+
+// loop.start();
+
+// import kontra from '../src/kontra.js'
+
+// let c = document.createElement('canvas');
+// document.body.appendChild(c);
+// kontra.init(c);
+
+// console.log('canvas:', kontra.canvas);

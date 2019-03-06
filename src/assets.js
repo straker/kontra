@@ -6,15 +6,20 @@ let trailingSlash = /\/$/;
 let dataMap = new WeakMap();
 let assets;
 
-// audio playability
-// @see https://github.com/Modernizr/Modernizr/blob/master/feature-detects/audio.js
-let audio = new Audio();
-let canUse = {
-  wav: '',
-  mp3: audio.canPlayType('audio/mpeg;').replace(noRegex,''),
-  ogg: audio.canPlayType('audio/ogg; codecs="vorbis"').replace(noRegex,''),
-  aac: audio.canPlayType('audio/aac;').replace(noRegex,'')
-};
+/**
+ * Get browser audio playability.
+ * @see https://github.com/Modernizr/Modernizr/blob/master/feature-detects/audio.js
+ *
+ * @returns {object}
+ */
+function getCanUse(audio) {
+  return {
+    wav: '',
+    mp3: audio.canPlayType('audio/mpeg;').replace(noRegex,''),
+    ogg: audio.canPlayType('audio/ogg; codecs="vorbis"').replace(noRegex,''),
+    aac: audio.canPlayType('audio/aac;').replace(noRegex,'')
+  };
+}
 
 /**
  * Join a base path and asset path.
@@ -112,6 +117,8 @@ function loadImage(originalUrl, url) {
  */
 function loadAudio(originalUrl, url, undefined) {
   return new Promise(function(resolve, reject) {
+    let audio = new Audio();
+    let canUse = getCanUse(audio);
 
     // determine which audio format the browser can play
     originalUrl = [].concat(originalUrl).reduce(function(a, source) {
@@ -122,7 +129,6 @@ function loadAudio(originalUrl, url, undefined) {
       reject(/* @if DEBUG */ 'cannot play any of the audio formats provided' + /* @endif */ originalUrl);
     }
     else {
-      let audio = new Audio();
       url = joinPath(assets.audioPath, originalUrl);
 
       audio.addEventListener('canplay', function loadAudioOnLoad() {
@@ -229,6 +235,3 @@ assets = {
 };
 
 export default assets;
-
-// expose for testing
-export { canUse };

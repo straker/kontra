@@ -2,6 +2,12 @@ import { noop } from './utils.js'
 import { emit } from './events.js'
 import kontra from './core.js'
 
+function clear({context, canvas}) {
+  if (context) {
+    context.clearRect(0,0,canvas.width,canvas.height);
+  }
+}
+
 /**
  * Game loop that updates and renders the game every frame.
  * @memberof kontra
@@ -12,27 +18,25 @@ import kontra from './core.js'
  * @param {function} properties.update - Function called to update the game.
  * @param {function} properties.render - Function called to render the game.
  */
-function gameLoop(properties) {
-  properties = properties || {};
-
+function gameLoop({fps = 60, clearCanvas = true, update, render}) {
   // check for required functions
   // @if DEBUG
-  if ( !(properties.update && properties.render) ) {
+  if ( !(update && render) ) {
     throw Error('You must provide update() and render() functions');
   }
   // @endif
 
   // animation variables
-  let fps = properties.fps || 60;
   let accumulator = 0;
   let delta = 1E3 / fps;  // delta between performance.now timings (in ms)
   let step = 1 / fps;
 
-  let clear = (properties.clearCanvas === false ?
-              noop :
-              function clear() {
-                kontra.context.clearRect(0,0,kontra.canvas.width,kontra.canvas.height);
-              });
+  // let clear = (clearCanvas === false ?
+  //             noop :
+  //             function clear() {
+  //               kontra.context.clearRect(0,0,kontra.canvas.width,kontra.canvas.height);
+  //             });
+  // let clear = noop;
   let last, rAF, now, dt, loop;
 
   /**
@@ -60,14 +64,14 @@ function gameLoop(properties) {
       accumulator -= delta;
     }
 
-    clear();
+    clear(kontra);
     loop.render();
   }
 
   // game loop object
   loop = {
-    update: properties.update,
-    render: properties.render,
+    update,
+    render,
     isStopped: true,
 
     /**

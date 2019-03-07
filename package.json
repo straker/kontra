@@ -6,7 +6,8 @@
   "scripts": {
     "test": "karma start --single-run",
     "build": "gulp build",
-    "dist": "gulp dist"
+    "dist": "gulp dist",
+    "rollup": "rollup examples/test.js --format iife --file examples/out.js"
   },
   "repository": {
     "type": "git",
@@ -48,11 +49,9 @@
     "karma-mocha-reporter": "^2.2.5",
     "karma-sinon": "^1.0.5",
     "mocha": "^6.0.1",
+    "rollup": "^1.2.3",
     "rollup-stream": "^1.24.1",
     "sinon": "^7.2.4",
     "vinyl-source-stream": "^2.0.0"
-  },
-  "dependencies": {
-    "rollup": "^1.2.3"
   }
 }

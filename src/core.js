@@ -1,31 +1,43 @@
-import { emit } from './events.js';
+import { emit } from './events.js'
 
-let kontra = {
-  /**
-   * Initialize the canvas.
-   * @memberof kontra
-   *
-   * @param {string|HTMLCanvasElement} canvas - Main canvas ID or Element for the game.
-   */
-  init(canvas) {
+let canvas = {};
+let context = {};
 
-    // check if canvas is a string first, an element next, or default to getting
-    // first canvas on page
-    this.canvas = document.getElementById(canvas) ||
-                  canvas ||
-                  document.querySelector('canvas');
+export function getCanvas() {
+  return canvas;
+}
 
-    // @if DEBUG
-    if (!this.canvas) {
-      throw Error('You must provide a canvas element for the game');
-    }
-    // @endif
+export function getContext() {
+  return context;
+}
 
-    this.context = this.canvas.getContext('2d');
-    this.context.imageSmoothingEnabled = false;
+/**
+ * Initialize the canvas.
+ * @memberof kontra
+ *
+ * @param {string|HTMLCanvasElement} canvas - Main canvas ID or Element for the game.
+ */
+export function init(c) {
 
-    emit('init');
+  // check if canvas is a string first, an element next, or default to getting
+  // first canvas on page
+  canvas = document.getElementById(c) ||
+           c ||
+           document.querySelector('canvas');
+
+  // @if DEBUG
+  if (!canvas) {
+    throw Error('You must provide a canvas element for the game');
   }
-};
+  // @endif
 
-export default kontra;
+  context = canvas.getContext('2d');
+  context.imageSmoothingEnabled = false;
+
+  emit('init');
+
+  // auto init keyboard if added to kontra
+  if (this && this._initKeys) {
+    this._initKeys();
+  }
+}

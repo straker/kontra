@@ -1,11 +1,14 @@
 import { noop } from './utils.js'
 import { emit } from './events.js'
-import kontra from './core.js'
+import { getContext, getCanvas } from './core.js'
 
-function clear({context, canvas}) {
-  if (context) {
-    context.clearRect(0,0,canvas.width,canvas.height);
-  }
+/**
+ * Clear the canvas.
+ * @private
+ */
+function clear() {
+  let canvas = getCanvas();
+  getContext().clearRect(0, 0, canvas.width, canvas.height);
 }
 
 /**
@@ -30,13 +33,7 @@ function gameLoop({fps = 60, clearCanvas = true, update, render}) {
   let accumulator = 0;
   let delta = 1E3 / fps;  // delta between performance.now timings (in ms)
   let step = 1 / fps;
-
-  // let clear = (clearCanvas === false ?
-  //             noop :
-  //             function clear() {
-  //               kontra.context.clearRect(0,0,kontra.canvas.width,kontra.canvas.height);
-  //             });
-  // let clear = noop;
+  let clearFn = clearCanvas ? clear : noop
   let last, rAF, now, dt, loop;
 
   /**
@@ -64,7 +61,7 @@ function gameLoop({fps = 60, clearCanvas = true, update, render}) {
       accumulator -= delta;
     }
 
-    clear(kontra);
+    clearFn();
     loop.render();
   }
 

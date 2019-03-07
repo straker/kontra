@@ -1,6 +1,10 @@
 export { default as animation } from './animation.js'
-export { default as assets } from './assets.js'
+export { init, getCanvas, getContext } from './core.js'
 export { on, off, emit } from './events.js'
 export { default as gameLoop } from './gameLoop.js'
-// export { default as keys } from './keys.js'
+export { bind, unbind, pressed } from './keys.js'
 export { default } from './kontra.defaults.js'
+
+// export { default as assets } from './assets.js'
+// export { default as keys } from './keys.js'
+// export { default as core } from './core.js'

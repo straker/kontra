@@ -1,66 +1,19 @@
+import { on } from './events.js';
+
 let callbacks = {};
 let pressedKeys = {};
-
-// let keyMap = (function() {
-//   let keys = {
-//     // named keys
-//     13: 'enter',
-//     27: 'esc',
-//     32: 'space',
-//     37: 'left',
-//     38: 'up',
-//     39: 'right',
-//     40: 'down'
-//   };
-
-//   // alpha keys
-//   // @see https://stackoverflow.com/a/43095772/2124254
-//   let i;
-//   for (i = 0; i < 26; i++) {
-//     keyMap[65+i] = (10 + i).toString(36);
-//   }
-//   // numeric keys
-//   for (i = 0; i < 10; i++) {
-//     keyMap[48+i] = ''+i;
-//   }
-
-//   return keys;
-// })();
-
-// addEventListener('keydown', keydownEventHandler);
-// addEventListener('keyup', keyupEventHandler);
-// addEventListener('blur', blurEventHandler);
-
-function init(addEventListener) {
-  return {
-    // named keys
-    13: 'enter',
-    27: 'esc',
-    32: 'space',
-    37: 'left',
-    38: 'up',
-    39: 'right',
-    40: 'down'
-  };
-
-  addEventListener();
-}
-if (pressedKeys.foo) {
-  init();
-}
 
 /**
  * Execute a function that corresponds to a keyboard key.
  * @private
  *
- * @param {Event} e
+ * @param {KeyboardEvent} e
  */
 function keydownEventHandler(e) {
-  let key = keyMap[e.which];
-  pressedKeys[key] = true;
+  pressedKeys[e.key] = true;
 
-  if (callbacks[key]) {
-    callbacks[key](e);
+  if (callbacks[e.key]) {
+    callbacks[e.key](e);
   }
 }
 
@@ -68,64 +21,61 @@ function keydownEventHandler(e) {
  * Set the released key to not being pressed.
  * @private
  *
- * @param {Event} e
+ * @param {KeyboardEvent} e
  */
 function keyupEventHandler(e) {
-  pressedKeys[ keyMap[e.which] ] = false;
+  pressedKeys[e.key] = false;
 }
 
 /**
  * Reset pressed keys.
  * @private
  *
- * @param {Event} e
+ * @param {KeyboardEvent} e
  */
 function blurEventHandler(e) {
   pressedKeys = {};
 }
 
+export function initKeys() {
+  addEventListener('keydown', keydownEventHandler);
+  addEventListener('keyup', keyupEventHandler);
+  addEventListener('blur', blurEventHandler);
+}
+
 /**
- * Object for using the keyboard.
+ * Register a function to be called on a key press.
+ * @memberof kontra.keys
+ *
+ * @param {string|string[]} keys - key or keys to bind.
  */
-const keys = {
-  map: keyMap,
+export function bind(keys, callback) {
+  // smaller than doing `Array.isArray(keys) ? keys : [keys]`
+  [].concat(keys).map(function(key) {
+    callbacks[key] = callback;
+  });
+}
 
-  /**
-   * Register a function to be called on a key press.
-   * @memberof kontra.keys
-   *
-   * @param {string|string[]} keys - key or keys to bind.
-   */
-  bind(keys, callback) {
-    // smaller than doing `Array.isArray(keys) ? keys : [keys]`
-    [].concat(keys).map(function(key) {
-      callbacks[key] = callback;
-    })
-  },
+/**
+ * Remove the callback function for a key.
+ * @memberof kontra.keys
+ *
+ * @param {string|string[]} keys - key or keys to unbind.
+ */
+export function unbind(keys, undefined) {
+  [].concat(keys).map(function(key) {
+    callbacks[key] = undefined;
+  })
+}
 
-  /**
-   * Remove the callback function for a key.
-   * @memberof kontra.keys
-   *
-   * @param {string|string[]} keys - key or keys to unbind.
-   */
-  unbind(keys, undefined) {
-    [].concat(keys).map(function(key) {
-      callbacks[key] = undefined;
-    })
-  },
-
-  /**
-   * Returns whether a key is pressed.
-   * @memberof kontra.keys
-   *
-   * @param {string} key - Key to check for press.
-   *
-   * @returns {boolean}
-   */
-  pressed(key) {
-    return !!pressedKeys[key];
-  }
-};
-
-export default keys
+/**
+ * Returns whether a key is pressed.
+ * @memberof kontra.keys
+ *
+ * @param {string} key - Key to check for press.
+ *
+ * @returns {boolean}
+ */
+export function pressed(key) {
+  return !!pressedKeys[key];
+}

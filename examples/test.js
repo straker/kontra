@@ -1,26 +1,28 @@
-// import _ from './test/index.js'
+import { init, gameLoop } from '../src/kontra.js'
 
-// console.log(_.add(1,2));
+let canvas = document.createElement('canvas');
+document.body.appendChild(canvas);
+init(canvas);
 
-import { assets } from '../src/kontra.js'
+let loop = gameLoop({
+  update() {},
+  render() {}
+})
 
-assets.load('./out.js');
+loop.start();
 
-// let loop = gameLoop({
-//   update() {
-
-//   },
-//   render() {
-
-//   }
+// bind(' ', () => {
+//   console.log('fire!');
 // });
-
-// loop.start();
 
 // import kontra from '../src/kontra.js'
 
-// let c = document.createElement('canvas');
-// document.body.appendChild(c);
-// kontra.init(c);
+// let canvas = document.createElement('canvas');
+// document.body.appendChild(canvas);
+// kontra.init(canvas);
 
-// console.log('canvas:', kontra.canvas);
+// debugger;
+
+// kontra.keys.bind(' ', () => {
+//   console.log('fire!');
+// });

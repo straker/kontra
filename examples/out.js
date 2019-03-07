@@ -1,269 +1,205 @@
 (function () {
   'use strict';
 
-  let imageRegex = /(jpeg|jpg|gif|png)$/;
-  let audioRegex = /(wav|mp3|ogg|aac)$/;
-  let noRegex = /^no$/;
-  let leadingSlash = /^\//;
-  let trailingSlash = /\/$/;
-  let dataMap = new WeakMap();
-  let assets;
+  let callbacks = {};
 
   /**
-   * Get browser audio playability.
-   * @see https://github.com/Modernizr/Modernizr/blob/master/feature-detects/audio.js
+   * Call all callback functions for the event.
+   * @memberof kontra
    *
-   * @returns {object}
+   * @param {string} event - Name of the event
+   * @param {...*} args - Arguments passed to all callbacks
    */
-  function getCanUse(audio) {
-    return {
-      wav: '',
-      mp3: audio.canPlayType('audio/mpeg;').replace(noRegex,''),
-      ogg: audio.canPlayType('audio/ogg; codecs="vorbis"').replace(noRegex,''),
-      aac: audio.canPlayType('audio/aac;').replace(noRegex,'')
-    };
+  function emit(event, ...args) {
+    if (!callbacks[event]) return;
+    callbacks[event].forEach(fn => fn(...args));
+  }
+
+  let canvas = {};
+  let context = {};
+
+  function getCanvas() {
+    return canvas;
+  }
+
+  function getContext() {
+    return context;
   }
 
   /**
-   * Join a base path and asset path.
+   * Initialize the canvas.
+   * @memberof kontra
    *
-   * @param {string} base - The asset base path.
-   * @param {string} url - The URL to the asset.
-   *
-   * @returns {string}
+   * @param {string|HTMLCanvasElement} canvas - Main canvas ID or Element for the game.
    */
-  function joinPath(base, url) {
-    return [base.replace(trailingSlash, ''), base ? url.replace(leadingSlash, '') : url]
-      .filter(s => s)
-      .join('/')
-  }
+  function init(c) {
 
-  /**
-   * Get the extension of an asset.
-   *
-   * @param {string} url - The URL to the asset.
-   *
-   * @returns {string}
-   */
-  function getExtension(url) {
-    return url.split('.').pop();
-  }
+    // check if canvas is a string first, an element next, or default to getting
+    // first canvas on page
+    canvas = document.getElementById(c) ||
+             c ||
+             document.querySelector('canvas');
 
-  /**
-   * Get the name of an asset.
-   *
-   * @param {string} url - The URL to the asset.
-   *
-   * @returns {string}
-   */
-  function getName(url) {
-    let name = url.replace('.' + getExtension(url), '');
-
-    // remove leading slash if there is no folder in the path
-    // @see https://stackoverflow.com/a/50592629/2124254
-    return name.split('/').length == 2 ? name.replace(leadingSlash, '') : name;
-  }
-
-  /**
-   * Get the full url from the base.
-   * @param {}
-   */
-  function getUrl(url, base) {
-    return new URL(url, base).href;
-  }
-
-  /**
-   * Load an Image file. Uses imagePath to resolve URL.
-   * @memberOf kontra.assets
-   * @private
-   *
-   * @param {string} url - The URL to the Image file.
-   *
-   * @returns {Promise} A deferred promise. Promise resolves with the Image.
-   *
-   * @example
-   * kontra.loadImage('car.png');
-   * kontra.loadImage('autobots/truck.png');
-   */
-  function loadImage(originalUrl, url) {
-    return new Promise(function(resolve, reject) {
-      let image = new Image();
-      url = joinPath(assets.imagePath, originalUrl);
-
-      image.onload = function loadImageOnLoad() {
-        let fullUrl = getUrl(url, window.location.href);
-        assets.images[ getName(originalUrl) ] = assets.images[url] = assets.images[fullUrl] = this;
-        resolve(this);
-      };
-
-      image.onerror = function loadImageOnError() {
-        reject(/* @if DEBUG */ 'Unable to load image ' + /* @endif */ url);
-      };
-
-      image.src = url;
-    });
-  }
-
-  /**
-   * Load an Audio file. Supports loading multiple audio formats which will be resolved by
-   * the browser in the order listed. Uses audioPath to resolve URL.
-   * @memberOf kontra.assets
-   * @private
-   *
-   * @param {string|string[]} url - The URL to the Audio file.
-   *
-   * @returns {Promise} A deferred promise. Promise resolves with the Audio.
-   *
-   * @example
-   * kontra.loadAudio('sound_effects/laser.mp3');
-   * kontra.loadAudio(['explosion.mp3', 'explosion.m4a', 'explosion.ogg']);
-   */
-  function loadAudio(originalUrl, url, undefined$1) {
-    return new Promise(function(resolve, reject) {
-      let audio = new Audio();
-      let canUse = getCanUse(audio);
-
-      // determine which audio format the browser can play
-      originalUrl = [].concat(originalUrl).reduce(function(a, source) {
-        return canUse[ getExtension(source) ] ? source : a
-      }, undefined$1);
-
-      if (!originalUrl) {
-        reject(/* @if DEBUG */ 'cannot play any of the audio formats provided' + /* @endif */ originalUrl);
-      }
-      else {
-        url = joinPath(assets.audioPath, originalUrl);
-
-        audio.addEventListener('canplay', function loadAudioOnLoad() {
-          let fullUrl = getUrl(url, window.location.href);
-          assets.audio[ getName(originalUrl) ] = assets.audio[url] = assets.audio[fullUrl] = this;
-          resolve(this);
-        });
-
-        audio.onerror = function loadAudioOnError() {
-          reject(/* @if DEBUG */ 'Unable to load audio ' + /* @endif */ url);
-        };
-
-        audio.src = url;
-        audio.load();
-      }
-    });
-  }
-
-  /**
-   * Load a data file (be it text or JSON). Uses dataPath to resolve URL.
-   * @memberOf kontra.assets
-   * @private
-   *
-   * @param {string} url - The URL to the data file.
-   *
-   * @returns {Promise} A deferred promise. Resolves with the data or parsed JSON.
-   *
-   * @example
-   * kontra.loadData('bio.json');
-   * kontra.loadData('dialog.txt');
-   */
-  function loadData(originalUrl, url) {
-    url = joinPath(assets.dataPath, originalUrl);
-
-    return fetch(url).then(function(response) {
-      if (!response.ok) throw response;
-      return response.clone().json().catch(function() { return response.text() })
-    }).then(function(data) {
-      let fullUrl = getUrl(url, window.location.href);
-      if (typeof data === 'object') {
-        dataMap.set(data, fullUrl);
-      }
-
-      assets.data[ getName(originalUrl) ] = assets.data[url] = assets.data[fullUrl] = data;
-      return data;
-    });
-  }
-
-  /**
-   * Object for loading assets.
-   */
-  assets = {
-    // all assets are stored by name as well as by URL
-    images: {},
-    audio: {},
-    data: {},
-
-    // base asset path for determining asset URLs
-    imagePath: '',
-    audioPath: '',
-    dataPath: '',
-
-    // expose for tileEngine
-    _d: dataMap,
-    _u: getUrl,
-
-    /**
-     * Load an Image, Audio, or data file.
-     * @memberOf kontra.assets
-     *
-     * @param {string|string[]} - Comma separated list of assets to load.
-     *
-     * @returns {Promise}
-     *
-     * @example
-     * kontra.loadAsset('car.png');
-     * kontra.loadAsset(['explosion.mp3', 'explosion.ogg']);
-     * kontra.loadAsset('bio.json');
-     * kontra.loadAsset('car.png', ['explosion.mp3', 'explosion.ogg'], 'bio.json');
-     */
-    load() {
-      let promises = [];
-      let url, extension, asset, i, promise;
-
-      for (i = 0; (asset = arguments[i]); i++) {
-        url = [].concat(asset)[0];
-
-        extension = getExtension(url);
-        if (extension.match(imageRegex)) {
-          promise = loadImage(asset);
-        }
-        else if (extension.match(audioRegex)) {
-          promise = loadAudio(asset);
-        }
-        else {
-          promise = loadData(asset);
-        }
-
-        promises.push(promise);
-      }
-
-      return Promise.all(promises);
+    // @if DEBUG
+    if (!canvas) {
+      throw Error('You must provide a canvas element for the game');
     }
-  };
+    // @endif
 
-  var assets$1 = assets;
+    context = canvas.getContext('2d');
+    context.imageSmoothingEnabled = false;
+
+    emit('init');
+
+    // auto init keyboard if added to kontra
+    if (this && this._initKeys) {
+      this._initKeys();
+    }
+  }
 
   /**
    * Noop function
    */
+  const noop = () => {};
 
-  // import _ from './test/index.js'
+  /**
+   * Clear the canvas.
+   * @private
+   */
+  function clear() {
+    let canvas = getCanvas();
+    getContext().clearRect(0, 0, canvas.width, canvas.height);
+  }
 
-  assets$1.load('./out.js');
+  /**
+   * Game loop that updates and renders the game every frame.
+   * @memberof kontra
+   *
+   * @param {object}   properties - Properties of the game loop.
+   * @param {number}   [properties.fps=60] - Desired frame rate.
+   * @param {boolean}  [properties.clearCanvas=true] - Clear the canvas every frame.
+   * @param {function} properties.update - Function called to update the game.
+   * @param {function} properties.render - Function called to render the game.
+   */
+  function gameLoop({fps = 60, clearCanvas = true, update, render}) {
+    // check for required functions
+    // @if DEBUG
+    if ( !(update && render) ) {
+      throw Error('You must provide update() and render() functions');
+    }
+    // @endif
 
-  // let loop = gameLoop({
-  //   update() {
+    // animation variables
+    let accumulator = 0;
+    let delta = 1E3 / fps;  // delta between performance.now timings (in ms)
+    let step = 1 / fps;
+    let clearFn = clearCanvas ? clear : noop;
+    let last, rAF, now, dt, loop;
 
-  //   },
-  //   render() {
+    /**
+     * Called every frame of the game loop.
+     */
+    function frame() {
+      rAF = requestAnimationFrame(frame);
 
-  //   }
+      now = performance.now();
+      dt = now - last;
+      last = now;
+
+      // prevent updating the game with a very large dt if the game were to lose focus
+      // and then regain focus later
+      if (dt > 1E3) {
+        return;
+      }
+
+      emit('tick');
+      accumulator += dt;
+
+      while (accumulator >= delta) {
+        loop.update(step);
+
+        accumulator -= delta;
+      }
+
+      clearFn();
+      loop.render();
+    }
+
+    // game loop object
+    loop = {
+      update,
+      render,
+      isStopped: true,
+
+      /**
+       * Start the game loop.
+       * @memberof kontra.gameLoop
+       */
+      start() {
+        last = performance.now();
+        this.isStopped = false;
+        requestAnimationFrame(frame);
+      },
+
+      /**
+       * Stop the game loop.
+       */
+      stop() {
+        this.isStopped = true;
+        cancelAnimationFrame(rAF);
+      },
+
+      // expose properties for testing
+      // @if DEBUG
+      _frame: frame,
+      set _last(value) {
+        last = value;
+      }
+      // @endif
+    };
+
+    return loop;
+  }
+
+  // kontra.animation = animation;
+  // kontra.assets = assets;
+  // kontra.on = on;
+  // kontra.off = off;
+  // kontra.emit = emit;
+  // kontra.gameLoop = gameLoop;
+  // kontra.keys = keys;
+
+  // export default kontra;
+
+  // export { default as assets } from './assets.js'
+  // export { default as keys } from './keys.js'
+  // export { default as core } from './core.js'
+
+  let canvas$1 = document.createElement('canvas');
+  document.body.appendChild(canvas$1);
+  init(canvas$1);
+
+  let loop = gameLoop({
+    update() {},
+    render() {}
+  });
+
+  loop.start();
+
+  // bind(' ', () => {
+  //   console.log('fire!');
   // });
-
-  // loop.start();
 
   // import kontra from '../src/kontra.js'
 
-  // let c = document.createElement('canvas');
-  // document.body.appendChild(c);
-  // kontra.init(c);
+  // let canvas = document.createElement('canvas');
+  // document.body.appendChild(canvas);
+  // kontra.init(canvas);
 
-  // console.log('canvas:', kontra.canvas);
+  // debugger;
+
+  // kontra.keys.bind(' ', () => {
+  //   console.log('fire!');
+  // });
 
 }());

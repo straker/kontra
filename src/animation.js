@@ -1,4 +1,4 @@
-import kontra from './core.js';
+import { getContext } from './core.js'
 
 class Animation {
   /**
@@ -93,7 +93,7 @@ class Animation {
     let col = this.frames[this._f] % this.spriteSheet._f | 0;
     let width = (properties.width !== undefined) ? properties.width : this.width
     let height = (properties.height !== undefined) ? properties.height : this.height
-    let context = (properties.context || kontra.context)
+    let context = (properties.context || getContext())
     context.drawImage(
       this.spriteSheet.image,
       col * this.width + (col * 2 + 1) * this.margin,
@@ -110,4 +110,4 @@ function animation(properties) {
 }
 animation.prototype = Animation.prototype;
 
-export default animation;
+export default animation

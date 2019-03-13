@@ -1,44 +1,78 @@
 import Animation from './animation.js'
 
+/**
+ * Parse a string of consecutive frames.
+ *
+ * @param {number|string} frames - Start and end frame.
+ *
+ * @returns {number|number[]} List of frames.
+ */
+function parseFrames(consecutiveFrames) {
+  // return a single number frame
+  // @see https://github.com/jed/140bytes/wiki/Byte-saving-techniques#coercion-to-test-for-types
+  if (+consecutiveFrames === consecutiveFrames) {
+    return consecutiveFrames;
+  }
+
+  let sequence = [];
+  let frames = consecutiveFrames.split('..');
+
+  // coerce string to number
+  // @see https://github.com/jed/140bytes/wiki/Byte-saving-techniques#coercion-to-test-for-types
+  let start = i = +frames[0];
+  let end = +frames[1];
+
+  // ascending frame order
+  if (start < end) {
+    for (; i <= end; i++) {
+      sequence.push(i);
+    }
+  }
+  // descending order
+  else {
+    for (; i >= end; i--) {
+      sequence.push(i);
+    }
+  }
+
+  return sequence;
+}
+
 class SpriteSheet {
   /**
    * Initialize properties on the spriteSheet.
-   * @memberof kontra
-   * @private
+   * @memberof kontr
    *
    * @param {object} properties - Properties of the sprite sheet.
-   * @param {Image|Canvas} properties.image - Image for the sprite sheet.
+   * @param {Image|HTMLCanvasElement} properties.image - Image for the sprite sheet.
    * @param {number} properties.frameWidth - Width (in px) of each frame.
    * @param {number} properties.frameHeight - Height (in px) of each frame.
    * @param {number} properties.frameMargin - Margin (in px) between each frame.
    * @param {object} properties.animations - Animations to create from the sprite sheet.
    */
-  constructor(properties) {
-    properties = properties || {};
-
+  constructor({image, frameWidth, frameHeight, frameMargin, animations} = {}) {
     // @if DEBUG
-    if (!properties.image) {
+    if (!image) {
       throw Error('You must provide an Image for the SpriteSheet');
     }
     // @endif
 
     this.animations = {};
-    this.image = properties.image;
+    this.image = image;
     this.frame = {
-      width: properties.frameWidth,
-      height: properties.frameHeight,
-      margin: properties.frameMargin
+      width: frameWidth,
+      height: frameHeight,
+      margin: frameMargin
     };
 
     // f = framesPerRow
-    this._f = properties.image.width / properties.frameWidth | 0;
+    this._f = image.width / frameWidth | 0;
 
-    this.createAnimations(properties.animations);
+    this.createAnimations(animations);
   }
 
   /**
    * Create animations from the sprite sheet.
-   * @memberof kontra.spriteSheet
    *
    * @param {object} animations - List of named animations to create from the Image.
    * @param {number|string|number[]|string[]} animations.animationName.frames - A single frame or list of frames for this animation.
@@ -71,11 +105,10 @@ class SpriteSheet {
    * });
    */
   createAnimations(animations) {
-    let animation, frames, frameRate, sequence, name;
+    let sequence, name;
 
     for (name in animations) {
-      animation = animations[name];
-      frames = animation.frames;
+      let { frames, frameRate, loop } = animations[name];
 
       // array that holds the order of the animation
       sequence = [];
@@ -87,60 +120,21 @@ class SpriteSheet {
       // @endif
 
       // add new frames to the end of the array
-      [].concat(frames).map(function(frame) {
-        sequence = sequence.concat(this._p(frame));
-      }, this);
+      [].concat(frames).map(frame => {
+        sequence = sequence.concat(parseFrames(frame));
+      });
 
       this.animations[name] = Animation({
         spriteSheet: this,
         frames: sequence,
-        frameRate: animation.frameRate,
-        loop: animation.loop
+        frameRate,
+        loop
       });
     }
   }
-
-  /**
-   * Parse a string of consecutive frames.
-   * @memberof kontra.spriteSheet
-   * @private
-   *
-   * @param {number|string} frames - Start and end frame.
-   *
-   * @returns {number[]} List of frames.
-   */
-  _p(consecutiveFrames, i) {
-    // @see https://github.com/jed/140bytes/wiki/Byte-saving-techniques#coercion-to-test-for-types
-    if (+consecutiveFrames === consecutiveFrames) {
-      return consecutiveFrames;
-    }
-
-    let sequence = [];
-    let frames = consecutiveFrames.split('..');
-
-    // coerce string to number
-    // @see https://github.com/jed/140bytes/wiki/Byte-saving-techniques#coercion-to-test-for-types
-    let start = i = +frames[0];
-    let end = +frames[1];
-
-    // ascending frame order
-    if (start < end) {
-      for (; i <= end; i++) {
-        sequence.push(i);
-      }
-    }
-    // descending order
-    else {
-      for (; i >= end; i--) {
-        sequence.push(i);
-      }
-    }
-
-    return sequence;
-  }
 }
 
-export default function SpriteSheetFactory(properties) {
+export default function spriteSheetFactory(properties) {
   return new SpriteSheet(properties);
 }
-SpriteSheetFactory.prototype = SpriteSheet.prototype;
+spriteSheetFactory.prototype = SpriteSheet.prototype;

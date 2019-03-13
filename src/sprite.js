@@ -1,11 +1,14 @@
-import kontra from './core.js'
+import { getContext } from './core.js'
 import Vector from './vector.js'
 
 class Sprite {
 
+  constructor(properties) {
+    this.init(properties);
+  }
+
   /**
    * Initialize properties on the sprite.
-   * @memberof kontra.sprite
    *
    * @param {object} properties - Properties of the sprite.
    * @param {number} properties.x - X coordinate of the sprite.
@@ -18,7 +21,7 @@ class Sprite {
    * @param {number} [properties.ttl=Infinity] - How may frames the sprite should be alive.
    * @param {number} [properties.rotation=0] - Rotation in radians of the sprite.
    * @param {number} [properties.anchor={x:0,y:0}] - The x and y origin of the sprite. {0,0} is the top left corner of the sprite, {1,1} is the bottom right corner.
-   * @param {Context} [properties.context=kontra.context] - Provide a context for the sprite to draw on.
+   * @param {Context} [properties.context=context] - Provide a context for the sprite to draw on.
    *
    * @param {Image|Canvas} [properties.image] - Image for the sprite.
    *
@@ -35,33 +38,28 @@ class Sprite {
    * decide when to kill it, you can set <code>ttl</code> to <code>Infinity</code>.
    * Just be sure to set <code>ttl</code> to 0 when you want the sprite to die.
    */
-  // @see https://github.com/jed/140bytes/wiki/Byte-saving-techniques#use-placeholder-arguments-instead-of-var
-  init(properties, prop, temp, firstAnimation) {
-    properties = properties || {};
-
-    this.position = Vector(properties.x, properties.y);
-    this.velocity = Vector(properties.dx, properties.dy);
-    this.acceleration = Vector(properties.ddx, properties.ddy);
+  init(properties = {}) {
+    let { x, y, dx, dy, ddx, ddy, width, height, image } = properties;
+    this.position = Vector(x, y);
+    this.velocity = Vector(dx, dy);
+    this.acceleration = Vector(ddx, ddy);
 
     // defaults
     this.width = this.height = this.rotation = 0;
     this.ttl = Infinity;
     this.anchor = {x: 0, y: 0};
-    this.context = kontra.context;
+    this.context = getContext();
 
-    // loop through properties before overrides
-    for (prop in properties) {
+    // add all properties to the sprite, overriding any defaults
+    for (let prop in properties) {
       this[prop] = properties[prop];
     }
 
     // image sprite
-    if (temp = properties.image) {
-      this.image = temp;
-      this.width = (properties.width !== undefined) ? properties.width : temp.width;
-      this.height = (properties.height !== undefined) ? properties.height : temp.height;
+    if (image) {
+      this.width = (width !== undefined) ? width : image.width;
+      this.height = (height !== undefined) ? height : image.height;
     }
-
-    return this;
   }
 
   // define getter and setter shortcut functions to make it easier to work with the
@@ -69,7 +67,6 @@ class Sprite {
 
   /**
    * Sprite position.x
-   * @memberof kontra.sprite
    *
    * @property {number} x
    */
@@ -79,7 +76,6 @@ class Sprite {
 
   /**
    * Sprite position.y
-   * @memberof kontra.sprite
    *
    * @property {number} y
    */
@@ -89,7 +85,6 @@ class Sprite {
 
   /**
    * Sprite velocity.x
-   * @memberof kontra.sprite
    *
    * @property {number} dx
    */
@@ -99,7 +94,6 @@ class Sprite {
 
   /**
    * Sprite velocity.y
-   * @memberof kontra.sprite
    *
    * @property {number} dy
    */
@@ -109,7 +103,6 @@ class Sprite {
 
   /**
    * Sprite acceleration.x
-   * @memberof kontra.sprite
    *
    * @property {number} ddx
    */
@@ -119,7 +112,6 @@ class Sprite {
 
   /**
    * Sprite acceleration.y
-   * @memberof kontra.sprite
    *
    * @property {number} ddy
    */
@@ -128,7 +120,7 @@ class Sprite {
   }
 
   get animations() {
-    return this.anims
+    return this._a;
   }
 
   set x(value) {
@@ -151,25 +143,25 @@ class Sprite {
   }
 
   set animations(value) {
-    let prop, firstAnimation
-    this.anims = {}
+    let prop, firstAnimation;
+    // a = animations
+    this._a = {};
 
     // clone each animation so no sprite shares an animation
     for (prop in value) {
-      this.anims[prop] = value[prop].clone()
+      this._a[prop] = value[prop].clone();
 
       // default the current animation to the first one in the list
-      firstAnimation = firstAnimation || this.anims[prop]
+      firstAnimation = firstAnimation || this._a[prop];
     }
 
-    this.currentAnimation = firstAnimation
-    this.width = this.width || firstAnimation.width
-    this.height = this.height || firstAnimation.height
+    this.currentAnimation = firstAnimation;
+    this.width = this.width || firstAnimation.width;
+    this.height = this.height || firstAnimation.height;
   }
 
   /**
    * Determine if the sprite is alive.
-   * @memberof kontra.sprite
    *
    * @returns {boolean}
    */
@@ -182,7 +174,6 @@ class Sprite {
    * NOTE: Does not take into account sprite rotation. If you need collision
    * detection between rotated sprites you will need to implement your own
    * CollidesWith() function. I suggest looking at the Separate Axis Theorem.
-   * @memberof kontra.sprite
    *
    * @param {object} object - Object to check collision against.
    *
@@ -210,7 +201,6 @@ class Sprite {
 
   /**
    * Update the sprites velocity and position.
-   * @memberof kontra.sprite
    * @abstract
    *
    * @param {number} dt - Time since last update.
@@ -220,7 +210,7 @@ class Sprite {
    * the sprite to update its position.
    *
    * @example
-   * sprite = kontra.sprite({
+   * sprite = sprite({
    *   update: function update(dt) {
    *     // do some logic
    *
@@ -233,8 +223,7 @@ class Sprite {
   }
 
   /**
-   * Render the sprite.
-   * @memberof kontra.sprite.
+   * Render the sprite..
    * @abstract
    *
    * This function can be overridden on a per sprite basis if more functionality
@@ -242,7 +231,7 @@ class Sprite {
    * sprite to draw its image.
    *
    * @example
-   * sprite = kontra.sprite({
+   * sprite = sprite({
    *   render: function render() {
    *     // do some logic
    *
@@ -256,7 +245,6 @@ class Sprite {
 
   /**
    * Play an animation.
-   * @memberof kontra.sprite
    *
    * @param {string} name - Name of the animation to play.
    */
@@ -271,7 +259,6 @@ class Sprite {
   /**
    * Advance the sprites position, velocity, and current animation (if it
    * has one).
-   * @memberof kontra.sprite
    *
    * @param {number} dt - Time since last update.
    */
@@ -288,7 +275,6 @@ class Sprite {
 
   /**
    * Draw the sprite to the canvas.
-   * @memberof kontra.sprite
    */
   draw() {
     let anchorWidth = -this.width * this.anchor.x;
@@ -326,7 +312,7 @@ class Sprite {
   }
 };
 
-export default function SpriteFactory(properties) {
-  return (new Sprite()).init(properties);
+export default function spriteFactory(properties) {
+  return new Sprite(properties);
 }
-SpriteFactory.prototype = Sprite.prototype;
+spriteFactory.prototype = Sprite.prototype;

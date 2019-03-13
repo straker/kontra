@@ -1,8 +1,7 @@
-import kontra from './core.js'
+import { getCanvas } from './core.js'
 
 /**
- * Determine which subnodes the object intersects with.
- * @private
+ * Determine which subnodes the object intersects with
  *
  * @param {object} object - Object to check.
  * @param {object} bounds - Bounds of the quadtree.
@@ -49,7 +48,6 @@ class Quadtree {
    * A quadtree for 2D collision checking. The quadtree acts like an object pool in that it
    * will create subnodes as objects are needed but it won't clean up the subnodes when it
    * collapses to avoid garbage collection.
-   * @memberof kontra
    *
    * @param {object} properties - Properties of the quadtree.
    * @param {number} [properties.maxDepth=3] - Maximum node depths the quadtree can have.
@@ -65,26 +63,25 @@ class Quadtree {
    *  2  |  3
    *     |
    */
-  constructor(properties) {
-    properties = properties || {};
-
-    this.maxDepth = properties.maxDepth || 3;
-    this.maxObjects = properties.maxObjects || 25;
+  constructor({maxDepth = 3, maxObjects = 25, bounds, parent, depth = 0} = {}) {
+    this.maxDepth = maxDepth;
+    this.maxObjects = maxObjects;
 
     // since we won't clean up any subnodes, we need to keep track of which nodes are
     // currently the leaf node so we know which nodes to add objects to
     // b = branch, d = depth, p = parent
     this._b = false;
-    this._d = properties.depth || 0;
+    this._d = depth;
     /* @if VISUAL_DEBUG */
-    this._p = properties.parent;
+    this._p = parent;
     /* @endif */
 
-    this.bounds = properties.bounds || {
+    let canvas = getCanvas();
+    this.bounds = bounds || {
       x: 0,
       y: 0,
-      width: kontra.canvas.width,
-      height: kontra.canvas.height
+      width: canvas.width,
+      height: canvas.height
     };
 
     this.objects = []
@@ -93,7 +90,6 @@ class Quadtree {
 
   /**
    * Clear the quadtree
-   * @memberof kontra.quadtree
    */
   clear() {
     this.subnodes.map(function(subnode) {
@@ -107,7 +103,6 @@ class Quadtree {
   /**
    * Find the leaf node the object belongs to and get all objects that are part of
    * that node.
-   * @memberof kontra.quadtree
    *
    * @param {object} object - Object to use for finding the leaf node.
    *
@@ -135,13 +130,12 @@ class Quadtree {
    * Add an object to the quadtree. Once the number of objects in the node exceeds
    * the maximum number of objects allowed, it will split and move all objects to their
    * corresponding subnodes.
-   * @memberof kontra.quadtree
    *
    * @param {...object|object[]} Objects to add to the quadtree
    *
    * @example
-   * kontra.quadtree().add({id:1}, {id:2}, {id:3});
-   * kontra.quadtree().add([{id:1}, {id:2}], {id:3});
+   * quadtree().add({id:1}, {id:2}, {id:3});
+   * quadtree().add([{id:1}, {id:2}], {id:3});
    */
   add() {
     let i, j, object, obj, indices, index;
@@ -182,8 +176,6 @@ class Quadtree {
 
   /**
    * Add an object to a subnode.
-   * @memberof kontra.quadtree
-   * @private
    *
    * @param {object} object - Object to add into a subnode
    */
@@ -199,8 +191,6 @@ class Quadtree {
 
   /**
    * Split the node into four subnodes.
-   * @memberof kontra.quadtree
-   * @private
    */
   // @see https://github.com/jed/140bytes/wiki/Byte-saving-techniques#use-placeholder-arguments-instead-of-var
   _s(subWidth, subHeight, i) {
@@ -215,7 +205,7 @@ class Quadtree {
     subHeight = this.bounds.height / 2 | 0;
 
     for (i = 0; i < 4; i++) {
-      this.subnodes[i] = QuadtreeFactory({
+      this.subnodes[i] = quadtreeFactory({
         bounds: {
           x: this.bounds.x + (i % 2 === 1 ? subWidth : 0),  // nodes 1 and 3
           y: this.bounds.y + (i >= 2 ? subHeight : 0),      // nodes 2 and 3
@@ -234,7 +224,6 @@ class Quadtree {
 
   /**
    * Draw the quadtree. Useful for visual debugging.
-   * @memberof kontra.quadtree
    */
    /* @if VISUAL_DEBUG **
    render() {
@@ -242,8 +231,8 @@ class Quadtree {
      if (this.objects.length || this._d === 0 ||
          (this._p && this._p._b)) {
 
-       kontra.context.strokeStyle = 'red';
-       kontra.context.strokeRect(this.bounds.x, this.bounds.y, this.bounds.width, this.bounds.height);
+       context.strokeStyle = 'red';
+       context.strokeRect(this.bounds.x, this.bounds.y, this.bounds.width, this.bounds.height);
 
        if (this.subnodes.length) {
          for (let i = 0; i < 4; i++) {
@@ -255,7 +244,7 @@ class Quadtree {
    /* @endif */
 }
 
-export default function QuadtreeFactory(properties) {
+export default function quadtreeFactory(properties) {
   return new Quadtree(properties);
 }
-QuadtreeFactory.prototype = Quadtree.prototype;
+quadtreeFactory.prototype = Quadtree.prototype;

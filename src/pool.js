@@ -2,21 +2,19 @@ class Pool {
   /**
    * Object pool. The pool will grow in size to accommodate as many objects as are needed.
    * Unused items are at the front of the pool and in use items are at the end of the pool.
-   * @memberof kontra
    *
    * @param {object} properties - Properties of the pool.
    * @param {function} properties.create - Function that returns the object to use in the pool.
-   * @param {number} properties.maxSize - The maximum size that the pool will grow to.
+   * @param {number} [properties.maxSize=1024] - The maximum size that the pool will grow to.
    */
-  constructor(properties) {
-    properties = properties || {};
+  constructor({create, maxSize = 1024} = {}) {
 
     // check for the correct structure of the objects added to pools so we know that the
     // rest of the pool code will work without errors
     // @if DEBUG
     let obj;
-    if (!properties.create ||
-        ( !( obj = properties.create() ) ||
+    if (!create ||
+        ( !( obj = create() ) ||
           !( obj.update && obj.init &&
              obj.isAlive )
        )) {
@@ -25,25 +23,23 @@ class Pool {
     // @endif
 
     // c = create, i = inUse
-    this._c = properties.create;
+    this._c = create;
     this._i = 0;
 
     // start the pool with an object
-    this.objects = [properties.create()];
+    this.objects = [create()];
     this.size = 1;
-    this.maxSize = properties.maxSize || 1024;
+    this.maxSize = maxSize || 1024;
   }
 
   /**
    * Get an object from the pool.
-   * @memberof kontra.pool
    *
    * @param {object} properties - Properties to pass to object.init().
    *
    * @returns {object}
    */
-  get(properties) {
-    properties = properties || {};
+  get(properties = {}) {
     // the pool is out of objects if the first object is in use and it can't grow
     if (this.objects.length == this._i) {
       if (this.size === this.maxSize) {
@@ -69,7 +65,6 @@ class Pool {
 
   /**
    * Return all objects that are alive from the pool.
-   * @memberof kontra.pool
    *
    * @returns {object[]}
    */
@@ -79,7 +74,6 @@ class Pool {
 
   /**
    * Clear the object pool.
-   * @memberof kontra.pool
    */
   clear() {
     this._i = this.objects.length = 0;
@@ -89,7 +83,6 @@ class Pool {
 
   /**
    * Update all alive pool objects.
-   * @memberof kontra.pool
    *
    * @param {number} dt - Time since last update.
    */
@@ -127,7 +120,6 @@ class Pool {
 
   /**
    * render all alive pool objects.
-   * @memberof kontra.pool
    */
   render() {
     let index = Math.max(this.objects.length - this._i, 0);
@@ -139,7 +131,7 @@ class Pool {
 }
 
 
-export default function PoolFactory(properties) {
+export default function poolFactory(properties) {
   return new Pool(properties);
 }
-PoolFactory.prototype = Pool.prototype;
+poolFactory.prototype = Pool.prototype;

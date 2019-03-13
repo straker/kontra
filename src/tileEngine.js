@@ -1,6 +1,30 @@
-import kontra from './core.js'
+import { getCanvas, getContext } from './core.js'
 
-const TileEngine = function(properties) {
+/**
+ * A tile engine for managing and drawing tilesets.
+ *
+ * @param {object} properties - Properties of the tile engine.
+ * @param {number} properties.width - Width of the tile map (in number of tiles).
+ * @param {number} properties.height - Height of the tile map (in number of tiles).
+ * @param {number} properties.tilewidth - Width of a single tile (in pixels).
+ * @param {number} properties.tileheight - Height of a single tile (in pixels).
+ *
+ * @param {object[]} properties.tilesets - Array of tileset objects.
+ * @param {number} tileset.firstgid - First tile index of the tileset. The first tileset will have a firstgid of 1 as 0 represents an empty tile.
+ * @param {string|HTMLImageElement} tileset.image - Relative path to the HTMLImageElement or an HTMLImageElement.
+ * @param {number} [tileset.margin=0] - The amount of whitespace between each tile.
+ * @param {number} [tileset.tilewidth] - Width of the tileset (in number of tiles). Defaults to properties.tilewidth.
+ * @param {number} [tileset.tileheight] - Height of the tileset (in number of tiles). Defaults to properties.tileheight.
+ * @param {string} [tileset.source] - Relative path to the tileset JSON file.
+ * @param {number} [tileset.columns] - Number of columns in the tileset image.
+ *
+ * @param {object[]} properties.layers - Array of layer objects.
+ * @param {string} layer.name - Unique name of the layer.
+ * @param {number[]} layer.data - 1D array of tile indices.
+ * @param {boolean} [layer.visible=true] - If the layer should be drawn or not.
+ * @param {number} [layer.opacity=1] - Percent opacity of the layer.
+ */
+export default function TileEngine(properties) {
   let mapwidth = properties.width * properties.tilewidth;
   let mapheight = properties.height * properties.tileheight
 
@@ -33,11 +57,11 @@ const TileEngine = function(properties) {
     // Firefox and Safari won't draw it.
     // @see http://stackoverflow.com/questions/19338032/canvas-indexsizeerror-index-or-size-is-negative-or-greater-than-the-allowed-a
     set sx(value) {
-      this._sx = Math.min( Math.max(0, value), mapwidth - kontra.canvas.width );
+      this._sx = Math.min( Math.max(0, value), mapwidth - getCanvas().width );
     },
 
     set sy(value) {
-      this._sy = Math.min( Math.max(0, value), mapheight - kontra.canvas.height );
+      this._sy = Math.min( Math.max(0, value), mapheight - getCanvas().height );
     },
 
     /**
@@ -138,7 +162,7 @@ const TileEngine = function(properties) {
   }, properties);
 
   // resolve linked files (source, image)
-  tileEngine.tilesets.forEach(tileset => {
+  tileEngine.tilesets.map(tileset => {
     let url = (kontra.assets ? kontra.assets._d.get(properties) : '') || window.location.href;
 
     if (tileset.source) {
@@ -156,7 +180,7 @@ const TileEngine = function(properties) {
       }
       // @endif
 
-      Object.keys(source).forEach(key => {
+      Object.keys(source).map(key => {
         tileset[key] = source[key];
       });
     }
@@ -215,7 +239,7 @@ const TileEngine = function(properties) {
     context.save();
     context.globalAlpha = layer.opacity;
 
-    layer.data.forEach((tile, index) => {
+    layer.data.map((tile, index) => {
 
       // skip empty tiles (0)
       if (!tile) return;
@@ -262,7 +286,7 @@ const TileEngine = function(properties) {
    */
   function prerender() {
     if (tileEngine.layers) {
-      tileEngine.layers.forEach(layer => {
+      tileEngine.layers.map(layer => {
         layerMap[layer.name] = layer;
 
         if (layer.visible !== false) {
@@ -279,15 +303,14 @@ const TileEngine = function(properties) {
    * @param {HTMLCanvasElement} canvas - Tile engine canvas to draw.
    */
   function render(canvas) {
-    (tileEngine.context || kontra.context).drawImage(
+    let { width, height } = getCanvas();
+    (tileEngine.context || getContext()).drawImage(
       canvas,
-      tileEngine.sx, tileEngine.sy, kontra.canvas.width, kontra.canvas.height,
-      0, 0, kontra.canvas.width, kontra.canvas.height
+      tileEngine.sx, tileEngine.sy, width, height,
+      0, 0, width, height
     );
   }
 
   prerender();
   return tileEngine;
 };
-
-export default TileEngine

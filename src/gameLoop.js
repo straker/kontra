@@ -4,7 +4,6 @@ import { getContext, getCanvas } from './core.js'
 
 /**
  * Clear the canvas.
- * @private
  */
 function clear() {
   let canvas = getCanvas();
@@ -13,7 +12,6 @@ function clear() {
 
 /**
  * Game loop that updates and renders the game every frame.
- * @memberof kontra
  *
  * @param {object}   properties - Properties of the game loop.
  * @param {number}   [properties.fps=60] - Desired frame rate.
@@ -21,7 +19,7 @@ function clear() {
  * @param {function} properties.update - Function called to update the game.
  * @param {function} properties.render - Function called to render the game.
  */
-function gameLoop({fps = 60, clearCanvas = true, update, render}) {
+export default function GameLoop({fps = 60, clearCanvas = true, update, render} = {}) {
   // check for required functions
   // @if DEBUG
   if ( !(update && render) ) {
@@ -73,7 +71,6 @@ function gameLoop({fps = 60, clearCanvas = true, update, render}) {
 
     /**
      * Start the game loop.
-     * @memberof kontra.gameLoop
      */
     start() {
       last = performance.now();
@@ -100,5 +97,3 @@ function gameLoop({fps = 60, clearCanvas = true, update, render}) {
 
   return loop;
 };
-
-export default gameLoop;

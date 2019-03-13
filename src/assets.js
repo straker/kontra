@@ -1,25 +1,12 @@
 let imageRegex = /(jpeg|jpg|gif|png)$/;
 let audioRegex = /(wav|mp3|ogg|aac)$/;
-let noRegex = /^no$/;
 let leadingSlash = /^\//;
 let trailingSlash = /\/$/;
 let dataMap = new WeakMap();
-let assets;
 
-/**
- * Get browser audio playability.
- * @see https://github.com/Modernizr/Modernizr/blob/master/feature-detects/audio.js
- *
- * @returns {object}
- */
-function getCanUse(audio) {
-  return {
-    wav: '',
-    mp3: audio.canPlayType('audio/mpeg;').replace(noRegex,''),
-    ogg: audio.canPlayType('audio/ogg; codecs="vorbis"').replace(noRegex,''),
-    aac: audio.canPlayType('audio/aac;').replace(noRegex,'')
-  };
-}
+let imagePath = '';
+let audioPath = '';
+let dataPath = '';
 
 /**
  * Join a base path and asset path.
@@ -62,176 +49,226 @@ function getName(url) {
 }
 
 /**
- * Get the full url from the base.
- * @param {}
+ * Get browser audio playability.
+ * @see https://github.com/Modernizr/Modernizr/blob/master/feature-detects/audio.js
+ *
+ * @param {HTMLMediaElement} audio - Audio element.
+ *
+ * @returns {object}
  */
-function getUrl(url, base) {
+function getCanPlay(audio) {
+  return {
+    wav: '',
+    mp3: audio.canPlayType('audio/mpeg;'),
+    ogg: audio.canPlayType('audio/ogg; codecs="vorbis"'),
+    aac: audio.canPlayType('audio/aac;')
+  };
+}
+
+export let images = {};
+export let audio = {};
+export let data = {};
+
+/**
+ * Get the full URL from the base.
+ *
+ * @param {string} url - The URL to the asset.
+ * @param {string} base - Base URL.
+ *
+ * @returns {string}
+ */
+export function getUrl(url, base) {
   return new URL(url, base).href;
 }
 
 /**
+ * Set the image path.
+ *
+ * @param {string} path - Base image path.
+ */
+export function setImagePath(path) {
+  imagePath = path;
+}
+
+/**
+ * Set the audio path.
+ *
+ * @param {string} path - Base audio path.
+ */
+export function setAudioPath(path) {
+  audioPath = path;
+}
+
+/**
+ * Set the data path.
+ *
+ * @param {string} path - Base data path.
+ */
+export function setDataPath(path) {
+  dataPath = path;
+}
+
+/**
  * Load an Image file. Uses imagePath to resolve URL.
- * @memberOf kontra.assets
- * @private
  *
  * @param {string} url - The URL to the Image file.
  *
  * @returns {Promise} A deferred promise. Promise resolves with the Image.
  *
  * @example
- * kontra.loadImage('car.png');
- * kontra.loadImage('autobots/truck.png');
+ * loadImage('car.png');
+ * loadImage('autobots/truck.png');
  */
-function loadImage(originalUrl, url) {
-  return new Promise(function(resolve, reject) {
-    let image = new Image();
-    url = joinPath(assets.imagePath, originalUrl);
+export function loadImage(url) {
+  return new Promise((resolve, reject) => {
+    let resolvedUrl, image, fullUrl;
+
+    resolvedUrl = joinPath(imagePath, url);
+    if (images[resolvedUrl]) return resolve(images[resolvedUrl]);
+
+    image = new Image();
 
     image.onload = function loadImageOnLoad() {
-      let fullUrl = getUrl(url, window.location.href);
-      assets.images[ getName(originalUrl) ] = assets.images[url] = assets.images[fullUrl] = this;
+      fullUrl = getUrl(resolvedUrl, window.location.href);
+      images[ getName(url) ] = images[resolvedUrl] = images[fullUrl] = this;
       resolve(this);
     };
 
     image.onerror = function loadImageOnError() {
-      reject(/* @if DEBUG */ 'Unable to load image ' + /* @endif */ url);
+      reject(/* @if DEBUG */ 'Unable to load image ' + /* @endif */ resolvedUrl);
     };
 
-    image.src = url;
+    image.src = resolvedUrl;
   });
 }
 
 /**
  * Load an Audio file. Supports loading multiple audio formats which will be resolved by
  * the browser in the order listed. Uses audioPath to resolve URL.
- * @memberOf kontra.assets
- * @private
  *
  * @param {string|string[]} url - The URL to the Audio file.
  *
  * @returns {Promise} A deferred promise. Promise resolves with the Audio.
  *
  * @example
- * kontra.loadAudio('sound_effects/laser.mp3');
- * kontra.loadAudio(['explosion.mp3', 'explosion.m4a', 'explosion.ogg']);
+ * loadAudio('sound_effects/laser.mp3');
+ * loadAudio(['explosion.mp3', 'explosion.m4a', 'explosion.ogg']);
  */
-function loadAudio(originalUrl, url, undefined) {
-  return new Promise(function(resolve, reject) {
-    let audio = new Audio();
-    let canUse = getCanUse(audio);
+export function loadAudio(url) {
+  return new Promise((resolve, reject) => {
+    let audioEl, canPlay, resolvedUrl, fullUrl;
 
-    // determine which audio format the browser can play
-    originalUrl = [].concat(originalUrl).reduce(function(a, source) {
-      return canUse[ getExtension(source) ] ? source : a
-    }, undefined);
+    audioEl = new Audio();
+    canPlay = getCanPlay(audioEl);
 
-    if (!originalUrl) {
-      reject(/* @if DEBUG */ 'cannot play any of the audio formats provided' + /* @endif */ originalUrl);
+    // determine the first audio format the browser can play
+    url = [].concat(url)
+            .reduce((playableSource, source) => playableSource
+              ? playableSource
+              : canPlay[ getExtension(source) ]
+                ? source
+                : null
+            , 0);  // 0 is the shortest falsy value
+
+    if (!url) {
+      return reject(/* @if DEBUG */ 'cannot play any of the audio formats provided' + /* @endif */ url);
     }
-    else {
-      url = joinPath(assets.audioPath, originalUrl);
 
-      audio.addEventListener('canplay', function loadAudioOnLoad() {
-        let fullUrl = getUrl(url, window.location.href);
-        assets.audio[ getName(originalUrl) ] = assets.audio[url] = assets.audio[fullUrl] = this;
-        resolve(this);
-      });
+    resolvedUrl = joinPath(audioPath, url);
+    if (audio[resolvedUrl]) return resolve(audio[resolvedUrl]);
 
-      audio.onerror = function loadAudioOnError() {
-        reject(/* @if DEBUG */ 'Unable to load audio ' + /* @endif */ url);
-      };
+    audioEl.addEventListener('canplay', function loadAudioOnLoad() {
+      fullUrl = getUrl(resolvedUrl, window.location.href);
+      audio[ getName(url) ] = audio[resolvedUrl] = audio[fullUrl] = this;
+      resolve(this);
+    });
 
-      audio.src = url;
-      audio.load();
-    }
+    audioEl.onerror = function loadAudioOnError() {
+      reject(/* @if DEBUG */ 'Unable to load audio ' + /* @endif */ resolvedUrl);
+    };
+
+    audioEl.src = resolvedUrl;
+    audioEl.load();
   });
 }
 
 /**
  * Load a data file (be it text or JSON). Uses dataPath to resolve URL.
- * @memberOf kontra.assets
- * @private
  *
  * @param {string} url - The URL to the data file.
  *
  * @returns {Promise} A deferred promise. Resolves with the data or parsed JSON.
  *
  * @example
- * kontra.loadData('bio.json');
- * kontra.loadData('dialog.txt');
+ * loadData('bio.json');
+ * loadData('dialog.txt');
  */
-function loadData(originalUrl, url) {
-  url = joinPath(assets.dataPath, originalUrl);
+export function loadData(url) {
+  let resolvedUrl, fullUrl;
 
-  return fetch(url).then(function(response) {
+  resolvedUrl = joinPath(dataPath, url);
+  if (data[resolvedUrl]) return Promise.resolve(data[resolvedUrl]);
+
+  return fetch(resolvedUrl).then(response => {
     if (!response.ok) throw response;
-    return response.clone().json().catch(function() { return response.text() })
-  }).then(function(data) {
-    let fullUrl = getUrl(url, window.location.href);
-    if (typeof data === 'object') {
-      dataMap.set(data, fullUrl);
+    return response.clone().json().catch(() => response.text())
+  }).then(response => {
+    fullUrl = getUrl(resolvedUrl, window.location.href);
+    if (typeof response === 'object') {
+      dataMap.set(response, fullUrl);
     }
 
-    assets.data[ getName(originalUrl) ] = assets.data[url] = assets.data[fullUrl] = data;
-    return data;
+    data[ getName(url) ] = data[resolvedUrl] = data[fullUrl] = response;
+    return response;
   });
 }
 
 /**
- * Object for loading assets.
+ * Load an Image, Audio, or data file.
+ *
+ * @param {string|string[]} - Comma separated list of assets to load.
+ *
+ * @returns {Promise} A deferred promise. Resolves with all the assets.
+ *
+ * @example
+ * load('car.png');
+ * load(['explosion.mp3', 'explosion.ogg']);
+ * load('bio.json');
+ * load('car.png', ['explosion.mp3', 'explosion.ogg'], 'bio.json');
  */
-assets = {
-  // all assets are stored by name as well as by URL
-  images: {},
-  audio: {},
-  data: {},
+export function load(...assets) {
+  return Promise.all(
+    assets.map(asset => {
+      // account for a string or an array for the url
+      let extension = getExtension( [].concat(asset)[0] );
 
-  // base asset path for determining asset URLs
-  imagePath: '',
-  audioPath: '',
-  dataPath: '',
+      return extension.match(imageRegex)
+        ? loadImage(asset)
+        : extension.match(audioRegex)
+          ? loadAudio(asset)
+          : loadData(asset);
+    })
+  );
+}
 
-  // expose for tileEngine
-  _d: dataMap,
-  _u: getUrl,
+// expose for testing
+export function _reset() {
+  images = {};
+  audio = {};
+  data = {};
 
-  /**
-   * Load an Image, Audio, or data file.
-   * @memberOf kontra.assets
-   *
-   * @param {string|string[]} - Comma separated list of assets to load.
-   *
-   * @returns {Promise}
-   *
-   * @example
-   * kontra.loadAsset('car.png');
-   * kontra.loadAsset(['explosion.mp3', 'explosion.ogg']);
-   * kontra.loadAsset('bio.json');
-   * kontra.loadAsset('car.png', ['explosion.mp3', 'explosion.ogg'], 'bio.json');
-   */
-  load() {
-    let promises = [];
-    let url, extension, asset, i, promise;
+  imagePath = audioPath = dataPath = '';
 
-    for (i = 0; (asset = arguments[i]); i++) {
-      url = [].concat(asset)[0];
-
-      extension = getExtension(url);
-      if (extension.match(imageRegex)) {
-        promise = loadImage(asset);
-      }
-      else if (extension.match(audioRegex)) {
-        promise = loadAudio(asset);
-      }
-      else {
-        promise = loadData(asset);
-      }
-
-      promises.push(promise);
-    }
-
-    return Promise.all(promises);
+  if (getCanPlay._r) {
+    getCanPlay = getCanPlay._r;
   }
-};
+}
 
-export default assets;
+/**
+ * Override the getCanPlay function to provide a specific return type for tests
+ */
+export function _setCanPlayFn(fn) {
+  let originalCanPlay = getCanPlay;
+  getCanPlay = fn;
+  getCanPlay._r = originalCanPlay;
+}

@@ -24,7 +24,7 @@ class Vector {
    * @returns {vector}
    */
   add(vec, dt) {
-    return VectorFactory(
+    return vectorFactory(
       this.x + (vec.x || 0) * (dt || 1),
       this.y + (vec.y || 0) * (dt || 1)
     );
@@ -76,7 +76,7 @@ class Vector {
   }
 }
 
-export default function VectorFactory(x, y) {
+export default function vectorFactory(x, y) {
   return new Vector(x, y);
 }
-VectorFactory.prototype = Vector.prototype;
+vectorFactory.prototype = Vector.prototype;

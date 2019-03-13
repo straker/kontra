@@ -1,39 +1,86 @@
-import animation from './animation.js'
-// import assets from './assets.js'
-import { on, off, emit } from './events.js'
-import gameLoop from './gameLoop.js'
-import { initKeys, bind, unbind, pressed } from './keys.js'
+import Animation from './animation.js'
+import {
+  images,
+  audio,
+  data,
+  setImagePath,
+  setAudioPath,
+  setDataPath,
+  loadImage,
+  loadAudio,
+  loadData,
+  load
+} from './assets.js'
 import { init, getCanvas, getContext } from './core.js'
+import { on, off, emit } from './events.js'
+import GameLoop from './gameLoop.js'
+import { initKeys, bindKeys, unbindKeys, keyPressed } from './keys.js'
+import {
+  initPointer,
+  pointer,
+  track,
+  untrack,
+  pointerOver,
+  onPointerDown,
+  onPointerUp,
+  pointerPressed
+} from './pointer.js'
+import Pool from './pool.js'
+import Quadtree from './quadtree.js'
+import Sprite from './sprite.js'
+import SpriteSheet from './spriteSheet.js'
+import { setStoreItem, getStoreItem } from './store.js'
+import TileEngine from './tileEngine.js'
+import Vector from './vector.js'
 
 let kontra = {
+  Animation,
+
+  images,
+  audio,
+  data,
+  setImagePath,
+  setAudioPath,
+  setDataPath,
+  loadImage,
+  loadAudio,
+  loadData,
+  load,
+
   init,
-  _initKeys: initKeys,
-  get canvas() {
-    return getCanvas();
-  },
-  get context() {
-    return getContext();
-  },
-  animation,
+  getCanvas,
+  getContext,
+
   on,
   off,
   emit,
-  gameLoop,
-  keys: {
-    bind,
-    unbind,
-    pressed
-  }
+
+  GameLoop,
+
+  initKeys,
+  bindKeys,
+  unbindKeys,
+  keyPressed,
+
+  initPointer,
+  pointer,
+  track,
+  untrack,
+  pointerOver,
+  onPointerDown,
+  onPointerUp,
+  pointerPressed,
+
+  Pool,
+  Quadtree,
+  Sprite,
+  SpriteSheet,
+
+  setStoreItem,
+  getStoreItem,
+
+  TileEngine,
+  Vector
 };
 
-export default kontra;
-
-// kontra.animation = animation;
-// kontra.assets = assets;
-// kontra.on = on;
-// kontra.off = off;
-// kontra.emit = emit;
-// kontra.gameLoop = gameLoop;
-// kontra.keys = keys;
-
-// export default kontra;
+export default kontra

@@ -20,7 +20,7 @@ const DEBUG = false;
 
 gulp.task('build', function() {
   return rollup({
-    input: './src/index.js',
+    input: './src/kontra.defaults.js',
     format: 'iife',
     name: 'kontra'
   })

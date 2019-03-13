@@ -1,5 +1,7 @@
+import { on } from './events.js'
 let callbacks = {};
 let pressedKeys = {};
+let initialized = false
 
 /**
  * Execute a function that corresponds to a keyboard key.
@@ -34,9 +36,11 @@ function blurEventHandler() {
  * Add keyboard event listeners.
  */
 export function initKeys() {
+  if (initialized) return;
   addEventListener('keydown', keydownEventHandler);
   addEventListener('keyup', keyupEventHandler);
   addEventListener('blur', blurEventHandler);
+  initialized = true
 }
 
 /**
@@ -69,3 +73,5 @@ export function unbindKeys(keys) {
 export function keyPressed(key) {
   return !!pressedKeys[key];
 }
+
+on('init', initKeys)

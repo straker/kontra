@@ -10,6 +10,7 @@ import { on } from './events.js'
 let thisFrameRenderOrder = [];
 let lastFrameRenderOrder = [];
 
+let initialized = false
 let callbacks = {};
 let trackedObjects = [];
 let pressedButtons = {};
@@ -161,6 +162,7 @@ function pointerHandler(evt, eventName) {
  * Add pointer event listeners.
  */
 export function initPointer() {
+  if (initialized) return
   let canvas = getCanvas();
 
   canvas.addEventListener('mousedown', pointerDownHandler);
@@ -181,6 +183,7 @@ export function initPointer() {
 
     thisFrameRenderOrder.length = 0;
   });
+  initialized = true
 }
 
 /**
@@ -265,3 +268,5 @@ export function onPointerUp(callback) {
 export function pointerPressed(button) {
   return !!pressedButtons[button]
 }
+
+on('init', initPointer)

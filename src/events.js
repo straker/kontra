@@ -1,4 +1,5 @@
-let callbacks = {};
+// expose for testing
+export let callbacks = {};
 
 /**
  * Register a callback for an event.

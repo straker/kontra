@@ -3,22 +3,22 @@ import * as assets from '../../src/assets.js'
 // --------------------------------------------------
 // assets
 // --------------------------------------------------
-describe.only('assets', () => {
+describe('assets', () => {
   beforeEach(() => {
     assets._reset();
   });
 
-  it('should export', () => {
-    expect(assets.images).to.be.ok;
-    expect(assets.audio).to.be.ok;
-    expect(assets.data).to.be.ok;
-    expect(assets.setImagePath).to.be.ok;
-    expect(assets.setAudioPath).to.be.ok;
-    expect(assets.setDataPath).to.be.ok;
-    expect(assets.loadImage).to.be.ok;
-    expect(assets.loadAudio).to.be.ok;
-    expect(assets.loadData).to.be.ok;
-    expect(assets.load).to.be.ok;
+  it('should export api', () => {
+    expect(assets.images).to.be.an('object');
+    expect(assets.audio).to.be.an('object');
+    expect(assets.data).to.be.an('object');
+    expect(assets.setImagePath).to.be.an('function');
+    expect(assets.setAudioPath).to.be.an('function');
+    expect(assets.setDataPath).to.be.an('function');
+    expect(assets.loadImage).to.be.an('function');
+    expect(assets.loadAudio).to.be.an('function');
+    expect(assets.loadData).to.be.an('function');
+    expect(assets.load).to.be.an('function');
   });
 
   // --------------------------------------------------
@@ -230,6 +230,23 @@ describe.only('assets', () => {
         expect(assets.audio['/audio/shoot.ogg']).to.equal(audio);
         expect(assets.audio['/audio/shoot']).to.equal(audio);
 
+        done();
+      })
+      .catch(e => {
+        done(e);
+      });
+    });
+
+    it('should load the first supported auto file in the array', done => {
+      assets._setCanPlayFn(function() {
+        return {
+          mp3: true,
+          ogg: true
+        }
+      });
+
+      assets.loadAudio(['/audio/shoot.ogg', '/audio/shoot.mp3']).then(audio => {
+        expect(audio.src.endsWith('/audio/shoot.ogg')).to.equal(true);
         done();
       })
       .catch(e => {

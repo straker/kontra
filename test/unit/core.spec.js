@@ -1,209 +1,75 @@
-import kontra, { callbacks } from '../../src/core.js'
+import * as core from '../../src/core.js'
+import { on } from '../../src/events.js'
 
 // --------------------------------------------------
-// kontra
+// core
 // --------------------------------------------------
-describe('kontra', () => {
+describe('core', () => {
 
   // --------------------------------------------------
-  // kontra.on
-  // --------------------------------------------------
-  describe('on', () => {
-    afterEach(() => {
-      delete callbacks.foo;
-    });
-
-    it('should add the event to the callbacks object', () => {
-      function func() {}
-      kontra.on('foo', func);
-
-      expect(callbacks.foo).to.be.an('array');
-      expect(callbacks.foo[0]).to.equal(func);
-    });
-
-    it('should append the event if it already exists', () => {
-      function func1() {}
-      function func2() {}
-      kontra.on('foo', func1);
-      kontra.on('foo', func2);
-
-      expect(callbacks.foo).to.be.an('array');
-      expect(callbacks.foo[0]).to.equal(func1);
-      expect(callbacks.foo[1]).to.equal(func2);
-    });
-  });
-
-
-
-
-
-  // --------------------------------------------------
-  // kontra.off
-  // --------------------------------------------------
-  describe('off', () => {
-    function func() {}
-
-    beforeEach(() => {
-      kontra.on('foo', func);
-    });
-
-    afterEach(() => {
-      delete callbacks.foo;
-    });
-
-    it('should remove the callback from the event', () => {
-      kontra.off('foo', func);
-
-      expect(callbacks.foo.length).to.equal(0);
-    });
-
-    it('should only remove the callback', () => {
-      function func1() {}
-      function func2() {}
-      kontra.on('foo', func1);
-      kontra.on('foo', func2);
-
-      kontra.off('foo', func);
-
-      expect(callbacks.foo.length).to.equal(2);
-      expect(callbacks.foo[0]).to.equal(func1);
-      expect(callbacks.foo[1]).to.equal(func2);
-    });
-
-    it('should not error if the callback was not added before', () => {
-      function fn() {
-        kontra.off('foo', () => {});
-      }
-
-      expect(fn).to.not.throw();
-    });
-
-    it('should not error if the event was not added before', () => {
-      function fn() {
-        kontra.off('myEvent', () => {});
-      }
-
-      expect(fn).to.not.throw();
-    });
-  });
-
-
-
-
-
-  // --------------------------------------------------
-  // kontra.emit
-  // --------------------------------------------------
-  describe('emit', () => {
-    let func = sinon.spy();
-
-    beforeEach(() => {
-      func.resetHistory();
-      kontra.on('foo', func);
-    });
-
-    afterEach(() => {
-      delete callbacks.foo;
-    });
-
-    it('should call the callback', () => {
-      kontra.emit('foo');
-
-      expect(func.called).to.equal(true);
-    });
-
-    it('should pass all parameters to the callback', () => {
-      kontra.emit('foo', 1, 2, 3);
-
-      expect(func.calledWith(1,2,3)).to.equal(true);
-    });
-
-    it('should call the callbacks in order', () => {
-      let func1 = sinon.spy();
-      let func2 = sinon.spy();
-      kontra.on('foo', func1);
-      kontra.on('foo', func2);
-
-      kontra.emit('foo');
-
-      sinon.assert.callOrder(func, func1, func2);
-    });
-
-    it('should not error if the event was not added before', () => {
-      function fn() {
-        kontra.emit('myEvent', () => {});
-      }
-
-      expect(fn).to.not.throw();
-    });
-  });
-
-
-
-
-
-  // --------------------------------------------------
-  // kontra.init
+  // init
   // --------------------------------------------------
   describe('init', () => {
     let canvas;
 
+    it('should export api', () => {
+      expect(core.init).to.be.an('function');
+      expect(core.getCanvas).to.be.an('function');
+      expect(core.getContext).to.be.an('function');
+    });
+
     it('should log an error if no canvas element exists', () => {
       function func() {
-        kontra.init();
+        core.init();
       }
 
       expect(func).to.throw();
     });
 
-    it('should select the first canvas element on the page when no query parameters are passed', () => {
+    it('should set the canvas when passed no arguments', () => {
       canvas = document.createElement('canvas');
       canvas.width = 600;
       canvas.height = 600;
       document.body.appendChild(canvas);
 
-      kontra.init();
+      core.init();
 
-      expect(kontra.canvas).to.equal(canvas);
+      expect(core.getCanvas()).to.equal(canvas);
     });
 
-    it('should set kontra.context to the canvas context', () => {
-      expect(kontra.context.canvas).to.equal(canvas);
-    });
+    it('should set the canvas when passed an id', () => {
+      canvas = document.createElement('canvas');
+      canvas.width = 600;
+      canvas.height = 600;
+      canvas.id = 'game';
+      document.body.appendChild(canvas);
 
-    it('should select a canvas that matches the passed id', () => {
-      let c = document.createElement('canvas');
-      c.width = 600;
-      c.height = 600;
-      c.id = 'game';
-      document.body.appendChild(c);
+      core.init('game');
 
-      kontra.init('game');
-
-      expect(kontra.canvas).to.equal(c);
+      expect(core.getCanvas()).to.equal(canvas);
     });
 
     it('should set the canvas when passed a canvas element', () => {
-      let c = document.createElement('canvas');
-      c.width = 600;
-      c.height = 600;
-      c.id = 'game2';
-      document.body.appendChild(c);
+      canvas = document.createElement('canvas');
+      canvas.width = 600;
+      canvas.height = 600;
+      canvas.id = 'game2';
+      document.body.appendChild(canvas);
 
-      kontra.init(c);
+      core.init(canvas);
 
-      expect(kontra.canvas).to.equal(c);
+      expect(core.getCanvas()).to.equal(canvas);
     });
 
-    it('should emit the init event', () => {
-      let stub = sinon.stub(kontra, 'emit');
+    it('should set the context from the canvas', () => {
+      expect(core.getContext().canvas).to.equal(canvas);
+    });
 
-      kontra.init();
+    it('should emit the init event', done => {
+      on('init', done);
+      core.init();
 
-      expect(stub.called).to.equal(true);
-      expect(stub.calledWith('init', kontra)).to.equal(true);
-
-      stub.restore();
+      throw new Error('should not get here');
     });
 
   });

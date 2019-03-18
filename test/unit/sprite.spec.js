@@ -1,5 +1,6 @@
-import kontra from '../../src/core.js'
 import Sprite from '../../src/sprite.js'
+import { init, getCanvas, getContext } from '../../src/core.js'
+import { noop } from '../../src/utils.js'
 
 // --------------------------------------------------
 // sprite
@@ -7,22 +8,22 @@ import Sprite from '../../src/sprite.js'
 describe('sprite', () => {
 
   before(() => {
-    if (!kontra.canvas) {
+    if (!getCanvas()) {
       let canvas = document.createElement('canvas');
       canvas.width = canvas.height = 600;
-      kontra.init(canvas);
+      init(canvas);
     }
   });
 
   // --------------------------------------------------
-  // sprite.init
+  // init
   // --------------------------------------------------
   describe('init', () => {
 
     it('should set default properties on the sprite when passed no arguments', () => {
       let sprite = Sprite();
 
-      expect(sprite.context).to.equal(kontra.context);
+      expect(sprite.context).to.equal(getContext());
       expect(sprite.width).to.equal(0);
       expect(sprite.height).to.equal(0);
       expect(sprite.position.constructor.name).to.equal('Vector');
@@ -164,7 +165,7 @@ describe('sprite', () => {
 
 
   // --------------------------------------------------
-  // sprite.update
+  // update
   // --------------------------------------------------
   describe('update', () => {
 
@@ -215,7 +216,7 @@ describe('sprite', () => {
         'walk': {
           width: 10,
           height: 20,
-          update: kontra._noop,
+          update: noop,
           clone: function() {
             return this;
           }
@@ -247,7 +248,7 @@ describe('sprite', () => {
 
 
   // --------------------------------------------------
-  // sprite.render
+  // render
   // --------------------------------------------------
   describe('render', () => {
 
@@ -257,7 +258,7 @@ describe('sprite', () => {
         y: 20
       });
 
-      sinon.stub(sprite.context, 'fillRect').callsFake(kontra._noop);
+      sinon.stub(sprite.context, 'fillRect').callsFake(noop);
 
       sprite.render();
 
@@ -277,7 +278,7 @@ describe('sprite', () => {
         image: img
       });
 
-      sinon.stub(sprite.context, 'drawImage').callsFake(kontra._noop);
+      sinon.stub(sprite.context, 'drawImage').callsFake(noop);
 
       sprite.render();
 
@@ -292,8 +293,8 @@ describe('sprite', () => {
         'walk': {
           width: 10,
           height: 20,
-          update: kontra._noop,
-          render: kontra._noop,
+          update: noop,
+          render: noop,
           clone: function() {
             return this;
           }
@@ -306,7 +307,7 @@ describe('sprite', () => {
         animations: animations
       });
 
-      sinon.stub(sprite.currentAnimation, 'render').callsFake(kontra._noop);
+      sinon.stub(sprite.currentAnimation, 'render').callsFake(noop);
 
       sprite.render();
 
@@ -322,7 +323,7 @@ describe('sprite', () => {
         rotation: Math.PI
       });
 
-      sinon.stub(sprite.context, 'rotate').callsFake(kontra._noop);
+      sinon.stub(sprite.context, 'rotate').callsFake(noop);
 
       sprite.render();
 
@@ -343,7 +344,7 @@ describe('sprite', () => {
         }
       });
 
-      sinon.stub(sprite.context, 'fillRect').callsFake(kontra._noop);
+      sinon.stub(sprite.context, 'fillRect').callsFake(noop);
 
       sprite.render();
 
@@ -372,7 +373,7 @@ describe('sprite', () => {
         }
       });
 
-      sinon.stub(sprite.context, 'drawImage').callsFake(kontra._noop);
+      sinon.stub(sprite.context, 'drawImage').callsFake(noop);
 
       sprite.render();
       expect(sprite.context.drawImage.calledWith(img, 0, 0, 10, 20, -5, -10, 10, 20)).to.be.ok;
@@ -395,8 +396,8 @@ describe('sprite', () => {
         'walk': {
           width: 10,
           height: 20,
-          update: kontra._noop,
-          render: kontra._noop,
+          update: noop,
+          render: noop,
           clone: function() {
             return this;
           }
@@ -413,7 +414,7 @@ describe('sprite', () => {
         }
       });
 
-      sinon.stub(sprite.currentAnimation, 'render').callsFake(kontra._noop);
+      sinon.stub(sprite.currentAnimation, 'render').callsFake(noop);
 
       sprite.render();
 
@@ -434,7 +435,7 @@ describe('sprite', () => {
 
 
   // --------------------------------------------------
-  // sprite.collidesWith
+  // collidesWith
   // --------------------------------------------------
   describe('collidesWith', () => {
 
@@ -513,7 +514,7 @@ describe('sprite', () => {
 
 
   // --------------------------------------------------
-  // sprite.isAlive
+  // isAlive
   // --------------------------------------------------
   describe('isAlive', () => {
 
@@ -525,8 +526,12 @@ describe('sprite', () => {
       sprite.ttl = 1;
 
       expect(sprite.isAlive()).to.be.true;
+    });
 
-      sprite.ttl = -0;
+    it('should return false when the sprite is not alive', () => {
+      let sprite = Sprite({
+        ttl: 0
+      });
 
       expect(sprite.isAlive()).to.be.false;
     });
@@ -538,7 +543,7 @@ describe('sprite', () => {
 
 
   // --------------------------------------------------
-  // sprite.playAnimation
+  // playAnimation
   // --------------------------------------------------
   describe('playAnimation', () => {
 
@@ -573,28 +578,28 @@ describe('sprite', () => {
       expect(sprite.currentAnimation).to.equal(animations.idle);
     });
 
-  });
-
-  it('should reset the animation if it doesn\'t loop', () => {
-    let animations = {
-      'walk': {
-        width: 10,
-        height: 20,
-        loop: false,
-        reset: sinon.spy(),
-        clone: function() {
-          return this;
+    it('should reset the animation if it doesn\'t loop', () => {
+      let animations = {
+        'walk': {
+          width: 10,
+          height: 20,
+          loop: false,
+          reset: sinon.spy(),
+          clone: function() {
+            return this;
+          }
         }
-      }
-    };
+      };
 
-    let sprite = Sprite({
-      animations: animations
+      let sprite = Sprite({
+        animations: animations
+      });
+
+      sprite.playAnimation('walk');
+
+      expect(animations.walk.reset.called).to.be.true;
     });
 
-    sprite.playAnimation('walk');
-
-    expect(animations.walk.reset.called).to.be.true;
   });
 
 });

@@ -14,7 +14,8 @@ import {
 import { init, getCanvas, getContext } from './core.js'
 import { on, off, emit } from './events.js'
 import GameLoop from './gameLoop.js'
-import { initKeys, bindKeys, unbindKeys, keyPressed } from './keys.js'
+import { keyMap, initKeys, bindKeys, unbindKeys, keyPressed } from './keys.js'
+import { registerPlugin, unregisterPlugin, extendObject } from './plugin.js'
 import {
   initPointer,
   pointer,
@@ -57,10 +58,15 @@ let kontra = {
 
   GameLoop,
 
+  keyMap,
   initKeys,
   bindKeys,
   unbindKeys,
   keyPressed,
+
+  registerPlugin,
+  unregisterPlugin,
+  extendObject,
 
   initPointer,
   pointer,

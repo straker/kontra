@@ -1,5 +1,5 @@
-import kontra from '../../src/core.js'
 import Animation from '../../src/animation.js'
+import { init, getCanvas, getContext } from '../../src/core.js'
 
 // --------------------------------------------------
 // animation
@@ -8,10 +8,10 @@ describe('animation', () => {
   let animation;
 
   before(() => {
-    if (!kontra.canvas) {
+    if (!getCanvas()) {
       let canvas = document.createElement('canvas');
       canvas.width = canvas.height = 600;
-      kontra.init(canvas);
+      init(canvas);
     }
   });
 
@@ -32,7 +32,7 @@ describe('animation', () => {
 
 
   // --------------------------------------------------
-  // animation.init
+  // init
   // --------------------------------------------------
   describe('init', () => {
 
@@ -51,7 +51,7 @@ describe('animation', () => {
 
 
   // --------------------------------------------------
-  // animation.clone
+  // clone
   // --------------------------------------------------
   describe('clone', () => {
 
@@ -69,7 +69,7 @@ describe('animation', () => {
 
 
   // --------------------------------------------------
-  // animation.update
+  // update
   // --------------------------------------------------
   describe('update', () => {
 
@@ -126,7 +126,7 @@ describe('animation', () => {
 
 
   // --------------------------------------------------
-  // animation.draw
+  // draw
   // --------------------------------------------------
   describe('draw', () => {
 
@@ -147,16 +147,17 @@ describe('animation', () => {
     });
 
     it('should use the default context', () => {
-      sinon.stub(kontra.context, 'drawImage');
+      let context = getContext();
+      sinon.stub(context, 'drawImage');
 
       animation.render({
         x: 10,
         y: 10
       });
 
-      expect(kontra.context.drawImage.called).to.be.ok;
+      expect(context.drawImage.called).to.be.ok;
 
-      kontra.context.drawImage.restore();
+      context.drawImage.restore();
     });
 
     it('should draw the spriteSheet in the middle of the animation', () => {

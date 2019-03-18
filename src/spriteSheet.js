@@ -19,8 +19,9 @@ function parseFrames(consecutiveFrames) {
 
   // coerce string to number
   // @see https://github.com/jed/140bytes/wiki/Byte-saving-techniques#coercion-to-test-for-types
-  let start = i = +frames[0];
+  let start = +frames[0];
   let end = +frames[1];
+  let i = start;
 
   // ascending frame order
   if (start < end) {

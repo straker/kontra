@@ -1,16 +1,28 @@
 let callbacks = {};
 let pressedKeys = {};
 
+export let keyMap = {
+  // named keys
+  13: 'enter',
+  27: 'esc',
+  32: 'space',
+  37: 'left',
+  38: 'up',
+  39: 'right',
+  40: 'down'
+};
+
 /**
  * Execute a function that corresponds to a keyboard key.
  *
  * @param {KeyboardEvent} evt
  */
 function keydownEventHandler(evt) {
-  pressedKeys[evt.key] = true;
+  let key = keyMap[evt.which];
+  pressedKeys[key] = true;
 
-  if (callbacks[evt.key]) {
-    callbacks[evt.key](evt);
+  if (callbacks[key]) {
+    callbacks[key](evt);
   }
 }
 
@@ -20,7 +32,7 @@ function keydownEventHandler(evt) {
  * @param {KeyboardEvent} evt
  */
 function keyupEventHandler(evt) {
-  pressedKeys[evt.key] = false;
+  pressedKeys[ keyMap[evt.which] ] = false;
 }
 
 /**
@@ -34,9 +46,25 @@ function blurEventHandler() {
  * Add keyboard event listeners.
  */
 export function initKeys() {
-  addEventListener('keydown', keydownEventHandler);
-  addEventListener('keyup', keyupEventHandler);
-  addEventListener('blur', blurEventHandler);
+  let i;
+
+  // alpha keys
+  // @see https://stackoverflow.com/a/43095772/2124254
+  for (i = 0; i < 26; i++) {
+    // rollupjs considers this a side-effect (for now), so we'll do it in the
+    // initKeys function
+    // @see https://twitter.com/lukastaegert/status/1107011988515893249?s=20
+    keyMap[65+i] = (10 + i).toString(36);
+  }
+
+  // numeric keys
+  for (i = 0; i < 10; i++) {
+    keyMap[48+i] = ''+i;
+  }
+
+  window.addEventListener('keydown', keydownEventHandler);
+  window.addEventListener('keyup', keyupEventHandler);
+  window.addEventListener('blur', blurEventHandler);
 }
 
 /**

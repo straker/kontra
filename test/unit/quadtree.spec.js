@@ -1,5 +1,5 @@
-import kontra from '../../src/core.js'
 import Quadtree from '../../src/quadtree.js'
+import { init, getCanvas } from '../../src/core.js'
 
 // --------------------------------------------------
 // quadtree
@@ -7,15 +7,15 @@ import Quadtree from '../../src/quadtree.js'
 describe('quadtree', () => {
 
   before(() => {
-    if (!kontra.canvas) {
+    if (!getCanvas()) {
       let canvas = document.createElement('canvas');
       canvas.width = canvas.height = 600;
-      kontra.init(canvas);
+      init(canvas);
     }
   });
 
   // --------------------------------------------------
-  // quadtree.init
+  // init
   // --------------------------------------------------
   describe('init', () => {
 
@@ -25,8 +25,8 @@ describe('quadtree', () => {
       expect(typeof quadtree.bounds).to.equal('object');
       expect(quadtree.bounds.x).to.equal(0);
       expect(quadtree.bounds.y).to.equal(0);
-      expect(quadtree.bounds.width).to.equal(kontra.canvas.width);
-      expect(quadtree.bounds.height).to.equal(kontra.canvas.height);
+      expect(quadtree.bounds.width).to.equal(getCanvas().width);
+      expect(quadtree.bounds.height).to.equal(getCanvas().height);
     });
 
     it('should allow you to set the maxDepth and maxObject counts', () => {
@@ -46,7 +46,7 @@ describe('quadtree', () => {
 
 
   // --------------------------------------------------
-  // quadtree.add
+  // add
   // --------------------------------------------------
   describe('add', () => {
     let quadtree;
@@ -193,7 +193,7 @@ describe('quadtree', () => {
 
 
   // --------------------------------------------------
-  // quadtree.clear
+  // clear
   // --------------------------------------------------
   describe('clear', () => {
     let quadtree;
@@ -241,7 +241,7 @@ describe('quadtree', () => {
 
 
   // --------------------------------------------------
-  // quadtree.get
+  // get
   // --------------------------------------------------
   describe('get', () => {
     let quadtree;

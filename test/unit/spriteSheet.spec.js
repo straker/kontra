@@ -1,5 +1,5 @@
-import kontra from '../../src/core.js'
 import SpriteSheet from '../../src/spriteSheet.js'
+import { noop } from '../../src/utils.js'
 
 // --------------------------------------------------
 // spriteSheet
@@ -7,7 +7,7 @@ import SpriteSheet from '../../src/spriteSheet.js'
 describe('spriteSheet', () => {
 
   // --------------------------------------------------
-  // spriteSheet.init
+  // init
   // --------------------------------------------------
   describe('init', () => {
 
@@ -32,7 +32,7 @@ describe('spriteSheet', () => {
     });
 
     it('should create animations if passed an animation object', () => {
-      sinon.stub(SpriteSheet.prototype, 'createAnimations').callsFake(kontra._noop);
+      sinon.stub(SpriteSheet.prototype, 'createAnimations').callsFake(noop);
 
       let spriteSheet = SpriteSheet({
         image: new Image(100, 200),
@@ -53,7 +53,7 @@ describe('spriteSheet', () => {
 
 
   // --------------------------------------------------
-  // spriteSheet.createAnimations
+  // createAnimations
   // --------------------------------------------------
   describe('createAnimations', () => {
     let spriteSheet;

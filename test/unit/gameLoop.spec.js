@@ -1,5 +1,7 @@
-import kontra from '../../src/core.js'
-import gameLoop from '../../src/gameLoop.js'
+import GameLoop from '../../src/gameLoop.js'
+import { init, getCanvas, getContext } from '../../src/core.js'
+import { on } from '../../src/events.js'
+import { noop } from '../../src/utils.js'
 
 // --------------------------------------------------
 // gameloop
@@ -8,10 +10,10 @@ describe('gameLoop', () => {
   let loop;
 
   before(() => {
-    if (!kontra.canvas) {
+    if (!getCanvas()) {
       let canvas = document.createElement('canvas');
       canvas.width = canvas.height = 600;
-      kontra.init(canvas);
+      init(canvas);
     }
   });
 
@@ -26,7 +28,7 @@ describe('gameLoop', () => {
 
     it('should log an error if not passed required functions', () => {
       function func() {
-        gameLoop();
+        GameLoop();
       }
 
       expect(func).to.throw();
@@ -43,11 +45,11 @@ describe('gameLoop', () => {
   // --------------------------------------------------
   describe('stop', () => {
     it('should call cancelAnimationFrame', () => {
-      sinon.stub(window, 'cancelAnimationFrame').callsFake(kontra._noop);
+      sinon.stub(window, 'cancelAnimationFrame').callsFake(noop);
 
-      loop = gameLoop({
-        update: kontra._noop,
-        render: kontra._noop,
+      loop = GameLoop({
+        update: noop,
+        render: noop,
         clearCanvas: false
       });
 
@@ -70,9 +72,9 @@ describe('gameLoop', () => {
   describe('frame', () => {
 
     it('should call the update function and pass it dt', (done) => {
-      loop = gameLoop({
+      loop = GameLoop({
         update: sinon.spy(),
-        render: kontra._noop,
+        render: noop,
         clearCanvas: false
       });
 
@@ -86,8 +88,8 @@ describe('gameLoop', () => {
     });
 
     it('should call the render function', (done) => {
-      loop = gameLoop({
-        update: kontra._noop,
+      loop = GameLoop({
+        update: noop,
         render: sinon.spy(),
         clearCanvas: false
       });
@@ -103,9 +105,9 @@ describe('gameLoop', () => {
     it('should exit early if time elapsed is greater than 1000ms', () => {
       let count = 0;
 
-      loop = gameLoop({
+      loop = GameLoop({
         update: function(time) { count++; },
-        render: kontra._noop,
+        render: noop,
         clearCanvas: false
       });
 
@@ -118,9 +120,9 @@ describe('gameLoop', () => {
     it('should make multiple calls to the update function if enough time has elapsed', () => {
       let count = 0;
 
-      loop = gameLoop({
+      loop = GameLoop({
         update: function(time) { count++; },
-        render: kontra._noop,
+        render: noop,
         clearCanvas: false
       });
 
@@ -131,35 +133,33 @@ describe('gameLoop', () => {
     });
 
     it('should call clearCanvas by default', () => {
-      loop = gameLoop({
-        update: kontra._noop,
-        render: kontra._noop
+      loop = GameLoop({
+        update: noop,
+        render: noop
       });
+      let context = getContext();
 
-      sinon.stub(kontra.context, 'clearRect').callsFake(kontra._noop);
+      sinon.stub(context, 'clearRect').callsFake(noop);
 
       loop._last = performance.now() - (1E3/60);
       loop._frame();
 
-      expect(kontra.context.clearRect.called).to.be.true;
+      expect(context.clearRect.called).to.be.true;
 
-      kontra.context.clearRect.restore();
+      context.clearRect.restore();
     });
 
-    it('should emit the tick event', () => {
-      let stub = sinon.stub(kontra, 'emit');
+    it('should emit the tick event', done => {
+      on('tick', done);
 
-      loop = gameLoop({
-        update: kontra._noop,
-        render: kontra._noop
+      loop = GameLoop({
+        update: noop,
+        render: noop
       });
       loop._last = performance.now() - (1E3/60);
       loop._frame();
 
-      expect(stub.called).to.equal(true);
-      expect(stub.calledWith('tick')).to.equal(true);
-
-      stub.restore();
+      throw new Error('should not get here');
     });
 
   });

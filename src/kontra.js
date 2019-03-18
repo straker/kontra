@@ -14,7 +14,8 @@ export {
 export { init, getCanvas, getContext } from './core.js'
 export { on, off, emit } from './events.js'
 export { default as GameLoop } from './gameLoop.js'
-export { initKeys, bindKeys, unbindKeys, keyPressed } from './keys.js'
+export { keyMap, initKeys, bindKeys, unbindKeys, keyPressed } from './keys.js'
+export { registerPlugin, unregisterPlugin, extendObject } from './plugin.js'
 export {
   initPointer,
   pointer,

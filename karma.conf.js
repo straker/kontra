@@ -14,7 +14,7 @@ module.exports = function(config) {
       {pattern: 'test/data/*.*', included: false, served: true },
 
       {pattern: 'src/*.js', type: 'module', included: false },
-      {pattern: 'test/unit/assets.spec.js', type: 'module' },
+      {pattern: 'test/**/*.spec.js', type: 'module' },
     ],
     browsers: ['ChromeHeadless'],
     proxies: {
@@ -22,16 +22,10 @@ module.exports = function(config) {
       '/audio': '/base/test/audio',
       '/data': '/base/test/data'
     },
-    reporters: ['mocha'/*, 'coverage'*/],  // coverage breaks all the src files
-    // preprocessors: {
-    //   'src/*.js': ['coverage']
-    // },
-    // coverageReporter: {
-    //   dir : 'coverage/',
-    //   reporters: [
-    //     {type: 'lcov', subdir: '.'},
-    //     {type: 'text-summary'}
-    //   ]
-    // }
+    reporters: ['mocha', 'coverage-istanbul'],
+    coverageIstanbulReporter: {
+      reports: ['html', 'lcovonly', 'text-summary'],
+      dir: 'coverage/'
+    }
   });
 };

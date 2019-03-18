@@ -1,4 +1,4 @@
-import keys from '../../src/keys.js'
+import * as keys from '../../src/keys.js'
 
 // --------------------------------------------------
 // keys
@@ -41,32 +41,57 @@ describe('keys', () => {
     simulateEvent('blur');
   });
 
+  it('should export api', () => {
+    expect(keys.keyMap).to.be.an('object');
+    expect(keys.initKeys).to.be.an('function');
+    expect(keys.bindKeys).to.be.an('function');
+    expect(keys.unbindKeys).to.be.an('function');
+    expect(keys.keyPressed).to.be.an('function');
+  });
+
+  // --------------------------------------------------
+  // initKeys
+  // --------------------------------------------------
+  describe('initKeys', () => {
+
+    it('should add event listeners', () => {
+      let spy = sinon.spy(window, 'addEventListener');
+
+      keys.initKeys();
+
+      expect(spy.called).to.be.true;
+
+      spy.restore();
+    });
+
+  });
+
 
 
 
 
   // --------------------------------------------------
-  // keys.pressed
+  // pressed
   // --------------------------------------------------
   describe('pressed', () => {
 
     it('should return false when a key is not pressed', () => {
-      expect(keys.pressed('a')).to.be.not.ok;
-      expect(keys.pressed('f1')).to.be.not.ok;
-      expect(keys.pressed('numpad0')).to.be.not.ok;
+      expect(keys.keyPressed('a')).to.be.not.ok;
+      expect(keys.keyPressed('f1')).to.be.not.ok;
+      expect(keys.keyPressed('numpad0')).to.be.not.ok;
     });
 
     it('should return true for a single key', () => {
       simulateEvent('keydown', {which: 65});
 
-      expect(keys.pressed('a')).to.be.true;
+      expect(keys.keyPressed('a')).to.be.true;
     });
 
     it('should return false if the key is no longer pressed', () => {
       simulateEvent('keydown', {which: 65});
       simulateEvent('keyup', {which: 65});
 
-      expect(keys.pressed('a')).to.be.not.ok;
+      expect(keys.keyPressed('a')).to.be.not.ok;
     });
 
   });
@@ -76,30 +101,28 @@ describe('keys', () => {
 
 
   // --------------------------------------------------
-  // keys.bind
+  // bind
   // --------------------------------------------------
   describe('bind', () => {
 
     it('should call the callback when a single key combination is pressed', (done) => {
-      keys.bind('a', () => {
+      keys.bindKeys('a', evt => {
         done();
       });
 
       simulateEvent('keydown', {which: 65});
 
-      // this should never be called since done() should be called in the callback
-      expect(false).to.be.true;
+      throw new Error('should not get here');
     });
 
     it('should accept an array of key combinations to bind', (done) => {
-      keys.bind(['a', 'b'], () => {
+      keys.bindKeys(['a', 'b'], evt => {
         done();
       });
 
       simulateEvent('keydown', {which: 66});
 
-      // this should never be called since done() should be called in the callback
-      expect(false).to.be.true;
+      throw new Error('should not get here');
     });
 
   });
@@ -109,28 +132,28 @@ describe('keys', () => {
 
 
   // --------------------------------------------------
-  // keys.unbind
+  // unbind
   // --------------------------------------------------
   describe('unbind', () => {
 
     it('should not call the callback when the combination has been unbound', () => {
-      keys.bind('a', () => {
+      keys.bindKeys('a', () => {
         // this should never be called since the key combination was unbound
         expect(false).to.be.true;
       });
 
-      keys.unbind('a');
+      keys.unbindKeys('a');
 
       simulateEvent('keydown', {which: 65});
     });
 
     it('should accept an array of key combinations to unbind', () => {
-      keys.bind(['a', 'b'], () => {
+      keys.bindKeys(['a', 'b'], () => {
         // this should never be called since the key combination was unbound
         expect(false).to.be.true;
       });
 
-      keys.unbind(['a', 'b']);
+      keys.unbindKeys(['a', 'b']);
 
       simulateEvent('keydown', {which: 65});
       simulateEvent('keydown', {which: 66});

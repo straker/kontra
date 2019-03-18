@@ -162,47 +162,47 @@ export default function TileEngine(properties) {
   }, properties);
 
   // resolve linked files (source, image)
-  tileEngine.tilesets.map(tileset => {
-    let url = (kontra.assets ? kontra.assets._d.get(properties) : '') || window.location.href;
+  // tileEngine.tilesets.map(tileset => {
+  //   let url = (kontra.assets ? kontra.assets._d.get(properties) : '') || window.location.href;
 
-    if (tileset.source) {
-      // @if DEBUG
-      if (!kontra.assets) {
-        throw Error(`You must use "kontra.assets" to resolve tileset.source`);
-      }
-      // @endif
+  //   if (tileset.source) {
+  //     // @if DEBUG
+  //     if (!kontra.assets) {
+  //       throw Error(`You must use "kontra.assets" to resolve tileset.source`);
+  //     }
+  //     // @endif
 
-      let source = kontra.assets.data[kontra.assets._u(tileset.source, url)];
+  //     let source = kontra.assets.data[kontra.assets._u(tileset.source, url)];
 
-      // @if DEBUG
-      if (!source) {
-        throw Error(`You must load the tileset source "${tileset.source}" before loading the tileset`);
-      }
-      // @endif
+  //     // @if DEBUG
+  //     if (!source) {
+  //       throw Error(`You must load the tileset source "${tileset.source}" before loading the tileset`);
+  //     }
+  //     // @endif
 
-      Object.keys(source).map(key => {
-        tileset[key] = source[key];
-      });
-    }
+  //     Object.keys(source).map(key => {
+  //       tileset[key] = source[key];
+  //     });
+  //   }
 
-    if (''+tileset.image === tileset.image) {
-      // @if DEBUG
-      if (!kontra.assets) {
-        throw Error(`You must use "kontra.assets" to resolve tileset.image`);
-      }
-      // @endif
+  //   if (''+tileset.image === tileset.image) {
+  //     // @if DEBUG
+  //     if (!kontra.assets) {
+  //       throw Error(`You must use "kontra.assets" to resolve tileset.image`);
+  //     }
+  //     // @endif
 
-      let image = kontra.assets.images[kontra.assets._u(tileset.image, url)];
+  //     let image = kontra.assets.images[kontra.assets._u(tileset.image, url)];
 
-      // @if DEBUG
-      if (!image) {
-        throw Error(`You must load the image "${tileset.image}" before loading the tileset`);
-      }
-      // @endif
+  //     // @if DEBUG
+  //     if (!image) {
+  //       throw Error(`You must load the image "${tileset.image}" before loading the tileset`);
+  //     }
+  //     // @endif
 
-      tileset.image = image;
-    }
-  });
+  //     tileset.image = image;
+  //   }
+  // });
 
   /**
    * Get the row from the y coordinate.

@@ -1,5 +1,5 @@
-import kontra from '../../src/core.js'
-import poolFn from '../../src/pool.js'
+import Pool from '../../src/pool.js'
+import { noop } from '../../src/utils.js'
 
 // --------------------------------------------------
 // pool
@@ -8,7 +8,7 @@ describe('pool', () => {
 
   let sprite = function() {
     return {
-      render: kontra._noop,
+      render: noop,
       update: function() {
         this.ttl--;
       },
@@ -31,13 +31,13 @@ describe('pool', () => {
 
 
   // --------------------------------------------------
-  // pool.init
+  // init
   // --------------------------------------------------
   describe('init', () => {
 
     it('should log an error if the create function is not passed', () => {
       function func() {
-        poolFn();
+        Pool();
       }
 
       expect(func).to.throw();
@@ -45,7 +45,7 @@ describe('pool', () => {
 
     it('should log an error if the create function did not return an object', () => {
       function func() {
-        poolFn({create:kontra._noop});
+        Pool({ create: noop});
       }
 
       expect(func).to.throw();
@@ -53,9 +53,9 @@ describe('pool', () => {
 
     it('should log an error if the create function returned an object with missing functions', () => {
       function func() {
-        poolFn({create: function() {
+        Pool({create: function() {
           return {
-            render: kontra._noop
+            render: noop
           }
         }});
       }
@@ -70,12 +70,12 @@ describe('pool', () => {
 
 
   // --------------------------------------------------
-  // pool.get
+  // get
   // --------------------------------------------------
   describe('get', () => {
 
     it('should call the objects init function', () => {
-      let pool = poolFn({
+      let pool = Pool({
         create: sprite
       });
 
@@ -87,7 +87,7 @@ describe('pool', () => {
     });
 
     it('should pass the properties to the objects init function', () => {
-      let pool = poolFn({
+      let pool = Pool({
         create: sprite
       });
 
@@ -103,7 +103,7 @@ describe('pool', () => {
     });
 
     it('should use the first object in the pool and move it to the back of the pool', () => {
-      let pool = poolFn({
+      let pool = Pool({
         create: sprite,
         maxSize: 5,
       });
@@ -141,7 +141,7 @@ describe('pool', () => {
     });
 
     it('should increase the size of the pool when there are no more objects', () => {
-      let pool = poolFn({
+      let pool = Pool({
         create: sprite
       });
 
@@ -155,7 +155,7 @@ describe('pool', () => {
     });
 
     it('should not increase the size of the pool past the max size', () => {
-      let pool = poolFn({
+      let pool = Pool({
         create: sprite,
         maxSize: 5
       });
@@ -168,7 +168,7 @@ describe('pool', () => {
     });
 
     it('should not continue making objects if not needed', () => {
-      let pool = poolFn({
+      let pool = Pool({
         create: sprite,
         maxSize: 500
       });
@@ -190,13 +190,13 @@ describe('pool', () => {
 
 
   // --------------------------------------------------
-  // pool.getAliveObjects
+  // getAliveObjects
   // --------------------------------------------------
   describe('getAliveObjects', () => {
 
     it('should return only alive objects', () => {
       let id = 0;
-      let pool = poolFn({
+      let pool = Pool({
         create: sprite,
         maxSize: 5
       });
@@ -217,7 +217,7 @@ describe('pool', () => {
 
     it('should return only alive objects after an update', () => {
       let id = 0;
-      let pool = poolFn({
+      let pool = Pool({
         create: sprite,
         maxSize: 5
       });
@@ -241,17 +241,17 @@ describe('pool', () => {
 
 
   // --------------------------------------------------
-  // pool.update
+  // update
   // --------------------------------------------------
   describe('update', () => {
 
     it('should call each alive objects update function', () => {
       let count = 0;
 
-      let pool = poolFn({
+      let pool = Pool({
         create: function() {
           return {
-            render: kontra._noop,
+            render: noop,
             update: function() {
               count++;
             },
@@ -272,7 +272,7 @@ describe('pool', () => {
     });
 
     it('should move a dead object to the front of the pool', () => {
-      let pool = poolFn({
+      let pool = Pool({
         create: sprite,
         maxSize: 5
       });
@@ -312,17 +312,17 @@ describe('pool', () => {
 
 
   // --------------------------------------------------
-  // pool.render
+  // render
   // --------------------------------------------------
   describe('render', () => {
 
     it('should call each alive objects render function', () => {
       let count = 0;
 
-      let pool = poolFn({
+      let pool = Pool({
         create: function() {
           return {
-            update: kontra._noop,
+            update: noop,
             render: function() {
               count++;
             },
@@ -349,12 +349,12 @@ describe('pool', () => {
 
 
   // --------------------------------------------------
-  // pool.clear
+  // clear
   // --------------------------------------------------
   describe('clear', () => {
 
     it('should empty the pool', () => {
-      let pool = poolFn({
+      let pool = Pool({
         create: sprite,
         maxSize: 20
       });

@@ -4,6 +4,7 @@
   "description": "Kontra HTML5 game development library",
   "main": "src/kontra.js",
   "module": "src/kontra.js",
+  "sideEffects": false,
   "scripts": {
     "test": "karma start --single-run",
     "test-watch": "karma start",

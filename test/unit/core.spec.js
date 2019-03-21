@@ -72,6 +72,13 @@ describe('core', () => {
       throw new Error('should not get here');
     });
 
+    it('should return the canvas and context', () => {
+      let { canvas, context } = core.init();
+
+      expect(canvas).to.equal(core.getCanvas());
+      expect(context).to.equal(core.getContext());
+    });
+
   });
 
 });

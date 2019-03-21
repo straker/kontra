@@ -237,6 +237,11 @@ export function loadData(url) {
  * load('car.png', ['explosion.mp3', 'explosion.ogg'], 'bio.json');
  */
 export function load(...assets) {
+  // TODO: in order to support the tileEngine loading source and images, add
+  // the needed properties to the window object when their appropriate functions
+  // are run. then the tileEnginge can look for these properties to know it can
+  // load the assets
+
   return Promise.all(
     assets.map(asset => {
       // account for a string or an array for the url

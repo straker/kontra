@@ -1,71 +1,37 @@
-import { init, initKeys } from '../src/kontra.js'
+import { init, GameLoop, Sprite, initKeys, keyPressed  } from '../src/kontra.js'
 
+let { canvas } = init(); // initialize kontra
 initKeys();
 
-let canvas = document.createElement('canvas');
-document.body.appendChild(canvas);
-init(canvas);
+let sprite = Sprite({
+  x: 100,
+  y: 80,
+  color: 'red',
+  width: 20,
+  height: 40,
+  dx: 2
+});
 
-// create a basic sprite with a velocity
-// window.sprite = Sprite({
-//   x: 290,
-//   y: 100,
-//   dx: 3,
-//   dy: 0,
-//   width: 20,
-//   height: 40,
-//   color: 'red'
-// });
+let loop = GameLoop({
+  update: function() {
+   if (keyPressed('left')) {
+     sprite.dx = -2;
+   }
+   else if (keyPressed('right')) {
+     sprite.dx = 2;
+   }
 
-// // create the game loop to update and render the sprite
-// window.loop = GameLoop({
-//   update: function() {
-//     sprite.update();
+    sprite.update();
+    if (sprite.x > canvas.width) {
+      sprite.x = -sprite.width;
+    }
+    if (sprite.x < -sprite.width) {
+      sprite.x = canvas.width;
+    }
+  },
+  render: function() {
+    sprite.render();
+  }
+});
 
-//     // reset the sprites position when it reaches the edge of the game
-//     if (sprite.x > getCanvas().width) {
-//       sprite.x = -sprite.width;
-//     }
-//   },
-//   render: function() {
-//     sprite.render();
-//   }
-// });
-
-// // start the loop
-// loop.start();
-
-// import kontra from '../src/kontra.js'
-
-// let canvas = document.createElement('canvas');
-// document.body.appendChild(canvas);
-// kontra.init(canvas);
-
-// // create a basic sprite with a velocity
-// window.sprite = kontra.Sprite({
-//   x: 290,
-//   y: 100,
-//   dx: 3,
-//   dy: 0,
-//   width: 20,
-//   height: 40,
-//   color: 'red'
-// });
-
-// // create the game loop to update and render the sprite
-// window.loop = kontra.GameLoop({
-//   update: function() {
-//     sprite.update();
-
-//     // reset the sprites position when it reaches the edge of the game
-//     if (sprite.x > kontra.getCanvas().width) {
-//       sprite.x = -sprite.width;
-//     }
-//   },
-//   render: function() {
-//     sprite.render();
-//   }
-// });
-
-// // start the loop
-// loop.start();
+loop.start();

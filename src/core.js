@@ -43,4 +43,6 @@ export function init(canvas) {
   context.imageSmoothingEnabled = false;
 
   emit('init');
+
+  return { canvas: canvasEl, context };
 }

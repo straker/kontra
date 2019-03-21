@@ -16,11 +16,17 @@ module.exports = function(config) {
       {pattern: 'src/*.js', type: 'module', included: false },
       {pattern: 'test/**/*.spec.js', type: 'module' },
     ],
+    preprocessors: {
+      'src/*.js': ["karma-coverage-istanbul-instrumenter"]
+    },
     browsers: ['ChromeHeadless'],
     proxies: {
       '/imgs': '/base/test/imgs',
       '/audio': '/base/test/audio',
       '/data': '/base/test/data'
+    },
+    coverageIstanbulInstrumenter: {
+      esModules: true
     },
     reporters: ['mocha', 'coverage-istanbul'],
     coverageIstanbulReporter: {

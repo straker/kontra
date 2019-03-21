@@ -38,12 +38,19 @@ describe('assets', () => {
       });
     });
 
-    it('should load an image and resolve with it', done => {
+    it('should resolve with the image if it is already loaded', done => {
       assets.loadImage('/imgs/bullet.png').then(image => {
-        expect(assets.images['/imgs/bullet.png']).to.equal(image);
-        expect(assets.images['/imgs/bullet']).to.equal(image);
+        let spy = sinon.spy(window, 'Image');
 
-        done();
+        assets.loadImage('/imgs/bullet.png').then(img => {
+          try {
+            expect(spy.called).to.equal(false);
+          } catch(e) {
+            return done(e);
+          }
+
+          done();
+        });
       })
       .catch(e => {
         done(e);
@@ -124,6 +131,25 @@ describe('assets', () => {
       });
     });
 
+    it('should resolve with the data if it is already loaded', done => {
+      assets.loadData('/data/test.txt').then(image => {
+        let spy = sinon.spy(window, 'fetch');
+
+        assets.loadData('/data/test.txt').then(img => {
+          try {
+            expect(spy.called).to.equal(false);
+          } catch(e) {
+            return done(e);
+          }
+
+          done();
+        });
+      })
+      .catch(e => {
+        done(e);
+      });
+    });
+
     it('should parse a JSON file', done => {
       assets.loadData('/data/test.json').then(data => {
         expect(typeof data).to.equal('object');
@@ -193,6 +219,25 @@ describe('assets', () => {
         expect(assets.audio['/audio/shoot']).to.equal(audio);
 
         done();
+      })
+      .catch(e => {
+        done(e);
+      });
+    });
+
+    it('should resolve with the audio if it is already loaded', done => {
+      assets.loadAudio('/audio/shoot.mp3').then(image => {
+        let spy = sinon.spy(Audio.prototype, 'addEventListener');
+
+        assets.loadAudio('/audio/shoot.mp3').then(img => {
+          try {
+            expect(spy.called).to.equal(false);
+          } catch(e) {
+            return done(e);
+          }
+
+          done();
+        });
       })
       .catch(e => {
         done(e);

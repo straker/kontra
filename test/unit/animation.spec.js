@@ -69,6 +69,27 @@ describe('animation', () => {
 
 
   // --------------------------------------------------
+  // reset
+  // --------------------------------------------------
+  describe('reset', () => {
+
+    it('should reset the animation', () => {
+      animation._f = 4;
+      animation._a = 4;
+
+      animation.reset();
+
+      expect(animation._f).to.equal(0);
+      expect(animation._a).to.equal(0);
+    });
+
+  });
+
+
+
+
+
+  // --------------------------------------------------
   // update
   // --------------------------------------------------
   describe('update', () => {
@@ -105,7 +126,7 @@ describe('animation', () => {
       expect(animation._f).to.equal(0);
     });
 
-    it('should not reset the animation if loop is false', () => {
+    it('should not restart the animation if loop is false', () => {
       animation.loop = false;
 
       for (let i = 0; i < 7; i++) {
@@ -126,11 +147,11 @@ describe('animation', () => {
 
 
   // --------------------------------------------------
-  // draw
+  // render
   // --------------------------------------------------
-  describe('draw', () => {
+  describe('render', () => {
 
-    it('should draw the spriteSheet at its initial frame', () => {
+    it('should render the spriteSheet at its initial frame', () => {
       let context = {drawImage: sinon.stub()};
 
       animation.render({
@@ -160,7 +181,7 @@ describe('animation', () => {
       context.drawImage.restore();
     });
 
-    it('should draw the spriteSheet in the middle of the animation', () => {
+    it('should render the spriteSheet in the middle of the animation', () => {
       let context = {drawImage: sinon.stub()};
 
       animation._f = 2;

@@ -1,6 +1,7 @@
 var kontra = (function () {
 'use strict';
 
+// expose for testing
 let callbacks = {};
 
 /**
@@ -228,6 +229,23 @@ function getName(url) {
   return name.split('/').length == 2 ? name.replace(leadingSlash, '') : name;
 }
 
+/**
+ * Get browser audio playability.
+ * @see https://github.com/Modernizr/Modernizr/blob/master/feature-detects/audio.js
+ *
+ * @param {HTMLMediaElement} audio - Audio element.
+ *
+ * @returns {object}
+ */
+function getCanPlay(audio) {
+  return {
+    wav: '',
+    mp3: audio.canPlayType('audio/mpeg;'),
+    ogg: audio.canPlayType('audio/ogg; codecs="vorbis"'),
+    aac: audio.canPlayType('audio/aac;')
+  };
+}
+
 let images = {};
 let audio = {};
 let data = {};
@@ -272,23 +290,6 @@ function setDataPath(path) {
 }
 
 /**
- * Get browser audio playability.
- * @see https://github.com/Modernizr/Modernizr/blob/master/feature-detects/audio.js
- *
- * @param {HTMLMediaElement} audio - Audio element.
- *
- * @returns {object}
- */
-function getCanPlay(audio) {
-  return {
-    wav: '',
-    mp3: audio.canPlayType('audio/mpeg;'),
-    ogg: audio.canPlayType('audio/ogg; codecs="vorbis"'),
-    aac: audio.canPlayType('audio/aac;')
-  };
-}
-
-/**
  * Load an Image file. Uses imagePath to resolve URL.
  *
  * @param {string} url - The URL to the Image file.
@@ -299,7 +300,6 @@ function getCanPlay(audio) {
  * loadImage('car.png');
  * loadImage('autobots/truck.png');
  */
-// @see https://github.com/jed/140bytes/wiki/Byte-saving-techniques#use-placeholder-arguments-instead-of-var
 function loadImage(url) {
   return new Promise((resolve, reject) => {
     let resolvedUrl, image, fullUrl;
@@ -335,7 +335,6 @@ function loadImage(url) {
  * loadAudio('sound_effects/laser.mp3');
  * loadAudio(['explosion.mp3', 'explosion.m4a', 'explosion.ogg']);
  */
-// @see https://github.com/jed/140bytes/wiki/Byte-saving-techniques#use-placeholder-arguments-instead-of-var
 function loadAudio(url) {
   return new Promise((resolve, reject) => {
     let audioEl, canPlay, resolvedUrl, fullUrl;
@@ -345,12 +344,12 @@ function loadAudio(url) {
 
     // determine the first audio format the browser can play
     url = [].concat(url)
-                    .reduce((playableSource, source) => playableSource
-                      ? playableSource
-                      : canPlay[ getExtension(source) ]
-                        ? source
-                        : null
-                    );
+            .reduce((playableSource, source) => playableSource
+              ? playableSource
+              : canPlay[ getExtension(source) ]
+                ? source
+                : null
+            , 0);  // 0 is the shortest falsy value
 
     if (!url) {
       return reject(/* @if DEBUG */ 'cannot play any of the audio formats provided' + /* @endif */ url);
@@ -385,7 +384,6 @@ function loadAudio(url) {
  * loadData('bio.json');
  * loadData('dialog.txt');
  */
-// @see https://github.com/jed/140bytes/wiki/Byte-saving-techniques#use-placeholder-arguments-instead-of-var
 function loadData(url) {
   let resolvedUrl, fullUrl;
 
@@ -405,7 +403,6 @@ function loadData(url) {
     return response;
   });
 }
-
 
 /**
  * Load an Image, Audio, or data file.
@@ -434,6 +431,13 @@ function load(...assets) {
     })
   );
 }
+
+// expose for testing
+
+
+/**
+ * Override the getCanPlay function to provide a specific return type for tests
+ */
 
 /**
  * Noop function
@@ -539,16 +543,28 @@ function GameLoop({fps = 60, clearCanvas = true, update, render} = {}) {
 let callbacks$1 = {};
 let pressedKeys = {};
 
+let keyMap = {
+  // named keys
+  13: 'enter',
+  27: 'esc',
+  32: 'space',
+  37: 'left',
+  38: 'up',
+  39: 'right',
+  40: 'down'
+};
+
 /**
  * Execute a function that corresponds to a keyboard key.
  *
  * @param {KeyboardEvent} evt
  */
 function keydownEventHandler(evt) {
-  pressedKeys[evt.key] = true;
+  let key = keyMap[evt.which];
+  pressedKeys[key] = true;
 
-  if (callbacks$1[evt.key]) {
-    callbacks$1[evt.key](evt);
+  if (callbacks$1[key]) {
+    callbacks$1[key](evt);
   }
 }
 
@@ -558,7 +574,7 @@ function keydownEventHandler(evt) {
  * @param {KeyboardEvent} evt
  */
 function keyupEventHandler(evt) {
-  pressedKeys[evt.key] = false;
+  pressedKeys[ keyMap[evt.which] ] = false;
 }
 
 /**
@@ -572,9 +588,25 @@ function blurEventHandler() {
  * Add keyboard event listeners.
  */
 function initKeys() {
-  addEventListener('keydown', keydownEventHandler);
-  addEventListener('keyup', keyupEventHandler);
-  addEventListener('blur', blurEventHandler);
+  let i;
+
+  // alpha keys
+  // @see https://stackoverflow.com/a/43095772/2124254
+  for (i = 0; i < 26; i++) {
+    // rollupjs considers this a side-effect (for now), so we'll do it in the
+    // initKeys function
+    // @see https://twitter.com/lukastaegert/status/1107011988515893249?s=20
+    keyMap[65+i] = (10 + i).toString(36);
+  }
+
+  // numeric keys
+  for (i = 0; i < 10; i++) {
+    keyMap[48+i] = ''+i;
+  }
+
+  window.addEventListener('keydown', keydownEventHandler);
+  window.addEventListener('keyup', keyupEventHandler);
+  window.addEventListener('blur', blurEventHandler);
 }
 
 /**
@@ -606,6 +638,147 @@ function unbindKeys(keys) {
  */
 function keyPressed(key) {
   return !!pressedKeys[key];
+}
+
+/**
+ * Get the kontra object method name from the plugin.
+ *
+ * @param {string} methodName - Before/After function name
+ *
+ * @returns {string}
+ */
+function getMethod(methodName) {
+  let methodTitle = methodName.substr( methodName.search(/[A-Z]/) );
+  return methodTitle[0].toLowerCase() + methodTitle.substr(1);
+}
+
+/**
+ * Remove an interceptor.
+ *
+ * @param {function[]} interceptors - Before/After interceptor list
+ * @param {function} fn - Interceptor function
+ */
+function removeInterceptor(interceptors, fn) {
+  let index = interceptors.indexOf(fn);
+  if (index !== -1) {
+    interceptors.splice(index, 1);
+  }
+}
+
+/**
+ * Register a plugin to run before or after methods. Based on interceptor pattern.
+ * @see https://blog.kiprosh.com/javascript-method-interceptors/
+ *
+ * @param {string} object - Kontra object to attach plugin to
+ * @param {object} pluginObj - Plugin object
+ *
+ * @example
+ * registerPlugin('sprite', myPluginObject)
+ */
+function registerPlugin(object, pluginObj) {
+  let objectProto = object.prototype;
+
+  if (!objectProto) return;
+
+  // create interceptor list and functions
+  if (!objectProto._inc) {
+    objectProto._inc = {};
+    objectProto._bInc = function beforePlugins(context, method, ...args) {
+      return this._inc[method].before.reduce((acc, fn) => {
+        let newArgs = fn(context, ...acc);
+        return newArgs ? newArgs : acc;
+      }, args);
+    };
+    objectProto._aInc = function afterPlugins(context, method, result, ...args) {
+      return this._inc[method].after.reduce((acc, fn) => {
+        let newResult = fn(context, acc, ...args);
+        return newResult ? newResult : acc;
+      }, result);
+    };
+  }
+
+  // add plugin to interceptors
+  Object.getOwnPropertyNames(pluginObj).forEach(methodName => {
+    let method = getMethod(methodName);
+
+    if (!objectProto[method]) return;
+
+    // override original method
+    if (!objectProto['_o' + method]) {
+      objectProto['_o' + method] = objectProto[method];
+
+      objectProto[method] = function interceptedFn(...args) {
+
+        // call before interceptors
+        let alteredArgs = this._bInc(this, method, ...args);
+
+        let result = objectProto['_o' + method].call(this, ...alteredArgs);
+
+        // call after interceptors
+        return this._aInc(this, method, result, ...args);
+      };
+    }
+
+    // create interceptors for the method
+    if (!objectProto._inc[method]) {
+      objectProto._inc[method] = {
+        before: [],
+        after: []
+      };
+    }
+
+    if (methodName.startsWith('before')) {
+      objectProto._inc[method].before.push(pluginObj[methodName]);
+    }
+    else if (methodName.startsWith('after')) {
+      objectProto._inc[method].after.push(pluginObj[methodName]);
+    }
+  });
+}
+
+/**
+ * Unregister a plugin.
+ *
+ * @param {string} object - Kontra object to attach plugin to
+ * @param {object} pluginObj - Plugin object
+ *
+ * @example
+ * unregisterPlugin('sprite', myPluginObject)
+ */
+function unregisterPlugin(object, pluginObj) {
+  let objectProto = object.prototype;
+
+  if (!objectProto || !objectProto._inc) return;
+
+  // remove plugin from interceptors
+  Object.getOwnPropertyNames(pluginObj).forEach(methodName => {
+    let method = getMethod(methodName);
+
+    if (methodName.startsWith('before')) {
+      removeInterceptor(objectProto._inc[method].before, pluginObj[methodName]);
+    }
+    else if (methodName.startsWith('after')) {
+      removeInterceptor(objectProto._inc[method].after, pluginObj[methodName]);
+    }
+  });
+}
+
+/**
+ * Safely extend functionality of a kontra object.
+ *
+ * @param {string} object - Kontra object to extend
+ * @param {object} properties - Properties to add
+ */
+function extendObject(object, properties) {
+  let objectProto = object.prototype;
+
+  if (!objectProto) return;
+
+  Object.getOwnPropertyNames(properties).forEach(prop => {
+    if (!objectProto[prop]) {
+      objectProto[prop] = properties[prop];
+    }
+  });
 }
 
 // save each object as they are rendered to determine which object
@@ -750,13 +923,10 @@ function pointerHandler(evt, eventName) {
   pointer.x = x;
   pointer.y = y;
 
-  let object;
-  if (evt.target === canvas) {
-    evt.preventDefault();
-    object = getCurrentObject();
-    if (object && object[eventName]) {
-      object[eventName](evt);
-    }
+  evt.preventDefault();
+  let object = getCurrentObject();
+  if (object && object[eventName]) {
+    object[eventName](evt);
   }
 
   if (callbacks$2[eventName]) {
@@ -1678,8 +1848,9 @@ function parseFrames(consecutiveFrames) {
 
   // coerce string to number
   // @see https://github.com/jed/140bytes/wiki/Byte-saving-techniques#coercion-to-test-for-types
-  let start = i = +frames[0];
+  let start = +frames[0];
   let end = +frames[1];
+  let i = start;
 
   // ascending frame order
   if (start < end) {
@@ -1993,47 +2164,47 @@ function TileEngine(properties) {
   }, properties);
 
   // resolve linked files (source, image)
-  tileEngine.tilesets.map(tileset => {
-    let url = (kontra.assets ? kontra.assets._d.get(properties) : '') || window.location.href;
+  // tileEngine.tilesets.map(tileset => {
+  //   let url = (kontra.assets ? kontra.assets._d.get(properties) : '') || window.location.href;
 
-    if (tileset.source) {
-      // @if DEBUG
-      if (!kontra.assets) {
-        throw Error(`You must use "kontra.assets" to resolve tileset.source`);
-      }
-      // @endif
+  //   if (tileset.source) {
+  //     // @if DEBUG
+  //     if (!kontra.assets) {
+  //       throw Error(`You must use "kontra.assets" to resolve tileset.source`);
+  //     }
+  //     // @endif
 
-      let source = kontra.assets.data[kontra.assets._u(tileset.source, url)];
+  //     let source = kontra.assets.data[kontra.assets._u(tileset.source, url)];
 
-      // @if DEBUG
-      if (!source) {
-        throw Error(`You must load the tileset source "${tileset.source}" before loading the tileset`);
-      }
-      // @endif
+  //     // @if DEBUG
+  //     if (!source) {
+  //       throw Error(`You must load the tileset source "${tileset.source}" before loading the tileset`);
+  //     }
+  //     // @endif
 
-      Object.keys(source).map(key => {
-        tileset[key] = source[key];
-      });
-    }
+  //     Object.keys(source).map(key => {
+  //       tileset[key] = source[key];
+  //     });
+  //   }
 
-    if (''+tileset.image === tileset.image) {
-      // @if DEBUG
-      if (!kontra.assets) {
-        throw Error(`You must use "kontra.assets" to resolve tileset.image`);
-      }
-      // @endif
+  //   if (''+tileset.image === tileset.image) {
+  //     // @if DEBUG
+  //     if (!kontra.assets) {
+  //       throw Error(`You must use "kontra.assets" to resolve tileset.image`);
+  //     }
+  //     // @endif
 
-      let image = kontra.assets.images[kontra.assets._u(tileset.image, url)];
+  //     let image = kontra.assets.images[kontra.assets._u(tileset.image, url)];
 
-      // @if DEBUG
-      if (!image) {
-        throw Error(`You must load the image "${tileset.image}" before loading the tileset`);
-      }
-      // @endif
+  //     // @if DEBUG
+  //     if (!image) {
+  //       throw Error(`You must load the image "${tileset.image}" before loading the tileset`);
+  //     }
+  //     // @endif
 
-      tileset.image = image;
-    }
-  });
+  //     tileset.image = image;
+  //   }
+  // });
 
   /**
    * Get the row from the y coordinate.
@@ -2146,7 +2317,7 @@ function TileEngine(properties) {
   return tileEngine;
 }
 
-let kontra$1 = {
+let kontra = {
   Animation: animationFactory,
 
   images,
@@ -2170,10 +2341,15 @@ let kontra$1 = {
 
   GameLoop,
 
+  keyMap,
   initKeys,
   bindKeys,
   unbindKeys,
   keyPressed,
+
+  registerPlugin,
+  unregisterPlugin,
+  extendObject,
 
   initPointer,
   pointer,
@@ -2196,6 +2372,6 @@ let kontra$1 = {
   Vector: vectorFactory
 };
 
-return kontra$1;
+return kontra;
 
 }());

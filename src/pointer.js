@@ -143,13 +143,10 @@ function pointerHandler(evt, eventName) {
   pointer.x = x;
   pointer.y = y;
 
-  let object;
-  if (evt.target === canvas) {
-    evt.preventDefault();
-    object = getCurrentObject();
-    if (object && object[eventName]) {
-      object[eventName](evt);
-    }
+  evt.preventDefault();
+  let object = getCurrentObject();
+  if (object && object[eventName]) {
+    object[eventName](evt);
   }
 
   if (callbacks[eventName]) {

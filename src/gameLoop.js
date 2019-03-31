@@ -1,100 +1,99 @@
-(function() {
+import { noop } from './utils.js'
+import { emit } from './events.js'
+import { getContext, getCanvas } from './core.js'
+
+/**
+ * Clear the canvas.
+ */
+function clear() {
+  let canvas = getCanvas();
+  getContext().clearRect(0, 0, canvas.width, canvas.height);
+}
+
+/**
+ * Game loop that updates and renders the game every frame.
+ *
+ * @param {object}   properties - Properties of the game loop.
+ * @param {number}   [properties.fps=60] - Desired frame rate.
+ * @param {boolean}  [properties.clearCanvas=true] - Clear the canvas every frame.
+ * @param {function} properties.update - Function called to update the game.
+ * @param {function} properties.render - Function called to render the game.
+ */
+export default function GameLoop({fps = 60, clearCanvas = true, update, render} = {}) {
+  // check for required functions
+  // @if DEBUG
+  if ( !(update && render) ) {
+    throw Error('You must provide update() and render() functions');
+  }
+  // @endif
+
+  // animation variables
+  let accumulator = 0;
+  let delta = 1E3 / fps;  // delta between performance.now timings (in ms)
+  let step = 1 / fps;
+  let clearFn = clearCanvas ? clear : noop
+  let last, rAF, now, dt, loop;
 
   /**
-   * Game loop that updates and renders the game every frame.
-   * @memberof kontra
-   *
-   * @param {object}   properties - Properties of the game loop.
-   * @param {number}   [properties.fps=60] - Desired frame rate.
-   * @param {boolean}  [properties.clearCanvas=true] - Clear the canvas every frame.
-   * @param {function} properties.update - Function called to update the game.
-   * @param {function} properties.render - Function called to render the game.
+   * Called every frame of the game loop.
    */
-  kontra.gameLoop = function(properties) {
-    properties = properties || {};
+  function frame() {
+    rAF = requestAnimationFrame(frame);
 
-    // check for required functions
-    // @if DEBUG
-    if ( !(properties.update && properties.render) ) {
-      throw Error('You must provide update() and render() functions');
+    now = performance.now();
+    dt = now - last;
+    last = now;
+
+    // prevent updating the game with a very large dt if the game were to lose focus
+    // and then regain focus later
+    if (dt > 1E3) {
+      return;
     }
-    // @endif
 
-    // animation variables
-    let fps = properties.fps || 60;
-    let accumulator = 0;
-    let delta = 1E3 / fps;  // delta between performance.now timings (in ms)
-    let step = 1 / fps;
+    emit('tick');
+    accumulator += dt;
 
-    let clear = (properties.clearCanvas === false ?
-                kontra._noop :
-                function clear() {
-                  kontra.context.clearRect(0,0,kontra.canvas.width,kontra.canvas.height);
-                });
-    let last, rAF, now, dt;
+    while (accumulator >= delta) {
+      loop.update(step);
+
+      accumulator -= delta;
+    }
+
+    clearFn();
+    loop.render();
+  }
+
+  // game loop object
+  loop = {
+    update,
+    render,
+    isStopped: true,
 
     /**
-     * Called every frame of the game loop.
+     * Start the game loop.
      */
-    function frame() {
-      rAF = requestAnimationFrame(frame);
+    start() {
+      last = performance.now();
+      this.isStopped = false;
+      requestAnimationFrame(frame);
+    },
 
-      now = performance.now();
-      dt = now - last;
-      last = now;
+    /**
+     * Stop the game loop.
+     */
+    stop() {
+      this.isStopped = true;
+      cancelAnimationFrame(rAF);
+    },
 
-      // prevent updating the game with a very large dt if the game were to lose focus
-      // and then regain focus later
-      if (dt > 1E3) {
-        return;
-      }
-
-      kontra.emit('tick');
-      accumulator += dt;
-
-      while (accumulator >= delta) {
-        gameLoop.update(step);
-
-        accumulator -= delta;
-      }
-
-      clear();
-      gameLoop.render();
+    // expose properties for testing
+    // @if DEBUG
+    _frame: frame,
+    set _last(value) {
+      last = value;
     }
-
-    // game loop object
-    let gameLoop = {
-      update: properties.update,
-      render: properties.render,
-      isStopped: true,
-
-      /**
-       * Start the game loop.
-       * @memberof kontra.gameLoop
-       */
-      start() {
-        last = performance.now();
-        this.isStopped = false;
-        requestAnimationFrame(frame);
-      },
-
-      /**
-       * Stop the game loop.
-       */
-      stop() {
-        this.isStopped = true;
-        cancelAnimationFrame(rAF);
-      },
-
-      // expose properties for testing
-      // @if DEBUG
-      _frame: frame,
-      set _last(value) {
-        last = value;
-      }
-      // @endif
-    };
-
-    return gameLoop;
+    // @endif
   };
-})();
+
+  return loop;
+};

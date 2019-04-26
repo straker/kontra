@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Kontra.js – Animation</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/themes/prism.min.css">
+  <link rel="stylesheet" href="../styles.css">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/components/prism-javascript.min.js"></script>
+  <script src="../../js/kontra.js"></script>
+</head>
+<body>
+  <div class="content">
+    <header class="main-nav">
+      <h1 id="kontra-heading">Kontra</h1>
+      <a href="#main">Skip navigation</a>
+
+      <nav aria-labelledby="kontra-heading">
+        <button class="menu-button" aria-expanded="false" aria-controls="menu"><span aria-hidden="true">☰</span> Menu</button>
+
+        <!-- add role=list back to list so screen readers still read it as list when
+             css list-style: none is set
+             @see https://web-a11y.slack.com/archives/C042TSFGN/p1501699529181172 -->
+        <ul id="menu" role="list">
+          <li><a href="/">Introduction</a></li>
+          <li><a href="/getting-started">Getting Started</a></li>
+          <li><a href="/download">Download</a></li>
+          <li><a href="/tutorials">Tutorials</a></li>
+          <li><a href="/made-with-kontra">Made With Kontra</a></li>
+
+          <li>
+            <h2 id="api">API</h2>
+            <ul aria-labelledby="api">
+              <li><a href="/api/animation.html">Animation</a></li>
+              <li><a href="/api/core.html">Core</a></li>
+              <li><a href="/api/events.html">Events</a></li>
+              <li><a href="/api/pool.html">Pool</a></li>
+              <li><a href="/api/sprite.html">Sprite</a></li>
+              <li><a href="/api/store.html">Store</a></li>
+              <li><a href="/api/vector.html">Vector</a></li>
+            </ul>
+          </li>
+        </ul>
+    </header>
+
+    <main id="main">
+      <div>
+        <h1>Animation(&#8203;properties)
+        </h1>
+
+        <p>An object for drawing sprite sheet animations.</p>
+<p>An animation defines the sequence of frames to use from a sprite sheet. It also defines at what speed the animation should run using <code>frameRate</code>.</p>
+<p>Typically you don&#39;t create an <a href="Animation.html">Animation</a> directly, but instead would create it through a <a href="SpriteSheet.html">SpriteSheet</a>.</p>
+<pre><code class="lang-js">import { SpriteSheet, Animation } from &#39;kontra&#39;;
+
+let spriteSheet = SpriteSheet({
+  // ...
+});
+
+let animation = Animation({
+  spriteSheet: spriteSheet,
+  frames: [1,2,3,6],
+  frameRate: 30
+});
+</code></pre>
+        <h3 id="title-Animation"><span class="visually-hidden">Animation</span> Parameters</span></h3>
+        <dl aria-labelledby="title-Animation">
+          <dt>
+            <code>properties</code>
+            
+          </dt>
+          <dd><p>Object. Properties of the animation.</p>
+        </dd>
+          <dt>
+            <code>properties.spriteSheet</code>
+            
+          </dt>
+          <dd><p><a href="SpriteSheet.html">SpriteSheet</a>. Sprite sheet for the animation.</p>
+        </dd>
+          <dt>
+            <code>properties.frames</code>
+            
+          </dt>
+          <dd><p>An Array of Numbers. List of frames of the animation.</p>
+        </dd>
+          <dt>
+            <code>properties.frameRate</code>
+            
+          </dt>
+          <dd><p>Number. Number of frames to display in one second.</p>
+        </dd>
+          <dt>
+            <code>properties.loop</code>
+            <span class="optional">Optional</span>
+          </dt>
+          <dd><p>Boolean. If the animation should loop. Defaults to <code>true</code>.</p>
+        </dd>
+        </dl>
+        
+
+        <section class="toc">
+          <h2 id="toc"><a href="#toc" class="section-link">Table of Contents<span aria-hidden="true">#</span></a></h2>
+
+          <ul aria-labeledby="toc">
+
+            <li>
+              <h3 id="properties">Properties</h3>
+              <ul aria-labeledby="properties">
+                <li>
+                  <a href="#frameRate">
+                    <span>Animation&#8203;.frameRate</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#frames">
+                    <span>Animation&#8203;.frames</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#height">
+                    <span>Animation&#8203;.height</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#loop">
+                    <span>Animation&#8203;.loop</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#margin">
+                    <span>Animation&#8203;.margin</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#spriteSheet">
+                    <span>Animation&#8203;.spriteSheet</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#width">
+                    <span>Animation&#8203;.width</span>
+                  </a>
+                </li>
+              </ul>
+            </li>
+
+            <li>
+              <h3 id="methods">Methods</h3>
+              <ul aria-labeledby="methods">
+                <li>
+                  <a href="#render">
+                    <span>Animation&#8203;.render(properties)</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#reset">
+                    <span>Animation&#8203;.reset()</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#update">
+                    <span>Animation&#8203;.update([dt])</span>
+                  </a>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </section>
+
+
+        <section>
+          <h2 id="frameRate">
+            <a href="#frameRate" class="section-link">
+              <span>Animation&#8203;.frameRate</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
+
+          <p>Number. Number of frames to display per second. Adjusting this value will change the speed of the animation.</p>
+          
+        </section>
+        <section>
+          <h2 id="frames">
+            <a href="#frames" class="section-link">
+              <span>Animation&#8203;.frames</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
+
+          <p>An Array of Numbers. Sequence of frames to use from the sprite sheet.</p>
+          
+        </section>
+        <section>
+          <h2 id="height">
+            <a href="#height" class="section-link">
+              <span>Animation&#8203;.height</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
+
+          <p>Number. The height of an individual frame. Taken from the property of the same name in the <a href="#spriteSheet">spriteSheet</a>.</p>
+          
+        </section>
+        <section>
+          <h2 id="loop">
+            <a href="#loop" class="section-link">
+              <span>Animation&#8203;.loop</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
+
+          <p>Boolean. If the animation should loop back to the beginning once completed.</p>
+          
+        </section>
+        <section>
+          <h2 id="margin">
+            <a href="#margin" class="section-link">
+              <span>Animation&#8203;.margin</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
+
+          <p>Number. The space between each frame. Taken from the property of the same name in the <a href="#spriteSheet">spriteSheet</a>.</p>
+          
+        </section>
+        <section>
+          <h2 id="render">
+            <a href="#render" class="section-link">
+              <span>Animation&#8203;.render(properties)</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
+
+          <p>Draw the current frame. Used when the animation is not stopped.</p>
+          <h3 id="title-render"><span class="visually-hidden">render</span> Parameters</span></h3>
+          <dl aria-labelledby="title-render">
+            <dt>
+              <code>properties</code>
+              
+            </dt>
+            <dd><p>Object. How to draw the animation.</p>
+          </dd>
+            <dt>
+              <code>properties.x</code>
+              
+            </dt>
+            <dd><p>Number. X position to draw.</p>
+          </dd>
+            <dt>
+              <code>properties.y</code>
+              
+            </dt>
+            <dd><p>Number. Y position to draw.</p>
+          </dd>
+            <dt>
+              <code>properties.width</code>
+              <span class="optional">Optional</span>
+            </dt>
+            <dd><p>Number. width of the sprite. Defaults to <a href="#width">Animation.width</a>.</p>
+          </dd>
+            <dt>
+              <code>properties.height</code>
+              <span class="optional">Optional</span>
+            </dt>
+            <dd><p>Number. height of the sprite. Defaults to <a href="#height">Animation.height</a>.</p>
+          </dd>
+            <dt>
+              <code>properties.context</code>
+              <span class="optional">Optional</span>
+            </dt>
+            <dd><p>Canvas​Rendering​Context2D. The context the animation should draw to. Defaults to <a href="/api/core.html#getContext">core.getContext()</a>.</p>
+          </dd>
+          </dl>
+          
+        </section>
+        <section>
+          <h2 id="reset">
+            <a href="#reset" class="section-link">
+              <span>Animation&#8203;.reset()</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
+
+          <p>Reset an animation to the first frame.</p>
+          
+        </section>
+        <section>
+          <h2 id="spriteSheet">
+            <a href="#spriteSheet" class="section-link">
+              <span>Animation&#8203;.spriteSheet</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
+
+          <p><a href="SpriteSheet.html">SpriteSheet</a>. The sprite sheet to use for the animation.</p>
+          
+        </section>
+        <section>
+          <h2 id="update">
+            <a href="#update" class="section-link">
+              <span>Animation&#8203;.update([dt])</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
+
+          <p>Update the animation. Used when the animation is not paused or stopped.</p>
+          <h3 id="title-update"><span class="visually-hidden">update</span> Parameters</span></h3>
+          <dl aria-labelledby="title-update">
+            <dt>
+              <code>dt</code>
+              <span class="optional">Optional</span>
+            </dt>
+            <dd><p>Number. Time since last update. Defaults to <code>1/60</code>.</p>
+          </dd>
+          </dl>
+          
+        </section>
+        <section>
+          <h2 id="width">
+            <a href="#width" class="section-link">
+              <span>Animation&#8203;.width</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
+
+          <p>Number. The width of an individual frame. Taken from the property of the same name in the <a href="#spriteSheet">spriteSheet</a>.</p>
+          
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+</body>
+</html>

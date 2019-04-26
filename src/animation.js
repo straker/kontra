@@ -1,24 +1,85 @@
 import { getContext } from './core.js'
 
+/**
+ * An object for drawing sprite sheet animations.
+ *
+ * An animation defines the sequence of frames to use from a sprite sheet. It also defines at what speed the animation should run using `frameRate`.
+ *
+ * Typically you don't create an kontra.Animation directly, but instead would create it through a kontra.SpriteSheet.
+ *
+ * ```js
+ * import { SpriteSheet, Animation } from 'kontra';
+ *
+ * let spriteSheet = SpriteSheet({
+ *   // ...
+ * });
+ *
+ * let animation = Animation({
+ *   spriteSheet: spriteSheet,
+ *   frames: [1,2,3,6],
+ *   frameRate: 30
+ * });
+ * ```
+ * @class Animation
+ *
+ * @param {Object} properties - Properties of the animation.
+ * @param {kontra.SpriteSheet} properties.spriteSheet - Sprite sheet for the animation.
+ * @param {Number[]} properties.frames - List of frames of the animation.
+ * @param {Number}  properties.frameRate - Number of frames to display in one second.
+ * @param {Boolean} [properties.loop=true] - If the animation should loop.
+ */
 class Animation {
-  /**
-   * Initialize properties on the animation.
-   *
-   * @param {object} properties - Properties of the animation.
-   * @param {object} properties.spriteSheet - Sprite sheet for the animation.
-   * @param {number[]} properties.frames - List of frames of the animation.
-   * @param {number}  properties.frameRate - Number of frames to display in one second.
-   * @param {boolean} [properties.loop=true] - If the animation should loop.
-   */
   constructor({spriteSheet, frames, frameRate, loop = true} = {}) {
+
+    /**
+     * The sprite sheet to use for the animation.
+     * @memberof Animation
+     * @property {kontra.SpriteSheet} spriteSheet
+     */
     this.spriteSheet = spriteSheet;
+
+    /**
+     * Sequence of frames to use from the sprite sheet.
+     * @memberof Animation
+     * @property {Number[]} frames
+     */
     this.frames = frames;
+
+    /**
+     * Number of frames to display per second. Adjusting this value will change the speed of the animation.
+     * @memberof Animation
+     * @property {Number} frameRate
+     */
     this.frameRate = frameRate;
+
+    /**
+     * If the animation should loop back to the beginning once completed.
+     * @memberof Animation
+     * @property {Boolean} loop
+     */
     this.loop = loop;
 
     let { width, height, margin = 0 } = spriteSheet.frame;
+
+    /**
+     * The width of an individual frame. Taken from the property of the same name in the [spriteSheet](#spriteSheet).
+     * @memberof Animation
+     * @property {Number} width
+     */
     this.width = width;
+
+    /**
+     * The height of an individual frame. Taken from the property of the same name in the [spriteSheet](#spriteSheet).
+     * @memberof Animation
+     * @property {Number} height
+     */
     this.height = height;
+
+    /**
+     * The space between each frame. Taken from the property of the same name in the [spriteSheet](#spriteSheet).
+     * @memberof Animation
+     * @property {Number} margin
+     */
     this.margin = margin;
 
     // f = frame, a = accumulator
@@ -27,9 +88,9 @@ class Animation {
   }
 
   /**
-   * Clone an animation to be used more than once.
+   * Clone an animation so it can be used more than once. By default animations passed to kontra.Sprite will be cloned so no two sprites update the same animation. Otherwise two sprites who shared the same animation would make it update twice as fast.
    *
-   * @returns {object}
+   * @returns {kontra.Animation} A new kontra.Animation instance.
    */
   clone() {
     return animationFactory(this);
@@ -37,6 +98,8 @@ class Animation {
 
   /**
    * Reset an animation to the first frame.
+   * @memberof Animation
+   * @function reset
    */
   reset() {
     this._f = 0;
@@ -45,8 +108,10 @@ class Animation {
 
   /**
    * Update the animation. Used when the animation is not paused or stopped.
+   * @memberof Animation
+   * @function update
    *
-   * @param {number} [dt=1/60] - Time since last update.
+   * @param {Number} [dt=1/60] - Time since last update.
    */
   update(dt = 1/60) {
 
@@ -64,13 +129,15 @@ class Animation {
 
   /**
    * Draw the current frame. Used when the animation is not stopped.
+   * @memberof Animation
+   * @function render
    *
-   * @param {object} properties - How to draw the animation.
-   * @param {number} properties.x - X position to draw.
-   * @param {number} properties.y - Y position to draw.
-   * @param {number} properties.width - width of the sprite.
-   * @param {number} properties.height - height of the sprit.
-   * @param {Context} [properties.context=kontra.context] - Provide a context for the sprite to draw on.
+   * @param {Object} properties - How to draw the animation.
+   * @param {Number} properties.x - X position to draw.
+   * @param {Number} properties.y - Y position to draw.
+   * @param {Number} [properties.width] - width of the sprite. Defaults to [Animation.width](#width).
+   * @param {Number} [properties.height] - height of the sprite. Defaults to [Animation.height](#height).
+   * @param {Canvas​Rendering​Context2D} [properties.context] - The context the animation should draw to. Defaults to [core.getContext()](/api/core.html#getContext).
    */
   render({x, y, width = this.width, height = this.height, context = getContext()} = {}) {
 

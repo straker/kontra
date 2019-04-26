@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Kontra.js – Events</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/themes/prism.min.css">
+  <link rel="stylesheet" href="../styles.css">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/components/prism-javascript.min.js"></script>
+  <script src="../../js/kontra.js"></script>
+</head>
+<body>
+  <div class="content">
+    <header class="main-nav">
+      <h1 id="kontra-heading">Kontra</h1>
+      <a href="#main">Skip navigation</a>
+
+      <nav aria-labelledby="kontra-heading">
+        <button class="menu-button" aria-expanded="false" aria-controls="menu"><span aria-hidden="true">☰</span> Menu</button>
+
+        <!-- add role=list back to list so screen readers still read it as list when
+             css list-style: none is set
+             @see https://web-a11y.slack.com/archives/C042TSFGN/p1501699529181172 -->
+        <ul id="menu" role="list">
+          <li><a href="/">Introduction</a></li>
+          <li><a href="/getting-started">Getting Started</a></li>
+          <li><a href="/download">Download</a></li>
+          <li><a href="/tutorials">Tutorials</a></li>
+          <li><a href="/made-with-kontra">Made With Kontra</a></li>
+
+          <li>
+            <h2 id="api">API</h2>
+            <ul aria-labelledby="api">
+              <li><a href="/api/animation.html">Animation</a></li>
+              <li><a href="/api/core.html">Core</a></li>
+              <li><a href="/api/events.html">Events</a></li>
+              <li><a href="/api/pool.html">Pool</a></li>
+              <li><a href="/api/sprite.html">Sprite</a></li>
+              <li><a href="/api/store.html">Store</a></li>
+              <li><a href="/api/vector.html">Vector</a></li>
+            </ul>
+          </li>
+        </ul>
+    </header>
+
+    <main id="main">
+      <div>
+        <h1>Events        </h1>
+
+        <p>A simple event system, mostly created to support <a href="/api/plugins.html">Plugins</a>. Allows you to hook into Kontra lifecycle events or create your own.</p>
+<pre><code class="lang-js">import { on, off, emit } from &#39;kontra&#39;;
+
+function callback(a, b, c) {
+  console.log({a, b, c});
+});
+
+on(&#39;myEvent&#39;, callback);
+emit(&#39;myEvent&#39;, 1, 2, 3);  //=&gt; {a: 1, b: 2, c: 3}
+off(&#39;myEvent&#39;, callback);
+</code></pre>
+        
+
+        <section class="toc">
+          <h2 id="toc"><a href="#toc" class="section-link">Table of Contents<span aria-hidden="true">#</span></a></h2>
+
+          <ul aria-labeledby="toc">
+            <li>
+              <ul>
+                <li><a href="#lifecycle-events">Lifecycle Events</a></li>
+              </ul>
+            </li>
+
+
+            <li>
+              <h3 id="methods">Methods</h3>
+              <ul aria-labeledby="methods">
+                <li>
+                  <a href="#emit">
+                    <span>emit(event, args)</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#off">
+                    <span>off(event, callback)</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#on">
+                    <span>on(event, callback)</span>
+                  </a>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </section>
+
+        <section>
+          <h2 id="lifecycle-events">
+            <a href="#lifecycle-events" class="section-link">
+              <span>Lifecycle Events</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
+
+          <p>There are currently only two lifecycle events:</p>
+<ul>
+<li><code>init</code> - Emitted after <code>init()</code> is called.</li>
+<li><code>tick</code> - Emitted every frame of <a href="GameLoop.html">GameLoop</a> before the loops <code>update()</code> and <code>render()</code> functions are called.</li>
+</ul>
+        </section>
+
+        <section>
+          <h2 id="emit">
+            <a href="#emit" class="section-link">
+              <span>emit(event, args)</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
+
+          <p>Call all callback functions for the event. All arguments will be passed to the callback functions.</p>
+          <h3 id="title-emit"><span class="visually-hidden">emit</span> Parameters</span></h3>
+          <dl aria-labelledby="title-emit">
+            <dt>
+              <code>event</code>
+              
+            </dt>
+            <dd><p>String. Name of the event.</p>
+          </dd>
+            <dt>
+              <code>args</code>
+              
+            </dt>
+            <dd><p>Any type. Arguments passed to all callbacks.</p>
+          </dd>
+          </dl>
+          
+        </section>
+        <section>
+          <h2 id="off">
+            <a href="#off" class="section-link">
+              <span>off(event, callback)</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
+
+          <p>Remove a callback for an event.</p>
+          <h3 id="title-off"><span class="visually-hidden">off</span> Parameters</span></h3>
+          <dl aria-labelledby="title-off">
+            <dt>
+              <code>event</code>
+              
+            </dt>
+            <dd><p>String. Name of the event.</p>
+          </dd>
+            <dt>
+              <code>callback</code>
+              
+            </dt>
+            <dd><p>Function. The function that was passed during registration.</p>
+          </dd>
+          </dl>
+          
+        </section>
+        <section>
+          <h2 id="on">
+            <a href="#on" class="section-link">
+              <span>on(event, callback)</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
+
+          <p>Register a callback for an event to be called whenever the event is emitted. The callback will be passed all arguments used in the <code>emit</code> call.</p>
+          <h3 id="title-on"><span class="visually-hidden">on</span> Parameters</span></h3>
+          <dl aria-labelledby="title-on">
+            <dt>
+              <code>event</code>
+              
+            </dt>
+            <dd><p>String. Name of the event.</p>
+          </dd>
+            <dt>
+              <code>callback</code>
+              
+            </dt>
+            <dd><p>Function. Function that will be called when the event is emitted.</p>
+          </dd>
+          </dl>
+          
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+</body>
+</html>

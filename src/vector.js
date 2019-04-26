@@ -1,27 +1,31 @@
+/**
+ * A simple 2d vector object.
+ *
+ * ```js
+ * import { Vector } from 'kontra';
+ *
+ * let vector = Vector(100, 200);
+ * ```
+ * @class Vector
+ *
+ * @param {Number} [x=0] - X coordinate of the vector.
+ * @param {Number} [y=0] - Y coordinate of the vector.
+ */
 class Vector {
-  /**
-   * Initialize the vectors x and y position.
-   * @memberof kontra.vector
-   * @private
-   *
-   * @param {number} [x=0] - X coordinate.
-   * @param {number} [y=0] - Y coordinate.
-   *
-   * @returns {vector}
-   */
   constructor(x, y) {
     this._x = x || 0;
     this._y = y || 0;
   }
 
   /**
-   * Add a vector to this vector.
-   * @memberof kontra.vector
+   * Return a new Vector whose value is the addition of the current Vector and the passed in Vector. If `dt` is provided, the result is multiplied by the value.
+   * @memberof Vector
+   * @function add
    *
-   * @param {vec} vector - Vector to add.
-   * @param {number} dt=1 - Time since last update.
+   * @param {kontra.Vector} vector - Vector to add to the current Vector.
+   * @param {Number} [dt=1] - Time since last update.
    *
-   * @returns {vector}
+   * @returns {kontra.Vector} A new kontra.Vector instance.
    */
   add(vec, dt) {
     return vectorFactory(
@@ -31,13 +35,28 @@ class Vector {
   }
 
   /**
-   * Clamp the vector between two points that form a rectangle.
-   * @memberof kontra.vector
+   * Clamp the Vector between two points, preventing `x` and `y` from going below or above the minimum and maximum values. Perfect for keeping a sprite from going outside the game boundaries.
    *
-   * @param {number} xMin - Min x value.
-   * @param {number} yMin - Min y value.
-   * @param {number} xMax - Max x value.
-   * @param {number} yMax - Max y value.
+   * ```js
+   * let vector = Vector(100, 200);
+   * vector.clamp(0, 0, 200, 300);
+   *
+   * vector.x += 200;
+   * console.log(vector.x);  //=> 200
+   *
+   * vector.y -= 300;
+   * console.log(vector.y);  //=> 0
+   *
+   * vector.add({x: -500, y: 500});
+   * console.log(vector);    //=> {x: 0, y: 300}
+   * ```
+   * @memberof Vector
+   * @function clamp
+   *
+   * @param {Number} xMin - Minimum x value.
+   * @param {Number} yMin - Minimum y value.
+   * @param {Number} xMax - Maximum x value.
+   * @param {Number} yMax - Maximum y value.
    */
   clamp(xMin, yMin, xMax, yMax) {
     this._c = true;
@@ -48,20 +67,18 @@ class Vector {
   }
 
   /**
-   * Vector x
-   * @memberof kontra.vector
-   *
-   * @property {number} x
+   * X coordinate of the vector.
+   * @memberof Vector
+   * @property {Number} x
    */
   get x() {
     return this._x;
   }
 
   /**
-   * Vector y
-   * @memberof kontra.vector
-   *
-   * @property {number} y
+   * Y coordinate of the vector.
+   * @memberof Vector
+   * @property {Number} y
    */
   get y() {
     return this._y;

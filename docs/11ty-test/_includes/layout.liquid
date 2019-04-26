@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Kontra.js – {{ title }}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/themes/prism.min.css">
+  <link rel="stylesheet" href="css/styles.css">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/components/prism-javascript.min.js"></script>
+  <script src="../../js/kontra.js"></script>
+</head>
+<body>
+  <div class="content">
+    <header class="main-nav">
+      <h1 id="kontra-heading">Kontra</h1>
+      <a href="#main">Skip navigation</a>
+
+      <nav aria-labelledby="kontra-heading">
+        <button class="menu-button" aria-expanded="false" aria-controls="menu"><span aria-hidden="true">☰</span> Menu</button>
+
+        <!-- add role=list back to list so screen readers still read it as list when
+             css list-style: none is set
+             @see https://web-a11y.slack.com/archives/C042TSFGN/p1501699529181172 -->
+        <ul id="menu" role="list">
+          <li><a href="">Introduction</a></li>
+          <li><a href="getting-started">Getting Started</a></li>
+          <li><a href="download">Download</a></li>
+          <li><a href="tutorials">Tutorials</a></li>
+          <li><a href="made-with-kontra">Made With Kontra</a></li>
+
+          <li>
+            <h2 id="api">API</h2>
+            <ul aria-labelledby="api">
+              <li><a href="api/assets">Asset Loading</a></li>
+              <li><a href="api/gameLoop">Game Loop</a></li>
+              <li><a href="api/keyboard">Keyboard</a></li>
+              <li><a href="api/kontra">Kontra</a></li>
+              <li><a href="api/pool">Object Pool</a></li>
+              <li><a href="api/plugin">Plugin</a></li>
+              <li><a href="api/pointer">Pointer</a></li>
+              <li><a href="api/quadtree">Quadtree</a></li>
+              <li><a href="api/sprite">Sprite</a></li>
+              <li><a href="api/animation">Spritesheet Animation</a></li>
+              <li><a href="api/spriteSheet">Spritesheet</a></li>
+              <li><a href="api/store">Store</a></li>
+              <li><a href="api/tileEngine">Tile Engine</a></li>
+              <li><a href="api/vector">Vector</a></li>
+            </ul>
+          </li>
+        </ul>
+    </header>
+
+    <main id="main">
+      <div>
+        <h1>{{ title }}</h1>
+
+        {{ content }}
+
+        <section class="toc">
+          <h2 id="toc"><a href="#toc" class="section-link">Table of Contents<span aria-hidden="true">#</span></a></h2>
+
+          <ul aria-labeledby="toc">
+            <li>
+              <h3 id="methods">Methods</h3>
+              <ul aria-labeledby="methods">
+                {% for method in methods %}
+                  {% comment %}
+                  make a comma separated list from an object. offset 1 so we don't get a trailing comma
+                  @see https://stackoverflow.com/questions/32378441/comma-separated-list-in-liquid
+                  {% endcomment %}
+                  {% assign params = method.params[0].name %}
+                  {% for param in method.params offset:1 %}
+                    {% capture params %}{{ params | append: "|" | append: param.name }}{% endcapture %}
+                  {% endfor %}
+
+                  <li><a href="#{{ method.name }}">{{ title | downcase }}&#8203;.{{ method.name }}({{ params | split: "|" | join: ", " }})</a></li>
+                {% endfor %}
+              </ul>
+            </li>
+          </ul>
+        </section>
+
+        {% assign allSections = methods | append properties %}
+        {{ allSections }}
+
+{{!--
+
+
+
+
+        <section class="toc">
+          <h2 id="toc"><a href="#toc" class="section-link">Table of Contents<span aria-hidden="true">#</span></a></h2>
+
+          <ul aria-labeledby="toc">
+            <li>
+              <h3 id="methods">Methods</h3>
+              <ul aria-labeledby="methods">
+                <li><a href="#get">kontra.store&#8203;.get(key)</a></li>
+                <li><a href="#set">kontra.store&#8203;.set(key, value)</a></li>
+              </ul>
+            </li>
+          </ul>
+        </section>
+
+
+
+
+
+        <section>
+          <h2 id="get"><a href="#get" class="section-link">kontra.store&#8203;.get(key)<span aria-hidden="true">#</span></a></h2>
+
+          <dl>
+            <dt><strong>key</strong> <em>{string}</em></dt>
+            <dd>Key to retrieve.</dd>
+          </dl>
+
+          <p>Get a keys value from local storage.</p>
+
+        </section>
+
+
+
+
+
+        <section>
+          <h2 id="set"><a href="#set" class="section-link">kontra.store&#8203;.set(key, value)<span aria-hidden="true">#</span></a></h2>
+
+          <dl>
+            <dt><strong>key</strong> <em>{string}</em></dt>
+            <dd>Key to set.</dd>
+            <dt><strong>value</strong> <em>{*}</em></dt>
+            <dd>Value to add.</dd>
+          </dl>
+
+          <p>Add or update a keys value in local storage.</p>
+
+        </section> --}}
+
+      </div>
+    </main>
+  </div>
+
+</body>
+</html>

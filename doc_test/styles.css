@@ -122,6 +122,17 @@ a:visited {
   color: #3e76c2;
 }
 
+/* highlight selected section */
+:target {
+  transform: translateX(20px);
+  border-left-color: #3e76c2;
+}
+section > h2 {
+  border-left: 40px solid white;
+  padding-left: 10px;
+  transition: transform 0.5s ease, border-left-color 0.5s ease;
+  margin-left: -50px;
+}
 
 
 .content {

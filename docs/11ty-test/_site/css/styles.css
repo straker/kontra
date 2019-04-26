@@ -97,7 +97,7 @@ li {
 }
 
 dd + dt {
-  margin-top: 0.75rem;
+  margin-top: 1rem;
 }
 
 dd {
@@ -277,18 +277,6 @@ code[class*=language-], pre[class*=language-] {
   border-top: 1px solid;
 }
 
-code:not([class]) {
-  background: #f5f2f0;
-  display: inline-block;
-  padding: 0 0.25rem;
-}
-
-.optional {
-  display: inline-block;
-  margin-left: 1rem;
-  padding: 0 0.25rem;
-  font-style: italic;
-}
 
 
 /*
@@ -480,6 +468,7 @@ nav {
 
 h1 {
   margin: 0;
+  padding: 0;
   border: 0;
 }
 

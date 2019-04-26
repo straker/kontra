@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Kontra.js – Store</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/themes/prism.min.css">
+  <link rel="stylesheet" href="../styles.css">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/components/prism-javascript.min.js"></script>
+  <script src="../../js/kontra.js"></script>
+</head>
+<body>
+  <div class="content">
+    <header class="main-nav">
+      <h1 id="kontra-heading">Kontra</h1>
+      <a href="#main">Skip navigation</a>
+
+      <nav aria-labelledby="kontra-heading">
+        <button class="menu-button" aria-expanded="false" aria-controls="menu"><span aria-hidden="true">☰</span> Menu</button>
+
+        <!-- add role=list back to list so screen readers still read it as list when
+             css list-style: none is set
+             @see https://web-a11y.slack.com/archives/C042TSFGN/p1501699529181172 -->
+        <ul id="menu" role="list">
+          <li><a href="/">Introduction</a></li>
+          <li><a href="/getting-started">Getting Started</a></li>
+          <li><a href="/download">Download</a></li>
+          <li><a href="/tutorials">Tutorials</a></li>
+          <li><a href="/made-with-kontra">Made With Kontra</a></li>
+
+          <li>
+            <h2 id="api">API</h2>
+            <ul aria-labelledby="api">
+              <li><a href="/api/animation.html">Animation</a></li>
+              <li><a href="/api/core.html">Core</a></li>
+              <li><a href="/api/events.html">Events</a></li>
+              <li><a href="/api/pool.html">Pool</a></li>
+              <li><a href="/api/sprite.html">Sprite</a></li>
+              <li><a href="/api/store.html">Store</a></li>
+              <li><a href="/api/vector.html">Vector</a></li>
+            </ul>
+          </li>
+        </ul>
+    </header>
+
+    <main id="main">
+      <div>
+        <h1>Store        </h1>
+
+        <p>A simple interface to LocalStorage based on <a href="https://github.com/marcuswestin/store.js">store.js</a>, whose sole purpose is to ensure that any keys you save to LocalStorage come out the same type as when they went in.</p>
+<p>Normally when you save something to LocalStorage, it converts it into a string. So if you were to save a number, it would be saved as <code>&quot;12&quot;</code> instead of <code>12</code>. This means when you retrieved the number, it would now be a string.</p>
+<pre><code class="lang-js">import { setStoreItem, getStoreItem } from &#39;kontra&#39;;
+
+setStoreItem(&#39;highScore&#39;, 100);
+getStoreItem(&#39;highScore&#39;);  //=&gt; 100
+</code></pre>
+        
+
+        <section class="toc">
+          <h2 id="toc"><a href="#toc" class="section-link">Table of Contents<span aria-hidden="true">#</span></a></h2>
+
+          <ul aria-labeledby="toc">
+
+
+            <li>
+              <h3 id="methods">Methods</h3>
+              <ul aria-labeledby="methods">
+                <li>
+                  <a href="#getStoreItem">
+                    <span>getStoreItem(key)</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#setStoreItem">
+                    <span>setStoreItem(key, value)</span>
+                  </a>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </section>
+
+
+        <section>
+          <h2 id="getStoreItem">
+            <a href="#getStoreItem" class="section-link">
+              <span>getStoreItem(key)</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
+
+          <p>Retrieve an item from localStorage and convert it back to its original type.</p>
+          <h3 id="title-getStoreItem"><span class="visually-hidden">getStoreItem</span> Parameters</span></h3>
+          <dl aria-labelledby="title-getStoreItem">
+            <dt>
+              <code>key</code>
+              
+            </dt>
+            <dd><p>String. Name of the key of the item to retrieve.</p>
+          </dd>
+          </dl>
+          
+          <h3><span class="visually-hidden">getStoreItem</span> Return value</h3>
+          <p><p>The retrieved item.</p>
+          </p>
+        </section>
+        <section>
+          <h2 id="setStoreItem">
+            <a href="#setStoreItem" class="section-link">
+              <span>setStoreItem(key, value)</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
+
+          <p>Save an item to localStorage.</p>
+          <h3 id="title-setStoreItem"><span class="visually-hidden">setStoreItem</span> Parameters</span></h3>
+          <dl aria-labelledby="title-setStoreItem">
+            <dt>
+              <code>key</code>
+              
+            </dt>
+            <dd><p>String. The name of the key.</p>
+          </dd>
+            <dt>
+              <code>value</code>
+              
+            </dt>
+            <dd><p>Any type. The value to store.</p>
+          </dd>
+          </dl>
+          
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+</body>
+</html>

@@ -1,6 +1,48 @@
+/**
+ * A minimalistic keyboard API. You can use it move the main sprite or respond to a key press.
+ *
+ * ```js
+ * import { initKeys, keyPressed } from 'kontra';
+ *
+ * // this function must be called first before keyboard
+ * // functions will work
+ * initKeys();
+ *
+ * function update() {
+ *   if (keyPressed('left')) {
+ *     // move left
+ *   }
+ * }
+ * ```
+ * @sectionName Keyboard
+ */
+
+/**
+ * Below is a list of keys that are provided by default. If you need to extend this list, you can use the [keyMap](#keyMap) property.
+ *
+ * - a-z
+ * - 0-9
+ * - enter, esc, space, left, up, right, down
+ * @sectionName Available Keys
+ */
+
 let callbacks = {};
 let pressedKeys = {};
 
+/**
+ * A map of keycodes to key names. Add to this object to expand the list of [available keys](#available-keys).
+ *
+ * ```js
+ * import { keyMap, bindKeys } from 'kontra';
+ *
+ * keyMap[34] = 'pageDown';
+ *
+ * bindKeys('pageDown', function(e) {
+ *   // handle pageDown key
+ * });
+ * ```
+ * @property {Object} keyMap
+ */
 export let keyMap = {
   // named keys
   13: 'enter',
@@ -43,7 +85,8 @@ function blurEventHandler() {
 }
 
 /**
- * Add keyboard event listeners.
+ * Initialize keyboard event listeners. This function must be called before using other keyboard functions.
+ * @function initKeys
  */
 export function initKeys() {
   let i;
@@ -68,9 +111,24 @@ export function initKeys() {
 }
 
 /**
- * Register a function to be called on a key press.
+ * Bind a set of keys that will call the callback function when they are pressed. Takes a single key or an array of keys. Is Passed the original KeyboardEvent as a parameter.
  *
- * @param {string|string[]} keys - key or keys to bind.
+ * ```js
+ * import { initKeys, bindKeys } from 'kontra';
+ *
+ * initKeys();
+ *
+ * bindKeys('p', function(e) {
+ *   // pause the game
+ * });
+ * bindKeys(['enter', 'space'], function(e) {
+ *   e.preventDefault();
+ *   // fire gun
+ * });
+ * ```
+ * @function bindKeys
+ *
+ * @param {String|String[]} keys - Key or keys to bind.
  */
 export function bindKeys(keys, callback) {
   // smaller than doing `Array.isArray(keys) ? keys : [keys]`
@@ -78,9 +136,17 @@ export function bindKeys(keys, callback) {
 }
 
 /**
- * Remove the callback function for a key.
+ * Remove the callback function for a bound set of keys. Takes a single key or an array of keys.
  *
- * @param {string|string[]} keys - key or keys to unbind.
+ * ```js
+ * import { unbindKeys } from 'kontra';
+ *
+ * unbindKeys('left');
+ * unbindKeys(['enter', 'space']);
+ * ```
+ * @function unbindKeys
+ *
+ * @param {String|String[]} keys - Key or keys to unbind.
  */
 export function unbindKeys(keys) {
   // 0 is the smallest falsy value
@@ -88,11 +154,36 @@ export function unbindKeys(keys) {
 }
 
 /**
- * Returns whether a key is pressed.
+ * Check if a key is currently pressed. Use during an `update()` function to perform actions each frame.
  *
- * @param {string} key - Key to check for press.
+ * ```js
+ * import { Sprite, initKeys, keyPressed } from 'kontra';
  *
- * @returns {boolean}
+ * initKeys();
+ *
+ * let sprite = Sprite({
+ *   update: function() {
+ *     if (keyPressed('left')){
+ *       // left arrow pressed
+ *     }
+ *     else if (keyPressed('right')) {
+ *       // right arrow pressed
+ *     }
+ *
+ *     if (keyPressed('up')) {
+ *       // up arrow pressed
+ *     }
+ *     else if (keyPressed('down')) {
+ *       // down arrow pressed
+ *     }
+ *   }
+ * });
+ * ```
+ * @function keyPressed
+ *
+ * @param {String} key - Key to check for pressed state.
+ *
+ * @returns {Boolean} `true` if the key is pressed, `false` otherwise.
  */
 export function keyPressed(key) {
   return !!pressedKeys[key];

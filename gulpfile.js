@@ -76,13 +76,15 @@ function addSectionAndPage() {
 
 function parseType(type) {
   let isArray = false;
-  if (type.includes('[]')) {
-    isArray = true;
-    type = `An Array of ${type.substring(0, type.length - 2)}s`;
+  if (type.includes('|')) {
+    type = type.split('|').join(' or ');
   }
 
-  else if (type.includes('|')) {
-    type = type.split('|').join(' or ');
+  if (type.includes('[]')) {
+    isArray = true;
+    type = type.replace(/(\w+)\[\]/, function(match, p1, index) {
+      return `${index === 0 ? 'A' : 'a'}n Array of ${p1}s`;
+    });
   }
 
   type = type.replace(kontraTypeRegex, function(match, p1) {

@@ -1,3 +1,22 @@
+/**
+ * A promise based asset loader for loading images, audio, and data files.
+ *
+ * ```js
+ * import { load } from 'kontra';
+ *
+ * load(
+ *   '../imgs/character.png',
+ *   '../data/tile_engine_basic.json',
+ *   ['/audio/music.ogg', '/audio/music.mp3']
+ * ).then(function(assets) {
+ *   // all assets have loaded
+ * }).catch(function(err) {
+ *   // error loading an asset
+ * });
+ * ```
+ * @sectionName Assets
+ */
+
 let imageRegex = /(jpeg|jpg|gif|png)$/;
 let audioRegex = /(wav|mp3|ogg|aac)$/;
 let leadingSlash = /^\//;
@@ -11,10 +30,10 @@ let dataPath = '';
 /**
  * Join a base path and asset path.
  *
- * @param {string} base - The asset base path.
- * @param {string} url - The URL to the asset.
+ * @param {String} base - The asset base path.
+ * @param {String} url - The URL to the asset.
  *
- * @returns {string}
+ * @returns {String}
  */
 function joinPath(base, url) {
   return [base.replace(trailingSlash, ''), base ? url.replace(leadingSlash, '') : url]
@@ -25,9 +44,9 @@ function joinPath(base, url) {
 /**
  * Get the extension of an asset.
  *
- * @param {string} url - The URL to the asset.
+ * @param {String} url - The URL to the asset.
  *
- * @returns {string}
+ * @returns {String}
  */
 function getExtension(url) {
   return url.split('.').pop();
@@ -36,9 +55,9 @@ function getExtension(url) {
 /**
  * Get the name of an asset.
  *
- * @param {string} url - The URL to the asset.
+ * @param {String} url - The URL to the asset.
  *
- * @returns {string}
+ * @returns {String}
  */
 function getName(url) {
   let name = url.replace('.' + getExtension(url), '');
@@ -65,59 +84,155 @@ function getCanPlay(audio) {
   };
 }
 
+/**
+ * Object of all loaded image assets by both file name and path. If the base [image path](#setImagePath) was set before the image was loaded, the file name and path will not include the base image path.
+ *
+ * ```js
+ * import { load, setImagePath, images } from 'kontra';
+ *
+ * load('../imgs/character.png').then(function() {
+ *   // Image asset can be accessed at both
+ *   // name: images['../imgs/character']
+ *   // path: images['../imgs/character.png']
+ * });
+ *
+ * setImagePath('/imgs');
+ * load('character_walk_sheet.png').then(function() {
+ *   // Image asset can be accessed at both
+ *   // name: images['character_walk_sheet']
+ *   // path: images['character_walk_sheet.png']
+ * });
+ * ```
+ * @property {Object} images
+ */
 export let images = {};
+
+/**
+ * Object of all loaded audio assets by both file name and path. If the base [audio path](#setAudioPath) was set before the audio was loaded, the file name and path will not include the base audio path.
+ *
+ * ```js
+ * import { load, setAudioPath, audio } from 'kontra';
+ *
+ * load('/audio/music.ogg').then(function() {
+ *   // Audio asset can be accessed at both
+ *   // name: audio['/audio/music']
+ *   // path: audio['/audio/music.ogg']
+ * });
+ *
+ * setAudioPath('/audio');
+ * load('sound.ogg').then(function() {
+ *   // Audio asset can be accessed at both
+ *   // name: audio['sound']
+ *   // path: audio['sound.ogg']
+ * });
+ * ```
+ * @property {Object} audio
+ */
 export let audio = {};
+
+/**
+ * Object of all loaded data assets by both file name and path. If the base [data path](#setDataPath) was set before the data was loaded, the file name and path will not include the base data path.
+ *
+ * ```js
+ * import { load, setDataPath, data } from 'kontra';
+ *
+ * load('../data/file.txt').then(function() {
+ *   // Audio asset can be accessed at both
+ *   // name: data['../data/file']
+ *   // path: data['../data/file.txt']
+ * });
+ *
+ * setDataPath('/data');
+ * load('info.json').then(function() {
+ *   // Audio asset can be accessed at both
+ *   // name: data['info']
+ *   // path: data['info.json']
+ * });
+ * ```
+ * @property {Object} data
+ */
 export let data = {};
 
 /**
  * Get the full URL from the base.
  *
- * @param {string} url - The URL to the asset.
- * @param {string} base - Base URL.
+ * @param {String} url - The URL to the asset.
+ * @param {String} base - Base URL.
  *
- * @returns {string}
+ * @returns {String}
  */
 export function getUrl(url, base) {
   return new URL(url, base).href;
 }
 
 /**
- * Set the image path.
+ * Sets the base path for all image assets. If a base path is set, all load calls for image assets will prepend the base path to the URL.
  *
- * @param {string} path - Base image path.
+ * ```js
+ * import { setImagePath, load } from 'kontra';
+ *
+ * setImagePath('/imgs');
+ * load('character.png');  // loads '/imgs/character.png'
+ * ```
+ * @function setImagePath
+ *
+ * @param {String} path - Base image path.
  */
 export function setImagePath(path) {
   imagePath = path;
 }
 
 /**
- * Set the audio path.
+ * Sets the base path for all audio assets. If a base path is set, all load calls for audio assets will prepend the base path to the URL.
  *
- * @param {string} path - Base audio path.
+ * ```js
+ * import { setAudioPath, load } from 'kontra';
+ *
+ * setAudioPath('/audio');
+ * load('music.ogg');  // loads '/audio/music.ogg'
+ * ```
+ * @function setAudioPath
+ *
+ * @param {String} path - Base audio path.
  */
 export function setAudioPath(path) {
   audioPath = path;
 }
 
 /**
- * Set the data path.
+ * Sets the base path for all data assets. If a base path is set, all load calls for data assets will prepend the base path to the URL.
  *
- * @param {string} path - Base data path.
+ * ```js
+ * import { setDataPath, load } from 'kontra';
+ *
+ * setDataPath('/data');
+ * load('file.json');  // loads '/data/file.json'
+ * ```
+ * @function setDataPath
+ *
+ * @param {String} path - Base data path.
  */
 export function setDataPath(path) {
   dataPath = path;
 }
 
 /**
- * Load an Image file. Uses imagePath to resolve URL.
+ * Load a single Image asset. Uses the base [image path](#setImagePath) to resolve the URL.
  *
- * @param {string} url - The URL to the Image file.
+ * Once loaded, the asset will be accessible on the the [images](#images) property.
+ *
+ * ```js
+ * import { loadImage } from 'kontra';
+ *
+ * loadImage('car.png').then(function(image) {
+ *   console.log(image.src);  //=> 'car.png'
+ * })
+ * ```
+ * @function loadImage
+ *
+ * @param {String} url - The URL to the Image file.
  *
  * @returns {Promise} A deferred promise. Promise resolves with the Image.
- *
- * @example
- * loadImage('car.png');
- * loadImage('autobots/truck.png');
  */
 export function loadImage(url) {
   return new Promise((resolve, reject) => {
@@ -143,16 +258,27 @@ export function loadImage(url) {
 }
 
 /**
- * Load an Audio file. Supports loading multiple audio formats which will be resolved by
- * the browser in the order listed. Uses audioPath to resolve URL.
+ * Load a single Audio asset. Supports loading multiple audio formats which will be resolved by the browser in the order listed. Uses the base [audio path](#setAudioPath) to resolve the URL.
  *
- * @param {string|string[]} url - The URL to the Audio file.
+ * Once loaded, the asset will be accessible on the the [audio](#audio) property. Since the loader determines which audio asset to load based on browser support, you should only reference the audio by its name and not by its file path since there's no guarantee which asset was loaded.
+ *
+ * ```js
+ * import { loadAudio } from 'kontra';
+ *
+ * loadAudio([
+ *   '/audio/music.mp3',
+ *   '/audio/music.ogg'
+ * ]).then(function(audio) {
+ *
+ *   // access audio by its name only (not by its .mp3 or .ogg path)
+ *   audio['/audio/music'].play();
+ * })
+ * ```
+ * @function loadAudio
+ *
+ * @param {String} url - The URL to the Audio file.
  *
  * @returns {Promise} A deferred promise. Promise resolves with the Audio.
- *
- * @example
- * loadAudio('sound_effects/laser.mp3');
- * loadAudio(['explosion.mp3', 'explosion.m4a', 'explosion.ogg']);
  */
 export function loadAudio(url) {
   return new Promise((resolve, reject) => {
@@ -193,15 +319,22 @@ export function loadAudio(url) {
 }
 
 /**
- * Load a data file (be it text or JSON). Uses dataPath to resolve URL.
+ * Load a single Data asset. Uses the base [data path](#setDataPath) to resolve the URL.
  *
- * @param {string} url - The URL to the data file.
+ * Once loaded, the asset will be accessible on the the [data](#data) property.
  *
- * @returns {Promise} A deferred promise. Resolves with the data or parsed JSON.
+ * ```js
+ * import { loadData } from 'kontra';
  *
- * @example
- * loadData('bio.json');
- * loadData('dialog.txt');
+ * loadData('../data/tile_engine_basic.json').then(function(data) {
+ *   // data contains the parsed JSON data
+ * })
+ * ```
+ * @function loadData
+ *
+ * @param {String} url - The URL to the Data file.
+ *
+ * @returns {Promise} A deferred promise. Promise resolves with the Image.
  */
 export function loadData(url) {
   let resolvedUrl, fullUrl;
@@ -224,26 +357,35 @@ export function loadData(url) {
 }
 
 /**
- * Load an Image, Audio, or data file.
+ * Load Image, Audio, or data files. Uses the [loadImage](#loadImage), [loadAudio](#loadAudio), and [loadData](#loadData) functions to load each asset type.
  *
- * @param {string|string[]} - Comma separated list of assets to load.
+ * ```js
+ * import { load } from 'kontra';
  *
- * @returns {Promise} A deferred promise. Resolves with all the assets.
+ * load(
+ *   '../imgs/character.png',
+ *   '../data/tile_engine_basic.json',
+ *   ['/audio/music.ogg', '/audio/music.mp3']
+ * ).then(function(assets) {
+ *   // all assets have loaded
+ * }).catch(function(err) {
+ *   // error loading an asset
+ * });
+ * ```
+ * @function load
  *
- * @example
- * load('car.png');
- * load(['explosion.mp3', 'explosion.ogg']);
- * load('bio.json');
- * load('car.png', ['explosion.mp3', 'explosion.ogg'], 'bio.json');
+ * @param {String|String[]} urls - Comma separated list of asset urls to load.
+ *
+ * @returns {Promise} A deferred promise. Resolves with all the loaded assets.
  */
-export function load(...assets) {
+export function load(...urls) {
   // TODO: in order to support the tileEngine loading source and images, add
   // the needed properties to the window object when their appropriate functions
   // are run. then the tileEnginge can look for these properties to know it can
   // load the assets
 
   return Promise.all(
-    assets.map(asset => {
+    urls.map(asset => {
       // account for a string or an array for the url
       let extension = getExtension( [].concat(asset)[0] );
 
@@ -269,9 +411,7 @@ export function _reset() {
   }
 }
 
-/**
- * Override the getCanPlay function to provide a specific return type for tests
- */
+// Override the getCanPlay function to provide a specific return type for tests
 export function _setCanPlayFn(fn) {
   let originalCanPlay = getCanPlay;
   getCanPlay = fn;

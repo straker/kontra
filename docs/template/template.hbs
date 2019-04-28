@@ -9,7 +9,7 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/prism.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/components/prism-javascript.min.js"></script>
-  <script src="../../js/kontra.js"></script>
+  <script src="../kontra.js"></script>
 </head>
 <body>
   <div class="content">
@@ -112,6 +112,9 @@
           </h2>
 
           {{{ description }}}
+          {{#if example}}
+            {{~> example-output ~}}
+          {{/if}}
         </section>
         {{/each}}
 
@@ -126,6 +129,9 @@
           </h2>
 
           {{{ description }}}
+          {{#if example}}
+            {{~> example-output ~}}
+          {{/if}}
           {{> parameter-table}}
         </section>
         {{/each}}

@@ -70,19 +70,19 @@ describe('quadtree', () => {
     it('should add an object to the quadtree', () => {
       quadtree.add({id: 1});
 
-      expect(quadtree.objects.length).to.equal(1);
+      expect(quadtree._o.length).to.equal(1);
     });
 
     it('should take multiple objects and add them to the quadtree', () => {
       quadtree.add({id: 1}, {id: 2}, {id: 3});
 
-      expect(quadtree.objects.length).to.equal(3);
+      expect(quadtree._o.length).to.equal(3);
     });
 
     it('should take an array of objects and add them to the quadtree', () => {
       quadtree.add([{id: 1}, {id: 2}], {id: 3});
 
-      expect(quadtree.objects.length).to.equal(3);
+      expect(quadtree._o.length).to.equal(3);
     });
 
     it('should split the quadtree if there are too many objects', () => {
@@ -90,13 +90,13 @@ describe('quadtree', () => {
         quadtree.add({id: i});
       }
 
-      expect(quadtree.objects.length).to.equal(5);
-      expect(quadtree.subnodes.length).to.equal(0);
+      expect(quadtree._o.length).to.equal(5);
+      expect(quadtree._s.length).to.equal(0);
 
       quadtree.add({id: 4});
 
-      expect(quadtree.objects.length).to.equal(0);
-      expect(quadtree.subnodes.length).to.equal(4);
+      expect(quadtree._o.length).to.equal(0);
+      expect(quadtree._s.length).to.equal(4);
     });
 
     it('should make each subnode 1/4 the size of the bounds when split', () => {
@@ -104,10 +104,10 @@ describe('quadtree', () => {
         quadtree.add({id: i});
       }
 
-      expect(quadtree.subnodes[0].bounds).to.eql({x: 0, y: 0, width: 50, height: 50});
-      expect(quadtree.subnodes[1].bounds).to.eql({x: 50, y: 0, width: 50, height: 50});
-      expect(quadtree.subnodes[2].bounds).to.eql({x: 0, y: 50, width: 50, height: 50});
-      expect(quadtree.subnodes[3].bounds).to.eql({x: 50, y: 50, width: 50, height: 50});
+      expect(quadtree._s[0].bounds).to.eql({x: 0, y: 0, width: 50, height: 50});
+      expect(quadtree._s[1].bounds).to.eql({x: 50, y: 0, width: 50, height: 50});
+      expect(quadtree._s[2].bounds).to.eql({x: 0, y: 50, width: 50, height: 50});
+      expect(quadtree._s[3].bounds).to.eql({x: 50, y: 50, width: 50, height: 50});
     });
 
     it('should add split objects to their correct subnodes', () => {
@@ -124,7 +124,7 @@ describe('quadtree', () => {
       quadtree.add(objects);
 
       // quadrant 0
-      subnode = quadtree.subnodes[0].objects;
+      subnode = quadtree._s[0]._o;
 
       expect(subnode.length).to.equal(3);
       expect(subnode.indexOf(objects[0])).to.not.equal(-1);
@@ -132,19 +132,19 @@ describe('quadtree', () => {
       expect(subnode.indexOf(objects[2])).to.not.equal(-1);
 
       // quadrant 1
-      subnode = quadtree.subnodes[1].objects;
+      subnode = quadtree._s[1]._o;
 
       expect(subnode.length).to.equal(2);
       expect(subnode.indexOf(objects[2])).to.not.equal(-1);
       expect(subnode.indexOf(objects[3])).to.not.equal(-1);
 
       // quadrant 2
-      subnode = quadtree.subnodes[2].objects;
+      subnode = quadtree._s[2]._o;
 
       expect(subnode.length).to.equal(0);
 
       // quadrant 3
-      subnode = quadtree.subnodes[3].objects;
+      subnode = quadtree._s[3]._o;
 
       expect(subnode.length).to.equal(3);
       expect(subnode.indexOf(objects[3])).to.not.equal(-1);
@@ -158,7 +158,7 @@ describe('quadtree', () => {
       }
 
       let object = {x: 10, y: 10, width: 10, height: 10};
-      let subnode = quadtree.subnodes[0].objects;
+      let subnode = quadtree._s[0]._o;
 
       quadtree.add(object);
 
@@ -172,7 +172,7 @@ describe('quadtree', () => {
         quadtree.add({id: i});
       }
 
-      let subnodes = quadtree.subnodes;
+      let subnodes = quadtree._s;
 
       quadtree.clear();
 
@@ -183,7 +183,7 @@ describe('quadtree', () => {
 
       // since splitting overrides the subnodes with new values this should
       // test that the subnodes were left alone after the 2nd split
-      expect(quadtree.subnodes).to.equal(subnodes);
+      expect(quadtree._s).to.equal(subnodes);
     });
 
   });
@@ -217,7 +217,7 @@ describe('quadtree', () => {
 
       quadtree.clear();
 
-      expect(quadtree.objects.length).to.equal(0);
+      expect(quadtree._o.length).to.equal(0);
     });
 
     it('should clear all objects in subnodes of the quadtree', () => {
@@ -227,11 +227,11 @@ describe('quadtree', () => {
 
       quadtree.clear();
 
-      expect(quadtree.objects.length).to.equal(0);
-      expect(quadtree.subnodes[0].objects.length).to.equal(0);
-      expect(quadtree.subnodes[1].objects.length).to.equal(0);
-      expect(quadtree.subnodes[2].objects.length).to.equal(0);
-      expect(quadtree.subnodes[3].objects.length).to.equal(0);
+      expect(quadtree._o.length).to.equal(0);
+      expect(quadtree._s[0]._o.length).to.equal(0);
+      expect(quadtree._s[1]._o.length).to.equal(0);
+      expect(quadtree._s[2]._o.length).to.equal(0);
+      expect(quadtree._s[3]._o.length).to.equal(0);
     });
 
   });

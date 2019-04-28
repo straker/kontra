@@ -1,6 +1,58 @@
 import { getCanvas } from './core.js'
 import { on } from './events.js'
 
+/**
+ * A simple pointer API. You can use it move the main sprite or respond to a pointer event. Works with both mouse and touch events.
+ *
+ * Pointer events can be added on a global level or on individual sprites or objects. Before an object can receive pointer events, you must tell the pointer which objects to track and the object must haven been rendered to the canvas using `object.render()`.
+ *
+ * After an object is tracked and rendered, you can assign it an `onDown()`, `onUp()`, or `onOver()` functions which will be called whenever a pointer down, up, or over event happens on the object.
+ *
+ * ```js
+ * import { initPointer, track, Sprite } from 'kontra';
+ *
+ * // this function must be called first before pointer
+ * // functions will work
+ * initPointer();
+ *
+ * let sprite = Sprite({
+ *   onDown: function() {
+ *     // handle on down events on the sprite
+ *   },
+ *   onUp: function() {
+ *     // handle on up events on the sprite
+ *   },
+ *   onOver: function() {
+ *     // handle on over events on the sprite
+ *   }
+ * });
+ *
+ * track(sprite);
+ * sprite.render();
+ * ```
+ *
+ * By default, the pointer is treated as a circle and will check for collisions against objects assuming they are rectangular (have a width and height property).
+ *
+ * If you need to perform a different type of collision detection, assign the object a collidesWithPointer(pointer) function and it will be called instead, passing the current pointer object. Use this function to determine how the pointer circle should collide with the object.
+ *
+ * ```js
+ * import { Sprite } from 'kontra';
+
+ * let sprite = Srite({
+ *   x: 10,
+ *   y: 10,
+ *   radius: 10
+ *   collidesWithPointer: function(pointer) {
+ *     // perform a circle v circle collision test
+ *     let dx = pointer.x - this.x;
+ *     let dy = pointer.y - this.y;
+ *     return Math.sqrt(dx * dx + dy * dy) < this.radius;
+ *   }
+ * });
+ * ```
+ * @sectionName Pointer
+ */
+
 // save each object as they are rendered to determine which object
 // is on top when multiple objects are the target of an event.
 // we'll always use the last frame's object order so we know
@@ -14,12 +66,30 @@ let callbacks = {};
 let trackedObjects = [];
 let pressedButtons = {};
 
+/**
+ * Below is a list of buttons that you can use.
+ *
+ * - left, middle, right
+ * @sectionName Available Buttons
+ */
 let buttonMap = {
   0: 'left',
   1: 'middle',
   2: 'right'
 };
 
+/**
+ * Object containing the `radius` and current `x` and `y` position of the pointer relative to the top-left corner of the canvas.
+ *
+ * ```js
+ * import { initPointer, pointer } from 'kontra';
+ *
+ * initPointer();
+ *
+ * console.log(pointer);  //=> { x: 100, y: 200, radius: 5 };
+ * ```
+ * @property {Object} pointer
+ */
 export let pointer = {
   x: 0,
   y: 0,
@@ -30,7 +100,7 @@ export let pointer = {
  * Detection collision between a rectangle and a circlevt.
  * @see https://yal.cc/rectangle-circle-intersection-test/
  *
- * @param {object} object - Object to check collision against.
+ * @param {Object} object - Object to check collision against.
  */
 function circleRectCollision(object) {
   let x = object.x;
@@ -48,7 +118,7 @@ function circleRectCollision(object) {
 /**
  * Get the first on top object that the pointer collides with.
  *
- * @returns {object} First object to collide with the pointer.
+ * @returns {Object} First object to collide with the pointer.
  */
 function getCurrentObject() {
 
@@ -155,7 +225,8 @@ function pointerHandler(evt, eventName) {
 }
 
 /**
- * Add pointer event listeners.
+ * Initialize pointer event listeners. This function must be called before using other pointer functions.
+ * @function initPointer
  */
 export function initPointer() {
   let canvas = getCanvas();
@@ -181,9 +252,19 @@ export function initPointer() {
 }
 
 /**
- * Register object to be tracked by pointer events.
+ * Begin tracking pointer events for a set of objects. Takes a single object or an array of objects.
  *
- * @param {object|object[]} objects - Object or objects to track.
+ * ```js
+ * import { initPointer, track } from 'kontra';
+ *
+ * initPointer();
+ *
+ * track(obj);
+ * track([obj1, obj2]);
+ * ```
+ * @function track
+ *
+ * @param {Object|Object[]} objects - Objects to track.
  */
 export function track(objects) {
   [].concat(objects).map(object => {
@@ -203,9 +284,17 @@ export function track(objects) {
 }
 
 /**
- * Remove object from being tracked by pointer events.
+* Remove the callback function for a bound set of objects.
  *
- * @param {object|object[]} objects - Object or objects to stop tracking.
+ * ```js
+ * import { untrack } from 'kontra';
+ *
+ * untrack(obj);
+ * untrack([obj1, obj2]);
+ * ```
+ * @function untrack
+ *
+ * @param {Object|Object[]} objects - Object or objects to stop tracking.
  */
 export function untrack(objects) {
   [].concat(objects).map(object => {
@@ -222,11 +311,48 @@ export function untrack(objects) {
 }
 
 /**
- * Returns whether a tracked object is under the pointer.
+ * Check to see if the pointer is currently over the object. Since multiple objects may be rendered on top of one another, only the top most object under the pointer will return true.
  *
- * @param {object} object - Object to check
+ * ```js
+ * import {
+ *   initPointer,
+ *   track,
+ *   pointer,
+ *   pointerOver,
+ *   Sprite
+ * } from 'kontra';
  *
- * @returns {boolean}
+ * initPointer();
+ *
+ * let sprite1 = Sprite({
+ *   x: 10,
+ *   y: 10,
+ *   width: 10,
+ *   height: 10
+ * });
+ * let sprite2 = Sprite({
+ *   x: 15,
+ *   y: 10,
+ *   width: 10,
+ *   height: 10
+ * });
+ *
+ * track([sprite1, sprite2]);
+ *
+ * sprite1.render();
+ * sprite2.render();
+ *
+ * pointer.x = 14;
+ * pointer.y = 15;
+ *
+ * console.log(pointerOver(sprite1));  //=> false
+ * console.log(pointerOver(sprite2));  //=> true
+ * ```
+ * @function pointerOver
+ *
+ * @param {Object} object - The object to check if the pointer is over.
+ *
+ * @returns {Boolean} `true` if the pointer is currently over the object, `false` otherwise.
  */
 export function pointerOver(object) {
   if (!trackedObjects.includes(object)) return false;
@@ -235,29 +361,69 @@ export function pointerOver(object) {
 }
 
 /**
- * Register a function to be called on pointer down.
+ * Register a function to be called on all pointer down events. Is Passed the original Event and the target object (if there is one).
  *
- * @param {function} callback - Function to execute
+ * ```js
+ * import { initPointer, onPointerDown } from 'kontra';
+ *
+ * initPointer();
+ *
+ * onPointerDown(function(e, object) {
+ *   // handle pointer down
+ * })
+ * ```
+ * @function onPointerDown
+ *
+ * @param {Function} callback - Function to call on pointer down.
  */
 export function onPointerDown(callback) {
   callbacks.onDown = callback;
 }
 
 /**
- * Register a function to be called on pointer up.
+* Register a function to be called on all pointer up events. Is Passed the original Event and the target object (if there is one).
  *
- * @param {function} callback - Function to execute
+ * ```js
+ * import { initPointer, onPointerUp } from 'kontra';
+ *
+ * initPointer();
+ *
+ * onPointerUp(function(e, object) {
+ *   // handle pointer up
+ * })
+ * ```
+ * @function onPointerUp
+ *
+ * @param {Function} callback - Function to call on pointer up.
  */
 export function onPointerUp(callback) {
   callbacks.onUp = callback;
 }
 
 /**
- * Returns whether the button is pressed.
+ * Check if a button is currently pressed. Use during an `update()` function to perform actions each frame.
  *
- * @param {string} button - Button to check for press.
+ * ```js
+ * import { initPointer, pointerPressed } from 'kontra';
  *
- * @returns {boolean}
+ * initPointer();
+ *
+ * Sprite({
+ *   update: function() {
+ *     if (pointerPressed('left')){
+ *       // left mouse button pressed
+ *     }
+ *     else if (pointerPressed('right')) {
+ *       // right mouse button pressed
+ *     }
+ *   }
+ * });
+ * ```
+ * @function pointerPressed
+ *
+ * @param {String} button - Button to check for pressed state.
+ *
+ * @returns {Boolean} `true` if the button is pressed, `false` otherwise.
  */
 export function pointerPressed(button) {
   return !!pressedButtons[button]

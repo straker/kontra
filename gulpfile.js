@@ -32,6 +32,8 @@ function sortByName(a, b) {
 
 const optionalRegex = /^\[.*\]$/;
 const kontraTypeRegex = /kontra\.(\w+)/g;
+const excludesRegex = /\/\/ exclude:start[\s\S]*?\/\/ exclude:end[\r\n]/g;
+let uuid = 0;
 
 // fun hack to add @section and @page to every jsdoc without explicitly having
 // to add them to every block :)
@@ -159,6 +161,22 @@ let tags = {
       name: '',
       description: marked(description),
       type: type
+    };
+  },
+  example: function() {
+    // console.log('\n\n\n');
+    // console.log(this.tag.description);
+
+    let id = `game-canvas-${uuid++}`;
+    this.block.example = {
+      id: id,
+      scriptOutput: `(function() {
+  kontra.init("${id}");
+  var canvas = document.querySelector("#${id}");
+  var context = canvas.getContext("2d");
+  ${this.tag.description}
+})();`,
+      codeOutput: this.tag.description.trim().replace(excludesRegex, '')
     };
   },
 

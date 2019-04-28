@@ -3,10 +3,10 @@ import { getCanvas } from './core.js'
 /**
  * Determine which subnodes the object intersects with
  *
- * @param {object} object - Object to check.
- * @param {object} bounds - Bounds of the quadtree.
+ * @param {Object} object - Object to check.
+ * @param {Object} bounds - Bounds of the quadtree.
  *
- * @returns {number[]} List of all subnodes object intersects.
+ * @returns {Number[]} List of all subnodes object intersects.
  */
 function getIndices(object, bounds) {
   let indices = [];
@@ -43,39 +43,81 @@ function getIndices(object, bounds) {
   return indices;
 }
 
+/*
+The quadtree acts like an object pool in that it will create subnodes as objects are needed but it won't clean up the subnodes when it collapses to avoid garbage collection.
+
+The quadrant indices are numbered as follows (following a z-order curve):
+     |
+  0  |  1
+ ----+----
+  2  |  3
+     |
+*/
+
+
+/**
+ * A 2D spatial partitioning data structure. Use it to quickly group objects by their position for faster access and collision checking.
+ * @class Quadtree
+ *
+ * @param {Object} properties - Properties of the quadtree.
+ * @param {Number} [properties.maxDepth=3] - Maximum node depth of the quadtree.
+ * @param {Number} [properties.maxObjects=25] - Maximum number of objects a node can have before splitting.
+ * @param {Object} [properties.bounds] - The 2D space (x, y, width, height) the quadtree occupies. Defaults to the entire canvas width and height.
+ */
 class Quadtree {
+
   /**
-   * A quadtree for 2D collision checking. The quadtree acts like an object pool in that it
-   * will create subnodes as objects are needed but it won't clean up the subnodes when it
-   * collapses to avoid garbage collection.
+   * To use a quadtree, you'll first create it using `Quadtree()`. Then every  frame you'll remove all objects from the quadtree using its [clear()](#clear) function  and add all objects back using its [add()](#add) function. You can add a single object  or an array of objects, and as many as you want.
    *
-   * @param {object} properties - Properties of the quadtree.
-   * @param {number} [properties.maxDepth=3] - Maximum node depths the quadtree can have.
-   * @param {number} [properties.maxObjects=25] - Maximum number of objects a node can support before splitting.
-   * @param {object} [properties.bounds] - The 2D space this node occupies.
-   * @param {object} [properties.parent] - Private. The node that contains this node.
-   * @param {number} [properties.depth=0] - Private. Current node depth.
+   * ```js
+   * import { Quadtree, Sprite, GameLoop } from 'kontra';
    *
-   * The quadrant indices are numbered as follows (following a z-order curve):
-   *     |
-   *  0  |  1
-   * ----+----
-   *  2  |  3
-   *     |
+   * let quadtree = Quadtree();
+   * let player = Sprite({
+   *   // ...
+   * });
+   * let enemy = Sprite({
+   *   // ...
+   * });
+   *
+   * let loop = GameLoop({
+   *   update: function() {
+   *     quadtree.clear();
+   *     quadtree.add(player, enemy);
+   *   }
+   * });
+   * ```
+   *
+   * You should clear the quadtree each frame since the quadtree is only a snapshot of the position of the objects when they were added. Since the quadtree doesn't know anything about those objects, it doesn't know when an object moved or when it should be removed from the tree.
+   *
+   * Objects added to the tree must have the properties `x`, `y`, `width`, and `height` so that their position in the quadtree can be calculated. kontra.Sprite defines these properties for you.
+   *
+   * When you need to get all objects in the same node as another object, use the quadtrees [get()](#get) function.
+   *
+   * ```js
+   * let objects = quadtree.get(player);  //=> [player, enemy]
+   * ```
+   * @sectionName Basic Use
    */
-  constructor({maxDepth = 3, maxObjects = 25, bounds, parent, depth = 0} = {}) {
+
+  constructor({maxDepth = 3, maxObjects = 25, bounds} = {}) {
+
+    /**
+     * Maximum node depth of the quadtree.
+     * @property {Number} maxDepth
+     */
     this.maxDepth = maxDepth;
+
+    /**
+     * Maximum number of objects a node can have before splitting.
+     * @property {Number} maxObjects
+     */
     this.maxObjects = maxObjects;
 
-    // since we won't clean up any subnodes, we need to keep track of which nodes are
-    // currently the leaf node so we know which nodes to add objects to
-    // b = branch, d = depth, p = parent
-    this._b = false;
-    this._d = depth;
-    /* @if VISUAL_DEBUG */
-    this._p = parent;
-    /* @endif */
-
+    /**
+     * The 2D space (x, y, width, height) the quadtree occupies.
+     * @property {Object} bounds
+     */
     let canvas = getCanvas();
     this.bounds = bounds || {
       x: 0,
@@ -84,58 +126,110 @@ class Quadtree {
       height: canvas.height
     };
 
-    this.objects = []
-    this.subnodes = [];
+    // since we won't clean up any subnodes, we need to keep track of which nodes are
+    // currently the leaf node so we know which nodes to add objects to
+    // b = branch, d = depth, o = objects, s = subnodes, p = parent
+    this._b = false;
+    this._d = 0;
+    this._o = []
+    this._s = [];
+    this._p = null;
   }
 
   /**
-   * Clear the quadtree
+   * Removes all objects from the quadtree. You should clear the quadtree every frame before adding all objects back into it.
+   * @function clear
    */
   clear() {
-    this.subnodes.map(function(subnode) {
+    this._s.map(function(subnode) {
       subnode.clear();
     });
 
     this._b = false;
-    this.objects.length = 0;
+    this._o.length = 0;
   }
 
   /**
-   * Find the leaf node the object belongs to and get all objects that are part of
-   * that node.
+   * Get an array of all objects that belong to the same node as the passed in object.
    *
-   * @param {object} object - Object to use for finding the leaf node.
+   * **Note:** if the passed in object is also part of the quadtree, it will be returned in the results.
    *
-   * @returns {object[]} A list of objects in the same leaf node as the object.
+   * ```js
+   * import { Sprite, Quadtree } from 'kontra';
+   *
+   * let quadtree = Quadtree();
+   * let player = Sprite({
+   *   // ...
+   * });
+   * let enemy1 = Sprite({
+   *   // ...
+   * });
+   * let enemy2 = Sprite({
+   *   // ...
+   * });
+   *
+   * quadtree.add(player, enemy1, enemy2);
+   * quadtree.get(player);  //=> [player, enemy1]
+   * ```
+   * @function get
+   *
+   * @param {Object} object - Object to use for finding other objects. The object must have the properties `x`, `y`, `width`, and `height` so that its position in the quadtree can be calculated.
+   *
+   * @returns {Object[]} A list of objects in the same node as the object.
    */
   get(object) {
     let objects = [];
     let indices, i;
 
     // traverse the tree until we get to a leaf node
-    while (this.subnodes.length && this._b) {
+    while (this._s.length && this._b) {
       indices = getIndices(object, this.bounds);
 
       for (i = 0; i < indices.length; i++) {
-        objects.push.apply(objects, this.subnodes[ indices[i] ].get(object));
+        objects.push.apply(objects, this._s[ indices[i] ].get(object));
       }
 
       return objects;
     }
 
-    return this.objects;
+    return this._o;
   }
 
   /**
-   * Add an object to the quadtree. Once the number of objects in the node exceeds
-   * the maximum number of objects allowed, it will split and move all objects to their
-   * corresponding subnodes.
+   * Add objects to the quadtree and group them by their position. Can take a single object, a comma separated list of objects, and an array of objects.
    *
-   * @param {...object|object[]} Objects to add to the quadtree
+   * ```js
+   * import { Quadtree, Sprite, Pool, GameLoop } from 'kontra';
    *
-   * @example
-   * quadtree().add({id:1}, {id:2}, {id:3});
-   * quadtree().add([{id:1}, {id:2}], {id:3});
+   * let quadtree = Quadtree();
+   * let bulletPool = Pool({
+   *   create: Sprite
+   * });
+   *
+   * let player = Sprite({
+   *   // ...
+   * });
+   * let enemy = Sprite({
+   *   // ...
+   * });
+   *
+   * // create some bullets
+   * for (let i = 0; i < 100; i++) {
+   *   bulletPool.get({
+   *     // ...
+   *   });
+   * }
+   *
+   * let loop = GameLoop({
+   *   update: function() {
+   *     quadtree.clear();
+   *     quadtree.add(player, enemy, bulletPool.getAliveObjects());
+   *   }
+   * });
+   * ```
+   * @function add
+   *
+   * @param {Object|Object[]} objectsN - Objects to add to the quadtree.
    */
   add() {
     let i, j, object, obj, indices, index;
@@ -158,18 +252,18 @@ class Quadtree {
       }
 
       // this node is a leaf node so add the object to it
-      this.objects.push(object);
+      this._o.push(object);
 
       // split the node if there are too many objects
-      if (this.objects.length > this.maxObjects && this._d < this.maxDepth) {
-        this._s();
+      if (this._o.length > this.maxObjects && this._d < this.maxDepth) {
+        this._sp();
 
         // move all objects to their corresponding subnodes
-        for (i = 0; (obj = this.objects[i]); i++) {
+        for (i = 0; (obj = this._o[i]); i++) {
           this._a(obj);
         }
 
-        this.objects.length = 0;
+        this._o.length = 0;
       }
     }
   }
@@ -177,7 +271,7 @@ class Quadtree {
   /**
    * Add an object to a subnode.
    *
-   * @param {object} object - Object to add into a subnode
+   * @param {Object} object - Object to add into a subnode
    */
   // @see https://github.com/jed/140bytes/wiki/Byte-saving-techniques#use-placeholder-arguments-instead-of-var
   _a(object, indices, i) {
@@ -185,7 +279,7 @@ class Quadtree {
 
     // add the object to all subnodes it intersects
     for (i = 0; i < indices.length; i++) {
-      this.subnodes[ indices[i] ].add(object);
+      this._s[ indices[i] ].add(object);
     }
   }
 
@@ -193,11 +287,11 @@ class Quadtree {
    * Split the node into four subnodes.
    */
   // @see https://github.com/jed/140bytes/wiki/Byte-saving-techniques#use-placeholder-arguments-instead-of-var
-  _s(subWidth, subHeight, i) {
+  _sp(subWidth, subHeight, i) {
     this._b = true;
 
     // only split if we haven't split before
-    if (this.subnodes.length) {
+    if (this._s.length) {
       return;
     }
 
@@ -205,20 +299,22 @@ class Quadtree {
     subHeight = this.bounds.height / 2 | 0;
 
     for (i = 0; i < 4; i++) {
-      this.subnodes[i] = quadtreeFactory({
+      this._s[i] = quadtreeFactory({
         bounds: {
           x: this.bounds.x + (i % 2 === 1 ? subWidth : 0),  // nodes 1 and 3
           y: this.bounds.y + (i >= 2 ? subHeight : 0),      // nodes 2 and 3
           width: subWidth,
           height: subHeight
         },
-        depth: this._d+1,
         maxDepth: this.maxDepth,
         maxObjects: this.maxObjects,
-        /* @if VISUAL_DEBUG */
-        parent: this
-        /* @endif */
       });
+
+      // d = depth, p = parent
+      this._s[i]._d = this._d+1;
+      /* @if VISUAL_DEBUG */
+      this._s[i]._p = this;
+      /* @endif */
     }
   }
 
@@ -228,15 +324,15 @@ class Quadtree {
    /* @if VISUAL_DEBUG **
    render() {
      // don't draw empty leaf nodes, always draw branch nodes and the first node
-     if (this.objects.length || this._d === 0 ||
+     if (this._o.length || this._d === 0 ||
          (this._p && this._p._b)) {
 
        context.strokeStyle = 'red';
        context.strokeRect(this.bounds.x, this.bounds.y, this.bounds.width, this.bounds.height);
 
-       if (this.subnodes.length) {
+       if (this._s.length) {
          for (let i = 0; i < 4; i++) {
-           this.subnodes[i].render();
+           this._s[i].render();
          }
        }
      }

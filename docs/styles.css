@@ -122,6 +122,17 @@ a:visited {
   color: #3e76c2;
 }
 
+/* highlight selected section */
+:target {
+  transform: translateX(20px);
+  border-left-color: #3e76c2;
+}
+section > h2 {
+  border-left: 40px solid white;
+  padding-left: 10px;
+  transition: transform 0.5s ease, border-left-color 0.5s ease;
+  margin-left: -50px;
+}
 
 
 .content {
@@ -144,6 +155,32 @@ main {
 
 main > div {
   max-width: 33.333rem;
+}
+
+.github-corner:hover .octo-arm {
+  animation: octocat-wave 560ms ease-in-out
+}
+
+@keyframes octocat-wave {
+  0%, 100%{
+    transform: rotate(0)
+  }
+  20%, 60% {
+    transform: rotate(-25deg)
+  }
+  40%, 80% {
+    transform: rotate(10deg)
+  }
+}
+
+@media (max-width: 500px) {
+  .github-corner:hover .octo-arm {
+    animation:none
+  }
+
+  .github-corner .octo-arm {
+    animation: octocat-wave 560ms ease-in-out
+  }
 }
 
 .main-nav {

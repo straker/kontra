@@ -5,20 +5,27 @@ import { getContext } from './core.js'
  *
  * An animation defines the sequence of frames to use from a sprite sheet. It also defines at what speed the animation should run using `frameRate`.
  *
- * Typically you don't create an kontra.Animation directly, but instead would create it through a kontra.SpriteSheet.
+ * Typically you don't create an kontra.Animation directly, but rather you would create them from kontra.SpriteSheet by passing the `animations` parameter.
  *
  * ```js
  * import { SpriteSheet, Animation } from 'kontra';
  *
- * let spriteSheet = SpriteSheet({
- *   // ...
- * });
+ * let image = new Image();
+ * image.src = '../imgs/character_walk_sheet.png';
+ * image.onload = function() {
+ *   let spriteSheet = SpriteSheet({
+ *     image: image,
+ *     frameWidth: 72,
+ *     frameHeight: 97
+ *   });
  *
- * let animation = Animation({
- *   spriteSheet: spriteSheet,
- *   frames: [1,2,3,6],
- *   frameRate: 30
- * });
+ *   // you typically wouldn't create an Animation this way
+ *   let animation = Animation({
+ *     spriteSheet: spriteSheet,
+ *     frames: [1,2,3,6],
+ *     frameRate: 30
+ *   });
+ * };
  * ```
  * @class Animation
  *
@@ -89,6 +96,8 @@ class Animation {
 
   /**
    * Clone an animation so it can be used more than once. By default animations passed to kontra.Sprite will be cloned so no two sprites update the same animation. Otherwise two sprites who shared the same animation would make it update twice as fast.
+   * @memberof Animation
+   * @function clone
    *
    * @returns {kontra.Animation} A new kontra.Animation instance.
    */

@@ -1,8 +1,8 @@
 export { default as Animation } from './animation.js'
 export {
-  images,
-  audio,
-  data,
+  imageAssets,
+  audioAssets,
+  dataAssets,
   setImagePath,
   setAudioPath,
   setDataPath,
@@ -14,7 +14,7 @@ export {
 export { init, getCanvas, getContext } from './core.js'
 export { on, off, emit } from './events.js'
 export { default as GameLoop } from './gameLoop.js'
-export { keyMap, initKeys, bindKeys, unbindKeys, keyPressed } from './keys.js'
+export { keyMap, initKeys, bindKeys, unbindKeys, keyPressed } from './keyboard.js'
 export { registerPlugin, unregisterPlugin, extendObject } from './plugin.js'
 export {
   initPointer,

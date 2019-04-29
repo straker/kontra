@@ -96,7 +96,7 @@ class Pool {
      * @memberof Pool
      * @property {Number} maxSize
      */
-    this.maxSize = maxSize || 1024;
+    this.maxSize = maxSize;
   }
 
   /**

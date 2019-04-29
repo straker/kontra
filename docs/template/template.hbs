@@ -9,7 +9,7 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/prism.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/components/prism-javascript.min.js"></script>
-  <script src="../kontra.js"></script>
+  <script src="../js/kontra.js"></script>
 </head>
 <body>
   <div class="content">
@@ -34,7 +34,7 @@
             <h2 id="api">API</h2>
             <ul aria-labelledby="api">
               {{#each navbar}}
-              <li><a href="/api/{{ url }}">{{ name }}</a></li>
+              <li><a href="/api/{{ url }}" {{#if selected}}aria-current="page"{{/if}}>{{ name }}</a></li>
               {{/each}}
             </ul>
           </li>

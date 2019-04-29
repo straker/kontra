@@ -1,8 +1,8 @@
 import Animation from './animation.js'
 import {
-  images,
-  audio,
-  data,
+  imageAssets,
+  audioAssets,
+  dataAssets,
   setImagePath,
   setAudioPath,
   setDataPath,
@@ -14,7 +14,7 @@ import {
 import { init, getCanvas, getContext } from './core.js'
 import { on, off, emit } from './events.js'
 import GameLoop from './gameLoop.js'
-import { keyMap, initKeys, bindKeys, unbindKeys, keyPressed } from './keys.js'
+import { keyMap, initKeys, bindKeys, unbindKeys, keyPressed } from './keyboard.js'
 import { registerPlugin, unregisterPlugin, extendObject } from './plugin.js'
 import {
   initPointer,
@@ -37,9 +37,9 @@ import Vector from './vector.js'
 let kontra = {
   Animation,
 
-  images,
-  audio,
-  data,
+  imageAssets,
+  audioAssets,
+  dataAssets,
   setImagePath,
   setAudioPath,
   setDataPath,

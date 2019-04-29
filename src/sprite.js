@@ -21,7 +21,7 @@ import Vector from './vector.js'
  * @param {Number} [properties.rotation=0] - Sprites rotation around the origin in radians.
  * @param {Number} [properties.anchor={x:0,y:0}] - The x and y origin of the sprite. {0,0} is the top left corner of the sprite, {1,1} is the bottom right corner.
  *
- * @param {Canvas​Rendering​Context2D} [properties.context=context] - The context the sprite should draw to. Defaults to [core.getContext()](/api/core.html#getContext).
+ * @param {Canvas​Rendering​Context2D} [properties.context] - The context the sprite should draw to. Defaults to [core.getContext()](/api/core.html#getContext).
  *
  * @param {Image|HTMLCanvasElement} [properties.image] - Use an image to draw the sprite.
  * @param {Object} [properties.animations] - An object of kontra.Animations from a kontra.Spritesheet to animate the sprite.
@@ -37,21 +37,26 @@ class Sprite {
    *
    * @sectionName Rectangle Sprite
    * @example
-   * // exclude:start
-   * let Sprite = kontra.Sprite;
-   * // exclude:end
+   * // exclude-code:start
+   * let { Sprite } = kontra;
+   * // exclude-code:end
+   * // exclude-script:start
+   * import { Sprite } from 'kontra';
+   * // exclude-script:end
+   *
    * let sprite = Sprite({
-   *   x: 290,
-   *   y: 80,
+   *   x: 300,
+   *   y: 100,
+   *   anchor: {x: 0.5, y: 0.5},
    *
    *   // required for a rectangle sprite
    *   width: 20,
    *   height: 40,
    *   color: 'red'
    * });
-   * // exclude:start
+   * // exclude-code:start
    * sprite.context = context;
-   * // exclude:end
+   * // exclude-code:end
    *
    * sprite.render();
    */
@@ -61,22 +66,27 @@ class Sprite {
    *
    * @sectionName Image Sprite
    * @example
-   * // exclude:start
-   * let Sprite = kontra.Sprite;
-   * // exclude:end
+   * // exclude-code:start
+   * let { Sprite } = kontra;
+   * // exclude-code:end
+   * // exclude-script:start
+   * import { Sprite } from 'kontra';
+   * // exclude-script:end
+   *
    * let image = new Image();
    * image.src = '../imgs/character.png';
    * image.onload = function() {
    *   let sprite = Sprite({
-   *     x: 267,
-   *     y: 54,
+   *     x: 300,
+   *     y: 100,
+   *     anchor: {x: 0.5, y: 0.5},
    *
    *     // required for an image sprite
    *     image: image
    *   });
-   * // exclude:start
-   * sprite.context = context;
-   * // exclude:end
+   *   // exclude-code:start
+   *   sprite.context = context;
+   *   // exclude-code:end
    *
    *   sprite.render();
    * };
@@ -85,18 +95,19 @@ class Sprite {
   /**
    * A sprite can use a spritesheet animation as well. To create an animation sprite, pass the `animations` property. The size of the sprite will automatically be set as the width and height of a frame of the spritesheet.
    *
-   * A sprite can have multiple named animations. The easiest way to create animations is to use kontra.SpriteSheet. All animations will automatically be [cloned](animations.html#clone) so no two sprites update the same animation.
+   * A sprite can have multiple named animations. The easiest way to create animations is to use kontra.SpriteSheet. All animations will automatically be [cloned](animation.html#clone) so no two sprites update the same animation.
    *
    * @sectionName Animation Sprite
    * @example
-   * // exclude:start
-   * let Sprite = kontra.Sprite;
-   * let SpriteSheet = kontra.SpriteSheet;
-   * let GameLoop = kontra.GameLoop;
-   * // exclude:end
+   * // exclude-code:start
+   * let { Sprite, SpriteSheet, GameLoop } = kontra;
+   * // exclude-code:end
+   * // exclude-script:start
+   * import { Sprite, SpriteSheet, GameLoop } from 'kontra';
+   * // exclude-script:end
+   *
    * let image = new Image();
    * image.src = '../imgs/character_walk_sheet.png';
-   *
    * image.onload = function() {
    *
    *   // use spriteSheet to create animations from an image
@@ -114,28 +125,29 @@ class Sprite {
    *   });
    *
    *   let sprite = Sprite({
-   *     x: 267,
-   *     y: 54,
+   *     x: 300,
+   *     y: 100,
+   *     anchor: {x: 0.5, y: 0.5},
    *
    *     // required for an animation sprite
    *     animations: spriteSheet.animations
    *   });
-   * // exclude:start
-   * sprite.context = context;
-   * // exclude:end
+   *   // exclude-code:start
+   *   sprite.context = context;
+   *   // exclude-code:end
    *
    *   // use kontra.gameLoop to play the animation
    *   let loop = GameLoop({
-   *   // exclude:start
+   *   // exclude-code:start
    *   clearCanvas: false,
-   *   // exclude:end
+   *   // exclude-code:end
    *     update: function(dt) {
    *       sprite.update();
    *     },
    *     render: function() {
-   * // exclude:start
-   * context.clearRect(0,0,context.canvas.width,context.canvas.height);
-   * // exclude:end
+   *       // exclude-code:start
+   *       context.clearRect(0,0,context.canvas.width,context.canvas.height);
+   *       // exclude-code:end
    *       sprite.render();
    *     }
    *   });
@@ -149,9 +161,13 @@ class Sprite {
    *
    * @sectionName Custom Properties
    * @example
-   * // exclude:start
-   * let Sprite = kontra.Sprite;
-   * // exclude:end
+   * // exclude-code:start
+   * let { Sprite } = kontra;
+   * // exclude-code:end
+   * // exclude-script:start
+   * import { Sprite } from 'kontra';
+   * // exclude-script:end
+   *
    * let sprite = Sprite({
    *   x: 300,
    *   y: 100,
@@ -169,9 +185,10 @@ class Sprite {
    *     this.context.fill();
    *   }
    * });
-   * // exclude:start
+   * // exclude-code:start
    * sprite.context = context;
-   * // exclude:end;
+   * // exclude-code:end
+   *
    * sprite.render();
    */
 
@@ -190,21 +207,21 @@ class Sprite {
     let { x, y, dx, dy, ddx, ddy, width, height, image } = properties;
 
     /**
-     * X and Y values of the sprites position vector.
+     * The sprites position vector.
      * @memberof Sprite
      * @property {kontra.Vector} position
      */
     this.position = Vector(x, y);
 
     /**
-     * X and Y values of the sprites velocity vector.
+     * The sprites velocity vector.
      * @memberof Sprite
      * @property {kontra.Vector} velocity
      */
     this.velocity = Vector(dx, dy);
 
     /**
-     * X and Y values of the sprites acceleration vector.
+     * The sprites acceleration vector.
      * @memberof Sprite
      * @property {kontra.Vector} acceleration
      */
@@ -244,18 +261,22 @@ class Sprite {
      * @property {Object} anchor
      *
      * @example
-     * // exclude:start
-     * let Sprite = kontra.Sprite;
-     * // exclude:end
+     * // exclude-code:start
+     * let { Sprite } = kontra;
+     * // exclude-code:end
+     * // exclude-script:start
+     * import { Sprite } from 'kontra';
+     * // exclude-script:end
+     *
      * let sprite = Sprite({
      *   x: 150,
      *   y: 100,
      *   color: 'red',
      *   width: 50,
      *   height: 50,
-     * // exclude:start
-     * context: context,
-     * // exclude:end
+     *   // exclude-code:start
+     *   context: context,
+     *   // exclude-code:end
      *   render: function() {
      *     this.draw();
      *
@@ -433,7 +454,7 @@ class Sprite {
     }
 
     /**
-     * The currently playing animation object.
+     * The currently playing Animation object if `animations` was passed as a parameter.
      * @memberof Sprite
      * @property {kontra.Animation} currentAnimation
      */
@@ -537,7 +558,7 @@ class Sprite {
   }
 
   /**
-   * Update the sprites position based on its velocity and acceleration. Calls the sprites [advance()(#advance) function.
+   * Update the sprites position based on its velocity and acceleration. Calls the sprites [advance()](#advance) function.
    * @memberof Sprite
    * @function update
    *

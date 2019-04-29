@@ -13,12 +13,6 @@ describe('tileEngine', () => {
       canvas.width = canvas.height = 600;
       init(canvas);
     }
-
-    // kontra.assets = assets;
-  });
-
-  after(() => {
-    // delete kontra.assets;
   });
 
   // --------------------------------------------------
@@ -51,53 +45,6 @@ describe('tileEngine', () => {
       expect(tileEngine.mapheight).to.equal(500);
     });
 
-  //   it('should resolve tileset image', () => {
-  //     let url = new URL('../../car.png', window.location.href);
-  //     let image = new Image(100, 100);
-  //     kontra.assets.images[url] = image
-
-  //     let tileEngine = TileEngine({
-  //       tilesets: [{
-  //         image: '../../car.png'
-  //       }]
-  //     });
-
-  //     expect(tileEngine.tilesets[0].image).to.equal(image);
-  //   });
-
-  //   it('should resolve tileset source', () => {
-  //     let url = new URL('/foo/bar/source.json', window.location.href);
-  //     kontra.assets.data[url] = {
-  //       foo: 'bar'
-  //     };
-
-  //     let tileEngine = TileEngine({
-  //       tilesets: [{
-  //         source: '/foo/bar/source.json'
-  //       }]
-  //     });
-
-  //     expect(tileEngine.tilesets[0].foo).to.equal('bar');
-  //   });
-
-  //   it('should resolve tileset source and the image of the source', () => {
-  //     let sourceUrl = new URL('/foo/bar/source.json', window.location.href);
-  //     let imageUrl = new URL('../../car.png', window.location.href);
-  //     let image = new Image(100, 100);
-
-  //     kontra.assets.images[imageUrl] = image
-  //     kontra.assets.data[sourceUrl] = {
-  //       image: '../../car.png'
-  //     };
-
-  //     let tileEngine = TileEngine({
-  //       tilesets: [{
-  //         source: '/foo/bar/source.json'
-  //       }]
-  //     });
-
-  //     expect(tileEngine.tilesets[0].image).to.equal(image);
-  //   });
   });
 
 
@@ -238,6 +185,10 @@ describe('tileEngine', () => {
 
     it('should not process out of bound positions', () => {
       expect(tileEngine.tileAtLayer('test', {x: -10, y: 0})).to.equal(undefined);
+    });
+
+    it('should return -1 if there is no layer by the provided name', () => {
+      expect(tileEngine.tileAtLayer('foo', {row: 0, col: 0})).to.equal(-1);
     });
 
   });

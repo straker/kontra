@@ -3,9 +3,9 @@ import Animation from './animation.js'
 /**
  * Parse a string of consecutive frames.
  *
- * @param {number|string} frames - Start and end frame.
+ * @param {Number|String} frames - Start and end frame.
  *
- * @returns {number|number[]} List of frames.
+ * @returns {Number|Number[]} List of frames.
  */
 function parseFrames(consecutiveFrames) {
   // return a single number frame
@@ -39,18 +39,56 @@ function parseFrames(consecutiveFrames) {
   return sequence;
 }
 
+/**
+ * A sprite sheet to animate a sequence of images. Used to create [animation sprites](./Sprite.html#animation-sprite).
+ *
+ * <figure>
+ *   <a href="../imgs/character_walk_sheet.png">
+ *     <img src="../imgs/character_walk_sheet.png" alt="11 frames of a walking pill-like alien wearing a space helmet.">
+ *   </a>
+ *   <figcaption>Sprite sheet image courtesy of <a href="https://kenney.nl/assets">Kenney</a>.</figcaption>
+ * </figure>
+ *
+ * Typically you create a sprite sheet just to create animations and then use the animations for your sprite.
+ *
+ * ```js
+ * import { Sprite, SpriteSheet } from 'kontra';
+ *
+ * let image = new Image();
+ * image.src = '../imgs/character_walk_sheet.png';
+ * image.onload = function() {
+ *   let spriteSheet = SpriteSheet({
+ *     image: image,
+ *     frameWidth: 72,
+ *     frameHeight: 97,
+ *     animations: {
+ *       // create a named animation: walk
+ *       walk: {
+ *         frames: '0..9',  // frames 0 through 9
+ *         frameRate: 30
+ *       }
+ *     }
+ *   });
+ *
+ *   let sprite = Sprite({
+ *     x: 200,
+ *     y: 100,
+ *
+ *     // use the sprite sheet animations for the sprite
+ *     animations: spriteSheet.animations
+ *   });
+ * };
+ * ```
+ * @class SpriteSheet
+ *
+ * @param {Object} properties - Properties of the sprite sheet.
+ * @param {Image|HTMLCanvasElement} properties.image - The sprite sheet image.
+ * @param {Number} properties.frameWidth - The width of a single frame.
+ * @param {Number} properties.frameHeight - The height of a single frame.
+ * @param {Number} [properties.frameMargin=0] - The amount of whitespace between each frame.
+ * @param {Object} [properties.animations] - Animations to create from the sprite sheet using kontra.Animation. Passed directly into the sprite sheets [createAnimations()](#createAnimations) function.
+ */
 class SpriteSheet {
-  /**
-   * Initialize properties on the spriteSheet.
-   * @memberof kontr
-   *
-   * @param {object} properties - Properties of the sprite sheet.
-   * @param {Image|HTMLCanvasElement} properties.image - Image for the sprite sheet.
-   * @param {number} properties.frameWidth - Width (in px) of each frame.
-   * @param {number} properties.frameHeight - Height (in px) of each frame.
-   * @param {number} properties.frameMargin - Margin (in px) between each frame.
-   * @param {object} properties.animations - Animations to create from the sprite sheet.
-   */
   constructor({image, frameWidth, frameHeight, frameMargin, animations} = {}) {
     // @if DEBUG
     if (!image) {
@@ -58,8 +96,27 @@ class SpriteSheet {
     }
     // @endif
 
+    /**
+     * An object of named kontra.Animation objects. Typically you pass this object into kontra.Sprite to create an [animation sprites](./Sprite.html#animation-sprite).
+     * @memberof SpriteSheet
+     * @property {Object} animations
+     */
     this.animations = {};
+
+    /**
+     * The sprite sheet image.
+     * @memberof SpriteSheet
+     * @property {Image|HTMLCanvasElement} image
+     */
     this.image = image;
+
+    /**
+     * An object that defines properties of a single frame in the sprite sheet. It has properties of `width`, `height`, and `margin`.
+     *
+     * `width` and `height` are the width of a single frame, while `margin` defines the amount of whitespace between each frame.
+     * @memberof SpriteSheet
+     * @property {Object} frame
+     */
     this.frame = {
       width: frameWidth,
       height: frameHeight,
@@ -73,37 +130,66 @@ class SpriteSheet {
   }
 
   /**
-   * Create animations from the sprite sheet.
+   * Create named animations from the sprite sheet. Called from the constructor if the `animations` property is passed in.
    *
-   * @param {object} animations - List of named animations to create from the Image.
-   * @param {number|string|number[]|string[]} animations.animationName.frames - A single frame or list of frames for this animation.
-   * @param {number} animations.animationName.frameRate - Number of frames to display in one second.
+   * This function populates the sprite sheets `animations` property with kontra.Animation objects. Each animation is accessible by its name.
    *
-   * @example
-   * let sheet = kontra.spriteSheet({image: img, frameWidth: 16, frameHeight: 16});
-   * sheet.createAnimations({
-   *   idle: {
-   *     frames: 1  // single frame animation
-   *   },
-   *   walk: {
-   *     frames: '2..6',  // ascending consecutive frame animation (frames 2-6, inclusive)
-   *     frameRate: 4
-   *   },
-   *   moonWalk: {
-   *     frames: '6..2',  // descending consecutive frame animation
-   *     frameRate: 4
-   *   },
-   *   jump: {
-   *     frames: [7, 12, 2],  // non-consecutive frame animation
-   *     frameRate: 3,
-   *     loop: false
-   *   },
-   *   attack: {
-   *     frames: ['8..10', 13, '10..8'],  // you can also mix and match, in this case frames [8,9,10,13,10,9,8]
-   *     frameRate: 2,
-   *     loop: false
-   *   }
-   * });
+   * ```js
+   * import { Sprite, SpriteSheet } from 'kontra';
+   *
+   * let image = new Image();
+   * image.src = '../imgs/character_walk_sheet.png';
+   * image.onload = function() {
+   *
+   *   let spriteSheet = SpriteSheet({
+   *     image: image,
+   *     frameWidth: 72,
+   *     frameHeight: 97,
+   *
+   *     // this will also call createAnimations()
+   *     animations: {
+   *       // create 1 animation: idle
+   *       idle: {
+   *         // a single frame
+   *         frames: 1
+   *       }
+   *     }
+   *   });
+   *
+   *   spriteSheet.createAnimations({
+   *     // create 4 animations: jump, walk, moonWalk, attack
+   *     jump: {
+   *       // sequence of frames (can be non-consecutive)
+   *       frames: [1, 10, 1],
+   *       frameRate: 10,
+   *       loop: false,
+   *     },
+   *     walk: {
+   *       // ascending consecutive frame animation (frames 2-6, inclusive)
+   *       frames: '2..6',
+   *       frameRate: 20
+   *     },
+   *     moonWalk: {
+   *       // descending consecutive frame animation (frames 6-2, inclusive)
+   *       frames: '6..2',
+   *       frameRate: 20
+   *     },
+   *     attack: {
+   *       // you can also mix and match, in this case frames [8,9,10,13,10,9,8]
+   *       frames: ['8..10', 13, '10..8'],
+   *       frameRate: 10,
+   *       loop: false,
+   *     }
+   *   });
+   * };
+   * ```
+   * @memberof SpriteSheet
+   * @function createAnimations
+   *
+   * @param {Object} animations - Object of named animations to create from the sprite sheet.
+   * @param {Number|String|Number[]|String[]} animations.<name>.frames - The sequence of frames to use from the sprite sheet. It can either be a single frame (`1`), a sequence of frames (`[1,2,3,4]`), or consecutive frame notation (`'1..4'`). Sprite sheet frames are `0` indexed.
+   * @param {Number} animations.<name>.frameRate - The number frames to display per second.
+   * @param {Boolean} [animations.<name>.loop] - If the animation should loop back to the beginning once completed.
    */
   createAnimations(animations) {
     let sequence, name;

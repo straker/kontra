@@ -8,9 +8,9 @@
   "scripts": {
     "test": "karma start --single-run",
     "test-watch": "karma start",
-    "build": "gulp build",
-    "dist": "gulp dist",
-    "rollup": "rollup examples/test.js --format iife --file examples/out.js"
+    "build": "gulp build && npm run build-docs",
+    "build-docs": "gulp build:docs",
+    "dist": "gulp dist"
   },
   "repository": {
     "type": "git",
@@ -30,7 +30,6 @@
   },
   "homepage": "https://github.com/straker/kontra",
   "devDependencies": {
-    "@11ty/eleventy": "^0.8.2",
     "chai": "^4.2.0",
     "coveralls": "^3.0.3",
     "gulp": "^4.0.0",

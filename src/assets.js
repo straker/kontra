@@ -28,6 +28,18 @@ let audioPath = '';
 let dataPath = '';
 
 /**
+ * Get the full URL from the base.
+ *
+ * @param {String} url - The URL to the asset.
+ * @param {String} base - Base URL.
+ *
+ * @returns {String}
+ */
+function getUrl(url, base) {
+  return new URL(url, base).href;
+}
+
+/**
  * Join a base path and asset path.
  *
  * @param {String} base - The asset base path.
@@ -88,81 +100,85 @@ function getCanPlay(audio) {
  * Object of all loaded image assets by both file name and path. If the base [image path](#setImagePath) was set before the image was loaded, the file name and path will not include the base image path.
  *
  * ```js
- * import { load, setImagePath, images } from 'kontra';
+ * import { load, setImagePath, imageAssets } from 'kontra';
  *
  * load('../imgs/character.png').then(function() {
  *   // Image asset can be accessed at both
- *   // name: images['../imgs/character']
- *   // path: images['../imgs/character.png']
+ *   // name: imageAssets['../imgs/character']
+ *   // path: imageAssets['../imgs/character.png']
  * });
  *
  * setImagePath('/imgs');
  * load('character_walk_sheet.png').then(function() {
  *   // Image asset can be accessed at both
- *   // name: images['character_walk_sheet']
- *   // path: images['character_walk_sheet.png']
+ *   // name: imageAssets['character_walk_sheet']
+ *   // path: imageAssets['character_walk_sheet.png']
  * });
  * ```
- * @property {Object} images
+ * @property {Object} imageAssets
  */
-export let images = {};
+export let imageAssets = {};
 
 /**
  * Object of all loaded audio assets by both file name and path. If the base [audio path](#setAudioPath) was set before the audio was loaded, the file name and path will not include the base audio path.
  *
  * ```js
- * import { load, setAudioPath, audio } from 'kontra';
+ * import { load, setAudioPath, audioAssets } from 'kontra';
  *
  * load('/audio/music.ogg').then(function() {
  *   // Audio asset can be accessed at both
- *   // name: audio['/audio/music']
- *   // path: audio['/audio/music.ogg']
+ *   // name: audioAssets['/audio/music']
+ *   // path: audioAssets['/audio/music.ogg']
  * });
  *
  * setAudioPath('/audio');
  * load('sound.ogg').then(function() {
  *   // Audio asset can be accessed at both
- *   // name: audio['sound']
- *   // path: audio['sound.ogg']
+ *   // name: audioAssets['sound']
+ *   // path: audioAssets['sound.ogg']
  * });
  * ```
- * @property {Object} audio
+ * @property {Object} audioAssets
  */
-export let audio = {};
+export let audioAssets = {};
 
 /**
  * Object of all loaded data assets by both file name and path. If the base [data path](#setDataPath) was set before the data was loaded, the file name and path will not include the base data path.
  *
  * ```js
- * import { load, setDataPath, data } from 'kontra';
+ * import { load, setDataPath, dataAssets } from 'kontra';
  *
  * load('../data/file.txt').then(function() {
  *   // Audio asset can be accessed at both
- *   // name: data['../data/file']
- *   // path: data['../data/file.txt']
+ *   // name: dataAssets['../data/file']
+ *   // path: dataAssets['../data/file.txt']
  * });
  *
  * setDataPath('/data');
  * load('info.json').then(function() {
  *   // Audio asset can be accessed at both
- *   // name: data['info']
- *   // path: data['info.json']
+ *   // name: dataAssets['info']
+ *   // path: dataAssets['info.json']
  * });
  * ```
- * @property {Object} data
+ * @property {Object} dataAssets
  */
-export let data = {};
+export let dataAssets = {};
 
 /**
- * Get the full URL from the base.
- *
- * @param {String} url - The URL to the asset.
- * @param {String} base - Base URL.
- *
- * @returns {String}
+ * Add a global kontra object so TileEngine can access information about the
+ * loaded assets when kontra is loaded in parts rather than as a whole (e.g.
+ * `import { load, TileEngine } from 'kontra';`)
  */
-export function getUrl(url, base) {
-  return new URL(url, base).href;
+function addGlobal() {
+  if (!window.__k) {
+    window.__k = {
+      dm: dataMap,
+      u: getUrl,
+      d: dataAssets,
+      i: imageAssets
+    }
+  }
 }
 
 /**
@@ -219,7 +235,7 @@ export function setDataPath(path) {
 /**
  * Load a single Image asset. Uses the base [image path](#setImagePath) to resolve the URL.
  *
- * Once loaded, the asset will be accessible on the the [images](#images) property.
+ * Once loaded, the asset will be accessible on the the [imageAssets](#imageAssets) property.
  *
  * ```js
  * import { loadImage } from 'kontra';
@@ -235,17 +251,19 @@ export function setDataPath(path) {
  * @returns {Promise} A deferred promise. Promise resolves with the Image.
  */
 export function loadImage(url) {
+  addGlobal();
+
   return new Promise((resolve, reject) => {
     let resolvedUrl, image, fullUrl;
 
     resolvedUrl = joinPath(imagePath, url);
-    if (images[resolvedUrl]) return resolve(images[resolvedUrl]);
+    if (imageAssets[resolvedUrl]) return resolve(imageAssets[resolvedUrl]);
 
     image = new Image();
 
     image.onload = function loadImageOnLoad() {
       fullUrl = getUrl(resolvedUrl, window.location.href);
-      images[ getName(url) ] = images[resolvedUrl] = images[fullUrl] = this;
+      imageAssets[ getName(url) ] = imageAssets[resolvedUrl] = imageAssets[fullUrl] = this;
       resolve(this);
     };
 
@@ -260,10 +278,10 @@ export function loadImage(url) {
 /**
  * Load a single Audio asset. Supports loading multiple audio formats which will be resolved by the browser in the order listed. Uses the base [audio path](#setAudioPath) to resolve the URL.
  *
- * Once loaded, the asset will be accessible on the the [audio](#audio) property. Since the loader determines which audio asset to load based on browser support, you should only reference the audio by its name and not by its file path since there's no guarantee which asset was loaded.
+ * Once loaded, the asset will be accessible on the the [audioAssets](#audioAssets) property. Since the loader determines which audio asset to load based on browser support, you should only reference the audio by its name and not by its file path since there's no guarantee which asset was loaded.
  *
  * ```js
- * import { loadAudio } from 'kontra';
+ * import { loadAudio, audioAssets } from 'kontra';
  *
  * loadAudio([
  *   '/audio/music.mp3',
@@ -271,7 +289,7 @@ export function loadImage(url) {
  * ]).then(function(audio) {
  *
  *   // access audio by its name only (not by its .mp3 or .ogg path)
- *   audio['/audio/music'].play();
+ *   audioAssets['/audio/music'].play();
  * })
  * ```
  * @function loadAudio
@@ -301,11 +319,11 @@ export function loadAudio(url) {
     }
 
     resolvedUrl = joinPath(audioPath, url);
-    if (audio[resolvedUrl]) return resolve(audio[resolvedUrl]);
+    if (audioAssets[resolvedUrl]) return resolve(audioAssets[resolvedUrl]);
 
     audioEl.addEventListener('canplay', function loadAudioOnLoad() {
       fullUrl = getUrl(resolvedUrl, window.location.href);
-      audio[ getName(url) ] = audio[resolvedUrl] = audio[fullUrl] = this;
+      audioAssets[ getName(url) ] = audioAssets[resolvedUrl] = audioAssets[fullUrl] = this;
       resolve(this);
     });
 
@@ -321,12 +339,12 @@ export function loadAudio(url) {
 /**
  * Load a single Data asset. Uses the base [data path](#setDataPath) to resolve the URL.
  *
- * Once loaded, the asset will be accessible on the the [data](#data) property.
+ * Once loaded, the asset will be accessible on the the [dataAssets](#dataAssets) property.
  *
  * ```js
  * import { loadData } from 'kontra';
  *
- * loadData('../data/tile_engine_basic.json').then(function(data) {
+ * loadData('../data/tile_engine_basic.json').then(function() {
  *   // data contains the parsed JSON data
  * })
  * ```
@@ -337,10 +355,11 @@ export function loadAudio(url) {
  * @returns {Promise} A deferred promise. Promise resolves with the Image.
  */
 export function loadData(url) {
+  addGlobal();
   let resolvedUrl, fullUrl;
 
   resolvedUrl = joinPath(dataPath, url);
-  if (data[resolvedUrl]) return Promise.resolve(data[resolvedUrl]);
+  if (dataAssets[resolvedUrl]) return Promise.resolve(dataAssets[resolvedUrl]);
 
   return fetch(resolvedUrl).then(response => {
     if (!response.ok) throw response;
@@ -351,7 +370,7 @@ export function loadData(url) {
       dataMap.set(response, fullUrl);
     }
 
-    data[ getName(url) ] = data[resolvedUrl] = data[fullUrl] = response;
+    dataAssets[ getName(url) ] = dataAssets[resolvedUrl] = dataAssets[fullUrl] = response;
     return response;
   });
 }
@@ -379,10 +398,7 @@ export function loadData(url) {
  * @returns {Promise} A deferred promise. Resolves with all the loaded assets.
  */
 export function load(...urls) {
-  // TODO: in order to support the tileEngine loading source and images, add
-  // the needed properties to the window object when their appropriate functions
-  // are run. then the tileEnginge can look for these properties to know it can
-  // load the assets
+  addGlobal();
 
   return Promise.all(
     urls.map(asset => {
@@ -400,11 +416,12 @@ export function load(...urls) {
 
 // expose for testing
 export function _reset() {
-  images = {};
-  audio = {};
-  data = {};
+  imageAssets = {};
+  audioAssets = {};
+  dataAssets = {};
 
   imagePath = audioPath = dataPath = '';
+  window.__k = undefined;
 
   if (getCanPlay._r) {
     getCanPlay = getCanPlay._r;

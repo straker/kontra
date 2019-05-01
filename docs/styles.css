@@ -348,7 +348,7 @@ label input {
   content: ')';
 }
 
-#download {
+/*#download {
   display: inline-block;
   position: absolute;
   right: 0;
@@ -367,7 +367,7 @@ label input {
 
 #download:hover {
 
-}
+}*/
 
 .code-section {
   position: relative;

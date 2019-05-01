@@ -7,8 +7,6 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/themes/prism.min.css">
   <link rel="stylesheet" href="../styles.css">
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/prism.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/components/prism-javascript.min.js"></script>
   <script src="../js/kontra.js"></script>
 </head>
 <body>
@@ -24,32 +22,34 @@
              css list-style: none is set
              @see https://web-a11y.slack.com/archives/C042TSFGN/p1501699529181172 -->
         <ul id="menu" role="list">
-          <li><a href="/">Introduction</a></li>
-          <li><a href="/getting-started">Getting Started</a></li>
-          <li><a href="/download">Download</a></li>
-          <li><a href="/tutorials">Tutorials</a></li>
-          <li><a href="/made-with-kontra">Made With Kontra</a></li>
+          <li><a href="/" >Introduction</a></li>
+          <li><a href="/getting-started" >Getting Started</a></li>
+          <li><a href="/tutorials" >Tutorials</a></li>
+          <li><a href="/made-with-kontra" >Made With Kontra</a></li>
 
           <li>
             <h2 id="api">API</h2>
             <ul aria-labelledby="api">
-              <li><a href="/api/animation.html" >Animation</a></li>
-              <li><a href="/api/assets.html" >Assets</a></li>
-              <li><a href="/api/core.html" >Core</a></li>
-              <li><a href="/api/events.html" >Events</a></li>
-              <li><a href="/api/gameloop.html" >GameLoop</a></li>
-              <li><a href="/api/keyboard.html" >Keyboard</a></li>
-              <li><a href="/api/pointer.html" >Pointer</a></li>
-              <li><a href="/api/pool.html" >Pool</a></li>
-              <li><a href="/api/quadtree.html" >Quadtree</a></li>
-              <li><a href="/api/sprite.html" aria-current="page">Sprite</a></li>
-              <li><a href="/api/spritesheet.html" >SpriteSheet</a></li>
-              <li><a href="/api/store.html" >Store</a></li>
-              <li><a href="/api/tileengine.html" >TileEngine</a></li>
-              <li><a href="/api/vector.html" >Vector</a></li>
+              <li><a href="/api/animation" >Animation</a></li>
+              <li><a href="/api/assets" >Assets</a></li>
+              <li><a href="/api/core" >Core</a></li>
+              <li><a href="/api/events" >Events</a></li>
+              <li><a href="/api/gameloop" >GameLoop</a></li>
+              <li><a href="/api/keyboard" >Keyboard</a></li>
+              <li><a href="/api/plugin" >Plugin</a></li>
+              <li><a href="/api/pointer" >Pointer</a></li>
+              <li><a href="/api/pool" >Pool</a></li>
+              <li><a href="/api/quadtree" >Quadtree</a></li>
+              <li><a href="/api/sprite" aria-current="page">Sprite</a></li>
+              <li><a href="/api/spritesheet" >SpriteSheet</a></li>
+              <li><a href="/api/store" >Store</a></li>
+              <li><a href="/api/tileengine" >TileEngine</a></li>
+              <li><a href="/api/vector" >Vector</a></li>
             </ul>
           </li>
         </ul>
+      </nav>
+      <div class="scroll-indicator" aria-hidden="true"><span>^</span></div>
     </header>
 
     <main id="main">
@@ -144,7 +144,7 @@
             <code>properties.context</code>
             <span class="optional">Optional</span>
           </dt>
-          <dd><p>Canvas​Rendering​Context2D. The context the sprite should draw to. Defaults to <a href="/api/core.html#getContext">core.getContext()</a>.</p>
+          <dd><p>Canvas​Rendering​Context2D. The context the sprite should draw to. Defaults to <a href="/api/core#getContext">core.getContext()</a>.</p>
         </dd>
           <dt>
             <code>properties.image</code>
@@ -350,7 +350,7 @@
           </h2>
 
           <p>In its most basic form, a sprite is a rectangle with a fill color. To create a rectangle sprite, pass the parameters <code>width</code>, <code>height</code>, and <code>color</code>. A rectangle sprite is great for initial prototyping and particles.</p>
-<canvas id="game-canvas-2"></canvas>
+<canvas id="game-canvas-0"></canvas>
 <pre><code class="language-javascript">import { Sprite } from &#x27;kontra&#x27;;
 
 let sprite &#x3D; Sprite({
@@ -366,8 +366,8 @@ let sprite &#x3D; Sprite({
 
 sprite.render();</code></pre>
 <script>(function() {
-  kontra.init("game-canvas-2");
-  var canvas = document.querySelector("#game-canvas-2");
+  kontra.init("game-canvas-0");
+  var canvas = document.querySelector("#game-canvas-0");
   canvas.width = 600;
   canvas.height = 200;
   var context = canvas.getContext("2d");
@@ -399,7 +399,7 @@ sprite.render();
           </h2>
 
           <p>A sprite can use an image instead of drawing a rectangle. To create an image sprite, pass the <code>image</code> parameter. The size of the sprite will automatically be set as the width and height of the image.</p>
-<canvas id="game-canvas-3"></canvas>
+<canvas id="game-canvas-1"></canvas>
 <pre><code class="language-javascript">import { Sprite } from &#x27;kontra&#x27;;
 
 let image &#x3D; new Image();
@@ -417,8 +417,8 @@ image.onload &#x3D; function() {
   sprite.render();
 };</code></pre>
 <script>(function() {
-  kontra.init("game-canvas-3");
-  var canvas = document.querySelector("#game-canvas-3");
+  kontra.init("game-canvas-1");
+  var canvas = document.querySelector("#game-canvas-1");
   canvas.width = 600;
   canvas.height = 200;
   var context = canvas.getContext("2d");
@@ -452,8 +452,8 @@ image.onload = function() {
           </h2>
 
           <p>A sprite can use a spritesheet animation as well. To create an animation sprite, pass the <code>animations</code> property. The size of the sprite will automatically be set as the width and height of a frame of the spritesheet.</p>
-<p>A sprite can have multiple named animations. The easiest way to create animations is to use <a href="SpriteSheet.html">SpriteSheet</a>. All animations will automatically be <a href="animation.html#clone">cloned</a> so no two sprites update the same animation.</p>
-<canvas id="game-canvas-4"></canvas>
+<p>A sprite can have multiple named animations. The easiest way to create animations is to use <a href="SpriteSheet">SpriteSheet</a>. All animations will automatically be <a href="animation#clone">cloned</a> so no two sprites update the same animation.</p>
+<canvas id="game-canvas-2"></canvas>
 <pre><code class="language-javascript">import { Sprite, SpriteSheet, GameLoop } from &#x27;kontra&#x27;;
 
 let image &#x3D; new Image();
@@ -496,8 +496,8 @@ image.onload &#x3D; function() {
   loop.start();
 };</code></pre>
 <script>(function() {
-  kontra.init("game-canvas-4");
-  var canvas = document.querySelector("#game-canvas-4");
+  kontra.init("game-canvas-2");
+  var canvas = document.querySelector("#game-canvas-2");
   canvas.width = 600;
   canvas.height = 200;
   var context = canvas.getContext("2d");
@@ -562,7 +562,7 @@ image.onload = function() {
           </h2>
 
           <p>If you need to draw a different shape, such as a circle, you can pass in custom properties and a render function to handle drawing the sprite.</p>
-<canvas id="game-canvas-5"></canvas>
+<canvas id="game-canvas-3"></canvas>
 <pre><code class="language-javascript">import { Sprite } from &#x27;kontra&#x27;;
 
 let sprite &#x3D; Sprite({
@@ -585,8 +585,8 @@ let sprite &#x3D; Sprite({
 
 sprite.render();</code></pre>
 <script>(function() {
-  kontra.init("game-canvas-5");
-  var canvas = document.querySelector("#game-canvas-5");
+  kontra.init("game-canvas-3");
+  var canvas = document.querySelector("#game-canvas-3");
   canvas.width = 600;
   canvas.height = 200;
   var context = canvas.getContext("2d");
@@ -625,7 +625,7 @@ sprite.render();
             </a>
           </h2>
 
-          <p><a href="Vector.html">Vector</a>. The sprites acceleration vector.</p>
+          <p><a href="Vector">Vector</a>. The sprites acceleration vector.</p>
           
         </section>
         <section>
@@ -683,7 +683,7 @@ let sprite = Sprite({
           </h2>
 
           <p>Object. The x and y origin of the sprite. {x:0, y:0} is the top left corner of the sprite, {x:1, y:1} is the bottom right corner.</p>
-<canvas id="game-canvas-6"></canvas>
+<canvas id="game-canvas-4"></canvas>
 <pre><code class="language-javascript">import { Sprite } from &#x27;kontra&#x27;;
 
 let sprite &#x3D; Sprite({
@@ -712,8 +712,8 @@ sprite.anchor &#x3D; {x: 1, y: 1};
 sprite.x &#x3D; 450;
 sprite.render();</code></pre>
 <script>(function() {
-  kontra.init("game-canvas-6");
-  var canvas = document.querySelector("#game-canvas-6");
+  kontra.init("game-canvas-4");
+  var canvas = document.querySelector("#game-canvas-4");
   canvas.width = 600;
   canvas.height = 200;
   var context = canvas.getContext("2d");
@@ -758,7 +758,7 @@ sprite.render();
             </a>
           </h2>
 
-          <p>Object. An object of <a href="Animation.html">Animation</a> from a <a href="SpriteSheet.html">SpriteSheet</a> to animate the sprite. Each animation is named so that it can can be used by name for the sprites <a href="#playAnimation">playAnimation()</a> function.</p>
+          <p>Object. An object of <a href="Animation">Animation</a> from a <a href="SpriteSheet">SpriteSheet</a> to animate the sprite. Each animation is named so that it can can be used by name for the sprites <a href="#playAnimation">playAnimation()</a> function.</p>
 <pre><code class="lang-js">import { Sprite, SpriteSheet } from &#39;kontra&#39;;
 
 let spriteSheet = SpriteSheet({
@@ -885,7 +885,7 @@ sprite.collidesWith(sprite2);  //=&gt; true
             </a>
           </h2>
 
-          <p><a href="Animation.html">Animation</a>. The currently playing Animation object if <code>animations</code> was passed as a parameter.</p>
+          <p><a href="Animation">Animation</a>. The currently playing Animation object if <code>animations</code> was passed as a parameter.</p>
           
         </section>
         <section>
@@ -920,7 +920,7 @@ sprite.collidesWith(sprite2);  //=&gt; true
 
           <p>Draw the sprite on its context at the its X and Y position. This function changes based on the type of the sprite. For a <a href="#rectangle-sprite">rectangle sprite</a>, it uses <code>context.fillRect()</code>, for an <a href="#image-sprite">image sprite</a> it uses <code>context.drawImage()</code>, and for an animation sprite it uses the <a href="#currentAnimation">currentAnimation</a> <code>render()</code> function.</p>
 <p>If you override the sprites <code>render()`</code> function with your own render function, you can call this function to draw the sprite using the sprites normal drawing function.</p>
-<pre><code class="lang-js">let sprite = &lt;a href=&quot;sprite.html&quot;&gt;sprite&lt;/a&gt;({
+<pre><code class="lang-js">let sprite = &lt;a href=&quot;sprite&quot;&gt;sprite&lt;/a&gt;({
  x: 290,
  y: 80,
  color: &#39;red&#39;,
@@ -1014,7 +1014,7 @@ sprite.render();
             </a>
           </h2>
 
-          <p>Check if the sprite is alive. Primarily used by <a href="Pool.html">Pool</a> to know when to recycle an object.</p>
+          <p>Check if the sprite is alive. Primarily used by <a href="Pool">Pool</a> to know when to recycle an object.</p>
           
           <h3><span class="visually-hidden">isAlive</span> Return value</h3>
           <p><p><code>true</code> if the sprites <a href="#ttl">ttl</a> property is above <code>0</code>, <code>false</code> otherwise.</p>
@@ -1070,7 +1070,7 @@ sprite.playAnimation(&#39;idle&#39;);
             </a>
           </h2>
 
-          <p><a href="Vector.html">Vector</a>. The sprites position vector.</p>
+          <p><a href="Vector">Vector</a>. The sprites position vector.</p>
           
         </section>
         <section>
@@ -1103,7 +1103,7 @@ sprite.playAnimation(&#39;idle&#39;);
             </a>
           </h2>
 
-          <p>Number. How may frames the sprite should be alive. Primarily used by <a href="Pool.html">Pool</a> to know when to recycle an object.</p>
+          <p>Number. How may frames the sprite should be alive. Primarily used by <a href="Pool">Pool</a> to know when to recycle an object.</p>
           
         </section>
         <section>
@@ -1134,7 +1134,7 @@ sprite.playAnimation(&#39;idle&#39;);
             </a>
           </h2>
 
-          <p><a href="Vector.html">Vector</a>. The sprites velocity vector.</p>
+          <p><a href="Vector">Vector</a>. The sprites velocity vector.</p>
           
         </section>
         <section>
@@ -1175,5 +1175,8 @@ sprite.playAnimation(&#39;idle&#39;);
     </main>
   </div>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/components/prism-javascript.min.js"></script>
+  <script src="../js/navbar.js"></script>
 </body>
 </html>

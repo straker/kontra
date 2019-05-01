@@ -10,8 +10,8 @@ import { emit } from './events.js'
  * let { canvas, context } = init();
  *
  * // or can get canvas and context through functions
- * let canvas = getCanvas();
- * let context = getContext();
+ * canvas = getCanvas();
+ * context = getContext();
  * ```
  * @sectionName Core
  */
@@ -42,13 +42,13 @@ export function getContext() {
  * Initialize the library and set up the canvas. Typically you will call `init()` as the first thing and give it the canvas to use. This will allow all Kontra objects to reference the canvas when created.
  *
  * ```js
- * let { canvas, context } = init('#game');
+ * let { canvas, context } = init('game');
  * ```
  * @function init
  *
  * @param {String|HTMLCanvasElement} [canvas] - The canvas for Kontra to use. Can either be the ID of the canvas element or the canvas element itself. Defaults to using the first canvas element on the page.
  *
- * @returns {Object} An object with properties `canvas` and `context`.
+ * @returns {Object} An object with properties `canvas` and `context`. `canvas` it the canvas element for the game and `context` is the context object the game draws to.
  */
 export function init(canvas) {
 

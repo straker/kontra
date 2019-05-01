@@ -7,8 +7,6 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/themes/prism.min.css">
   <link rel="stylesheet" href="../styles.css">
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/prism.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/components/prism-javascript.min.js"></script>
   <script src="../js/kontra.js"></script>
 </head>
 <body>
@@ -24,32 +22,34 @@
              css list-style: none is set
              @see https://web-a11y.slack.com/archives/C042TSFGN/p1501699529181172 -->
         <ul id="menu" role="list">
-          <li><a href="/">Introduction</a></li>
-          <li><a href="/getting-started">Getting Started</a></li>
-          <li><a href="/download">Download</a></li>
-          <li><a href="/tutorials">Tutorials</a></li>
-          <li><a href="/made-with-kontra">Made With Kontra</a></li>
+          <li><a href="/" >Introduction</a></li>
+          <li><a href="/getting-started" >Getting Started</a></li>
+          <li><a href="/tutorials" >Tutorials</a></li>
+          <li><a href="/made-with-kontra" >Made With Kontra</a></li>
 
           <li>
             <h2 id="api">API</h2>
             <ul aria-labelledby="api">
-              <li><a href="/api/animation.html" >Animation</a></li>
-              <li><a href="/api/assets.html" >Assets</a></li>
-              <li><a href="/api/core.html" >Core</a></li>
-              <li><a href="/api/events.html" >Events</a></li>
-              <li><a href="/api/gameloop.html" >GameLoop</a></li>
-              <li><a href="/api/keyboard.html" >Keyboard</a></li>
-              <li><a href="/api/pointer.html" >Pointer</a></li>
-              <li><a href="/api/pool.html" >Pool</a></li>
-              <li><a href="/api/quadtree.html" >Quadtree</a></li>
-              <li><a href="/api/sprite.html" >Sprite</a></li>
-              <li><a href="/api/spritesheet.html" >SpriteSheet</a></li>
-              <li><a href="/api/store.html" >Store</a></li>
-              <li><a href="/api/tileengine.html" aria-current="page">TileEngine</a></li>
-              <li><a href="/api/vector.html" >Vector</a></li>
+              <li><a href="/api/animation" >Animation</a></li>
+              <li><a href="/api/assets" >Assets</a></li>
+              <li><a href="/api/core" >Core</a></li>
+              <li><a href="/api/events" >Events</a></li>
+              <li><a href="/api/gameloop" >GameLoop</a></li>
+              <li><a href="/api/keyboard" >Keyboard</a></li>
+              <li><a href="/api/plugin" >Plugin</a></li>
+              <li><a href="/api/pointer" >Pointer</a></li>
+              <li><a href="/api/pool" >Pool</a></li>
+              <li><a href="/api/quadtree" >Quadtree</a></li>
+              <li><a href="/api/sprite" >Sprite</a></li>
+              <li><a href="/api/spritesheet" >SpriteSheet</a></li>
+              <li><a href="/api/store" >Store</a></li>
+              <li><a href="/api/tileengine" aria-current="page">TileEngine</a></li>
+              <li><a href="/api/vector" >Vector</a></li>
             </ul>
           </li>
         </ul>
+      </nav>
+      <div class="scroll-indicator" aria-hidden="true"><span>^</span></div>
     </header>
 
     <main id="main">
@@ -102,7 +102,7 @@
             <code>properties.context</code>
             <span class="optional">Optional</span>
           </dt>
-          <dd><p>Canvas​Rendering​Context2D. The context the tile engine should draw to. Defaults to <a href="/api/core.html#getContext">core.getContext()</a></p>
+          <dd><p>Canvas​Rendering​Context2D. The context the tile engine should draw to. Defaults to <a href="/api/core#getContext">core.getContext()</a></p>
         </dd>
           <dt>
             <code>properties.tilesets</code>
@@ -120,7 +120,7 @@
             <code>properties.tilesetN.image</code>
             
           </dt>
-          <dd><p>String or HTMLImageElement. Relative path to the HTMLImageElement or an HTMLImageElement. If passing a relative path, the image file must have been <a href="./assets.html">loaded</a> first.</p>
+          <dd><p>String or HTMLImageElement. Relative path to the HTMLImageElement or an HTMLImageElement. If passing a relative path, the image file must have been <a href="./assets">loaded</a> first.</p>
         </dd>
           <dt>
             <code>properties.tilesetN.margin</code>
@@ -144,7 +144,7 @@
             <code>properties.tilesetN.source</code>
             <span class="optional">Optional</span>
           </dt>
-          <dd><p>String. Relative path to the tileset JSON file. The source JSON file must have been <a href="./assets.html">loaded</a> first.</p>
+          <dd><p>String. Relative path to the tileset JSON file. The source JSON file must have been <a href="./assets">loaded</a> first.</p>
         </dd>
           <dt>
             <code>properties.tilesetN.columns</code>
@@ -304,7 +304,7 @@
 <p>You&#39;ll then need to add at least one tileset with an image as well as firstgid, or fist tile index of the tileset. The first tileset will always have a firstgid of 1 as 0 represents an empty tile.</p>
 <p>Lastly, you&#39;ll need to add at least one named layer with data. A layer tells the tile engine which tiles from the tileset image to use at what position on the map.</p>
 <p>Once all tileset images and all layers have been added, you can render the tile engine by calling its <code>render()</code> function.</p>
-<canvas id="game-canvas-7"></canvas>
+<canvas id="game-canvas-5"></canvas>
 <pre><code class="language-javascript">import { TileEngine } from &#x27;kontra&#x27;;
 
 let img &#x3D; new Image();
@@ -343,8 +343,8 @@ img.onload &#x3D; function() {
   tileEngine.render();
 }</code></pre>
 <script>(function() {
-  kontra.init("game-canvas-7");
-  var canvas = document.querySelector("#game-canvas-7");
+  kontra.init("game-canvas-5");
+  var canvas = document.querySelector("#game-canvas-5");
   canvas.width = 576;
   canvas.height = 576;
   var context = canvas.getContext("2d");
@@ -399,8 +399,8 @@ img.onload = function() {
           </h2>
 
           <p>Adding all the tileset images and layers to a tile engine can be tedious, especially if you have multiple layers. If you want a simpler way to create a tile engine, Kontra has been written to work directly with the JSON output of the <a href="http://www.mapeditor.org/">Tiled Map Editor</a>.</p>
-<p>The one requirement is that you must preload all of the tileset images and tileset sources using the appropriate <a href="./assets.html">asset loader functions</a> before you create the tile engine.</p>
-<canvas id="game-canvas-8"></canvas>
+<p>The one requirement is that you must preload all of the tileset images and tileset sources using the appropriate <a href="./assets">asset loader functions</a> before you create the tile engine.</p>
+<canvas id="game-canvas-6"></canvas>
 <pre><code class="language-javascript">import { load, TileEngine, dataAssets } from &#x27;kontra&#x27;;
 
 load(&#x27;../imgs/mapPack_tilesheet.png&#x27;, &#x27;../data/tile_engine_basic.json&#x27;)
@@ -409,8 +409,8 @@ load(&#x27;../imgs/mapPack_tilesheet.png&#x27;, &#x27;../data/tile_engine_basic.
     tileEngine.render();
   });</code></pre>
 <script>(function() {
-  kontra.init("game-canvas-8");
-  var canvas = document.querySelector("#game-canvas-8");
+  kontra.init("game-canvas-6");
+  var canvas = document.querySelector("#game-canvas-6");
   canvas.width = 576;
   canvas.height = 576;
   var context = canvas.getContext("2d");
@@ -436,7 +436,7 @@ load('../imgs/mapPack_tilesheet.png', '../data/tile_engine_basic.json')
 
           <p>If your tilemap is larger than the canvas size, you can move the tilemap camera to change how the tilemap is drawn. Use the tile engines <a href="#sx">sx</a> and <a href="#sy">sy</a> properties to move the camera. Just like drawing an image, the cameras coordinates are the top left corner.</p>
 <p>The <code>sx</code> and <code>sy</code> coordinates will never draw the tile map below 0 or beyond the last row or column of the tile map.</p>
-<canvas id="game-canvas-9"></canvas>
+<canvas id="game-canvas-7"></canvas>
 <pre><code class="language-javascript">import { load, TileEngine, dataAssets, GameLoop } from &#x27;kontra&#x27;;
 
 load(&#x27;../imgs/mapPack_tilesheet.png&#x27;, &#x27;../data/tile_engine_camera.json&#x27;)
@@ -460,8 +460,8 @@ load(&#x27;../imgs/mapPack_tilesheet.png&#x27;, &#x27;../data/tile_engine_camera
     loop.start();
   });</code></pre>
 <script>(function() {
-  kontra.init("game-canvas-9");
-  var canvas = document.querySelector("#game-canvas-9");
+  kontra.init("game-canvas-7");
+  var canvas = document.querySelector("#game-canvas-7");
   canvas.width = 576;
   canvas.height = 576;
   var context = canvas.getContext("2d");
@@ -523,7 +523,7 @@ load('../imgs/mapPack_tilesheet.png', '../data/tile_engine_camera.json')
             </a>
           </h2>
 
-          <p>Check if the object collides with the layer (shares a gird coordinate with any positive tile index in layers data). The object being checked must have the properties <code>x</code>, <code>y</code>, <code>width</code>, and <code>height</code> so that its position in the grid can be calculated. <a href="Sprite.html">Sprite</a> defines these properties for you.</p>
+          <p>Check if the object collides with the layer (shares a gird coordinate with any positive tile index in layers data). The object being checked must have the properties <code>x</code>, <code>y</code>, <code>width</code>, and <code>height</code> so that its position in the grid can be calculated. <a href="Sprite">Sprite</a> defines these properties for you.</p>
 <pre><code class="lang-js">import { TileEngine, Sprite } from &#39;kontra&#39;;
 
 let tileEngine = TileEngine({
@@ -762,5 +762,8 @@ tileEngine.tileAtLayer(&#39;collision&#39;, {row: 2, col: 1});  //=&gt; 2
     </main>
   </div>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/components/prism-javascript.min.js"></script>
+  <script src="../js/navbar.js"></script>
 </body>
 </html>

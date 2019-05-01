@@ -7,8 +7,6 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/themes/prism.min.css">
   <link rel="stylesheet" href="../styles.css">
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/prism.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/components/prism-javascript.min.js"></script>
   <script src="../js/kontra.js"></script>
 </head>
 <body>
@@ -24,32 +22,34 @@
              css list-style: none is set
              @see https://web-a11y.slack.com/archives/C042TSFGN/p1501699529181172 -->
         <ul id="menu" role="list">
-          <li><a href="/">Introduction</a></li>
-          <li><a href="/getting-started">Getting Started</a></li>
-          <li><a href="/download">Download</a></li>
-          <li><a href="/tutorials">Tutorials</a></li>
-          <li><a href="/made-with-kontra">Made With Kontra</a></li>
+          <li><a href="/" >Introduction</a></li>
+          <li><a href="/getting-started" >Getting Started</a></li>
+          <li><a href="/tutorials" >Tutorials</a></li>
+          <li><a href="/made-with-kontra" >Made With Kontra</a></li>
 
           <li>
             <h2 id="api">API</h2>
             <ul aria-labelledby="api">
-              <li><a href="/api/animation.html" >Animation</a></li>
-              <li><a href="/api/assets.html" >Assets</a></li>
-              <li><a href="/api/core.html" >Core</a></li>
-              <li><a href="/api/events.html" >Events</a></li>
-              <li><a href="/api/gameloop.html" >GameLoop</a></li>
-              <li><a href="/api/keyboard.html" >Keyboard</a></li>
-              <li><a href="/api/pointer.html" >Pointer</a></li>
-              <li><a href="/api/pool.html" >Pool</a></li>
-              <li><a href="/api/quadtree.html" aria-current="page">Quadtree</a></li>
-              <li><a href="/api/sprite.html" >Sprite</a></li>
-              <li><a href="/api/spritesheet.html" >SpriteSheet</a></li>
-              <li><a href="/api/store.html" >Store</a></li>
-              <li><a href="/api/tileengine.html" >TileEngine</a></li>
-              <li><a href="/api/vector.html" >Vector</a></li>
+              <li><a href="/api/animation" >Animation</a></li>
+              <li><a href="/api/assets" >Assets</a></li>
+              <li><a href="/api/core" >Core</a></li>
+              <li><a href="/api/events" >Events</a></li>
+              <li><a href="/api/gameloop" >GameLoop</a></li>
+              <li><a href="/api/keyboard" >Keyboard</a></li>
+              <li><a href="/api/plugin" >Plugin</a></li>
+              <li><a href="/api/pointer" >Pointer</a></li>
+              <li><a href="/api/pool" >Pool</a></li>
+              <li><a href="/api/quadtree" aria-current="page">Quadtree</a></li>
+              <li><a href="/api/sprite" >Sprite</a></li>
+              <li><a href="/api/spritesheet" >SpriteSheet</a></li>
+              <li><a href="/api/store" >Store</a></li>
+              <li><a href="/api/tileengine" >TileEngine</a></li>
+              <li><a href="/api/vector" >Vector</a></li>
             </ul>
           </li>
         </ul>
+      </nav>
+      <div class="scroll-indicator" aria-hidden="true"><span>^</span></div>
     </header>
 
     <main id="main">
@@ -60,6 +60,8 @@
         </h1>
 
         <p>A 2D spatial partitioning data structure. Use it to quickly group objects by their position for faster access and collision checking.</p>
+<p><canvas width="600" height="200" id="quadtree-example"></canvas></p>
+<script src="../js/quadtree.js"></script>
         <h3 id="title-Quadtree"><span class="visually-hidden">Quadtree</span> Parameters</span></h3>
         <dl aria-labelledby="title-Quadtree">
           <dt>
@@ -170,9 +172,9 @@ let loop = GameLoop({
 });
 </code></pre>
 <p>You should clear the quadtree each frame since the quadtree is only a snapshot of the position of the objects when they were added. Since the quadtree doesn&#39;t know anything about those objects, it doesn&#39;t know when an object moved or when it should be removed from the tree.</p>
-<p>Objects added to the tree must have the properties <code>x</code>, <code>y</code>, <code>width</code>, and <code>height</code> so that their position in the quadtree can be calculated. <a href="Sprite.html">Sprite</a> defines these properties for you.</p>
+<p>Objects added to the tree must have the properties <code>x</code>, <code>y</code>, <code>width</code>, and <code>height</code> so that their position in the quadtree can be calculated. <a href="Sprite">Sprite</a> defines these properties for you.</p>
 <p>When you need to get all objects in the same node as another object, use the quadtrees <a href="#get">get()</a> function.</p>
-<pre><code class="lang-js">let objects = quadtree.get(player);  //=&gt; [player, enemy]
+<pre><code class="lang-js">let objects = quadtree.get(player);  //=&gt; [enemy]
 </code></pre>
         </section>
 
@@ -255,7 +257,7 @@ let loop = GameLoop({
           </h2>
 
           <p>Get an array of all objects that belong to the same node as the passed in object.</p>
-<p><strong>Note:</strong> if the passed in object is also part of the quadtree, it will be returned in the results.</p>
+<p><strong>Note:</strong> if the passed in object is also part of the quadtree, it will not be returned in the results.</p>
 <pre><code class="lang-js">import { Sprite, Quadtree } from &#39;kontra&#39;;
 
 let quadtree = Quadtree();
@@ -270,7 +272,7 @@ let enemy2 = Sprite({
 });
 
 quadtree.add(player, enemy1, enemy2);
-quadtree.get(player);  //=&gt; [player, enemy1]
+quadtree.get(player);  //=&gt; [enemy1]
 </code></pre>
           <h3 id="title-get"><span class="visually-hidden">get</span> Parameters</span></h3>
           <dl aria-labelledby="title-get">
@@ -283,7 +285,7 @@ quadtree.get(player);  //=&gt; [player, enemy1]
           </dl>
           
           <h3><span class="visually-hidden">get</span> Return value</h3>
-          <p><p>A list of objects in the same node as the object.</p>
+          <p><p>A list of objects in the same node as the object, not including the object itself.</p>
           </p>
         </section>
         <section>
@@ -313,5 +315,8 @@ quadtree.get(player);  //=&gt; [player, enemy1]
     </main>
   </div>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/components/prism-javascript.min.js"></script>
+  <script src="../js/navbar.js"></script>
 </body>
 </html>

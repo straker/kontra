@@ -21,7 +21,7 @@ import Vector from './vector.js'
  * @param {Number} [properties.rotation=0] - Sprites rotation around the origin in radians.
  * @param {Number} [properties.anchor={x:0,y:0}] - The x and y origin of the sprite. {0,0} is the top left corner of the sprite, {1,1} is the bottom right corner.
  *
- * @param {Canvas​Rendering​Context2D} [properties.context] - The context the sprite should draw to. Defaults to [core.getContext()](/api/core.html#getContext).
+ * @param {Canvas​Rendering​Context2D} [properties.context] - The context the sprite should draw to. Defaults to [core.getContext()](/api/core#getContext).
  *
  * @param {Image|HTMLCanvasElement} [properties.image] - Use an image to draw the sprite.
  * @param {Object} [properties.animations] - An object of kontra.Animations from a kontra.Spritesheet to animate the sprite.
@@ -95,7 +95,7 @@ class Sprite {
   /**
    * A sprite can use a spritesheet animation as well. To create an animation sprite, pass the `animations` property. The size of the sprite will automatically be set as the width and height of a frame of the spritesheet.
    *
-   * A sprite can have multiple named animations. The easiest way to create animations is to use kontra.SpriteSheet. All animations will automatically be [cloned](animation.html#clone) so no two sprites update the same animation.
+   * A sprite can have multiple named animations. The easiest way to create animations is to use kontra.SpriteSheet. All animations will automatically be [cloned](animation#clone) so no two sprites update the same animation.
    *
    * @sectionName Animation Sprite
    * @example

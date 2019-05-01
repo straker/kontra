@@ -311,6 +311,38 @@ describe('quadtree', () => {
       expect(getObjects[4]).to.equal(objects[4]);
     });
 
+    it('should not return the passed object', () => {
+      let objects = [
+        {x: 10, y: 10, width: 10, height: 10},
+        {x: 20, y: 10, width: 10, height: 10}
+      ];
+
+      quadtree.add(objects);
+
+      let getObjects = quadtree.get(objects[0]);
+
+      expect(getObjects.length).to.equal(1);
+      expect(getObjects[0]).to.equal(objects[1]);
+    });
+
+    it('should not return the same object more than once', () => {
+      let objects = [
+        {x: 0, y: 0, width: 10, height: 10},
+        {x: 10, y: 10, width: 10, height: 10},
+        {x: 20, y: 20, width: 10, height: 10},
+        {x: 30, y: 30, width: 10, height: 10},
+        {x: 40, y: 40, width: 10, height: 10},
+        {x: 50, y: 50, width: 10, height: 10},
+        {x: 60, y: 10, width: 10, height: 10}
+      ];
+
+      quadtree.add(objects);
+
+      let getObjects = quadtree.get({x: 45, y: 45, width: 20, height: 20});
+
+      expect(getObjects.length).to.equal(7);
+    });
+
   });
 
 });

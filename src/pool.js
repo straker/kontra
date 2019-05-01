@@ -1,14 +1,8 @@
 /**
  * A fast and memory efficient object pool for sprite reuse. Perfect for particle systems or SHUMPs. The pool starts out with just 1 object, but will grow in size to accommodate as many objects as are needed.
  *
- * ```js
- * import { Pool, Sprite } from 'kontra';
- *
- * let pool = Pool({
- *   create: Sprite,
- *   maxSize: 100
- * });
- * ```
+ * <canvas width="600" height="200" id="pool-example"></canvas>
+ * <script src="../js/pool.js"></script>
  * @class Pool
  *
  * @param {Object} properties - Properties of the pool.
@@ -100,7 +94,7 @@ class Pool {
   }
 
   /**
-   * Get and return an object from the pool. The properties parameter will be passed directly to the objects `init(properties)` function. If you're using a [Sprite](Sprite.html), you should also pass the `ttl` property to designate how many frames you want the object to be alive for.
+   * Get and return an object from the pool. The properties parameter will be passed directly to the objects `init(properties)` function. If you're using a kontra.Sprite, you should also pass the `ttl` property to designate how many frames you want the object to be alive for.
    *
    * If you want to control when the sprite is ready for reuse, pass `Infinity` for `ttl`. You'll need to set the sprites `ttl` to `0` when you're ready for the sprite to be reused.
    *

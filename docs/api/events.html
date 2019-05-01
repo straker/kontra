@@ -7,8 +7,6 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/themes/prism.min.css">
   <link rel="stylesheet" href="../styles.css">
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/prism.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/components/prism-javascript.min.js"></script>
   <script src="../js/kontra.js"></script>
 </head>
 <body>
@@ -24,32 +22,34 @@
              css list-style: none is set
              @see https://web-a11y.slack.com/archives/C042TSFGN/p1501699529181172 -->
         <ul id="menu" role="list">
-          <li><a href="/">Introduction</a></li>
-          <li><a href="/getting-started">Getting Started</a></li>
-          <li><a href="/download">Download</a></li>
-          <li><a href="/tutorials">Tutorials</a></li>
-          <li><a href="/made-with-kontra">Made With Kontra</a></li>
+          <li><a href="/" >Introduction</a></li>
+          <li><a href="/getting-started" >Getting Started</a></li>
+          <li><a href="/tutorials" >Tutorials</a></li>
+          <li><a href="/made-with-kontra" >Made With Kontra</a></li>
 
           <li>
             <h2 id="api">API</h2>
             <ul aria-labelledby="api">
-              <li><a href="/api/animation.html" >Animation</a></li>
-              <li><a href="/api/assets.html" >Assets</a></li>
-              <li><a href="/api/core.html" >Core</a></li>
-              <li><a href="/api/events.html" aria-current="page">Events</a></li>
-              <li><a href="/api/gameloop.html" >GameLoop</a></li>
-              <li><a href="/api/keyboard.html" >Keyboard</a></li>
-              <li><a href="/api/pointer.html" >Pointer</a></li>
-              <li><a href="/api/pool.html" >Pool</a></li>
-              <li><a href="/api/quadtree.html" >Quadtree</a></li>
-              <li><a href="/api/sprite.html" >Sprite</a></li>
-              <li><a href="/api/spritesheet.html" >SpriteSheet</a></li>
-              <li><a href="/api/store.html" >Store</a></li>
-              <li><a href="/api/tileengine.html" >TileEngine</a></li>
-              <li><a href="/api/vector.html" >Vector</a></li>
+              <li><a href="/api/animation" >Animation</a></li>
+              <li><a href="/api/assets" >Assets</a></li>
+              <li><a href="/api/core" >Core</a></li>
+              <li><a href="/api/events" aria-current="page">Events</a></li>
+              <li><a href="/api/gameloop" >GameLoop</a></li>
+              <li><a href="/api/keyboard" >Keyboard</a></li>
+              <li><a href="/api/plugin" >Plugin</a></li>
+              <li><a href="/api/pointer" >Pointer</a></li>
+              <li><a href="/api/pool" >Pool</a></li>
+              <li><a href="/api/quadtree" >Quadtree</a></li>
+              <li><a href="/api/sprite" >Sprite</a></li>
+              <li><a href="/api/spritesheet" >SpriteSheet</a></li>
+              <li><a href="/api/store" >Store</a></li>
+              <li><a href="/api/tileengine" >TileEngine</a></li>
+              <li><a href="/api/vector" >Vector</a></li>
             </ul>
           </li>
         </ul>
+      </nav>
+      <div class="scroll-indicator" aria-hidden="true"><span>^</span></div>
     </header>
 
     <main id="main">
@@ -58,7 +58,7 @@
 
         <h1>Events        </h1>
 
-        <p>A simple event system, mostly created to support <a href="/api/plugins.html">Plugins</a>. Allows you to hook into Kontra lifecycle events or create your own.</p>
+        <p>A simple event system, mostly created to support <a href="/api/plugins">Plugins</a>. Allows you to hook into Kontra lifecycle events or create your own.</p>
 <pre><code class="lang-js">import { on, off, emit } from &#39;kontra&#39;;
 
 function callback(a, b, c) {
@@ -116,7 +116,7 @@ off(&#39;myEvent&#39;, callback);
           <p>There are currently only two lifecycle events:</p>
 <ul>
 <li><code>init</code> - Emitted after <code>init()</code> is called.</li>
-<li><code>tick</code> - Emitted every frame of <a href="GameLoop.html">GameLoop</a> before the loops <code>update()</code> and <code>render()</code> functions are called.</li>
+<li><code>tick</code> - Emitted every frame of <a href="GameLoop">GameLoop</a> before the loops <code>update()</code> and <code>render()</code> functions are called.</li>
 </ul>
         </section>
 
@@ -203,5 +203,8 @@ off(&#39;myEvent&#39;, callback);
     </main>
   </div>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/components/prism-javascript.min.js"></script>
+  <script src="../js/navbar.js"></script>
 </body>
 </html>

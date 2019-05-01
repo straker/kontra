@@ -76,8 +76,8 @@ function emit(event, ...args) {
  * let { canvas, context } = init();
  *
  * // or can get canvas and context through functions
- * let canvas = getCanvas();
- * let context = getContext();
+ * canvas = getCanvas();
+ * context = getContext();
  * ```
  * @sectionName Core
  */
@@ -109,13 +109,13 @@ function getContext() {
  * Initialize the library and set up the canvas. Typically you will call `init()` as the first thing and give it the canvas to use. This will allow all Kontra objects to reference the canvas when created.
  *
  * ```js
- * let { canvas, context } = init('#game');
+ * let { canvas, context } = init('game');
  * ```
  * @function init
  *
  * @param {String|HTMLCanvasElement} [canvas] - The canvas for Kontra to use. Can either be the ID of the canvas element or the canvas element itself. Defaults to using the first canvas element on the page.
  *
- * @returns {Object} An object with properties `canvas` and `context`.
+ * @returns {Object} An object with properties `canvas` and `context`. `canvas` it the canvas element for the game and `context` is the context object the game draws to.
  */
 function init(canvas) {
 
@@ -1661,14 +1661,8 @@ function pointerPressed(button) {
 /**
  * A fast and memory efficient object pool for sprite reuse. Perfect for particle systems or SHUMPs. The pool starts out with just 1 object, but will grow in size to accommodate as many objects as are needed.
  *
- * ```js
- * import { Pool, Sprite } from 'kontra';
- *
- * let pool = Pool({
- *   create: Sprite,
- *   maxSize: 100
- * });
- * ```
+ * <canvas width="600" height="200" id="pool-example"></canvas>
+ * <script src="../js/pool.js"></script>
  * @class Pool
  *
  * @param {Object} properties - Properties of the pool.
@@ -1947,6 +1941,9 @@ The quadrant indices are numbered as follows (following a z-order curve):
 
 /**
  * A 2D spatial partitioning data structure. Use it to quickly group objects by their position for faster access and collision checking.
+ *
+ * <canvas width="600" height="200" id="quadtree-example"></canvas>
+ * <script src="../js/quadtree.js"></script>
  * @class Quadtree
  *
  * @param {Object} properties - Properties of the quadtree.
@@ -2068,7 +2065,7 @@ class Quadtree {
    * @returns {Object[]} A list of objects in the same node as the object.
    */
   get(object) {
-    let objects = [];
+    let objects = new Set();
     let indices, i;
 
     // traverse the tree until we get to a leaf node
@@ -2076,13 +2073,14 @@ class Quadtree {
       indices = getIndices(object, this.bounds);
 
       for (i = 0; i < indices.length; i++) {
-        objects.push.apply(objects, this._s[ indices[i] ].get(object));
+        this._s[ indices[i] ].get(object).forEach(obj => objects.add(obj));
       }
 
-      return objects;
+      return Array.from(objects);
     }
 
-    return this._o;
+    // don't add the object to the return list
+    return this._o.filter(obj => obj !== object);
   }
 
   /**

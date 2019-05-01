@@ -16,15 +16,15 @@ import { getCanvas, getContext } from './core.js'
  * @param {Number} properties.height - Height of the tile map (in number of tiles).
  * @param {Number} properties.tilewidth - Width of a single tile (in pixels).
  * @param {Number} properties.tileheight - Height of a single tile (in pixels).
- * @param {Canvas​Rendering​Context2D} [properties.context] - The context the tile engine should draw to. Defaults to [core.getContext()](/api/core.html#getContext)
+ * @param {Canvas​Rendering​Context2D} [properties.context] - The context the tile engine should draw to. Defaults to [core.getContext()](/api/core#getContext)
  *
  * @param {Object[]} properties.tilesets - Array of tileset objects.
  * @param {Number} properties.tilesetN.firstgid - First tile index of the tileset. The first tileset will have a firstgid of 1 as 0 represents an empty tile.
- * @param {String|HTMLImageElement} properties.tilesetN.image - Relative path to the HTMLImageElement or an HTMLImageElement. If passing a relative path, the image file must have been [loaded](./assets.html) first.
+ * @param {String|HTMLImageElement} properties.tilesetN.image - Relative path to the HTMLImageElement or an HTMLImageElement. If passing a relative path, the image file must have been [loaded](./assets) first.
  * @param {Number} [properties.tilesetN.margin=0] - The amount of whitespace between each tile.
  * @param {Number} [properties.tilesetN.tilewidth] - Width of the tileset (in number of tiles). Defaults to properties.tilewidth.
  * @param {Number} [properties.tilesetN.tileheight] - Height of the tileset (in number of tiles). Defaults to properties.tileheight.
- * @param {String} [properties.tilesetN.source] - Relative path to the tileset JSON file. The source JSON file must have been [loaded](./assets.html) first.
+ * @param {String} [properties.tilesetN.source] - Relative path to the tileset JSON file. The source JSON file must have been [loaded](./assets) first.
  * @param {Number} [properties.tilesetN.columns] - Number of columns in the tileset image.
  *
  * @param {Object[]} properties.layers - Array of layer objects.
@@ -101,7 +101,7 @@ import { getCanvas, getContext } from './core.js'
 /**
  * Adding all the tileset images and layers to a tile engine can be tedious, especially if you have multiple layers. If you want a simpler way to create a tile engine, Kontra has been written to work directly with the JSON output of the [Tiled Map Editor](http://www.mapeditor.org/).
  *
- * The one requirement is that you must preload all of the tileset images and tileset sources using the appropriate [asset loader functions](./assets.html) before you create the tile engine.
+ * The one requirement is that you must preload all of the tileset images and tileset sources using the appropriate [asset loader functions](./assets) before you create the tile engine.
  *
  * @sectionName Advance Use
  * @example {576x576}

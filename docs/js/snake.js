@@ -1,19 +1,18 @@
 (function() {
-  kontra.init('snake-game');
+  let { canvas, context } = kontra.init('snake-game');
 
-  /* exclude:start */
+  kontra.initKeys();
   var arrows = [37,38,39,40];
-  kontra.canvas.addEventListener('keydown', function(e) {
+  canvas.addEventListener('keydown', function(e) {
     if (arrows.indexOf(e.which) !== -1) {
       e.preventDefault();
     }
   }, true);
-  /* exclude:end */
   var grid = 15;
-  var numRows = kontra.canvas.height / grid;
-  var numCols = kontra.canvas.width / grid;
-  var snake = kontra.sprite();
-  var apple = kontra.sprite();
+  var numRows = canvas.height / grid;
+  var numCols = canvas.width / grid;
+  var snake = kontra.Sprite();
+  var apple = kontra.Sprite();
 
   // keep track of which cells of the game are open so the apple doesn't spawn on
   // top of the snake
@@ -59,15 +58,15 @@
 
         // wrap snake position on edge of screen
         if (this.x < 0) {
-          this.x = kontra.canvas.width - grid;
+          this.x = canvas.width - grid;
         }
-        else if (this.x >= kontra.canvas.width) {
+        else if (this.x >= canvas.width) {
           this.x = 0;
         }
         if (this.y < 0) {
-          this.y = kontra.canvas.height - grid;
+          this.y = canvas.height - grid;
         }
-        else if (this.y >= kontra.canvas.height) {
+        else if (this.y >= canvas.height) {
           this.y = 0;
         }
 
@@ -124,33 +123,33 @@
 
   // we don't want the controls to update at 15fps so we'll update the movement
   // outside the game loop for more tight feeling controls
-  kontra.keys.bind('left', function() {
+  kontra.bindKeys('left', function() {
     // prevent snake from backtracking on itself
     if (snake.dx === 0) {
       snake.dx = -grid;
       snake.dy = 0;
     }
   });
-  kontra.keys.bind('up', function() {
+  kontra.bindKeys('up', function() {
     if (snake.dy === 0) {
       snake.dy = -grid;
       snake.dx = 0;
     }
   });
-  kontra.keys.bind('right', function() {
+  kontra.bindKeys('right', function() {
     if (snake.dx === 0) {
       snake.dx = grid;
       snake.dy = 0;
     }
   });
-  kontra.keys.bind('down', function() {
+  kontra.bindKeys('down', function() {
     if (snake.dy === 0) {
       snake.dy = grid;
       snake.dx = 0;
     }
   });
 
-  var loop = kontra.gameLoop({
+  var loop = kontra.GameLoop({
     fps: 15,  // snake plays great at 15fps
     update: function() {
       snake.update();

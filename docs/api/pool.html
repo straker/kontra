@@ -7,8 +7,6 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/themes/prism.min.css">
   <link rel="stylesheet" href="../styles.css">
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/prism.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/components/prism-javascript.min.js"></script>
   <script src="../js/kontra.js"></script>
 </head>
 <body>
@@ -24,32 +22,34 @@
              css list-style: none is set
              @see https://web-a11y.slack.com/archives/C042TSFGN/p1501699529181172 -->
         <ul id="menu" role="list">
-          <li><a href="/">Introduction</a></li>
-          <li><a href="/getting-started">Getting Started</a></li>
-          <li><a href="/download">Download</a></li>
-          <li><a href="/tutorials">Tutorials</a></li>
-          <li><a href="/made-with-kontra">Made With Kontra</a></li>
+          <li><a href="/" >Introduction</a></li>
+          <li><a href="/getting-started" >Getting Started</a></li>
+          <li><a href="/tutorials" >Tutorials</a></li>
+          <li><a href="/made-with-kontra" >Made With Kontra</a></li>
 
           <li>
             <h2 id="api">API</h2>
             <ul aria-labelledby="api">
-              <li><a href="/api/animation.html" >Animation</a></li>
-              <li><a href="/api/assets.html" >Assets</a></li>
-              <li><a href="/api/core.html" >Core</a></li>
-              <li><a href="/api/events.html" >Events</a></li>
-              <li><a href="/api/gameloop.html" >GameLoop</a></li>
-              <li><a href="/api/keyboard.html" >Keyboard</a></li>
-              <li><a href="/api/pointer.html" >Pointer</a></li>
-              <li><a href="/api/pool.html" aria-current="page">Pool</a></li>
-              <li><a href="/api/quadtree.html" >Quadtree</a></li>
-              <li><a href="/api/sprite.html" >Sprite</a></li>
-              <li><a href="/api/spritesheet.html" >SpriteSheet</a></li>
-              <li><a href="/api/store.html" >Store</a></li>
-              <li><a href="/api/tileengine.html" >TileEngine</a></li>
-              <li><a href="/api/vector.html" >Vector</a></li>
+              <li><a href="/api/animation" >Animation</a></li>
+              <li><a href="/api/assets" >Assets</a></li>
+              <li><a href="/api/core" >Core</a></li>
+              <li><a href="/api/events" >Events</a></li>
+              <li><a href="/api/gameloop" >GameLoop</a></li>
+              <li><a href="/api/keyboard" >Keyboard</a></li>
+              <li><a href="/api/plugin" >Plugin</a></li>
+              <li><a href="/api/pointer" >Pointer</a></li>
+              <li><a href="/api/pool" aria-current="page">Pool</a></li>
+              <li><a href="/api/quadtree" >Quadtree</a></li>
+              <li><a href="/api/sprite" >Sprite</a></li>
+              <li><a href="/api/spritesheet" >SpriteSheet</a></li>
+              <li><a href="/api/store" >Store</a></li>
+              <li><a href="/api/tileengine" >TileEngine</a></li>
+              <li><a href="/api/vector" >Vector</a></li>
             </ul>
           </li>
         </ul>
+      </nav>
+      <div class="scroll-indicator" aria-hidden="true"><span>^</span></div>
     </header>
 
     <main id="main">
@@ -60,13 +60,8 @@
         </h1>
 
         <p>A fast and memory efficient object pool for sprite reuse. Perfect for particle systems or SHUMPs. The pool starts out with just 1 object, but will grow in size to accommodate as many objects as are needed.</p>
-<pre><code class="lang-js">import { Pool, Sprite } from &#39;kontra&#39;;
-
-let pool = Pool({
-  create: Sprite,
-  maxSize: 100
-});
-</code></pre>
+<p><canvas width="600" height="200" id="pool-example"></canvas></p>
+<script src="../js/pool.js"></script>
         <h3 id="title-Pool"><span class="visually-hidden">Pool</span> Parameters</span></h3>
         <dl aria-labelledby="title-Pool">
           <dt>
@@ -162,8 +157,8 @@ let pool = Pool({
             </a>
           </h2>
 
-          <p>To use the pool, you must pass the <code>create()</code> function, which should return a new <a href="Sprite.html">Sprite</a> or object. This object will be added to the pool every time there are no more alive objects.</p>
-<p>The object must implement the functions <code>update(dt)</code>, <code>init(properties)</code>, and <code>isAlive()</code>. If one of these functions is missing the pool will throw an error. <a href="Sprite.html">Sprite</a> defines these functions for you.</p>
+          <p>To use the pool, you must pass the <code>create()</code> function, which should return a new <a href="Sprite">Sprite</a> or object. This object will be added to the pool every time there are no more alive objects.</p>
+<p>The object must implement the functions <code>update(dt)</code>, <code>init(properties)</code>, and <code>isAlive()</code>. If one of these functions is missing the pool will throw an error. <a href="Sprite">Sprite</a> defines these functions for you.</p>
 <p>An object is available for reuse when its <code>isAlive()</code> function returns <code>false</code>. For a sprite, this is typically when its ttl is <code>0</code>.</p>
 <p>When you want an object from the pool, use the pools <code>get(properties)</code> function and pass it any properties you want the newly initialized object to have.</p>
 <pre><code class="lang-js">let pool = Pool({
@@ -212,7 +207,7 @@ pool.get({
             </a>
           </h2>
 
-          <p>Get and return an object from the pool. The properties parameter will be passed directly to the objects <code>init(properties)</code> function. If you&#39;re using a <a href="Sprite.html">Sprite</a>, you should also pass the <code>ttl</code> property to designate how many frames you want the object to be alive for.</p>
+          <p>Get and return an object from the pool. The properties parameter will be passed directly to the objects <code>init(properties)</code> function. If you&#39;re using a <a href="Sprite">Sprite</a>, you should also pass the <code>ttl</code> property to designate how many frames you want the object to be alive for.</p>
 <p>If you want to control when the sprite is ready for reuse, pass <code>Infinity</code> for <code>ttl</code>. You&#39;ll need to set the sprites <code>ttl</code> to <code>0</code> when you&#39;re ready for the sprite to be reused.</p>
 <pre><code class="lang-js">let sprite = pool.get({
   // the object will get these properties and values
@@ -249,7 +244,7 @@ pool.get({
             </a>
           </h2>
 
-          <p>Returns an array of all alive objects. Useful if you need to do special processing on all alive objects outside of the pool, such as add all alive objects to a <a href="Quadtree.html">Quadtree</a>.</p>
+          <p>Returns an array of all alive objects. Useful if you need to do special processing on all alive objects outside of the pool, such as add all alive objects to a <a href="Quadtree">Quadtree</a>.</p>
           
           <h3><span class="visually-hidden">getAliveObjects</span> Return value</h3>
           <p><p>An Array of all alive objects.</p>
@@ -324,5 +319,8 @@ pool.get({
     </main>
   </div>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/components/prism-javascript.min.js"></script>
+  <script src="../js/navbar.js"></script>
 </body>
 </html>

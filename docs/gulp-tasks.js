@@ -8,6 +8,7 @@ const kontraTypeRegex = /kontra\.(\w+)/g;
 const excludeCodeRegex = /\s*\/\/ exclude-code:start[\s\S]*?\/\/ exclude-code:end/g;
 const excludeScriptRegex = /\s*\/\/ exclude-script:start[\r\n]([\s\S]*?[\r\n])\/\/ exclude-script:end[\r\n]/g;
 let uuid = 0;
+let navbar;
 
 /**
  * Sort sections by name
@@ -56,7 +57,7 @@ function addSectionAndPage() {
       description: description[0].toUpperCase() + description.substring(1),
       type: '',
       name: '',
-      source: `@section ${description}`
+      source: `@page ${description}`
     });
   }
 
@@ -86,7 +87,7 @@ function parseType(type) {
       url = url.substring(0, url.length - 1);
     }
 
-    return `<a href="${url}.html">${p1}</a>`
+    return `<a href="${url}">${p1}</a>`
   });
 
   if (type === '*') {
@@ -214,7 +215,11 @@ let tags = {
 
 function livingcssPreprocess(context, template, Handlebars) {
   if (context.navbar) {
+    // remove the .html
+    context.navbar.forEach(navItem => navItem.url = navItem.url.replace('.html', ''));
+
     context.navbar.sort(sortByName);
+    navbar = context.navbar;
   }
 
   context.otherSections = [];
@@ -271,7 +276,33 @@ function livingcssPreprocess(context, template, Handlebars) {
   });
 }
 
-gulp.task('build:docs', function() {
+function buildContent() {
+  navbar.forEach(navItem => {
+    navItem.selected = false;
+  });
+
+  return gulp.src('./docs/content/*.js')
+    .pipe(livingcss('docs', {
+      loadcss: false,
+      template: 'docs/template/template.hbs',
+      tags: {...tags},
+      preprocess: function(context, template, Handlebars) {
+        context.navbar = navbar;
+        context.otherSections = context.sections.slice(1);
+        context['nav-'+context.id] = true;
+
+        return livingcss.utils.readFileGlobs('docs/template/partials/*.hbs', function(data, file) {
+
+          // make the name of the partial the name of the file
+          var partialName = path.basename(file, path.extname(file));
+          Handlebars.registerPartial(partialName, data);
+        });
+      }
+    }))
+    .pipe(gulp.dest('docs'))
+}
+
+function buildApi() {
   return gulp.src('./src/*.js')
     .pipe(livingcss('docs/api', {
       loadcss: false,
@@ -280,8 +311,10 @@ gulp.task('build:docs', function() {
       preprocess: livingcssPreprocess
     }))
     .pipe(gulp.dest('docs/api'))
-});
+}
+
+gulp.task('build:docs', gulp.series(buildApi, buildContent));
 
 gulp.task('watch:docs', function() {
-  gulp.watch(['./src/*.js','template/**/*.hbs'], gulp.series('build:docs'));
+  gulp.watch(['./src/*.js','./docs/content/*.js','./docs/template/**/*.hbs'], gulp.series('build:docs'));
 });

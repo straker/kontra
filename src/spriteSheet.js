@@ -40,7 +40,7 @@ function parseFrames(consecutiveFrames) {
 }
 
 /**
- * A sprite sheet to animate a sequence of images. Used to create [animation sprites](./Sprite.html#animation-sprite).
+ * A sprite sheet to animate a sequence of images. Used to create [animation sprites](./Sprite#animation-sprite).
  *
  * <figure>
  *   <a href="../imgs/character_walk_sheet.png">
@@ -97,7 +97,7 @@ class SpriteSheet {
     // @endif
 
     /**
-     * An object of named kontra.Animation objects. Typically you pass this object into kontra.Sprite to create an [animation sprites](./Sprite.html#animation-sprite).
+     * An object of named kontra.Animation objects. Typically you pass this object into kontra.Sprite to create an [animation sprites](./Sprite#animation-sprite).
      * @memberof SpriteSheet
      * @property {Object} animations
      */

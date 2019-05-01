@@ -7,8 +7,6 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/themes/prism.min.css">
   <link rel="stylesheet" href="../styles.css">
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/prism.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/components/prism-javascript.min.js"></script>
   <script src="../js/kontra.js"></script>
 </head>
 <body>
@@ -24,32 +22,34 @@
              css list-style: none is set
              @see https://web-a11y.slack.com/archives/C042TSFGN/p1501699529181172 -->
         <ul id="menu" role="list">
-          <li><a href="/">Introduction</a></li>
-          <li><a href="/getting-started">Getting Started</a></li>
-          <li><a href="/download">Download</a></li>
-          <li><a href="/tutorials">Tutorials</a></li>
-          <li><a href="/made-with-kontra">Made With Kontra</a></li>
+          <li><a href="/" >Introduction</a></li>
+          <li><a href="/getting-started" >Getting Started</a></li>
+          <li><a href="/tutorials" >Tutorials</a></li>
+          <li><a href="/made-with-kontra" >Made With Kontra</a></li>
 
           <li>
             <h2 id="api">API</h2>
             <ul aria-labelledby="api">
-              <li><a href="/api/animation.html" >Animation</a></li>
-              <li><a href="/api/assets.html" >Assets</a></li>
-              <li><a href="/api/core.html" >Core</a></li>
-              <li><a href="/api/events.html" >Events</a></li>
-              <li><a href="/api/gameloop.html" >GameLoop</a></li>
-              <li><a href="/api/keyboard.html" >Keyboard</a></li>
-              <li><a href="/api/pointer.html" >Pointer</a></li>
-              <li><a href="/api/pool.html" >Pool</a></li>
-              <li><a href="/api/quadtree.html" >Quadtree</a></li>
-              <li><a href="/api/sprite.html" >Sprite</a></li>
-              <li><a href="/api/spritesheet.html" aria-current="page">SpriteSheet</a></li>
-              <li><a href="/api/store.html" >Store</a></li>
-              <li><a href="/api/tileengine.html" >TileEngine</a></li>
-              <li><a href="/api/vector.html" >Vector</a></li>
+              <li><a href="/api/animation" >Animation</a></li>
+              <li><a href="/api/assets" >Assets</a></li>
+              <li><a href="/api/core" >Core</a></li>
+              <li><a href="/api/events" >Events</a></li>
+              <li><a href="/api/gameloop" >GameLoop</a></li>
+              <li><a href="/api/keyboard" >Keyboard</a></li>
+              <li><a href="/api/plugin" >Plugin</a></li>
+              <li><a href="/api/pointer" >Pointer</a></li>
+              <li><a href="/api/pool" >Pool</a></li>
+              <li><a href="/api/quadtree" >Quadtree</a></li>
+              <li><a href="/api/sprite" >Sprite</a></li>
+              <li><a href="/api/spritesheet" aria-current="page">SpriteSheet</a></li>
+              <li><a href="/api/store" >Store</a></li>
+              <li><a href="/api/tileengine" >TileEngine</a></li>
+              <li><a href="/api/vector" >Vector</a></li>
             </ul>
           </li>
         </ul>
+      </nav>
+      <div class="scroll-indicator" aria-hidden="true"><span>^</span></div>
     </header>
 
     <main id="main">
@@ -59,7 +59,7 @@
         <h1>SpriteSheet(&#8203;properties)
         </h1>
 
-        <p>A sprite sheet to animate a sequence of images. Used to create <a href="./Sprite.html#animation-sprite">animation sprites</a>.</p>
+        <p>A sprite sheet to animate a sequence of images. Used to create <a href="./Sprite#animation-sprite">animation sprites</a>.</p>
 <figure>
   <a href="../imgs/character_walk_sheet.png">
     <img src="../imgs/character_walk_sheet.png" alt="11 frames of a walking pill-like alien wearing a space helmet.">
@@ -184,7 +184,7 @@ image.onload = function() {
             </a>
           </h2>
 
-          <p>Object. An object of named <a href="Animation.html">Animation</a> objects. Typically you pass this object into <a href="Sprite.html">Sprite</a> to create an <a href="./Sprite.html#animation-sprite">animation sprites</a>.</p>
+          <p>Object. An object of named <a href="Animation">Animation</a> objects. Typically you pass this object into <a href="Sprite">Sprite</a> to create an <a href="./Sprite#animation-sprite">animation sprites</a>.</p>
           
         </section>
         <section>
@@ -196,7 +196,7 @@ image.onload = function() {
           </h2>
 
           <p>Create named animations from the sprite sheet. Called from the constructor if the <code>animations</code> property is passed in.</p>
-<p>This function populates the sprite sheets <code>animations</code> property with <a href="Animation.html">Animation</a> objects. Each animation is accessible by its name.</p>
+<p>This function populates the sprite sheets <code>animations</code> property with <a href="Animation">Animation</a> objects. Each animation is accessible by its name.</p>
 <pre><code class="lang-js">import { Sprite, SpriteSheet } from &#39;kontra&#39;;
 
 let image = new Image();
@@ -302,5 +302,8 @@ image.onload = function() {
     </main>
   </div>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/components/prism-javascript.min.js"></script>
+  <script src="../js/navbar.js"></script>
 </body>
 </html>

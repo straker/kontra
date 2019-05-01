@@ -57,6 +57,9 @@ The quadrant indices are numbered as follows (following a z-order curve):
 
 /**
  * A 2D spatial partitioning data structure. Use it to quickly group objects by their position for faster access and collision checking.
+ *
+ * <canvas width="600" height="200" id="quadtree-example"></canvas>
+ * <script src="../js/quadtree.js"></script>
  * @class Quadtree
  *
  * @param {Object} properties - Properties of the quadtree.
@@ -95,7 +98,7 @@ class Quadtree {
    * When you need to get all objects in the same node as another object, use the quadtrees [get()](#get) function.
    *
    * ```js
-   * let objects = quadtree.get(player);  //=> [player, enemy]
+   * let objects = quadtree.get(player);  //=> [enemy]
    * ```
    * @sectionName Basic Use
    */
@@ -152,7 +155,7 @@ class Quadtree {
   /**
    * Get an array of all objects that belong to the same node as the passed in object.
    *
-   * **Note:** if the passed in object is also part of the quadtree, it will be returned in the results.
+   * **Note:** if the passed in object is also part of the quadtree, it will not be returned in the results.
    *
    * ```js
    * import { Sprite, Quadtree } from 'kontra';
@@ -169,16 +172,17 @@ class Quadtree {
    * });
    *
    * quadtree.add(player, enemy1, enemy2);
-   * quadtree.get(player);  //=> [player, enemy1]
+   * quadtree.get(player);  //=> [enemy1]
    * ```
    * @function get
    *
    * @param {Object} object - Object to use for finding other objects. The object must have the properties `x`, `y`, `width`, and `height` so that its position in the quadtree can be calculated.
    *
-   * @returns {Object[]} A list of objects in the same node as the object.
+   * @returns {Object[]} A list of objects in the same node as the object, not including the object itself.
    */
   get(object) {
-    let objects = [];
+    // since an object can belong to multiple nodes we should not add it multiple times
+    let objects = new Set();
     let indices, i;
 
     // traverse the tree until we get to a leaf node
@@ -186,13 +190,14 @@ class Quadtree {
       indices = getIndices(object, this.bounds);
 
       for (i = 0; i < indices.length; i++) {
-        objects.push.apply(objects, this._s[ indices[i] ].get(object));
+        this._s[ indices[i] ].get(object).forEach(obj => objects.add(obj));
       }
 
-      return objects;
+      return Array.from(objects);
     }
 
-    return this._o;
+    // don't add the object to the return list
+    return this._o.filter(obj => obj !== object);
   }
 
   /**

@@ -223,3 +223,4 @@ export default function poolFactory(properties) {
   return new Pool(properties);
 }
 poolFactory.prototype = Pool.prototype;
+poolFactory.class = Pool;

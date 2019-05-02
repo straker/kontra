@@ -8,10 +8,10 @@
   <canvas id="game" width="600" height="400" style="background: #333331"></canvas>
   <script id="code">
     // initialize the game and setup the canvas
-    kontra.init();
+    let { canvas, context } = kontra.init();
 
     // create a basic sprite with a velocity
-    window.sprite = kontra.sprite({
+    window.sprite = kontra.Sprite({
       x: 290,
       y: 180,
       dx: 3,
@@ -22,12 +22,12 @@
     });
 
     // create the game loop to update and render the sprite
-    window.loop = kontra.gameLoop({
+    window.loop = kontra.GameLoop({
       update: function() {
         sprite.update();
 
         // reset the sprites position when it reaches the edge of the game
-        if (sprite.x > kontra.canvas.width) {
+        if (sprite.x > canvas.width) {
           sprite.x = -sprite.width;
         }
       },

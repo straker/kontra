@@ -7,7 +7,7 @@
 <body>
   <canvas id="game" width="600" height="400" style="background: #333331"></canvas>
   <script id="code">
-    // plugin: upgrade kontra.sprite with advanced collision handling
+    // plugin: upgrade kontra.Sprite with advanced collision handling
     (function() {
       let RECTANGLE = 0;
       let CIRCLE = 1;
@@ -86,19 +86,19 @@
 
     // code
     // initialize the game and setup the canvas
-    kontra.init();
+    let { canvas, context } = kontra.init();
 
     // register the plugin
-    kontra.plugin.register('sprite', advacedCollisionPlugin);
+    kontra.registerPlugin(kontra.Sprite, advacedCollisionPlugin);
 
     let sprites = [];
     let shapes = advacedCollisionPlugin.shapes;
 
     // rec sprite
-    sprites.push(kontra.sprite({
+    sprites.push(kontra.Sprite({
       x: 100,
       y: 60,
-      dx: 3,
+      dx: 2,
       dy: 0,
       width: 40,
       height: 40,
@@ -106,15 +106,15 @@
       _color: 'red',
       update: function() {
         this.advance();
-        if (this.x > kontra.canvas.width) this.x = -this.width
+        if (this.x > canvas.width) this.x = -this.width
       }
     }));
 
     // rec sprite
-    sprites.push(kontra.sprite({
-      x: kontra.canvas.width - 100 - 40,
+    sprites.push(kontra.Sprite({
+      x: canvas.width - 100 - 40,
       y: 60,
-      dx: -3,
+      dx: -2,
       dy: 0,
       width: 40,
       height: 40,
@@ -122,22 +122,22 @@
       _color: 'blue',
       update: function() {
         this.advance();
-        if (this.x < -this.width) this.x = kontra.canvas.width
+        if (this.x < -this.width) this.x = canvas.width
       }
     }));
 
     // circle sprite
-    sprites.push(kontra.sprite({
+    sprites.push(kontra.Sprite({
       x: 120,
       y: 180,
-      dx: 3,
+      dx: 2,
       dy: 0,
       radius: 20,
       shape: shapes.CIRCLE,
       _color: 'yellow',
       update: function() {
         this.advance();
-        if (this.x - 20 > kontra.canvas.width) this.x = -20
+        if (this.x - 20 > canvas.width) this.x = -20
       },
       render: function() {
         this.context.fillStyle = this.color;
@@ -148,17 +148,17 @@
     }));
 
     // circle sprite
-    sprites.push(kontra.sprite({
-      x: kontra.canvas.width - 100 - 20,
+    sprites.push(kontra.Sprite({
+      x: canvas.width - 100 - 20,
       y: 180,
-      dx: -3,
+      dx: -2,
       dy: 0,
       radius: 20,
       shape: shapes.CIRCLE,
       _color: 'orange',
       update: function() {
         this.advance();
-        if (this.x + 20 < 0) this.x = kontra.canvas.width + 20;
+        if (this.x + 20 < 0) this.x = canvas.width + 20;
       },
       render: function() {
         this.context.fillStyle = this.color;
@@ -169,10 +169,10 @@
     }));
 
     // rec sprite
-    sprites.push(kontra.sprite({
+    sprites.push(kontra.Sprite({
       x: 100,
       y: 260,
-      dx: 3,
+      dx: 2,
       dy: 0,
       width: 40,
       height: 40,
@@ -180,22 +180,22 @@
       _color: 'green',
       update: function() {
         this.advance();
-        if (this.x > kontra.canvas.width) this.x = -this.width
+        if (this.x > canvas.width) this.x = -this.width
       }
     }));
 
     // circle sprite
-    sprites.push(kontra.sprite({
-      x: kontra.canvas.width - 100 - 20,
+    sprites.push(kontra.Sprite({
+      x: canvas.width - 100 - 20,
       y: 280,
-      dx: -3,
+      dx: -2,
       dy: 0,
       radius: 20,
       shape: shapes.CIRCLE,
       _color: 'purple',
       update: function() {
         this.advance();
-        if (this.x + 20 < 0) this.x = kontra.canvas.width + 20;
+        if (this.x + 20 < 0) this.x = canvas.width + 20;
       },
       render: function() {
         this.context.fillStyle = this.color;
@@ -206,7 +206,7 @@
     }));
 
     // create the game loop to update and render the sprite
-    window.loop = kontra.gameLoop({
+    window.loop = kontra.GameLoop({
       update: function() {
         sprites.forEach(sprite => {
           sprite.update()

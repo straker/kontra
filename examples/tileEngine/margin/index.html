@@ -17,8 +17,8 @@
  */
 kontra.init();
 
-kontra.assets.load('./roguelikeDungeon_transparent.png', './marginTiles.json', './roguelikeDungeon_transparent.json').then(function() {
-  tileEngine = kontra.tileEngine(kontra.assets.data['./marginTiles']);
+kontra.load('./roguelikeDungeon_transparent.png', './marginTiles.json', './roguelikeDungeon_transparent.json').then(function() {
+  tileEngine = kontra.TileEngine(kontra.dataAssets['./marginTiles']);
   tileEngine.render();
 });</script>
   <script src="../../prism/codeOutput.js"></script>

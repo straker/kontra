@@ -20,50 +20,23 @@
    * man.png - [LPC White Beard]{@link http://opengameart.org/content/lpc-white-beard}. Stephen
    *           Challener (Redshrike), Johannes Sjölund, and Carlo Enrico Victoria (Nemisys)
    */
-  kontra.init();
+  let { canvas, context } = kontra.init();
 
-  kontra.assets.audioPath = '../../audio/';
+  kontra.initKeys();
 
-  kontra.assets.load('terrain.json', 'man.png', 'terrain.png', ['Digital_Forest.mp3', 'Digital_Forest.mp3']).then(function() {
-    var terrain = kontra.assets.data.terrain;
+  kontra.setAudioPath('../../audio/');
+
+  kontra.load('terrain.json', 'man.png', 'terrain.png', ['Digital_Forest.mp3', 'Digital_Forest.mp3']).then(function() {
+    var terrain = kontra.dataAssets.terrain;
 
     // setup tile engine
-    window.tileEngine = kontra.tileEngine(kontra.assets.data.terrain);
-    tileEngine.sx = terrain.width * terrain.tilewidth / 2 - kontra.canvas.width / 2,
-    tileEngine.sy = terrain.height * terrain.tileheight - kontra.canvas.height
-
-    // var tileEngine = kontra.tileEngine({
-    //   tileWidth: terrain.tilewidth,
-    //   tileHeight: terrain.tileheight,
-    //   width: terrain.width,
-    //   height: terrain.height,
-
-    //   // center the game world
-    //   sx: terrain.width * terrain.tilewidth / 2 - kontra.canvas.width / 2,
-    //   sy: terrain.height * terrain.tileheight - kontra.canvas.height
-    // });
-
-    // // add all tilesets
-    // for (var i = 0, tileset; tileset = terrain.tilesets[i]; i++) {
-    //   tileEngine.addTileset({
-    //     image: kontra.images[tileset.image],
-    //     firstGrid: tileset.firstgrid
-    //   });
-    // }
-
-    // // add all layers
-    // for (var i = 0, layer; layer = terrain.layers[i]; i++) {
-    //   tileEngine.addLayer({
-    //     name: layer.name,
-    //     data: layer.data,
-    //     render: (layer.properties ? JSON.parse(layer.properties.render) : true),
-    //     zIndex: i,
-    //   });
-    // }
+    window.tileEngine = kontra.TileEngine(terrain);
+    tileEngine.sx = terrain.width * terrain.tilewidth / 2 - canvas.width / 2,
+    tileEngine.sy = terrain.height * terrain.tileheight - canvas.height
 
     // create the walking man sprite sheet and animations
-    var spritesheet = kontra.spriteSheet({
-      image: kontra.assets.images.man,
+    var spritesheet = kontra.SpriteSheet({
+      image: kontra.imageAssets.man,
       frameWidth: 64,
       frameHeight: 64,
       animations: {
@@ -87,7 +60,7 @@
     });
 
     // create the player
-    var player = kontra.sprite({
+    var player = kontra.Sprite({
       x: 268,
       y: 268,
       speed: 3,
@@ -103,7 +76,7 @@
           height: 22
         };
 
-        if (kontra.keys.pressed('up')) {
+        if (kontra.keyPressed('up')) {
           // change the animation
           this.playAnimation('walk_up');
 
@@ -128,7 +101,7 @@
           }
         }
 
-        else if (kontra.keys.pressed('down')) {
+        else if (kontra.keyPressed('down')) {
           this.playAnimation('walk_down');
 
           this.advance();
@@ -138,7 +111,7 @@
             return;
           }
 
-          if (tileEngine.sy < tileEngine.mapheight - kontra.canvas.height &&
+          if (tileEngine.sy < tileEngine.mapheight - canvas.height &&
               this.y >= this.startY) {
             tileEngine.sy += this.speed;
           }
@@ -147,7 +120,7 @@
           }
         }
 
-        else if (kontra.keys.pressed('left')) {
+        else if (kontra.keyPressed('left')) {
           this.playAnimation('walk_left');
 
           this.advance();
@@ -165,7 +138,7 @@
           }
         }
 
-        else if (kontra.keys.pressed('right')) {
+        else if (kontra.keyPressed('right')) {
           this.playAnimation('walk_right');
 
           this.advance();
@@ -175,7 +148,7 @@
             return;
           }
 
-          if (tileEngine.sx < tileEngine.mapwidth - kontra.canvas.width &&
+          if (tileEngine.sx < tileEngine.mapwidth - canvas.width &&
               this.x >= this.startX) {
             tileEngine.sx += this.speed;
           }
@@ -187,9 +160,9 @@
     });
 
     // clamp player position in the game world
-    player.position.clamp(-16, -16, kontra.canvas.width - player.width + 16, kontra.canvas.height - player.height);
+    player.position.clamp(-16, -16, canvas.width - player.width + 16, canvas.height - player.height);
 
-    var loop = kontra.gameLoop({
+    var loop = kontra.GameLoop({
       update: function() {
         player.update();
       },
@@ -202,14 +175,14 @@
       }
     });
 
-    kontra.keys.bind('m', function() {
-      kontra.assets.audio.Digital_Forest.muted = !kontra.assets.audio.Digital_Forest.muted;
+    kontra.bindKeys('m', function() {
+      kontra.audioAssets.Digital_Forest.play();
+      kontra.audioAssets.Digital_Forest.muted = !kontra.audioAssets.Digital_Forest.muted;
     });
 
-    kontra.assets.audio.Digital_Forest.loop = true;
-    kontra.assets.audio.Digital_Forest.muted = true;
-    kontra.assets.audio.Digital_Forest.volume = 0.5;
-    kontra.assets.audio.Digital_Forest.play();
+    kontra.audioAssets.Digital_Forest.loop = true;
+    kontra.audioAssets.Digital_Forest.muted = true;
+    kontra.audioAssets.Digital_Forest.volume = 0.5;
     loop.start();
   });
   </script>

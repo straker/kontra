@@ -8,23 +8,23 @@
   <canvas id="game" width="600" height="400" style="background: #333331"></canvas>
   <script id="code">
     // initialize the game and setup the canvas
-    kontra.init();
+    let { canvas, context } = kontra.init();
 
     // set image path so we don't have to reference the image by it's path
-    kontra.assets.imagePath = '../imgs/';
+    kontra.setImagePath('../imgs/');
 
     // load the image
-    kontra.assets.load('character.png').then(function() {
+    kontra.load('character.png').then(function() {
 
       // pass the image to the sprite
-      window.sprite = kontra.sprite({
+      window.sprite = kontra.Sprite({
         anchor: {
           x: 0.5,
           y: 0.5
         },
         x: 300,
         y: 200,
-        image: kontra.assets.images.character
+        image: kontra.imageAssets.character
       });
 
       // render the sprite

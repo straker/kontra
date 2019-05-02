@@ -249,8 +249,17 @@ let tags = {
 
 function livingcssPreprocess(context, template, Handlebars) {
   if (context.navbar) {
+
     // remove the .html from the nav item urls
-    context.navbar.forEach(navItem => navItem.url = navItem.url.replace('.html', ''));
+    context.navbar.forEach(navItem => {
+      navItem.url = navItem.url.replace('.html', '');
+
+      // fix lower casing of names
+      if (navItem.url === 'gameloop') navItem.url = 'gameLoop';
+      else if (navItem.url === 'spritesheet') navItem.url = 'spriteSheet';
+      else if (navItem.url === 'tileengine') navItem.url = 'tileEngine';
+
+    });
 
     context.navbar.sort(sortByName);
     navbar = context.navbar;

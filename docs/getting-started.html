@@ -3,17 +3,18 @@
 <head>
   <title>Kontra.js – Getting Started</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <base href="/">
+  <base href="https://straker.github.io/kontra/">
+
+  <script>
+  // adjust path based on location (github pages required kontra url)
+  if (window.location.host.indexOf('localhost') !== -1) {
+    let base = document.querySelector('base');
+    base.setAttribute('href', '/');
+  }
+  </script>
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/themes/prism.min.css">
   <link rel="stylesheet" href="assets/styles.css">
-  <script type="text/javascript">
-  // adjust path based on location (github pages required kontra url)
-  if (window.location.host.indexOf('localhost') === -1) {
-    let base = document.querySelector('base');
-    base.setAttribute('href', 'https://straker.github.io/kontra/');
-  }
-  </script>
   <script src="assets/js/kontra.js"></script>
 </head>
 <body>
@@ -88,7 +89,7 @@ let { canvas, context } = init();
 </code></pre>
 <h2 id="create">Create</h2>
 <p>After the game is initialize, you can create a simple <a href="api/sprite.html">Sprite</a> and <a href="api/gameLoop.html">Game Loop</a> in just a few lines of code</p>
-<canvas id="game-canvas-80"></canvas>
+<canvas id="game-canvas-8"></canvas>
 <pre><code class="language-javascript">import { init, Sprite, GameLoop } from &#x27;kontra&#x27;;
 
 let { canvas } &#x3D; init();
@@ -119,8 +120,8 @@ let loop &#x3D; GameLoop({  // create the main game loop
 
 loop.start();    // start the game</code></pre>
 <script>(function() {
-  kontra.init("game-canvas-80");
-  var canvas = document.querySelector("#game-canvas-80");
+  kontra.init("game-canvas-8");
+  var canvas = document.querySelector("#game-canvas-8");
   canvas.width = 600;
   canvas.height = 200;
   var context = canvas.getContext("2d");

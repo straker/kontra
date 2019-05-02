@@ -3,17 +3,18 @@
 <head>
   <title>Kontra.js – Vector</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <base href="/">
+  <base href="https://straker.github.io/kontra/">
+
+  <script>
+  // adjust path based on location (github pages required kontra url)
+  if (window.location.host.indexOf('localhost') !== -1) {
+    let base = document.querySelector('base');
+    base.setAttribute('href', '/');
+  }
+  </script>
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/themes/prism.min.css">
   <link rel="stylesheet" href="assets/styles.css">
-  <script type="text/javascript">
-  // adjust path based on location (github pages required kontra url)
-  if (window.location.host.indexOf('localhost') === -1) {
-    let base = document.querySelector('base');
-    base.setAttribute('href', 'https://straker.github.io/kontra/');
-  }
-  </script>
   <script src="assets/js/kontra.js"></script>
 </head>
 <body>

@@ -3,17 +3,18 @@
 <head>
   <title>Kontra.js – TileEngine</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <base href="/">
+  <base href="https://straker.github.io/kontra/">
+
+  <script>
+  // adjust path based on location (github pages required kontra url)
+  if (window.location.host.indexOf('localhost') !== -1) {
+    let base = document.querySelector('base');
+    base.setAttribute('href', '/');
+  }
+  </script>
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/themes/prism.min.css">
   <link rel="stylesheet" href="assets/styles.css">
-  <script type="text/javascript">
-  // adjust path based on location (github pages required kontra url)
-  if (window.location.host.indexOf('localhost') === -1) {
-    let base = document.querySelector('base');
-    base.setAttribute('href', 'https://straker.github.io/kontra/');
-  }
-  </script>
   <script src="assets/js/kontra.js"></script>
 </head>
 <body>
@@ -312,7 +313,7 @@
 <p>You&#39;ll then need to add at least one tileset with an image as well as firstgid, or first tile index of the tileset. The first tileset will always have a firstgid of 1 as 0 represents an empty tile.</p>
 <p>Lastly, you&#39;ll need to add at least one named layer with data. A layer tells the tile engine which tiles from the tileset image to use at what position on the map.</p>
 <p>Once all tileset images and all layers have been added, you can render the tile engine by calling its <a href="#render">render()</a> function.</p>
-<canvas id="game-canvas-77"></canvas>
+<canvas id="game-canvas-5"></canvas>
 <pre><code class="language-javascript">import { TileEngine } from &#x27;kontra&#x27;;
 
 let img &#x3D; new Image();
@@ -351,8 +352,8 @@ img.onload &#x3D; function() {
   tileEngine.render();
 }</code></pre>
 <script>(function() {
-  kontra.init("game-canvas-77");
-  var canvas = document.querySelector("#game-canvas-77");
+  kontra.init("game-canvas-5");
+  var canvas = document.querySelector("#game-canvas-5");
   canvas.width = 576;
   canvas.height = 576;
   var context = canvas.getContext("2d");
@@ -408,7 +409,7 @@ img.onload = function() {
 
           <p>Adding all the tileset images and layers to a tile engine can be tedious, especially if you have multiple layers. If you want a simpler way to create a tile engine, Kontra has been written to work directly with the JSON output of the <a href="http://www.mapeditor.org/">Tiled Map Editor</a>.</p>
 <p>The one requirement is that you must preload all of the tileset images and tileset sources using the appropriate <a href="./assets">asset loader functions</a> before you create the tile engine.</p>
-<canvas id="game-canvas-78"></canvas>
+<canvas id="game-canvas-6"></canvas>
 <pre><code class="language-javascript">import { load, TileEngine, dataAssets } from &#x27;kontra&#x27;;
 
 load(&#x27;../assets/imgs/mapPack_tilesheet.png&#x27;, &#x27;../assets/data/tile_engine_basic.json&#x27;)
@@ -417,8 +418,8 @@ load(&#x27;../assets/imgs/mapPack_tilesheet.png&#x27;, &#x27;../assets/data/tile
     tileEngine.render();
   });</code></pre>
 <script>(function() {
-  kontra.init("game-canvas-78");
-  var canvas = document.querySelector("#game-canvas-78");
+  kontra.init("game-canvas-6");
+  var canvas = document.querySelector("#game-canvas-6");
   canvas.width = 576;
   canvas.height = 576;
   var context = canvas.getContext("2d");
@@ -444,7 +445,7 @@ load('../assets/imgs/mapPack_tilesheet.png', '../assets/data/tile_engine_basic.j
 
           <p>If your tilemap is larger than the canvas size, you can move the tilemap camera to change how the tilemap is drawn. Use the tile engines <a href="#sx">sx</a> and <a href="#sy">sy</a> properties to move the camera. Just like drawing an image, the cameras coordinates are the top left corner.</p>
 <p>The <code>sx</code> and <code>sy</code> coordinates will never draw the tile map below 0 or beyond the last row or column of the tile map.</p>
-<canvas id="game-canvas-79"></canvas>
+<canvas id="game-canvas-7"></canvas>
 <pre><code class="language-javascript">import { load, TileEngine, dataAssets, GameLoop } from &#x27;kontra&#x27;;
 
 load(&#x27;../assets/imgs/mapPack_tilesheet.png&#x27;, &#x27;../assets/data/tile_engine_camera.json&#x27;)
@@ -468,8 +469,8 @@ load(&#x27;../assets/imgs/mapPack_tilesheet.png&#x27;, &#x27;../assets/data/tile
     loop.start();
   });</code></pre>
 <script>(function() {
-  kontra.init("game-canvas-79");
-  var canvas = document.querySelector("#game-canvas-79");
+  kontra.init("game-canvas-7");
+  var canvas = document.querySelector("#game-canvas-7");
   canvas.width = 576;
   canvas.height = 576;
   var context = canvas.getContext("2d");

@@ -3,17 +3,18 @@
 <head>
   <title>Kontra.js – Sprite</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <base href="/">
+  <base href="https://straker.github.io/kontra/">
+
+  <script>
+  // adjust path based on location (github pages required kontra url)
+  if (window.location.host.indexOf('localhost') !== -1) {
+    let base = document.querySelector('base');
+    base.setAttribute('href', '/');
+  }
+  </script>
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/themes/prism.min.css">
   <link rel="stylesheet" href="assets/styles.css">
-  <script type="text/javascript">
-  // adjust path based on location (github pages required kontra url)
-  if (window.location.host.indexOf('localhost') === -1) {
-    let base = document.querySelector('base');
-    base.setAttribute('href', 'https://straker.github.io/kontra/');
-  }
-  </script>
   <script src="assets/js/kontra.js"></script>
 </head>
 <body>
@@ -359,7 +360,7 @@
           </h2>
 
           <p>In its most basic form, a sprite is a rectangle with a fill color. To create a rectangle sprite, pass the arguments <code>width</code>, <code>height</code>, and <code>color</code>. A rectangle sprite is great for initial prototyping and particles.</p>
-<canvas id="game-canvas-72"></canvas>
+<canvas id="game-canvas-0"></canvas>
 <pre><code class="language-javascript">import { Sprite } from &#x27;kontra&#x27;;
 
 let sprite &#x3D; Sprite({
@@ -375,8 +376,8 @@ let sprite &#x3D; Sprite({
 
 sprite.render();</code></pre>
 <script>(function() {
-  kontra.init("game-canvas-72");
-  var canvas = document.querySelector("#game-canvas-72");
+  kontra.init("game-canvas-0");
+  var canvas = document.querySelector("#game-canvas-0");
   canvas.width = 600;
   canvas.height = 200;
   var context = canvas.getContext("2d");
@@ -408,7 +409,7 @@ sprite.render();
           </h2>
 
           <p>A sprite can use an image instead of drawing a rectangle. To create an image sprite, pass the <code>image</code> argument. The size of the sprite will automatically be set as the width and height of the image.</p>
-<canvas id="game-canvas-73"></canvas>
+<canvas id="game-canvas-1"></canvas>
 <pre><code class="language-javascript">import { Sprite } from &#x27;kontra&#x27;;
 
 let image &#x3D; new Image();
@@ -426,8 +427,8 @@ image.onload &#x3D; function() {
   sprite.render();
 };</code></pre>
 <script>(function() {
-  kontra.init("game-canvas-73");
-  var canvas = document.querySelector("#game-canvas-73");
+  kontra.init("game-canvas-1");
+  var canvas = document.querySelector("#game-canvas-1");
   canvas.width = 600;
   canvas.height = 200;
   var context = canvas.getContext("2d");
@@ -462,7 +463,7 @@ image.onload = function() {
 
           <p>A sprite can use a spritesheet animation as well. To create an animation sprite, pass the <code>animations</code> argument. The size of the sprite will automatically be set as the width and height of a frame of the spritesheet.</p>
 <p>A sprite can have multiple named animations. The easiest way to create animations is to use <a href="SpriteSheet">SpriteSheet</a>. All animations will automatically be <a href="animation#clone">cloned</a> so no two sprites update the same animation.</p>
-<canvas id="game-canvas-74"></canvas>
+<canvas id="game-canvas-2"></canvas>
 <pre><code class="language-javascript">import { Sprite, SpriteSheet, GameLoop } from &#x27;kontra&#x27;;
 
 let image &#x3D; new Image();
@@ -505,8 +506,8 @@ image.onload &#x3D; function() {
   loop.start();
 };</code></pre>
 <script>(function() {
-  kontra.init("game-canvas-74");
-  var canvas = document.querySelector("#game-canvas-74");
+  kontra.init("game-canvas-2");
+  var canvas = document.querySelector("#game-canvas-2");
   canvas.width = 600;
   canvas.height = 200;
   var context = canvas.getContext("2d");
@@ -571,7 +572,7 @@ image.onload = function() {
           </h2>
 
           <p>If you need to draw a different shape, such as a circle, you can pass in custom properties and a render function to handle drawing the sprite.</p>
-<canvas id="game-canvas-75"></canvas>
+<canvas id="game-canvas-3"></canvas>
 <pre><code class="language-javascript">import { Sprite } from &#x27;kontra&#x27;;
 
 let sprite &#x3D; Sprite({
@@ -594,8 +595,8 @@ let sprite &#x3D; Sprite({
 
 sprite.render();</code></pre>
 <script>(function() {
-  kontra.init("game-canvas-75");
-  var canvas = document.querySelector("#game-canvas-75");
+  kontra.init("game-canvas-3");
+  var canvas = document.querySelector("#game-canvas-3");
   canvas.width = 600;
   canvas.height = 200;
   var context = canvas.getContext("2d");
@@ -709,7 +710,7 @@ let sprite = Sprite({
           </h2>
 
           <p>The x and y origin of the sprite. {x:0, y:0} is the top left corner of the sprite, {x:1, y:1} is the bottom right corner.</p>
-<canvas id="game-canvas-76"></canvas>
+<canvas id="game-canvas-4"></canvas>
 <pre><code class="language-javascript">import { Sprite } from &#x27;kontra&#x27;;
 
 let sprite &#x3D; Sprite({
@@ -738,8 +739,8 @@ sprite.anchor &#x3D; {x: 1, y: 1};
 sprite.x &#x3D; 450;
 sprite.render();</code></pre>
 <script>(function() {
-  kontra.init("game-canvas-76");
-  var canvas = document.querySelector("#game-canvas-76");
+  kontra.init("game-canvas-4");
+  var canvas = document.querySelector("#game-canvas-4");
   canvas.width = 600;
   canvas.height = 200;
   var context = canvas.getContext("2d");

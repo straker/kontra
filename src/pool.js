@@ -2,7 +2,7 @@
  * A fast and memory efficient [object pool](https://gameprogrammingpatterns.com/object-pool.html) for sprite reuse. Perfect for particle systems or SHUMPs. The pool starts out with just one object, but will grow in size to accommodate as many objects as are needed.
  *
  * <canvas width="600" height="200" id="pool-example"></canvas>
- * <script src="../assets/js/pool.js"></script>
+ * <script src="assets/js/pool.js"></script>
  * @class Pool
  *
  * @param {Object} properties - Properties of the pool.

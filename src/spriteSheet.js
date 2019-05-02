@@ -43,8 +43,8 @@ function parseFrames(consecutiveFrames) {
  * A sprite sheet to animate a sequence of images. Used to create [animation sprites](./Sprite#animation-sprite).
  *
  * <figure>
- *   <a href="../assets/imgs/character_walk_sheet.png">
- *     <img src="../assets/imgs/character_walk_sheet.png" alt="11 frames of a walking pill-like alien wearing a space helmet.">
+ *   <a href="assets/imgs/character_walk_sheet.png">
+ *     <img src="assets/imgs/character_walk_sheet.png" alt="11 frames of a walking pill-like alien wearing a space helmet.">
  *   </a>
  *   <figcaption>Sprite sheet image courtesy of <a href="https://kenney.nl/assets">Kenney</a>.</figcaption>
  * </figure>
@@ -55,7 +55,7 @@ function parseFrames(consecutiveFrames) {
  * import { Sprite, SpriteSheet } from 'kontra';
  *
  * let image = new Image();
- * image.src = '../assets/imgs/character_walk_sheet.png';
+ * image.src = 'assets/imgs/character_walk_sheet.png';
  * image.onload = function() {
  *   let spriteSheet = SpriteSheet({
  *     image: image,
@@ -138,7 +138,7 @@ class SpriteSheet {
    * import { Sprite, SpriteSheet } from 'kontra';
    *
    * let image = new Image();
-   * image.src = '../assets/imgs/character_walk_sheet.png';
+   * image.src = 'assets/imgs/character_walk_sheet.png';
    * image.onload = function() {
    *
    *   let spriteSheet = SpriteSheet({

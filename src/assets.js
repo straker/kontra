@@ -5,8 +5,8 @@
  * import { load } from 'kontra';
  *
  * load(
- *   '../assets/imgs/character.png',
- *   '../assets/data/tile_engine_basic.json',
+ *   'assets/imgs/character.png',
+ *   'assets/data/tile_engine_basic.json',
  *   ['/audio/music.ogg', '/audio/music.mp3']
  * ).then(function(assets) {
  *   // all assets have loaded
@@ -102,13 +102,13 @@ function getCanPlay(audio) {
  * ```js
  * import { load, setImagePath, imageAssets } from 'kontra';
  *
- * load('../assets/imgs/character.png').then(function() {
+ * load('assets/imgs/character.png').then(function() {
  *   // Image asset can be accessed by both
- *   // name: imageAssets['../assets/imgs/character']
- *   // path: imageAssets['../assets/imgs/character.png']
+ *   // name: imageAssets['assets/imgs/character']
+ *   // path: imageAssets['assets/imgs/character.png']
  * });
  *
- * setImagePath('../assets/imgs');
+ * setImagePath('assets/imgs');
  * load('character_walk_sheet.png').then(function() {
  *   // Image asset can be accessed by both
  *   // name: imageAssets['character_walk_sheet']
@@ -148,13 +148,13 @@ export let audioAssets = {};
  * ```js
  * import { load, setDataPath, dataAssets } from 'kontra';
  *
- * load('../assets/data/file.txt').then(function() {
+ * load('assets/data/file.txt').then(function() {
  *   // Audio asset can be accessed by both
- *   // name: dataAssets['../assets/data/file']
- *   // path: dataAssets['../assets/data/file.txt']
+ *   // name: dataAssets['assets/data/file']
+ *   // path: dataAssets['assets/data/file.txt']
  * });
  *
- * setDataPath('../assets/data');
+ * setDataPath('assets/data');
  * load('info.json').then(function() {
  *   // Audio asset can be accessed by both
  *   // name: dataAssets['info']
@@ -344,7 +344,7 @@ export function loadAudio(url) {
  * ```js
  * import { loadData } from 'kontra';
  *
- * loadData('../assets/data/tile_engine_basic.json').then(function(data) {
+ * loadData('assets/data/tile_engine_basic.json').then(function(data) {
  *   // data contains the parsed JSON data
  * })
  * ```
@@ -382,8 +382,8 @@ export function loadData(url) {
  * import { load } from 'kontra';
  *
  * load(
- *   '../assets/imgs/character.png',
- *   '../assets/data/tile_engine_basic.json',
+ *   'assets/imgs/character.png',
+ *   'assets/data/tile_engine_basic.json',
  *   ['/audio/music.ogg', '/audio/music.mp3']
  * ).then(function(assets) {
  *   // all assets have loaded

@@ -59,7 +59,7 @@ The quadrant indices are numbered as follows (following a z-order curve):
  * A 2D [spatial partitioning](https://gameprogrammingpatterns.com/spatial-partition.html) data structure. Use it to quickly group objects by their position for faster access and collision checking.
  *
  * <canvas width="600" height="200" id="quadtree-example"></canvas>
- * <script src="../assets/js/quadtree.js"></script>
+ * <script src="assets/js/quadtree.js"></script>
  * @class Quadtree
  *
  * @param {Object} properties - Properties of the quadtree.

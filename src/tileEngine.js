@@ -4,8 +4,8 @@ import { getCanvas, getContext } from './core.js'
  * A tile engine for managing and drawing tilesets.
  *
  * <figure>
- *   <a href="../assets/imgs/mapPack_tilesheet.png">
- *     <img src="../assets/imgs/mapPack_tilesheet.png" alt="Tileset to create an overworld map in various seasons.">
+ *   <a href="assets/imgs/mapPack_tilesheet.png">
+ *     <img src="assets/imgs/mapPack_tilesheet.png" alt="Tileset to create an overworld map in various seasons.">
  *   </a>
  *   <figcaption>Tileset image courtesy of <a href="https://kenney.nl/assets">Kenney</a>.</figcaption>
  * </figure>
@@ -59,7 +59,7 @@ import { getCanvas, getContext } from './core.js'
  * // exclude-script:end
  *
  * let img = new Image();
- * img.src = '../assets/imgs/mapPack_tilesheet.png';
+ * img.src = 'assets/imgs/mapPack_tilesheet.png';
  * img.onload = function() {
  *   let tileEngine = TileEngine({
  *     // tile size
@@ -112,9 +112,9 @@ import { getCanvas, getContext } from './core.js'
  * import { load, TileEngine, dataAssets } from 'kontra';
  * // exclude-script:end
  *
- * load('../assets/imgs/mapPack_tilesheet.png', '../assets/data/tile_engine_basic.json')
+ * load('assets/imgs/mapPack_tilesheet.png', 'assets/data/tile_engine_basic.json')
  *   .then(assets => {
- *     let tileEngine = TileEngine(dataAssets['../assets/data/tile_engine_basic']);
+ *     let tileEngine = TileEngine(dataAssets['assets/data/tile_engine_basic']);
  *     // exclude-code:start
  *     tileEngine.context = context;
  *     // exclude-code:end
@@ -136,9 +136,9 @@ import { getCanvas, getContext } from './core.js'
  * import { load, TileEngine, dataAssets, GameLoop } from 'kontra';
  * // exclude-script:end
  *
- * load('../assets/imgs/mapPack_tilesheet.png', '../assets/data/tile_engine_camera.json')
+ * load('assets/imgs/mapPack_tilesheet.png', 'assets/data/tile_engine_camera.json')
  *   .then(function() {
- *     let tileEngine = TileEngine(dataAssets['../assets/data/tile_engine_camera']);
+ *     let tileEngine = TileEngine(dataAssets['assets/data/tile_engine_camera']);
  *     // exclude-code:start
  *     tileEngine.context = context;
  *     // exclude-code:end

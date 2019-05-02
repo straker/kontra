@@ -74,7 +74,7 @@ class Sprite {
    * // exclude-script:end
    *
    * let image = new Image();
-   * image.src = '../assets/imgs/character.png';
+   * image.src = 'assets/imgs/character.png';
    * image.onload = function() {
    *   let sprite = Sprite({
    *     x: 300,
@@ -107,7 +107,7 @@ class Sprite {
    * // exclude-script:end
    *
    * let image = new Image();
-   * image.src = '../assets/imgs/character_walk_sheet.png';
+   * image.src = 'assets/imgs/character_walk_sheet.png';
    * image.onload = function() {
    *
    *   // use spriteSheet to create animations from an image

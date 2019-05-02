@@ -8,8 +8,7 @@
   "scripts": {
     "test": "karma start --single-run",
     "test-watch": "karma start",
-    "build": "gulp build && npm run build-docs",
-    "build-docs": "gulp build:docs",
+    "build": "gulp build",
     "dist": "gulp dist"
   },
   "repository": {

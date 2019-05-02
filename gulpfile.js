@@ -14,7 +14,7 @@ const VISUAL_DEBUG = false;
 // Enables/Disables DEBUG mode in Kontra
 const DEBUG = false;
 
-gulp.task('build', function() {
+function build() {
   return rollup({
     input: './src/kontra.defaults.js',
     format: 'iife',
@@ -22,7 +22,9 @@ gulp.task('build', function() {
   })
   .pipe(source('kontra.js'))
   .pipe(gulp.dest('.'))
-});
+}
+
+gulp.task('build', gulp.series(build, 'build:docs'));
 
 gulp.task('dist', function() {
   return gulp.src('kontra.js')
@@ -30,7 +32,7 @@ gulp.task('dist', function() {
     .pipe(plumber())
     .pipe(terser())
     .pipe(plumber.stop())
-    .pipe(gulp.dest('./docs/js'))
+    .pipe(gulp.dest('./docs/assets/js'))
     .pipe(rename('kontra.min.js'))
     .pipe(size({
       showFiles: true

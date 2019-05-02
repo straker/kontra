@@ -305,7 +305,7 @@
 <p>You&#39;ll then need to add at least one tileset with an image as well as firstgid, or first tile index of the tileset. The first tileset will always have a firstgid of 1 as 0 represents an empty tile.</p>
 <p>Lastly, you&#39;ll need to add at least one named layer with data. A layer tells the tile engine which tiles from the tileset image to use at what position on the map.</p>
 <p>Once all tileset images and all layers have been added, you can render the tile engine by calling its <a href="#render">render()</a> function.</p>
-<canvas id="game-canvas-266"></canvas>
+<canvas id="game-canvas-5"></canvas>
 <pre><code class="language-javascript">import { TileEngine } from &#x27;kontra&#x27;;
 
 let img &#x3D; new Image();
@@ -344,8 +344,8 @@ img.onload &#x3D; function() {
   tileEngine.render();
 }</code></pre>
 <script>(function() {
-  kontra.init("game-canvas-266");
-  var canvas = document.querySelector("#game-canvas-266");
+  kontra.init("game-canvas-5");
+  var canvas = document.querySelector("#game-canvas-5");
   canvas.width = 576;
   canvas.height = 576;
   var context = canvas.getContext("2d");
@@ -401,7 +401,7 @@ img.onload = function() {
 
           <p>Adding all the tileset images and layers to a tile engine can be tedious, especially if you have multiple layers. If you want a simpler way to create a tile engine, Kontra has been written to work directly with the JSON output of the <a href="http://www.mapeditor.org/">Tiled Map Editor</a>.</p>
 <p>The one requirement is that you must preload all of the tileset images and tileset sources using the appropriate <a href="./assets">asset loader functions</a> before you create the tile engine.</p>
-<canvas id="game-canvas-267"></canvas>
+<canvas id="game-canvas-6"></canvas>
 <pre><code class="language-javascript">import { load, TileEngine, dataAssets } from &#x27;kontra&#x27;;
 
 load(&#x27;../assets/imgs/mapPack_tilesheet.png&#x27;, &#x27;../assets/data/tile_engine_basic.json&#x27;)
@@ -410,8 +410,8 @@ load(&#x27;../assets/imgs/mapPack_tilesheet.png&#x27;, &#x27;../assets/data/tile
     tileEngine.render();
   });</code></pre>
 <script>(function() {
-  kontra.init("game-canvas-267");
-  var canvas = document.querySelector("#game-canvas-267");
+  kontra.init("game-canvas-6");
+  var canvas = document.querySelector("#game-canvas-6");
   canvas.width = 576;
   canvas.height = 576;
   var context = canvas.getContext("2d");
@@ -437,7 +437,7 @@ load('../assets/imgs/mapPack_tilesheet.png', '../assets/data/tile_engine_basic.j
 
           <p>If your tilemap is larger than the canvas size, you can move the tilemap camera to change how the tilemap is drawn. Use the tile engines <a href="#sx">sx</a> and <a href="#sy">sy</a> properties to move the camera. Just like drawing an image, the cameras coordinates are the top left corner.</p>
 <p>The <code>sx</code> and <code>sy</code> coordinates will never draw the tile map below 0 or beyond the last row or column of the tile map.</p>
-<canvas id="game-canvas-268"></canvas>
+<canvas id="game-canvas-7"></canvas>
 <pre><code class="language-javascript">import { load, TileEngine, dataAssets, GameLoop } from &#x27;kontra&#x27;;
 
 load(&#x27;../assets/imgs/mapPack_tilesheet.png&#x27;, &#x27;../assets/data/tile_engine_camera.json&#x27;)
@@ -461,8 +461,8 @@ load(&#x27;../assets/imgs/mapPack_tilesheet.png&#x27;, &#x27;../assets/data/tile
     loop.start();
   });</code></pre>
 <script>(function() {
-  kontra.init("game-canvas-268");
-  var canvas = document.querySelector("#game-canvas-268");
+  kontra.init("game-canvas-7");
+  var canvas = document.querySelector("#game-canvas-7");
   canvas.width = 576;
   canvas.height = 576;
   var context = canvas.getContext("2d");
@@ -502,7 +502,7 @@ load('../assets/imgs/mapPack_tilesheet.png', '../assets/data/tile_engine_camera.
             </a>
           </h2>
 
-          <p>CanvasRenderingContext2D. The context the tile engine will draw to.</p>
+          <p>The context the tile engine will draw to.</p>
           
         </section>
         <section>
@@ -513,7 +513,7 @@ load('../assets/imgs/mapPack_tilesheet.png', '../assets/data/tile_engine_camera.
             </a>
           </h2>
 
-          <p>Number. The height of tile map (in tiles).</p>
+          <p>The height of tile map (in tiles).</p>
           
         </section>
         <section>
@@ -585,7 +585,7 @@ tileEngine.layerCollidesWith(&#39;collision&#39;, sprite);  //=&gt; true
             </a>
           </h2>
 
-          <p>An Array of Objects. Array of all layers of the tile engine.</p>
+          <p>Array of all layers of the tile engine.</p>
           
         </section>
         <section>
@@ -596,7 +596,7 @@ tileEngine.layerCollidesWith(&#39;collision&#39;, sprite);  //=&gt; true
             </a>
           </h2>
 
-          <p>Number. The height of the tile map (in pixels).</p>
+          <p>The height of the tile map (in pixels).</p>
           
         </section>
         <section>
@@ -607,7 +607,7 @@ tileEngine.layerCollidesWith(&#39;collision&#39;, sprite);  //=&gt; true
             </a>
           </h2>
 
-          <p>Number. The width of the tile map (in pixels).</p>
+          <p>The width of the tile map (in pixels).</p>
           
         </section>
         <section>
@@ -649,7 +649,7 @@ tileEngine.layerCollidesWith(&#39;collision&#39;, sprite);  //=&gt; true
             </a>
           </h2>
 
-          <p>Number. X coordinate of the tile map camera.</p>
+          <p>X coordinate of the tile map camera.</p>
           
         </section>
         <section>
@@ -660,7 +660,7 @@ tileEngine.layerCollidesWith(&#39;collision&#39;, sprite);  //=&gt; true
             </a>
           </h2>
 
-          <p>Number. Y coordinate of the tile map camera.</p>
+          <p>Y coordinate of the tile map camera.</p>
           
         </section>
         <section>
@@ -722,7 +722,7 @@ tileEngine.tileAtLayer(&#39;collision&#39;, {row: 2, col: 1});  //=&gt; 2
             </a>
           </h2>
 
-          <p>Number. The height of a tile (in pixels).</p>
+          <p>The height of a tile (in pixels).</p>
           
         </section>
         <section>
@@ -733,7 +733,7 @@ tileEngine.tileAtLayer(&#39;collision&#39;, {row: 2, col: 1});  //=&gt; 2
             </a>
           </h2>
 
-          <p>An Array of Objects. Array of all tilesets of the tile engine.</p>
+          <p>Array of all tilesets of the tile engine.</p>
           
         </section>
         <section>
@@ -744,7 +744,7 @@ tileEngine.tileAtLayer(&#39;collision&#39;, {row: 2, col: 1});  //=&gt; 2
             </a>
           </h2>
 
-          <p>Number. The width a tile (in pixels).</p>
+          <p>The width a tile (in pixels).</p>
           
         </section>
         <section>
@@ -755,7 +755,7 @@ tileEngine.tileAtLayer(&#39;collision&#39;, {row: 2, col: 1});  //=&gt; 2
             </a>
           </h2>
 
-          <p>Number. The width of tile map (in tiles).</p>
+          <p>The width of tile map (in tiles).</p>
           
         </section>
 

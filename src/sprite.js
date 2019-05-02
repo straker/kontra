@@ -670,7 +670,9 @@ class Sprite {
    * If you override the sprites `render()` function with your own render function, you can call this function to draw the sprite normally.
    *
    * ```js
-   * let sprite = kontra.sprite({
+   * import { Sprite } from 'kontra';
+   *
+   * let sprite = Sprite({
    *  x: 290,
    *  y: 80,
    *  color: 'red',

@@ -2,7 +2,7 @@ var kontra = (function () {
 'use strict';
 
 /**
- * A simple event system, mostly created to support [Plugins](/api/plugins.html). Allows you to hook into Kontra lifecycle events or create your own.
+ * A simple event system, mostly created to support [Plugins](/api/plugin). Allows you to hook into Kontra lifecycle events or create your own.
  *
  * ```js
  * import { on, off, emit } from 'kontra';
@@ -86,7 +86,7 @@ let canvasEl;
 let context;
 
 /**
- * Return the canvas object.
+ * Return the canvas element.
  * @function getCanvas
  *
  * @returns {HTMLCanvasElement} The canvas element for the game.
@@ -144,13 +144,13 @@ function init(canvas) {
  *
  * An animation defines the sequence of frames to use from a sprite sheet. It also defines at what speed the animation should run using `frameRate`.
  *
- * Typically you don't create an kontra.Animation directly, but rather you would create them from kontra.SpriteSheet by passing the `animations` parameter.
+ * Typically you don't create an kontra.Animation directly, but rather you would create them from kontra.SpriteSheet by passing the `animations` argument.
  *
  * ```js
  * import { SpriteSheet, Animation } from 'kontra';
  *
  * let image = new Image();
- * image.src = '../imgs/character_walk_sheet.png';
+ * image.src = '../assets/imgs/character_walk_sheet.png';
  * image.onload = function() {
  *   let spriteSheet = SpriteSheet({
  *     image: image,
@@ -255,7 +255,7 @@ class Animation {
   }
 
   /**
-   * Update the animation. Used when the animation is not paused or stopped.
+   * Update the animation.
    * @memberof Animation
    * @function update
    *
@@ -276,16 +276,16 @@ class Animation {
   }
 
   /**
-   * Draw the current frame. Used when the animation is not stopped.
+   * Draw the current frame of the animation.
    * @memberof Animation
    * @function render
    *
-   * @param {Object} properties - How to draw the animation.
-   * @param {Number} properties.x - X position to draw.
-   * @param {Number} properties.y - Y position to draw.
+   * @param {Object} properties - Properties to draw the animation.
+   * @param {Number} properties.x - X position to draw the animation.
+   * @param {Number} properties.y - Y position to draw the animation.
    * @param {Number} [properties.width] - width of the sprite. Defaults to [Animation.width](#width).
    * @param {Number} [properties.height] - height of the sprite. Defaults to [Animation.height](#height).
-   * @param {Canvas​Rendering​Context2D} [properties.context] - The context the animation should draw to. Defaults to [core.getContext()](/api/core.html#getContext).
+   * @param {Canvas​Rendering​Context2D} [properties.context] - The context the animation should draw to. Defaults to [core.getContext()](/api/core#getContext).
    */
   render({x, y, width = this.width, height = this.height, context = getContext()} = {}) {
 
@@ -316,8 +316,8 @@ animationFactory.prototype = Animation.prototype;
  * import { load } from 'kontra';
  *
  * load(
- *   '../imgs/character.png',
- *   '../data/tile_engine_basic.json',
+ *   '../assets/imgs/character.png',
+ *   '../assets/data/tile_engine_basic.json',
  *   ['/audio/music.ogg', '/audio/music.mp3']
  * ).then(function(assets) {
  *   // all assets have loaded
@@ -413,15 +413,15 @@ function getCanPlay(audio) {
  * ```js
  * import { load, setImagePath, imageAssets } from 'kontra';
  *
- * load('../imgs/character.png').then(function() {
- *   // Image asset can be accessed at both
- *   // name: imageAssets['../imgs/character']
- *   // path: imageAssets['../imgs/character.png']
+ * load('../assets/imgs/character.png').then(function() {
+ *   // Image asset can be accessed by both
+ *   // name: imageAssets['../assets/imgs/character']
+ *   // path: imageAssets['../assets/imgs/character.png']
  * });
  *
- * setImagePath('/imgs');
+ * setImagePath('../assets/imgs');
  * load('character_walk_sheet.png').then(function() {
- *   // Image asset can be accessed at both
+ *   // Image asset can be accessed by both
  *   // name: imageAssets['character_walk_sheet']
  *   // path: imageAssets['character_walk_sheet.png']
  * });
@@ -437,14 +437,14 @@ let imageAssets = {};
  * import { load, setAudioPath, audioAssets } from 'kontra';
  *
  * load('/audio/music.ogg').then(function() {
- *   // Audio asset can be accessed at both
+ *   // Audio asset can be accessed by both
  *   // name: audioAssets['/audio/music']
  *   // path: audioAssets['/audio/music.ogg']
  * });
  *
  * setAudioPath('/audio');
  * load('sound.ogg').then(function() {
- *   // Audio asset can be accessed at both
+ *   // Audio asset can be accessed by both
  *   // name: audioAssets['sound']
  *   // path: audioAssets['sound.ogg']
  * });
@@ -459,15 +459,15 @@ let audioAssets = {};
  * ```js
  * import { load, setDataPath, dataAssets } from 'kontra';
  *
- * load('../data/file.txt').then(function() {
- *   // Audio asset can be accessed at both
- *   // name: dataAssets['../data/file']
- *   // path: dataAssets['../data/file.txt']
+ * load('../assets/data/file.txt').then(function() {
+ *   // Audio asset can be accessed by both
+ *   // name: dataAssets['../assets/data/file']
+ *   // path: dataAssets['../assets/data/file.txt']
  * });
  *
- * setDataPath('/data');
+ * setDataPath('../assets/data');
  * load('info.json').then(function() {
- *   // Audio asset can be accessed at both
+ *   // Audio asset can be accessed by both
  *   // name: dataAssets['info']
  *   // path: dataAssets['info.json']
  * });
@@ -587,7 +587,7 @@ function loadImage(url) {
 }
 
 /**
- * Load a single Audio asset. Supports loading multiple audio formats which will be resolved by the browser in the order listed. Uses the base [audio path](#setAudioPath) to resolve the URL.
+ * Load a single Audio asset. Supports loading multiple audio formats which the loader will use to load the first audio format supported by the browser in the order listed. Uses the base [audio path](#setAudioPath) to resolve the URL.
  *
  * Once loaded, the asset will be accessible on the the [audioAssets](#audioAssets) property. Since the loader determines which audio asset to load based on browser support, you should only reference the audio by its name and not by its file path since there's no guarantee which asset was loaded.
  *
@@ -655,7 +655,7 @@ function loadAudio(url) {
  * ```js
  * import { loadData } from 'kontra';
  *
- * loadData('../data/tile_engine_basic.json').then(function() {
+ * loadData('../assets/data/tile_engine_basic.json').then(function(data) {
  *   // data contains the parsed JSON data
  * })
  * ```
@@ -663,7 +663,7 @@ function loadAudio(url) {
  *
  * @param {String} url - The URL to the Data file.
  *
- * @returns {Promise} A deferred promise. Promise resolves with the Image.
+ * @returns {Promise} A deferred promise. Promise resolves with the contents of the file. If the file is a JSON file, the contents will be parsed as JSON.
  */
 function loadData(url) {
   addGlobal();
@@ -693,8 +693,8 @@ function loadData(url) {
  * import { load } from 'kontra';
  *
  * load(
- *   '../imgs/character.png',
- *   '../data/tile_engine_basic.json',
+ *   '../assets/imgs/character.png',
+ *   '../assets/data/tile_engine_basic.json',
  *   ['/audio/music.ogg', '/audio/music.mp3']
  * ).then(function(assets) {
  *   // all assets have loaded
@@ -1011,7 +1011,7 @@ function initKeys() {
 }
 
 /**
- * Bind a set of keys that will call the callback function when they are pressed. Takes a single key or an array of keys. Is Passed the original KeyboardEvent as a parameter.
+ * Bind a set of keys that will call the callback function when they are pressed. Takes a single key or an array of keys. Is passed the original KeyboardEvent as a parameter.
  *
  * ```js
  * import { initKeys, bindKeys } from 'kontra';
@@ -1090,11 +1090,177 @@ function keyPressed(key) {
 }
 
 /**
+ * A plugin system based on the [interceptor pattern](https://en.wikipedia.org/wiki/Interceptor_pattern), designed to share reusable code such as more advance collision detection or a 2D physics engine.
+ *
+ * ```js
+ * import { registerPlugin, Sprite } from 'kontra';
+ * import loggingPlugin from 'path/to/plugin/code.js'
+ *
+ * // register a plugin that adds logging to all Sprites
+ * registerPlugin(Sprite, loggingPlugin);
+ * ```
+ * @sectionName Plugin
+ */
+
+/**
+ * A plugin is an object that defines a set of intercept functions that should be run before or after a Kontra objects functions. These functions allow you to modify the code or change the behavior of the intercepted functions.
+ *
+ * An intercept function is named the same name as the function it will intercept. The function name is also prefixed with `before` to have the function run before the intercepted function, or `after` to run after the intercepted function.
+ *
+ * For example, if you wish to add a function to run after a Sprites `collidesWidth()` function, the name of the intercept function would be `afterCollidesWidth` (note the capitalization of the `collidesWidth` function name). `beforeCollidesWidth` would run before the Sprites `collidesWidth()` function.
+ *
+ * A plugin can define any number of before and after intercept functions. When the plugin is registered for a Kontra object, only intercept functions that match a function name in the Kontra object will be intercepted.
+ *
+ * As the plugin author, you should not [register](#registerPlugin) the plugin yourself. You should only export the plugin object and let the consumer register it.
+ *
+ * ```js
+ * // pluginCode.js
+ * const loggingPlugin = {
+ *   afterCollidesWith(sprite, result, object) {
+ *     console.log('collision between sprites!');
+ *   }
+ * };
+ * export default loggingPlugin;
+ * ```
+ *
+ * ```js
+ * // consumerCode.js
+ * import { registerPlugin, Sprite } from 'kontra';
+ * import loggingPlugin from pluginCode.js;
+ *
+ * // have the plugin run for all Sprites
+ * registerPlugin(Sprite, loggingPlugin);
+ *
+ * let sprite1 = Sprite({
+ *   x: 10,
+ *   y: 20,
+ *   width: 10,
+ *   height: 10
+ * });
+ *
+ * let sprite2 = Sprite({
+ *   x: 15,
+ *   y: 20,
+ *   width: 10,
+ *   height: 10
+ * });
+ *
+ * sprite1.collidesWith(sprite2);  //=> 'collision between sprites!'; true
+ * ```
+ * @sectionName How to Create a Plugin
+ */
+
+/**
+ * A before intercept function can be used to modify or change the arguments that will be passed to the intercepted function.
+ *
+ * The function will be passed the `this` context of the intercepted object as well as all arguments of the original call. The function should either return an Array of the arguments if modifying them or return `null` or nothing if not modifying the arguments.
+ *
+ * ```js
+ * class MyObj {
+ *   add(a, b) {
+ *     return a + b;
+ *   }
+ * }
+ *
+ * // create a plugin that doubles the arguments before passing
+ * // them to the original add function
+ * registerPlugin(MyObj, {
+ *   beforeAdd(context, a, b) {
+ *     return [a * 2, b * 2];
+ *   }
+ * });
+ *
+ * const obj = new MyObj();
+ * obj.add(1, 2);  //=> 6
+ * ```
+ *
+ * Multiple before intercept functions can be registered for the same function. All functions will be run in the order they were registered. The functions return value will be passed to the next function. If the function doesn't modify the arguments (returned `null` or nothing) then the functions parameters will be passed to the next function instead.
+ *
+ * ```js
+ * class MyObj {
+ *   add(a, b) {
+ *     return a + b;
+ *   }
+ * }
+ *
+ * // log the arguments of the call and pass them unchanged to
+ * // the next plugin
+ * registerPlugin(MyObj, {
+ *   beforeAdd(context, a, b) {
+ *     console.log(`add passed: ${a}, ${b}`);
+ *   }
+ * });
+ *
+ * registerPlugin(MyObj, {
+ *   beforeAdd(context, a, b) {  // receives a=1 and b=2
+ *     return [a * 2, b * 2];
+ *   }
+ * });
+ *
+ * const obj = new MyObj();
+ * obj.add(1, 2);  //=> 'add passed: 1, 2'; 6
+ * ```
+ * @sectionName Before Intercept Functions
+ */
+
+/**
+ * An after intercept function can be used to modify or change the results of the intercepted function.
+ *
+ * The function will be passed the `this` context of the intercepted object, the result of the intercepted function, and the final arguments passed to the intercepted function. The function should either return a value if modifying the result or return `null` or nothing if not modifying the result.
+ *
+ * ```js
+ * class MyObj {
+ *   add(a, b) {
+ *     return a + b;
+ *   }
+ * }
+ *
+ * // create a plugin that doubles the result
+ * registerPlugin(MyObj, {
+ *   afterAdd(context, result, a, b) {
+ *     return result * 2;
+ *   }
+ * });
+ *
+ * const obj = new MyObj();
+ * obj.add(1, 2);  //=> 6
+ * ```
+ *
+ * Multiple after intercept functions can be registered for the same function. All functions will be run in the order they were registered. Each functions return value will be passed to the next function. If the function doesn't modify the result (returned `null` or nothing) then the functions parameters will be passed to the next function instead.
+ *
+ * ```js
+ * class MyObj {
+ *   add(a, b) {
+ *     return a + b;
+ *   }
+ * }
+ *
+ * // log the arguments of the call and pass them unchanged to
+ * // the next plugin
+ * registerPlugin(MyObj, {
+ *   afterAdd(context, result, a, b) {
+ *     console.log(`add passed: ${a}, ${b} and returned ${result}`);
+ *   }
+ * });
+ *
+ * registerPlugin(MyObj, {
+ *   afterAdd(context, result, a, b) {  // receives result=3
+ *     return result * 2;
+ *   }
+ * });
+ *
+ * const obj = new MyObj();
+ * obj.add(1, 2);  //=> 'add passed: 1, 2 and returned 3'; 6
+ * ```
+ * @sectionName After Intercept Functions
+ */
+
+/**
  * Get the kontra object method name from the plugin.
  *
- * @param {string} methodName - Before/After function name
+ * @param {String} methodName - Before/After function name
  *
- * @returns {string}
+ * @returns {String}
  */
 function getMethod(methodName) {
   let methodTitle = methodName.substr( methodName.search(/[A-Z]/) );
@@ -1115,17 +1281,14 @@ function removeInterceptor(interceptors, fn) {
 }
 
 /**
- * Register a plugin to run before or after methods. Based on interceptor pattern.
- * @see https://blog.kiprosh.com/javascript-method-interceptors/
+ * Register a plugin to run a set of functions before or after the Kontra object functions.
+ * @function registerPlugin
  *
- * @param {string} object - Kontra object to attach plugin to
- * @param {object} pluginObj - Plugin object
- *
- * @example
- * registerPlugin('sprite', myPluginObject)
+ * @param {Object} kontraObj - Kontra object to attach the plugin to.
+ * @param {Object} pluginObj - Plugin object with before and after intercept functions.
  */
-function registerPlugin(object, pluginObj) {
-  let objectProto = object.prototype;
+function registerPlugin(kontraObj, pluginObj) {
+  let objectProto = kontraObj.prototype;
 
   if (!objectProto) return;
 
@@ -1186,16 +1349,14 @@ function registerPlugin(object, pluginObj) {
 }
 
 /**
- * Unregister a plugin.
+ * Unregister a plugin from a Kontra object.
+ * @function unregisterPlugin
  *
- * @param {string} object - Kontra object to attach plugin to
- * @param {object} pluginObj - Plugin object
- *
- * @example
- * unregisterPlugin('sprite', myPluginObject)
+ * @param {Object} kontraObj - Kontra object to detach plugin from.
+ * @param {Object} pluginObj - The plugin object that was passed during registration.
  */
-function unregisterPlugin(object, pluginObj) {
-  let objectProto = object.prototype;
+function unregisterPlugin(kontraObj, pluginObj) {
+  let objectProto = kontraObj.prototype;
 
   if (!objectProto || !objectProto._inc) return;
 
@@ -1213,13 +1374,25 @@ function unregisterPlugin(object, pluginObj) {
 }
 
 /**
- * Safely extend functionality of a kontra object.
+ * Safely extend the functionality of a Kontra object. Any properties that already exist on the Kontra object will not be added.
  *
- * @param {string} object - Kontra object to extend
- * @param {object} properties - Properties to add
+ * ```js
+ * import { extendObject, Vector } from 'kontra';
+ *
+ * // add a subtract function to all Vectors
+ * extendObject(Vector, {
+ *   subtract(vec) {
+ *     return Vector(this.x - vec.x, this.y - vec.y);
+ *   }
+ * });
+ * ```
+ * @function extendObject
+ *
+ * @param {Object} kontraObj - Kontra object to extend
+ * @param {Object} properties - Properties to add.
  */
-function extendObject(object, properties) {
-  let objectProto = object.prototype;
+function extendObject(kontraObj, properties) {
+  let objectProto = kontraObj.prototype;
 
   if (!objectProto) return;
 
@@ -1262,7 +1435,7 @@ function extendObject(object, properties) {
  *
  * By default, the pointer is treated as a circle and will check for collisions against objects assuming they are rectangular (have a width and height property).
  *
- * If you need to perform a different type of collision detection, assign the object a collidesWithPointer(pointer) function and it will be called instead, passing the current pointer object. Use this function to determine how the pointer circle should collide with the object.
+ * If you need to perform a different type of collision detection, assign the object a `collidesWithPointer()` function and it will be called instead. The function is passed the pointer object. Use this function to determine how the pointer circle should collide with the object.
  *
  * ```js
  * import { Sprite } from 'kontra';
@@ -1590,7 +1763,7 @@ function pointerOver(object) {
 }
 
 /**
- * Register a function to be called on all pointer down events. Is Passed the original Event and the target object (if there is one).
+ * Register a function to be called on all pointer down events. Is passed the original Event and the target object (if there is one).
  *
  * ```js
  * import { initPointer, onPointerDown } from 'kontra';
@@ -1610,7 +1783,7 @@ function onPointerDown(callback) {
 }
 
 /**
-* Register a function to be called on all pointer up events. Is Passed the original Event and the target object (if there is one).
+* Register a function to be called on all pointer up events. Is passed the original Event and the target object (if there is one).
  *
  * ```js
  * import { initPointer, onPointerUp } from 'kontra';
@@ -1659,30 +1832,30 @@ function pointerPressed(button) {
 }
 
 /**
- * A fast and memory efficient object pool for sprite reuse. Perfect for particle systems or SHUMPs. The pool starts out with just 1 object, but will grow in size to accommodate as many objects as are needed.
+ * A fast and memory efficient [object pool](https://gameprogrammingpatterns.com/object-pool.html) for sprite reuse. Perfect for particle systems or SHUMPs. The pool starts out with just one object, but will grow in size to accommodate as many objects as are needed.
  *
  * <canvas width="600" height="200" id="pool-example"></canvas>
- * <script src="../js/pool.js"></script>
+ * <script src="../assets/js/pool.js"></script>
  * @class Pool
  *
  * @param {Object} properties - Properties of the pool.
- * @param {Function} properties.create - Function that returns a new object to be added to the pool when there are no objects able to be reused.
+ * @param {Function} properties.create - Function that returns a new object to be added to the pool when there are no more alive objects.
  * @param {Number} [properties.maxSize=1024] - The maximum number of objects allowed in the pool. The pool will never grow beyond this size.
  */
 class Pool {
 
   /**
-   * To use the pool, you must pass the `create()` function, which should return a new kontra.Sprite or object. This object will be added to the pool every time there are no more alive objects.
+   * To use the pool, you must pass the `create()` function argument, which should return a new kontra.Sprite or object. This object will be added to the pool every time there are no more alive objects.
    *
-   * The object must implement the functions `update(dt)`, `init(properties)`, and `isAlive()`. If one of these functions is missing the pool will throw an error. kontra.Sprite defines these functions for you.
+   * The object must implement the functions `update()`, `init()`, and `isAlive()`. If one of these functions is missing the pool will throw an error. kontra.Sprite defines these functions for you.
    *
    * An object is available for reuse when its `isAlive()` function returns `false`. For a sprite, this is typically when its ttl is `0`.
    *
-   * When you want an object from the pool, use the pools `get(properties)` function and pass it any properties you want the newly initialized object to have.
+   * When you want an object from the pool, use the pools [get()](#get) function and pass it any properties you want the newly initialized object to have.
    *
    * ```js
    * let pool = Pool({
-   *   // create a new sprite every time the pool needs new objects
+   *   // create a new sprite every time the pool needs a new object
    *   create: Sprite
    * });
    *
@@ -1697,7 +1870,7 @@ class Pool {
    * });
    * ```
    *
-   * When you want to update or render all alive objects in the pool, use the pools `update()` and `render()` functions.
+   * When you want to update or render all alive objects in the pool, use the pools [update()](#update) and [render()](#render) functions.
    *
    * ```js
    * let loop = GameLoop({
@@ -1754,7 +1927,7 @@ class Pool {
   }
 
   /**
-   * Get and return an object from the pool. The properties parameter will be passed directly to the objects `init(properties)` function. If you're using a [Sprite](Sprite.html), you should also pass the `ttl` property to designate how many frames you want the object to be alive for.
+   * Get and return an object from the pool. The properties parameter will be passed directly to the objects `init()` function. If you're using a kontra.Sprite, you should also pass the `ttl` property to designate how many frames you want the object to be alive for.
    *
    * If you want to control when the sprite is ready for reuse, pass `Infinity` for `ttl`. You'll need to set the sprites `ttl` to `0` when you're ready for the sprite to be reused.
    *
@@ -1775,7 +1948,7 @@ class Pool {
    * @memberof Pool
    * @function get
    *
-   * @param {Object} properties - Properties to pass to the objects `init(properties)` function.
+   * @param {Object} properties - Properties to pass to the objects `init()` function.
    *
    * @returns {Object} The newly initialized object.
    */
@@ -1826,7 +1999,7 @@ class Pool {
   }
 
   /**
-   * Update all alive objects in the pool by calling the objects update() function. This function also manages when each object should be recycled, so it is recommended that you do not call the objects update() function outside of this function.
+   * Update all alive objects in the pool by calling the objects `update()` function. This function also manages when each object should be recycled, so it is recommended that you do not call the objects `update()` function outside of this function.
    * @memberof Pool
    * @function update
    *
@@ -1940,10 +2113,10 @@ The quadrant indices are numbered as follows (following a z-order curve):
 
 
 /**
- * A 2D spatial partitioning data structure. Use it to quickly group objects by their position for faster access and collision checking.
+ * A 2D [spatial partitioning](https://gameprogrammingpatterns.com/spatial-partition.html) data structure. Use it to quickly group objects by their position for faster access and collision checking.
  *
  * <canvas width="600" height="200" id="quadtree-example"></canvas>
- * <script src="../js/quadtree.js"></script>
+ * <script src="../assets/js/quadtree.js"></script>
  * @class Quadtree
  *
  * @param {Object} properties - Properties of the quadtree.
@@ -1954,7 +2127,7 @@ The quadrant indices are numbered as follows (following a z-order curve):
 class Quadtree {
 
   /**
-   * To use a quadtree, you'll first create it using `Quadtree()`. Then every  frame you'll remove all objects from the quadtree using its [clear()](#clear) function  and add all objects back using its [add()](#add) function. You can add a single object  or an array of objects, and as many as you want.
+   * Every frame you should remove all objects from the quadtree using its [clear()](#clear) function and then add all objects back using its [add()](#add) function. You can add a single object, a list of objects, or an array of objects.
    *
    * ```js
    * import { Quadtree, Sprite, GameLoop } from 'kontra';
@@ -1982,7 +2155,7 @@ class Quadtree {
    * When you need to get all objects in the same node as another object, use the quadtrees [get()](#get) function.
    *
    * ```js
-   * let objects = quadtree.get(player);  //=> [player, enemy]
+   * let objects = quadtree.get(player);  //=> [enemy]
    * ```
    * @sectionName Basic Use
    */
@@ -2039,7 +2212,7 @@ class Quadtree {
   /**
    * Get an array of all objects that belong to the same node as the passed in object.
    *
-   * **Note:** if the passed in object is also part of the quadtree, it will be returned in the results.
+   * **Note:** if the passed in object is also part of the quadtree, it will not be returned in the results.
    *
    * ```js
    * import { Sprite, Quadtree } from 'kontra';
@@ -2056,15 +2229,16 @@ class Quadtree {
    * });
    *
    * quadtree.add(player, enemy1, enemy2);
-   * quadtree.get(player);  //=> [player, enemy1]
+   * quadtree.get(player);  //=> [enemy1]
    * ```
    * @function get
    *
    * @param {Object} object - Object to use for finding other objects. The object must have the properties `x`, `y`, `width`, and `height` so that its position in the quadtree can be calculated.
    *
-   * @returns {Object[]} A list of objects in the same node as the object.
+   * @returns {Object[]} A list of objects in the same node as the object, not including the object itself.
    */
   get(object) {
+    // since an object can belong to multiple nodes we should not add it multiple times
     let objects = new Set();
     let indices, i;
 
@@ -2084,7 +2258,7 @@ class Quadtree {
   }
 
   /**
-   * Add objects to the quadtree and group them by their position. Can take a single object, a comma separated list of objects, and an array of objects.
+   * Add objects to the quadtree and group them by their position. Can take a single object, a list of objects, and an array of objects.
    *
    * ```js
    * import { Quadtree, Sprite, Pool, GameLoop } from 'kontra';
@@ -2338,8 +2512,8 @@ vectorFactory.prototype = Vector.prototype;
  * @class Sprite
  *
  * @param {Object} properties - Properties of the sprite.
- * @param {Number} properties.x - X coordinate of the sprites position vector.
- * @param {Number} properties.y - Y coordinate of the sprites position vector.
+ * @param {Number} properties.x - X coordinate of the position vector.
+ * @param {Number} properties.y - Y coordinate of the position vector.
  * @param {Number} [properties.dx] - X coordinate of the velocity vector.
  * @param {Number} [properties.dy] - Y coordinate of the velocity vector.
  * @param {Number} [properties.ddx] - X coordinate of the acceleration vector.
@@ -2351,21 +2525,21 @@ vectorFactory.prototype = Vector.prototype;
  *
  * @param {Number} [properties.ttl=Infinity] - How many frames the sprite should be alive. Used by kontra.Pool.
  * @param {Number} [properties.rotation=0] - Sprites rotation around the origin in radians.
- * @param {Number} [properties.anchor={x:0,y:0}] - The x and y origin of the sprite. {0,0} is the top left corner of the sprite, {1,1} is the bottom right corner.
+ * @param {Number} [properties.anchor={x:0,y:0}] - The x and y origin of the sprite. {x:0, y:0} is the top left corner of the sprite, {x:1, y:1} is the bottom right corner.
  *
- * @param {Canvas​Rendering​Context2D} [properties.context] - The context the sprite should draw to. Defaults to [core.getContext()](/api/core.html#getContext).
+ * @param {Canvas​Rendering​Context2D} [properties.context] - The context the sprite should draw to. Defaults to [core.getContext()](/api/core#getContext).
  *
  * @param {Image|HTMLCanvasElement} [properties.image] - Use an image to draw the sprite.
- * @param {Object} [properties.animations] - An object of kontra.Animations from a kontra.Spritesheet to animate the sprite.
+ * @param {Object} [properties.animations] - An object of [Animations](animation) from a kontra.Spritesheet to animate the sprite.
  *
  * @param {Function} [properties.update] - Function called every frame to update the sprite.
  * @param {Function} [properties.render] - Function called every frame to render the sprite.
- * @param {*} [properties.*] - Any additional properties you need added to the sprite. For example, if you pass `Sprite({type: 'player'})`` then the sprite will also have a property of the same name and value. You can pass as many additional properties as you want.
+ * @param {*} [properties.*] - Any additional properties you need added to the sprite. For example, if you pass `Sprite({type: 'player'})` then the sprite will also have a property of the same name and value. You can pass as many additional properties as you want.
  */
 class Sprite {
 
   /**
-   * In its most basic form, a sprite is a rectangle with a fill color. To create a rectangle sprite, pass the parameters `width`, `height`, and `color`. A rectangle sprite is great for initial prototyping and particles.
+   * In its most basic form, a sprite is a rectangle with a fill color. To create a rectangle sprite, pass the arguments `width`, `height`, and `color`. A rectangle sprite is great for initial prototyping and particles.
    *
    * @sectionName Rectangle Sprite
    * @example
@@ -2394,7 +2568,7 @@ class Sprite {
    */
 
   /**
-   * A sprite can use an image instead of drawing a rectangle. To create an image sprite, pass the `image` parameter. The size of the sprite will automatically be set as the width and height of the image.
+   * A sprite can use an image instead of drawing a rectangle. To create an image sprite, pass the `image` argument. The size of the sprite will automatically be set as the width and height of the image.
    *
    * @sectionName Image Sprite
    * @example
@@ -2406,7 +2580,7 @@ class Sprite {
    * // exclude-script:end
    *
    * let image = new Image();
-   * image.src = '../imgs/character.png';
+   * image.src = '../assets/imgs/character.png';
    * image.onload = function() {
    *   let sprite = Sprite({
    *     x: 300,
@@ -2425,9 +2599,9 @@ class Sprite {
    */
 
   /**
-   * A sprite can use a spritesheet animation as well. To create an animation sprite, pass the `animations` property. The size of the sprite will automatically be set as the width and height of a frame of the spritesheet.
+   * A sprite can use a spritesheet animation as well. To create an animation sprite, pass the `animations` argument. The size of the sprite will automatically be set as the width and height of a frame of the spritesheet.
    *
-   * A sprite can have multiple named animations. The easiest way to create animations is to use kontra.SpriteSheet. All animations will automatically be [cloned](animation.html#clone) so no two sprites update the same animation.
+   * A sprite can have multiple named animations. The easiest way to create animations is to use kontra.SpriteSheet. All animations will automatically be [cloned](animation#clone) so no two sprites update the same animation.
    *
    * @sectionName Animation Sprite
    * @example
@@ -2439,7 +2613,7 @@ class Sprite {
    * // exclude-script:end
    *
    * let image = new Image();
-   * image.src = '../imgs/character_walk_sheet.png';
+   * image.src = '../assets/imgs/character_walk_sheet.png';
    * image.onload = function() {
    *
    *   // use spriteSheet to create animations from an image
@@ -2562,13 +2736,13 @@ class Sprite {
     // defaults
 
     /**
-     * The width of the sprite. If the sprite is a rectangle sprite, it uses the passed in value. For an image sprite it is the width of the image. And for an animation sprite it is the width of a single frame of the animation.
+     * The width of the sprite. If the sprite is a [rectangle sprite](#rectangle-sprite), it uses the passed in value. For an [image sprite](#image-sprite) it is the width of the image. And for an [animation sprite](#animation-sprite) it is the width of a single frame of the animation.
      * @memberof Sprite
      * @property {Number} width
      */
 
     /**
-     * The height of the sprite. If the sprite is a rectangle sprite, it uses the passed in value. For an image sprite it is the height of the image. And for an animation sprite it is the height of a single frame of the animation.
+     * The height of the sprite. If the sprite is a [rectangle sprite](#rectangle-sprite), it uses the passed in value. For an [image sprite](#image-sprite) it is the height of the image. And for an [animation sprite](#animation-sprite) it is the height of a single frame of the animation.
      * @memberof Sprite
      * @property {Number} height
      */
@@ -2639,13 +2813,13 @@ class Sprite {
     this.context = getContext();
 
     /**
-     * The color of the sprite if it was passed as a parameter.
+     * The color of the sprite if it was passed as an argument.
      * @memberof Sprite
      * @property {String} color
      */
 
      /**
-     * The image the sprite will use when drawn if passed as a parameter.
+     * The image the sprite will use when drawn if passed as an argument.
      * @memberof Sprite
      * @property {Image|HTMLCanvasElement} image
      */
@@ -2666,7 +2840,7 @@ class Sprite {
   // position, velocity, and acceleration vectors.
 
   /**
-   * X coordinate of the sprites position vector.
+   * X coordinate of the position vector.
    * @memberof Sprite
    * @property {Number} x
    */
@@ -2675,7 +2849,7 @@ class Sprite {
   }
 
   /**
-   * Y coordinate of the sprites position vector.
+   * Y coordinate of the position vector.
    * @memberof Sprite
    * @property {Number} y
    */
@@ -2720,7 +2894,7 @@ class Sprite {
   }
 
   /**
-   * An object of kontra.Animation from a kontra.SpriteSheet to animate the sprite. Each animation is named so that it can can be used by name for the sprites [playAnimation()](#playAnimation) function.
+   * An object of [Animations](animation) from a kontra.SpriteSheet to animate the sprite. Each animation is named so that it can can be used by name for the sprites [playAnimation()](#playAnimation) function.
    *
    * ```js
    * import { Sprite, SpriteSheet } from 'kontra';
@@ -2786,7 +2960,7 @@ class Sprite {
     }
 
     /**
-     * The currently playing Animation object if `animations` was passed as a parameter.
+     * The currently playing Animation object if `animations` was passed as an argument.
      * @memberof Sprite
      * @property {kontra.Animation} currentAnimation
      */
@@ -2809,7 +2983,7 @@ class Sprite {
   /**
    * Check if the sprite collide with the object. Uses a simple [Axis-Aligned Bounding Box (AABB) collision check](https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection#Axis-Aligned_Bounding_Box). Takes into account the sprites [anchor](#anchor).
    *
-   * **NOTE:** Does not take into account sprite rotation. If you need collision detection between rotated sprites you will need to implement your own `collidesWith()`` function. I suggest looking at the Separate Axis Theorem.
+   * **NOTE:** Does not take into account sprite rotation. If you need collision detection between rotated sprites you will need to implement your own `collidesWith()` function. I suggest looking at the Separate Axis Theorem.
    *
    * ```js
    * import { Sprite } from 'kontra';
@@ -2834,7 +3008,7 @@ class Sprite {
    * sprite.collidesWith(sprite2);  //=> true
    * ```
    *
-   * If you need a different type of collision check, you can override this function by passing a parameter of the same name.
+   * If you need a different type of collision check, you can override this function by passing an argument by the same name.
    *
    * ```js
    * // circle collision
@@ -2901,7 +3075,7 @@ class Sprite {
   }
 
   /**
-   * Render the sprite to its context. Calls the sprites [draw()](#draw) function
+   * Render the sprite. Calls the sprites [draw()](#draw) function.
    * @memberof Sprite
    * @function render
    */
@@ -2951,7 +3125,7 @@ class Sprite {
   /**
    * Move the sprite by its acceleration and velocity. If the sprite is an [animation sprite](#animation-sprite), it also advances the animation every frame.
    *
-   * If you override the sprites [update()](#update) function with your own update function, you can call this function to move the sprite using the sprites normal update function.
+   * If you override the sprites [update()](#update) function with your own update function, you can call this function to move the sprite normally.
    *
    * ```js
    * import { Sprite } from 'kontra';
@@ -2997,9 +3171,9 @@ class Sprite {
   }
 
   /**
-   * Draw the sprite on its context at the its X and Y position. This function changes based on the type of the sprite. For a [rectangle sprite](#rectangle-sprite), it uses `context.fillRect()`, for an [image sprite](#image-sprite) it uses `context.drawImage()`, and for an animation sprite it uses the [currentAnimation](#currentAnimation) `render()` function.
+   * Draw the sprite at its X and Y position. This function changes based on the type of the sprite. For a [rectangle sprite](#rectangle-sprite), it uses `context.fillRect()`, for an [image sprite](#image-sprite) it uses `context.drawImage()`, and for an [animation sprite](#animation-sprite) it uses the [currentAnimation](#currentAnimation) `render()` function.
    *
-   * If you override the sprites `render()`` function with your own render function, you can call this function to draw the sprite using the sprites normal drawing function.
+   * If you override the sprites `render()` function with your own render function, you can call this function to draw the sprite normally.
    *
    * ```js
    * let sprite = kontra.sprite({
@@ -3106,11 +3280,11 @@ function parseFrames(consecutiveFrames) {
 }
 
 /**
- * A sprite sheet to animate a sequence of images. Used to create [animation sprites](./Sprite.html#animation-sprite).
+ * A sprite sheet to animate a sequence of images. Used to create [animation sprites](./Sprite#animation-sprite).
  *
  * <figure>
- *   <a href="../imgs/character_walk_sheet.png">
- *     <img src="../imgs/character_walk_sheet.png" alt="11 frames of a walking pill-like alien wearing a space helmet.">
+ *   <a href="../assets/imgs/character_walk_sheet.png">
+ *     <img src="../assets/imgs/character_walk_sheet.png" alt="11 frames of a walking pill-like alien wearing a space helmet.">
  *   </a>
  *   <figcaption>Sprite sheet image courtesy of <a href="https://kenney.nl/assets">Kenney</a>.</figcaption>
  * </figure>
@@ -3121,7 +3295,7 @@ function parseFrames(consecutiveFrames) {
  * import { Sprite, SpriteSheet } from 'kontra';
  *
  * let image = new Image();
- * image.src = '../imgs/character_walk_sheet.png';
+ * image.src = '../assets/imgs/character_walk_sheet.png';
  * image.onload = function() {
  *   let spriteSheet = SpriteSheet({
  *     image: image,
@@ -3163,7 +3337,7 @@ class SpriteSheet {
     // @endif
 
     /**
-     * An object of named kontra.Animation objects. Typically you pass this object into kontra.Sprite to create an [animation sprites](./Sprite.html#animation-sprite).
+     * An object of named kontra.Animation objects. Typically you pass this object into kontra.Sprite to create an [animation sprites](./Sprite#animation-sprite).
      * @memberof SpriteSheet
      * @property {Object} animations
      */
@@ -3196,7 +3370,7 @@ class SpriteSheet {
   }
 
   /**
-   * Create named animations from the sprite sheet. Called from the constructor if the `animations` property is passed in.
+   * Create named animations from the sprite sheet. Called from the constructor if the `animations` argument is passed.
    *
    * This function populates the sprite sheets `animations` property with kontra.Animation objects. Each animation is accessible by its name.
    *
@@ -3204,7 +3378,7 @@ class SpriteSheet {
    * import { Sprite, SpriteSheet } from 'kontra';
    *
    * let image = new Image();
-   * image.src = '../imgs/character_walk_sheet.png';
+   * image.src = '../assets/imgs/character_walk_sheet.png';
    * image.onload = function() {
    *
    *   let spriteSheet = SpriteSheet({
@@ -3253,9 +3427,9 @@ class SpriteSheet {
    * @function createAnimations
    *
    * @param {Object} animations - Object of named animations to create from the sprite sheet.
-   * @param {Number|String|Number[]|String[]} animations.<name>.frames - The sequence of frames to use from the sprite sheet. It can either be a single frame (`1`), a sequence of frames (`[1,2,3,4]`), or consecutive frame notation (`'1..4'`). Sprite sheet frames are `0` indexed.
+   * @param {Number|String|Number[]|String[]} animations.<name>.frames - The sequence of frames to use from the sprite sheet. It can either be a single frame (`1`), a sequence of frames (`[1,2,3,4]`), or a consecutive frame notation (`'1..4'`). Sprite sheet frames are `0` indexed.
    * @param {Number} animations.<name>.frameRate - The number frames to display per second.
-   * @param {Boolean} [animations.<name>.loop] - If the animation should loop back to the beginning once completed.
+   * @param {Boolean} [animations.<name>.loop=true] - If the animation should loop back to the beginning once completed.
    */
   createAnimations(animations) {
     let sequence, name;
@@ -3345,8 +3519,8 @@ function getStoreItem(key) {
  * A tile engine for managing and drawing tilesets.
  *
  * <figure>
- *   <a href="../imgs/mapPack_tilesheet.png">
- *     <img src="../imgs/mapPack_tilesheet.png" alt="Tileset to create an overworld map in various seasons.">
+ *   <a href="../assets/imgs/mapPack_tilesheet.png">
+ *     <img src="../assets/imgs/mapPack_tilesheet.png" alt="Tileset to create an overworld map in various seasons.">
  *   </a>
  *   <figcaption>Tileset image courtesy of <a href="https://kenney.nl/assets">Kenney</a>.</figcaption>
  * </figure>
@@ -3357,21 +3531,21 @@ function getStoreItem(key) {
  * @param {Number} properties.height - Height of the tile map (in number of tiles).
  * @param {Number} properties.tilewidth - Width of a single tile (in pixels).
  * @param {Number} properties.tileheight - Height of a single tile (in pixels).
- * @param {Canvas​Rendering​Context2D} [properties.context] - The context the tile engine should draw to. Defaults to [core.getContext()](/api/core.html#getContext)
+ * @param {Canvas​Rendering​Context2D} [properties.context] - The context the tile engine should draw to. Defaults to [core.getContext()](/api/core#getContext)
  *
  * @param {Object[]} properties.tilesets - Array of tileset objects.
  * @param {Number} properties.tilesetN.firstgid - First tile index of the tileset. The first tileset will have a firstgid of 1 as 0 represents an empty tile.
- * @param {String|HTMLImageElement} properties.tilesetN.image - Relative path to the HTMLImageElement or an HTMLImageElement. If passing a relative path, the image file must have been [loaded](./assets.html) first.
- * @param {Number} [properties.tilesetN.margin=0] - The amount of whitespace between each tile.
- * @param {Number} [properties.tilesetN.tilewidth] - Width of the tileset (in number of tiles). Defaults to properties.tilewidth.
- * @param {Number} [properties.tilesetN.tileheight] - Height of the tileset (in number of tiles). Defaults to properties.tileheight.
- * @param {String} [properties.tilesetN.source] - Relative path to the tileset JSON file. The source JSON file must have been [loaded](./assets.html) first.
+ * @param {String|HTMLImageElement} properties.tilesetN.image - Relative path to the HTMLImageElement or an HTMLImageElement. If passing a relative path, the image file must have been [loaded](./assets) first.
+ * @param {Number} [properties.tilesetN.margin=0] - The amount of whitespace between each tile (in pixels).
+ * @param {Number} [properties.tilesetN.tilewidth] - Width of the tileset (in pixels). Defaults to properties.tilewidth.
+ * @param {Number} [properties.tilesetN.tileheight] - Height of the tileset (in pixels). Defaults to properties.tileheight.
+ * @param {String} [properties.tilesetN.source] - Relative path to the source JSON file. The source JSON file must have been [loaded](./assets) first.
  * @param {Number} [properties.tilesetN.columns] - Number of columns in the tileset image.
  *
  * @param {Object[]} properties.layers - Array of layer objects.
  * @param {String} properties.layerN.name - Unique name of the layer.
  * @param {Number[]} properties.layerN.data - 1D array of tile indices.
- * @param {boolean} [properties.layerN.visible=true] - If the layer should be drawn or not.
+ * @param {Boolean} [properties.layerN.visible=true] - If the layer should be drawn or not.
  * @param {Number} [properties.layerN.opacity=1] - Percent opacity of the layer.
  */
 
@@ -3384,11 +3558,11 @@ function getStoreItem(key) {
  *
  * To set up the tile engine, you'll need to pass it the width and height of a tile (in pixels) and the width and height of the map (in number of tiles).
  *
- * You'll then need to add at least one tileset with an image as well as firstgid, or fist tile index of the tileset. The first tileset will always have a firstgid of 1 as 0 represents an empty tile.
+ * You'll then need to add at least one tileset with an image as well as firstgid, or first tile index of the tileset. The first tileset will always have a firstgid of 1 as 0 represents an empty tile.
  *
  * Lastly, you'll need to add at least one named layer with data. A layer tells the tile engine which tiles from the tileset image to use at what position on the map.
  *
- * Once all tileset images and all layers have been added, you can render the tile engine by calling its `render()` function.
+ * Once all tileset images and all layers have been added, you can render the tile engine by calling its [render()](#render) function.
  *
  * @sectionName Basic Use
  * @example {576x576}
@@ -3400,7 +3574,7 @@ function getStoreItem(key) {
  * // exclude-script:end
  *
  * let img = new Image();
- * img.src = '../imgs/mapPack_tilesheet.png';
+ * img.src = '../assets/imgs/mapPack_tilesheet.png';
  * img.onload = function() {
  *   let tileEngine = TileEngine({
  *     // tile size
@@ -3442,7 +3616,7 @@ function getStoreItem(key) {
 /**
  * Adding all the tileset images and layers to a tile engine can be tedious, especially if you have multiple layers. If you want a simpler way to create a tile engine, Kontra has been written to work directly with the JSON output of the [Tiled Map Editor](http://www.mapeditor.org/).
  *
- * The one requirement is that you must preload all of the tileset images and tileset sources using the appropriate [asset loader functions](./assets.html) before you create the tile engine.
+ * The one requirement is that you must preload all of the tileset images and tileset sources using the appropriate [asset loader functions](./assets) before you create the tile engine.
  *
  * @sectionName Advance Use
  * @example {576x576}
@@ -3453,9 +3627,9 @@ function getStoreItem(key) {
  * import { load, TileEngine, dataAssets } from 'kontra';
  * // exclude-script:end
  *
- * load('../imgs/mapPack_tilesheet.png', '../data/tile_engine_basic.json')
+ * load('../assets/imgs/mapPack_tilesheet.png', '../assets/data/tile_engine_basic.json')
  *   .then(assets => {
- *     let tileEngine = TileEngine(dataAssets['../data/tile_engine_basic']);
+ *     let tileEngine = TileEngine(dataAssets['../assets/data/tile_engine_basic']);
  *     // exclude-code:start
  *     tileEngine.context = context;
  *     // exclude-code:end
@@ -3477,9 +3651,9 @@ function getStoreItem(key) {
  * import { load, TileEngine, dataAssets, GameLoop } from 'kontra';
  * // exclude-script:end
  *
- * load('../imgs/mapPack_tilesheet.png', '../data/tile_engine_camera.json')
+ * load('../assets/imgs/mapPack_tilesheet.png', '../assets/data/tile_engine_camera.json')
  *   .then(function() {
- *     let tileEngine = TileEngine(dataAssets['../data/tile_engine_camera']);
+ *     let tileEngine = TileEngine(dataAssets['../assets/data/tile_engine_camera']);
  *     // exclude-code:start
  *     tileEngine.context = context;
  *     // exclude-code:end
@@ -3686,7 +3860,7 @@ function TileEngine(properties = {}) {
      *
      * tileEngine.layerCollidesWith('collision', sprite);  //=> true
      * ```
-     * @memberof kontra.tileEngine
+     * @memberof TileEngine
      * @function layerCollidesWith
      *
      * @param {String} name - The name of the layer to check for collision.

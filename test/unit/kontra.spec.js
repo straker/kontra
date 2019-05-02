@@ -11,9 +11,9 @@ describe('kontra', () => {
   });
 
   it('should export assets api', () => {
-    expect(kontraExports.images).to.exist;
-    expect(kontraExports.audio).to.exist;
-    expect(kontraExports.data).to.exist;
+    expect(kontraExports.imageAssets).to.exist;
+    expect(kontraExports.audioAssets).to.exist;
+    expect(kontraExports.dataAssets).to.exist;
     expect(kontraExports.setImagePath).to.exist;
     expect(kontraExports.setAudioPath).to.exist;
     expect(kontraExports.setDataPath).to.exist;

@@ -1,50 +1,101 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Kontra.js – Kontra.quadtree</title>
+  <title>Kontra.js – Quadtree</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/webcomponentsjs/0.7.22/webcomponents-lite.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/themes/prism.min.css">
+  <link rel="stylesheet" href="../assets/styles.css">
 
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/themes/prism.min.css">
-  <link rel="stylesheet" href="../styles.css">
-
-  <link rel="import" href="../components/main-nav.html">
-  <link rel="import" href="../components/code-output.html">
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/prism.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/components/prism-javascript.min.js"></script>
-  <script src="../js/kontra.js"></script>
+  <script src="../assets/js/kontra.js"></script>
 </head>
 <body>
   <div class="content">
-    <main-nav></main-nav>
+    <header class="main-nav">
+      <div id="kontra-heading" class="nav-heading">Kontra</div>
+      <a href="#main">Skip navigation</a>
+
+      <nav>
+        <button class="menu-button" aria-expanded="false" aria-controls="menu"><span aria-hidden="true">☰</span> Menu</button>
+
+        <!-- add role=list back to list so screen readers still read it as list when
+             css list-style: none is set
+             @see https://web-a11y.slack.com/archives/C042TSFGN/p1501699529181172 -->
+        <ul id="menu" role="list">
+          <li><a href="/" >Introduction</a></li>
+          <li><a href="/getting-started" >Getting Started</a></li>
+          <li><a href="/download" >Download</a></li>
+          <li><a href="/tutorials" >Tutorials</a></li>
+          <li><a href="/made-with-kontra" >Made With Kontra</a></li>
+
+          <li>
+            <span id="api" class="nav-api-heading">API</span>
+            <ul aria-labelledby="api">
+              <li><a href="/api/animation" >Animation</a></li>
+              <li><a href="/api/assets" >Assets</a></li>
+              <li><a href="/api/core" >Core</a></li>
+              <li><a href="/api/events" >Events</a></li>
+              <li><a href="/api/gameloop" >GameLoop</a></li>
+              <li><a href="/api/keyboard" >Keyboard</a></li>
+              <li><a href="/api/plugin" >Plugin</a></li>
+              <li><a href="/api/pointer" >Pointer</a></li>
+              <li><a href="/api/pool" >Pool</a></li>
+              <li><a href="/api/quadtree" aria-current="page">Quadtree</a></li>
+              <li><a href="/api/sprite" >Sprite</a></li>
+              <li><a href="/api/spritesheet" >SpriteSheet</a></li>
+              <li><a href="/api/store" >Store</a></li>
+              <li><a href="/api/tileengine" >TileEngine</a></li>
+              <li><a href="/api/vector" >Vector</a></li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <div class="scroll-indicator" aria-hidden="true"><span>^</span></div>
+    </header>
 
     <main id="main">
       <div>
-        <h1>Kontra&#8203;.quadtree(&#8203;properties)</h1>
+        <a href="https://github.com/straker/kontra" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
 
-        <dl>
-          <dt><strong>properties</strong> <em>{object}</em></dt>
-          <dd>Properties of the quadtree.</dd>
-          <dt><strong>properties.maxDepth</strong> <em>{number}</em></dt>
-          <dd>Optional. Maximum node depth of the quadtree. Defaults to 3.</dd>
-          <dt><strong>properties.maxObjects</strong> <em>{number}</em></dt>
-          <dd>Optional. Maximum number of objects a node can have before splitting. Defaults to 25.</dd>
-          <dt><strong>properties.bounds</strong> <em>{object}</em></dt>
-          <dd>Optional. The 2D space (x, y, width, height) the quadtree should occupy. Defaults to the entire canvas width and height.</dd>
+        <h1>Quadtree(&#8203;properties)
+        </h1>
+
+        <p>A 2D <a href="https://gameprogrammingpatterns.com/spatial-partition.html">spatial partitioning</a> data structure. Use it to quickly group objects by their position for faster access and collision checking.</p>
+<p><canvas width="600" height="200" id="quadtree-example"></canvas></p>
+<script src="../assets/js/quadtree.js"></script>
+        <h3 id="title-Quadtree"><span class="visually-hidden">Quadtree</span> Parameters</span></h3>
+        <dl aria-labelledby="title-Quadtree">
+          <dt>
+            <code>properties</code>
+            
+          </dt>
+          <dd><p>Object. Properties of the quadtree.</p>
+        </dd>
+          <dt>
+            <code>properties.maxDepth</code>
+            <span class="optional">Optional</span>
+          </dt>
+          <dd><p>Number. Maximum node depth of the quadtree. Defaults to <code>3</code>.</p>
+        </dd>
+          <dt>
+            <code>properties.maxObjects</code>
+            <span class="optional">Optional</span>
+          </dt>
+          <dd><p>Number. Maximum number of objects a node can have before splitting. Defaults to <code>25</code>.</p>
+        </dd>
+          <dt>
+            <code>properties.bounds</code>
+            <span class="optional">Optional</span>
+          </dt>
+          <dd><p>Object. The 2D space (x, y, width, height) the quadtree occupies. Defaults to the entire canvas width and height.</p>
+        </dd>
         </dl>
-
-        <p>A 2D spatial partitioning data structure. Use it to quickly group objects by their position for faster access and collision checking.</p>
-
-
-
-
+        
 
         <section class="toc">
           <h2 id="toc"><a href="#toc" class="section-link">Table of Contents<span aria-hidden="true">#</span></a></h2>
 
-          <ul aria-labeledby="toc">
+          <ul aria-labelledby="toc">
             <li>
               <ul>
                 <li><a href="#basic-use">Basic Use</a></li>
@@ -53,167 +104,220 @@
 
             <li>
               <h3 id="properties">Properties</h3>
-              <ul aria-labeledby="properties">
-                <li><a href="#bounds">kontra.quadtree&#8203;.bounds</a></li>
-                <li><a href="#maxDepth">kontra.quadtree&#8203;.maxDepth</a></li>
-                <li><a href="#maxObjects">kontra.quadtree&#8203;.maxObjects</a></li>
+              <ul aria-labelledby="properties">
+                <li>
+                  <a href="#bounds">
+                    <span>bounds</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#maxDepth">
+                    <span>maxDepth</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#maxObjects">
+                    <span>maxObjects</span>
+                  </a>
+                </li>
               </ul>
             </li>
 
             <li>
               <h3 id="methods">Methods</h3>
-              <ul aria-labeledby="methods">
-                <li><a href="#add">kontra.quadtree&#8203;.add(object[, ...])</a></li>
-                <li><a href="#clear">kontra.quadtree&#8203;.clear()</a></li>
-                <li><a href="#get">kontra.quadtree&#8203;.get(object)</a></li>
+              <ul aria-labelledby="methods">
+                <li>
+                  <a href="#add">
+                    <span>add(objectsN)</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#clear">
+                    <span>clear()</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#get">
+                    <span>get(object)</span>
+                  </a>
+                </li>
               </ul>
             </li>
           </ul>
         </section>
 
-
-
-
-
         <section>
-          <h2 id="basic-use"><a href="#basic-use" class="section-link">Basic Use<span aria-hidden="true">#</span></a></h2>
+          <h2 id="basic-use">
+            <a href="#basic-use" class="section-link">
+              <span>Basic Use</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
 
-          <p>To use a quadtree, you'll first create it using <code>kontra.quadtree()</code>. Then, every frame you'll remove all objects from the quadtree using its <a href="#clear">clear()</a> function and add all objects back using its <a href="#add">add()</a> function. You can add a single object or an array of objects, and as many as you want.</p>
+          <p>Every frame you should remove all objects from the quadtree using its <a href="#clear">clear()</a> function and then add all objects back using its <a href="#add">add()</a> function. You can add a single object, a list of objects, or an array of objects.</p>
+<pre><code class="lang-js">import { Quadtree, Sprite, GameLoop } from &#39;kontra&#39;;
 
-          <pre><code class="language-javascript">let quadtree = kontra.quadtree();
+let quadtree = Quadtree();
+let player = Sprite({
+  // ...
+});
+let enemy = Sprite({
+  // ...
+});
 
-let player = kontra.sprite({/* ... */});
-let enemy = kontra.sprite({/* ... */})
-
-let loop = kontra.gameLoop({
+let loop = GameLoop({
   update: function() {
     quadtree.clear();
     quadtree.add(player, enemy);
   }
-});</code></pre>
-
-          <p>You should clear the quadtree each frame since the quadtree is only a snapshot of the position of the objects when they were added. Since the quadtree doesn't know anything about those objects, it doesn't know when an object moved or when it should be removed from the tree.</p>
-
-          <p>Objects added to the tree must have the properties <code>x</code>, <code>y</code>, <code>width</code>, and <code>height</code> so that their position in the quadtree can be calculated. <a href="sprite">kontra.sprite</a> defines these properties for you.</p>
-
-          <p>When you need to get all objects in the same node as another object, use the quadtrees <a href="#get">get()</a> function.</p>
-
-          <pre><code class="language-javascript">let objects = quadtree.get(player);  //=> [player, enemy]</code></pre>
-
+});
+</code></pre>
+<p>You should clear the quadtree each frame since the quadtree is only a snapshot of the position of the objects when they were added. Since the quadtree doesn&#39;t know anything about those objects, it doesn&#39;t know when an object moved or when it should be removed from the tree.</p>
+<p>Objects added to the tree must have the properties <code>x</code>, <code>y</code>, <code>width</code>, and <code>height</code> so that their position in the quadtree can be calculated. <a href="Sprite">Sprite</a> defines these properties for you.</p>
+<p>When you need to get all objects in the same node as another object, use the quadtrees <a href="#get">get()</a> function.</p>
+<pre><code class="lang-js">let objects = quadtree.get(player);  //=&gt; [enemy]
+</code></pre>
         </section>
 
-
-
-
-
         <section>
-          <h2 id="add"><a href="#add" class="section-link">kontra.quadtree&#8203;.add(object[, ...])<span aria-hidden="true">#</span></a></h2>
+          <h2 id="add">
+            <a href="#add" class="section-link">
+              <span>add(objectsN)</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
 
-          <dl>
-            <dt><strong>object</strong> <em>{object | object[]}</em></dt>
-            <dd>Objects or arrys of objects to add to the quadtree.</dd>
-          </dl>
+          <p>Add objects to the quadtree and group them by their position. Can take a single object, a list of objects, and an array of objects.</p>
+<pre><code class="lang-js">import { Quadtree, Sprite, Pool, GameLoop } from &#39;kontra&#39;;
 
-          <p>Add objects to the quadtree and group them by their position. Can take a single object, a comma separated list of objects, and an array of objects.</p>
+let quadtree = Quadtree();
+let bulletPool = Pool({
+  create: Sprite
+});
 
-          <pre><code class="language-javascript">let player = kontra.sprite({/* ... */});
-let enemy = kontra.sprite({/* ... */});
-let bulletPool = kontra.quadtree({
-  create: kontra.sprite
+let player = Sprite({
+  // ...
+});
+let enemy = Sprite({
+  // ...
 });
 
 // create some bullets
-for (let i = 0; i < 100; i++) {
-  bulletPool.get({/* ... */});
+for (let i = 0; i &lt; 100; i++) {
+  bulletPool.get({
+    // ...
+  });
 }
 
-let loop = kontra.gameLoop({
+let loop = GameLoop({
   update: function() {
     quadtree.clear();
     quadtree.add(player, enemy, bulletPool.getAliveObjects());
   }
-});</code></pre>
-
+});
+</code></pre>
+          <h3 id="title-add"><span class="visually-hidden">add</span> Parameters</span></h3>
+          <dl aria-labelledby="title-add">
+            <dt>
+              <code>objectsN</code>
+              
+            </dt>
+            <dd><p>Object or an Array of Objects. Objects to add to the quadtree.</p>
+          </dd>
+          </dl>
+          
         </section>
-
-
-
-
-
         <section>
-          <h2 id="bounds"><a href="#bounds" class="section-link">kontra.quadtree&#8203;.bounds<span aria-hidden="true">#</span></a></h2>
+          <h2 id="bounds">
+            <a href="#bounds" class="section-link">
+              <span>bounds</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
 
-          <p><em>{object}</em></p>
-
-          <p>The 2D space (x, y, width, height) the quadtree occupies. The quadtree will never expand past the space and any objects that are outside of the space will not be added to the quadtree.</p>
-
+          <p>The 2D space (x, y, width, height) the quadtree occupies.</p>
+          
         </section>
-
-
-
-
-
         <section>
-          <h2 id="clear"><a href="#clear" class="section-link">kontra.quadtree&#8203;.clear()<span aria-hidden="true">#</span></a></h2>
+          <h2 id="clear">
+            <a href="#clear" class="section-link">
+              <span>clear()</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
 
           <p>Removes all objects from the quadtree. You should clear the quadtree every frame before adding all objects back into it.</p>
-
+          
         </section>
-
-
-
-
-
         <section>
-          <h2 id="get"><a href="#get" class="section-link">kontra.quadtree&#8203;.get(object)<span aria-hidden="true">#</span></a></h2>
-
-          <dl>
-            <dt><strong>object</strong> <em>{object}</em></dt>
-            <dd>Object to use for finding other objects.</dd>
-          </dl>
+          <h2 id="get">
+            <a href="#get" class="section-link">
+              <span>get(object)</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
 
           <p>Get an array of all objects that belong to the same node as the passed in object.</p>
+<p><strong>Note:</strong> if the passed in object is also part of the quadtree, it will not be returned in the results.</p>
+<pre><code class="lang-js">import { Sprite, Quadtree } from &#39;kontra&#39;;
 
-          <p><strong>Note:</strong> if the passed in object is also part of the quadtree, it will be returned in the results.</p>
-
-          <pre><code class="language-javascript">let player = kontra.sprite({/* ... */});
-let enemy1 = kontra.sprite({/* ... */});
-let enemy2 = kontra.sprite({/* .. */});
+let quadtree = Quadtree();
+let player = Sprite({
+  // ...
+});
+let enemy1 = Sprite({
+  // ...
+});
+let enemy2 = Sprite({
+  // ...
+});
 
 quadtree.add(player, enemy1, enemy2);
-quadtree.get(player);  //=> [player, enemy1]</code></pre>
-
+quadtree.get(player);  //=&gt; [enemy1]
+</code></pre>
+          <h3 id="title-get"><span class="visually-hidden">get</span> Parameters</span></h3>
+          <dl aria-labelledby="title-get">
+            <dt>
+              <code>object</code>
+              
+            </dt>
+            <dd><p>Object. Object to use for finding other objects. The object must have the properties <code>x</code>, <code>y</code>, <code>width</code>, and <code>height</code> so that its position in the quadtree can be calculated.</p>
+          </dd>
+          </dl>
+          
+          <h3><span class="visually-hidden">get</span> Return value</h3>
+          <p><p>A list of objects in the same node as the object, not including the object itself.</p>
+          </p>
         </section>
-
-
-
-
-
         <section>
-          <h2 id="maxDepth"><a href="#maxDepth" class="section-link">kontra.quadtree&#8203;.maxDepth<span aria-hidden="true">#</span></a></h2>
+          <h2 id="maxDepth">
+            <a href="#maxDepth" class="section-link">
+              <span>maxDepth</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
 
-          <p><em>{number}</em></p>
-
-          <p>The maximum node depth of the quadtree. Every time a node splits, the four subnodes it creates go up one in depth. This can keep happening until the depth of a subnode reaches <code>maxDepth</code>.</p>
-
+          <p>Maximum node depth of the quadtree.</p>
+          
         </section>
-
-
-
-
-
         <section>
-          <h2 id="maxObjects"><a href="#maxObjects" class="section-link">kontra.quadtree&#8203;.maxObjects<span aria-hidden="true">#</span></a></h2>
+          <h2 id="maxObjects">
+            <a href="#maxObjects" class="section-link">
+              <span>maxObjects</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
 
-          <p><em>{number}</em></p>
-
-          <p>The maximum number of objects a node can have before it splits.</p>
-
+          <p>Maximum number of objects a node can have before splitting.</p>
+          
         </section>
 
       </div>
     </main>
   </div>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/components/prism-javascript.min.js"></script>
+  <script src="../assets/js/navbar.js"></script>
 </body>
 </html>

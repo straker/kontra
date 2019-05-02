@@ -1,238 +1,352 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Kontra.js – Kontra.plugin</title>
+  <title>Kontra.js – Plugin</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/webcomponentsjs/0.7.22/webcomponents-lite.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/themes/prism.min.css">
+  <link rel="stylesheet" href="../assets/styles.css">
 
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/themes/prism.min.css">
-  <link rel="stylesheet" href="../styles.css">
-
-  <link rel="import" href="../components/main-nav.html">
-  <link rel="import" href="../components/code-output.html">
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/prism.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/components/prism-javascript.min.js"></script>
-  <script src="../js/kontra.js"></script>
+  <script src="../assets/js/kontra.js"></script>
 </head>
 <body>
   <div class="content">
-    <main-nav></main-nav>
+    <header class="main-nav">
+      <div id="kontra-heading" class="nav-heading">Kontra</div>
+      <a href="#main">Skip navigation</a>
+
+      <nav>
+        <button class="menu-button" aria-expanded="false" aria-controls="menu"><span aria-hidden="true">☰</span> Menu</button>
+
+        <!-- add role=list back to list so screen readers still read it as list when
+             css list-style: none is set
+             @see https://web-a11y.slack.com/archives/C042TSFGN/p1501699529181172 -->
+        <ul id="menu" role="list">
+          <li><a href="/" >Introduction</a></li>
+          <li><a href="/getting-started" >Getting Started</a></li>
+          <li><a href="/download" >Download</a></li>
+          <li><a href="/tutorials" >Tutorials</a></li>
+          <li><a href="/made-with-kontra" >Made With Kontra</a></li>
+
+          <li>
+            <span id="api" class="nav-api-heading">API</span>
+            <ul aria-labelledby="api">
+              <li><a href="/api/animation" >Animation</a></li>
+              <li><a href="/api/assets" >Assets</a></li>
+              <li><a href="/api/core" >Core</a></li>
+              <li><a href="/api/events" >Events</a></li>
+              <li><a href="/api/gameloop" >GameLoop</a></li>
+              <li><a href="/api/keyboard" >Keyboard</a></li>
+              <li><a href="/api/plugin" aria-current="page">Plugin</a></li>
+              <li><a href="/api/pointer" >Pointer</a></li>
+              <li><a href="/api/pool" >Pool</a></li>
+              <li><a href="/api/quadtree" >Quadtree</a></li>
+              <li><a href="/api/sprite" >Sprite</a></li>
+              <li><a href="/api/spritesheet" >SpriteSheet</a></li>
+              <li><a href="/api/store" >Store</a></li>
+              <li><a href="/api/tileengine" >TileEngine</a></li>
+              <li><a href="/api/vector" >Vector</a></li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <div class="scroll-indicator" aria-hidden="true"><span>^</span></div>
+    </header>
 
     <main id="main">
       <div>
-        <h1>Kontra.plugin</h1>
+        <a href="https://github.com/straker/kontra" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
 
-        <p>A minimal plugin architecture to enable sharing of common functionality. The plugin system is designed after the Interceptor Pattern and allows you to write functions that can be run before and after any Kontra object function.</p>
+        <h1>Plugin        </h1>
 
-        <p>The plugin architecture also allows you to safely extend Kontra objects. This allows you to safely add additional properties without overriding ones that may already exist.</p>
+        <p>A plugin system based on the <a href="https://en.wikipedia.org/wiki/Interceptor_pattern">interceptor pattern</a>, designed to share reusable code such as more advance collision detection or a 2D physics engine.</p>
+<pre><code class="lang-js">import { registerPlugin, Sprite } from &#39;kontra&#39;;
+import loggingPlugin from &#39;path/to/plugin/code.js&#39;
 
-        <pre><code class="language-javascript">let myPlugin = {
-  beforeAdd(vector, vecToAdd) {
-    console.log(`adding {${vecToAdd.x}, ${vecToAdd.y}} vector to {${vector.x}, ${vector.y}}`);
-  },
-  afterAdd(vector, result, vecToAdd) {
-    console.log(`result of add was: {${result.x}, ${result.y}}`);
-  }
-};
-
-kontra.plugin.register('vector', myPlugin);</code></pre>
-
-
-
-
+// register a plugin that adds logging to all Sprites
+registerPlugin(Sprite, loggingPlugin);
+</code></pre>
+        
 
         <section class="toc">
           <h2 id="toc"><a href="#toc" class="section-link">Table of Contents<span aria-hidden="true">#</span></a></h2>
 
-          <ul aria-labeledby="toc">
+          <ul aria-labelledby="toc">
             <li>
               <ul>
-                <li><a href="#best-practices">Plugin Best Practices</a></li></li>
+                <li><a href="#how-to create a plugin">How to Create a Plugin</a></li>
+                <li><a href="#before-intercept functions">Before Intercept Functions</a></li>
+                <li><a href="#after-intercept functions">After Intercept Functions</a></li>
               </ul>
             </li>
+
 
             <li>
               <h3 id="methods">Methods</h3>
-              <ul aria-labeledby="methods">
-                <li><a href="#extend">kontra.plugin&#8203;.extend(object, properties)</a></li>
-                <li><a href="#register">kontra.plugin&#8203;.register(object, plugin)</a></li>
-                <li><a href="#unregister">kontra.plugin&#8203;.unregister(object, plugin)</a></li>
+              <ul aria-labelledby="methods">
+                <li>
+                  <a href="#extendObject">
+                    <span>extendObject(kontraObj, properties)</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#registerPlugin">
+                    <span>registerPlugin(kontraObj, pluginObj)</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#unregisterPlugin">
+                    <span>unregisterPlugin(kontraObj, pluginObj)</span>
+                  </a>
+                </li>
               </ul>
             </li>
           </ul>
         </section>
 
-
-
-
-
         <section>
-          <h2 id="best-practices"><a href="#best-practices" class="section-link">Plugin Best Practices<span aria-hidden="true">#</span></a></h2>
+          <h2 id="how-to create a plugin">
+            <a href="#how-to create a plugin" class="section-link">
+              <span>How to Create a Plugin</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
 
-          <ul>
-            <li>Export your plugin object for the consumer to use.</li>
-            <li>You should not register the plugin yourself. Instead, you should expect the consumer of your plugin to register it. This way the consumer can determine the order in which plugins should run.</li>
-            <li>In your plugin docs, remind the user to register the plugin themselves.</li>
-            <li>Gracefully handle errors in in your plugin code. As an idea, you could return <code>null</code> on an error so your plugin does not break the rest of the plugin chain.</li>
-          </ul>
-
-          <pre><code class="language-javascript">(function() {
-  let myPlugin = {
-    beforeAdd() {
-      // ...
-    },
-    afterAdd() {
-      // ...
-    }
-  }
-
-  window.myPlugin = myPlugin;
-  // or
-  module.export = myPlugin;
-  // or
-  export default myPlugin;
-})();</code></pre>
-
-        </section>
-
-
-
-
-
-        <section>
-          <h2 id="extend"><a href="#extend" class="section-link">kontra.plugin&#8203;.extend(object, properties)<span aria-hidden="true">#</span></a></h2>
-
-          <dl>
-            <dt><strong>object</strong> <em>{string}</em></dt>
-            <dd>Kontra object to add extend.</dd>
-            <dt><strong>properties</strong> <em>{object}</em></dt>
-            <dd>Properties to add to the Kontra object.</dd>
-          </dl>
-
-          <p>Safely extend a Kontra object with the provided properties. If the property already exists on the object, your property will not be added.</p>
-
-          <pre><code class="language-javascript">kontra.plugin.extend('vector', {
-  subtract: function(vec) {
-    return kontra.vector(this.x - vec.x, this.y - vec.y);
-  }
-};  // all kontra.vectors will now have a subtract function</code></pre>
-
-        </section>
-
-
-
-
-
-        <section>
-          <h2 id="register"><a href="#register" class="section-link">kontra.plugin&#8203;.register(object, plugin)<span aria-hidden="true">#</span></a></h2>
-
-          <dl>
-            <dt><strong>object</strong> <em>{string}</em></dt>
-            <dd>Kontra object to attach plugin to.</dd>
-            <dt><strong>plugin</strong> <em>{object}</em></dt>
-            <dd>Plugin object with before and after functions.</dd>
-          </dl>
-
-          <p>Register a plugin to run before and/or after any function defined on the Kontra object.</p>
-
-          <pre><code class="language-javascript">// Intercept kontra.vector.add function and run functions before and after it
-let myPlugin = {
-  beforeAdd(vector, vecToAdd) {
-    console.log(`adding {${vecToAdd.x}, ${vecToAdd.y}} vector to {${vector.x}, ${vector.y}}`);
-  },
-  afterAdd(vector, result, vecToAdd) {
-    console.log(`result of add was: {${result.x}, ${result.y}}`);
+          <p>A plugin is an object that defines a set of intercept functions that should be run before or after a Kontra objects functions. These functions allow you to modify the code or change the behavior of the intercepted functions.</p>
+<p>An intercept function is named the same name as the function it will intercept. The function name is also prefixed with <code>before</code> to have the function run before the intercepted function, or <code>after</code> to run after the intercepted function.</p>
+<p>For example, if you wish to add a function to run after a Sprites <code>collidesWidth()</code> function, the name of the intercept function would be <code>afterCollidesWidth</code> (note the capitalization of the <code>collidesWidth</code> function name). <code>beforeCollidesWidth</code> would run before the Sprites <code>collidesWidth()</code> function.</p>
+<p>A plugin can define any number of before and after intercept functions. When the plugin is registered for a Kontra object, only intercept functions that match a function name in the Kontra object will be intercepted.</p>
+<p>As the plugin author, you should not <a href="#registerPlugin">register</a> the plugin yourself. You should only export the plugin object and let the consumer register it.</p>
+<pre><code class="lang-js">// pluginCode.js
+const loggingPlugin = {
+  afterCollidesWith(sprite, result, object) {
+    console.log(&#39;collision between sprites!&#39;);
   }
 };
+export default loggingPlugin;
+</code></pre>
+<pre><code class="lang-js">// consumerCode.js
+import { registerPlugin, Sprite } from &#39;kontra&#39;;
+import loggingPlugin from pluginCode.js;
 
-kontra.plugin.register('vector', myPlugin);</code></pre>
+// have the plugin run for all Sprites
+registerPlugin(Sprite, loggingPlugin);
 
-          <h3>Before functions</h3>
+let sprite1 = Sprite({
+  x: 10,
+  y: 20,
+  width: 10,
+  height: 10
+});
 
-          <p>Before functions run before the intercepted Kontra object function. They are defined by prefixing the function with <code>before</code> and the name of the intercepted function. The parameters passed to the function will be the context the function was called with followed by all parameters passed to the intercepted function.</p>
+let sprite2 = Sprite({
+  x: 15,
+  y: 20,
+  width: 10,
+  height: 10
+});
 
-          <p>Before functions can modify the arguments passed to the intercepted function. To do this, you'll need to return an array that represents the new arguments. You can modify or pass through any argument in this way. If your function does not modify the arguments, you can return <code>null</code>.</p>
+sprite1.collidesWith(sprite2);  //=&gt; &#39;collision between sprites!&#39;; true
+</code></pre>
+        </section>
+        <section>
+          <h2 id="before-intercept functions">
+            <a href="#before-intercept functions" class="section-link">
+              <span>Before Intercept Functions</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
 
-          <p>If multiple before functions are registered for the same intercepted function, they will be run in the order they were registered and will be passed the arguments from the previous before function.</p>
-
-          <pre><code class="language-javascript">let logPlugin = {
-  // `vector` is the vector the `add` function was called on
-  // `vecToAdd` is the vector being passed to the `add` function
-  beforeAdd(vector, vecToAdd) {
-    console.log(`adding {${vecToAdd.x}, ${vecToAdd.y}} vector to {${vector.x}, ${vector.y}}`);
-
-    // don't modify the arguments so return nothing
+          <p>A before intercept function can be used to modify or change the arguments that will be passed to the intercepted function.</p>
+<p>The function will be passed the <code>this</code> context of the intercepted object as well as all arguments of the original call. The function should either return an Array of the arguments if modifying them or return <code>null</code> or nothing if not modifying the arguments.</p>
+<pre><code class="lang-js">class MyObj {
+  add(a, b) {
+    return a + b;
   }
 }
 
-let modifyArgsPlugin = {
-  beforeAdd(vector, vecToAdd) {
-    // modify the parameter being passed to the `add` function
-    let newVector = kontra.vector(10, 20);
-    return [newVector]
+// create a plugin that doubles the arguments before passing
+// them to the original add function
+registerPlugin(MyObj, {
+  beforeAdd(context, a, b) {
+    return [a * 2, b * 2];
+  }
+});
+
+const obj = new MyObj();
+obj.add(1, 2);  //=&gt; 6
+</code></pre>
+<p>Multiple before intercept functions can be registered for the same function. All functions will be run in the order they were registered. The functions return value will be passed to the next function. If the function doesn&#39;t modify the arguments (returned <code>null</code> or nothing) then the functions parameters will be passed to the next function instead.</p>
+<pre><code class="lang-js">class MyObj {
+  add(a, b) {
+    return a + b;
   }
 }
 
-let passThroughArgsPlugin = {
-  beforeAdd(vector, vecToAdd) {
-    // pass through the original argument to the `add` function but also
-    // pass an additional one
-    let newVector = kontra.vector(10, 20);
-    return [vecToAdd, newVector]
+// log the arguments of the call and pass them unchanged to
+// the next plugin
+registerPlugin(MyObj, {
+  beforeAdd(context, a, b) {
+    console.log(`add passed: ${a}, ${b}`);
   }
-}</code></pre>
+});
 
-          <h3>After functions</h3>
+registerPlugin(MyObj, {
+  beforeAdd(context, a, b) {  // receives a=1 and b=2
+    return [a * 2, b * 2];
+  }
+});
 
-          <p>After functions run after the intercepted Kontra object function. They are defined by prefixing the function with <code>after</code> and the name of the intercepted function. The parameters passed to the function will be the context the function was called with, the result of the intercepted function, followed by all parameters passed to the intercepted function.</p>
+const obj = new MyObj();
+obj.add(1, 2);  //=&gt; &#39;add passed: 1, 2&#39;; 6
+</code></pre>
+        </section>
+        <section>
+          <h2 id="after-intercept functions">
+            <a href="#after-intercept functions" class="section-link">
+              <span>After Intercept Functions</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
 
-          <p>After functions can modify the result of the intercepted function. To do this, you return a new value as the result. If your function does not modify the result, you can return <code>null</code>.</p>
-
-          <p>If multiple after functions are registered for the same intercepted function, they will be run in the order they were registered and will be passed the result from the previous after function.</p>
-
-          <pre><code class="language-javascript">let logPlugin = {
-  // `vector` is the vector the `add` function was called on
-  // `result` is the result of the `add` function
-  // `vecToAdd` is the vector being passed to the `add` function
-  afterAdd(vector, result, vecToAdd) {
-    console.log(`result of add was: {${result.x}, ${result.y}}`);
-
-    // don't modify the result so return nothing
+          <p>An after intercept function can be used to modify or change the results of the intercepted function.</p>
+<p>The function will be passed the <code>this</code> context of the intercepted object, the result of the intercepted function, and the final arguments passed to the intercepted function. The function should either return a value if modifying the result or return <code>null</code> or nothing if not modifying the result.</p>
+<pre><code class="lang-js">class MyObj {
+  add(a, b) {
+    return a + b;
   }
 }
 
-let modifyResultPlugin = {
-  afterAdd(vector, result, vecToAdd) {
-    // modify the result of the `add` function
-    return kontra.vector(result.x * 2, result.y * 2);
+// create a plugin that doubles the result
+registerPlugin(MyObj, {
+  afterAdd(context, result, a, b) {
+    return result * 2;
   }
-}</code></pre>
+});
 
+const obj = new MyObj();
+obj.add(1, 2);  //=&gt; 6
+</code></pre>
+<p>Multiple after intercept functions can be registered for the same function. All functions will be run in the order they were registered. Each functions return value will be passed to the next function. If the function doesn&#39;t modify the result (returned <code>null</code> or nothing) then the functions parameters will be passed to the next function instead.</p>
+<pre><code class="lang-js">class MyObj {
+  add(a, b) {
+    return a + b;
+  }
+}
+
+// log the arguments of the call and pass them unchanged to
+// the next plugin
+registerPlugin(MyObj, {
+  afterAdd(context, result, a, b) {
+    console.log(`add passed: ${a}, ${b} and returned ${result}`);
+  }
+});
+
+registerPlugin(MyObj, {
+  afterAdd(context, result, a, b) {  // receives result=3
+    return result * 2;
+  }
+});
+
+const obj = new MyObj();
+obj.add(1, 2);  //=&gt; &#39;add passed: 1, 2 and returned 3&#39;; 6
+</code></pre>
         </section>
 
-
-
-
-
         <section>
-          <h2 id="unregsiter"><a href="#unregsiter" class="section-link">kontra.plugin&#8203;.unregsiter(object, plugin)<span aria-hidden="true">#</span></a></h2>
+          <h2 id="extendObject">
+            <a href="#extendObject" class="section-link">
+              <span>extendObject(kontraObj, properties)</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
 
-          <dl>
-            <dt><strong>object</strong> <em>{string}</em></dt>
-            <dd>Kontra object to attach plugin to.</dd>
-            <dt><strong>plugin</strong> <em>{object}</em></dt>
-            <dd>Plugin object with before and after functions.</dd>
+          <p>Safely extend the functionality of a Kontra object. Any properties that already exist on the Kontra object will not be added.</p>
+<pre><code class="lang-js">import { extendObject, Vector } from &#39;kontra&#39;;
+
+// add a subtract function to all Vectors
+extendObject(Vector, {
+  subtract(vec) {
+    return Vector(this.x - vec.x, this.y - vec.y);
+  }
+});
+</code></pre>
+          <h3 id="title-extendObject"><span class="visually-hidden">extendObject</span> Parameters</span></h3>
+          <dl aria-labelledby="title-extendObject">
+            <dt>
+              <code>kontraObj</code>
+              
+            </dt>
+            <dd><p>Object. Kontra object to extend</p>
+          </dd>
+            <dt>
+              <code>properties</code>
+              
+            </dt>
+            <dd><p>Object. Properties to add.</p>
+          </dd>
           </dl>
+          
+        </section>
+        <section>
+          <h2 id="registerPlugin">
+            <a href="#registerPlugin" class="section-link">
+              <span>registerPlugin(kontraObj, pluginObj)</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
 
-          <p>Unregister a plugin and remove all its before and after functions from the intercepted Kontra object.</p>
+          <p>Register a plugin to run a set of functions before or after the Kontra object functions.</p>
+          <h3 id="title-registerPlugin"><span class="visually-hidden">registerPlugin</span> Parameters</span></h3>
+          <dl aria-labelledby="title-registerPlugin">
+            <dt>
+              <code>kontraObj</code>
+              
+            </dt>
+            <dd><p>Object. Kontra object to attach the plugin to.</p>
+          </dd>
+            <dt>
+              <code>pluginObj</code>
+              
+            </dt>
+            <dd><p>Object. Plugin object with before and after intercept functions.</p>
+          </dd>
+          </dl>
+          
+        </section>
+        <section>
+          <h2 id="unregisterPlugin">
+            <a href="#unregisterPlugin" class="section-link">
+              <span>unregisterPlugin(kontraObj, pluginObj)</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
 
+          <p>Unregister a plugin from a Kontra object.</p>
+          <h3 id="title-unregisterPlugin"><span class="visually-hidden">unregisterPlugin</span> Parameters</span></h3>
+          <dl aria-labelledby="title-unregisterPlugin">
+            <dt>
+              <code>kontraObj</code>
+              
+            </dt>
+            <dd><p>Object. Kontra object to detach plugin from.</p>
+          </dd>
+            <dt>
+              <code>pluginObj</code>
+              
+            </dt>
+            <dd><p>Object. The plugin object that was passed during registration.</p>
+          </dd>
+          </dl>
+          
         </section>
 
       </div>
     </main>
   </div>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/components/prism-javascript.min.js"></script>
+  <script src="../assets/js/navbar.js"></script>
 </body>
 </html>

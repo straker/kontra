@@ -98,6 +98,22 @@ describe('sprite', () => {
       expect(sprite.height).to.equal(20);
     });
 
+    it('should allow user to override with and height of image', () => {
+      let img = new Image();
+      img.width = 10;
+      img.height = 20;
+
+      let sprite = Sprite({
+        image: img,
+        width: 20,
+        height: 40
+      });
+
+      expect(sprite.image).to.equal(img);
+      expect(sprite.width).to.equal(20);
+      expect(sprite.height).to.equal(40);
+    });
+
     it('should set the width and height of the sprite to an animation if passed', () => {
       // simple animation object from spriteSheet
       let animations = {
@@ -505,6 +521,48 @@ describe('sprite', () => {
       sprite2.anchor = {x: 1, y: 0};
 
       expect(sprite1.collidesWith(sprite2)).to.be.true;
+    });
+
+    it('should return null if either sprite is rotated', () => {
+      let sprite1 = Sprite({
+        x: 10,
+        y: 20,
+        width: 10,
+        height: 20,
+        rotation: 1
+      });
+
+      let sprite2 = Sprite({
+        x: 19,
+        y: 39,
+        width: 10,
+        height: 20
+      });
+
+      expect(sprite1.collidesWith(sprite2)).to.equal(null);
+
+      sprite1.rotation = 0;
+      sprite2.rotation = 1;
+
+      expect(sprite1.collidesWith(sprite2)).to.equal(null);
+    });
+
+    it('should work for non-sprite objects', () => {
+      let sprite1 = Sprite({
+        x: 10,
+        y: 20,
+        width: 10,
+        height: 20
+      });
+
+      let obj = {
+        x: 10,
+        y: 20,
+        width: 10,
+        height: 20
+      };
+
+      expect(sprite1.collidesWith(obj)).to.be.true;
     });
 
   });

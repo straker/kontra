@@ -46,16 +46,15 @@ h2, h3, h4, h5, h6 {
   font-weight: normal;
 }
 
-h1 {
+h1, .nav-heading {
   font-size: 2.666rem;   /* 48 / 18 */
   line-height: 3.25rem;  /* 1.625 * 2 */
   font-weight: bold;
   padding-bottom: 0.8125rem;
-  border-bottom: 1px solid currentColor;
-  margin: 0 0 1.312rem 0;
+  margin: 0;
 }
 
-h2 {
+h2, .nav-api-heading {
   font-size: 1.875rem;   /* 30 / 16 */
   line-height: 2.25rem;
   margin-bottom: 1rem;
@@ -97,7 +96,7 @@ li {
 }
 
 dd + dt {
-  margin-top: 1rem;
+  margin-top: 0.75rem;
 }
 
 dd {
@@ -122,6 +121,17 @@ a:visited {
   color: #3e76c2;
 }
 
+/* highlight selected section */
+:target {
+  transform: translateX(20px);
+  border-left-color: #3e76c2;
+}
+section > h2 {
+  border-left: 40px solid white;
+  padding-left: 10px;
+  transition: transform 0.5s ease, border-left-color 0.5s ease;
+  margin-left: -50px;
+}
 
 
 .content {
@@ -146,6 +156,32 @@ main > div {
   max-width: 33.333rem;
 }
 
+.github-corner:hover .octo-arm {
+  animation: octocat-wave 560ms ease-in-out
+}
+
+@keyframes octocat-wave {
+  0%, 100%{
+    transform: rotate(0)
+  }
+  20%, 60% {
+    transform: rotate(-25deg)
+  }
+  40%, 80% {
+    transform: rotate(10deg)
+  }
+}
+
+@media (max-width: 500px) {
+  .github-corner:hover .octo-arm {
+    animation:none
+  }
+
+  .github-corner .octo-arm {
+    animation: octocat-wave 560ms ease-in-out
+  }
+}
+
 .main-nav {
   background: #333333;
   padding: 1.325rem;
@@ -158,8 +194,9 @@ nav {
   padding-right: 14.6%;
 }
 
-.main-nav h1 {
+.nav-heading, .nav-api-heading {
   color: #fdfdfd;
+  display: block;
 }
 
 .main-nav section:first-child {
@@ -277,6 +314,18 @@ code[class*=language-], pre[class*=language-] {
   border-top: 1px solid;
 }
 
+code:not([class]) {
+  background: #f5f2f0;
+  display: inline-block;
+  padding: 0 0.25rem;
+}
+
+.optional {
+  display: inline-block;
+  margin-left: 1rem;
+  padding: 0 0.25rem;
+  font-style: italic;
+}
 
 
 /*
@@ -299,7 +348,7 @@ label input {
   content: ')';
 }
 
-#download {
+/*#download {
   display: inline-block;
   position: absolute;
   right: 0;
@@ -318,7 +367,7 @@ label input {
 
 #download:hover {
 
-}
+}*/
 
 .code-section {
   position: relative;
@@ -377,6 +426,10 @@ dd > dl {
   grid-template-columns: repeat(2, 1fr);
   text-align: center;
   list-style: none;
+}
+
+.games a {
+  display: block;
 }
 
 .games li {
@@ -464,11 +517,11 @@ nav {
   margin: 0;
   padding: 0;
   list-style: none;
+  overflow-y: hidden;
 }
 
-h1 {
+.nav-heading {
   margin: 0;
-  padding: 0;
   border: 0;
 }
 
@@ -478,7 +531,7 @@ h1 {
   list-style: none;
 }
 
-#menu h2 {
+#menu .nav-api-heading {
   margin: 1.625rem 0 0.5rem;
   padding-bottom: 0.5rem;
   border-bottom: 1px solid #fdfdfd;
@@ -486,10 +539,14 @@ h1 {
   margin-top: 3.25rem;
 }
 
-.menu-expanded h1 {
+.menu-expanded .nav-heading {
   padding-bottom: 0.8125rem;
   border-bottom: 1px solid #fdfdfd;
   margin: 0 0 1.312rem 0;
+}
+
+.scroll-indicator {
+  display: none;
 }
 
 @media screen and (min-width: 620px) {
@@ -501,11 +558,15 @@ h1 {
     overflow-y: scroll;
   }
 
+  #menu {
+    overflow-y: initial;
+  }
+
   .menu-button {
     display: none;
   }
 
-  .main-nav h1 {
+  .main-nav .nav-heading {
     padding-bottom: 0.8125rem;
     border-bottom: 1px solid #fdfdfd;
     margin: 0 0 1.312rem 0;

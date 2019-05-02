@@ -1,12 +1,57 @@
+/**
+ * A fast and memory efficient [object pool](https://gameprogrammingpatterns.com/object-pool.html) for sprite reuse. Perfect for particle systems or SHUMPs. The pool starts out with just one object, but will grow in size to accommodate as many objects as are needed.
+ *
+ * <canvas width="600" height="200" id="pool-example"></canvas>
+ * <script src="../assets/js/pool.js"></script>
+ * @class Pool
+ *
+ * @param {Object} properties - Properties of the pool.
+ * @param {Function} properties.create - Function that returns a new object to be added to the pool when there are no more alive objects.
+ * @param {Number} [properties.maxSize=1024] - The maximum number of objects allowed in the pool. The pool will never grow beyond this size.
+ */
 class Pool {
+
   /**
-   * Object pool. The pool will grow in size to accommodate as many objects as are needed.
-   * Unused items are at the front of the pool and in use items are at the end of the pool.
+   * To use the pool, you must pass the `create()` function argument, which should return a new kontra.Sprite or object. This object will be added to the pool every time there are no more alive objects.
    *
-   * @param {object} properties - Properties of the pool.
-   * @param {function} properties.create - Function that returns the object to use in the pool.
-   * @param {number} [properties.maxSize=1024] - The maximum size that the pool will grow to.
+   * The object must implement the functions `update()`, `init()`, and `isAlive()`. If one of these functions is missing the pool will throw an error. kontra.Sprite defines these functions for you.
+   *
+   * An object is available for reuse when its `isAlive()` function returns `false`. For a sprite, this is typically when its ttl is `0`.
+   *
+   * When you want an object from the pool, use the pools [get()](#get) function and pass it any properties you want the newly initialized object to have.
+   *
+   * ```js
+   * let pool = Pool({
+   *   // create a new sprite every time the pool needs a new object
+   *   create: Sprite
+   * });
+   *
+   * // properties will be passed to the sprites init() function
+   * pool.get({
+   *   x: 100,
+   *   y: 200,
+   *   width: 20,
+   *   height: 40,
+   *   color: 'red',
+   *   ttl: 60
+   * });
+   * ```
+   *
+   * When you want to update or render all alive objects in the pool, use the pools [update()](#update) and [render()](#render) functions.
+   *
+   * ```js
+   * let loop = GameLoop({
+   *   update: function() {
+   *     pool.update();
+   *   },
+   *   render: function() {
+   *     pool.render();
+   *   }
+   * });
+   * ```
+   * @sectionName Basic Use
    */
+
   constructor({create, maxSize = 1024} = {}) {
 
     // check for the correct structure of the objects added to pools so we know that the
@@ -26,18 +71,53 @@ class Pool {
     this._c = create;
     this._i = 0;
 
-    // start the pool with an object
-    this.objects = [create()];
+    /**
+     * All objects currently in the pool, both alive and not alive.
+     * @memberof Pool
+     * @property {Object[]} objects
+     */
+    this.objects = [create()]; // start the pool with an object
+
+    /**
+     * The number of alive objects.
+     * @memberof Pool
+     * @property {Number} size
+     */
     this.size = 1;
-    this.maxSize = maxSize || 1024;
+
+    /**
+     * The maximum number of objects allowed in the pool. The pool will never grow beyond this size.
+     * @memberof Pool
+     * @property {Number} maxSize
+     */
+    this.maxSize = maxSize;
   }
 
   /**
-   * Get an object from the pool.
+   * Get and return an object from the pool. The properties parameter will be passed directly to the objects `init()` function. If you're using a kontra.Sprite, you should also pass the `ttl` property to designate how many frames you want the object to be alive for.
    *
-   * @param {object} properties - Properties to pass to object.init().
+   * If you want to control when the sprite is ready for reuse, pass `Infinity` for `ttl`. You'll need to set the sprites `ttl` to `0` when you're ready for the sprite to be reused.
    *
-   * @returns {object}
+   * ```js
+   * let sprite = pool.get({
+   *   // the object will get these properties and values
+   *   x: 100,
+   *   y: 200,
+   *   width: 20,
+   *   height: 40,
+   *   color: 'red',
+   *
+   *   // pass Infinity for ttl to prevent the object from being reused
+   *   // until you set it back to 0
+   *   ttl: Infinity
+   * });
+   * ```
+   * @memberof Pool
+   * @function get
+   *
+   * @param {Object} properties - Properties to pass to the objects `init()` function.
+   *
+   * @returns {Object} The newly initialized object.
    */
   get(properties = {}) {
     // the pool is out of objects if the first object is in use and it can't grow
@@ -64,16 +144,20 @@ class Pool {
   }
 
   /**
-   * Return all objects that are alive from the pool.
+   * Returns an array of all alive objects. Useful if you need to do special processing on all alive objects outside of the pool, such as add all alive objects to a kontra.Quadtree.
+   * @memberof Pool
+   * @function getAliveObjects
    *
-   * @returns {object[]}
+   * @returns {Object[]} An Array of all alive objects.
    */
   getAliveObjects() {
     return this.objects.slice(this.objects.length - this._i);
   }
 
   /**
-   * Clear the object pool.
+   * Clear the object pool. Removes all objects from the pool and resets its [size](#size) to 1.
+   * @memberof Pool
+   * @function clear
    */
   clear() {
     this._i = this.objects.length = 0;
@@ -82,9 +166,11 @@ class Pool {
   }
 
   /**
-   * Update all alive pool objects.
+   * Update all alive objects in the pool by calling the objects `update()` function. This function also manages when each object should be recycled, so it is recommended that you do not call the objects `update()` function outside of this function.
+   * @memberof Pool
+   * @function update
    *
-   * @param {number} dt - Time since last update.
+   * @param {Number} [dt] - Time since last update.
    */
   update(dt) {
     let i = this.size - 1;
@@ -119,7 +205,9 @@ class Pool {
   }
 
   /**
-   * render all alive pool objects.
+   * Render all alive objects in the pool by calling the objects `render()` function.
+   * @memberof Pool
+   * @function render
    */
   render() {
     let index = Math.max(this.objects.length - this._i, 0);

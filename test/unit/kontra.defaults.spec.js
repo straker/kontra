@@ -10,9 +10,9 @@ describe('kontra.defaults', () => {
   });
 
   it('should add assets api', () => {
-    expect(kontra.images).to.exist;
-    expect(kontra.audio).to.exist;
-    expect(kontra.data).to.exist;
+    expect(kontra.imageAssets).to.exist;
+    expect(kontra.audioAssets).to.exist;
+    expect(kontra.dataAssets).to.exist;
     expect(kontra.setImagePath).to.exist;
     expect(kontra.setAudioPath).to.exist;
     expect(kontra.setDataPath).to.exist;

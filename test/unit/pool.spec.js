@@ -63,6 +63,14 @@ describe('pool', () => {
       expect(func).to.throw();
     });
 
+    it('should default maxSize to 1024', () => {
+      let pool = Pool({
+        create: sprite
+      });
+
+      expect(pool.maxSize).to.equal(1024);
+    });
+
   });
 
 

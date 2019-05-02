@@ -70,8 +70,8 @@
 
         <p>A tile engine for managing and drawing tilesets.</p>
 <figure>
-  <a href="../assets/imgs/mapPack_tilesheet.png">
-    <img src="../assets/imgs/mapPack_tilesheet.png" alt="Tileset to create an overworld map in various seasons.">
+  <a href="assets/imgs/mapPack_tilesheet.png">
+    <img src="assets/imgs/mapPack_tilesheet.png" alt="Tileset to create an overworld map in various seasons.">
   </a>
   <figcaption>Tileset image courtesy of <a href="https://kenney.nl/assets">Kenney</a>.</figcaption>
 </figure>
@@ -317,7 +317,7 @@
 <pre><code class="language-javascript">import { TileEngine } from &#x27;kontra&#x27;;
 
 let img &#x3D; new Image();
-img.src &#x3D; &#x27;../assets/imgs/mapPack_tilesheet.png&#x27;;
+img.src &#x3D; &#x27;assets/imgs/mapPack_tilesheet.png&#x27;;
 img.onload &#x3D; function() {
   let tileEngine &#x3D; TileEngine({
     // tile size
@@ -361,7 +361,7 @@ img.onload &#x3D; function() {
 let { TileEngine } = kontra;
 // exclude-code:end
 let img = new Image();
-img.src = '../assets/imgs/mapPack_tilesheet.png';
+img.src = 'assets/imgs/mapPack_tilesheet.png';
 img.onload = function() {
   let tileEngine = TileEngine({
     // tile size
@@ -412,9 +412,9 @@ img.onload = function() {
 <canvas id="game-canvas-6"></canvas>
 <pre><code class="language-javascript">import { load, TileEngine, dataAssets } from &#x27;kontra&#x27;;
 
-load(&#x27;../assets/imgs/mapPack_tilesheet.png&#x27;, &#x27;../assets/data/tile_engine_basic.json&#x27;)
+load(&#x27;assets/imgs/mapPack_tilesheet.png&#x27;, &#x27;assets/data/tile_engine_basic.json&#x27;)
   .then(assets &#x3D;&gt; {
-    let tileEngine &#x3D; TileEngine(dataAssets[&#x27;../assets/data/tile_engine_basic&#x27;]);
+    let tileEngine &#x3D; TileEngine(dataAssets[&#x27;assets/data/tile_engine_basic&#x27;]);
     tileEngine.render();
   });</code></pre>
 <script>(function() {
@@ -426,9 +426,9 @@ load(&#x27;../assets/imgs/mapPack_tilesheet.png&#x27;, &#x27;../assets/data/tile
   // exclude-code:start
 let { TileEngine, load, dataAssets } = kontra;
 // exclude-code:end
-load('../assets/imgs/mapPack_tilesheet.png', '../assets/data/tile_engine_basic.json')
+load('assets/imgs/mapPack_tilesheet.png', 'assets/data/tile_engine_basic.json')
   .then(assets => {
-    let tileEngine = TileEngine(dataAssets['../assets/data/tile_engine_basic']);
+    let tileEngine = TileEngine(dataAssets['assets/data/tile_engine_basic']);
     // exclude-code:start
     tileEngine.context = context;
     // exclude-code:end
@@ -448,9 +448,9 @@ load('../assets/imgs/mapPack_tilesheet.png', '../assets/data/tile_engine_basic.j
 <canvas id="game-canvas-7"></canvas>
 <pre><code class="language-javascript">import { load, TileEngine, dataAssets, GameLoop } from &#x27;kontra&#x27;;
 
-load(&#x27;../assets/imgs/mapPack_tilesheet.png&#x27;, &#x27;../assets/data/tile_engine_camera.json&#x27;)
+load(&#x27;assets/imgs/mapPack_tilesheet.png&#x27;, &#x27;assets/data/tile_engine_camera.json&#x27;)
   .then(function() {
-    let tileEngine &#x3D; TileEngine(dataAssets[&#x27;../assets/data/tile_engine_camera&#x27;]);
+    let tileEngine &#x3D; TileEngine(dataAssets[&#x27;assets/data/tile_engine_camera&#x27;]);
 
     let sx &#x3D; 1;
     let loop &#x3D; GameLoop({
@@ -477,9 +477,9 @@ load(&#x27;../assets/imgs/mapPack_tilesheet.png&#x27;, &#x27;../assets/data/tile
   // exclude-code:start
 let { TileEngine, load, dataAssets, GameLoop } = kontra;
 // exclude-code:end
-load('../assets/imgs/mapPack_tilesheet.png', '../assets/data/tile_engine_camera.json')
+load('assets/imgs/mapPack_tilesheet.png', 'assets/data/tile_engine_camera.json')
   .then(function() {
-    let tileEngine = TileEngine(dataAssets['../assets/data/tile_engine_camera']);
+    let tileEngine = TileEngine(dataAssets['assets/data/tile_engine_camera']);
     // exclude-code:start
     tileEngine.context = context;
     // exclude-code:end

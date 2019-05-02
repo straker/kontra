@@ -2,7 +2,7 @@ var kontra = (function () {
 'use strict';
 
 /**
- * A simple event system, mostly created to support [Plugins](/api/plugin). Allows you to hook into Kontra lifecycle events or create your own.
+ * A simple event system, mostly created to support [Plugins](api/plugin). Allows you to hook into Kontra lifecycle events or create your own.
  *
  * ```js
  * import { on, off, emit } from 'kontra';
@@ -150,7 +150,7 @@ function init(canvas) {
  * import { SpriteSheet, Animation } from 'kontra';
  *
  * let image = new Image();
- * image.src = '../assets/imgs/character_walk_sheet.png';
+ * image.src = 'assets/imgs/character_walk_sheet.png';
  * image.onload = function() {
  *   let spriteSheet = SpriteSheet({
  *     image: image,
@@ -285,7 +285,7 @@ class Animation {
    * @param {Number} properties.y - Y position to draw the animation.
    * @param {Number} [properties.width] - width of the sprite. Defaults to [Animation.width](#width).
    * @param {Number} [properties.height] - height of the sprite. Defaults to [Animation.height](#height).
-   * @param {Canvas​Rendering​Context2D} [properties.context] - The context the animation should draw to. Defaults to [core.getContext()](/api/core#getContext).
+   * @param {Canvas​Rendering​Context2D} [properties.context] - The context the animation should draw to. Defaults to [core.getContext()](api/core#getContext).
    */
   render({x, y, width = this.width, height = this.height, context = getContext()} = {}) {
 
@@ -317,8 +317,8 @@ animationFactory.class = Animation;
  * import { load } from 'kontra';
  *
  * load(
- *   '../assets/imgs/character.png',
- *   '../assets/data/tile_engine_basic.json',
+ *   'assets/imgs/character.png',
+ *   'assets/data/tile_engine_basic.json',
  *   ['/audio/music.ogg', '/audio/music.mp3']
  * ).then(function(assets) {
  *   // all assets have loaded
@@ -414,13 +414,13 @@ function getCanPlay(audio) {
  * ```js
  * import { load, setImagePath, imageAssets } from 'kontra';
  *
- * load('../assets/imgs/character.png').then(function() {
+ * load('assets/imgs/character.png').then(function() {
  *   // Image asset can be accessed by both
- *   // name: imageAssets['../assets/imgs/character']
- *   // path: imageAssets['../assets/imgs/character.png']
+ *   // name: imageAssets['assets/imgs/character']
+ *   // path: imageAssets['assets/imgs/character.png']
  * });
  *
- * setImagePath('../assets/imgs');
+ * setImagePath('assets/imgs');
  * load('character_walk_sheet.png').then(function() {
  *   // Image asset can be accessed by both
  *   // name: imageAssets['character_walk_sheet']
@@ -460,13 +460,13 @@ let audioAssets = {};
  * ```js
  * import { load, setDataPath, dataAssets } from 'kontra';
  *
- * load('../assets/data/file.txt').then(function() {
+ * load('assets/data/file.txt').then(function() {
  *   // Audio asset can be accessed by both
- *   // name: dataAssets['../assets/data/file']
- *   // path: dataAssets['../assets/data/file.txt']
+ *   // name: dataAssets['assets/data/file']
+ *   // path: dataAssets['assets/data/file.txt']
  * });
  *
- * setDataPath('../assets/data');
+ * setDataPath('assets/data');
  * load('info.json').then(function() {
  *   // Audio asset can be accessed by both
  *   // name: dataAssets['info']
@@ -656,7 +656,7 @@ function loadAudio(url) {
  * ```js
  * import { loadData } from 'kontra';
  *
- * loadData('../assets/data/tile_engine_basic.json').then(function(data) {
+ * loadData('assets/data/tile_engine_basic.json').then(function(data) {
  *   // data contains the parsed JSON data
  * })
  * ```
@@ -694,8 +694,8 @@ function loadData(url) {
  * import { load } from 'kontra';
  *
  * load(
- *   '../assets/imgs/character.png',
- *   '../assets/data/tile_engine_basic.json',
+ *   'assets/imgs/character.png',
+ *   'assets/data/tile_engine_basic.json',
  *   ['/audio/music.ogg', '/audio/music.mp3']
  * ).then(function(assets) {
  *   // all assets have loaded
@@ -1836,7 +1836,7 @@ function pointerPressed(button) {
  * A fast and memory efficient [object pool](https://gameprogrammingpatterns.com/object-pool.html) for sprite reuse. Perfect for particle systems or SHUMPs. The pool starts out with just one object, but will grow in size to accommodate as many objects as are needed.
  *
  * <canvas width="600" height="200" id="pool-example"></canvas>
- * <script src="../assets/js/pool.js"></script>
+ * <script src="assets/js/pool.js"></script>
  * @class Pool
  *
  * @param {Object} properties - Properties of the pool.
@@ -2118,7 +2118,7 @@ The quadrant indices are numbered as follows (following a z-order curve):
  * A 2D [spatial partitioning](https://gameprogrammingpatterns.com/spatial-partition.html) data structure. Use it to quickly group objects by their position for faster access and collision checking.
  *
  * <canvas width="600" height="200" id="quadtree-example"></canvas>
- * <script src="../assets/js/quadtree.js"></script>
+ * <script src="assets/js/quadtree.js"></script>
  * @class Quadtree
  *
  * @param {Object} properties - Properties of the quadtree.
@@ -2531,7 +2531,7 @@ vectorFactory.class = Vector;
  * @param {Number} [properties.rotation=0] - Sprites rotation around the origin in radians.
  * @param {Number} [properties.anchor={x:0,y:0}] - The x and y origin of the sprite. {x:0, y:0} is the top left corner of the sprite, {x:1, y:1} is the bottom right corner.
  *
- * @param {Canvas​Rendering​Context2D} [properties.context] - The context the sprite should draw to. Defaults to [core.getContext()](/api/core#getContext).
+ * @param {Canvas​Rendering​Context2D} [properties.context] - The context the sprite should draw to. Defaults to [core.getContext()](api/core#getContext).
  *
  * @param {Image|HTMLCanvasElement} [properties.image] - Use an image to draw the sprite.
  * @param {Object} [properties.animations] - An object of [Animations](animation) from a kontra.Spritesheet to animate the sprite.
@@ -2584,7 +2584,7 @@ class Sprite {
    * // exclude-script:end
    *
    * let image = new Image();
-   * image.src = '../assets/imgs/character.png';
+   * image.src = 'assets/imgs/character.png';
    * image.onload = function() {
    *   let sprite = Sprite({
    *     x: 300,
@@ -2617,7 +2617,7 @@ class Sprite {
    * // exclude-script:end
    *
    * let image = new Image();
-   * image.src = '../assets/imgs/character_walk_sheet.png';
+   * image.src = 'assets/imgs/character_walk_sheet.png';
    * image.onload = function() {
    *
    *   // use spriteSheet to create animations from an image
@@ -3305,8 +3305,8 @@ function parseFrames(consecutiveFrames) {
  * A sprite sheet to animate a sequence of images. Used to create [animation sprites](./Sprite#animation-sprite).
  *
  * <figure>
- *   <a href="../assets/imgs/character_walk_sheet.png">
- *     <img src="../assets/imgs/character_walk_sheet.png" alt="11 frames of a walking pill-like alien wearing a space helmet.">
+ *   <a href="assets/imgs/character_walk_sheet.png">
+ *     <img src="assets/imgs/character_walk_sheet.png" alt="11 frames of a walking pill-like alien wearing a space helmet.">
  *   </a>
  *   <figcaption>Sprite sheet image courtesy of <a href="https://kenney.nl/assets">Kenney</a>.</figcaption>
  * </figure>
@@ -3317,7 +3317,7 @@ function parseFrames(consecutiveFrames) {
  * import { Sprite, SpriteSheet } from 'kontra';
  *
  * let image = new Image();
- * image.src = '../assets/imgs/character_walk_sheet.png';
+ * image.src = 'assets/imgs/character_walk_sheet.png';
  * image.onload = function() {
  *   let spriteSheet = SpriteSheet({
  *     image: image,
@@ -3400,7 +3400,7 @@ class SpriteSheet {
    * import { Sprite, SpriteSheet } from 'kontra';
    *
    * let image = new Image();
-   * image.src = '../assets/imgs/character_walk_sheet.png';
+   * image.src = 'assets/imgs/character_walk_sheet.png';
    * image.onload = function() {
    *
    *   let spriteSheet = SpriteSheet({
@@ -3542,8 +3542,8 @@ function getStoreItem(key) {
  * A tile engine for managing and drawing tilesets.
  *
  * <figure>
- *   <a href="../assets/imgs/mapPack_tilesheet.png">
- *     <img src="../assets/imgs/mapPack_tilesheet.png" alt="Tileset to create an overworld map in various seasons.">
+ *   <a href="assets/imgs/mapPack_tilesheet.png">
+ *     <img src="assets/imgs/mapPack_tilesheet.png" alt="Tileset to create an overworld map in various seasons.">
  *   </a>
  *   <figcaption>Tileset image courtesy of <a href="https://kenney.nl/assets">Kenney</a>.</figcaption>
  * </figure>
@@ -3554,7 +3554,7 @@ function getStoreItem(key) {
  * @param {Number} properties.height - Height of the tile map (in number of tiles).
  * @param {Number} properties.tilewidth - Width of a single tile (in pixels).
  * @param {Number} properties.tileheight - Height of a single tile (in pixels).
- * @param {Canvas​Rendering​Context2D} [properties.context] - The context the tile engine should draw to. Defaults to [core.getContext()](/api/core#getContext)
+ * @param {Canvas​Rendering​Context2D} [properties.context] - The context the tile engine should draw to. Defaults to [core.getContext()](api/core#getContext)
  *
  * @param {Object[]} properties.tilesets - Array of tileset objects.
  * @param {Number} properties.tilesetN.firstgid - First tile index of the tileset. The first tileset will have a firstgid of 1 as 0 represents an empty tile.
@@ -3597,7 +3597,7 @@ function getStoreItem(key) {
  * // exclude-script:end
  *
  * let img = new Image();
- * img.src = '../assets/imgs/mapPack_tilesheet.png';
+ * img.src = 'assets/imgs/mapPack_tilesheet.png';
  * img.onload = function() {
  *   let tileEngine = TileEngine({
  *     // tile size
@@ -3650,9 +3650,9 @@ function getStoreItem(key) {
  * import { load, TileEngine, dataAssets } from 'kontra';
  * // exclude-script:end
  *
- * load('../assets/imgs/mapPack_tilesheet.png', '../assets/data/tile_engine_basic.json')
+ * load('assets/imgs/mapPack_tilesheet.png', 'assets/data/tile_engine_basic.json')
  *   .then(assets => {
- *     let tileEngine = TileEngine(dataAssets['../assets/data/tile_engine_basic']);
+ *     let tileEngine = TileEngine(dataAssets['assets/data/tile_engine_basic']);
  *     // exclude-code:start
  *     tileEngine.context = context;
  *     // exclude-code:end
@@ -3674,9 +3674,9 @@ function getStoreItem(key) {
  * import { load, TileEngine, dataAssets, GameLoop } from 'kontra';
  * // exclude-script:end
  *
- * load('../assets/imgs/mapPack_tilesheet.png', '../assets/data/tile_engine_camera.json')
+ * load('assets/imgs/mapPack_tilesheet.png', 'assets/data/tile_engine_camera.json')
  *   .then(function() {
- *     let tileEngine = TileEngine(dataAssets['../assets/data/tile_engine_camera']);
+ *     let tileEngine = TileEngine(dataAssets['assets/data/tile_engine_camera']);
  *     // exclude-code:start
  *     tileEngine.context = context;
  *     // exclude-code:end

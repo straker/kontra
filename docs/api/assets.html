@@ -71,8 +71,8 @@
 <pre><code class="lang-js">import { load } from &#39;kontra&#39;;
 
 load(
-  &#39;../assets/imgs/character.png&#39;,
-  &#39;../assets/data/tile_engine_basic.json&#39;,
+  &#39;assets/imgs/character.png&#39;,
+  &#39;assets/data/tile_engine_basic.json&#39;,
   [&#39;/audio/music.ogg&#39;, &#39;/audio/music.mp3&#39;]
 ).then(function(assets) {
   // all assets have loaded
@@ -189,13 +189,13 @@ load(&#39;sound.ogg&#39;).then(function() {
           <p>Object of all loaded data assets by both file name and path. If the base <a href="#setDataPath">data path</a> was set before the data was loaded, the file name and path will not include the base data path.</p>
 <pre><code class="lang-js">import { load, setDataPath, dataAssets } from &#39;kontra&#39;;
 
-load(&#39;../assets/data/file.txt&#39;).then(function() {
+load(&#39;assets/data/file.txt&#39;).then(function() {
   // Audio asset can be accessed by both
-  // name: dataAssets[&#39;../assets/data/file&#39;]
-  // path: dataAssets[&#39;../assets/data/file.txt&#39;]
+  // name: dataAssets[&#39;assets/data/file&#39;]
+  // path: dataAssets[&#39;assets/data/file.txt&#39;]
 });
 
-setDataPath(&#39;../assets/data&#39;);
+setDataPath(&#39;assets/data&#39;);
 load(&#39;info.json&#39;).then(function() {
   // Audio asset can be accessed by both
   // name: dataAssets[&#39;info&#39;]
@@ -215,13 +215,13 @@ load(&#39;info.json&#39;).then(function() {
           <p>Object of all loaded image assets by both file name and path. If the base <a href="#setImagePath">image path</a> was set before the image was loaded, the file name and path will not include the base image path.</p>
 <pre><code class="lang-js">import { load, setImagePath, imageAssets } from &#39;kontra&#39;;
 
-load(&#39;../assets/imgs/character.png&#39;).then(function() {
+load(&#39;assets/imgs/character.png&#39;).then(function() {
   // Image asset can be accessed by both
-  // name: imageAssets[&#39;../assets/imgs/character&#39;]
-  // path: imageAssets[&#39;../assets/imgs/character.png&#39;]
+  // name: imageAssets[&#39;assets/imgs/character&#39;]
+  // path: imageAssets[&#39;assets/imgs/character.png&#39;]
 });
 
-setImagePath(&#39;../assets/imgs&#39;);
+setImagePath(&#39;assets/imgs&#39;);
 load(&#39;character_walk_sheet.png&#39;).then(function() {
   // Image asset can be accessed by both
   // name: imageAssets[&#39;character_walk_sheet&#39;]
@@ -242,8 +242,8 @@ load(&#39;character_walk_sheet.png&#39;).then(function() {
 <pre><code class="lang-js">import { load } from &#39;kontra&#39;;
 
 load(
-  &#39;../assets/imgs/character.png&#39;,
-  &#39;../assets/data/tile_engine_basic.json&#39;,
+  &#39;assets/imgs/character.png&#39;,
+  &#39;assets/data/tile_engine_basic.json&#39;,
   [&#39;/audio/music.ogg&#39;, &#39;/audio/music.mp3&#39;]
 ).then(function(assets) {
   // all assets have loaded
@@ -312,7 +312,7 @@ loadAudio([
 <p>Once loaded, the asset will be accessible on the the <a href="#dataAssets">dataAssets</a> property.</p>
 <pre><code class="lang-js">import { loadData } from &#39;kontra&#39;;
 
-loadData(&#39;../assets/data/tile_engine_basic.json&#39;).then(function(data) {
+loadData(&#39;assets/data/tile_engine_basic.json&#39;).then(function(data) {
   // data contains the parsed JSON data
 })
 </code></pre>

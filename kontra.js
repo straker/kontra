@@ -308,6 +308,7 @@ function animationFactory(properties) {
   return new Animation(properties);
 }
 animationFactory.prototype = Animation.prototype;
+animationFactory.class = Animation;
 
 /**
  * A promise based asset loader for loading images, audio, and data files.
@@ -2056,6 +2057,7 @@ function poolFactory(properties) {
   return new Pool(properties);
 }
 poolFactory.prototype = Pool.prototype;
+poolFactory.class = Pool;
 
 /**
  * Determine which subnodes the object intersects with
@@ -2406,6 +2408,7 @@ function quadtreeFactory(properties) {
   return new Quadtree(properties);
 }
 quadtreeFactory.prototype = Quadtree.prototype;
+quadtreeFactory.class = Quadtree;
 
 /**
  * A simple 2d vector object.
@@ -2506,6 +2509,7 @@ function vectorFactory(x, y) {
   return new Vector(x, y);
 }
 vectorFactory.prototype = Vector.prototype;
+vectorFactory.class = Vector;
 
 /**
  * A versatile way to update and draw your game objects. It can handle simple rectangles, images, and sprite sheet animations. It can be used for your main player object as well as tiny particles in a particle engine.
@@ -2696,6 +2700,21 @@ class Sprite {
    * // exclude-code:end
    *
    * sprite.render();
+   */
+
+  /**
+   * If you want to extend a Sprite, you can do so by extending the Sprite class. The one caveat is that `Sprite` is not the Sprite class, but actually is a factory function.
+   *
+   * To extend the Sprite class, use the `.class` property of the constructor.
+   *
+   * ```js
+   * import { Sprite } from kontra;
+   *
+   * class CustomSprite extends Sprite.class {
+   *   // ...
+   * }
+   * ```
+   * @sectionName Extending a Sprite
    */
 
   constructor(properties) {
@@ -3176,7 +3195,9 @@ class Sprite {
    * If you override the sprites `render()` function with your own render function, you can call this function to draw the sprite normally.
    *
    * ```js
-   * let sprite = kontra.sprite({
+   * import { Sprite } from 'kontra';
+   *
+   * let sprite = Sprite({
    *  x: 290,
    *  y: 80,
    *  color: 'red',
@@ -3239,6 +3260,7 @@ function spriteFactory(properties) {
   return new Sprite(properties);
 }
 spriteFactory.prototype = Sprite.prototype;
+spriteFactory.class = Sprite;
 
 /**
  * Parse a string of consecutive frames.
@@ -3465,6 +3487,7 @@ function spriteSheetFactory(properties) {
   return new SpriteSheet(properties);
 }
 spriteSheetFactory.prototype = SpriteSheet.prototype;
+spriteSheetFactory.class = SpriteSheet;
 
 /**
  * A simple interface to LocalStorage based on [store.js](https://github.com/marcuswestin/store.js), whose sole purpose is to ensure that any keys you save to LocalStorage come out the same type as when they went in.

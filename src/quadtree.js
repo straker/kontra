@@ -349,3 +349,4 @@ export default function quadtreeFactory(properties) {
   return new Quadtree(properties);
 }
 quadtreeFactory.prototype = Quadtree.prototype;
+quadtreeFactory.class = Quadtree;

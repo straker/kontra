@@ -97,3 +97,4 @@ export default function vectorFactory(x, y) {
   return new Vector(x, y);
 }
 vectorFactory.prototype = Vector.prototype;
+vectorFactory.class = Vector;

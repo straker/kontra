@@ -3,11 +3,18 @@
 <head>
   <title>Kontra.js – Sprite</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <base href="/">
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/themes/prism.min.css">
-  <link rel="stylesheet" href="../assets/styles.css">
-
-  <script src="../assets/js/kontra.js"></script>
+  <link rel="stylesheet" href="assets/styles.css">
+  <script type="text/javascript">
+  // adjust path based on location (github pages required kontra url)
+  if (window.location.host.indexOf('localhost') === -1) {
+    let base = document.querySelector('base');
+    base.setAttribute('href', 'https://straker.github.io/kontra/');
+  }
+  </script>
+  <script src="assets/js/kontra.js"></script>
 </head>
 <body>
   <div class="content">
@@ -22,30 +29,30 @@
              css list-style: none is set
              @see https://web-a11y.slack.com/archives/C042TSFGN/p1501699529181172 -->
         <ul id="menu" role="list">
-          <li><a href="/" >Introduction</a></li>
-          <li><a href="/getting-started" >Getting Started</a></li>
-          <li><a href="/download" >Download</a></li>
-          <li><a href="/tutorials" >Tutorials</a></li>
-          <li><a href="/made-with-kontra" >Made With Kontra</a></li>
+          <li><a href="." >Introduction</a></li>
+          <li><a href="getting-started" >Getting Started</a></li>
+          <li><a href="download" >Download</a></li>
+          <li><a href="tutorials" >Tutorials</a></li>
+          <li><a href="made-with-kontra" >Made With Kontra</a></li>
 
           <li>
             <span id="api" class="nav-api-heading">API</span>
             <ul aria-labelledby="api">
-              <li><a href="/api/animation" >Animation</a></li>
-              <li><a href="/api/assets" >Assets</a></li>
-              <li><a href="/api/core" >Core</a></li>
-              <li><a href="/api/events" >Events</a></li>
-              <li><a href="/api/gameloop" >GameLoop</a></li>
-              <li><a href="/api/keyboard" >Keyboard</a></li>
-              <li><a href="/api/plugin" >Plugin</a></li>
-              <li><a href="/api/pointer" >Pointer</a></li>
-              <li><a href="/api/pool" >Pool</a></li>
-              <li><a href="/api/quadtree" >Quadtree</a></li>
-              <li><a href="/api/sprite" aria-current="page">Sprite</a></li>
-              <li><a href="/api/spritesheet" >SpriteSheet</a></li>
-              <li><a href="/api/store" >Store</a></li>
-              <li><a href="/api/tileengine" >TileEngine</a></li>
-              <li><a href="/api/vector" >Vector</a></li>
+              <li><a href="api/animation" >Animation</a></li>
+              <li><a href="api/assets" >Assets</a></li>
+              <li><a href="api/core" >Core</a></li>
+              <li><a href="api/events" >Events</a></li>
+              <li><a href="api/gameloop" >GameLoop</a></li>
+              <li><a href="api/keyboard" >Keyboard</a></li>
+              <li><a href="api/plugin" >Plugin</a></li>
+              <li><a href="api/pointer" >Pointer</a></li>
+              <li><a href="api/pool" >Pool</a></li>
+              <li><a href="api/quadtree" >Quadtree</a></li>
+              <li><a href="api/sprite" aria-current="page">Sprite</a></li>
+              <li><a href="api/spritesheet" >SpriteSheet</a></li>
+              <li><a href="api/store" >Store</a></li>
+              <li><a href="api/tileengine" >TileEngine</a></li>
+              <li><a href="api/vector" >Vector</a></li>
             </ul>
           </li>
         </ul>
@@ -145,7 +152,7 @@
             <code>properties.context</code>
             <span class="optional">Optional</span>
           </dt>
-          <dd><p>Canvas​Rendering​Context2D. The context the sprite should draw to. Defaults to <a href="/api/core#getContext">core.getContext()</a>.</p>
+          <dd><p>Canvas​Rendering​Context2D. The context the sprite should draw to. Defaults to <a href="api/core#getContext">core.getContext()</a>.</p>
         </dd>
           <dt>
             <code>properties.image</code>
@@ -352,7 +359,7 @@
           </h2>
 
           <p>In its most basic form, a sprite is a rectangle with a fill color. To create a rectangle sprite, pass the arguments <code>width</code>, <code>height</code>, and <code>color</code>. A rectangle sprite is great for initial prototyping and particles.</p>
-<canvas id="game-canvas-0"></canvas>
+<canvas id="game-canvas-72"></canvas>
 <pre><code class="language-javascript">import { Sprite } from &#x27;kontra&#x27;;
 
 let sprite &#x3D; Sprite({
@@ -368,8 +375,8 @@ let sprite &#x3D; Sprite({
 
 sprite.render();</code></pre>
 <script>(function() {
-  kontra.init("game-canvas-0");
-  var canvas = document.querySelector("#game-canvas-0");
+  kontra.init("game-canvas-72");
+  var canvas = document.querySelector("#game-canvas-72");
   canvas.width = 600;
   canvas.height = 200;
   var context = canvas.getContext("2d");
@@ -401,7 +408,7 @@ sprite.render();
           </h2>
 
           <p>A sprite can use an image instead of drawing a rectangle. To create an image sprite, pass the <code>image</code> argument. The size of the sprite will automatically be set as the width and height of the image.</p>
-<canvas id="game-canvas-1"></canvas>
+<canvas id="game-canvas-73"></canvas>
 <pre><code class="language-javascript">import { Sprite } from &#x27;kontra&#x27;;
 
 let image &#x3D; new Image();
@@ -419,8 +426,8 @@ image.onload &#x3D; function() {
   sprite.render();
 };</code></pre>
 <script>(function() {
-  kontra.init("game-canvas-1");
-  var canvas = document.querySelector("#game-canvas-1");
+  kontra.init("game-canvas-73");
+  var canvas = document.querySelector("#game-canvas-73");
   canvas.width = 600;
   canvas.height = 200;
   var context = canvas.getContext("2d");
@@ -455,7 +462,7 @@ image.onload = function() {
 
           <p>A sprite can use a spritesheet animation as well. To create an animation sprite, pass the <code>animations</code> argument. The size of the sprite will automatically be set as the width and height of a frame of the spritesheet.</p>
 <p>A sprite can have multiple named animations. The easiest way to create animations is to use <a href="SpriteSheet">SpriteSheet</a>. All animations will automatically be <a href="animation#clone">cloned</a> so no two sprites update the same animation.</p>
-<canvas id="game-canvas-2"></canvas>
+<canvas id="game-canvas-74"></canvas>
 <pre><code class="language-javascript">import { Sprite, SpriteSheet, GameLoop } from &#x27;kontra&#x27;;
 
 let image &#x3D; new Image();
@@ -498,8 +505,8 @@ image.onload &#x3D; function() {
   loop.start();
 };</code></pre>
 <script>(function() {
-  kontra.init("game-canvas-2");
-  var canvas = document.querySelector("#game-canvas-2");
+  kontra.init("game-canvas-74");
+  var canvas = document.querySelector("#game-canvas-74");
   canvas.width = 600;
   canvas.height = 200;
   var context = canvas.getContext("2d");
@@ -564,7 +571,7 @@ image.onload = function() {
           </h2>
 
           <p>If you need to draw a different shape, such as a circle, you can pass in custom properties and a render function to handle drawing the sprite.</p>
-<canvas id="game-canvas-3"></canvas>
+<canvas id="game-canvas-75"></canvas>
 <pre><code class="language-javascript">import { Sprite } from &#x27;kontra&#x27;;
 
 let sprite &#x3D; Sprite({
@@ -587,8 +594,8 @@ let sprite &#x3D; Sprite({
 
 sprite.render();</code></pre>
 <script>(function() {
-  kontra.init("game-canvas-3");
-  var canvas = document.querySelector("#game-canvas-3");
+  kontra.init("game-canvas-75");
+  var canvas = document.querySelector("#game-canvas-75");
   canvas.width = 600;
   canvas.height = 200;
   var context = canvas.getContext("2d");
@@ -702,7 +709,7 @@ let sprite = Sprite({
           </h2>
 
           <p>The x and y origin of the sprite. {x:0, y:0} is the top left corner of the sprite, {x:1, y:1} is the bottom right corner.</p>
-<canvas id="game-canvas-4"></canvas>
+<canvas id="game-canvas-76"></canvas>
 <pre><code class="language-javascript">import { Sprite } from &#x27;kontra&#x27;;
 
 let sprite &#x3D; Sprite({
@@ -731,8 +738,8 @@ sprite.anchor &#x3D; {x: 1, y: 1};
 sprite.x &#x3D; 450;
 sprite.render();</code></pre>
 <script>(function() {
-  kontra.init("game-canvas-4");
-  var canvas = document.querySelector("#game-canvas-4");
+  kontra.init("game-canvas-76");
+  var canvas = document.querySelector("#game-canvas-76");
   canvas.width = 600;
   canvas.height = 200;
   var context = canvas.getContext("2d");
@@ -1198,6 +1205,6 @@ sprite.playAnimation(&#39;idle&#39;);
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/prism.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/components/prism-javascript.min.js"></script>
-  <script src="../assets/js/navbar.js"></script>
+  <script src="assets/js/navbar.js"></script>
 </body>
 </html>

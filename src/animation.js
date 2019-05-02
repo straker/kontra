@@ -146,7 +146,7 @@ class Animation {
    * @param {Number} properties.y - Y position to draw the animation.
    * @param {Number} [properties.width] - width of the sprite. Defaults to [Animation.width](#width).
    * @param {Number} [properties.height] - height of the sprite. Defaults to [Animation.height](#height).
-   * @param {Canvas​Rendering​Context2D} [properties.context] - The context the animation should draw to. Defaults to [core.getContext()](/api/core#getContext).
+   * @param {Canvas​Rendering​Context2D} [properties.context] - The context the animation should draw to. Defaults to [core.getContext()](api/core#getContext).
    */
   render({x, y, width = this.width, height = this.height, context = getContext()} = {}) {
 

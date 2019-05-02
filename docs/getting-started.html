@@ -3,11 +3,18 @@
 <head>
   <title>Kontra.js – Getting Started</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <base href="/">
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/themes/prism.min.css">
-  <link rel="stylesheet" href="../assets/styles.css">
-
-  <script src="../assets/js/kontra.js"></script>
+  <link rel="stylesheet" href="assets/styles.css">
+  <script type="text/javascript">
+  // adjust path based on location (github pages required kontra url)
+  if (window.location.host.indexOf('localhost') === -1) {
+    let base = document.querySelector('base');
+    base.setAttribute('href', 'https://straker.github.io/kontra/');
+  }
+  </script>
+  <script src="assets/js/kontra.js"></script>
 </head>
 <body>
   <div class="content">
@@ -22,30 +29,30 @@
              css list-style: none is set
              @see https://web-a11y.slack.com/archives/C042TSFGN/p1501699529181172 -->
         <ul id="menu" role="list">
-          <li><a href="/" >Introduction</a></li>
-          <li><a href="/getting-started" aria-current="page">Getting Started</a></li>
-          <li><a href="/download" >Download</a></li>
-          <li><a href="/tutorials" >Tutorials</a></li>
-          <li><a href="/made-with-kontra" >Made With Kontra</a></li>
+          <li><a href="." >Introduction</a></li>
+          <li><a href="getting-started" aria-current="page">Getting Started</a></li>
+          <li><a href="download" >Download</a></li>
+          <li><a href="tutorials" >Tutorials</a></li>
+          <li><a href="made-with-kontra" >Made With Kontra</a></li>
 
           <li>
             <span id="api" class="nav-api-heading">API</span>
             <ul aria-labelledby="api">
-              <li><a href="/api/animation" >Animation</a></li>
-              <li><a href="/api/assets" >Assets</a></li>
-              <li><a href="/api/core" >Core</a></li>
-              <li><a href="/api/events" >Events</a></li>
-              <li><a href="/api/gameloop" >GameLoop</a></li>
-              <li><a href="/api/keyboard" >Keyboard</a></li>
-              <li><a href="/api/plugin" >Plugin</a></li>
-              <li><a href="/api/pointer" >Pointer</a></li>
-              <li><a href="/api/pool" >Pool</a></li>
-              <li><a href="/api/quadtree" >Quadtree</a></li>
-              <li><a href="/api/sprite" >Sprite</a></li>
-              <li><a href="/api/spritesheet" >SpriteSheet</a></li>
-              <li><a href="/api/store" >Store</a></li>
-              <li><a href="/api/tileengine" >TileEngine</a></li>
-              <li><a href="/api/vector" >Vector</a></li>
+              <li><a href="api/animation" >Animation</a></li>
+              <li><a href="api/assets" >Assets</a></li>
+              <li><a href="api/core" >Core</a></li>
+              <li><a href="api/events" >Events</a></li>
+              <li><a href="api/gameloop" >GameLoop</a></li>
+              <li><a href="api/keyboard" >Keyboard</a></li>
+              <li><a href="api/plugin" >Plugin</a></li>
+              <li><a href="api/pointer" >Pointer</a></li>
+              <li><a href="api/pool" >Pool</a></li>
+              <li><a href="api/quadtree" >Quadtree</a></li>
+              <li><a href="api/sprite" >Sprite</a></li>
+              <li><a href="api/spritesheet" >SpriteSheet</a></li>
+              <li><a href="api/store" >Store</a></li>
+              <li><a href="api/tileengine" >TileEngine</a></li>
+              <li><a href="api/vector" >Vector</a></li>
             </ul>
           </li>
         </ul>
@@ -68,7 +75,7 @@
 <p>Load the library by adding it as a script tag on the page.</p>
 <pre><code class="lang-js">&lt;script src=&quot;kontra.js&quot;&gt;&lt;/script&gt;
 </code></pre>
-<p>Kontra also supports ES modules and exports all API functions, allowing you to import it into your code as well. This is the recommended way to create <a href="/download">custom builds</a> of the library.</p>
+<p>Kontra also supports ES modules and exports all API functions, allowing you to import it into your code as well. This is the recommended way to create <a href="download">custom builds</a> of the library.</p>
 <pre><code class="lang-js">import { Sprite } from &#39;kontra&#39;;
 </code></pre>
 <p>Want to get started without all the hassle? <a href="https://webmakerapp.com/">Web Maker</a> has you covered! When you start a new project, select the Kontra Game Engine from the list of predefined templates and you&#39;re good to go. Learn more by reading the <a href="https://medium.com/web-maker/js13kgames-jam-with-web-maker-a3389cf2cbb">Web Maker and JS13k tutorial</a>.</p>
@@ -81,7 +88,7 @@ let { canvas, context } = init();
 </code></pre>
 <h2 id="create">Create</h2>
 <p>After the game is initialize, you can create a simple <a href="api/sprite.html">Sprite</a> and <a href="api/gameLoop.html">Game Loop</a> in just a few lines of code</p>
-<canvas id="game-canvas-8"></canvas>
+<canvas id="game-canvas-80"></canvas>
 <pre><code class="language-javascript">import { init, Sprite, GameLoop } from &#x27;kontra&#x27;;
 
 let { canvas } &#x3D; init();
@@ -112,8 +119,8 @@ let loop &#x3D; GameLoop({  // create the main game loop
 
 loop.start();    // start the game</code></pre>
 <script>(function() {
-  kontra.init("game-canvas-8");
-  var canvas = document.querySelector("#game-canvas-8");
+  kontra.init("game-canvas-80");
+  var canvas = document.querySelector("#game-canvas-80");
   canvas.width = 600;
   canvas.height = 200;
   var context = canvas.getContext("2d");
@@ -156,6 +163,6 @@ loop.start();    // start the game
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/prism.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/components/prism-javascript.min.js"></script>
-  <script src="../assets/js/navbar.js"></script>
+  <script src="assets/js/navbar.js"></script>
 </body>
 </html>

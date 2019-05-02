@@ -13,7 +13,7 @@ Load the library by adding it as a script tag on the page.
 <script src="kontra.js"></script>
 ```
 
-Kontra also supports ES modules and exports all API functions, allowing you to import it into your code as well. This is the recommended way to create [custom builds](/download) of the library.
+Kontra also supports ES modules and exports all API functions, allowing you to import it into your code as well. This is the recommended way to create [custom builds](download) of the library.
 
 ```js
 import { Sprite } from 'kontra';

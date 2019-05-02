@@ -16,7 +16,7 @@ import { getCanvas, getContext } from './core.js'
  * @param {Number} properties.height - Height of the tile map (in number of tiles).
  * @param {Number} properties.tilewidth - Width of a single tile (in pixels).
  * @param {Number} properties.tileheight - Height of a single tile (in pixels).
- * @param {Canvas​Rendering​Context2D} [properties.context] - The context the tile engine should draw to. Defaults to [core.getContext()](/api/core#getContext)
+ * @param {Canvas​Rendering​Context2D} [properties.context] - The context the tile engine should draw to. Defaults to [core.getContext()](api/core#getContext)
  *
  * @param {Object[]} properties.tilesets - Array of tileset objects.
  * @param {Number} properties.tilesetN.firstgid - First tile index of the tileset. The first tileset will have a firstgid of 1 as 0 represents an empty tile.

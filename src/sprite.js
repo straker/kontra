@@ -21,7 +21,7 @@ import Vector from './vector.js'
  * @param {Number} [properties.rotation=0] - Sprites rotation around the origin in radians.
  * @param {Number} [properties.anchor={x:0,y:0}] - The x and y origin of the sprite. {x:0, y:0} is the top left corner of the sprite, {x:1, y:1} is the bottom right corner.
  *
- * @param {Canvas​Rendering​Context2D} [properties.context] - The context the sprite should draw to. Defaults to [core.getContext()](/api/core#getContext).
+ * @param {Canvas​Rendering​Context2D} [properties.context] - The context the sprite should draw to. Defaults to [core.getContext()](api/core#getContext).
  *
  * @param {Image|HTMLCanvasElement} [properties.image] - Use an image to draw the sprite.
  * @param {Object} [properties.animations] - An object of [Animations](animation) from a kontra.Spritesheet to animate the sprite.

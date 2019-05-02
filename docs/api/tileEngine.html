@@ -1,150 +1,317 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Kontra.js – Kontra.tileEngine</title>
+  <title>Kontra.js – TileEngine</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/webcomponentsjs/0.7.22/webcomponents-lite.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/themes/prism.min.css">
+  <link rel="stylesheet" href="../assets/styles.css">
 
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/themes/prism.min.css">
-  <link rel="stylesheet" href="../styles.css">
-
-  <link rel="import" href="../components/main-nav.html">
-  <link rel="import" href="../components/code-output.html">
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/prism.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/components/prism-javascript.min.js"></script>
-  <script src="../js/kontra.js"></script>
+  <script src="../assets/js/kontra.js"></script>
 </head>
 <body>
   <div class="content">
-    <main-nav></main-nav>
+    <header class="main-nav">
+      <div id="kontra-heading" class="nav-heading">Kontra</div>
+      <a href="#main">Skip navigation</a>
+
+      <nav>
+        <button class="menu-button" aria-expanded="false" aria-controls="menu"><span aria-hidden="true">☰</span> Menu</button>
+
+        <!-- add role=list back to list so screen readers still read it as list when
+             css list-style: none is set
+             @see https://web-a11y.slack.com/archives/C042TSFGN/p1501699529181172 -->
+        <ul id="menu" role="list">
+          <li><a href="/" >Introduction</a></li>
+          <li><a href="/getting-started" >Getting Started</a></li>
+          <li><a href="/download" >Download</a></li>
+          <li><a href="/tutorials" >Tutorials</a></li>
+          <li><a href="/made-with-kontra" >Made With Kontra</a></li>
+
+          <li>
+            <span id="api" class="nav-api-heading">API</span>
+            <ul aria-labelledby="api">
+              <li><a href="/api/animation" >Animation</a></li>
+              <li><a href="/api/assets" >Assets</a></li>
+              <li><a href="/api/core" >Core</a></li>
+              <li><a href="/api/events" >Events</a></li>
+              <li><a href="/api/gameloop" >GameLoop</a></li>
+              <li><a href="/api/keyboard" >Keyboard</a></li>
+              <li><a href="/api/plugin" >Plugin</a></li>
+              <li><a href="/api/pointer" >Pointer</a></li>
+              <li><a href="/api/pool" >Pool</a></li>
+              <li><a href="/api/quadtree" >Quadtree</a></li>
+              <li><a href="/api/sprite" >Sprite</a></li>
+              <li><a href="/api/spritesheet" >SpriteSheet</a></li>
+              <li><a href="/api/store" >Store</a></li>
+              <li><a href="/api/tileengine" aria-current="page">TileEngine</a></li>
+              <li><a href="/api/vector" >Vector</a></li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <div class="scroll-indicator" aria-hidden="true"><span>^</span></div>
+    </header>
 
     <main id="main">
       <div>
-        <h1 id="tileEngine">Kontra&#8203;.tileEngine&#8203;(properties)</h1>
+        <a href="https://github.com/straker/kontra" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
 
-        <dl aria-labeledby="tileEngine">
-          <dt><strong>properties</strong> <em>{object}</em></dt>
-          <dd>Properties of the tile engine.</dd>
-          <dt><strong>properties.width</strong> <em>{number}</em></dt>
-          <dd>Width of the tile map (in number of tiles).</dd>
-          <dt><strong>properties.height</strong> <em>{number}</em></dt>
-          <dd>Height of the tile map (in number of tiles).</dd>
-          <dt><strong>properties.tilewidth</strong> <em>{number}</em></dt>
-          <dd>Width of a single tile (in pixels).</dd>
-          <dt><strong>properties.tileheight</strong> <em>{number}</em></dt>
-          <dd>Height of a single tile (in pixels).</dd>
-
-          <dt class="object-prop"><strong>properties.tilesets</strong> <em>{object[]}</em></dt>
-          <dd>Array of tileset objects.</dd>
-          <dt><strong>properties.tilesets.firstgid</strong> <em>{number}</em></dt>
-          <dd>First tile index of the tileset. The first tileset will have a firstgid> of 1 as 0 represents an empty tile.</dd>
-          <dt><strong>properties.tilesets.image</strong> <em>{string | HTMLImageElement}</em></dt>
-          <dd>Relative path to the HTMLImageElement or an HTMLImageElement.</dd>
-          <dt><strong>properties.tilesets.margin</strong> <em>{number}</em></dt>
-          <dd>Optional. The amount of whitespace between each tile. Defaults to 0.</dd>
-          <dt><strong>properties.tilesets.tilewidth</strong> <em>{number}</em></dt>
-          <dd>Optional. Width of the tileset (in number of tiles). Defaults to <a href="#tilewidth">tilewidth</a>.</dd>
-          <dt><strong>properties.tilesets.tileheight</strong> <em>{number}</em></dt>
-          <dd>Optional. Height of the tileset (in number of tiles). Defaults to <a href="#tileheight">tileheight</a>.</dd>
-          <dt><strong>properties.tilesets.source</strong> <em>{string}</em></dt>
-          <dd>Optional. Relative path to the tileset JSON file.</dd>
-          <dt><strong>properties.tilesets.columns</strong> <em>{number}</em></dt>
-          <dd>Optional. Number of columns in the tileset image.</dd>
-
-          <dt class="object-prop"><strong>properties.layers</strong> <em>{object[]}</em></dt>
-          <dd>Array of layer objects.</dd>
-          <dt><strong>properties.layers.name</strong> <em>{string}</em></dt>
-          <dd>Unique name of the layer.</dd>
-          <dt><strong>properties.layers.data</strong> <em>{number[]}</em></dt>
-          <dd>1D array of tile indices.</dd>
-          <dt><strong>properties.layers.visible</strong> <em>{boolean}</em></dt>
-          <dd>Optional. If the layer should be drawn or not. Defaults to true.</dd>
-          <dt><strong>properties.layers.opacity</strong> <em>{number}</em></dt>
-          <dd>Optional. Percent opacity of the layer. Defaults to 1.</dd>
-
-        </dl>
+        <h1>TileEngine(&#8203;properties)
+        </h1>
 
         <p>A tile engine for managing and drawing tilesets.</p>
-
-        <figure>
-          <a href="../imgs/mapPack_tilesheet.png">
-            <img src="../imgs/mapPack_tilesheet.png" alt="Tileset to create an overworld map in various seasons."/>
-          </a>
-          <figcaption>Tileset image courtesy of <a href="https://kenney.nl/assets">Kenney</a>.</figcaption>
-        </figure>
-
-
-
-
+<figure>
+  <a href="../assets/imgs/mapPack_tilesheet.png">
+    <img src="../assets/imgs/mapPack_tilesheet.png" alt="Tileset to create an overworld map in various seasons.">
+  </a>
+  <figcaption>Tileset image courtesy of <a href="https://kenney.nl/assets">Kenney</a>.</figcaption>
+</figure>
+        <h3 id="title-TileEngine"><span class="visually-hidden">TileEngine</span> Parameters</span></h3>
+        <dl aria-labelledby="title-TileEngine">
+          <dt>
+            <code>properties</code>
+            
+          </dt>
+          <dd><p>Object. Properties of the tile engine.</p>
+        </dd>
+          <dt>
+            <code>properties.width</code>
+            
+          </dt>
+          <dd><p>Number. Width of the tile map (in number of tiles).</p>
+        </dd>
+          <dt>
+            <code>properties.height</code>
+            
+          </dt>
+          <dd><p>Number. Height of the tile map (in number of tiles).</p>
+        </dd>
+          <dt>
+            <code>properties.tilewidth</code>
+            
+          </dt>
+          <dd><p>Number. Width of a single tile (in pixels).</p>
+        </dd>
+          <dt>
+            <code>properties.tileheight</code>
+            
+          </dt>
+          <dd><p>Number. Height of a single tile (in pixels).</p>
+        </dd>
+          <dt>
+            <code>properties.context</code>
+            <span class="optional">Optional</span>
+          </dt>
+          <dd><p>Canvas​Rendering​Context2D. The context the tile engine should draw to. Defaults to <a href="/api/core#getContext">core.getContext()</a></p>
+        </dd>
+          <dt>
+            <code>properties.tilesets</code>
+            
+          </dt>
+          <dd><p>An Array of Objects. Array of tileset objects.</p>
+        </dd>
+          <dt>
+            <code>properties.tilesetN.firstgid</code>
+            
+          </dt>
+          <dd><p>Number. First tile index of the tileset. The first tileset will have a firstgid of 1 as 0 represents an empty tile.</p>
+        </dd>
+          <dt>
+            <code>properties.tilesetN.image</code>
+            
+          </dt>
+          <dd><p>String or HTMLImageElement. Relative path to the HTMLImageElement or an HTMLImageElement. If passing a relative path, the image file must have been <a href="./assets">loaded</a> first.</p>
+        </dd>
+          <dt>
+            <code>properties.tilesetN.margin</code>
+            <span class="optional">Optional</span>
+          </dt>
+          <dd><p>Number. The amount of whitespace between each tile (in pixels). Defaults to <code>0</code>.</p>
+        </dd>
+          <dt>
+            <code>properties.tilesetN.tilewidth</code>
+            <span class="optional">Optional</span>
+          </dt>
+          <dd><p>Number. Width of the tileset (in pixels). Defaults to properties.tilewidth.</p>
+        </dd>
+          <dt>
+            <code>properties.tilesetN.tileheight</code>
+            <span class="optional">Optional</span>
+          </dt>
+          <dd><p>Number. Height of the tileset (in pixels). Defaults to properties.tileheight.</p>
+        </dd>
+          <dt>
+            <code>properties.tilesetN.source</code>
+            <span class="optional">Optional</span>
+          </dt>
+          <dd><p>String. Relative path to the source JSON file. The source JSON file must have been <a href="./assets">loaded</a> first.</p>
+        </dd>
+          <dt>
+            <code>properties.tilesetN.columns</code>
+            <span class="optional">Optional</span>
+          </dt>
+          <dd><p>Number. Number of columns in the tileset image.</p>
+        </dd>
+          <dt>
+            <code>properties.layers</code>
+            
+          </dt>
+          <dd><p>An Array of Objects. Array of layer objects.</p>
+        </dd>
+          <dt>
+            <code>properties.layerN.name</code>
+            
+          </dt>
+          <dd><p>String. Unique name of the layer.</p>
+        </dd>
+          <dt>
+            <code>properties.layerN.data</code>
+            
+          </dt>
+          <dd><p>An Array of Numbers. 1D array of tile indices.</p>
+        </dd>
+          <dt>
+            <code>properties.layerN.visible</code>
+            <span class="optional">Optional</span>
+          </dt>
+          <dd><p>Boolean. If the layer should be drawn or not. Defaults to <code>true</code>.</p>
+        </dd>
+          <dt>
+            <code>properties.layerN.opacity</code>
+            <span class="optional">Optional</span>
+          </dt>
+          <dd><p>Number. Percent opacity of the layer. Defaults to <code>1</code>.</p>
+        </dd>
+        </dl>
+        
 
         <section class="toc">
           <h2 id="toc"><a href="#toc" class="section-link">Table of Contents<span aria-hidden="true">#</span></a></h2>
 
-          <ul aria-labeledby="toc">
-            <li><a href="#basic-use">Basic Use</a></li>
-            <li><a href="#advance-use">Advance Use</a></li>
-            <li><a href="#camera">Moving the Camera</a></li>
+          <ul aria-labelledby="toc">
+            <li>
+              <ul>
+                <li><a href="#basic-use">Basic Use</a></li>
+                <li><a href="#advance-use">Advance Use</a></li>
+                <li><a href="#moving-the camera">Moving the Camera</a></li>
+              </ul>
+            </li>
 
             <li>
               <h3 id="properties">Properties</h3>
-              <ul aria-labeledby="properties">
-                <li><a href="#context">kontra.tileEngine&#8203;.context</a></li>
-                <li><a href="#height">kontra.tileEngine&#8203;.height</a></li>
-                <li><a href="#layers">kontra.tileEngine&#8203;.layers</a></li>
-                <li><a href="#mapheight">kontra.tileEngine&#8203;.mapheight</a></li>
-                <li><a href="#mapwidth">kontra.tileEngine&#8203;.mapwidth</a></li>
-                <li><a href="#sx">kontra.tileEngine&#8203;.sx</a></li>
-                <li><a href="#sy">kontra.tileEngine&#8203;.sy</a></li>
-                <li><a href="#tileheight">kontra.tileEngine&#8203;.tileheight</a></li>
-                <li><a href="#tilesets">kontra.tileEngine&#8203;.tilesets</a></li>
-                <li><a href="#tilewidth">kontra.tileEngine&#8203;.tilewidth</a></li>
-                <li><a href="#width">kontra.tileEngine&#8203;.width</a></li>
+              <ul aria-labelledby="properties">
+                <li>
+                  <a href="#context">
+                    <span>TileEngine&#8203;.context</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#height">
+                    <span>TileEngine&#8203;.height</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#layers">
+                    <span>TileEngine&#8203;.layers</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#mapheight">
+                    <span>TileEngine&#8203;.mapheight</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#mapwidth">
+                    <span>TileEngine&#8203;.mapwidth</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#sx">
+                    <span>TileEngine&#8203;.sx</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#sy">
+                    <span>TileEngine&#8203;.sy</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#tileheight">
+                    <span>TileEngine&#8203;.tileheight</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#tilesets">
+                    <span>TileEngine&#8203;.tilesets</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#tilewidth">
+                    <span>TileEngine&#8203;.tilewidth</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#width">
+                    <span>TileEngine&#8203;.width</span>
+                  </a>
+                </li>
               </ul>
             </li>
 
             <li>
               <h3 id="methods">Methods</h3>
-              <ul aria-labeledby="methods">
-                <li><a href="#layerCollidesWith">kontra.tileEngine&#8203;.layerCollidesWith(name, object)</a></li>
-                <li><a href="#render">kontra.tileEngine&#8203;.render()</a></li>
-                <li><a href="#renderLayer">kontra.tileEngine&#8203;.renderLayer(name)</a></li>
-                <li><a href="#tileAtLayer">kontra.tileEngine&#8203;.tileAtLayer(name, position)</a></li>
+              <ul aria-labelledby="methods">
+                <li>
+                  <a href="#layerCollidesWith">
+                    <span>TileEngine&#8203;.layerCollidesWith(name, object)</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#render">
+                    <span>TileEngine&#8203;.render()</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#renderLayer">
+                    <span>TileEngine&#8203;.renderLayer(name)</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#tileAtLayer">
+                    <span>TileEngine&#8203;.tileAtLayer(name, position)</span>
+                  </a>
+                </li>
               </ul>
             </li>
           </ul>
         </section>
 
-
-
-
-
         <section>
-          <h2 id="basic-use"><a href="#basic-use" class="section-link">Basic Use<span aria-hidden="true">#</span></a></h2>
+          <h2 id="basic-use">
+            <a href="#basic-use" class="section-link">
+              <span>Basic Use</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
 
           <p>Creating a tile map requires three things:</p>
+<ol>
+<li>Dimensions of the tile map and a tile</li>
+<li>At least one tileset with an image</li>
+<li>At least one layer with data</li>
+</ol>
+<p>To set up the tile engine, you&#39;ll need to pass it the width and height of a tile (in pixels) and the width and height of the map (in number of tiles).</p>
+<p>You&#39;ll then need to add at least one tileset with an image as well as firstgid, or first tile index of the tileset. The first tileset will always have a firstgid of 1 as 0 represents an empty tile.</p>
+<p>Lastly, you&#39;ll need to add at least one named layer with data. A layer tells the tile engine which tiles from the tileset image to use at what position on the map.</p>
+<p>Once all tileset images and all layers have been added, you can render the tile engine by calling its <a href="#render">render()</a> function.</p>
+<canvas id="game-canvas-5"></canvas>
+<pre><code class="language-javascript">import { TileEngine } from &#x27;kontra&#x27;;
 
-          <ol>
-            <li>Dimensions of the tile map and a tile</li>
-            <li>At least one tileset with an image</li>
-            <li>At least one layer with data</li>
-          </ol>
-
-          <p>To set up the tile engine, you'll need to pass it the width and height of a tile (in pixels) and the width and height of the map (in number of tiles).</p>
-
-          <p>You'll then need to add at least one tileset with an image as well as firstgid, or fist tile index of the tileset. The first tileset will always have a firstgid of 1 as <code>0</code> represents an empty tile.</p>
-
-          <p>Lastly, you'll need to add at least one named layer with data. A layer tells the tile engine which tiles from the tileset image to use at what position on the map.</p>
-
-          <p>Once all tileset images and all layers have been added, you can render the tile engine by calling its <a href="#render">render()</a> function.</p>
-
-<code-output width="576" height="576">
-let img = document.createElement('img');
-img.src = '../imgs/mapPack_tilesheet.png';
-
-img.onload = function() {
-  let tileEngine = kontra.tileEngine({
+let img &#x3D; new Image();
+img.src &#x3D; &#x27;../assets/imgs/mapPack_tilesheet.png&#x27;;
+img.onload &#x3D; function() {
+  let tileEngine &#x3D; TileEngine({
     // tile size
     tilewidth: 64,
     tileheight: 64,
@@ -153,11 +320,57 @@ img.onload = function() {
     width: 9,
     height: 9,
 
+    // tileset object
     tilesets: [{
       firstgid: 1,
       image: img
     }],
 
+    // layer object
+    layers: [{
+      name: &#x27;ground&#x27;,
+      data: [ 0,  0,  0,  0,  0,  0,  0,  0,  0,
+              0,  0,  6,  7,  7,  8,  0,  0,  0,
+              0,  6,  27, 24, 24, 25, 0,  0,  0,
+              0,  23, 24, 24, 24, 26, 8,  0,  0,
+              0,  23, 24, 24, 24, 24, 26, 8,  0,
+              0,  23, 24, 24, 24, 24, 24, 25, 0,
+              0,  40, 41, 41, 10, 24, 24, 25, 0,
+              0,  0,  0,  0,  40, 41, 41, 42, 0,
+              0,  0,  0,  0,  0,  0,  0,  0,  0 ]
+    }]
+  });
+
+  tileEngine.render();
+}</code></pre>
+<script>(function() {
+  kontra.init("game-canvas-5");
+  var canvas = document.querySelector("#game-canvas-5");
+  canvas.width = 576;
+  canvas.height = 576;
+  var context = canvas.getContext("2d");
+  // exclude-code:start
+let { TileEngine } = kontra;
+// exclude-code:end
+let img = new Image();
+img.src = '../assets/imgs/mapPack_tilesheet.png';
+img.onload = function() {
+  let tileEngine = TileEngine({
+    // tile size
+    tilewidth: 64,
+    tileheight: 64,
+
+    // map size in tiles
+    width: 9,
+    height: 9,
+
+    // tileset object
+    tilesets: [{
+      firstgid: 1,
+      image: img
+    }],
+
+    // layer object
     layers: [{
       name: 'ground',
       data: [ 0,  0,  0,  0,  0,  0,  0,  0,  0,
@@ -171,62 +384,100 @@ img.onload = function() {
               0,  0,  0,  0,  0,  0,  0,  0,  0 ]
     }]
   });
-
-  /* exclude:start */
+  // exclude-code:start
   tileEngine.context = context;
-  /* exclude:end */
+  // exclude-code:end
+
   tileEngine.render();
 }
-</code-output>
-
-        </section>
-
-
-
-
-
+})();</script>        </section>
         <section>
-          <h2 id="advance-use"><a href="#advance-use" class="section-link">Advance Use<span aria-hidden="true">#</span></a></h2>
+          <h2 id="advance-use">
+            <a href="#advance-use" class="section-link">
+              <span>Advance Use</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
 
           <p>Adding all the tileset images and layers to a tile engine can be tedious, especially if you have multiple layers. If you want a simpler way to create a tile engine, Kontra has been written to work directly with the JSON output of the <a href="http://www.mapeditor.org/">Tiled Map Editor</a>.</p>
+<p>The one requirement is that you must preload all of the tileset images and tileset sources using the appropriate <a href="./assets">asset loader functions</a> before you create the tile engine.</p>
+<canvas id="game-canvas-6"></canvas>
+<pre><code class="language-javascript">import { load, TileEngine, dataAssets } from &#x27;kontra&#x27;;
 
-          <p>The one requirement is that you must preload all of the tileset images and tileset sources using <a href="assets#load">kontra.assets.load()</a> before you create the tile engine.</p>
-
-<code-output width="576" height="576">
-kontra.assets.load('../imgs/mapPack_tilesheet.png', '../data/tile_engine_basic.json')
-  .then(function() {
-    let tileEngine = kontra.tileEngine(kontra.assets.data['../data/tile_engine_basic']);
-    /* exclude:start */
+load(&#x27;../assets/imgs/mapPack_tilesheet.png&#x27;, &#x27;../assets/data/tile_engine_basic.json&#x27;)
+  .then(assets &#x3D;&gt; {
+    let tileEngine &#x3D; TileEngine(dataAssets[&#x27;../assets/data/tile_engine_basic&#x27;]);
+    tileEngine.render();
+  });</code></pre>
+<script>(function() {
+  kontra.init("game-canvas-6");
+  var canvas = document.querySelector("#game-canvas-6");
+  canvas.width = 576;
+  canvas.height = 576;
+  var context = canvas.getContext("2d");
+  // exclude-code:start
+let { TileEngine, load, dataAssets } = kontra;
+// exclude-code:end
+load('../assets/imgs/mapPack_tilesheet.png', '../assets/data/tile_engine_basic.json')
+  .then(assets => {
+    let tileEngine = TileEngine(dataAssets['../assets/data/tile_engine_basic']);
+    // exclude-code:start
     tileEngine.context = context;
-    /* exclude:end */
-
+    // exclude-code:end
     tileEngine.render();
   });
-</code-output>
-
-        </section>
-
-
-
-
-
+})();</script>        </section>
         <section>
-          <h2 id="camera"><a href="#camera" class="section-link">Moving the Camera<span aria-hidden="true">#</span></a></h2>
+          <h2 id="moving-the camera">
+            <a href="#moving-the camera" class="section-link">
+              <span>Moving the Camera</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
 
           <p>If your tilemap is larger than the canvas size, you can move the tilemap camera to change how the tilemap is drawn. Use the tile engines <a href="#sx">sx</a> and <a href="#sy">sy</a> properties to move the camera. Just like drawing an image, the cameras coordinates are the top left corner.</p>
+<p>The <code>sx</code> and <code>sy</code> coordinates will never draw the tile map below 0 or beyond the last row or column of the tile map.</p>
+<canvas id="game-canvas-7"></canvas>
+<pre><code class="language-javascript">import { load, TileEngine, dataAssets, GameLoop } from &#x27;kontra&#x27;;
 
-          <p>The <code>sx</code> and <code>sy</code> coordinates will never draw the tile map below 0 or beyond the last row or column of the tile map.</p>
-
-<code-output width="576" height="576">
-kontra.assets.load('../imgs/mapPack_tilesheet.png', '../data/tile_engine_camera.json')
+load(&#x27;../assets/imgs/mapPack_tilesheet.png&#x27;, &#x27;../assets/data/tile_engine_camera.json&#x27;)
   .then(function() {
-    let tileEngine = kontra.tileEngine(kontra.assets.data['../data/tile_engine_camera']);
-    /* exclude:start */
+    let tileEngine &#x3D; TileEngine(dataAssets[&#x27;../assets/data/tile_engine_camera&#x27;]);
+
+    let sx &#x3D; 1;
+    let loop &#x3D; GameLoop({
+      update: function() {
+        tileEngine.sx +&#x3D; sx;
+
+        if (tileEngine.sx &lt;&#x3D; 0 || tileEngine.sx &gt;&#x3D; 320) {
+          sx &#x3D; -sx;
+        }
+      },
+      render: function() {
+        tileEngine.render();
+      }
+    });
+
+    loop.start();
+  });</code></pre>
+<script>(function() {
+  kontra.init("game-canvas-7");
+  var canvas = document.querySelector("#game-canvas-7");
+  canvas.width = 576;
+  canvas.height = 576;
+  var context = canvas.getContext("2d");
+  // exclude-code:start
+let { TileEngine, load, dataAssets, GameLoop } = kontra;
+// exclude-code:end
+load('../assets/imgs/mapPack_tilesheet.png', '../assets/data/tile_engine_camera.json')
+  .then(function() {
+    let tileEngine = TileEngine(dataAssets['../assets/data/tile_engine_camera']);
+    // exclude-code:start
     tileEngine.context = context;
-    /* exclude:end */
+    // exclude-code:end
 
     let sx = 1;
-    let loop = kontra.gameLoop({
+    let loop = GameLoop({
       update: function() {
         tileEngine.sx += sx;
 
@@ -241,60 +492,51 @@ kontra.assets.load('../imgs/mapPack_tilesheet.png', '../data/tile_engine_camera.
 
     loop.start();
   });
-</code-output>
-
-        </section>
-
-
-
-
+})();</script>        </section>
 
         <section>
-          <h2 id="context"><a href="#context" class="section-link">kontra.tileEngine&#8203;.context<span aria-hidden="true">#</span></a></h2>
-
-          <p><em>{CanvasRenderingContext2D}</em></p>
+          <h2 id="context">
+            <a href="#context" class="section-link">
+              <span>TileEngine&#8203;.context</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
 
           <p>The context the tile engine will draw to.</p>
-
+          
         </section>
-
-
-
-
-
         <section>
-          <h2 id="height"><a href="#height" class="section-link">kontra.tileEngine&#8203;.height<span aria-hidden="true">#</span></a></h2>
+          <h2 id="height">
+            <a href="#height" class="section-link">
+              <span>TileEngine&#8203;.height</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
 
-          <p><em>{number}</em></p>
-
-          <p>The height of the map in tiles.</p>
-
+          <p>The height of tile map (in tiles).</p>
+          
         </section>
-
-
-
-
-
         <section>
-          <h2 id="layerCollidesWith"><a href="#layerCollidesWith" class="section-link">kontra.tileEngine&#8203;.layerCollidesWith(name, object)<span aria-hidden="true">#</span></a></h2>
+          <h2 id="layerCollidesWith">
+            <a href="#layerCollidesWith" class="section-link">
+              <span>TileEngine&#8203;.layerCollidesWith(name, object)</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
 
-          <dl>
-            <dt><strong>name</strong> <em>{string}</em></dt>
-            <dd>The name of the layer to check for collision.</dd>
-            <dt><strong>object</strong> <em>{object}</em></dt>
-            <dd>The object to check collision against.</dd>
-          </dl>
+          <p>Check if the object collides with the layer (shares a gird coordinate with any positive tile index in layers data). The object being checked must have the properties <code>x</code>, <code>y</code>, <code>width</code>, and <code>height</code> so that its position in the grid can be calculated. <a href="Sprite">Sprite</a> defines these properties for you.</p>
+<pre><code class="lang-js">import { TileEngine, Sprite } from &#39;kontra&#39;;
 
-          <p>Check if the object collides with the layer (shares a gird coordinate with any positive tile index in layers data). The object being checked must have the properties <code>x</code>, <code>y</code>, <code>width</code>, and <code>height</code> so that its position in the grid can be calculated. <a href="sprite">kontra.sprite</a> defines these properties for you.</p>
-
-          <pre><code class="language-javascript">let tileEngine = kontra.tileEngine({
+let tileEngine = TileEngine({
   tilewidth: 32,
   tileheight: 32,
   width: 4,
   height: 4,
-  tilesets: [{/* ... */}],
+  tilesets: [{
+    // ...
+  }],
   layers: [{
-    name: 'collision',
+    name: &#39;collision&#39;,
     data: [ 0,0,0,0,
             0,1,4,0,
             0,2,5,0,
@@ -302,137 +544,146 @@ kontra.assets.load('../imgs/mapPack_tilesheet.png', '../data/tile_engine_camera.
   }]
 });
 
-let sprite = kontra.sprite({
+let sprite = Sprite({
   x: 50,
   y: 20,
   width: 5,
   height: 5
 });
 
-tileEngine.layerCollidesWith('collision', sprite);  //=> false
+tileEngine.layerCollidesWith(&#39;collision&#39;, sprite);  //=&gt; false
 
 sprite.y = 28;
 
-tileEngine.layerCollidesWith('collision', sprite);  //=> true</code></pre>
-
+tileEngine.layerCollidesWith(&#39;collision&#39;, sprite);  //=&gt; true
+</code></pre>
+          <h3 id="title-layerCollidesWith"><span class="visually-hidden">layerCollidesWith</span> Parameters</span></h3>
+          <dl aria-labelledby="title-layerCollidesWith">
+            <dt>
+              <code>name</code>
+              
+            </dt>
+            <dd><p>String. The name of the layer to check for collision.</p>
+          </dd>
+            <dt>
+              <code>object</code>
+              
+            </dt>
+            <dd><p>Object. Object to check collision against.</p>
+          </dd>
+          </dl>
+          
+          <h3><span class="visually-hidden">layerCollidesWith</span> Return value</h3>
+          <p><p><code>true</code> if the object collides with a tile, <code>false</code> otherwise.</p>
+          </p>
         </section>
-
-
-
-
-
         <section>
-          <h2 id="layers"><a href="#layers" class="section-link">kontra.tileEngine&#8203;.layers<span aria-hidden="true">#</span></a></h2>
-
-          <p><em>{object[]}</em></p>
+          <h2 id="layers">
+            <a href="#layers" class="section-link">
+              <span>TileEngine&#8203;.layers</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
 
           <p>Array of all layers of the tile engine.</p>
-
+          
         </section>
-
-
-
-
-
         <section>
-          <h2 id="mapheight"><a href="#mapheight" class="section-link">kontra.tileEngine&#8203;.mapheight<span aria-hidden="true">#</span></a></h2>
+          <h2 id="mapheight">
+            <a href="#mapheight" class="section-link">
+              <span>TileEngine&#8203;.mapheight</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
 
-          <p><em>{number}</em></p>
-
-          <p>The height of a tile map in pixels.</p>
-
+          <p>The height of the tile map (in pixels).</p>
+          
         </section>
-
-
-
-
-
         <section>
-          <h2 id="mapwidth"><a href="#mapwidth" class="section-link">kontra.tileEngine&#8203;.mapwidth<span aria-hidden="true">#</span></a></h2>
+          <h2 id="mapwidth">
+            <a href="#mapwidth" class="section-link">
+              <span>TileEngine&#8203;.mapwidth</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
 
-          <p><em>{number}</em></p>
-
-          <p>The width of a tile map in pixels.</p>
-
+          <p>The width of the tile map (in pixels).</p>
+          
         </section>
-
-
-
-
-
         <section>
-          <h2 id="render"><a href="#render" class="section-link">kontra.tileEngine&#8203;.render()<span aria-hidden="true">#</span></a></h2>
+          <h2 id="render">
+            <a href="#render" class="section-link">
+              <span>TileEngine&#8203;.render()</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
 
           <p>Render all visible layers.</p>
-
+          
         </section>
-
-
-
-
-
         <section>
-          <h2 id="renderLayer"><a href="#renderLayer" class="section-link">kontra.tileEngine&#8203;.renderLayer(name)<span aria-hidden="true">#</span></a></h2>
+          <h2 id="renderLayer">
+            <a href="#renderLayer" class="section-link">
+              <span>TileEngine&#8203;.renderLayer(name)</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
 
-          <dl>
-            <dt><strong>name</strong> <em>{string}</em></dt>
-            <dd>Name of the layer.</dd>
+          <p>Render a specific layer by name.</p>
+          <h3 id="title-renderLayer"><span class="visually-hidden">renderLayer</span> Parameters</span></h3>
+          <dl aria-labelledby="title-renderLayer">
+            <dt>
+              <code>name</code>
+              
+            </dt>
+            <dd><p>String. Name of the layer to render.</p>
+          </dd>
           </dl>
-
-          <p>Render a specific layer.</p>
-
+          
         </section>
-
-
-
-
-
         <section>
-          <h2 id="sx"><a href="#sx" class="section-link">kontra.tileEngine&#8203;.sx<span aria-hidden="true">#</span></a></h2>
-
-          <p><em>{number}</em></p>
+          <h2 id="sx">
+            <a href="#sx" class="section-link">
+              <span>TileEngine&#8203;.sx</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
 
           <p>X coordinate of the tile map camera.</p>
-
+          
         </section>
-
-
-
-
-
         <section>
-          <h2 id="sy"><a href="#sy" class="section-link">kontra.tileEngine&#8203;.sy<span aria-hidden="true">#</span></a></h2>
-
-          <p><em>{number}</em></p>
+          <h2 id="sy">
+            <a href="#sy" class="section-link">
+              <span>TileEngine&#8203;.sy</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
 
           <p>Y coordinate of the tile map camera.</p>
-
+          
         </section>
-
-
-
-
-
         <section>
-          <h2 id="tileAtLayer"><a href="#tileAtLayer" class="section-link">kontra.tileEngine&#8203;.tileAtLayer(name, position)<span aria-hidden="true">#</span></a></h2>
-
-          <dl>
-            <dt><strong>name</strong> <em>{string}</em></dt>
-            <dd>Name of the layer.</dd>
-            <dt><strong>position</strong> <em>{object}</em></dt>
-            <dd>Position of the tile using either <code>x</code> and <code>y</code> or <code>row</code> and <code>col</code>.</dd>
-          </dl>
+          <h2 id="tileAtLayer">
+            <a href="#tileAtLayer" class="section-link">
+              <span>TileEngine&#8203;.tileAtLayer(name, position)</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
 
           <p>Get the tile at the specified layer using either x and y coordinates or row and column coordinates.</p>
+<pre><code class="lang-js">import { TileEngine } from &#39;kontra&#39;;
 
-          <pre><code class="language-javascript">let tileEngine = kontra.tileEngine({
+let tileEngine = TileEngine({
   tilewidth: 32,
   tileheight: 32,
   width: 4,
   height: 4,
-  tilesets: [{/* ... */}],
+  tilesets: [{
+    // ...
+  }],
   layers: [{
-    name: 'collision',
+    name: &#39;collision&#39;,
     data: [ 0,0,0,0,
             0,1,4,0,
             0,2,5,0,
@@ -440,65 +691,80 @@ tileEngine.layerCollidesWith('collision', sprite);  //=> true</code></pre>
   }]
 });
 
-tileEngine.tileAtLayer('collision', {x: 50, y: 50});  //=> 1
-tileEngine.tileAtLayer('collision', {row: 2, col: 1});  //=> 2</code></pre>
-
+tileEngine.tileAtLayer(&#39;collision&#39;, {x: 50, y: 50});  //=&gt; 1
+tileEngine.tileAtLayer(&#39;collision&#39;, {row: 2, col: 1});  //=&gt; 2
+</code></pre>
+          <h3 id="title-tileAtLayer"><span class="visually-hidden">tileAtLayer</span> Parameters</span></h3>
+          <dl aria-labelledby="title-tileAtLayer">
+            <dt>
+              <code>name</code>
+              
+            </dt>
+            <dd><p>String. Name of the layer.</p>
+          </dd>
+            <dt>
+              <code>position</code>
+              
+            </dt>
+            <dd><p>Object. Position of the tile in either {x, y} or {row, col} coordinates.</p>
+          </dd>
+          </dl>
+          
+          <h3><span class="visually-hidden">tileAtLayer</span> Return value</h3>
+          <p><p>The tile index. Will return <code>-1</code> if no layer exists by the provided name.</p>
+          </p>
         </section>
-
-
-
-
-
         <section>
-          <h2 id="tileheight"><a href="#tileheight" class="section-link">kontra.tileEngine&#8203;.tileheight<span aria-hidden="true">#</span></a></h2>
+          <h2 id="tileheight">
+            <a href="#tileheight" class="section-link">
+              <span>TileEngine&#8203;.tileheight</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
 
-          <p><em>{number}</em></p>
-
-          <p>The height of a tile.</p>
-
+          <p>The height of a tile (in pixels).</p>
+          
         </section>
-
-
-
-
-
         <section>
-          <h2 id="tilesets"><a href="#tilesets" class="section-link">kontra.tileEngine&#8203;.tilesets<span aria-hidden="true">#</span></a></h2>
-
-          <p><em>{object[]}</em></p>
+          <h2 id="tilesets">
+            <a href="#tilesets" class="section-link">
+              <span>TileEngine&#8203;.tilesets</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
 
           <p>Array of all tilesets of the tile engine.</p>
-
+          
         </section>
-
-
-
-
-
         <section>
-          <h2 id="tilewidth"><a href="#tilewidth" class="section-link">kontra.tileEngine&#8203;.tilewidth<span aria-hidden="true">#</span></a></h2>
+          <h2 id="tilewidth">
+            <a href="#tilewidth" class="section-link">
+              <span>TileEngine&#8203;.tilewidth</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
 
-          <p><em>{number}</em></p>
-
-          <p>The width of a tile.</p>
-
+          <p>The width a tile (in pixels).</p>
+          
         </section>
-
-
-
-
-
         <section>
-          <h2 id="width"><a href="#width" class="section-link">kontra.tileEngine&#8203;.width<span aria-hidden="true">#</span></a></h2>
+          <h2 id="width">
+            <a href="#width" class="section-link">
+              <span>TileEngine&#8203;.width</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
 
-          <p><em>{number}</em></p>
-
-          <p>The width of the map in tiles.</p>
-
+          <p>The width of tile map (in tiles).</p>
+          
         </section>
-       </div>
+
+      </div>
     </main>
   </div>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/components/prism-javascript.min.js"></script>
+  <script src="../assets/js/navbar.js"></script>
 </body>
 </html>

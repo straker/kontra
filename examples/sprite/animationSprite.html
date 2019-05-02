@@ -8,17 +8,17 @@
   <canvas id="game" width="600" height="400" style="background: #333331"></canvas>
   <script id="code">
     // initialize the game and setup the canvas
-    kontra.init();
+    let { canvas, context } = kontra.init();
 
     // set image path so we don't have to reference the sprite sheet by it's path
-    kontra.assets.imagePath = '../imgs/';
+    kontra.setImagePath('../imgs/');
 
     // load the sprite sheet
-    kontra.assets.load('character_walk_sheet.png').then(function() {
+    kontra.load('character_walk_sheet.png').then(function() {
 
       // create the sprite sheet and its animation
-      window.spriteSheet = kontra.spriteSheet({
-        image: kontra.assets.images.character_walk_sheet,
+      window.spriteSheet = kontra.SpriteSheet({
+        image: kontra.imageAssets.character_walk_sheet,
         frameWidth: 72,
         frameHeight: 97,
         animations: {
@@ -30,7 +30,7 @@
       });
 
       // pass the animations to the sprite
-      window.sprite = kontra.sprite({
+      window.sprite = kontra.Sprite({
         width: 72 * 2,
         height: 97 * 2,
         anchor: {
@@ -46,7 +46,7 @@
       sprite.playAnimation('walk');
 
       // create the game loop to update and render the sprite
-      window.loop = kontra.gameLoop({
+      window.loop = kontra.GameLoop({
         update: function() {
           sprite.update();
         },

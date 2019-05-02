@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Advanced Vector Plugin</title>
+  <script src="../../kontra.js"></script>
+</head>
+<body>
+  <canvas id="game" width="600" height="400" style="background: #333331"></canvas>
+  <script id="code">
+    // plugin: upgrade kontra.Sprite with advanced collision handling
+    (function() {
+      let RECTANGLE = 0;
+      let CIRCLE = 1;
+
+      let accountForAnchor = function(object) {
+        let x = object.x;
+        let y = object.y;
+        let width = object.shape === RECTANGLE ? object.width: object.radius;
+        let height = object.shape === RECTANGLE ? object.height: object.radius;
+
+        if (object.anchor) {
+          x -= width * object.anchor.x;
+          y -= height * object.anchor.y;
+        }
+
+        return {
+          x,
+          y,
+          width: object.width,
+          height: object.height,
+          radius: object.radius,
+          shape: object.shape
+        };
+      }
+
+      let recVsRec = function(rec1, rec2) {
+        return rec1.x < rec2.x + rec2.width &&
+               rec1.x + rec1.width > rec2.x &&
+               rec1.y < rec2.y + rec2.height &&
+               rec1.y + rec1.height > rec2.y;
+      }
+
+      let recVsCircle = function(rec, circle) {
+        let dx = circle.x - Math.max(rec.x, Math.min(circle.x, rec.x + rec.width));
+        let dy = circle.y - Math.max(rec.y, Math.min(circle.y, rec.y + rec.height));
+        return dx * dx + dy * dy < circle.radius * circle.radius;
+      }
+
+      let circleVsCircle = function(circle1, circle2) {
+        let dx = circle1.x - circle2.x;
+        let dy = circle1.y - circle2.y;
+        return Math.sqrt(dx * dx + dy * dy) <= circle1.radius + circle2.radius;
+      }
+
+      window.advacedCollisionPlugin = {
+        shapes: {
+          RECTANGLE,
+          CIRCLE
+        },
+        afterCollidesWith(sprite, result, object) {
+          let obj1 = accountForAnchor(sprite);
+          let obj2 = accountForAnchor(object);
+
+          if (obj1.shape === RECTANGLE) {
+            if (obj2.shape === RECTANGLE) {
+              return recVsRec(obj1, obj2);
+            }
+            else {
+              return recVsCircle(obj1, obj2);
+            }
+          }
+          else if (obj2.shape === RECTANGLE) {
+            return recVsCircle(obj2, obj1);
+          }
+          else {
+            return circleVsCircle(obj1, obj2);
+          }
+        }
+      }
+    })();
+
+
+
+
+
+
+    // code
+    // initialize the game and setup the canvas
+    let { canvas, context } = kontra.init();
+
+    // register the plugin
+    kontra.registerPlugin(kontra.Sprite, advacedCollisionPlugin);
+
+    let sprites = [];
+    let shapes = advacedCollisionPlugin.shapes;
+
+    // rec sprite
+    sprites.push(kontra.Sprite({
+      x: 100,
+      y: 60,
+      dx: 2,
+      dy: 0,
+      width: 40,
+      height: 40,
+      shape: shapes.RECTANGLE,
+      _color: 'red',
+      update: function() {
+        this.advance();
+        if (this.x > canvas.width) this.x = -this.width
+      }
+    }));
+
+    // rec sprite
+    sprites.push(kontra.Sprite({
+      x: canvas.width - 100 - 40,
+      y: 60,
+      dx: -2,
+      dy: 0,
+      width: 40,
+      height: 40,
+      shape: shapes.RECTANGLE,
+      _color: 'blue',
+      update: function() {
+        this.advance();
+        if (this.x < -this.width) this.x = canvas.width
+      }
+    }));
+
+    // circle sprite
+    sprites.push(kontra.Sprite({
+      x: 120,
+      y: 180,
+      dx: 2,
+      dy: 0,
+      radius: 20,
+      shape: shapes.CIRCLE,
+      _color: 'yellow',
+      update: function() {
+        this.advance();
+        if (this.x - 20 > canvas.width) this.x = -20
+      },
+      render: function() {
+        this.context.fillStyle = this.color;
+        this.context.beginPath();
+        this.context.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        this.context.fill();
+      }
+    }));
+
+    // circle sprite
+    sprites.push(kontra.Sprite({
+      x: canvas.width - 100 - 20,
+      y: 180,
+      dx: -2,
+      dy: 0,
+      radius: 20,
+      shape: shapes.CIRCLE,
+      _color: 'orange',
+      update: function() {
+        this.advance();
+        if (this.x + 20 < 0) this.x = canvas.width + 20;
+      },
+      render: function() {
+        this.context.fillStyle = this.color;
+        this.context.beginPath();
+        this.context.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        this.context.fill();
+      }
+    }));
+
+    // rec sprite
+    sprites.push(kontra.Sprite({
+      x: 100,
+      y: 260,
+      dx: 2,
+      dy: 0,
+      width: 40,
+      height: 40,
+      shape: shapes.RECTANGLE,
+      _color: 'green',
+      update: function() {
+        this.advance();
+        if (this.x > canvas.width) this.x = -this.width
+      }
+    }));
+
+    // circle sprite
+    sprites.push(kontra.Sprite({
+      x: canvas.width - 100 - 20,
+      y: 280,
+      dx: -2,
+      dy: 0,
+      radius: 20,
+      shape: shapes.CIRCLE,
+      _color: 'purple',
+      update: function() {
+        this.advance();
+        if (this.x + 20 < 0) this.x = canvas.width + 20;
+      },
+      render: function() {
+        this.context.fillStyle = this.color;
+        this.context.beginPath();
+        this.context.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        this.context.fill();
+      }
+    }));
+
+    // create the game loop to update and render the sprite
+    window.loop = kontra.GameLoop({
+      update: function() {
+        sprites.forEach(sprite => {
+          sprite.update()
+          sprite.isColliding = false;
+        });
+
+        // check for collision
+        for (let i = 0; i < sprites.length - 1; i++) {
+          for (let j = i + 1; j < sprites.length; j++) {
+            if (sprites[i].collidesWith(sprites[j])) {
+              sprites[i].isColliding = true;
+              sprites[j].isColliding = true;
+            }
+          }
+        }
+
+        sprites.forEach(sprite => {
+          sprite.color = sprite.isColliding ? 'cyan' : sprite._color;
+        });
+      },
+      render: function() {
+        sprites.forEach(sprite => sprite.render());
+      }
+    });
+
+    // start the loop
+    loop.start();
+  </script>
+  <script src="../prism/codeOutput.js"></script>
+</body>
+</html>

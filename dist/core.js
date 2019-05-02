@@ -1,1 +1,0 @@
-kontra={init(t){var n=this.canvas=document.getElementById(t)||t||document.querySelector("canvas");this.context=n.getContext("2d"),this.context.imageSmoothingEnabled=!1,this._init()},_noop:new Function,_tick:new Function,_init:new Function};

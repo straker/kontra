@@ -1,53 +1,73 @@
-kontra = {
+import { emit } from './events.js'
 
-  /**
-   * Initialize the canvas.
-   * @memberof kontra
-   *
-   * @param {string|HTMLCanvasElement} canvas - Main canvas ID or Element for the game.
-   */
-  init(canvas) {
+/**
+ * Functions for initializing the Kontra library and getting the canvas and context
+ * objects.
+ *
+ * ```js
+ * import { getCanvas, getContext, init } from 'kontra';
+ *
+ * let { canvas, context } = init();
+ *
+ * // or can get canvas and context through functions
+ * canvas = getCanvas();
+ * context = getContext();
+ * ```
+ * @sectionName Core
+ */
 
-    // check if canvas is a string first, an element next, or default to getting
-    // first canvas on page
-    var canvasEl = this.canvas = document.getElementById(canvas) ||
-                                 canvas ||
-                                 document.querySelector('canvas');
+let canvasEl, context;
 
-    // @if DEBUG
-    if (!canvasEl) {
-      throw Error('You must provide a canvas element for the game');
-    }
-    // @endif
+/**
+ * Return the canvas element.
+ * @function getCanvas
+ *
+ * @returns {HTMLCanvasElement} The canvas element for the game.
+ */
+export function getCanvas() {
+  return canvasEl;
+}
 
-    this.context = canvasEl.getContext('2d');
-    this.context.imageSmoothingEnabled = false;
-    this._init();
-  },
+/**
+ * Return the context object.
+ * @function getContext
+ *
+ * @returns {CanvasRenderingContext2D} The context object the game draws to.
+ */
+export function getContext() {
+  return context;
+}
 
-  /**
-   * Noop function.
-   * @see https://stackoverflow.com/questions/21634886/what-is-the-javascript-convention-for-no-operation#comment61796464_33458430
-   * @memberof kontra
-   * @private
-   *
-   * The new operator is required when using sinon.stub to replace with the noop.
-   */
-  _noop: new Function,
+/**
+ * Initialize the library and set up the canvas. Typically you will call `init()` as the first thing and give it the canvas to use. This will allow all Kontra objects to reference the canvas when created.
+ *
+ * ```js
+ * let { canvas, context } = init('game');
+ * ```
+ * @function init
+ *
+ * @param {String|HTMLCanvasElement} [canvas] - The canvas for Kontra to use. Can either be the ID of the canvas element or the canvas element itself. Defaults to using the first canvas element on the page.
+ *
+ * @returns {Object} An object with properties `canvas` and `context`. `canvas` it the canvas element for the game and `context` is the context object the game draws to.
+ */
+export function init(canvas) {
 
-  /**
-   * Dispatch event to any part of the code that needs to know when
-   * a new frame has started. Will be filled out in pointer events.
-   * @memberOf kontra
-   * @private
-   */
-  _tick: new Function,
+  // check if canvas is a string first, an element next, or default to getting
+  // first canvas on page
+  canvasEl = document.getElementById(canvas) ||
+             canvas ||
+             document.querySelector('canvas');
 
-  /**
-   * Dispatch event to any part of the code that needs to know when
-   * kontra has initialized. Will be filled out in pointer events.
-   * @memberOf kontra
-   * @private
-   */
-  _init: new Function
-};
+  // @if DEBUG
+  if (!canvasEl) {
+    throw Error('You must provide a canvas element for the game');
+  }
+  // @endif
+
+  context = canvasEl.getContext('2d');
+  context.imageSmoothingEnabled = false;
+
+  emit('init');
+
+  return { canvas: canvasEl, context };
+}

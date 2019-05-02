@@ -8,10 +8,12 @@
   <canvas id="game" width="600" height="400" style="background: #333331"></canvas>
   <script id="code">
     // initialize the game and setup the canvas
-    kontra.init();
+    let { canvas, context } = kontra.init();
+
+    kontra.initKeys();
 
     // create a basic sprite with a velocity
-    window.sprite = kontra.sprite({
+    window.sprite = kontra.Sprite({
       x: 290,
       y: 180,
       dx: 3,
@@ -22,44 +24,44 @@
       // pass a custom update function to the sprite
       update: function() {
         // move the sprite with the keyboard
-        if (kontra.keys.pressed('up')) {
+        if (kontra.keyPressed('up')) {
           this.y -= this.dy;
         }
-        else if (kontra.keys.pressed('down')) {
+        else if (kontra.keyPressed('down')) {
           this.y += this.dy;
         }
 
-        if (kontra.keys.pressed('left')) {
+        if (kontra.keyPressed('left')) {
           this.x -= this.dx;
         }
-        else if (kontra.keys.pressed('right')) {
+        else if (kontra.keyPressed('right')) {
           this.x += this.dx;
         }
 
         // reset the sprites position when it reaches the edge of the game
-        if (this.x > kontra.canvas.width) {
+        if (this.x > canvas.width) {
           this.x = -this.width;
         }
         else if (this.x < -this.width) {
-          this.x = kontra.canvas.width;
+          this.x = canvas.width;
         }
 
-        if (this.y > kontra.canvas.height) {
+        if (this.y > canvas.height) {
           this.y = -this.height;
         }
         else if (this.y < -this.height) {
-          this.y = kontra.canvas.height;
+          this.y = canvas.height;
         }
       }
     });
 
     // prevent default key behavior
-    kontra.keys.bind(['up', 'down', 'left', 'right'], function(e) {
+    kontra.bindKeys(['up', 'down', 'left', 'right'], function(e) {
       e.preventDefault();
     });
 
     // create the game loop to update and render the sprite
-    window.loop = kontra.gameLoop({
+    window.loop = kontra.GameLoop({
       update: function() {
         sprite.update();
       },

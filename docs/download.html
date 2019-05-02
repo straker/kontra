@@ -1,129 +1,120 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <title>Kontra.js – Download</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/webcomponentsjs/0.7.22/webcomponents-lite.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/themes/prism.min.css">
+  <link rel="stylesheet" href="../assets/styles.css">
 
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/themes/prism.min.css">
-  <link rel="stylesheet" href="styles.css">
-
-  <link rel="import" href="components/main-nav.html">
-  <link rel="import" href="components/code-output.html">
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/prism.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/components/prism-javascript.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/fetch/2.0.3/fetch.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/es6-promise/4.1.1/es6-promise.auto.min.js"></script>
-  <script src="js/kontra.js"></script>
+  <script src="../assets/js/kontra.js"></script>
 </head>
 <body>
   <div class="content">
-    <main-nav></main-nav>
+    <header class="main-nav">
+      <div id="kontra-heading" class="nav-heading">Kontra</div>
+      <a href="#main">Skip navigation</a>
 
-    <main id="main" tabindex="0">
+      <nav>
+        <button class="menu-button" aria-expanded="false" aria-controls="menu"><span aria-hidden="true">☰</span> Menu</button>
+
+        <!-- add role=list back to list so screen readers still read it as list when
+             css list-style: none is set
+             @see https://web-a11y.slack.com/archives/C042TSFGN/p1501699529181172 -->
+        <ul id="menu" role="list">
+          <li><a href="/" >Introduction</a></li>
+          <li><a href="/getting-started" >Getting Started</a></li>
+          <li><a href="/download" aria-current="page">Download</a></li>
+          <li><a href="/tutorials" >Tutorials</a></li>
+          <li><a href="/made-with-kontra" >Made With Kontra</a></li>
+
+          <li>
+            <span id="api" class="nav-api-heading">API</span>
+            <ul aria-labelledby="api">
+              <li><a href="/api/animation" >Animation</a></li>
+              <li><a href="/api/assets" >Assets</a></li>
+              <li><a href="/api/core" >Core</a></li>
+              <li><a href="/api/events" >Events</a></li>
+              <li><a href="/api/gameloop" >GameLoop</a></li>
+              <li><a href="/api/keyboard" >Keyboard</a></li>
+              <li><a href="/api/plugin" >Plugin</a></li>
+              <li><a href="/api/pointer" >Pointer</a></li>
+              <li><a href="/api/pool" >Pool</a></li>
+              <li><a href="/api/quadtree" >Quadtree</a></li>
+              <li><a href="/api/sprite" >Sprite</a></li>
+              <li><a href="/api/spritesheet" >SpriteSheet</a></li>
+              <li><a href="/api/store" >Store</a></li>
+              <li><a href="/api/tileengine" >TileEngine</a></li>
+              <li><a href="/api/vector" >Vector</a></li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <div class="scroll-indicator" aria-hidden="true"><span>^</span></div>
+    </header>
+
+    <main id="main">
       <div>
-        <h1>Download</h1>
+        <a href="https://github.com/straker/kontra" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
 
-        <p>To ensure you can squeeze every byte out of your game, download only the files you need.</p>
+        <h1>Download        </h1>
 
-        <form>
-          <fieldset id="compression">
-            <legend>Compression level</legend>
+        <p>Download the latest version of Kontra.</p>
+<h2 id="source-code">Source Code</h2>
+<ul>
+<li><a href="https://raw.githubusercontent.com/straker/kontra/master/kontra.min.js">Production version</a></li>
+<li><a href="https://raw.githubusercontent.com/straker/kontra/master/kontra.js">Development version</a></li>
+<li><a href="https://registry.npmjs.org/kontra/-/kontra-5.5.1.tgz">TGZ file</a></li>
+<li><a href="https://github.com/straker/kontra">Github repo</a></li>
+</ul>
+<h2 id="package-mangers">Package mangers</h2>
+<ul>
+<li><code>$ npm install kontra</code></li>
+<li><code>$ yarn add kontra</code></li>
+</ul>
+<h2 id="cdn">CDN</h2>
+<pre><code class="lang-js">&lt;script src=&quot;https://cdn.jsdelivr.net/npm/kontra@5.5.1/kontra.min.js&quot;&gt;&lt;/script&gt;
+</code></pre>
+<pre><code class="lang-js">&lt;script src=&quot;https://cdn.jsdelivr.net/npm/kontra@5.5.1/kontra.js&quot;&gt;&lt;/script&gt;
+</code></pre>
+<h2 id="custom-builds">Custom Builds</h2>
+<p>As of kontra 6.0.0, custom builds can be achieved by using a module bundler such as <a href="https://rollupjs.org/">Rollup</a> or <a href="https://webpack.js.org/">webpack</a>. Kontra supports ES modules, allowing you to use <a href="https://rollupjs.org/guide/en#tree-shaking">tree-shaking</a> to only bundle the code you need.</p>
+<pre><code class="lang-js">// game.js
+import { Sprite, GameLoop } from &#39;kontra&#39;;
 
-            <label>
-              <input type="radio" name="compression" value="dev">
-              Development version
-            </label>
+let sprite = Sprite({
+x: 100,
+y: 100,
+dx: 2,
+width: 20,
+height: 40,
+color: &#39;red&#39;
+});
 
-            <label>
-              <input type="radio" name="compression" value="min" checked>
-              Minified version
-            </label>
-          </fieldset>
+let loop = GameLoop({
+update() {
+ sprite.update();
+},
+render() {
+ sprite.render();
+}
+});
 
-          <fieldset id="files"'>
-            <legend>Files</legend>
+loop.start();
+</code></pre>
+<pre><code class="lang-bash">$ rollup game.js --format iife --file game.bundle.js
+</code></pre>
+        
 
-            <label>
-              <input type="checkbox" name="files" value="core" checked disabled>
-              Core <small class="filesize"></small>
-            </label>
 
-            <hr>
 
-            <label>
-              <input type="checkbox" name="files" value="gameLoop" checked>
-              Game Loop <small class="filesize"></small>
-            </label>
 
-            <label>
-              <input type="checkbox" name="files" value="keyboard" checked>
-              Keyboard <small class="filesize"></small>
-            </label>
-
-            <label>
-              <input type="checkbox" name="files" value="sprite" checked>
-              Sprite and Vector <small class="filesize"></small>
-            </label>
-
-            <hr>
-
-            <label>
-              <input type="checkbox" name="files" value="assets">
-              Assets <small class="filesize"></small>
-            </label>
-
-            <label>
-              <input type="checkbox" name="files" value="pool">
-              Object pool <small class="filesize"></small>
-            </label>
-
-            <label>
-              <input type="checkbox" name="files" value="pointer">
-              Pointer <small class="filesize"></small>
-            </label>
-
-            <label>
-              <input type="checkbox" name="files" value="quadtree">
-              Quadtree <small class="filesize"></small>
-            </label>
-
-            <label>
-              <input type="checkbox" name="files" value="spriteSheet">
-              Sprite Sheet and Animation <small class="filesize"></small>
-            </label>
-
-            <label>
-              <input type="checkbox" name="files" value="tileEngine">
-              Tile Engine <small class="filesize"></small>
-            </label>
-
-            <label>
-              <input type="checkbox" name="files" value="store">
-              Store <small class="filesize"></small>
-            </label>
-          </fieldset>
-        </form>
-
-        <div role="region" aria-live="polite" aria-atomic="true">
-          <p><strong>Total file size:</strong> <span id="total-filesize"></span> <span id="gzip-size"></span></p>
-        </div>
-
-        <section class="code-section">
-          <h2 class="code-title">Code</h2>
-          <a id="download" download="kontra.js" href="data:application/octet-stream;charset=utf-8" aria-label="Download code">Download</a>
-
-          <pre class="code-output"><code id="code" class="language-javascript"></code></pre>
-        </section>
-
-        <small>Download page inspired by <a href="https://prismjs.com/download.html">Prism.js</a>.</small>
       </div>
     </main>
   </div>
 
-  <script src="js/gzip.js"></script>
-  <script src="js/download.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/components/prism-javascript.min.js"></script>
+  <script src="../assets/js/navbar.js"></script>
 </body>
 </html>

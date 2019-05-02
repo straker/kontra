@@ -1,27 +1,29 @@
-kontra.init();
+let { canvas, contex} = kontra.init();
+
+kontra.initKeys();
 
 // set default asset paths
-kontra.assets.imagePath = 'imgs/';
-kontra.assets.audioPath = 'sounds/';
+kontra.setImagePath('imgs/');
+kontra.setAudioPath('sounds/');
 
 // load assets
-kontra.assets.load(
+kontra.load(
   // images
   'ship.png', 'bg.png', 'bullet_enemy.png', 'bullet.png', 'enemy.png',
   // audios
   'explosion.mp3', 'game_over.mp3', 'kick_shock.mp3', 'laser.mp3'
 ).then(function() {
   document.getElementById('loading').style.display = 'none';
-  var score = document.getElementById('score');
-  var playerScore = 0;
+  let score = document.getElementById('score');
+  let playerScore = 0;
 
-  kontra.assets.audio.kick_shock.loop = true;
+  kontra.audioAssets.kick_shock.loop = true;
 
   /*
    * Audio pools
    */
   // create an audio sprite for use in an audio pool, mimicking a normal image sprite
-  var audioSprite = {
+  let audioSprite = {
     isAlive: function() {
       return !this.audio.ended;
     },
@@ -42,7 +44,7 @@ kontra.assets.load(
    * @param {Audio} properties.audio - Audio object to clone.
    */
   function create(properties) {
-    var sprite = Object.create(audioSprite);
+    let sprite = Object.create(audioSprite);
     sprite.audio = properties.audio.cloneNode();
     sprite.audio.volume = 0.25;
 
@@ -56,108 +58,108 @@ kontra.assets.load(
    * Toggle all the audios in the pool
    */
   function toggleVolume() {
-    for (var i = 0, obj; obj = this.objects[i]; i++) {
+    for (let i = 0, obj; obj = this.objects[i]; i++) {
       obj.audio.muted = !obj.audio.muted;
     }
   }
 
   // create audio pools
-  var laserPool = kontra.pool({
+  let laserPool = kontra.Pool({
     create: function() {
-      return create({audio: kontra.assets.audio.laser})
+      return create({audio: kontra.audioAssets.laser})
     },
     fill: true,
     maxSize: 5
   });
   laserPool.toggleVolume = toggleVolume;
 
-  for (var i = 0; i < 5; i++) {
+  for (let i = 0; i < 5; i++) {
     laserPool.get({'play': false});
   }
 
-  var explosionPool = kontra.pool({
+  let explosionPool = kontra.Pool({
     create: function() {
-      return create({audio: kontra.assets.audio.explosion})
+      return create({audio: kontra.audioAssets.explosion})
     },
     maxSize: 10
   });
   explosionPool.toggleVolume = toggleVolume;
 
-  for (var i = 0; i < 5; i++) {
+  for (let i = 0; i < 5; i++) {
     explosionPool.get({'play': false});
   }
 
   /*
    * object pools
    */
-  var bullets = kontra.pool({
-    create: kontra.sprite,
+  let bullets = kontra.Pool({
+    create: kontra.Sprite,
     maxSize: 20
   });
 
-  var enemies = kontra.pool({
-    create: kontra.sprite,
+  let enemies = kontra.Pool({
+    create: kontra.Sprite,
     maxSize: 18
   });
 
-  var enemyBullets = kontra.pool({
-    create: kontra.sprite,
+  let enemyBullets = kontra.Pool({
+    create: kontra.Sprite,
     maxSize: 30
   });
 
   /*
    * game objects
    */
-  var quadtree = kontra.quadtree();
+  let quadtree = kontra.Quadtree();
 
   // panning background
-  var background = kontra.sprite({
+  let background = kontra.Sprite({
     dy: 1,
-    image: kontra.assets.images.bg,
+    image: kontra.imageAssets.bg,
     update: function() {
       this.advance();
 
-      if (this.y >= kontra.canvas.height) {
+      if (this.y >= canvas.height) {
         this.y = 0;
       }
     },
     render: function() {
       this.draw();
 
-      this.context.drawImage(this.image, this.x, this.y - kontra.canvas.height);
+      this.context.drawImage(this.image, this.x, this.y - canvas.height);
     }
   });
 
   // player ship
-  var player = kontra.sprite({
+  let player = kontra.Sprite({
     x: 280,
     y: 270,
-    image: kontra.assets.images.ship,
+    image: kontra.imageAssets.ship,
     counter: 15,
     update: function() {
       this.counter++;
 
-      if (kontra.keys.pressed('left')) {
+      if (kontra.keyPressed('left')) {
         this.x -= 3;
       }
-      else if (kontra.keys.pressed('right')) {
+      else if (kontra.keyPressed('right')) {
         this.x += 3;
       }
 
-      if (kontra.keys.pressed('up')) {
+      if (kontra.keyPressed('up')) {
         this.y -= 3;
       }
-      else if (kontra.keys.pressed('down')) {
+      else if (kontra.keyPressed('down')) {
         this.y += 3;
       }
 
-      if (kontra.keys.pressed('space') && this.counter >= 15) {
-        for (var i = 0; i < 2; i++) {
+      if (kontra.keyPressed('space') && this.counter >= 15) {
+        for (let i = 0; i < 2; i++) {
           bullets.get({
             x: this.x + 6 + (i * 27),
             y: this.y,
             dy: -3,
-            image: kontra.assets.images.bullet,
+            image: kontra.imageAssets.bullet,
             ttl: 130,
             type: 'friendly'
           });
@@ -172,25 +174,25 @@ kontra.assets.load(
 
   // clamp player position to lower third of the screen
   player.position.clamp(
-    0, kontra.canvas.height * 2 / 3,
-    kontra.canvas.width - player.width, kontra.canvas.height - player.height
+    0, canvas.height * 2 / 3,
+    canvas.width - player.width, canvas.height - player.height
   );
 
   /**
    * Spawn a new wave of enemies.
    */
   function spawnWave() {
-    var width = kontra.assets.images.enemy.width;
-    var x = 100;
-    var y = -kontra.assets.images.enemy.height;
-    var spacer = y * 1.5;
+    let width = kontra.imageAssets.enemy.width;
+    let x = 100;
+    let y = -kontra.imageAssets.enemy.height;
+    let spacer = y * 1.5;
 
-    for (var i = 1; i <= 18; i++) {
+    for (let i = 1; i <= 18; i++) {
       enemies.get({
         x: x,
         y: y,
         dy: 2,
-        image: kontra.assets.images.enemy,
+        image: kontra.imageAssets.enemy,
         ttl: Infinity,
         leftEdge: x - 90,
         rightEdge: x + 90 + width,
@@ -219,7 +221,7 @@ kontra.assets.load(
               x: this.x + this.width / 2,
               y: this.y + this.height,
               dy: 2.5,
-              image: kontra.assets.images.bullet_enemy,
+              image: kontra.imageAssets.bullet_enemy,
               ttl: 150,
               type: 'hostile'
             });
@@ -239,7 +241,7 @@ kontra.assets.load(
   /*
    * Game loop
    */
-  var loop = kontra.gameLoop({
+  let loop = kontra.GameLoop({
     clearCanvas: false,
     update: function(dt) {
       background.update();
@@ -250,7 +252,7 @@ kontra.assets.load(
       laserPool.update();
       explosionPool.update();
 
-      var liveBullets = bullets.getAliveObjects();
+      let liveBullets = bullets.getAliveObjects();
 
       quadtree.clear();
       quadtree.add(enemies.getAliveObjects(), enemyBullets.getAliveObjects());
@@ -258,17 +260,17 @@ kontra.assets.load(
       // find collisions between the player ship and enemy bullets
       objects = quadtree.get(player);
 
-      for (var i = 0, obj; obj = objects[i]; i++) {
+      for (let i = 0, obj; obj = objects[i]; i++) {
         if (obj.type === 'hostile' && obj.collidesWith(player)) {
           gameOver();
         }
       }
 
       // find collisions between the player bullets and enemy ships
-      for (var i = 0, bullet; bullet = liveBullets[i]; i++) {
+      for (let i = 0, bullet; bullet = liveBullets[i]; i++) {
         objects = quadtree.get(bullet);
 
-        for (var j = 0, obj; obj = objects[j]; j++) {
+        for (let j = 0, obj; obj = objects[j]; j++) {
           if (obj.type === 'enemy' && obj.collidesWith(bullet)) {
             bullet.ttl = 0;
             obj.ttl = 0;
@@ -295,18 +297,18 @@ kontra.assets.load(
     }
   });
 
-  kontra.keys.bind('m', function() {
+  kontra.bindKeys('m', function() {
     toggleMusic();
   });
 
-  kontra.keys.bind('p', function() {
+  kontra.bindKeys('p', function() {
     if (loop.isStopped) {
       loop.start();
-      kontra.assets.audio.kick_shock.play();
+      kontra.audioAssets.kick_shock.play();
     }
     else {
       loop.stop();
-      kontra.assets.audio.kick_shock.pause();
+      kontra.audioAssets.kick_shock.pause();
     }
   });
 
@@ -314,8 +316,8 @@ kontra.assets.load(
    * Toggle the music on and off.
    */
   function toggleMusic() {
-    kontra.assets.audio.kick_shock.muted = !kontra.assets.audio.kick_shock.muted;
-    kontra.assets.audio.game_over.muted = !kontra.assets.audio.game_over.muted
+    kontra.audioAssets.kick_shock.muted = !kontra.audioAssets.kick_shock.muted;
+    kontra.audioAssets.game_over.muted = !kontra.audioAssets.game_over.muted
     laserPool.toggleVolume();
     explosionPool.toggleVolume();
   }
@@ -326,9 +328,9 @@ kontra.assets.load(
   function gameOver() {
     loop.stop();
     document.getElementById('game-over').style.display = 'block';
-    kontra.assets.audio.kick_shock.pause();
-    kontra.assets.audio.game_over.currentTime = 0;
-    kontra.assets.audio.game_over.play();
+    kontra.audioAssets.kick_shock.pause();
+    kontra.audioAssets.game_over.currentTime = 0;
+    kontra.audioAssets.game_over.play();
   }
 
   /**
@@ -344,9 +346,9 @@ kontra.assets.load(
     score.innerHTML = 0;
 
     loop.start();
-    kontra.assets.audio.game_over.pause();
-    kontra.assets.audio.kick_shock.currentTime = 0;
-    kontra.assets.audio.kick_shock.play();
+    kontra.audioAssets.game_over.pause();
+    kontra.audioAssets.kick_shock.currentTime = 0;
+    kontra.audioAssets.kick_shock.play();
 
     player.position.x = 280;
     player.position.y = 270;

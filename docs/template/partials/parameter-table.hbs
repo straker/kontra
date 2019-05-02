@@ -1,0 +1,17 @@
+{{#if param}}
+<h3 id="title-{{ name }}"><span class="visually-hidden">{{ name }}</span> Parameters</span></h3>
+<dl aria-labelledby="title-{{ name }}">
+  {{#each param}}
+  <dt>
+    <code>{{ name }}</code>
+    {{#if optional}}<span class="optional">Optional</span>{{/if}}
+  </dt>
+  <dd>{{{ description }}}</dd>
+  {{/each}}
+</dl>
+{{/if}}
+
+{{#if returns}}
+<h3><span class="visually-hidden">{{ name }}</span> Return value</h3>
+<p>{{{ returns.description }}}</p>
+{{/if}}

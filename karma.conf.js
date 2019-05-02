@@ -6,7 +6,6 @@ module.exports = function(config) {
     basePath: '',
     singleRun: false,
     autoWatch: true,
-    concurrency: Infinity,
     frameworks: ['mocha', 'chai', 'sinon'],
     files: [
       // assets
@@ -14,26 +13,25 @@ module.exports = function(config) {
       {pattern: 'test/audio/*.*', included: false, served: true },
       {pattern: 'test/data/*.*', included: false, served: true },
 
-      'src/core.js',
-      'src/*.js',
-      'test/*.js',
+      {pattern: 'src/*.js', type: 'module', included: false },
+      {pattern: 'test/**/*.spec.js', type: 'module' },
     ],
+    preprocessors: {
+      'src/*.js': ["karma-coverage-istanbul-instrumenter"]
+    },
     browsers: ['ChromeHeadless'],
     proxies: {
       '/imgs': '/base/test/imgs',
       '/audio': '/base/test/audio',
       '/data': '/base/test/data'
     },
-    reporters: ['progress', 'coverage'],
-    preprocessors: {
-      'src/*.js': ['coverage']
+    coverageIstanbulInstrumenter: {
+      esModules: true
     },
-    coverageReporter: {
-      dir : 'coverage/',
-      reporters: [
-        {type: 'lcov', subdir: '.'},
-        {type: 'text-summary'}
-      ]
+    reporters: ['mocha', 'coverage-istanbul'],
+    coverageIstanbulReporter: {
+      reports: ['html', 'lcovonly', 'text-summary'],
+      dir: 'coverage/'
     }
   });
 };

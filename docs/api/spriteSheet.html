@@ -1,147 +1,210 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Kontra.js – Kontra.spriteSheet</title>
+  <title>Kontra.js – SpriteSheet</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/webcomponentsjs/0.7.22/webcomponents-lite.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/themes/prism.min.css">
+  <link rel="stylesheet" href="../assets/styles.css">
 
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/themes/prism.min.css">
-  <link rel="stylesheet" href="../styles.css">
-
-  <link rel="import" href="../components/main-nav.html">
-  <link rel="import" href="../components/code-output.html">
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/prism.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/components/prism-javascript.min.js"></script>
-  <script src="../js/kontra.js"></script>
+  <script src="../assets/js/kontra.js"></script>
 </head>
 <body>
   <div class="content">
-    <main-nav></main-nav>
+    <header class="main-nav">
+      <div id="kontra-heading" class="nav-heading">Kontra</div>
+      <a href="#main">Skip navigation</a>
+
+      <nav>
+        <button class="menu-button" aria-expanded="false" aria-controls="menu"><span aria-hidden="true">☰</span> Menu</button>
+
+        <!-- add role=list back to list so screen readers still read it as list when
+             css list-style: none is set
+             @see https://web-a11y.slack.com/archives/C042TSFGN/p1501699529181172 -->
+        <ul id="menu" role="list">
+          <li><a href="/" >Introduction</a></li>
+          <li><a href="/getting-started" >Getting Started</a></li>
+          <li><a href="/download" >Download</a></li>
+          <li><a href="/tutorials" >Tutorials</a></li>
+          <li><a href="/made-with-kontra" >Made With Kontra</a></li>
+
+          <li>
+            <span id="api" class="nav-api-heading">API</span>
+            <ul aria-labelledby="api">
+              <li><a href="/api/animation" >Animation</a></li>
+              <li><a href="/api/assets" >Assets</a></li>
+              <li><a href="/api/core" >Core</a></li>
+              <li><a href="/api/events" >Events</a></li>
+              <li><a href="/api/gameloop" >GameLoop</a></li>
+              <li><a href="/api/keyboard" >Keyboard</a></li>
+              <li><a href="/api/plugin" >Plugin</a></li>
+              <li><a href="/api/pointer" >Pointer</a></li>
+              <li><a href="/api/pool" >Pool</a></li>
+              <li><a href="/api/quadtree" >Quadtree</a></li>
+              <li><a href="/api/sprite" >Sprite</a></li>
+              <li><a href="/api/spritesheet" aria-current="page">SpriteSheet</a></li>
+              <li><a href="/api/store" >Store</a></li>
+              <li><a href="/api/tileengine" >TileEngine</a></li>
+              <li><a href="/api/vector" >Vector</a></li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <div class="scroll-indicator" aria-hidden="true"><span>^</span></div>
+    </header>
 
     <main id="main">
       <div>
-        <h1>Kontra&#8203;.spriteSheet(&#8203;properties)</h1>
+        <a href="https://github.com/straker/kontra" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
 
-        <dl>
-          <dt><strong>properties</strong> <em>{object}</em></dt>
-          <dd>Properties of the animation.</dd>
-          <dt><strong>properties.image</strong> <em>{HTMLImageElement | HTMLCanvasElement}</em></dt>
-          <dd>The sprite sheet image.</dd>
-          <dt><strong>properties.frameWidth</strong> <em>{number}</em></dt>
-          <dd>The width of a single frame.</dd>
-          <dt><strong>properties.frameHeight</strong> <em>{number}</em></dt>
-          <dd>The height of a single frame.</dd>
-          <dt><strong>properties.frameMargin</strong> <em>{number}</em></dt>
-          <dd>Optional. The amount of whitespace between each frame. Defaults to 0.</dd>
-          <dt><strong>properties.animations</strong> <em>{object}</em></dt>
-          <dd><a href="animation">kontra.animations</a> to create from the sprite sheet. Passed directly into the sprite sheets <a href="#createAnimations">createAnimations(animations)</a> function.</dd>
-        </dl>
+        <h1>SpriteSheet(&#8203;properties)
+        </h1>
 
-        <p>A sprite sheet to animate a sequence of images.</p>
+        <p>A sprite sheet to animate a sequence of images. Used to create <a href="./Sprite#animation-sprite">animation sprites</a>.</p>
+<figure>
+  <a href="../assets/imgs/character_walk_sheet.png">
+    <img src="../assets/imgs/character_walk_sheet.png" alt="11 frames of a walking pill-like alien wearing a space helmet.">
+  </a>
+  <figcaption>Sprite sheet image courtesy of <a href="https://kenney.nl/assets">Kenney</a>.</figcaption>
+</figure>
 
-        <figure>
-          <a href="../imgs/character_walk_sheet.png">
-            <img src="../imgs/character_walk_sheet.png" alt="11 frames of a walking teal pill-like person wearing a space helmet."/>
-          </a>
-          <figcaption>Sprite sheet image courtesy of <a href="https://kenney.nl/assets">Kenney</a>.</figcaption>
-        </figure>
+<p>Typically you create a sprite sheet just to create animations and then use the animations for your sprite.</p>
+<pre><code class="lang-js">import { Sprite, SpriteSheet } from &#39;kontra&#39;;
 
-        <p>Typically you create a sprite sheet just to create <a href="animation">animations</a> and then use the animations for your <a href="sprite">sprite</a>.</p>
-
-        <pre><code class="language-javascript">let image = new Image();
-image.src = '../imgs/character_walk_sheet.png';
-
-let spriteSheet = kontra.spriteSheet({
-  image: image,
-  frameWidth: 72,
-  frameHeight: 97,
-  animations: {
-    // create a named animation: walk
-    walk: {
-      frames: '0..9',  // frames 0 through 9
-      frameRate: 30
+let image = new Image();
+image.src = &#39;../assets/imgs/character_walk_sheet.png&#39;;
+image.onload = function() {
+  let spriteSheet = SpriteSheet({
+    image: image,
+    frameWidth: 72,
+    frameHeight: 97,
+    animations: {
+      // create a named animation: walk
+      walk: {
+        frames: &#39;0..9&#39;,  // frames 0 through 9
+        frameRate: 30
+      }
     }
-  }
-});
+  });
 
-let sprite = kontra.sprite({
-  x: 200,
-  y: 100,
+  let sprite = Sprite({
+    x: 200,
+    y: 100,
 
-  // use the sprite sheet animations for the sprite
-  animations: spriteSheet.animations
-});</code></pre>
-
-
-
-
+    // use the sprite sheet animations for the sprite
+    animations: spriteSheet.animations
+  });
+};
+</code></pre>
+        <h3 id="title-SpriteSheet"><span class="visually-hidden">SpriteSheet</span> Parameters</span></h3>
+        <dl aria-labelledby="title-SpriteSheet">
+          <dt>
+            <code>properties</code>
+            
+          </dt>
+          <dd><p>Object. Properties of the sprite sheet.</p>
+        </dd>
+          <dt>
+            <code>properties.image</code>
+            
+          </dt>
+          <dd><p>Image or HTMLCanvasElement. The sprite sheet image.</p>
+        </dd>
+          <dt>
+            <code>properties.frameWidth</code>
+            
+          </dt>
+          <dd><p>Number. The width of a single frame.</p>
+        </dd>
+          <dt>
+            <code>properties.frameHeight</code>
+            
+          </dt>
+          <dd><p>Number. The height of a single frame.</p>
+        </dd>
+          <dt>
+            <code>properties.frameMargin</code>
+            <span class="optional">Optional</span>
+          </dt>
+          <dd><p>Number. The amount of whitespace between each frame. Defaults to <code>0</code>.</p>
+        </dd>
+          <dt>
+            <code>properties.animations</code>
+            <span class="optional">Optional</span>
+          </dt>
+          <dd><p>Object. Animations to create from the sprite sheet using <a href="Animation">Animation</a>. Passed directly into the sprite sheets <a href="#createAnimations">createAnimations()</a> function.</p>
+        </dd>
+        </dl>
+        
 
         <section class="toc">
           <h2 id="toc"><a href="#toc" class="section-link">Table of Contents<span aria-hidden="true">#</span></a></h2>
 
-          <ul aria-labeledby="toc">
+          <ul aria-labelledby="toc">
+
             <li>
               <h3 id="properties">Properties</h3>
-              <ul aria-labeledby="properties">
-                <li><a href="#animations">kontra.spriteSheet&#8203;.animations</a></li>
-                <li><a href="#frame">kontra.spriteSheet&#8203;.frame</a></li>
-                <li><a href="#image">kontra.spriteSheet&#8203;.image</a></li>
+              <ul aria-labelledby="properties">
+                <li>
+                  <a href="#animations">
+                    <span>SpriteSheet&#8203;.animations</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#frame">
+                    <span>SpriteSheet&#8203;.frame</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#image">
+                    <span>SpriteSheet&#8203;.image</span>
+                  </a>
+                </li>
               </ul>
             </li>
 
             <li>
               <h3 id="methods">Methods</h3>
-              <ul aria-labeledby="methods">
-                <li><a href="#createAnimations">kontra.spriteSheet&#8203;.createAnimations(animations)</a></li>
+              <ul aria-labelledby="methods">
+                <li>
+                  <a href="#createAnimations">
+                    <span>SpriteSheet&#8203;.createAnimations(animations)</span>
+                  </a>
+                </li>
               </ul>
             </li>
           </ul>
         </section>
 
 
-
-
-
         <section>
-          <h2 id="animations"><a href="#animations" class="section-link">kontra.spriteSheet&#8203;.animations<span aria-hidden="true">#</span></a></h2>
+          <h2 id="animations">
+            <a href="#animations" class="section-link">
+              <span>SpriteSheet&#8203;.animations</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
 
-          <p><em>{object}</em></p>
-
-          <p>An object of named <a href="animation">kontra.animation</a> objects. Typically you pass this object into <a href="sprite">kontra.sprite</a> to create an <a href="sprite#animation-sprite">animation sprite</a>.</p>
-
+          <p>An object of named <a href="Animation">Animation</a> objects. Typically you pass this object into <a href="Sprite">Sprite</a> to create an <a href="./Sprite#animation-sprite">animation sprites</a>.</p>
+          
         </section>
-
-
-
-
-
         <section>
-          <h2 id="createAnimations"><a href="#createAnimations" class="section-link">kontra.spriteSheet&#8203;.createAnimations(animations)<span aria-hidden="true">#</span></a></h2>
+          <h2 id="createAnimations">
+            <a href="#createAnimations" class="section-link">
+              <span>SpriteSheet&#8203;.createAnimations(animations)</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
 
-          <dl>
-            <dt><strong>animations</strong> <em>{object}</em></dt>
-            <dd>Object of named animations to create from the sprite sheet.</dd>
-            <dt><strong>animations.&lt;name&gt;.frames</strong> <em>{number | number[] | string}</em></dt>
-            <dd>The sequence of frames to use from the sprite sheet. It can either be a single frame (<em>number</em>), a sequence of frames (<em>number[]</em>), or a consecutive frame notation (<code>'1..4'</code>). Sprite sheet frames are 0 indexed.</dd>
-            <dt><strong>animations.&lt;name&gt;.frameRate</strong> <em>{object}</em></dt>
-            <dd>The number frames to display per second.</dd>
-            <dt><strong>animations.&lt;name&gt;.loop</strong> <em>{boolean}</em></dt>
-            <dd>Optional. If the animation should loop back to the beginning once completed. Defaults to true.</dd>
-          </dl>
+          <p>Create named animations from the sprite sheet. Called from the constructor if the <code>animations</code> argument is passed.</p>
+<p>This function populates the sprite sheets <code>animations</code> property with <a href="Animation">Animation</a> objects. Each animation is accessible by its name.</p>
+<pre><code class="lang-js">import { Sprite, SpriteSheet } from &#39;kontra&#39;;
 
-          <p>Create animations from the sprite sheet. Called from <code>kontra.spriteSheet</code> automatically if the <code>animations</code> property is passed in.</p>
-
-          <p>This function populates the sprite sheets <a href="#animations">animations</a> object with <a href="animation">kontra.animation</a> objects. Each animation is accessible by their name.</p>
-
-<code-output>
 let image = new Image();
-image.src = '../imgs/character_walk_sheet.png';
-
+image.src = &#39;../assets/imgs/character_walk_sheet.png&#39;;
 image.onload = function() {
 
-  let spriteSheet = kontra.spriteSheet({
+  let spriteSheet = SpriteSheet({
     image: image,
     frameWidth: 72,
     frameHeight: 97,
@@ -150,7 +213,8 @@ image.onload = function() {
     animations: {
       // create 1 animation: idle
       idle: {
-        frames: 1  // single frame
+        // a single frame
+        frames: 1
       }
     }
   });
@@ -158,72 +222,89 @@ image.onload = function() {
   spriteSheet.createAnimations({
     // create 4 animations: jump, walk, moonWalk, attack
     jump: {
-      frames: [1, 10, 1],  // sequence of frames (can be non-consecutive)
+      // sequence of frames (can be non-consecutive)
+      frames: [1, 10, 1],
       frameRate: 10,
-      loop: false,  // don't loop the animation
+      loop: false,
     },
     walk: {
-      frames: '2..6',  // ascending consecutive frame animation (frames 2-6, inclusive)
+      // ascending consecutive frame animation (frames 2-6, inclusive)
+      frames: &#39;2..6&#39;,
       frameRate: 20
     },
     moonWalk: {
-      frames: '6..2',  // descending consecutive frame animation
+      // descending consecutive frame animation (frames 6-2, inclusive)
+      frames: &#39;6..2&#39;,
       frameRate: 20
     },
     attack: {
-      frames: ['8..10', 13, '10..8'],  // you can also mix and match, in this case frames [8,9,10,13,10,9,8]
+      // you can also mix and match, in this case frames [8,9,10,13,10,9,8]
+      frames: [&#39;8..10&#39;, 13, &#39;10..8&#39;],
       frameRate: 10,
-      loop: false,  // don't loop the animation
+      loop: false,
     }
   });
-
-  // update and render the walk animation every frame
-  let loop = kontra.gameLoop({
-    update: function() {
-      spriteSheet.animations.walk.update();
-    },
-    render: function() {
-      spriteSheet.animations.walk.render({x: 267, y: 54,});
-    }
-  });
-
-  loop.start();
 };
 </code></pre>
-
+          <h3 id="title-createAnimations"><span class="visually-hidden">createAnimations</span> Parameters</span></h3>
+          <dl aria-labelledby="title-createAnimations">
+            <dt>
+              <code>animations</code>
+              
+            </dt>
+            <dd><p>Object. Object of named animations to create from the sprite sheet.</p>
+          </dd>
+            <dt>
+              <code>animations.&lt;name&gt;.frames</code>
+              
+            </dt>
+            <dd><p>Number or String or an Array of Numbers or String[]. The sequence of frames to use from the sprite sheet. It can either be a single frame (<code>1</code>), a sequence of frames (<code>[1,2,3,4]</code>), or a consecutive frame notation (<code>&#39;1..4&#39;</code>). Sprite sheet frames are <code>0</code> indexed.</p>
+          </dd>
+            <dt>
+              <code>animations.&lt;name&gt;.frameRate</code>
+              
+            </dt>
+            <dd><p>Number. The number frames to display per second.</p>
+          </dd>
+            <dt>
+              <code>animations.&lt;name&gt;.loop</code>
+              <span class="optional">Optional</span>
+            </dt>
+            <dd><p>Boolean. If the animation should loop back to the beginning once completed. Defaults to <code>true</code>.</p>
+          </dd>
+          </dl>
+          
         </section>
-
-
-
-
-
         <section>
-          <h2 id="frame"><a href="#frame" class="section-link">kontra.spriteSheet&#8203;.frame<span aria-hidden="true">#</span></a></h2>
-
-          <p><em>{object}</em></p>
+          <h2 id="frame">
+            <a href="#frame" class="section-link">
+              <span>SpriteSheet&#8203;.frame</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
 
           <p>An object that defines properties of a single frame in the sprite sheet. It has properties of <code>width</code>, <code>height</code>, and <code>margin</code>.</p>
-
-          <p><code>width</code> and <code>height</code> define the width of a single frame, while <code>margin</code> defines the amount of whitespace between each frame.</p>
-
+<p><code>width</code> and <code>height</code> are the width of a single frame, while <code>margin</code> defines the amount of whitespace between each frame.</p>
+          
         </section>
-
-
-
-
-
         <section>
-          <h2 id="image"><a href="#image" class="section-link">kontra.spriteSheet&#8203;.image<span aria-hidden="true">#</span></a></h2>
-
-          <p><em>{HTMLImageElement | HTMLCanvasElement}</em></p>
+          <h2 id="image">
+            <a href="#image" class="section-link">
+              <span>SpriteSheet&#8203;.image</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
 
           <p>The sprite sheet image.</p>
-
+          
         </section>
 
       </div>
     </main>
   </div>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/components/prism-javascript.min.js"></script>
+  <script src="../assets/js/navbar.js"></script>
 </body>
 </html>

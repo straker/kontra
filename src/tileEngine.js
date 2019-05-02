@@ -4,8 +4,8 @@ import { getCanvas, getContext } from './core.js'
  * A tile engine for managing and drawing tilesets.
  *
  * <figure>
- *   <a href="../imgs/mapPack_tilesheet.png">
- *     <img src="../imgs/mapPack_tilesheet.png" alt="Tileset to create an overworld map in various seasons.">
+ *   <a href="../assets/imgs/mapPack_tilesheet.png">
+ *     <img src="../assets/imgs/mapPack_tilesheet.png" alt="Tileset to create an overworld map in various seasons.">
  *   </a>
  *   <figcaption>Tileset image courtesy of <a href="https://kenney.nl/assets">Kenney</a>.</figcaption>
  * </figure>
@@ -21,16 +21,16 @@ import { getCanvas, getContext } from './core.js'
  * @param {Object[]} properties.tilesets - Array of tileset objects.
  * @param {Number} properties.tilesetN.firstgid - First tile index of the tileset. The first tileset will have a firstgid of 1 as 0 represents an empty tile.
  * @param {String|HTMLImageElement} properties.tilesetN.image - Relative path to the HTMLImageElement or an HTMLImageElement. If passing a relative path, the image file must have been [loaded](./assets) first.
- * @param {Number} [properties.tilesetN.margin=0] - The amount of whitespace between each tile.
- * @param {Number} [properties.tilesetN.tilewidth] - Width of the tileset (in number of tiles). Defaults to properties.tilewidth.
- * @param {Number} [properties.tilesetN.tileheight] - Height of the tileset (in number of tiles). Defaults to properties.tileheight.
- * @param {String} [properties.tilesetN.source] - Relative path to the tileset JSON file. The source JSON file must have been [loaded](./assets) first.
+ * @param {Number} [properties.tilesetN.margin=0] - The amount of whitespace between each tile (in pixels).
+ * @param {Number} [properties.tilesetN.tilewidth] - Width of the tileset (in pixels). Defaults to properties.tilewidth.
+ * @param {Number} [properties.tilesetN.tileheight] - Height of the tileset (in pixels). Defaults to properties.tileheight.
+ * @param {String} [properties.tilesetN.source] - Relative path to the source JSON file. The source JSON file must have been [loaded](./assets) first.
  * @param {Number} [properties.tilesetN.columns] - Number of columns in the tileset image.
  *
  * @param {Object[]} properties.layers - Array of layer objects.
  * @param {String} properties.layerN.name - Unique name of the layer.
  * @param {Number[]} properties.layerN.data - 1D array of tile indices.
- * @param {boolean} [properties.layerN.visible=true] - If the layer should be drawn or not.
+ * @param {Boolean} [properties.layerN.visible=true] - If the layer should be drawn or not.
  * @param {Number} [properties.layerN.opacity=1] - Percent opacity of the layer.
  */
 
@@ -43,11 +43,11 @@ import { getCanvas, getContext } from './core.js'
  *
  * To set up the tile engine, you'll need to pass it the width and height of a tile (in pixels) and the width and height of the map (in number of tiles).
  *
- * You'll then need to add at least one tileset with an image as well as firstgid, or fist tile index of the tileset. The first tileset will always have a firstgid of 1 as 0 represents an empty tile.
+ * You'll then need to add at least one tileset with an image as well as firstgid, or first tile index of the tileset. The first tileset will always have a firstgid of 1 as 0 represents an empty tile.
  *
  * Lastly, you'll need to add at least one named layer with data. A layer tells the tile engine which tiles from the tileset image to use at what position on the map.
  *
- * Once all tileset images and all layers have been added, you can render the tile engine by calling its `render()` function.
+ * Once all tileset images and all layers have been added, you can render the tile engine by calling its [render()](#render) function.
  *
  * @sectionName Basic Use
  * @example {576x576}
@@ -59,7 +59,7 @@ import { getCanvas, getContext } from './core.js'
  * // exclude-script:end
  *
  * let img = new Image();
- * img.src = '../imgs/mapPack_tilesheet.png';
+ * img.src = '../assets/imgs/mapPack_tilesheet.png';
  * img.onload = function() {
  *   let tileEngine = TileEngine({
  *     // tile size
@@ -112,9 +112,9 @@ import { getCanvas, getContext } from './core.js'
  * import { load, TileEngine, dataAssets } from 'kontra';
  * // exclude-script:end
  *
- * load('../imgs/mapPack_tilesheet.png', '../data/tile_engine_basic.json')
+ * load('../assets/imgs/mapPack_tilesheet.png', '../assets/data/tile_engine_basic.json')
  *   .then(assets => {
- *     let tileEngine = TileEngine(dataAssets['../data/tile_engine_basic']);
+ *     let tileEngine = TileEngine(dataAssets['../assets/data/tile_engine_basic']);
  *     // exclude-code:start
  *     tileEngine.context = context;
  *     // exclude-code:end
@@ -136,9 +136,9 @@ import { getCanvas, getContext } from './core.js'
  * import { load, TileEngine, dataAssets, GameLoop } from 'kontra';
  * // exclude-script:end
  *
- * load('../imgs/mapPack_tilesheet.png', '../data/tile_engine_camera.json')
+ * load('../assets/imgs/mapPack_tilesheet.png', '../assets/data/tile_engine_camera.json')
  *   .then(function() {
- *     let tileEngine = TileEngine(dataAssets['../data/tile_engine_camera']);
+ *     let tileEngine = TileEngine(dataAssets['../assets/data/tile_engine_camera']);
  *     // exclude-code:start
  *     tileEngine.context = context;
  *     // exclude-code:end
@@ -345,7 +345,7 @@ export default function TileEngine(properties = {}) {
      *
      * tileEngine.layerCollidesWith('collision', sprite);  //=> true
      * ```
-     * @memberof kontra.tileEngine
+     * @memberof TileEngine
      * @function layerCollidesWith
      *
      * @param {String} name - The name of the layer to check for collision.

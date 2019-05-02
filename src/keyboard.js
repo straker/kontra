@@ -111,7 +111,7 @@ export function initKeys() {
 }
 
 /**
- * Bind a set of keys that will call the callback function when they are pressed. Takes a single key or an array of keys. Is Passed the original KeyboardEvent as a parameter.
+ * Bind a set of keys that will call the callback function when they are pressed. Takes a single key or an array of keys. Is passed the original KeyboardEvent as a parameter.
  *
  * ```js
  * import { initKeys, bindKeys } from 'kontra';

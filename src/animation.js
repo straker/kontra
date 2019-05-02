@@ -5,13 +5,13 @@ import { getContext } from './core.js'
  *
  * An animation defines the sequence of frames to use from a sprite sheet. It also defines at what speed the animation should run using `frameRate`.
  *
- * Typically you don't create an kontra.Animation directly, but rather you would create them from kontra.SpriteSheet by passing the `animations` parameter.
+ * Typically you don't create an kontra.Animation directly, but rather you would create them from kontra.SpriteSheet by passing the `animations` argument.
  *
  * ```js
  * import { SpriteSheet, Animation } from 'kontra';
  *
  * let image = new Image();
- * image.src = '../imgs/character_walk_sheet.png';
+ * image.src = '../assets/imgs/character_walk_sheet.png';
  * image.onload = function() {
  *   let spriteSheet = SpriteSheet({
  *     image: image,
@@ -116,7 +116,7 @@ class Animation {
   }
 
   /**
-   * Update the animation. Used when the animation is not paused or stopped.
+   * Update the animation.
    * @memberof Animation
    * @function update
    *
@@ -137,13 +137,13 @@ class Animation {
   }
 
   /**
-   * Draw the current frame. Used when the animation is not stopped.
+   * Draw the current frame of the animation.
    * @memberof Animation
    * @function render
    *
-   * @param {Object} properties - How to draw the animation.
-   * @param {Number} properties.x - X position to draw.
-   * @param {Number} properties.y - Y position to draw.
+   * @param {Object} properties - Properties to draw the animation.
+   * @param {Number} properties.x - X position to draw the animation.
+   * @param {Number} properties.y - Y position to draw the animation.
    * @param {Number} [properties.width] - width of the sprite. Defaults to [Animation.width](#width).
    * @param {Number} [properties.height] - height of the sprite. Defaults to [Animation.height](#height).
    * @param {Canvas​Rendering​Context2D} [properties.context] - The context the animation should draw to. Defaults to [core.getContext()](/api/core#getContext).

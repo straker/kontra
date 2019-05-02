@@ -1,21 +1,21 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <title>Kontra.js – Plugin</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/themes/prism.min.css">
-  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="../assets/styles.css">
 
-  <script src="../js/kontra.js"></script>
+  <script src="../assets/js/kontra.js"></script>
 </head>
 <body>
   <div class="content">
     <header class="main-nav">
-      <h1 id="kontra-heading">Kontra</h1>
+      <div id="kontra-heading" class="nav-heading">Kontra</div>
       <a href="#main">Skip navigation</a>
 
-      <nav aria-labelledby="kontra-heading">
+      <nav>
         <button class="menu-button" aria-expanded="false" aria-controls="menu"><span aria-hidden="true">☰</span> Menu</button>
 
         <!-- add role=list back to list so screen readers still read it as list when
@@ -24,11 +24,12 @@
         <ul id="menu" role="list">
           <li><a href="/" >Introduction</a></li>
           <li><a href="/getting-started" >Getting Started</a></li>
+          <li><a href="/download" >Download</a></li>
           <li><a href="/tutorials" >Tutorials</a></li>
           <li><a href="/made-with-kontra" >Made With Kontra</a></li>
 
           <li>
-            <h2 id="api">API</h2>
+            <span id="api" class="nav-api-heading">API</span>
             <ul aria-labelledby="api">
               <li><a href="/api/animation" >Animation</a></li>
               <li><a href="/api/assets" >Assets</a></li>
@@ -70,7 +71,7 @@ registerPlugin(Sprite, loggingPlugin);
         <section class="toc">
           <h2 id="toc"><a href="#toc" class="section-link">Table of Contents<span aria-hidden="true">#</span></a></h2>
 
-          <ul aria-labeledby="toc">
+          <ul aria-labelledby="toc">
             <li>
               <ul>
                 <li><a href="#how-to create a plugin">How to Create a Plugin</a></li>
@@ -82,7 +83,7 @@ registerPlugin(Sprite, loggingPlugin);
 
             <li>
               <h3 id="methods">Methods</h3>
-              <ul aria-labeledby="methods">
+              <ul aria-labelledby="methods">
                 <li>
                   <a href="#extendObject">
                     <span>extendObject(kontraObj, properties)</span>
@@ -123,9 +124,8 @@ const loggingPlugin = {
   }
 };
 export default loggingPlugin;
-
-
-// consumerCode.js
+</code></pre>
+<pre><code class="lang-js">// consumerCode.js
 import { registerPlugin, Sprite } from &#39;kontra&#39;;
 import loggingPlugin from pluginCode.js;
 
@@ -176,7 +176,7 @@ registerPlugin(MyObj, {
 const obj = new MyObj();
 obj.add(1, 2);  //=&gt; 6
 </code></pre>
-<p>Multiple before intercept functions can be registered for the same function. All functions will be run in the order registered. The prior functions return will be passed to the next function. If the prior function didn&#39;t modify the arguments (returned <code>null</code> or nothing) then the prior functions parameters will be passed to the next function instead.</p>
+<p>Multiple before intercept functions can be registered for the same function. All functions will be run in the order they were registered. The functions return value will be passed to the next function. If the function doesn&#39;t modify the arguments (returned <code>null</code> or nothing) then the functions parameters will be passed to the next function instead.</p>
 <pre><code class="lang-js">class MyObj {
   add(a, b) {
     return a + b;
@@ -227,7 +227,7 @@ registerPlugin(MyObj, {
 const obj = new MyObj();
 obj.add(1, 2);  //=&gt; 6
 </code></pre>
-<p>Multiple after intercept functions can be registered for the same function. All functions will be run in the order registered. The prior functions return will be passed to the next function. If the prior function didn&#39;t modify the result (returned <code>null</code> or nothing) then the prior functions <code>result</code> parameter will be passed to the next function instead.</p>
+<p>Multiple after intercept functions can be registered for the same function. All functions will be run in the order they were registered. Each functions return value will be passed to the next function. If the function doesn&#39;t modify the result (returned <code>null</code> or nothing) then the functions parameters will be passed to the next function instead.</p>
 <pre><code class="lang-js">class MyObj {
   add(a, b) {
     return a + b;
@@ -347,6 +347,6 @@ extendObject(Vector, {
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/prism.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/components/prism-javascript.min.js"></script>
-  <script src="../js/navbar.js"></script>
+  <script src="../assets/js/navbar.js"></script>
 </body>
 </html>

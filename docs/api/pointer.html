@@ -1,21 +1,21 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <title>Kontra.js – Pointer</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/themes/prism.min.css">
-  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="../assets/styles.css">
 
-  <script src="../js/kontra.js"></script>
+  <script src="../assets/js/kontra.js"></script>
 </head>
 <body>
   <div class="content">
     <header class="main-nav">
-      <h1 id="kontra-heading">Kontra</h1>
+      <div id="kontra-heading" class="nav-heading">Kontra</div>
       <a href="#main">Skip navigation</a>
 
-      <nav aria-labelledby="kontra-heading">
+      <nav>
         <button class="menu-button" aria-expanded="false" aria-controls="menu"><span aria-hidden="true">☰</span> Menu</button>
 
         <!-- add role=list back to list so screen readers still read it as list when
@@ -24,11 +24,12 @@
         <ul id="menu" role="list">
           <li><a href="/" >Introduction</a></li>
           <li><a href="/getting-started" >Getting Started</a></li>
+          <li><a href="/download" >Download</a></li>
           <li><a href="/tutorials" >Tutorials</a></li>
           <li><a href="/made-with-kontra" >Made With Kontra</a></li>
 
           <li>
-            <h2 id="api">API</h2>
+            <span id="api" class="nav-api-heading">API</span>
             <ul aria-labelledby="api">
               <li><a href="/api/animation" >Animation</a></li>
               <li><a href="/api/assets" >Assets</a></li>
@@ -83,7 +84,7 @@ track(sprite);
 sprite.render();
 </code></pre>
 <p>By default, the pointer is treated as a circle and will check for collisions against objects assuming they are rectangular (have a width and height property).</p>
-<p>If you need to perform a different type of collision detection, assign the object a collidesWithPointer(pointer) function and it will be called instead, passing the current pointer object. Use this function to determine how the pointer circle should collide with the object.</p>
+<p>If you need to perform a different type of collision detection, assign the object a <code>collidesWithPointer()</code> function and it will be called instead. The function is passed the pointer object. Use this function to determine how the pointer circle should collide with the object.</p>
 <pre><code class="lang-js">import { Sprite } from &#39;kontra&#39;;
 
 let sprite = Srite({
@@ -103,7 +104,7 @@ let sprite = Srite({
         <section class="toc">
           <h2 id="toc"><a href="#toc" class="section-link">Table of Contents<span aria-hidden="true">#</span></a></h2>
 
-          <ul aria-labeledby="toc">
+          <ul aria-labelledby="toc">
             <li>
               <ul>
                 <li><a href="#available-buttons">Available Buttons</a></li>
@@ -112,7 +113,7 @@ let sprite = Srite({
 
             <li>
               <h3 id="properties">Properties</h3>
-              <ul aria-labeledby="properties">
+              <ul aria-labelledby="properties">
                 <li>
                   <a href="#pointer">
                     <span>pointer</span>
@@ -123,7 +124,7 @@ let sprite = Srite({
 
             <li>
               <h3 id="methods">Methods</h3>
-              <ul aria-labeledby="methods">
+              <ul aria-labelledby="methods">
                 <li>
                   <a href="#initPointer">
                     <span>initPointer()</span>
@@ -197,7 +198,7 @@ let sprite = Srite({
             </a>
           </h2>
 
-          <p>Register a function to be called on all pointer down events. Is Passed the original Event and the target object (if there is one).</p>
+          <p>Register a function to be called on all pointer down events. Is passed the original Event and the target object (if there is one).</p>
 <pre><code class="lang-js">import { initPointer, onPointerDown } from &#39;kontra&#39;;
 
 initPointer();
@@ -225,7 +226,7 @@ onPointerDown(function(e, object) {
             </a>
           </h2>
 
-          <p>Register a function to be called on all pointer up events. Is Passed the original Event and the target object (if there is one).</p>
+          <p>Register a function to be called on all pointer up events. Is passed the original Event and the target object (if there is one).</p>
 <pre><code class="lang-js">import { initPointer, onPointerUp } from &#39;kontra&#39;;
 
 initPointer();
@@ -416,6 +417,6 @@ untrack([obj1, obj2]);
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/prism.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/components/prism-javascript.min.js"></script>
-  <script src="../js/navbar.js"></script>
+  <script src="../assets/js/navbar.js"></script>
 </body>
 </html>

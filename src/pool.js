@@ -1,28 +1,28 @@
 /**
- * A fast and memory efficient object pool for sprite reuse. Perfect for particle systems or SHUMPs. The pool starts out with just 1 object, but will grow in size to accommodate as many objects as are needed.
+ * A fast and memory efficient [object pool](https://gameprogrammingpatterns.com/object-pool.html) for sprite reuse. Perfect for particle systems or SHUMPs. The pool starts out with just one object, but will grow in size to accommodate as many objects as are needed.
  *
  * <canvas width="600" height="200" id="pool-example"></canvas>
- * <script src="../js/pool.js"></script>
+ * <script src="../assets/js/pool.js"></script>
  * @class Pool
  *
  * @param {Object} properties - Properties of the pool.
- * @param {Function} properties.create - Function that returns a new object to be added to the pool when there are no objects able to be reused.
+ * @param {Function} properties.create - Function that returns a new object to be added to the pool when there are no more alive objects.
  * @param {Number} [properties.maxSize=1024] - The maximum number of objects allowed in the pool. The pool will never grow beyond this size.
  */
 class Pool {
 
   /**
-   * To use the pool, you must pass the `create()` function, which should return a new kontra.Sprite or object. This object will be added to the pool every time there are no more alive objects.
+   * To use the pool, you must pass the `create()` function argument, which should return a new kontra.Sprite or object. This object will be added to the pool every time there are no more alive objects.
    *
-   * The object must implement the functions `update(dt)`, `init(properties)`, and `isAlive()`. If one of these functions is missing the pool will throw an error. kontra.Sprite defines these functions for you.
+   * The object must implement the functions `update()`, `init()`, and `isAlive()`. If one of these functions is missing the pool will throw an error. kontra.Sprite defines these functions for you.
    *
    * An object is available for reuse when its `isAlive()` function returns `false`. For a sprite, this is typically when its ttl is `0`.
    *
-   * When you want an object from the pool, use the pools `get(properties)` function and pass it any properties you want the newly initialized object to have.
+   * When you want an object from the pool, use the pools [get()](#get) function and pass it any properties you want the newly initialized object to have.
    *
    * ```js
    * let pool = Pool({
-   *   // create a new sprite every time the pool needs new objects
+   *   // create a new sprite every time the pool needs a new object
    *   create: Sprite
    * });
    *
@@ -37,7 +37,7 @@ class Pool {
    * });
    * ```
    *
-   * When you want to update or render all alive objects in the pool, use the pools `update()` and `render()` functions.
+   * When you want to update or render all alive objects in the pool, use the pools [update()](#update) and [render()](#render) functions.
    *
    * ```js
    * let loop = GameLoop({
@@ -94,7 +94,7 @@ class Pool {
   }
 
   /**
-   * Get and return an object from the pool. The properties parameter will be passed directly to the objects `init(properties)` function. If you're using a kontra.Sprite, you should also pass the `ttl` property to designate how many frames you want the object to be alive for.
+   * Get and return an object from the pool. The properties parameter will be passed directly to the objects `init()` function. If you're using a kontra.Sprite, you should also pass the `ttl` property to designate how many frames you want the object to be alive for.
    *
    * If you want to control when the sprite is ready for reuse, pass `Infinity` for `ttl`. You'll need to set the sprites `ttl` to `0` when you're ready for the sprite to be reused.
    *
@@ -115,7 +115,7 @@ class Pool {
    * @memberof Pool
    * @function get
    *
-   * @param {Object} properties - Properties to pass to the objects `init(properties)` function.
+   * @param {Object} properties - Properties to pass to the objects `init()` function.
    *
    * @returns {Object} The newly initialized object.
    */
@@ -166,7 +166,7 @@ class Pool {
   }
 
   /**
-   * Update all alive objects in the pool by calling the objects update() function. This function also manages when each object should be recycled, so it is recommended that you do not call the objects update() function outside of this function.
+   * Update all alive objects in the pool by calling the objects `update()` function. This function also manages when each object should be recycled, so it is recommended that you do not call the objects `update()` function outside of this function.
    * @memberof Pool
    * @function update
    *

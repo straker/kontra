@@ -43,8 +43,8 @@ function parseFrames(consecutiveFrames) {
  * A sprite sheet to animate a sequence of images. Used to create [animation sprites](./Sprite#animation-sprite).
  *
  * <figure>
- *   <a href="../imgs/character_walk_sheet.png">
- *     <img src="../imgs/character_walk_sheet.png" alt="11 frames of a walking pill-like alien wearing a space helmet.">
+ *   <a href="../assets/imgs/character_walk_sheet.png">
+ *     <img src="../assets/imgs/character_walk_sheet.png" alt="11 frames of a walking pill-like alien wearing a space helmet.">
  *   </a>
  *   <figcaption>Sprite sheet image courtesy of <a href="https://kenney.nl/assets">Kenney</a>.</figcaption>
  * </figure>
@@ -55,7 +55,7 @@ function parseFrames(consecutiveFrames) {
  * import { Sprite, SpriteSheet } from 'kontra';
  *
  * let image = new Image();
- * image.src = '../imgs/character_walk_sheet.png';
+ * image.src = '../assets/imgs/character_walk_sheet.png';
  * image.onload = function() {
  *   let spriteSheet = SpriteSheet({
  *     image: image,
@@ -130,7 +130,7 @@ class SpriteSheet {
   }
 
   /**
-   * Create named animations from the sprite sheet. Called from the constructor if the `animations` property is passed in.
+   * Create named animations from the sprite sheet. Called from the constructor if the `animations` argument is passed.
    *
    * This function populates the sprite sheets `animations` property with kontra.Animation objects. Each animation is accessible by its name.
    *
@@ -138,7 +138,7 @@ class SpriteSheet {
    * import { Sprite, SpriteSheet } from 'kontra';
    *
    * let image = new Image();
-   * image.src = '../imgs/character_walk_sheet.png';
+   * image.src = '../assets/imgs/character_walk_sheet.png';
    * image.onload = function() {
    *
    *   let spriteSheet = SpriteSheet({
@@ -187,9 +187,9 @@ class SpriteSheet {
    * @function createAnimations
    *
    * @param {Object} animations - Object of named animations to create from the sprite sheet.
-   * @param {Number|String|Number[]|String[]} animations.<name>.frames - The sequence of frames to use from the sprite sheet. It can either be a single frame (`1`), a sequence of frames (`[1,2,3,4]`), or consecutive frame notation (`'1..4'`). Sprite sheet frames are `0` indexed.
+   * @param {Number|String|Number[]|String[]} animations.<name>.frames - The sequence of frames to use from the sprite sheet. It can either be a single frame (`1`), a sequence of frames (`[1,2,3,4]`), or a consecutive frame notation (`'1..4'`). Sprite sheet frames are `0` indexed.
    * @param {Number} animations.<name>.frameRate - The number frames to display per second.
-   * @param {Boolean} [animations.<name>.loop] - If the animation should loop back to the beginning once completed.
+   * @param {Boolean} [animations.<name>.loop=true] - If the animation should loop back to the beginning once completed.
    */
   createAnimations(animations) {
     let sequence, name;

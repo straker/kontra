@@ -13,7 +13,7 @@ Load the library by adding it as a script tag on the page.
 <script src="kontra.js"></script>
 ```
 
-Kontra fully supports es6 modules and exports all api functions. This is the recommended way to create custom builds of the library. Use Rollup or webpack to bundle only the code you need from the library.
+Kontra also supports ES modules and exports all API functions, allowing you to import it into your code as well. This is the recommended way to create [custom builds](/download) of the library.
 
 ```js
 import { Sprite } from 'kontra';
@@ -25,6 +25,8 @@ Want to get started without all the hassle? [Web Maker](https://webmakerapp.com/
 
 Initialize the game by calling [init()](api/core.html#init) to create the drawing context. By default, it will use the first canvas element on the page, but you can also pass it the ID of the canvas or a Canvas element.
 
+The `init()` function returns the canvas and context used for the game.
+
 ```js
 import { init } from 'kontra';
 
@@ -33,7 +35,7 @@ let { canvas, context } = init();
 
 ## Create
 
-Once the game is initialize, you can create a simple [Sprite](api/sprite.html) and [Game Loop](api/gameLoop.html) in just a few lines of code
+After the game is initialize, you can create a simple [Sprite](api/sprite.html) and [Game Loop](api/gameLoop.html) in just a few lines of code
 
 @example
 * // exclude-code:start
@@ -55,7 +57,7 @@ Once the game is initialize, you can create a simple [Sprite](api/sprite.html) a
 * });
 *
 * let loop = GameLoop({  // create the main game loop
-*   update: function() {        // update the game state
+*   update: function() { // update the game state
 *     sprite.update();
 *
 *     // wrap the sprites position when it reaches
@@ -64,7 +66,7 @@ Once the game is initialize, you can create a simple [Sprite](api/sprite.html) a
 *       sprite.x = -sprite.width;
 *     }
 *   },
-*   render: function() {        // render the game state
+*   render: function() { // render the game state
 *     sprite.render();
 *   }
 * });

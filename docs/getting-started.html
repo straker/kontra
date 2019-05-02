@@ -1,21 +1,21 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <title>Kontra.js – Getting Started</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/themes/prism.min.css">
-  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="../assets/styles.css">
 
-  <script src="../js/kontra.js"></script>
+  <script src="../assets/js/kontra.js"></script>
 </head>
 <body>
   <div class="content">
     <header class="main-nav">
-      <h1 id="kontra-heading">Kontra</h1>
+      <div id="kontra-heading" class="nav-heading">Kontra</div>
       <a href="#main">Skip navigation</a>
 
-      <nav aria-labelledby="kontra-heading">
+      <nav>
         <button class="menu-button" aria-expanded="false" aria-controls="menu"><span aria-hidden="true">☰</span> Menu</button>
 
         <!-- add role=list back to list so screen readers still read it as list when
@@ -24,11 +24,12 @@
         <ul id="menu" role="list">
           <li><a href="/" >Introduction</a></li>
           <li><a href="/getting-started" aria-current="page">Getting Started</a></li>
+          <li><a href="/download" >Download</a></li>
           <li><a href="/tutorials" >Tutorials</a></li>
           <li><a href="/made-with-kontra" >Made With Kontra</a></li>
 
           <li>
-            <h2 id="api">API</h2>
+            <span id="api" class="nav-api-heading">API</span>
             <ul aria-labelledby="api">
               <li><a href="/api/animation" >Animation</a></li>
               <li><a href="/api/assets" >Assets</a></li>
@@ -64,22 +65,23 @@
 <li><code>$ npm install kontra</code></li>
 </ul>
 <h2 id="load">Load</h2>
-<p>Load the library by adding it as a script tag to the page.</p>
+<p>Load the library by adding it as a script tag on the page.</p>
 <pre><code class="lang-js">&lt;script src=&quot;kontra.js&quot;&gt;&lt;/script&gt;
 </code></pre>
-<p>Kontra fully supports es6 modules and exports all api functions. This is the recommended way to create custom builds of the library. Use Rollup or webpack to bundle only the code you need from the library.</p>
+<p>Kontra also supports ES modules and exports all API functions, allowing you to import it into your code as well. This is the recommended way to create <a href="/download">custom builds</a> of the library.</p>
 <pre><code class="lang-js">import { Sprite } from &#39;kontra&#39;;
 </code></pre>
 <p>Want to get started without all the hassle? <a href="https://webmakerapp.com/">Web Maker</a> has you covered! When you start a new project, select the Kontra Game Engine from the list of predefined templates and you&#39;re good to go. Learn more by reading the <a href="https://medium.com/web-maker/js13kgames-jam-with-web-maker-a3389cf2cbb">Web Maker and JS13k tutorial</a>.</p>
 <h2 id="initialize">Initialize</h2>
 <p>Initialize the game by calling <a href="api/core.html#init">init()</a> to create the drawing context. By default, it will use the first canvas element on the page, but you can also pass it the ID of the canvas or a Canvas element.</p>
+<p>The <code>init()</code> function returns the canvas and context used for the game.</p>
 <pre><code class="lang-js">import { init } from &#39;kontra&#39;;
 
 let { canvas, context } = init();
 </code></pre>
 <h2 id="create">Create</h2>
-<p>Once the game is initialize, you can create a simple <a href="api/sprite.html">Sprite</a> and <a href="api/gameLoop.html">Game Loop</a> in just a few lines of code</p>
-<canvas id="game-canvas-8"></canvas>
+<p>After the game is initialize, you can create a simple <a href="api/sprite.html">Sprite</a> and <a href="api/gameLoop.html">Game Loop</a> in just a few lines of code</p>
+<canvas id="game-canvas-269"></canvas>
 <pre><code class="language-javascript">import { init, Sprite, GameLoop } from &#x27;kontra&#x27;;
 
 let { canvas } &#x3D; init();
@@ -94,7 +96,7 @@ let sprite &#x3D; Sprite({
 });
 
 let loop &#x3D; GameLoop({  // create the main game loop
-  update: function() {        // update the game state
+  update: function() { // update the game state
     sprite.update();
 
     // wrap the sprites position when it reaches
@@ -103,15 +105,15 @@ let loop &#x3D; GameLoop({  // create the main game loop
       sprite.x &#x3D; -sprite.width;
     }
   },
-  render: function() {        // render the game state
+  render: function() { // render the game state
     sprite.render();
   }
 });
 
 loop.start();    // start the game</code></pre>
 <script>(function() {
-  kontra.init("game-canvas-8");
-  var canvas = document.querySelector("#game-canvas-8");
+  kontra.init("game-canvas-269");
+  var canvas = document.querySelector("#game-canvas-269");
   canvas.width = 600;
   canvas.height = 200;
   var context = canvas.getContext("2d");
@@ -128,7 +130,7 @@ let sprite = Sprite({
 });
 
 let loop = GameLoop({  // create the main game loop
-  update: function() {        // update the game state
+  update: function() { // update the game state
     sprite.update();
 
     // wrap the sprites position when it reaches
@@ -137,7 +139,7 @@ let loop = GameLoop({  // create the main game loop
       sprite.x = -sprite.width;
     }
   },
-  render: function() {        // render the game state
+  render: function() { // render the game state
     sprite.render();
   }
 });
@@ -154,6 +156,6 @@ loop.start();    // start the game
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/prism.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/components/prism-javascript.min.js"></script>
-  <script src="../js/navbar.js"></script>
+  <script src="../assets/js/navbar.js"></script>
 </body>
 </html>

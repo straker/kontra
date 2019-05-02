@@ -2,9 +2,11 @@ const gulp = require('gulp');
 const livingcss = require('gulp-livingcss');
 const path = require('path');
 const marked = require('marked');
+const packageJson = require('./package.json');
 
 const optionalRegex = /^\[.*\]$/;
 const kontraTypeRegex = /kontra\.(\w+)/g;
+const packageVersionRegex = /{{\s?packageVersion\s?}}/g;
 const excludeCodeRegex = /\s*\/\/ exclude-code:start[\s\S]*?\/\/ exclude-code:end/g;
 const excludeScriptRegex = /\s*\/\/ exclude-script:start[\r\n]([\s\S]*?[\r\n])\/\/ exclude-script:end[\r\n]/g;
 let uuid = 0;
@@ -131,7 +133,7 @@ let tags = {
     }
 
     type = parseType(type);
-    description = `${type}. ${description}${entry.default ? ` Defaults to \`${entry.default}\`.` : ''}`;
+    description = `${type}. ${parseType(description)}${entry.default ? ` Defaults to \`${entry.default}\`.` : ''}`;
 
     entry.name = name;
     entry.description = marked(description);
@@ -210,6 +212,9 @@ let tags = {
     });
 
     addSectionAndPage.call(this);
+  },
+  packageVersion: function() {
+    this.block.description = this.block.description.replace(packageVersionRegex, packageJson.version);
   }
 };
 
@@ -264,10 +269,6 @@ function livingcssPreprocess(context, template, Handlebars) {
     context.methodsAndProperties.sort(sortByName);
   });
 
-  // Handlebars.registerHelper('json', function(context) {
-  //     return '<pre><code>'+JSON.stringify(context,null,2)+'</code></pre>';
-  // });
-
   return livingcss.utils.readFileGlobs('docs/template/partials/*.hbs', function(data, file) {
 
     // make the name of the partial the name of the file
@@ -276,12 +277,12 @@ function livingcssPreprocess(context, template, Handlebars) {
   });
 }
 
-function buildContent() {
+function buildPages() {
   navbar.forEach(navItem => {
     navItem.selected = false;
   });
 
-  return gulp.src('./docs/content/*.js')
+  return gulp.src('./docs/pages/*.js')
     .pipe(livingcss('docs', {
       loadcss: false,
       template: 'docs/template/template.hbs',
@@ -313,8 +314,8 @@ function buildApi() {
     .pipe(gulp.dest('docs/api'))
 }
 
-gulp.task('build:docs', gulp.series(buildApi, buildContent));
+gulp.task('build:docs', gulp.series(buildApi, buildPages));
 
 gulp.task('watch:docs', function() {
-  gulp.watch(['./src/*.js','./docs/content/*.js','./docs/template/**/*.hbs'], gulp.series('build:docs'));
+  gulp.watch(['./src/*.js','./docs/pages/*.js','./docs/template/**/*.hbs'], gulp.series('build:docs'));
 });

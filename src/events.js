@@ -1,5 +1,5 @@
 /**
- * A simple event system, mostly created to support [Plugins](/api/plugins). Allows you to hook into Kontra lifecycle events or create your own.
+ * A simple event system, mostly created to support [Plugins](/api/plugin). Allows you to hook into Kontra lifecycle events or create your own.
  *
  * ```js
  * import { on, off, emit } from 'kontra';

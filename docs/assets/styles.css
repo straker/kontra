@@ -46,16 +46,15 @@ h2, h3, h4, h5, h6 {
   font-weight: normal;
 }
 
-h1 {
+h1, .nav-heading {
   font-size: 2.666rem;   /* 48 / 18 */
   line-height: 3.25rem;  /* 1.625 * 2 */
   font-weight: bold;
   padding-bottom: 0.8125rem;
-  border-bottom: 1px solid currentColor;
-  margin: 0 0 1.312rem 0;
+  margin: 0;
 }
 
-h2 {
+h2, .nav-api-heading {
   font-size: 1.875rem;   /* 30 / 16 */
   line-height: 2.25rem;
   margin-bottom: 1rem;
@@ -195,8 +194,9 @@ nav {
   padding-right: 14.6%;
 }
 
-.main-nav h1 {
+.nav-heading, .nav-api-heading {
   color: #fdfdfd;
+  display: block;
 }
 
 .main-nav section:first-child {
@@ -428,6 +428,10 @@ dd > dl {
   list-style: none;
 }
 
+.games a {
+  display: block;
+}
+
 .games li {
   position: relative;
 }
@@ -513,9 +517,10 @@ nav {
   margin: 0;
   padding: 0;
   list-style: none;
+  overflow-y: hidden;
 }
 
-h1 {
+.nav-heading {
   margin: 0;
   border: 0;
 }
@@ -526,7 +531,7 @@ h1 {
   list-style: none;
 }
 
-#menu h2 {
+#menu .nav-api-heading {
   margin: 1.625rem 0 0.5rem;
   padding-bottom: 0.5rem;
   border-bottom: 1px solid #fdfdfd;
@@ -534,10 +539,14 @@ h1 {
   margin-top: 3.25rem;
 }
 
-.menu-expanded h1 {
+.menu-expanded .nav-heading {
   padding-bottom: 0.8125rem;
   border-bottom: 1px solid #fdfdfd;
   margin: 0 0 1.312rem 0;
+}
+
+.scroll-indicator {
+  display: none;
 }
 
 @media screen and (min-width: 620px) {
@@ -549,11 +558,15 @@ h1 {
     overflow-y: scroll;
   }
 
+  #menu {
+    overflow-y: initial;
+  }
+
   .menu-button {
     display: none;
   }
 
-  .main-nav h1 {
+  .main-nav .nav-heading {
     padding-bottom: 0.8125rem;
     border-bottom: 1px solid #fdfdfd;
     margin: 0 0 1.312rem 0;

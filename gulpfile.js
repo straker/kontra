@@ -6,7 +6,7 @@ const plumber = require('gulp-plumber');
 const preprocess = require('gulp-preprocess');
 const rollup = require('rollup-stream');
 const source = require('vinyl-source-stream');
-require('./docs/gulp-tasks.js');
+require('./doc-tasks.js');
 
 // Enables/Disables visual debugging in Kontra
 const VISUAL_DEBUG = false;

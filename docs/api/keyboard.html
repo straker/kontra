@@ -1,21 +1,21 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <title>Kontra.js – Keyboard</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/themes/prism.min.css">
-  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="../assets/styles.css">
 
-  <script src="../js/kontra.js"></script>
+  <script src="../assets/js/kontra.js"></script>
 </head>
 <body>
   <div class="content">
     <header class="main-nav">
-      <h1 id="kontra-heading">Kontra</h1>
+      <div id="kontra-heading" class="nav-heading">Kontra</div>
       <a href="#main">Skip navigation</a>
 
-      <nav aria-labelledby="kontra-heading">
+      <nav>
         <button class="menu-button" aria-expanded="false" aria-controls="menu"><span aria-hidden="true">☰</span> Menu</button>
 
         <!-- add role=list back to list so screen readers still read it as list when
@@ -24,11 +24,12 @@
         <ul id="menu" role="list">
           <li><a href="/" >Introduction</a></li>
           <li><a href="/getting-started" >Getting Started</a></li>
+          <li><a href="/download" >Download</a></li>
           <li><a href="/tutorials" >Tutorials</a></li>
           <li><a href="/made-with-kontra" >Made With Kontra</a></li>
 
           <li>
-            <h2 id="api">API</h2>
+            <span id="api" class="nav-api-heading">API</span>
             <ul aria-labelledby="api">
               <li><a href="/api/animation" >Animation</a></li>
               <li><a href="/api/assets" >Assets</a></li>
@@ -76,7 +77,7 @@ function update() {
         <section class="toc">
           <h2 id="toc"><a href="#toc" class="section-link">Table of Contents<span aria-hidden="true">#</span></a></h2>
 
-          <ul aria-labeledby="toc">
+          <ul aria-labelledby="toc">
             <li>
               <ul>
                 <li><a href="#available-keys">Available Keys</a></li>
@@ -85,7 +86,7 @@ function update() {
 
             <li>
               <h3 id="properties">Properties</h3>
-              <ul aria-labeledby="properties">
+              <ul aria-labelledby="properties">
                 <li>
                   <a href="#keyMap">
                     <span>keyMap</span>
@@ -96,7 +97,7 @@ function update() {
 
             <li>
               <h3 id="methods">Methods</h3>
-              <ul aria-labeledby="methods">
+              <ul aria-labelledby="methods">
                 <li>
                   <a href="#bindKeys">
                     <span>bindKeys(keys)</span>
@@ -146,7 +147,7 @@ function update() {
             </a>
           </h2>
 
-          <p>Bind a set of keys that will call the callback function when they are pressed. Takes a single key or an array of keys. Is Passed the original KeyboardEvent as a parameter.</p>
+          <p>Bind a set of keys that will call the callback function when they are pressed. Takes a single key or an array of keys. Is passed the original KeyboardEvent as a parameter.</p>
 <pre><code class="lang-js">import { initKeys, bindKeys } from &#39;kontra&#39;;
 
 initKeys();
@@ -277,6 +278,6 @@ unbindKeys([&#39;enter&#39;, &#39;space&#39;]);
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/prism.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/components/prism-javascript.min.js"></script>
-  <script src="../js/navbar.js"></script>
+  <script src="../assets/js/navbar.js"></script>
 </body>
 </html>

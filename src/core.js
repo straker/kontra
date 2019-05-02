@@ -19,7 +19,7 @@ import { emit } from './events.js'
 let canvasEl, context;
 
 /**
- * Return the canvas object.
+ * Return the canvas element.
  * @function getCanvas
  *
  * @returns {HTMLCanvasElement} The canvas element for the game.

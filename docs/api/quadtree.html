@@ -1,21 +1,21 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <title>Kontra.js – Quadtree</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/themes/prism.min.css">
-  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="../assets/styles.css">
 
-  <script src="../js/kontra.js"></script>
+  <script src="../assets/js/kontra.js"></script>
 </head>
 <body>
   <div class="content">
     <header class="main-nav">
-      <h1 id="kontra-heading">Kontra</h1>
+      <div id="kontra-heading" class="nav-heading">Kontra</div>
       <a href="#main">Skip navigation</a>
 
-      <nav aria-labelledby="kontra-heading">
+      <nav>
         <button class="menu-button" aria-expanded="false" aria-controls="menu"><span aria-hidden="true">☰</span> Menu</button>
 
         <!-- add role=list back to list so screen readers still read it as list when
@@ -24,11 +24,12 @@
         <ul id="menu" role="list">
           <li><a href="/" >Introduction</a></li>
           <li><a href="/getting-started" >Getting Started</a></li>
+          <li><a href="/download" >Download</a></li>
           <li><a href="/tutorials" >Tutorials</a></li>
           <li><a href="/made-with-kontra" >Made With Kontra</a></li>
 
           <li>
-            <h2 id="api">API</h2>
+            <span id="api" class="nav-api-heading">API</span>
             <ul aria-labelledby="api">
               <li><a href="/api/animation" >Animation</a></li>
               <li><a href="/api/assets" >Assets</a></li>
@@ -59,9 +60,9 @@
         <h1>Quadtree(&#8203;properties)
         </h1>
 
-        <p>A 2D spatial partitioning data structure. Use it to quickly group objects by their position for faster access and collision checking.</p>
+        <p>A 2D <a href="https://gameprogrammingpatterns.com/spatial-partition.html">spatial partitioning</a> data structure. Use it to quickly group objects by their position for faster access and collision checking.</p>
 <p><canvas width="600" height="200" id="quadtree-example"></canvas></p>
-<script src="../js/quadtree.js"></script>
+<script src="../assets/js/quadtree.js"></script>
         <h3 id="title-Quadtree"><span class="visually-hidden">Quadtree</span> Parameters</span></h3>
         <dl aria-labelledby="title-Quadtree">
           <dt>
@@ -94,7 +95,7 @@
         <section class="toc">
           <h2 id="toc"><a href="#toc" class="section-link">Table of Contents<span aria-hidden="true">#</span></a></h2>
 
-          <ul aria-labeledby="toc">
+          <ul aria-labelledby="toc">
             <li>
               <ul>
                 <li><a href="#basic-use">Basic Use</a></li>
@@ -103,7 +104,7 @@
 
             <li>
               <h3 id="properties">Properties</h3>
-              <ul aria-labeledby="properties">
+              <ul aria-labelledby="properties">
                 <li>
                   <a href="#bounds">
                     <span>bounds</span>
@@ -124,7 +125,7 @@
 
             <li>
               <h3 id="methods">Methods</h3>
-              <ul aria-labeledby="methods">
+              <ul aria-labelledby="methods">
                 <li>
                   <a href="#add">
                     <span>add(objectsN)</span>
@@ -153,7 +154,7 @@
             </a>
           </h2>
 
-          <p>To use a quadtree, you&#39;ll first create it using <code>Quadtree()</code>. Then every  frame you&#39;ll remove all objects from the quadtree using its <a href="#clear">clear()</a> function  and add all objects back using its <a href="#add">add()</a> function. You can add a single object  or an array of objects, and as many as you want.</p>
+          <p>Every frame you should remove all objects from the quadtree using its <a href="#clear">clear()</a> function and then add all objects back using its <a href="#add">add()</a> function. You can add a single object, a list of objects, or an array of objects.</p>
 <pre><code class="lang-js">import { Quadtree, Sprite, GameLoop } from &#39;kontra&#39;;
 
 let quadtree = Quadtree();
@@ -186,7 +187,7 @@ let loop = GameLoop({
             </a>
           </h2>
 
-          <p>Add objects to the quadtree and group them by their position. Can take a single object, a comma separated list of objects, and an array of objects.</p>
+          <p>Add objects to the quadtree and group them by their position. Can take a single object, a list of objects, and an array of objects.</p>
 <pre><code class="lang-js">import { Quadtree, Sprite, Pool, GameLoop } from &#39;kontra&#39;;
 
 let quadtree = Quadtree();
@@ -317,6 +318,6 @@ quadtree.get(player);  //=&gt; [enemy1]
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/prism.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/components/prism-javascript.min.js"></script>
-  <script src="../js/navbar.js"></script>
+  <script src="../assets/js/navbar.js"></script>
 </body>
 </html>

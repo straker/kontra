@@ -5,8 +5,8 @@
  * import { load } from 'kontra';
  *
  * load(
- *   '../imgs/character.png',
- *   '../data/tile_engine_basic.json',
+ *   '../assets/imgs/character.png',
+ *   '../assets/data/tile_engine_basic.json',
  *   ['/audio/music.ogg', '/audio/music.mp3']
  * ).then(function(assets) {
  *   // all assets have loaded
@@ -102,15 +102,15 @@ function getCanPlay(audio) {
  * ```js
  * import { load, setImagePath, imageAssets } from 'kontra';
  *
- * load('../imgs/character.png').then(function() {
- *   // Image asset can be accessed at both
- *   // name: imageAssets['../imgs/character']
- *   // path: imageAssets['../imgs/character.png']
+ * load('../assets/imgs/character.png').then(function() {
+ *   // Image asset can be accessed by both
+ *   // name: imageAssets['../assets/imgs/character']
+ *   // path: imageAssets['../assets/imgs/character.png']
  * });
  *
- * setImagePath('/imgs');
+ * setImagePath('../assets/imgs');
  * load('character_walk_sheet.png').then(function() {
- *   // Image asset can be accessed at both
+ *   // Image asset can be accessed by both
  *   // name: imageAssets['character_walk_sheet']
  *   // path: imageAssets['character_walk_sheet.png']
  * });
@@ -126,14 +126,14 @@ export let imageAssets = {};
  * import { load, setAudioPath, audioAssets } from 'kontra';
  *
  * load('/audio/music.ogg').then(function() {
- *   // Audio asset can be accessed at both
+ *   // Audio asset can be accessed by both
  *   // name: audioAssets['/audio/music']
  *   // path: audioAssets['/audio/music.ogg']
  * });
  *
  * setAudioPath('/audio');
  * load('sound.ogg').then(function() {
- *   // Audio asset can be accessed at both
+ *   // Audio asset can be accessed by both
  *   // name: audioAssets['sound']
  *   // path: audioAssets['sound.ogg']
  * });
@@ -148,15 +148,15 @@ export let audioAssets = {};
  * ```js
  * import { load, setDataPath, dataAssets } from 'kontra';
  *
- * load('../data/file.txt').then(function() {
- *   // Audio asset can be accessed at both
- *   // name: dataAssets['../data/file']
- *   // path: dataAssets['../data/file.txt']
+ * load('../assets/data/file.txt').then(function() {
+ *   // Audio asset can be accessed by both
+ *   // name: dataAssets['../assets/data/file']
+ *   // path: dataAssets['../assets/data/file.txt']
  * });
  *
- * setDataPath('/data');
+ * setDataPath('../assets/data');
  * load('info.json').then(function() {
- *   // Audio asset can be accessed at both
+ *   // Audio asset can be accessed by both
  *   // name: dataAssets['info']
  *   // path: dataAssets['info.json']
  * });
@@ -276,7 +276,7 @@ export function loadImage(url) {
 }
 
 /**
- * Load a single Audio asset. Supports loading multiple audio formats which will be resolved by the browser in the order listed. Uses the base [audio path](#setAudioPath) to resolve the URL.
+ * Load a single Audio asset. Supports loading multiple audio formats which the loader will use to load the first audio format supported by the browser in the order listed. Uses the base [audio path](#setAudioPath) to resolve the URL.
  *
  * Once loaded, the asset will be accessible on the the [audioAssets](#audioAssets) property. Since the loader determines which audio asset to load based on browser support, you should only reference the audio by its name and not by its file path since there's no guarantee which asset was loaded.
  *
@@ -344,7 +344,7 @@ export function loadAudio(url) {
  * ```js
  * import { loadData } from 'kontra';
  *
- * loadData('../data/tile_engine_basic.json').then(function() {
+ * loadData('../assets/data/tile_engine_basic.json').then(function(data) {
  *   // data contains the parsed JSON data
  * })
  * ```
@@ -352,7 +352,7 @@ export function loadAudio(url) {
  *
  * @param {String} url - The URL to the Data file.
  *
- * @returns {Promise} A deferred promise. Promise resolves with the Image.
+ * @returns {Promise} A deferred promise. Promise resolves with the contents of the file. If the file is a JSON file, the contents will be parsed as JSON.
  */
 export function loadData(url) {
   addGlobal();
@@ -382,8 +382,8 @@ export function loadData(url) {
  * import { load } from 'kontra';
  *
  * load(
- *   '../imgs/character.png',
- *   '../data/tile_engine_basic.json',
+ *   '../assets/imgs/character.png',
+ *   '../assets/data/tile_engine_basic.json',
  *   ['/audio/music.ogg', '/audio/music.mp3']
  * ).then(function(assets) {
  *   // all assets have loaded

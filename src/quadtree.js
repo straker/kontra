@@ -56,10 +56,10 @@ The quadrant indices are numbered as follows (following a z-order curve):
 
 
 /**
- * A 2D spatial partitioning data structure. Use it to quickly group objects by their position for faster access and collision checking.
+ * A 2D [spatial partitioning](https://gameprogrammingpatterns.com/spatial-partition.html) data structure. Use it to quickly group objects by their position for faster access and collision checking.
  *
  * <canvas width="600" height="200" id="quadtree-example"></canvas>
- * <script src="../js/quadtree.js"></script>
+ * <script src="../assets/js/quadtree.js"></script>
  * @class Quadtree
  *
  * @param {Object} properties - Properties of the quadtree.
@@ -70,7 +70,7 @@ The quadrant indices are numbered as follows (following a z-order curve):
 class Quadtree {
 
   /**
-   * To use a quadtree, you'll first create it using `Quadtree()`. Then every  frame you'll remove all objects from the quadtree using its [clear()](#clear) function  and add all objects back using its [add()](#add) function. You can add a single object  or an array of objects, and as many as you want.
+   * Every frame you should remove all objects from the quadtree using its [clear()](#clear) function and then add all objects back using its [add()](#add) function. You can add a single object, a list of objects, or an array of objects.
    *
    * ```js
    * import { Quadtree, Sprite, GameLoop } from 'kontra';
@@ -201,7 +201,7 @@ class Quadtree {
   }
 
   /**
-   * Add objects to the quadtree and group them by their position. Can take a single object, a comma separated list of objects, and an array of objects.
+   * Add objects to the quadtree and group them by their position. Can take a single object, a list of objects, and an array of objects.
    *
    * ```js
    * import { Quadtree, Sprite, Pool, GameLoop } from 'kontra';

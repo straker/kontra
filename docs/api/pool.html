@@ -1,21 +1,21 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <title>Kontra.js – Pool</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/themes/prism.min.css">
-  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="../assets/styles.css">
 
-  <script src="../js/kontra.js"></script>
+  <script src="../assets/js/kontra.js"></script>
 </head>
 <body>
   <div class="content">
     <header class="main-nav">
-      <h1 id="kontra-heading">Kontra</h1>
+      <div id="kontra-heading" class="nav-heading">Kontra</div>
       <a href="#main">Skip navigation</a>
 
-      <nav aria-labelledby="kontra-heading">
+      <nav>
         <button class="menu-button" aria-expanded="false" aria-controls="menu"><span aria-hidden="true">☰</span> Menu</button>
 
         <!-- add role=list back to list so screen readers still read it as list when
@@ -24,11 +24,12 @@
         <ul id="menu" role="list">
           <li><a href="/" >Introduction</a></li>
           <li><a href="/getting-started" >Getting Started</a></li>
+          <li><a href="/download" >Download</a></li>
           <li><a href="/tutorials" >Tutorials</a></li>
           <li><a href="/made-with-kontra" >Made With Kontra</a></li>
 
           <li>
-            <h2 id="api">API</h2>
+            <span id="api" class="nav-api-heading">API</span>
             <ul aria-labelledby="api">
               <li><a href="/api/animation" >Animation</a></li>
               <li><a href="/api/assets" >Assets</a></li>
@@ -59,9 +60,9 @@
         <h1>Pool(&#8203;properties)
         </h1>
 
-        <p>A fast and memory efficient object pool for sprite reuse. Perfect for particle systems or SHUMPs. The pool starts out with just 1 object, but will grow in size to accommodate as many objects as are needed.</p>
+        <p>A fast and memory efficient <a href="https://gameprogrammingpatterns.com/object-pool.html">object pool</a> for sprite reuse. Perfect for particle systems or SHUMPs. The pool starts out with just one object, but will grow in size to accommodate as many objects as are needed.</p>
 <p><canvas width="600" height="200" id="pool-example"></canvas></p>
-<script src="../js/pool.js"></script>
+<script src="../assets/js/pool.js"></script>
         <h3 id="title-Pool"><span class="visually-hidden">Pool</span> Parameters</span></h3>
         <dl aria-labelledby="title-Pool">
           <dt>
@@ -74,7 +75,7 @@
             <code>properties.create</code>
             
           </dt>
-          <dd><p>Function. Function that returns a new object to be added to the pool when there are no objects able to be reused.</p>
+          <dd><p>Function. Function that returns a new object to be added to the pool when there are no more alive objects.</p>
         </dd>
           <dt>
             <code>properties.maxSize</code>
@@ -88,7 +89,7 @@
         <section class="toc">
           <h2 id="toc"><a href="#toc" class="section-link">Table of Contents<span aria-hidden="true">#</span></a></h2>
 
-          <ul aria-labeledby="toc">
+          <ul aria-labelledby="toc">
             <li>
               <ul>
                 <li><a href="#basic-use">Basic Use</a></li>
@@ -97,7 +98,7 @@
 
             <li>
               <h3 id="properties">Properties</h3>
-              <ul aria-labeledby="properties">
+              <ul aria-labelledby="properties">
                 <li>
                   <a href="#maxSize">
                     <span>Pool&#8203;.maxSize</span>
@@ -118,7 +119,7 @@
 
             <li>
               <h3 id="methods">Methods</h3>
-              <ul aria-labeledby="methods">
+              <ul aria-labelledby="methods">
                 <li>
                   <a href="#clear">
                     <span>Pool&#8203;.clear()</span>
@@ -157,12 +158,12 @@
             </a>
           </h2>
 
-          <p>To use the pool, you must pass the <code>create()</code> function, which should return a new <a href="Sprite">Sprite</a> or object. This object will be added to the pool every time there are no more alive objects.</p>
-<p>The object must implement the functions <code>update(dt)</code>, <code>init(properties)</code>, and <code>isAlive()</code>. If one of these functions is missing the pool will throw an error. <a href="Sprite">Sprite</a> defines these functions for you.</p>
+          <p>To use the pool, you must pass the <code>create()</code> function argument, which should return a new <a href="Sprite">Sprite</a> or object. This object will be added to the pool every time there are no more alive objects.</p>
+<p>The object must implement the functions <code>update()</code>, <code>init()</code>, and <code>isAlive()</code>. If one of these functions is missing the pool will throw an error. <a href="Sprite">Sprite</a> defines these functions for you.</p>
 <p>An object is available for reuse when its <code>isAlive()</code> function returns <code>false</code>. For a sprite, this is typically when its ttl is <code>0</code>.</p>
-<p>When you want an object from the pool, use the pools <code>get(properties)</code> function and pass it any properties you want the newly initialized object to have.</p>
+<p>When you want an object from the pool, use the pools <a href="#get">get()</a> function and pass it any properties you want the newly initialized object to have.</p>
 <pre><code class="lang-js">let pool = Pool({
-  // create a new sprite every time the pool needs new objects
+  // create a new sprite every time the pool needs a new object
   create: Sprite
 });
 
@@ -176,7 +177,7 @@ pool.get({
   ttl: 60
 });
 </code></pre>
-<p>When you want to update or render all alive objects in the pool, use the pools <code>update()</code> and <code>render()</code> functions.</p>
+<p>When you want to update or render all alive objects in the pool, use the pools <a href="#update">update()</a> and <a href="#render">render()</a> functions.</p>
 <pre><code class="lang-js">let loop = GameLoop({
   update: function() {
     pool.update();
@@ -207,7 +208,7 @@ pool.get({
             </a>
           </h2>
 
-          <p>Get and return an object from the pool. The properties parameter will be passed directly to the objects <code>init(properties)</code> function. If you&#39;re using a <a href="Sprite">Sprite</a>, you should also pass the <code>ttl</code> property to designate how many frames you want the object to be alive for.</p>
+          <p>Get and return an object from the pool. The properties parameter will be passed directly to the objects <code>init()</code> function. If you&#39;re using a <a href="Sprite">Sprite</a>, you should also pass the <code>ttl</code> property to designate how many frames you want the object to be alive for.</p>
 <p>If you want to control when the sprite is ready for reuse, pass <code>Infinity</code> for <code>ttl</code>. You&#39;ll need to set the sprites <code>ttl</code> to <code>0</code> when you&#39;re ready for the sprite to be reused.</p>
 <pre><code class="lang-js">let sprite = pool.get({
   // the object will get these properties and values
@@ -228,7 +229,7 @@ pool.get({
               <code>properties</code>
               
             </dt>
-            <dd><p>Object. Properties to pass to the objects <code>init(properties)</code> function.</p>
+            <dd><p>Object. Properties to pass to the objects <code>init()</code> function.</p>
           </dd>
           </dl>
           
@@ -302,7 +303,7 @@ pool.get({
             </a>
           </h2>
 
-          <p>Update all alive objects in the pool by calling the objects update() function. This function also manages when each object should be recycled, so it is recommended that you do not call the objects update() function outside of this function.</p>
+          <p>Update all alive objects in the pool by calling the objects <code>update()</code> function. This function also manages when each object should be recycled, so it is recommended that you do not call the objects <code>update()</code> function outside of this function.</p>
           <h3 id="title-update"><span class="visually-hidden">update</span> Parameters</span></h3>
           <dl aria-labelledby="title-update">
             <dt>
@@ -321,6 +322,6 @@ pool.get({
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/prism.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/components/prism-javascript.min.js"></script>
-  <script src="../js/navbar.js"></script>
+  <script src="../assets/js/navbar.js"></script>
 </body>
 </html>

@@ -33,7 +33,7 @@ import { on } from './events.js'
  *
  * By default, the pointer is treated as a circle and will check for collisions against objects assuming they are rectangular (have a width and height property).
  *
- * If you need to perform a different type of collision detection, assign the object a collidesWithPointer(pointer) function and it will be called instead, passing the current pointer object. Use this function to determine how the pointer circle should collide with the object.
+ * If you need to perform a different type of collision detection, assign the object a `collidesWithPointer()` function and it will be called instead. The function is passed the pointer object. Use this function to determine how the pointer circle should collide with the object.
  *
  * ```js
  * import { Sprite } from 'kontra';
@@ -361,7 +361,7 @@ export function pointerOver(object) {
 }
 
 /**
- * Register a function to be called on all pointer down events. Is Passed the original Event and the target object (if there is one).
+ * Register a function to be called on all pointer down events. Is passed the original Event and the target object (if there is one).
  *
  * ```js
  * import { initPointer, onPointerDown } from 'kontra';
@@ -381,7 +381,7 @@ export function onPointerDown(callback) {
 }
 
 /**
-* Register a function to be called on all pointer up events. Is Passed the original Event and the target object (if there is one).
+* Register a function to be called on all pointer up events. Is passed the original Event and the target object (if there is one).
  *
  * ```js
  * import { initPointer, onPointerUp } from 'kontra';

@@ -1,21 +1,21 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <title>Kontra.js – TileEngine</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/themes/prism.min.css">
-  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="../assets/styles.css">
 
-  <script src="../js/kontra.js"></script>
+  <script src="../assets/js/kontra.js"></script>
 </head>
 <body>
   <div class="content">
     <header class="main-nav">
-      <h1 id="kontra-heading">Kontra</h1>
+      <div id="kontra-heading" class="nav-heading">Kontra</div>
       <a href="#main">Skip navigation</a>
 
-      <nav aria-labelledby="kontra-heading">
+      <nav>
         <button class="menu-button" aria-expanded="false" aria-controls="menu"><span aria-hidden="true">☰</span> Menu</button>
 
         <!-- add role=list back to list so screen readers still read it as list when
@@ -24,11 +24,12 @@
         <ul id="menu" role="list">
           <li><a href="/" >Introduction</a></li>
           <li><a href="/getting-started" >Getting Started</a></li>
+          <li><a href="/download" >Download</a></li>
           <li><a href="/tutorials" >Tutorials</a></li>
           <li><a href="/made-with-kontra" >Made With Kontra</a></li>
 
           <li>
-            <h2 id="api">API</h2>
+            <span id="api" class="nav-api-heading">API</span>
             <ul aria-labelledby="api">
               <li><a href="/api/animation" >Animation</a></li>
               <li><a href="/api/assets" >Assets</a></li>
@@ -61,8 +62,8 @@
 
         <p>A tile engine for managing and drawing tilesets.</p>
 <figure>
-  <a href="../imgs/mapPack_tilesheet.png">
-    <img src="../imgs/mapPack_tilesheet.png" alt="Tileset to create an overworld map in various seasons.">
+  <a href="../assets/imgs/mapPack_tilesheet.png">
+    <img src="../assets/imgs/mapPack_tilesheet.png" alt="Tileset to create an overworld map in various seasons.">
   </a>
   <figcaption>Tileset image courtesy of <a href="https://kenney.nl/assets">Kenney</a>.</figcaption>
 </figure>
@@ -126,25 +127,25 @@
             <code>properties.tilesetN.margin</code>
             <span class="optional">Optional</span>
           </dt>
-          <dd><p>Number. The amount of whitespace between each tile. Defaults to <code>0</code>.</p>
+          <dd><p>Number. The amount of whitespace between each tile (in pixels). Defaults to <code>0</code>.</p>
         </dd>
           <dt>
             <code>properties.tilesetN.tilewidth</code>
             <span class="optional">Optional</span>
           </dt>
-          <dd><p>Number. Width of the tileset (in number of tiles). Defaults to properties.tilewidth.</p>
+          <dd><p>Number. Width of the tileset (in pixels). Defaults to properties.tilewidth.</p>
         </dd>
           <dt>
             <code>properties.tilesetN.tileheight</code>
             <span class="optional">Optional</span>
           </dt>
-          <dd><p>Number. Height of the tileset (in number of tiles). Defaults to properties.tileheight.</p>
+          <dd><p>Number. Height of the tileset (in pixels). Defaults to properties.tileheight.</p>
         </dd>
           <dt>
             <code>properties.tilesetN.source</code>
             <span class="optional">Optional</span>
           </dt>
-          <dd><p>String. Relative path to the tileset JSON file. The source JSON file must have been <a href="./assets">loaded</a> first.</p>
+          <dd><p>String. Relative path to the source JSON file. The source JSON file must have been <a href="./assets">loaded</a> first.</p>
         </dd>
           <dt>
             <code>properties.tilesetN.columns</code>
@@ -174,7 +175,7 @@
             <code>properties.layerN.visible</code>
             <span class="optional">Optional</span>
           </dt>
-          <dd><p>boolean. If the layer should be drawn or not. Defaults to <code>true</code>.</p>
+          <dd><p>Boolean. If the layer should be drawn or not. Defaults to <code>true</code>.</p>
         </dd>
           <dt>
             <code>properties.layerN.opacity</code>
@@ -188,7 +189,7 @@
         <section class="toc">
           <h2 id="toc"><a href="#toc" class="section-link">Table of Contents<span aria-hidden="true">#</span></a></h2>
 
-          <ul aria-labeledby="toc">
+          <ul aria-labelledby="toc">
             <li>
               <ul>
                 <li><a href="#basic-use">Basic Use</a></li>
@@ -199,7 +200,7 @@
 
             <li>
               <h3 id="properties">Properties</h3>
-              <ul aria-labeledby="properties">
+              <ul aria-labelledby="properties">
                 <li>
                   <a href="#context">
                     <span>TileEngine&#8203;.context</span>
@@ -260,10 +261,10 @@
 
             <li>
               <h3 id="methods">Methods</h3>
-              <ul aria-labeledby="methods">
+              <ul aria-labelledby="methods">
                 <li>
                   <a href="#layerCollidesWith">
-                    <span>kontra.tileEngine&#8203;.layerCollidesWith(name, object)</span>
+                    <span>TileEngine&#8203;.layerCollidesWith(name, object)</span>
                   </a>
                 </li>
                 <li>
@@ -301,14 +302,14 @@
 <li>At least one layer with data</li>
 </ol>
 <p>To set up the tile engine, you&#39;ll need to pass it the width and height of a tile (in pixels) and the width and height of the map (in number of tiles).</p>
-<p>You&#39;ll then need to add at least one tileset with an image as well as firstgid, or fist tile index of the tileset. The first tileset will always have a firstgid of 1 as 0 represents an empty tile.</p>
+<p>You&#39;ll then need to add at least one tileset with an image as well as firstgid, or first tile index of the tileset. The first tileset will always have a firstgid of 1 as 0 represents an empty tile.</p>
 <p>Lastly, you&#39;ll need to add at least one named layer with data. A layer tells the tile engine which tiles from the tileset image to use at what position on the map.</p>
-<p>Once all tileset images and all layers have been added, you can render the tile engine by calling its <code>render()</code> function.</p>
-<canvas id="game-canvas-5"></canvas>
+<p>Once all tileset images and all layers have been added, you can render the tile engine by calling its <a href="#render">render()</a> function.</p>
+<canvas id="game-canvas-266"></canvas>
 <pre><code class="language-javascript">import { TileEngine } from &#x27;kontra&#x27;;
 
 let img &#x3D; new Image();
-img.src &#x3D; &#x27;../imgs/mapPack_tilesheet.png&#x27;;
+img.src &#x3D; &#x27;../assets/imgs/mapPack_tilesheet.png&#x27;;
 img.onload &#x3D; function() {
   let tileEngine &#x3D; TileEngine({
     // tile size
@@ -343,8 +344,8 @@ img.onload &#x3D; function() {
   tileEngine.render();
 }</code></pre>
 <script>(function() {
-  kontra.init("game-canvas-5");
-  var canvas = document.querySelector("#game-canvas-5");
+  kontra.init("game-canvas-266");
+  var canvas = document.querySelector("#game-canvas-266");
   canvas.width = 576;
   canvas.height = 576;
   var context = canvas.getContext("2d");
@@ -352,7 +353,7 @@ img.onload &#x3D; function() {
 let { TileEngine } = kontra;
 // exclude-code:end
 let img = new Image();
-img.src = '../imgs/mapPack_tilesheet.png';
+img.src = '../assets/imgs/mapPack_tilesheet.png';
 img.onload = function() {
   let tileEngine = TileEngine({
     // tile size
@@ -400,26 +401,26 @@ img.onload = function() {
 
           <p>Adding all the tileset images and layers to a tile engine can be tedious, especially if you have multiple layers. If you want a simpler way to create a tile engine, Kontra has been written to work directly with the JSON output of the <a href="http://www.mapeditor.org/">Tiled Map Editor</a>.</p>
 <p>The one requirement is that you must preload all of the tileset images and tileset sources using the appropriate <a href="./assets">asset loader functions</a> before you create the tile engine.</p>
-<canvas id="game-canvas-6"></canvas>
+<canvas id="game-canvas-267"></canvas>
 <pre><code class="language-javascript">import { load, TileEngine, dataAssets } from &#x27;kontra&#x27;;
 
-load(&#x27;../imgs/mapPack_tilesheet.png&#x27;, &#x27;../data/tile_engine_basic.json&#x27;)
+load(&#x27;../assets/imgs/mapPack_tilesheet.png&#x27;, &#x27;../assets/data/tile_engine_basic.json&#x27;)
   .then(assets &#x3D;&gt; {
-    let tileEngine &#x3D; TileEngine(dataAssets[&#x27;../data/tile_engine_basic&#x27;]);
+    let tileEngine &#x3D; TileEngine(dataAssets[&#x27;../assets/data/tile_engine_basic&#x27;]);
     tileEngine.render();
   });</code></pre>
 <script>(function() {
-  kontra.init("game-canvas-6");
-  var canvas = document.querySelector("#game-canvas-6");
+  kontra.init("game-canvas-267");
+  var canvas = document.querySelector("#game-canvas-267");
   canvas.width = 576;
   canvas.height = 576;
   var context = canvas.getContext("2d");
   // exclude-code:start
 let { TileEngine, load, dataAssets } = kontra;
 // exclude-code:end
-load('../imgs/mapPack_tilesheet.png', '../data/tile_engine_basic.json')
+load('../assets/imgs/mapPack_tilesheet.png', '../assets/data/tile_engine_basic.json')
   .then(assets => {
-    let tileEngine = TileEngine(dataAssets['../data/tile_engine_basic']);
+    let tileEngine = TileEngine(dataAssets['../assets/data/tile_engine_basic']);
     // exclude-code:start
     tileEngine.context = context;
     // exclude-code:end
@@ -436,12 +437,12 @@ load('../imgs/mapPack_tilesheet.png', '../data/tile_engine_basic.json')
 
           <p>If your tilemap is larger than the canvas size, you can move the tilemap camera to change how the tilemap is drawn. Use the tile engines <a href="#sx">sx</a> and <a href="#sy">sy</a> properties to move the camera. Just like drawing an image, the cameras coordinates are the top left corner.</p>
 <p>The <code>sx</code> and <code>sy</code> coordinates will never draw the tile map below 0 or beyond the last row or column of the tile map.</p>
-<canvas id="game-canvas-7"></canvas>
+<canvas id="game-canvas-268"></canvas>
 <pre><code class="language-javascript">import { load, TileEngine, dataAssets, GameLoop } from &#x27;kontra&#x27;;
 
-load(&#x27;../imgs/mapPack_tilesheet.png&#x27;, &#x27;../data/tile_engine_camera.json&#x27;)
+load(&#x27;../assets/imgs/mapPack_tilesheet.png&#x27;, &#x27;../assets/data/tile_engine_camera.json&#x27;)
   .then(function() {
-    let tileEngine &#x3D; TileEngine(dataAssets[&#x27;../data/tile_engine_camera&#x27;]);
+    let tileEngine &#x3D; TileEngine(dataAssets[&#x27;../assets/data/tile_engine_camera&#x27;]);
 
     let sx &#x3D; 1;
     let loop &#x3D; GameLoop({
@@ -460,17 +461,17 @@ load(&#x27;../imgs/mapPack_tilesheet.png&#x27;, &#x27;../data/tile_engine_camera
     loop.start();
   });</code></pre>
 <script>(function() {
-  kontra.init("game-canvas-7");
-  var canvas = document.querySelector("#game-canvas-7");
+  kontra.init("game-canvas-268");
+  var canvas = document.querySelector("#game-canvas-268");
   canvas.width = 576;
   canvas.height = 576;
   var context = canvas.getContext("2d");
   // exclude-code:start
 let { TileEngine, load, dataAssets, GameLoop } = kontra;
 // exclude-code:end
-load('../imgs/mapPack_tilesheet.png', '../data/tile_engine_camera.json')
+load('../assets/imgs/mapPack_tilesheet.png', '../assets/data/tile_engine_camera.json')
   .then(function() {
-    let tileEngine = TileEngine(dataAssets['../data/tile_engine_camera']);
+    let tileEngine = TileEngine(dataAssets['../assets/data/tile_engine_camera']);
     // exclude-code:start
     tileEngine.context = context;
     // exclude-code:end
@@ -518,7 +519,7 @@ load('../imgs/mapPack_tilesheet.png', '../data/tile_engine_camera.json')
         <section>
           <h2 id="layerCollidesWith">
             <a href="#layerCollidesWith" class="section-link">
-              <span>kontra.tileEngine&#8203;.layerCollidesWith(name, object)</span>
+              <span>TileEngine&#8203;.layerCollidesWith(name, object)</span>
               <span aria-hidden="true">#</span>
             </a>
           </h2>
@@ -764,6 +765,6 @@ tileEngine.tileAtLayer(&#39;collision&#39;, {row: 2, col: 1});  //=&gt; 2
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/prism.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/components/prism-javascript.min.js"></script>
-  <script src="../js/navbar.js"></script>
+  <script src="../assets/js/navbar.js"></script>
 </body>
 </html>

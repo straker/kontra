@@ -30,8 +30,9 @@
  *   }
  * };
  * export default loggingPlugin;
+ * ```
  *
- *
+ * ```js
  * // consumerCode.js
  * import { registerPlugin, Sprite } from 'kontra';
  * import loggingPlugin from pluginCode.js;
@@ -82,7 +83,7 @@
  * obj.add(1, 2);  //=> 6
  * ```
  *
- * Multiple before intercept functions can be registered for the same function. All functions will be run in the order registered. The prior functions return will be passed to the next function. If the prior function didn't modify the arguments (returned `null` or nothing) then the prior functions parameters will be passed to the next function instead.
+ * Multiple before intercept functions can be registered for the same function. All functions will be run in the order they were registered. The functions return value will be passed to the next function. If the function doesn't modify the arguments (returned `null` or nothing) then the functions parameters will be passed to the next function instead.
  *
  * ```js
  * class MyObj {
@@ -134,7 +135,7 @@
  * obj.add(1, 2);  //=> 6
  * ```
  *
- * Multiple after intercept functions can be registered for the same function. All functions will be run in the order registered. The prior functions return will be passed to the next function. If the prior function didn't modify the result (returned `null` or nothing) then the prior functions `result` parameter will be passed to the next function instead.
+ * Multiple after intercept functions can be registered for the same function. All functions will be run in the order they were registered. Each functions return value will be passed to the next function. If the function doesn't modify the result (returned `null` or nothing) then the functions parameters will be passed to the next function instead.
  *
  * ```js
  * class MyObj {

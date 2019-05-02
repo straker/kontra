@@ -1,21 +1,21 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <title>Kontra.js – Assets</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/themes/prism.min.css">
-  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="../assets/styles.css">
 
-  <script src="../js/kontra.js"></script>
+  <script src="../assets/js/kontra.js"></script>
 </head>
 <body>
   <div class="content">
     <header class="main-nav">
-      <h1 id="kontra-heading">Kontra</h1>
+      <div id="kontra-heading" class="nav-heading">Kontra</div>
       <a href="#main">Skip navigation</a>
 
-      <nav aria-labelledby="kontra-heading">
+      <nav>
         <button class="menu-button" aria-expanded="false" aria-controls="menu"><span aria-hidden="true">☰</span> Menu</button>
 
         <!-- add role=list back to list so screen readers still read it as list when
@@ -24,11 +24,12 @@
         <ul id="menu" role="list">
           <li><a href="/" >Introduction</a></li>
           <li><a href="/getting-started" >Getting Started</a></li>
+          <li><a href="/download" >Download</a></li>
           <li><a href="/tutorials" >Tutorials</a></li>
           <li><a href="/made-with-kontra" >Made With Kontra</a></li>
 
           <li>
-            <h2 id="api">API</h2>
+            <span id="api" class="nav-api-heading">API</span>
             <ul aria-labelledby="api">
               <li><a href="/api/animation" >Animation</a></li>
               <li><a href="/api/assets" aria-current="page">Assets</a></li>
@@ -62,8 +63,8 @@
 <pre><code class="lang-js">import { load } from &#39;kontra&#39;;
 
 load(
-  &#39;../imgs/character.png&#39;,
-  &#39;../data/tile_engine_basic.json&#39;,
+  &#39;../assets/imgs/character.png&#39;,
+  &#39;../assets/data/tile_engine_basic.json&#39;,
   [&#39;/audio/music.ogg&#39;, &#39;/audio/music.mp3&#39;]
 ).then(function(assets) {
   // all assets have loaded
@@ -76,11 +77,11 @@ load(
         <section class="toc">
           <h2 id="toc"><a href="#toc" class="section-link">Table of Contents<span aria-hidden="true">#</span></a></h2>
 
-          <ul aria-labeledby="toc">
+          <ul aria-labelledby="toc">
 
             <li>
               <h3 id="properties">Properties</h3>
-              <ul aria-labeledby="properties">
+              <ul aria-labelledby="properties">
                 <li>
                   <a href="#audioAssets">
                     <span>audioAssets</span>
@@ -101,7 +102,7 @@ load(
 
             <li>
               <h3 id="methods">Methods</h3>
-              <ul aria-labeledby="methods">
+              <ul aria-labelledby="methods">
                 <li>
                   <a href="#load">
                     <span>load(urls)</span>
@@ -155,14 +156,14 @@ load(
 <pre><code class="lang-js">import { load, setAudioPath, audioAssets } from &#39;kontra&#39;;
 
 load(&#39;/audio/music.ogg&#39;).then(function() {
-  // Audio asset can be accessed at both
+  // Audio asset can be accessed by both
   // name: audioAssets[&#39;/audio/music&#39;]
   // path: audioAssets[&#39;/audio/music.ogg&#39;]
 });
 
 setAudioPath(&#39;/audio&#39;);
 load(&#39;sound.ogg&#39;).then(function() {
-  // Audio asset can be accessed at both
+  // Audio asset can be accessed by both
   // name: audioAssets[&#39;sound&#39;]
   // path: audioAssets[&#39;sound.ogg&#39;]
 });
@@ -180,15 +181,15 @@ load(&#39;sound.ogg&#39;).then(function() {
           <p>Object. Object of all loaded data assets by both file name and path. If the base <a href="#setDataPath">data path</a> was set before the data was loaded, the file name and path will not include the base data path.</p>
 <pre><code class="lang-js">import { load, setDataPath, dataAssets } from &#39;kontra&#39;;
 
-load(&#39;../data/file.txt&#39;).then(function() {
-  // Audio asset can be accessed at both
-  // name: dataAssets[&#39;../data/file&#39;]
-  // path: dataAssets[&#39;../data/file.txt&#39;]
+load(&#39;../assets/data/file.txt&#39;).then(function() {
+  // Audio asset can be accessed by both
+  // name: dataAssets[&#39;../assets/data/file&#39;]
+  // path: dataAssets[&#39;../assets/data/file.txt&#39;]
 });
 
-setDataPath(&#39;/data&#39;);
+setDataPath(&#39;../assets/data&#39;);
 load(&#39;info.json&#39;).then(function() {
-  // Audio asset can be accessed at both
+  // Audio asset can be accessed by both
   // name: dataAssets[&#39;info&#39;]
   // path: dataAssets[&#39;info.json&#39;]
 });
@@ -206,15 +207,15 @@ load(&#39;info.json&#39;).then(function() {
           <p>Object. Object of all loaded image assets by both file name and path. If the base <a href="#setImagePath">image path</a> was set before the image was loaded, the file name and path will not include the base image path.</p>
 <pre><code class="lang-js">import { load, setImagePath, imageAssets } from &#39;kontra&#39;;
 
-load(&#39;../imgs/character.png&#39;).then(function() {
-  // Image asset can be accessed at both
-  // name: imageAssets[&#39;../imgs/character&#39;]
-  // path: imageAssets[&#39;../imgs/character.png&#39;]
+load(&#39;../assets/imgs/character.png&#39;).then(function() {
+  // Image asset can be accessed by both
+  // name: imageAssets[&#39;../assets/imgs/character&#39;]
+  // path: imageAssets[&#39;../assets/imgs/character.png&#39;]
 });
 
-setImagePath(&#39;/imgs&#39;);
+setImagePath(&#39;../assets/imgs&#39;);
 load(&#39;character_walk_sheet.png&#39;).then(function() {
-  // Image asset can be accessed at both
+  // Image asset can be accessed by both
   // name: imageAssets[&#39;character_walk_sheet&#39;]
   // path: imageAssets[&#39;character_walk_sheet.png&#39;]
 });
@@ -233,8 +234,8 @@ load(&#39;character_walk_sheet.png&#39;).then(function() {
 <pre><code class="lang-js">import { load } from &#39;kontra&#39;;
 
 load(
-  &#39;../imgs/character.png&#39;,
-  &#39;../data/tile_engine_basic.json&#39;,
+  &#39;../assets/imgs/character.png&#39;,
+  &#39;../assets/data/tile_engine_basic.json&#39;,
   [&#39;/audio/music.ogg&#39;, &#39;/audio/music.mp3&#39;]
 ).then(function(assets) {
   // all assets have loaded
@@ -264,7 +265,7 @@ load(
             </a>
           </h2>
 
-          <p>Load a single Audio asset. Supports loading multiple audio formats which will be resolved by the browser in the order listed. Uses the base <a href="#setAudioPath">audio path</a> to resolve the URL.</p>
+          <p>Load a single Audio asset. Supports loading multiple audio formats which the loader will use to load the first audio format supported by the browser in the order listed. Uses the base <a href="#setAudioPath">audio path</a> to resolve the URL.</p>
 <p>Once loaded, the asset will be accessible on the the <a href="#audioAssets">audioAssets</a> property. Since the loader determines which audio asset to load based on browser support, you should only reference the audio by its name and not by its file path since there&#39;s no guarantee which asset was loaded.</p>
 <pre><code class="lang-js">import { loadAudio, audioAssets } from &#39;kontra&#39;;
 
@@ -303,7 +304,7 @@ loadAudio([
 <p>Once loaded, the asset will be accessible on the the <a href="#dataAssets">dataAssets</a> property.</p>
 <pre><code class="lang-js">import { loadData } from &#39;kontra&#39;;
 
-loadData(&#39;../data/tile_engine_basic.json&#39;).then(function() {
+loadData(&#39;../assets/data/tile_engine_basic.json&#39;).then(function(data) {
   // data contains the parsed JSON data
 })
 </code></pre>
@@ -318,7 +319,7 @@ loadData(&#39;../data/tile_engine_basic.json&#39;).then(function() {
           </dl>
           
           <h3><span class="visually-hidden">loadData</span> Return value</h3>
-          <p><p>A deferred promise. Promise resolves with the Image.</p>
+          <p><p>A deferred promise. Promise resolves with the contents of the file. If the file is a JSON file, the contents will be parsed as JSON.</p>
           </p>
         </section>
         <section>
@@ -433,6 +434,6 @@ load(&#39;character.png&#39;);  // loads &#39;/imgs/character.png&#39;
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/prism.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/components/prism-javascript.min.js"></script>
-  <script src="../js/navbar.js"></script>
+  <script src="../assets/js/navbar.js"></script>
 </body>
 </html>

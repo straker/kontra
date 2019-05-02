@@ -6,8 +6,8 @@ import Vector from './vector.js'
  * @class Sprite
  *
  * @param {Object} properties - Properties of the sprite.
- * @param {Number} properties.x - X coordinate of the sprites position vector.
- * @param {Number} properties.y - Y coordinate of the sprites position vector.
+ * @param {Number} properties.x - X coordinate of the position vector.
+ * @param {Number} properties.y - Y coordinate of the position vector.
  * @param {Number} [properties.dx] - X coordinate of the velocity vector.
  * @param {Number} [properties.dy] - Y coordinate of the velocity vector.
  * @param {Number} [properties.ddx] - X coordinate of the acceleration vector.
@@ -19,21 +19,21 @@ import Vector from './vector.js'
  *
  * @param {Number} [properties.ttl=Infinity] - How many frames the sprite should be alive. Used by kontra.Pool.
  * @param {Number} [properties.rotation=0] - Sprites rotation around the origin in radians.
- * @param {Number} [properties.anchor={x:0,y:0}] - The x and y origin of the sprite. {0,0} is the top left corner of the sprite, {1,1} is the bottom right corner.
+ * @param {Number} [properties.anchor={x:0,y:0}] - The x and y origin of the sprite. {x:0, y:0} is the top left corner of the sprite, {x:1, y:1} is the bottom right corner.
  *
  * @param {Canvas​Rendering​Context2D} [properties.context] - The context the sprite should draw to. Defaults to [core.getContext()](/api/core#getContext).
  *
  * @param {Image|HTMLCanvasElement} [properties.image] - Use an image to draw the sprite.
- * @param {Object} [properties.animations] - An object of kontra.Animations from a kontra.Spritesheet to animate the sprite.
+ * @param {Object} [properties.animations] - An object of [Animations](animation) from a kontra.Spritesheet to animate the sprite.
  *
  * @param {Function} [properties.update] - Function called every frame to update the sprite.
  * @param {Function} [properties.render] - Function called every frame to render the sprite.
- * @param {*} [properties.*] - Any additional properties you need added to the sprite. For example, if you pass `Sprite({type: 'player'})`` then the sprite will also have a property of the same name and value. You can pass as many additional properties as you want.
+ * @param {*} [properties.*] - Any additional properties you need added to the sprite. For example, if you pass `Sprite({type: 'player'})` then the sprite will also have a property of the same name and value. You can pass as many additional properties as you want.
  */
 class Sprite {
 
   /**
-   * In its most basic form, a sprite is a rectangle with a fill color. To create a rectangle sprite, pass the parameters `width`, `height`, and `color`. A rectangle sprite is great for initial prototyping and particles.
+   * In its most basic form, a sprite is a rectangle with a fill color. To create a rectangle sprite, pass the arguments `width`, `height`, and `color`. A rectangle sprite is great for initial prototyping and particles.
    *
    * @sectionName Rectangle Sprite
    * @example
@@ -62,7 +62,7 @@ class Sprite {
    */
 
   /**
-   * A sprite can use an image instead of drawing a rectangle. To create an image sprite, pass the `image` parameter. The size of the sprite will automatically be set as the width and height of the image.
+   * A sprite can use an image instead of drawing a rectangle. To create an image sprite, pass the `image` argument. The size of the sprite will automatically be set as the width and height of the image.
    *
    * @sectionName Image Sprite
    * @example
@@ -74,7 +74,7 @@ class Sprite {
    * // exclude-script:end
    *
    * let image = new Image();
-   * image.src = '../imgs/character.png';
+   * image.src = '../assets/imgs/character.png';
    * image.onload = function() {
    *   let sprite = Sprite({
    *     x: 300,
@@ -93,7 +93,7 @@ class Sprite {
    */
 
   /**
-   * A sprite can use a spritesheet animation as well. To create an animation sprite, pass the `animations` property. The size of the sprite will automatically be set as the width and height of a frame of the spritesheet.
+   * A sprite can use a spritesheet animation as well. To create an animation sprite, pass the `animations` argument. The size of the sprite will automatically be set as the width and height of a frame of the spritesheet.
    *
    * A sprite can have multiple named animations. The easiest way to create animations is to use kontra.SpriteSheet. All animations will automatically be [cloned](animation#clone) so no two sprites update the same animation.
    *
@@ -107,7 +107,7 @@ class Sprite {
    * // exclude-script:end
    *
    * let image = new Image();
-   * image.src = '../imgs/character_walk_sheet.png';
+   * image.src = '../assets/imgs/character_walk_sheet.png';
    * image.onload = function() {
    *
    *   // use spriteSheet to create animations from an image
@@ -230,13 +230,13 @@ class Sprite {
     // defaults
 
     /**
-     * The width of the sprite. If the sprite is a rectangle sprite, it uses the passed in value. For an image sprite it is the width of the image. And for an animation sprite it is the width of a single frame of the animation.
+     * The width of the sprite. If the sprite is a [rectangle sprite](#rectangle-sprite), it uses the passed in value. For an [image sprite](#image-sprite) it is the width of the image. And for an [animation sprite](#animation-sprite) it is the width of a single frame of the animation.
      * @memberof Sprite
      * @property {Number} width
      */
 
     /**
-     * The height of the sprite. If the sprite is a rectangle sprite, it uses the passed in value. For an image sprite it is the height of the image. And for an animation sprite it is the height of a single frame of the animation.
+     * The height of the sprite. If the sprite is a [rectangle sprite](#rectangle-sprite), it uses the passed in value. For an [image sprite](#image-sprite) it is the height of the image. And for an [animation sprite](#animation-sprite) it is the height of a single frame of the animation.
      * @memberof Sprite
      * @property {Number} height
      */
@@ -307,13 +307,13 @@ class Sprite {
     this.context = getContext();
 
     /**
-     * The color of the sprite if it was passed as a parameter.
+     * The color of the sprite if it was passed as an argument.
      * @memberof Sprite
      * @property {String} color
      */
 
      /**
-     * The image the sprite will use when drawn if passed as a parameter.
+     * The image the sprite will use when drawn if passed as an argument.
      * @memberof Sprite
      * @property {Image|HTMLCanvasElement} image
      */
@@ -334,7 +334,7 @@ class Sprite {
   // position, velocity, and acceleration vectors.
 
   /**
-   * X coordinate of the sprites position vector.
+   * X coordinate of the position vector.
    * @memberof Sprite
    * @property {Number} x
    */
@@ -343,7 +343,7 @@ class Sprite {
   }
 
   /**
-   * Y coordinate of the sprites position vector.
+   * Y coordinate of the position vector.
    * @memberof Sprite
    * @property {Number} y
    */
@@ -388,7 +388,7 @@ class Sprite {
   }
 
   /**
-   * An object of kontra.Animation from a kontra.SpriteSheet to animate the sprite. Each animation is named so that it can can be used by name for the sprites [playAnimation()](#playAnimation) function.
+   * An object of [Animations](animation) from a kontra.SpriteSheet to animate the sprite. Each animation is named so that it can can be used by name for the sprites [playAnimation()](#playAnimation) function.
    *
    * ```js
    * import { Sprite, SpriteSheet } from 'kontra';
@@ -454,7 +454,7 @@ class Sprite {
     }
 
     /**
-     * The currently playing Animation object if `animations` was passed as a parameter.
+     * The currently playing Animation object if `animations` was passed as an argument.
      * @memberof Sprite
      * @property {kontra.Animation} currentAnimation
      */
@@ -477,7 +477,7 @@ class Sprite {
   /**
    * Check if the sprite collide with the object. Uses a simple [Axis-Aligned Bounding Box (AABB) collision check](https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection#Axis-Aligned_Bounding_Box). Takes into account the sprites [anchor](#anchor).
    *
-   * **NOTE:** Does not take into account sprite rotation. If you need collision detection between rotated sprites you will need to implement your own `collidesWith()`` function. I suggest looking at the Separate Axis Theorem.
+   * **NOTE:** Does not take into account sprite rotation. If you need collision detection between rotated sprites you will need to implement your own `collidesWith()` function. I suggest looking at the Separate Axis Theorem.
    *
    * ```js
    * import { Sprite } from 'kontra';
@@ -502,7 +502,7 @@ class Sprite {
    * sprite.collidesWith(sprite2);  //=> true
    * ```
    *
-   * If you need a different type of collision check, you can override this function by passing a parameter of the same name.
+   * If you need a different type of collision check, you can override this function by passing an argument by the same name.
    *
    * ```js
    * // circle collision
@@ -569,7 +569,7 @@ class Sprite {
   }
 
   /**
-   * Render the sprite to its context. Calls the sprites [draw()](#draw) function
+   * Render the sprite. Calls the sprites [draw()](#draw) function.
    * @memberof Sprite
    * @function render
    */
@@ -619,7 +619,7 @@ class Sprite {
   /**
    * Move the sprite by its acceleration and velocity. If the sprite is an [animation sprite](#animation-sprite), it also advances the animation every frame.
    *
-   * If you override the sprites [update()](#update) function with your own update function, you can call this function to move the sprite using the sprites normal update function.
+   * If you override the sprites [update()](#update) function with your own update function, you can call this function to move the sprite normally.
    *
    * ```js
    * import { Sprite } from 'kontra';
@@ -665,9 +665,9 @@ class Sprite {
   }
 
   /**
-   * Draw the sprite on its context at the its X and Y position. This function changes based on the type of the sprite. For a [rectangle sprite](#rectangle-sprite), it uses `context.fillRect()`, for an [image sprite](#image-sprite) it uses `context.drawImage()`, and for an animation sprite it uses the [currentAnimation](#currentAnimation) `render()` function.
+   * Draw the sprite at its X and Y position. This function changes based on the type of the sprite. For a [rectangle sprite](#rectangle-sprite), it uses `context.fillRect()`, for an [image sprite](#image-sprite) it uses `context.drawImage()`, and for an [animation sprite](#animation-sprite) it uses the [currentAnimation](#currentAnimation) `render()` function.
    *
-   * If you override the sprites `render()`` function with your own render function, you can call this function to draw the sprite using the sprites normal drawing function.
+   * If you override the sprites `render()` function with your own render function, you can call this function to draw the sprite normally.
    *
    * ```js
    * let sprite = kontra.sprite({

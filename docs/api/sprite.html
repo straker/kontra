@@ -190,6 +190,7 @@
                 <li><a href="#image-sprite">Image Sprite</a></li>
                 <li><a href="#animation-sprite">Animation Sprite</a></li>
                 <li><a href="#custom-properties">Custom Properties</a></li>
+                <li><a href="#extending-a sprite">Extending a Sprite</a></li>
               </ul>
             </li>
 
@@ -617,6 +618,23 @@ sprite.context = context;
 
 sprite.render();
 })();</script>        </section>
+        <section>
+          <h2 id="extending-a sprite">
+            <a href="#extending-a sprite" class="section-link">
+              <span>Extending a Sprite</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
+
+          <p>If you want to extend a Sprite, you can do so by extending the Sprite class. The one caveat is that <code>&lt;a href=&quot;Sprite&quot;&gt;Sprite&lt;/a&gt;</code> is not the Sprite class, but instead is a <a href="https://en.wikipedia.org/wiki/Factory_(object-oriented_programming">factory function</a>).</p>
+<p>To extend the Sprite class, use the <code>.class</code> property of the constructor.</p>
+<pre><code class="lang-js">import { Sprite } from kontra;
+
+class CustomSprite extends Sprite.class {
+  // ...
+}
+</code></pre>
+        </section>
 
         <section>
           <h2 id="acceleration">

@@ -8,10 +8,12 @@
   <canvas id="game" width="600" height="400" style="background: #333331"></canvas>
   <script id="code">
     // initialize the game and setup the canvas
-    kontra.init();
+    let { canvas, context } = kontra.init();
+
+    kontra.initPointer();
 
     // create a sprite
-    window.sprite = kontra.sprite({
+    window.sprite = kontra.Sprite({
       x: 290,
       y: 180,
       width: 20,
@@ -27,15 +29,15 @@
         if (this.x < 0) {
           this.x = 0;
         }
-        else if (this.x >= kontra.canvas.width - this.width) {
-          this.x = kontra.canvas.width - this.width;
+        else if (this.x >= canvas.width - this.width) {
+          this.x = canvas.width - this.width;
         }
 
         if (this.y < 0) {
           this.y = 0;
         }
-        else if (this.y >= kontra.canvas.height - this.height) {
-          this.y = kontra.canvas.height - this.height;
+        else if (this.y >= canvas.height - this.height) {
+          this.y = canvas.height - this.height;
         }
       },
 
@@ -54,10 +56,10 @@
 
     // render and track pointer events on the sprite
     sprite.render();
-    kontra.pointer.track(sprite);
+    kontra.track(sprite);
 
     // create the game loop to update and render the sprite
-    window.loop = kontra.gameLoop({
+    window.loop = kontra.GameLoop({
       update: function() {
         sprite.update();
       },

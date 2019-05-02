@@ -225,3 +225,4 @@ export default function spriteSheetFactory(properties) {
   return new SpriteSheet(properties);
 }
 spriteSheetFactory.prototype = SpriteSheet.prototype;
+spriteSheetFactory.class = SpriteSheet;

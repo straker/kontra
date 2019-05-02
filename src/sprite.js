@@ -192,6 +192,21 @@ class Sprite {
    * sprite.render();
    */
 
+  /**
+   * If you want to extend a Sprite, you can do so by extending the Sprite class. The one caveat is that `kontra.Sprite` is not the Sprite class, but instead is a [factory function](https://en.wikipedia.org/wiki/Factory_(object-oriented_programming)).
+   *
+   * To extend the Sprite class, use the `.class` property of the constructor.
+   *
+   * ```js
+   * import { Sprite } from kontra;
+   *
+   * class CustomSprite extends Sprite.class {
+   *   // ...
+   * }
+   * ```
+   * @sectionName Extending a Sprite
+   */
+
   constructor(properties) {
     this.init(properties);
   }
@@ -735,3 +750,4 @@ export default function spriteFactory(properties) {
   return new Sprite(properties);
 }
 spriteFactory.prototype = Sprite.prototype;
+spriteFactory.class = Sprite;

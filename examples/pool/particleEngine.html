@@ -7,13 +7,13 @@
 <body>
   <canvas width="600" height="600" style="background: #333331"></canvas>
   <script id="code">
-  kontra.init();
+  let { canvas, context } = kontra.init();
 
-  var midX = kontra.canvas.width / 2;
-  var midY = kontra.canvas.height / 2;
+  let midX = canvas.width / 2;
+  let midY = canvas.height / 2;
 
-  var fields = [
-    kontra.sprite({
+  let fields = [
+    kontra.Sprite({
       x: midX - 75,
       y: midY + 20,
       width: 3,
@@ -22,7 +22,7 @@
       mass: 900,
       size: 3
     }),
-    kontra.sprite({
+    kontra.Sprite({
       x: midX + 25,
       y: midY + 10,
       width: 3,
@@ -33,26 +33,26 @@
     })
   ];
 
-  var pool = kontra.pool({
-    create: kontra.sprite,
+  let pool = kontra.Pool({
+    create: kontra.Sprite,
     maxSize: 5000,
     fill: true
   });
 
-  kontra.context.fillStyle = 'white';
+  context.fillStyle = 'white';
 
   // redefine sprite update to account for fields
-  kontra.sprite.prototype.update = function() {
+  kontra.Sprite.prototype.update = function() {
     // apply field
-    var totalAccelerationX = 0
-    var totalAccelerationY = 0;
+    let totalAccelerationX = 0
+    let totalAccelerationY = 0;
 
-    for (var i = 0, field; field = fields[i]; i++) {
+    for (let i = 0, field; field = fields[i]; i++) {
 
-      var vectorX = field.x - this.x;
-      var vectorY = field.y - this.y;
+      let vectorX = field.x - this.x;
+      let vectorY = field.y - this.y;
 
-      var force = field.mass / Math.pow(vectorX * vectorX + vectorY * vectorY, 1.5);
+      let force = field.mass / Math.pow(vectorX * vectorX + vectorY * vectorY, 1.5);
 
       totalAccelerationX += vectorX * force;
       totalAccelerationY += vectorY * force;
@@ -65,13 +65,13 @@
   };
 
   // redefine sprite render to not change context fillStyle every time
-  kontra.sprite.prototype.render = function() {
-    kontra.context.fillRect(this.x, this.y, 3, 3);
+  kontra.Sprite.prototype.render = function() {
+    context.fillRect(this.x, this.y, 3, 3);
   };
 
-  var loop = kontra.gameLoop({
+  let loop = kontra.GameLoop({
     update: function() {
-      for (var i = 0; i < 4; i++) {
+      for (let i = 0; i < 4; i++) {
         pool.get({
           x: midX + 75,
           y: midY,

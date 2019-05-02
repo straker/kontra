@@ -7,10 +7,10 @@
 <body>
   <canvas id="game" width="600" height="400" style="background: #333331"></canvas>
   <script id="code">
-    // plugin: upgrade kontra.vector with advanced vector functions
+    // plugin: upgrade kontra.Vector with advanced vector functions
     (function() {
       let subtract = function(vec) {
-        return kontra.vector(this.x - vec.x, this.y - vec.y);
+        return kontra.Vector(this.x - vec.x, this.y - vec.y);
       }
       let dot = function(vec) {
         return this.x * vec.x + this.y * vec.y;
@@ -22,7 +22,7 @@
         return this.dot(this, this) ** 0.5;
       }
       let scale = function(percent) {
-        return kontra.vector(this.x * percent, this.y * percent);
+        return kontra.Vector(this.x * percent, this.y * percent);
       }
       let normalize = function() {
         this.scale(this, 1 / (this.length(this) || 1));
@@ -33,7 +33,7 @@
 
       let advancedVectorPlugin = {}
 
-      kontra.plugin.extend('vector', {
+      kontra.extendObject(kontra.Vector, {
         subtract,
         dot,
         cross,
@@ -53,7 +53,7 @@
     kontra.init();
 
     // create a basic sprite
-    window.sprite = kontra.sprite({
+    window.sprite = kontra.Sprite({
       x: 290,
       y: 180,
       width: 20,

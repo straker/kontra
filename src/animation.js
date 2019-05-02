@@ -169,3 +169,4 @@ export default function animationFactory(properties) {
   return new Animation(properties);
 }
 animationFactory.prototype = Animation.prototype;
+animationFactory.class = Animation;

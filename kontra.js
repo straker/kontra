@@ -2703,7 +2703,7 @@ class Sprite {
    */
 
   /**
-   * If you want to extend a Sprite, you can do so by extending the Sprite class. The one caveat is that `kontra.Sprite` is not the Sprite class, but instead is a [factory function](https://en.wikipedia.org/wiki/Factory_(object-oriented_programming)).
+   * If you want to extend a Sprite, you can do so by extending the Sprite class. The one caveat is that `Sprite` is not the Sprite class, but actually is a factory function.
    *
    * To extend the Sprite class, use the `.class` property of the constructor.
    *

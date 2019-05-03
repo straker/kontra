@@ -91,21 +91,21 @@
 import { Sprite, GameLoop } from &#39;kontra&#39;;
 
 let sprite = Sprite({
-x: 100,
-y: 100,
-dx: 2,
-width: 20,
-height: 40,
-color: &#39;red&#39;
+  x: 100,
+  y: 100,
+  dx: 2,
+  width: 20,
+  height: 40,
+  color: &#39;red&#39;
 });
 
 let loop = GameLoop({
-update() {
- sprite.update();
-},
-render() {
- sprite.render();
-}
+  update() {
+    sprite.update();
+  },
+  render() {
+    sprite.render();
+  }
 });
 
 loop.start();

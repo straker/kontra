@@ -78,7 +78,7 @@ Have a game you want to add? [Let me know](https://github.com/straker/kontra/iss
   </li>
 
   <li>
-    <a href="http://snekfarm.hermbit.com/">
+    <a href="https://ldjam.com/events/ludum-dare/44/snek-farm">
       <img src="assets/imgs/games/snek-farm.png" alt="" width="320" height="200"/>
       <span>Snek Farm</span>
       <span><span class="visually-hidden">. By </span><small>t3nshi, hermbit, and Failpositive</small></span>

@@ -6,7 +6,7 @@ Download the latest version of Kontra.
 
 - [Production version](https://raw.githubusercontent.com/straker/kontra/master/kontra.min.js)
 - [Development version](https://raw.githubusercontent.com/straker/kontra/master/kontra.js)
-- [TGZ file](https://registry.npmjs.org/kontra/-/kontra-5.5.1.tgz)
+- [TGZ file](https://registry.npmjs.org/kontra/-/kontra-{{ packageVersion }}.tgz)
 - [Github repo](https://github.com/straker/kontra)
 
 ## Package mangers

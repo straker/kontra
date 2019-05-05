@@ -104,7 +104,7 @@
                 {{#each methods}}
                 <li>
                   <a href="#{{ name }}">
-                    <span>{{#if memberof}}{{ memberof }}&#8203;.{{/if}}{{ name }}({{ paramList }})</span>
+                    <span>{{#if memberof}}{{ memberof }}&#8203;.{{/if}}{{ name }}(&#8203;{{ paramList }})</span>
                   </a>
                 </li>
                 {{/each}}
@@ -136,7 +136,7 @@
           <h2 id="{{ name }}">
             <a href="#{{ name }}" class="section-link">
               <span>{{#if memberof}}{{ memberof }}&#8203;.{{/if}}{{ name }}
-              {{~#if function}}({{ paramList }}){{/if}}</span>
+              {{~#if function}}(&#8203;{{ paramList }}){{/if}}</span>
               <span aria-hidden="true">#</span>
             </a>
           </h2>

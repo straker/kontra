@@ -180,6 +180,11 @@ main > div {
   .github-corner .octo-arm {
     animation: octocat-wave 560ms ease-in-out
   }
+
+  .github-corner svg {
+    width: 60px;
+    height: 60px;
+  }
 }
 
 .main-nav {
@@ -430,6 +435,7 @@ dd > dl {
 
 .games a {
   display: block;
+  margin: 0 auto;
 }
 
 .games li {
@@ -438,6 +444,7 @@ dd > dl {
 
 .games img {
   width: 100%;
+  height: auto;
 }
 
 .games span {
@@ -454,6 +461,10 @@ dd > dl {
   .content {
     flex-direction: column;
     height: auto;
+  }
+
+  main > div {
+    margin: 0 auto;
   }
 
   .main-nav {
@@ -477,6 +488,12 @@ dd > dl {
     padding-bottom: 0.8125rem;
     margin: 0 0 1.312rem 0;
     line-height: 4.25rem;
+  }
+}
+
+@media screen and (max-width: 350px) {
+  .games {
+    grid-template-columns: 1fr;
   }
 }
 

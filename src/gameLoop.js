@@ -101,6 +101,7 @@ export default function GameLoop({fps = 60, clearCanvas = true, update, render} 
   loop = {
     /**
      * Called every frame to update the game. Put all of your games update logic here.
+     * @memberof GameLoop
      * @function update
      *
      * @param {Number} dt - The fixed dt time of 1/60 of a frame.
@@ -109,6 +110,7 @@ export default function GameLoop({fps = 60, clearCanvas = true, update, render} 
 
     /**
      * Called every frame to render the game. Put all of your games render logic here.
+     * @memberof GameLoop
      * @function render
      */
     render,
@@ -130,12 +132,14 @@ export default function GameLoop({fps = 60, clearCanvas = true, update, render} 
      * loop.stop();
      * console.log(loop.isStopped);  //=> true
      * ```
+     * @memberof GameLoop
      * @property {Boolean} isStopped
      */
     isStopped: true,
 
     /**
      * Start the game loop.
+     * @memberof GameLoop
      * @function start
      */
     start() {
@@ -146,6 +150,7 @@ export default function GameLoop({fps = 60, clearCanvas = true, update, render} 
 
     /**
      * Stop the game loop.
+     * @memberof GameLoop
      * @function stop
      */
     stop() {

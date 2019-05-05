@@ -107,18 +107,21 @@ class Quadtree {
 
     /**
      * Maximum node depth of the quadtree.
+     * @memberof Quadtree
      * @property {Number} maxDepth
      */
     this.maxDepth = maxDepth;
 
     /**
      * Maximum number of objects a node can have before splitting.
+     * @memberof Quadtree
      * @property {Number} maxObjects
      */
     this.maxObjects = maxObjects;
 
     /**
      * The 2D space (x, y, width, height) the quadtree occupies.
+     * @memberof Quadtree
      * @property {Object} bounds
      */
     let canvas = getCanvas();
@@ -141,6 +144,7 @@ class Quadtree {
 
   /**
    * Removes all objects from the quadtree. You should clear the quadtree every frame before adding all objects back into it.
+   * @memberof Quadtree
    * @function clear
    */
   clear() {
@@ -174,6 +178,7 @@ class Quadtree {
    * quadtree.add(player, enemy1, enemy2);
    * quadtree.get(player);  //=> [enemy1]
    * ```
+   * @memberof Quadtree
    * @function get
    *
    * @param {Object} object - Object to use for finding other objects. The object must have the properties `x`, `y`, `width`, and `height` so that its position in the quadtree can be calculated.
@@ -232,6 +237,7 @@ class Quadtree {
    *   }
    * });
    * ```
+   * @memberof Quadtree
    * @function add
    *
    * @param {Object|Object[]} objectsN - Objects to add to the quadtree.

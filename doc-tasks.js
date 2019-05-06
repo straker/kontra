@@ -3,6 +3,7 @@ const livingcss = require('gulp-livingcss');
 const path = require('path');
 const marked = require('marked');
 const packageJson = require('./package.json');
+const fs = require('fs');
 
 const optionalRegex = /^\[.*\]$/;
 const kontraTypeRegex = /kontra\.(\w+)/g;
@@ -244,6 +245,19 @@ let tags = {
   // primarily used for the download page
   packageVersion: function() {
     this.block.description = this.block.description.replace(packageVersionRegex, packageJson.version);
+  },
+
+  // read a separate file for docs
+  docs: function() {
+    let contents = fs.readFileSync(this.tag.description);
+
+    let parseComments = require( path.join(require.resolve('livingcss'), '../lib/parseComments.js') );
+    let tags = require( path.join(require.resolve('livingcss'), '../lib/tags.js') );
+
+    parseComments(contents.toString(), this.tag.description, tags, {
+      pages: this.pages,
+      sections: this.sections
+    });
   }
 };
 

@@ -77,7 +77,20 @@
 </figure>
 
 <p>Typically you create a sprite sheet just to create animations and then use the animations for your sprite.</p>
-<pre><code class="lang-js">import { Sprite, SpriteSheet } from &#39;kontra&#39;;
+<div class="tablist">
+  <ul role="tablist">
+    <li role="presentation" data-tab="global">
+      <button role="tab" id="spritesheet-global-tab">Global Object</button>
+    </li>
+    <li role="presentation" data-tab="es">
+      <button role="tab" id="spritesheet-es-tab">ES Module Import</button>
+    </li>
+    <li role="presentation" data-tab="bundle">
+      <button role="tab" id="spritesheet-bundle-tab">Module Bundler</button>
+    </li>
+    <li role="presentation"></li>
+  </ul>
+  <section role="tabpanel" aria-labelledby=spritesheet-global-tab data-tabpanel="global"><pre><code class="lang-js">let { Sprite, SpriteSheet } = kontra;
 
 let image = new Image();
 image.src = &#39;assets/imgs/character_walk_sheet.png&#39;;
@@ -103,7 +116,62 @@ image.onload = function() {
     animations: spriteSheet.animations
   });
 };
-</code></pre>
+</code></pre></section>
+  <section role="tabpanel" aria-labelledby=spritesheet-es-tab data-tabpanel="es"><pre><code class="lang-js">import { Sprite, SpriteSheet } from 'path/to/kontra.mjs';
+
+let image = new Image();
+image.src = &#39;assets/imgs/character_walk_sheet.png&#39;;
+image.onload = function() {
+  let spriteSheet = SpriteSheet({
+    image: image,
+    frameWidth: 72,
+    frameHeight: 97,
+    animations: {
+      // create a named animation: walk
+      walk: {
+        frames: &#39;0..9&#39;,  // frames 0 through 9
+        frameRate: 30
+      }
+    }
+  });
+
+  let sprite = Sprite({
+    x: 200,
+    y: 100,
+
+    // use the sprite sheet animations for the sprite
+    animations: spriteSheet.animations
+  });
+};
+</code></pre></section>
+  <section role="tabpanel" aria-labelledby=spritesheet-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">import { Sprite, SpriteSheet } from &#39;kontra&#39;;
+
+let image = new Image();
+image.src = &#39;assets/imgs/character_walk_sheet.png&#39;;
+image.onload = function() {
+  let spriteSheet = SpriteSheet({
+    image: image,
+    frameWidth: 72,
+    frameHeight: 97,
+    animations: {
+      // create a named animation: walk
+      walk: {
+        frames: &#39;0..9&#39;,  // frames 0 through 9
+        frameRate: 30
+      }
+    }
+  });
+
+  let sprite = Sprite({
+    x: 200,
+    y: 100,
+
+    // use the sprite sheet animations for the sprite
+    animations: spriteSheet.animations
+  });
+};
+</code></pre></section>
+</div>
         <h3 id="title-SpriteSheet"><span class="visually-hidden">SpriteSheet</span> Parameters</span></h3>
         <dl aria-labelledby="title-SpriteSheet">
           <dt>
@@ -206,7 +274,20 @@ image.onload = function() {
 
           <p>Create named animations from the sprite sheet. Called from the constructor if the <code>animations</code> argument is passed.</p>
 <p>This function populates the sprite sheets <code>animations</code> property with <a href="Animation">Animation</a> objects. Each animation is accessible by its name.</p>
-<pre><code class="lang-js">import { Sprite, SpriteSheet } from &#39;kontra&#39;;
+<div class="tablist">
+  <ul role="tablist">
+    <li role="presentation" data-tab="global">
+      <button role="tab" id="createanimations-global-tab">Global Object</button>
+    </li>
+    <li role="presentation" data-tab="es">
+      <button role="tab" id="createanimations-es-tab">ES Module Import</button>
+    </li>
+    <li role="presentation" data-tab="bundle">
+      <button role="tab" id="createanimations-bundle-tab">Module Bundler</button>
+    </li>
+    <li role="presentation"></li>
+  </ul>
+  <section role="tabpanel" aria-labelledby=createanimations-global-tab data-tabpanel="global"><pre><code class="lang-js">let { Sprite, SpriteSheet } = kontra;
 
 let image = new Image();
 image.src = &#39;assets/imgs/character_walk_sheet.png&#39;;
@@ -253,7 +334,104 @@ image.onload = function() {
     }
   });
 };
-</code></pre>
+</code></pre></section>
+  <section role="tabpanel" aria-labelledby=createanimations-es-tab data-tabpanel="es"><pre><code class="lang-js">import { Sprite, SpriteSheet } from 'path/to/kontra.mjs';
+
+let image = new Image();
+image.src = &#39;assets/imgs/character_walk_sheet.png&#39;;
+image.onload = function() {
+
+  let spriteSheet = SpriteSheet({
+    image: image,
+    frameWidth: 72,
+    frameHeight: 97,
+
+    // this will also call createAnimations()
+    animations: {
+      // create 1 animation: idle
+      idle: {
+        // a single frame
+        frames: 1
+      }
+    }
+  });
+
+  spriteSheet.createAnimations({
+    // create 4 animations: jump, walk, moonWalk, attack
+    jump: {
+      // sequence of frames (can be non-consecutive)
+      frames: [1, 10, 1],
+      frameRate: 10,
+      loop: false,
+    },
+    walk: {
+      // ascending consecutive frame animation (frames 2-6, inclusive)
+      frames: &#39;2..6&#39;,
+      frameRate: 20
+    },
+    moonWalk: {
+      // descending consecutive frame animation (frames 6-2, inclusive)
+      frames: &#39;6..2&#39;,
+      frameRate: 20
+    },
+    attack: {
+      // you can also mix and match, in this case frames [8,9,10,13,10,9,8]
+      frames: [&#39;8..10&#39;, 13, &#39;10..8&#39;],
+      frameRate: 10,
+      loop: false,
+    }
+  });
+};
+</code></pre></section>
+  <section role="tabpanel" aria-labelledby=createanimations-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">import { Sprite, SpriteSheet } from &#39;kontra&#39;;
+
+let image = new Image();
+image.src = &#39;assets/imgs/character_walk_sheet.png&#39;;
+image.onload = function() {
+
+  let spriteSheet = SpriteSheet({
+    image: image,
+    frameWidth: 72,
+    frameHeight: 97,
+
+    // this will also call createAnimations()
+    animations: {
+      // create 1 animation: idle
+      idle: {
+        // a single frame
+        frames: 1
+      }
+    }
+  });
+
+  spriteSheet.createAnimations({
+    // create 4 animations: jump, walk, moonWalk, attack
+    jump: {
+      // sequence of frames (can be non-consecutive)
+      frames: [1, 10, 1],
+      frameRate: 10,
+      loop: false,
+    },
+    walk: {
+      // ascending consecutive frame animation (frames 2-6, inclusive)
+      frames: &#39;2..6&#39;,
+      frameRate: 20
+    },
+    moonWalk: {
+      // descending consecutive frame animation (frames 6-2, inclusive)
+      frames: &#39;6..2&#39;,
+      frameRate: 20
+    },
+    attack: {
+      // you can also mix and match, in this case frames [8,9,10,13,10,9,8]
+      frames: [&#39;8..10&#39;, 13, &#39;10..8&#39;],
+      frameRate: 10,
+      loop: false,
+    }
+  });
+};
+</code></pre></section>
+</div>
           <h3 id="title-createAnimations"><span class="visually-hidden">createAnimations</span> Parameters</span></h3>
           <dl aria-labelledby="title-createAnimations">
             <dt>
@@ -314,5 +492,6 @@ image.onload = function() {
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/prism.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/components/prism-javascript.min.js"></script>
   <script src="assets/js/navbar.js"></script>
+  <script src="assets/js/exampleTabList.js"></script>
 </body>
 </html>

@@ -68,12 +68,38 @@
         <h1>Plugin        </h1>
 
         <p>A plugin system based on the <a href="https://en.wikipedia.org/wiki/Interceptor_pattern">interceptor pattern</a>, designed to share reusable code such as more advance collision detection or a 2D physics engine.</p>
-<pre><code class="lang-js">import { registerPlugin, Sprite } from &#39;kontra&#39;;
+<div class="tablist">
+  <ul role="tablist">
+    <li role="presentation" data-tab="global">
+      <button role="tab" id="plugin-global-tab">Global Object</button>
+    </li>
+    <li role="presentation" data-tab="es">
+      <button role="tab" id="plugin-es-tab">ES Module Import</button>
+    </li>
+    <li role="presentation" data-tab="bundle">
+      <button role="tab" id="plugin-bundle-tab">Module Bundler</button>
+    </li>
+    <li role="presentation"></li>
+  </ul>
+  <section role="tabpanel" aria-labelledby=plugin-global-tab data-tabpanel="global"><pre><code class="lang-js">let { registerPlugin, Sprite } = kontra;
 import loggingPlugin from &#39;path/to/plugin/code.js&#39;
 
 // register a plugin that adds logging to all Sprites
 registerPlugin(Sprite, loggingPlugin);
-</code></pre>
+</code></pre></section>
+  <section role="tabpanel" aria-labelledby=plugin-es-tab data-tabpanel="es"><pre><code class="lang-js">import { registerPlugin, Sprite } from 'path/to/kontra.mjs';
+import loggingPlugin from &#39;path/to/plugin/code.js&#39;
+
+// register a plugin that adds logging to all Sprites
+registerPlugin(Sprite, loggingPlugin);
+</code></pre></section>
+  <section role="tabpanel" aria-labelledby=plugin-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">import { registerPlugin, Sprite } from &#39;kontra&#39;;
+import loggingPlugin from &#39;path/to/plugin/code.js&#39;
+
+// register a plugin that adds logging to all Sprites
+registerPlugin(Sprite, loggingPlugin);
+</code></pre></section>
+</div>
         
 
         <section class="toc">
@@ -125,15 +151,104 @@ registerPlugin(Sprite, loggingPlugin);
 <p>For example, if you wish to add a function to run after a Sprites <code>collidesWidth()</code> function, the name of the intercept function would be <code>afterCollidesWidth</code> (note the capitalization of the <code>collidesWidth</code> function name). <code>beforeCollidesWidth</code> would run before the Sprites <code>collidesWidth()</code> function.</p>
 <p>A plugin can define any number of before and after intercept functions. When the plugin is registered for a Kontra object, only intercept functions that match a function name in the Kontra object will be intercepted.</p>
 <p>As the plugin author, you should not <a href="#registerPlugin">register</a> the plugin yourself. You should only export the plugin object and let the consumer register it.</p>
-<pre><code class="lang-js">// pluginCode.js
+<div class="tablist">
+  <ul role="tablist">
+    <li role="presentation" data-tab="global">
+      <button role="tab" id="how-to-create-a-plugin-global-tab">Global Object</button>
+    </li>
+    <li role="presentation" data-tab="es">
+      <button role="tab" id="how-to-create-a-plugin-es-tab">ES Module Import</button>
+    </li>
+    <li role="presentation" data-tab="bundle">
+      <button role="tab" id="how-to-create-a-plugin-bundle-tab">Module Bundler</button>
+    </li>
+    <li role="presentation"></li>
+  </ul>
+  <section role="tabpanel" aria-labelledby=how-to-create-a-plugin-global-tab data-tabpanel="global"><pre><code class="lang-js">// pluginCode.js
 const loggingPlugin = {
   afterCollidesWith(sprite, result, object) {
     console.log(&#39;collision between sprites!&#39;);
   }
 };
 export default loggingPlugin;
-</code></pre>
-<pre><code class="lang-js">// consumerCode.js
+</code></pre></section>
+  <section role="tabpanel" aria-labelledby=how-to-create-a-plugin-es-tab data-tabpanel="es"><pre><code class="lang-js">// pluginCode.js
+const loggingPlugin = {
+  afterCollidesWith(sprite, result, object) {
+    console.log(&#39;collision between sprites!&#39;);
+  }
+};
+export default loggingPlugin;
+</code></pre></section>
+  <section role="tabpanel" aria-labelledby=how-to-create-a-plugin-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">// pluginCode.js
+const loggingPlugin = {
+  afterCollidesWith(sprite, result, object) {
+    console.log(&#39;collision between sprites!&#39;);
+  }
+};
+export default loggingPlugin;
+</code></pre></section>
+</div>
+<div class="tablist">
+  <ul role="tablist">
+    <li role="presentation" data-tab="global">
+      <button role="tab" id="how-to-create-a-plugin-global-tab">Global Object</button>
+    </li>
+    <li role="presentation" data-tab="es">
+      <button role="tab" id="how-to-create-a-plugin-es-tab">ES Module Import</button>
+    </li>
+    <li role="presentation" data-tab="bundle">
+      <button role="tab" id="how-to-create-a-plugin-bundle-tab">Module Bundler</button>
+    </li>
+    <li role="presentation"></li>
+  </ul>
+  <section role="tabpanel" aria-labelledby=how-to-create-a-plugin-global-tab data-tabpanel="global"><pre><code class="lang-js">// consumerCode.js
+let { registerPlugin, Sprite } = kontra;
+import loggingPlugin from pluginCode.js;
+
+// have the plugin run for all Sprites
+registerPlugin(Sprite, loggingPlugin);
+
+let sprite1 = Sprite({
+  x: 10,
+  y: 20,
+  width: 10,
+  height: 10
+});
+
+let sprite2 = Sprite({
+  x: 15,
+  y: 20,
+  width: 10,
+  height: 10
+});
+
+sprite1.collidesWith(sprite2);  //=&gt; &#39;collision between sprites!&#39;; true
+</code></pre></section>
+  <section role="tabpanel" aria-labelledby=how-to-create-a-plugin-es-tab data-tabpanel="es"><pre><code class="lang-js">// consumerCode.js
+import { registerPlugin, Sprite } from 'path/to/kontra.mjs';
+import loggingPlugin from pluginCode.js;
+
+// have the plugin run for all Sprites
+registerPlugin(Sprite, loggingPlugin);
+
+let sprite1 = Sprite({
+  x: 10,
+  y: 20,
+  width: 10,
+  height: 10
+});
+
+let sprite2 = Sprite({
+  x: 15,
+  y: 20,
+  width: 10,
+  height: 10
+});
+
+sprite1.collidesWith(sprite2);  //=&gt; &#39;collision between sprites!&#39;; true
+</code></pre></section>
+  <section role="tabpanel" aria-labelledby=how-to-create-a-plugin-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">// consumerCode.js
 import { registerPlugin, Sprite } from &#39;kontra&#39;;
 import loggingPlugin from pluginCode.js;
 
@@ -155,7 +270,8 @@ let sprite2 = Sprite({
 });
 
 sprite1.collidesWith(sprite2);  //=&gt; &#39;collision between sprites!&#39;; true
-</code></pre>
+</code></pre></section>
+</div>
         </section>
         <section>
           <h2 id="before-intercept functions">
@@ -167,7 +283,20 @@ sprite1.collidesWith(sprite2);  //=&gt; &#39;collision between sprites!&#39;; tr
 
           <p>A before intercept function can be used to modify or change the arguments that will be passed to the intercepted function.</p>
 <p>The function will be passed the <code>this</code> context of the intercepted object as well as all arguments of the original call. The function should either return an Array of the arguments if modifying them or return <code>null</code> or nothing if not modifying the arguments.</p>
-<pre><code class="lang-js">class MyObj {
+<div class="tablist">
+  <ul role="tablist">
+    <li role="presentation" data-tab="global">
+      <button role="tab" id="before-intercept-functions-global-tab">Global Object</button>
+    </li>
+    <li role="presentation" data-tab="es">
+      <button role="tab" id="before-intercept-functions-es-tab">ES Module Import</button>
+    </li>
+    <li role="presentation" data-tab="bundle">
+      <button role="tab" id="before-intercept-functions-bundle-tab">Module Bundler</button>
+    </li>
+    <li role="presentation"></li>
+  </ul>
+  <section role="tabpanel" aria-labelledby=before-intercept-functions-global-tab data-tabpanel="global"><pre><code class="lang-js">class MyObj {
   add(a, b) {
     return a + b;
   }
@@ -183,9 +312,57 @@ registerPlugin(MyObj, {
 
 const obj = new MyObj();
 obj.add(1, 2);  //=&gt; 6
-</code></pre>
+</code></pre></section>
+  <section role="tabpanel" aria-labelledby=before-intercept-functions-es-tab data-tabpanel="es"><pre><code class="lang-js">class MyObj {
+  add(a, b) {
+    return a + b;
+  }
+}
+
+// create a plugin that doubles the arguments before passing
+// them to the original add function
+registerPlugin(MyObj, {
+  beforeAdd(context, a, b) {
+    return [a * 2, b * 2];
+  }
+});
+
+const obj = new MyObj();
+obj.add(1, 2);  //=&gt; 6
+</code></pre></section>
+  <section role="tabpanel" aria-labelledby=before-intercept-functions-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">class MyObj {
+  add(a, b) {
+    return a + b;
+  }
+}
+
+// create a plugin that doubles the arguments before passing
+// them to the original add function
+registerPlugin(MyObj, {
+  beforeAdd(context, a, b) {
+    return [a * 2, b * 2];
+  }
+});
+
+const obj = new MyObj();
+obj.add(1, 2);  //=&gt; 6
+</code></pre></section>
+</div>
 <p>Multiple before intercept functions can be registered for the same function. All functions will be run in the order they were registered. The functions return value will be passed to the next function. If the function doesn&#39;t modify the arguments (returned <code>null</code> or nothing) then the functions parameters will be passed to the next function instead.</p>
-<pre><code class="lang-js">class MyObj {
+<div class="tablist">
+  <ul role="tablist">
+    <li role="presentation" data-tab="global">
+      <button role="tab" id="before-intercept-functions-global-tab">Global Object</button>
+    </li>
+    <li role="presentation" data-tab="es">
+      <button role="tab" id="before-intercept-functions-es-tab">ES Module Import</button>
+    </li>
+    <li role="presentation" data-tab="bundle">
+      <button role="tab" id="before-intercept-functions-bundle-tab">Module Bundler</button>
+    </li>
+    <li role="presentation"></li>
+  </ul>
+  <section role="tabpanel" aria-labelledby=before-intercept-functions-global-tab data-tabpanel="global"><pre><code class="lang-js">class MyObj {
   add(a, b) {
     return a + b;
   }
@@ -207,7 +384,54 @@ registerPlugin(MyObj, {
 
 const obj = new MyObj();
 obj.add(1, 2);  //=&gt; &#39;add passed: 1, 2&#39;; 6
-</code></pre>
+</code></pre></section>
+  <section role="tabpanel" aria-labelledby=before-intercept-functions-es-tab data-tabpanel="es"><pre><code class="lang-js">class MyObj {
+  add(a, b) {
+    return a + b;
+  }
+}
+
+// log the arguments of the call and pass them unchanged to
+// the next plugin
+registerPlugin(MyObj, {
+  beforeAdd(context, a, b) {
+    console.log(`add passed: ${a}, ${b}`);
+  }
+});
+
+registerPlugin(MyObj, {
+  beforeAdd(context, a, b) {  // receives a=1 and b=2
+    return [a * 2, b * 2];
+  }
+});
+
+const obj = new MyObj();
+obj.add(1, 2);  //=&gt; &#39;add passed: 1, 2&#39;; 6
+</code></pre></section>
+  <section role="tabpanel" aria-labelledby=before-intercept-functions-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">class MyObj {
+  add(a, b) {
+    return a + b;
+  }
+}
+
+// log the arguments of the call and pass them unchanged to
+// the next plugin
+registerPlugin(MyObj, {
+  beforeAdd(context, a, b) {
+    console.log(`add passed: ${a}, ${b}`);
+  }
+});
+
+registerPlugin(MyObj, {
+  beforeAdd(context, a, b) {  // receives a=1 and b=2
+    return [a * 2, b * 2];
+  }
+});
+
+const obj = new MyObj();
+obj.add(1, 2);  //=&gt; &#39;add passed: 1, 2&#39;; 6
+</code></pre></section>
+</div>
         </section>
         <section>
           <h2 id="after-intercept functions">
@@ -219,7 +443,20 @@ obj.add(1, 2);  //=&gt; &#39;add passed: 1, 2&#39;; 6
 
           <p>An after intercept function can be used to modify or change the results of the intercepted function.</p>
 <p>The function will be passed the <code>this</code> context of the intercepted object, the result of the intercepted function, and the final arguments passed to the intercepted function. The function should either return a value if modifying the result or return <code>null</code> or nothing if not modifying the result.</p>
-<pre><code class="lang-js">class MyObj {
+<div class="tablist">
+  <ul role="tablist">
+    <li role="presentation" data-tab="global">
+      <button role="tab" id="after-intercept-functions-global-tab">Global Object</button>
+    </li>
+    <li role="presentation" data-tab="es">
+      <button role="tab" id="after-intercept-functions-es-tab">ES Module Import</button>
+    </li>
+    <li role="presentation" data-tab="bundle">
+      <button role="tab" id="after-intercept-functions-bundle-tab">Module Bundler</button>
+    </li>
+    <li role="presentation"></li>
+  </ul>
+  <section role="tabpanel" aria-labelledby=after-intercept-functions-global-tab data-tabpanel="global"><pre><code class="lang-js">class MyObj {
   add(a, b) {
     return a + b;
   }
@@ -234,9 +471,55 @@ registerPlugin(MyObj, {
 
 const obj = new MyObj();
 obj.add(1, 2);  //=&gt; 6
-</code></pre>
+</code></pre></section>
+  <section role="tabpanel" aria-labelledby=after-intercept-functions-es-tab data-tabpanel="es"><pre><code class="lang-js">class MyObj {
+  add(a, b) {
+    return a + b;
+  }
+}
+
+// create a plugin that doubles the result
+registerPlugin(MyObj, {
+  afterAdd(context, result, a, b) {
+    return result * 2;
+  }
+});
+
+const obj = new MyObj();
+obj.add(1, 2);  //=&gt; 6
+</code></pre></section>
+  <section role="tabpanel" aria-labelledby=after-intercept-functions-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">class MyObj {
+  add(a, b) {
+    return a + b;
+  }
+}
+
+// create a plugin that doubles the result
+registerPlugin(MyObj, {
+  afterAdd(context, result, a, b) {
+    return result * 2;
+  }
+});
+
+const obj = new MyObj();
+obj.add(1, 2);  //=&gt; 6
+</code></pre></section>
+</div>
 <p>Multiple after intercept functions can be registered for the same function. All functions will be run in the order they were registered. Each functions return value will be passed to the next function. If the function doesn&#39;t modify the result (returned <code>null</code> or nothing) then the functions parameters will be passed to the next function instead.</p>
-<pre><code class="lang-js">class MyObj {
+<div class="tablist">
+  <ul role="tablist">
+    <li role="presentation" data-tab="global">
+      <button role="tab" id="after-intercept-functions-global-tab">Global Object</button>
+    </li>
+    <li role="presentation" data-tab="es">
+      <button role="tab" id="after-intercept-functions-es-tab">ES Module Import</button>
+    </li>
+    <li role="presentation" data-tab="bundle">
+      <button role="tab" id="after-intercept-functions-bundle-tab">Module Bundler</button>
+    </li>
+    <li role="presentation"></li>
+  </ul>
+  <section role="tabpanel" aria-labelledby=after-intercept-functions-global-tab data-tabpanel="global"><pre><code class="lang-js">class MyObj {
   add(a, b) {
     return a + b;
   }
@@ -258,7 +541,54 @@ registerPlugin(MyObj, {
 
 const obj = new MyObj();
 obj.add(1, 2);  //=&gt; &#39;add passed: 1, 2 and returned 3&#39;; 6
-</code></pre>
+</code></pre></section>
+  <section role="tabpanel" aria-labelledby=after-intercept-functions-es-tab data-tabpanel="es"><pre><code class="lang-js">class MyObj {
+  add(a, b) {
+    return a + b;
+  }
+}
+
+// log the arguments of the call and pass them unchanged to
+// the next plugin
+registerPlugin(MyObj, {
+  afterAdd(context, result, a, b) {
+    console.log(`add passed: ${a}, ${b} and returned ${result}`);
+  }
+});
+
+registerPlugin(MyObj, {
+  afterAdd(context, result, a, b) {  // receives result=3
+    return result * 2;
+  }
+});
+
+const obj = new MyObj();
+obj.add(1, 2);  //=&gt; &#39;add passed: 1, 2 and returned 3&#39;; 6
+</code></pre></section>
+  <section role="tabpanel" aria-labelledby=after-intercept-functions-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">class MyObj {
+  add(a, b) {
+    return a + b;
+  }
+}
+
+// log the arguments of the call and pass them unchanged to
+// the next plugin
+registerPlugin(MyObj, {
+  afterAdd(context, result, a, b) {
+    console.log(`add passed: ${a}, ${b} and returned ${result}`);
+  }
+});
+
+registerPlugin(MyObj, {
+  afterAdd(context, result, a, b) {  // receives result=3
+    return result * 2;
+  }
+});
+
+const obj = new MyObj();
+obj.add(1, 2);  //=&gt; &#39;add passed: 1, 2 and returned 3&#39;; 6
+</code></pre></section>
+</div>
         </section>
 
         <section>
@@ -270,7 +600,20 @@ obj.add(1, 2);  //=&gt; &#39;add passed: 1, 2 and returned 3&#39;; 6
           </h2>
 
           <p>Safely extend the functionality of a Kontra object. Any properties that already exist on the Kontra object will not be added.</p>
-<pre><code class="lang-js">import { extendObject, Vector } from &#39;kontra&#39;;
+<div class="tablist">
+  <ul role="tablist">
+    <li role="presentation" data-tab="global">
+      <button role="tab" id="extendobject-global-tab">Global Object</button>
+    </li>
+    <li role="presentation" data-tab="es">
+      <button role="tab" id="extendobject-es-tab">ES Module Import</button>
+    </li>
+    <li role="presentation" data-tab="bundle">
+      <button role="tab" id="extendobject-bundle-tab">Module Bundler</button>
+    </li>
+    <li role="presentation"></li>
+  </ul>
+  <section role="tabpanel" aria-labelledby=extendobject-global-tab data-tabpanel="global"><pre><code class="lang-js">let { extendObject, Vector } = kontra;
 
 // add a subtract function to all Vectors
 extendObject(Vector, {
@@ -278,7 +621,26 @@ extendObject(Vector, {
     return Vector(this.x - vec.x, this.y - vec.y);
   }
 });
-</code></pre>
+</code></pre></section>
+  <section role="tabpanel" aria-labelledby=extendobject-es-tab data-tabpanel="es"><pre><code class="lang-js">import { extendObject, Vector } from 'path/to/kontra.mjs';
+
+// add a subtract function to all Vectors
+extendObject(Vector, {
+  subtract(vec) {
+    return Vector(this.x - vec.x, this.y - vec.y);
+  }
+});
+</code></pre></section>
+  <section role="tabpanel" aria-labelledby=extendobject-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">import { extendObject, Vector } from &#39;kontra&#39;;
+
+// add a subtract function to all Vectors
+extendObject(Vector, {
+  subtract(vec) {
+    return Vector(this.x - vec.x, this.y - vec.y);
+  }
+});
+</code></pre></section>
+</div>
           <h3 id="title-extendObject"><span class="visually-hidden">extendObject</span> Parameters</span></h3>
           <dl aria-labelledby="title-extendObject">
             <dt>
@@ -356,5 +718,6 @@ extendObject(Vector, {
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/prism.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/components/prism-javascript.min.js"></script>
   <script src="assets/js/navbar.js"></script>
+  <script src="assets/js/exampleTabList.js"></script>
 </body>
 </html>

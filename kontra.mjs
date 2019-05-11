@@ -1,6 +1,3 @@
-var kontra = (function () {
-'use strict';
-
 /**
  * A simple event system, mostly created to support [Plugins](api/plugin). Allows you to hook into Kontra lifecycle events or create your own.
  *
@@ -3673,6 +3670,5 @@ let kontra = {
   Vector: vectorFactory
 };
 
-return kontra;
-
-}());
+export { animationFactory as Animation, imageAssets, audioAssets, dataAssets, setImagePath, setAudioPath, setDataPath, loadImage, loadAudio, loadData, load, init, getCanvas, getContext, on, off, emit, GameLoop, keyMap, initKeys, bindKeys, unbindKeys, keyPressed, registerPlugin, unregisterPlugin, extendObject, initPointer, pointer, track, untrack, pointerOver, onPointerDown, onPointerUp, pointerPressed, poolFactory as Pool, quadtreeFactory as Quadtree, spriteFactory as Sprite, spriteSheetFactory as SpriteSheet, setStoreItem, getStoreItem, TileEngine, vectorFactory as Vector };
+export default kontra;

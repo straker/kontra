@@ -68,7 +68,20 @@
         <h1>Keyboard        </h1>
 
         <p>A minimalistic keyboard API. You can use it move the main sprite or respond to a key press.</p>
-<pre><code class="lang-js">import { initKeys, keyPressed } from &#39;kontra&#39;;
+<div class="tablist">
+  <ul role="tablist">
+    <li role="presentation" data-tab="global">
+      <button role="tab" id="keyboard-global-tab">Global Object</button>
+    </li>
+    <li role="presentation" data-tab="es">
+      <button role="tab" id="keyboard-es-tab">ES Module Import</button>
+    </li>
+    <li role="presentation" data-tab="bundle">
+      <button role="tab" id="keyboard-bundle-tab">Module Bundler</button>
+    </li>
+    <li role="presentation"></li>
+  </ul>
+  <section role="tabpanel" aria-labelledby=keyboard-global-tab data-tabpanel="global"><pre><code class="lang-js">let { initKeys, keyPressed } = kontra;
 
 // this function must be called first before keyboard
 // functions will work
@@ -79,7 +92,32 @@ function update() {
     // move left
   }
 }
-</code></pre>
+</code></pre></section>
+  <section role="tabpanel" aria-labelledby=keyboard-es-tab data-tabpanel="es"><pre><code class="lang-js">import { initKeys, keyPressed } from 'path/to/kontra.mjs';
+
+// this function must be called first before keyboard
+// functions will work
+initKeys();
+
+function update() {
+  if (keyPressed(&#39;left&#39;)) {
+    // move left
+  }
+}
+</code></pre></section>
+  <section role="tabpanel" aria-labelledby=keyboard-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">import { initKeys, keyPressed } from &#39;kontra&#39;;
+
+// this function must be called first before keyboard
+// functions will work
+initKeys();
+
+function update() {
+  if (keyPressed(&#39;left&#39;)) {
+    // move left
+  }
+}
+</code></pre></section>
+</div>
         
 
         <section class="toc">
@@ -156,7 +194,20 @@ function update() {
           </h2>
 
           <p>Bind a set of keys that will call the callback function when they are pressed. Takes a single key or an array of keys. Is passed the original KeyboardEvent as a parameter.</p>
-<pre><code class="lang-js">import { initKeys, bindKeys } from &#39;kontra&#39;;
+<div class="tablist">
+  <ul role="tablist">
+    <li role="presentation" data-tab="global">
+      <button role="tab" id="bindkeys-global-tab">Global Object</button>
+    </li>
+    <li role="presentation" data-tab="es">
+      <button role="tab" id="bindkeys-es-tab">ES Module Import</button>
+    </li>
+    <li role="presentation" data-tab="bundle">
+      <button role="tab" id="bindkeys-bundle-tab">Module Bundler</button>
+    </li>
+    <li role="presentation"></li>
+  </ul>
+  <section role="tabpanel" aria-labelledby=bindkeys-global-tab data-tabpanel="global"><pre><code class="lang-js">let { initKeys, bindKeys } = kontra;
 
 initKeys();
 
@@ -167,7 +218,32 @@ bindKeys([&#39;enter&#39;, &#39;space&#39;], function(e) {
   e.preventDefault();
   // fire gun
 });
-</code></pre>
+</code></pre></section>
+  <section role="tabpanel" aria-labelledby=bindkeys-es-tab data-tabpanel="es"><pre><code class="lang-js">import { initKeys, bindKeys } from 'path/to/kontra.mjs';
+
+initKeys();
+
+bindKeys(&#39;p&#39;, function(e) {
+  // pause the game
+});
+bindKeys([&#39;enter&#39;, &#39;space&#39;], function(e) {
+  e.preventDefault();
+  // fire gun
+});
+</code></pre></section>
+  <section role="tabpanel" aria-labelledby=bindkeys-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">import { initKeys, bindKeys } from &#39;kontra&#39;;
+
+initKeys();
+
+bindKeys(&#39;p&#39;, function(e) {
+  // pause the game
+});
+bindKeys([&#39;enter&#39;, &#39;space&#39;], function(e) {
+  e.preventDefault();
+  // fire gun
+});
+</code></pre></section>
+</div>
           <h3 id="title-bindKeys"><span class="visually-hidden">bindKeys</span> Parameters</span></h3>
           <dl aria-labelledby="title-bindKeys">
             <dt>
@@ -199,14 +275,44 @@ bindKeys([&#39;enter&#39;, &#39;space&#39;], function(e) {
           </h2>
 
           <p>A map of keycodes to key names. Add to this object to expand the list of <a href="#available-keys">available keys</a>.</p>
-<pre><code class="lang-js">import { keyMap, bindKeys } from &#39;kontra&#39;;
+<div class="tablist">
+  <ul role="tablist">
+    <li role="presentation" data-tab="global">
+      <button role="tab" id="keymap-global-tab">Global Object</button>
+    </li>
+    <li role="presentation" data-tab="es">
+      <button role="tab" id="keymap-es-tab">ES Module Import</button>
+    </li>
+    <li role="presentation" data-tab="bundle">
+      <button role="tab" id="keymap-bundle-tab">Module Bundler</button>
+    </li>
+    <li role="presentation"></li>
+  </ul>
+  <section role="tabpanel" aria-labelledby=keymap-global-tab data-tabpanel="global"><pre><code class="lang-js">let { keyMap, bindKeys } = kontra;
 
 keyMap[34] = &#39;pageDown&#39;;
 
 bindKeys(&#39;pageDown&#39;, function(e) {
   // handle pageDown key
 });
-</code></pre>
+</code></pre></section>
+  <section role="tabpanel" aria-labelledby=keymap-es-tab data-tabpanel="es"><pre><code class="lang-js">import { keyMap, bindKeys } from 'path/to/kontra.mjs';
+
+keyMap[34] = &#39;pageDown&#39;;
+
+bindKeys(&#39;pageDown&#39;, function(e) {
+  // handle pageDown key
+});
+</code></pre></section>
+  <section role="tabpanel" aria-labelledby=keymap-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">import { keyMap, bindKeys } from &#39;kontra&#39;;
+
+keyMap[34] = &#39;pageDown&#39;;
+
+bindKeys(&#39;pageDown&#39;, function(e) {
+  // handle pageDown key
+});
+</code></pre></section>
+</div>
           
         </section>
         <section>
@@ -218,7 +324,20 @@ bindKeys(&#39;pageDown&#39;, function(e) {
           </h2>
 
           <p>Check if a key is currently pressed. Use during an <code>update()</code> function to perform actions each frame.</p>
-<pre><code class="lang-js">import { Sprite, initKeys, keyPressed } from &#39;kontra&#39;;
+<div class="tablist">
+  <ul role="tablist">
+    <li role="presentation" data-tab="global">
+      <button role="tab" id="keypressed-global-tab">Global Object</button>
+    </li>
+    <li role="presentation" data-tab="es">
+      <button role="tab" id="keypressed-es-tab">ES Module Import</button>
+    </li>
+    <li role="presentation" data-tab="bundle">
+      <button role="tab" id="keypressed-bundle-tab">Module Bundler</button>
+    </li>
+    <li role="presentation"></li>
+  </ul>
+  <section role="tabpanel" aria-labelledby=keypressed-global-tab data-tabpanel="global"><pre><code class="lang-js">let { Sprite, initKeys, keyPressed } = kontra;
 
 initKeys();
 
@@ -239,7 +358,52 @@ let sprite = Sprite({
     }
   }
 });
-</code></pre>
+</code></pre></section>
+  <section role="tabpanel" aria-labelledby=keypressed-es-tab data-tabpanel="es"><pre><code class="lang-js">import { Sprite, initKeys, keyPressed } from 'path/to/kontra.mjs';
+
+initKeys();
+
+let sprite = Sprite({
+  update: function() {
+    if (keyPressed(&#39;left&#39;)){
+      // left arrow pressed
+    }
+    else if (keyPressed(&#39;right&#39;)) {
+      // right arrow pressed
+    }
+
+    if (keyPressed(&#39;up&#39;)) {
+      // up arrow pressed
+    }
+    else if (keyPressed(&#39;down&#39;)) {
+      // down arrow pressed
+    }
+  }
+});
+</code></pre></section>
+  <section role="tabpanel" aria-labelledby=keypressed-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">import { Sprite, initKeys, keyPressed } from &#39;kontra&#39;;
+
+initKeys();
+
+let sprite = Sprite({
+  update: function() {
+    if (keyPressed(&#39;left&#39;)){
+      // left arrow pressed
+    }
+    else if (keyPressed(&#39;right&#39;)) {
+      // right arrow pressed
+    }
+
+    if (keyPressed(&#39;up&#39;)) {
+      // up arrow pressed
+    }
+    else if (keyPressed(&#39;down&#39;)) {
+      // down arrow pressed
+    }
+  }
+});
+</code></pre></section>
+</div>
           <h3 id="title-keyPressed"><span class="visually-hidden">keyPressed</span> Parameters</span></h3>
           <dl aria-labelledby="title-keyPressed">
             <dt>
@@ -263,11 +427,35 @@ let sprite = Sprite({
           </h2>
 
           <p>Remove the callback function for a bound set of keys. Takes a single key or an array of keys.</p>
-<pre><code class="lang-js">import { unbindKeys } from &#39;kontra&#39;;
+<div class="tablist">
+  <ul role="tablist">
+    <li role="presentation" data-tab="global">
+      <button role="tab" id="unbindkeys-global-tab">Global Object</button>
+    </li>
+    <li role="presentation" data-tab="es">
+      <button role="tab" id="unbindkeys-es-tab">ES Module Import</button>
+    </li>
+    <li role="presentation" data-tab="bundle">
+      <button role="tab" id="unbindkeys-bundle-tab">Module Bundler</button>
+    </li>
+    <li role="presentation"></li>
+  </ul>
+  <section role="tabpanel" aria-labelledby=unbindkeys-global-tab data-tabpanel="global"><pre><code class="lang-js">let { unbindKeys } = kontra;
 
 unbindKeys(&#39;left&#39;);
 unbindKeys([&#39;enter&#39;, &#39;space&#39;]);
-</code></pre>
+</code></pre></section>
+  <section role="tabpanel" aria-labelledby=unbindkeys-es-tab data-tabpanel="es"><pre><code class="lang-js">import { unbindKeys } from 'path/to/kontra.mjs';
+
+unbindKeys(&#39;left&#39;);
+unbindKeys([&#39;enter&#39;, &#39;space&#39;]);
+</code></pre></section>
+  <section role="tabpanel" aria-labelledby=unbindkeys-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">import { unbindKeys } from &#39;kontra&#39;;
+
+unbindKeys(&#39;left&#39;);
+unbindKeys([&#39;enter&#39;, &#39;space&#39;]);
+</code></pre></section>
+</div>
           <h3 id="title-unbindKeys"><span class="visually-hidden">unbindKeys</span> Parameters</span></h3>
           <dl aria-labelledby="title-unbindKeys">
             <dt>
@@ -287,5 +475,6 @@ unbindKeys([&#39;enter&#39;, &#39;space&#39;]);
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/prism.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/components/prism-javascript.min.js"></script>
   <script src="assets/js/navbar.js"></script>
+  <script src="assets/js/exampleTabList.js"></script>
 </body>
 </html>

@@ -81,9 +81,15 @@
 <li><code>$ yarn add kontra</code></li>
 </ul>
 <h2 id="cdn">CDN</h2>
-<pre><code class="lang-js">&lt;script src=&quot;https://cdn.jsdelivr.net/npm/kontra@6.0.0/kontra.min.js&quot;&gt;&lt;/script&gt;
+<h3 id="global-object">Global Object</h3>
+<pre><code class="lang-html">&lt;script src=&quot;https://cdn.jsdelivr.net/npm/kontra@6.0.0/kontra.min.js&quot;&gt;&lt;/script&gt;
 </code></pre>
-<pre><code class="lang-js">&lt;script src=&quot;https://cdn.jsdelivr.net/npm/kontra@6.0.0/kontra.js&quot;&gt;&lt;/script&gt;
+<pre><code class="lang-html">&lt;script src=&quot;https://cdn.jsdelivr.net/npm/kontra@6.0.0/kontra.js&quot;&gt;&lt;/script&gt;
+</code></pre>
+<h3 id="es-module-import">ES Module Import</h3>
+<pre><code class="lang-js">import kontra from &#39;https://cdn.jsdelivr.net/npm/kontra@6.0.0/kontra.min.mjs&#39;;
+</code></pre>
+<pre><code class="lang-js">import kontra from &#39;https://cdn.jsdelivr.net/npm/kontra@6.0.0/kontra.mjs&#39;;
 </code></pre>
 <h2 id="custom-builds">Custom Builds</h2>
 <p>As of kontra 6.0.0, custom builds can be achieved by using a module bundler such as <a href="https://rollupjs.org/">Rollup</a> or <a href="https://webpack.js.org/">webpack</a>. Kontra supports ES modules, allowing you to use <a href="https://rollupjs.org/guide/en#tree-shaking">tree-shaking</a> to only bundle the code you need.</p>
@@ -124,5 +130,6 @@ loop.start();
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/prism.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/components/prism-javascript.min.js"></script>
   <script src="assets/js/navbar.js"></script>
+  <script src="assets/js/exampleTabList.js"></script>
 </body>
 </html>

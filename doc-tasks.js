@@ -10,6 +10,8 @@ const kontraTypeRegex = /kontra\.(\w+)/g;
 const packageVersionRegex = /{{\s?packageVersion\s?}}/g;
 const excludeCodeRegex = /\s*\/\/ exclude-code:start[\s\S]*?\/\/ exclude-code:end/g;
 const excludeScriptRegex = /\s*\/\/ exclude-script:start[\r\n]([\s\S]*?[\r\n])\/\/ exclude-script:end[\r\n]/g;
+const codeRegex =/<pre>[\s\S]*?<code class="(.*)">([\s\S]*?)<\/code><\/pre>/g;
+const importRegex = /import \{(.*)\} from .+kontra.+?;/g;
 let uuid = 0;
 let navbar;
 
@@ -67,6 +69,42 @@ function addSectionAndPage() {
   }
 
   this.comment.description = parseType(this.comment.description);
+}
+
+/**
+ * Create a tab panel to show the different ways to load the library automatically from the code output of a section description. Don't do this for any code output that has '// exclude-tablist'
+ */
+function buildImports(section) {
+  section.description = section.description
+    .replace(codeRegex, (match, className) => {
+
+      if (className === 'lang-js' && !match.includes('// exclude-tablist')) {
+        let globalImport = match.replace(importRegex, `let {$1} = kontra`);
+        let esImport = match.replace(importRegex, `import {$1} from 'path/to/kontra.mjs'`);
+        let bundlerImport = match;
+
+        return `<div class="tablist">
+  <ul role="tablist">
+    <li role="presentation" data-tab="global">
+      <button role="tab" id="${section.id}-global-tab">Global Object</button>
+    </li>
+    <li role="presentation" data-tab="es">
+      <button role="tab" id="${section.id}-es-tab">ES Module Import</button>
+    </li>
+    <li role="presentation" data-tab="bundle">
+      <button role="tab" id="${section.id}-bundle-tab">Module Bundler</button>
+    </li>
+    <li role="presentation"></li>
+  </ul>
+  <section role="tabpanel" aria-labelledby=${section.id}-global-tab data-tabpanel="global">${globalImport}</section>
+  <section role="tabpanel" aria-labelledby=${section.id}-es-tab data-tabpanel="es">${esImport}</section>
+  <section role="tabpanel" aria-labelledby=${section.id}-bundle-tab data-tabpanel="bundle">${bundlerImport}</section>
+</div>`;
+      }
+      else {
+        return match.replace('// exclude-tablist\n', '');
+      }
+    });
 }
 
 /**
@@ -193,6 +231,14 @@ let tags = {
      * To exclude code form the script, use the comments `// exclude-script:start` and `// exclude-script:end`. All lines between the two comments will not be run in the script but will be show in the code block. Typically the ES import syntax is excluded will be put in the exclude comments so the script doesn't try to import from the global kontra object.
      */
     let id = `game-canvas-${uuid++}`;
+
+    let codeOutput = this.tag.description.trim()
+      .replace(excludeCodeRegex, '')
+      .replace(excludeScriptRegex, '$1');
+    let globalImport = codeOutput.replace(importRegex, `let {$1} = kontra`);
+    let esImport = codeOutput.replace(importRegex, `import {$1} from 'path/to/kontra.mjs'`);
+    let bundlerImport = codeOutput;
+
     this.block.example = {
       id: id,
       scriptOutput: `(function() {
@@ -203,9 +249,9 @@ let tags = {
   var context = canvas.getContext("2d");
   ${this.tag.description.replace(excludeScriptRegex, '')}
 })();`,
-      codeOutput: this.tag.description.trim()
-        .replace(excludeCodeRegex, '')
-        .replace(excludeScriptRegex, '$1')
+      globalOutput: globalImport,
+      esOutput: esImport,
+      bundleOutput: bundlerImport
     };
   },
 
@@ -305,6 +351,8 @@ function livingcssPreprocess(context, template, Handlebars) {
     context.methods.sort(sortByName);
     context.properties.sort(sortByName);
     context.methodsAndProperties.sort(sortByName);
+
+    buildImports(section);
   });
 
   // load all handlebar partials
@@ -330,6 +378,10 @@ function buildPages() {
         context.navbar = navbar;
         context.otherSections = context.sections.slice(1);
         context['nav-'+context.id] = true;
+
+        context.sections.forEach(section => {
+          buildImports(section);
+        });
 
         // load all handlebar partials
         return livingcss.utils.readFileGlobs('docs/template/partials/*.hbs', function(data, file) {

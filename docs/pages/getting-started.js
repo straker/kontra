@@ -2,22 +2,41 @@
 
 ## Download
 
-- [Production](https://raw.githubusercontent.com/straker/kontra/master/kontra.min.js) and [development](https://raw.githubusercontent.com/straker/kontra/master/kontra.js) versions
+- Global object [production](https://raw.githubusercontent.com/straker/kontra/master/kontra.min.js) and [development](https://raw.githubusercontent.com/straker/kontra/master/kontra.js) versions
+- ES module [production](https://raw.githubusercontent.com/straker/kontra/master/kontra.min.mjs) and [development](https://raw.githubusercontent.com/straker/kontra/master/kontra.mjs) versions
 - `$ npm install kontra`
 
 ## Load
 
-Load the library by adding it as a script tag on the page.
+There are a few different ways to load the library depending on how you are going to use it.
 
-```js
-<script src="kontra.js"></script>
+### Global Object
+
+Load the library by adding it as a script tag. This will add a global `kontra` object to the page with all Kontra functions and properties.
+
+```html
+<script src="path/to/kontra.js"></script>
 ```
 
-Kontra also supports ES modules and exports all API functions, allowing you to import it into your code as well. This is the recommended way to create [custom builds](download) of the library.
+### ES Module Import
+
+Kontra also supports ES modules and exports all API functions, allowing you to import it into your code as well. Import the file `kontra.mjs` and either use the entire `kontra` object or just import the functions you need.
 
 ```js
-import { Sprite } from 'kontra';
+// exclude-tablist
+import kontra from 'path/to/kontra.mjs';
 ```
+
+### Module Bundler
+
+If you're using a module bundler that supports npm dependency resolution (such as Webpack or Parcel), you can import the library directly from the module name. This is the recommended way to create [custom builds](download) of the library.
+
+```js
+// exclude-tablist
+import kontra from 'kontra';
+```
+
+### Web Maker
 
 Want to get started without all the hassle? [Web Maker](https://webmakerapp.com/) has you covered! When you start a new project, select the Kontra Game Engine from the list of predefined templates and you're good to go. Learn more by reading the [Web Maker and JS13k tutorial](https://medium.com/web-maker/js13kgames-jam-with-web-maker-a3389cf2cbb).
 

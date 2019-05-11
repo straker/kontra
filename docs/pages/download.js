@@ -16,11 +16,24 @@ Download the latest version of Kontra.
 
 ## CDN
 
-```js
+### Global Object
+
+```html
 <script src="https://cdn.jsdelivr.net/npm/kontra@{{ packageVersion }}/kontra.min.js"></script>
 ```
-```js
+```html
 <script src="https://cdn.jsdelivr.net/npm/kontra@{{ packageVersion }}/kontra.js"></script>
+```
+
+### ES Module Import
+
+```js
+// exclude-tablist
+import kontra from 'https://cdn.jsdelivr.net/npm/kontra@{{ packageVersion }}/kontra.min.mjs';
+```
+```js
+// exclude-tablist
+import kontra from 'https://cdn.jsdelivr.net/npm/kontra@{{ packageVersion }}/kontra.mjs';
 ```
 
 ## Custom Builds
@@ -28,6 +41,7 @@ Download the latest version of Kontra.
 As of kontra 6.0.0, custom builds can be achieved by using a module bundler such as [Rollup](https://rollupjs.org/) or [webpack](https://webpack.js.org/). Kontra supports ES modules, allowing you to use [tree-shaking](https://rollupjs.org/guide/en#tree-shaking) to only bundle the code you need.
 
 * ```js
+* // exclude-tablist
 * // game.js
 * import { Sprite, GameLoop } from 'kontra';
 *

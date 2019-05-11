@@ -14,19 +14,26 @@ const VISUAL_DEBUG = false;
 // Enables/Disables DEBUG mode in Kontra
 const DEBUG = false;
 
-function build() {
+function buildIife() {
   return rollup({
     input: './src/kontra.defaults.js',
     format: 'iife',
     name: 'kontra'
   })
   .pipe(source('kontra.js'))
-  .pipe(gulp.dest('.'))
+  .pipe(gulp.dest('.'));
 }
 
-gulp.task('build', gulp.series(build, 'build:docs'));
+function buildModule() {
+  return rollup({
+      input: './src/kontra.js',
+      format: 'es'
+    })
+    .pipe(source('kontra.mjs'))
+    .pipe(gulp.dest('.'));
+}
 
-gulp.task('dist', function() {
+function distIife() {
   return gulp.src('kontra.js')
     .pipe(preprocess({context: { DEBUG: DEBUG, VISUAL_DEBUG: VISUAL_DEBUG }}))
     .pipe(plumber())
@@ -41,8 +48,29 @@ gulp.task('dist', function() {
       showFiles: true,
       gzip: true
     }))
-    .pipe(gulp.dest('.'))
-});
+    .pipe(gulp.dest('.'));
+}
+
+function distModule() {
+  return gulp.src('kontra.mjs')
+    .pipe(preprocess({context: { DEBUG: DEBUG, VISUAL_DEBUG: VISUAL_DEBUG }}))
+    .pipe(plumber())
+    .pipe(terser())
+    .pipe(plumber.stop())
+    .pipe(rename('kontra.min.mjs'))
+    .pipe(size({
+      showFiles: true
+    }))
+    .pipe(size({
+      showFiles: true,
+      gzip: true
+    }))
+    .pipe(gulp.dest('.'));
+}
+
+gulp.task('build', gulp.series(buildIife, buildModule, 'build:docs'));
+
+gulp.task('dist', gulp.series(distIife, distModule));
 
 gulp.task('watch', function() {
   gulp.watch('src/*.js', gulp.series('build', 'dist'));

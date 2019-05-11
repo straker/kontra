@@ -68,7 +68,20 @@
         <h1>Events        </h1>
 
         <p>A simple event system, mostly created to support <a href="api/plugin">Plugins</a>. Allows you to hook into Kontra lifecycle events or create your own.</p>
-<pre><code class="lang-js">import { on, off, emit } from &#39;kontra&#39;;
+<div class="tablist">
+  <ul role="tablist">
+    <li role="presentation" data-tab="global">
+      <button role="tab" id="events-global-tab">Global Object</button>
+    </li>
+    <li role="presentation" data-tab="es">
+      <button role="tab" id="events-es-tab">ES Module Import</button>
+    </li>
+    <li role="presentation" data-tab="bundle">
+      <button role="tab" id="events-bundle-tab">Module Bundler</button>
+    </li>
+    <li role="presentation"></li>
+  </ul>
+  <section role="tabpanel" aria-labelledby=events-global-tab data-tabpanel="global"><pre><code class="lang-js">let { on, off, emit } = kontra;
 
 function callback(a, b, c) {
   console.log({a, b, c});
@@ -77,7 +90,28 @@ function callback(a, b, c) {
 on(&#39;myEvent&#39;, callback);
 emit(&#39;myEvent&#39;, 1, 2, 3);  //=&gt; {a: 1, b: 2, c: 3}
 off(&#39;myEvent&#39;, callback);
-</code></pre>
+</code></pre></section>
+  <section role="tabpanel" aria-labelledby=events-es-tab data-tabpanel="es"><pre><code class="lang-js">import { on, off, emit } from 'path/to/kontra.mjs';
+
+function callback(a, b, c) {
+  console.log({a, b, c});
+});
+
+on(&#39;myEvent&#39;, callback);
+emit(&#39;myEvent&#39;, 1, 2, 3);  //=&gt; {a: 1, b: 2, c: 3}
+off(&#39;myEvent&#39;, callback);
+</code></pre></section>
+  <section role="tabpanel" aria-labelledby=events-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">import { on, off, emit } from &#39;kontra&#39;;
+
+function callback(a, b, c) {
+  console.log({a, b, c});
+});
+
+on(&#39;myEvent&#39;, callback);
+emit(&#39;myEvent&#39;, 1, 2, 3);  //=&gt; {a: 1, b: 2, c: 3}
+off(&#39;myEvent&#39;, callback);
+</code></pre></section>
+</div>
         
 
         <section class="toc">
@@ -213,7 +247,7 @@ off(&#39;myEvent&#39;, callback);
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/prism.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/components/prism-javascript.min.js"></script>
   <script src="assets/js/navbar.js"></script>
+  <script src="assets/js/exampleTabList.js"></script>
 </body>
 </html>

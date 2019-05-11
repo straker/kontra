@@ -83,7 +83,7 @@ p {
   line-height: 1.625rem;
 }
 
-p, ul, ol, dl, table, pre[class*=language-], canvas, form, figure {
+p, ul, ol, dl, table, pre[class*=language-], canvas, form, figure, .tablist {
   margin: 0 0 1.312rem;
 }
 
@@ -311,6 +311,74 @@ h3 [aria-hidden=true] {
 
 code[class*=language-], pre[class*=language-] {
   font-size: 0.889rem;
+}
+
+[role=tablist] {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+[role=tablist] li:last-child {
+  flex-grow: 1;
+  border-bottom: 1px solid #333;
+}
+
+[role=tabpanel] {
+  margin: 0;
+  border: 1px solid #333;
+  border-top: none;
+}
+
+[role=tabpanel] {
+  display: none;
+}
+
+[role=tabpanel] pre {
+  margin: 0;
+}
+
+[role=tab] {
+  position: relative;
+  padding: 0.5rem 1rem;
+  display: block;
+  background: none;
+  border: 0;
+  font-size: 0.75rem;
+  cursor: pointer;
+  border-left: 1px solid #aaa;
+  border-right: 1px solid #aaa;
+  border-top: 1px solid #aaa;
+}
+
+[role=tab]:before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  border-bottom: 1px solid #333;
+}
+
+[data-examples=global] [data-tab=global] [role=tab],
+[data-examples=es] [data-tab=es] [role=tab],
+[data-examples=bundle] [data-tab=bundle] [role=tab] {
+  background: #f5f2f0;
+  border-color: #333;
+}
+
+[data-examples=global] [data-tab=global] [role=tab]:before,
+[data-examples=es] [data-tab=es] [role=tab]:before,
+[data-examples=bundle] [data-tab=bundle] [role=tab]:before {
+  display: none;
+}
+
+[data-examples=global] [data-tabpanel=global],
+[data-examples=es] [data-tabpanel=es],
+[data-examples=bundle] [data-tabpanel=bundle] {
+  display: block;
 }
 
 .object-prop {

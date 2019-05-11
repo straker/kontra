@@ -361,7 +361,22 @@
 
           <p>In its most basic form, a sprite is a rectangle with a fill color. To create a rectangle sprite, pass the arguments <code>width</code>, <code>height</code>, and <code>color</code>. A rectangle sprite is great for initial prototyping and particles.</p>
 <canvas id="game-canvas-0"></canvas>
-<pre><code class="language-javascript">import { Sprite } from &#x27;kontra&#x27;;
+
+<div class="tablist">
+  <ul role="tablist">
+    <li role="presentation" data-tab="global">
+      <button role="tab" id="game-canvas-0-global-tab">Global Object</button>
+    </li>
+    <li role="presentation" data-tab="es">
+      <button role="tab" id="game-canvas-0-es-tab">ES Module Import</button>
+    </li>
+    <li role="presentation" data-tab="bundle">
+      <button role="tab" id="game-canvas-0-bundle-tab">Module Bundler</button>
+    </li>
+    <li role="presentation"></li>
+  </ul>
+  <section role="tabpanel" aria-labelledby=game-canvas-0-global-tab data-tabpanel="global">
+    <pre><code class="lang-js">let { Sprite } &#x3D; kontra
 
 let sprite &#x3D; Sprite({
   x: 300,
@@ -375,6 +390,41 @@ let sprite &#x3D; Sprite({
 });
 
 sprite.render();</code></pre>
+  </section>
+  <section role="tabpanel" aria-labelledby=game-canvas-0-es-tab data-tabpanel="es">
+    <pre><code class="lang-js">import { Sprite } from &#x27;path/to/kontra.mjs&#x27;
+
+let sprite &#x3D; Sprite({
+  x: 300,
+  y: 100,
+  anchor: {x: 0.5, y: 0.5},
+
+  // required for a rectangle sprite
+  width: 20,
+  height: 40,
+  color: &#x27;red&#x27;
+});
+
+sprite.render();</code></pre>
+  </section>
+  <section role="tabpanel" aria-labelledby=game-canvas-0-bundle-tab data-tabpanel="bundle">
+    <pre><code class="lang-js">import { Sprite } from &#x27;kontra&#x27;;
+
+let sprite &#x3D; Sprite({
+  x: 300,
+  y: 100,
+  anchor: {x: 0.5, y: 0.5},
+
+  // required for a rectangle sprite
+  width: 20,
+  height: 40,
+  color: &#x27;red&#x27;
+});
+
+sprite.render();</code></pre>
+  </section>
+</div>
+
 <script>(function() {
   kontra.init("game-canvas-0");
   var canvas = document.querySelector("#game-canvas-0");
@@ -410,7 +460,22 @@ sprite.render();
 
           <p>A sprite can use an image instead of drawing a rectangle. To create an image sprite, pass the <code>image</code> argument. The size of the sprite will automatically be set as the width and height of the image.</p>
 <canvas id="game-canvas-1"></canvas>
-<pre><code class="language-javascript">import { Sprite } from &#x27;kontra&#x27;;
+
+<div class="tablist">
+  <ul role="tablist">
+    <li role="presentation" data-tab="global">
+      <button role="tab" id="game-canvas-1-global-tab">Global Object</button>
+    </li>
+    <li role="presentation" data-tab="es">
+      <button role="tab" id="game-canvas-1-es-tab">ES Module Import</button>
+    </li>
+    <li role="presentation" data-tab="bundle">
+      <button role="tab" id="game-canvas-1-bundle-tab">Module Bundler</button>
+    </li>
+    <li role="presentation"></li>
+  </ul>
+  <section role="tabpanel" aria-labelledby=game-canvas-1-global-tab data-tabpanel="global">
+    <pre><code class="lang-js">let { Sprite } &#x3D; kontra
 
 let image &#x3D; new Image();
 image.src &#x3D; &#x27;assets/imgs/character.png&#x27;;
@@ -426,6 +491,45 @@ image.onload &#x3D; function() {
 
   sprite.render();
 };</code></pre>
+  </section>
+  <section role="tabpanel" aria-labelledby=game-canvas-1-es-tab data-tabpanel="es">
+    <pre><code class="lang-js">import { Sprite } from &#x27;path/to/kontra.mjs&#x27;
+
+let image &#x3D; new Image();
+image.src &#x3D; &#x27;assets/imgs/character.png&#x27;;
+image.onload &#x3D; function() {
+  let sprite &#x3D; Sprite({
+    x: 300,
+    y: 100,
+    anchor: {x: 0.5, y: 0.5},
+
+    // required for an image sprite
+    image: image
+  });
+
+  sprite.render();
+};</code></pre>
+  </section>
+  <section role="tabpanel" aria-labelledby=game-canvas-1-bundle-tab data-tabpanel="bundle">
+    <pre><code class="lang-js">import { Sprite } from &#x27;kontra&#x27;;
+
+let image &#x3D; new Image();
+image.src &#x3D; &#x27;assets/imgs/character.png&#x27;;
+image.onload &#x3D; function() {
+  let sprite &#x3D; Sprite({
+    x: 300,
+    y: 100,
+    anchor: {x: 0.5, y: 0.5},
+
+    // required for an image sprite
+    image: image
+  });
+
+  sprite.render();
+};</code></pre>
+  </section>
+</div>
+
 <script>(function() {
   kontra.init("game-canvas-1");
   var canvas = document.querySelector("#game-canvas-1");
@@ -464,7 +568,22 @@ image.onload = function() {
           <p>A sprite can use a spritesheet animation as well. To create an animation sprite, pass the <code>animations</code> argument. The size of the sprite will automatically be set as the width and height of a frame of the spritesheet.</p>
 <p>A sprite can have multiple named animations. The easiest way to create animations is to use <a href="SpriteSheet">SpriteSheet</a>. All animations will automatically be <a href="animation#clone">cloned</a> so no two sprites update the same animation.</p>
 <canvas id="game-canvas-2"></canvas>
-<pre><code class="language-javascript">import { Sprite, SpriteSheet, GameLoop } from &#x27;kontra&#x27;;
+
+<div class="tablist">
+  <ul role="tablist">
+    <li role="presentation" data-tab="global">
+      <button role="tab" id="game-canvas-2-global-tab">Global Object</button>
+    </li>
+    <li role="presentation" data-tab="es">
+      <button role="tab" id="game-canvas-2-es-tab">ES Module Import</button>
+    </li>
+    <li role="presentation" data-tab="bundle">
+      <button role="tab" id="game-canvas-2-bundle-tab">Module Bundler</button>
+    </li>
+    <li role="presentation"></li>
+  </ul>
+  <section role="tabpanel" aria-labelledby=game-canvas-2-global-tab data-tabpanel="global">
+    <pre><code class="lang-js">let { Sprite, SpriteSheet, GameLoop } &#x3D; kontra
 
 let image &#x3D; new Image();
 image.src &#x3D; &#x27;assets/imgs/character_walk_sheet.png&#x27;;
@@ -505,6 +624,95 @@ image.onload &#x3D; function() {
 
   loop.start();
 };</code></pre>
+  </section>
+  <section role="tabpanel" aria-labelledby=game-canvas-2-es-tab data-tabpanel="es">
+    <pre><code class="lang-js">import { Sprite, SpriteSheet, GameLoop } from &#x27;path/to/kontra.mjs&#x27;
+
+let image &#x3D; new Image();
+image.src &#x3D; &#x27;assets/imgs/character_walk_sheet.png&#x27;;
+image.onload &#x3D; function() {
+
+  // use spriteSheet to create animations from an image
+  let spriteSheet &#x3D; SpriteSheet({
+    image: image,
+    frameWidth: 72,
+    frameHeight: 97,
+    animations: {
+      // create a named animation: walk
+      walk: {
+        frames: &#x27;0..9&#x27;,  // frames 0 through 9
+        frameRate: 30
+      }
+    }
+  });
+
+  let sprite &#x3D; Sprite({
+    x: 300,
+    y: 100,
+    anchor: {x: 0.5, y: 0.5},
+
+    // required for an animation sprite
+    animations: spriteSheet.animations
+  });
+
+  // use kontra.gameLoop to play the animation
+  let loop &#x3D; GameLoop({
+    update: function(dt) {
+      sprite.update();
+    },
+    render: function() {
+      sprite.render();
+    }
+  });
+
+  loop.start();
+};</code></pre>
+  </section>
+  <section role="tabpanel" aria-labelledby=game-canvas-2-bundle-tab data-tabpanel="bundle">
+    <pre><code class="lang-js">import { Sprite, SpriteSheet, GameLoop } from &#x27;kontra&#x27;;
+
+let image &#x3D; new Image();
+image.src &#x3D; &#x27;assets/imgs/character_walk_sheet.png&#x27;;
+image.onload &#x3D; function() {
+
+  // use spriteSheet to create animations from an image
+  let spriteSheet &#x3D; SpriteSheet({
+    image: image,
+    frameWidth: 72,
+    frameHeight: 97,
+    animations: {
+      // create a named animation: walk
+      walk: {
+        frames: &#x27;0..9&#x27;,  // frames 0 through 9
+        frameRate: 30
+      }
+    }
+  });
+
+  let sprite &#x3D; Sprite({
+    x: 300,
+    y: 100,
+    anchor: {x: 0.5, y: 0.5},
+
+    // required for an animation sprite
+    animations: spriteSheet.animations
+  });
+
+  // use kontra.gameLoop to play the animation
+  let loop &#x3D; GameLoop({
+    update: function(dt) {
+      sprite.update();
+    },
+    render: function() {
+      sprite.render();
+    }
+  });
+
+  loop.start();
+};</code></pre>
+  </section>
+</div>
+
 <script>(function() {
   kontra.init("game-canvas-2");
   var canvas = document.querySelector("#game-canvas-2");
@@ -573,7 +781,22 @@ image.onload = function() {
 
           <p>If you need to draw a different shape, such as a circle, you can pass in custom properties and a render function to handle drawing the sprite.</p>
 <canvas id="game-canvas-3"></canvas>
-<pre><code class="language-javascript">import { Sprite } from &#x27;kontra&#x27;;
+
+<div class="tablist">
+  <ul role="tablist">
+    <li role="presentation" data-tab="global">
+      <button role="tab" id="game-canvas-3-global-tab">Global Object</button>
+    </li>
+    <li role="presentation" data-tab="es">
+      <button role="tab" id="game-canvas-3-es-tab">ES Module Import</button>
+    </li>
+    <li role="presentation" data-tab="bundle">
+      <button role="tab" id="game-canvas-3-bundle-tab">Module Bundler</button>
+    </li>
+    <li role="presentation"></li>
+  </ul>
+  <section role="tabpanel" aria-labelledby=game-canvas-3-global-tab data-tabpanel="global">
+    <pre><code class="lang-js">let { Sprite } &#x3D; kontra
 
 let sprite &#x3D; Sprite({
   x: 300,
@@ -594,6 +817,55 @@ let sprite &#x3D; Sprite({
 });
 
 sprite.render();</code></pre>
+  </section>
+  <section role="tabpanel" aria-labelledby=game-canvas-3-es-tab data-tabpanel="es">
+    <pre><code class="lang-js">import { Sprite } from &#x27;path/to/kontra.mjs&#x27;
+
+let sprite &#x3D; Sprite({
+  x: 300,
+  y: 100,
+
+  color: &#x27;red&#x27;,
+
+  // custom properties
+  radius: 20,
+
+  render: function() {
+    this.context.fillStyle &#x3D; this.color;
+
+    this.context.beginPath();
+    this.context.arc(this.x, this.y, this.radius, 0, 2  * Math.PI);
+    this.context.fill();
+  }
+});
+
+sprite.render();</code></pre>
+  </section>
+  <section role="tabpanel" aria-labelledby=game-canvas-3-bundle-tab data-tabpanel="bundle">
+    <pre><code class="lang-js">import { Sprite } from &#x27;kontra&#x27;;
+
+let sprite &#x3D; Sprite({
+  x: 300,
+  y: 100,
+
+  color: &#x27;red&#x27;,
+
+  // custom properties
+  radius: 20,
+
+  render: function() {
+    this.context.fillStyle &#x3D; this.color;
+
+    this.context.beginPath();
+    this.context.arc(this.x, this.y, this.radius, 0, 2  * Math.PI);
+    this.context.fill();
+  }
+});
+
+sprite.render();</code></pre>
+  </section>
+</div>
+
 <script>(function() {
   kontra.init("game-canvas-3");
   var canvas = document.querySelector("#game-canvas-3");
@@ -636,12 +908,38 @@ sprite.render();
 
           <p>If you want to extend a Sprite, you can do so by extending the Sprite class. The one caveat is that <code>Sprite</code> is not the Sprite class, but actually is a factory function.</p>
 <p>To extend the Sprite class, use the <code>.class</code> property of the constructor.</p>
-<pre><code class="lang-js">import { Sprite } from kontra;
+<div class="tablist">
+  <ul role="tablist">
+    <li role="presentation" data-tab="global">
+      <button role="tab" id="extending-a-sprite-global-tab">Global Object</button>
+    </li>
+    <li role="presentation" data-tab="es">
+      <button role="tab" id="extending-a-sprite-es-tab">ES Module Import</button>
+    </li>
+    <li role="presentation" data-tab="bundle">
+      <button role="tab" id="extending-a-sprite-bundle-tab">Module Bundler</button>
+    </li>
+    <li role="presentation"></li>
+  </ul>
+  <section role="tabpanel" aria-labelledby=extending-a-sprite-global-tab data-tabpanel="global"><pre><code class="lang-js">import { Sprite } from kontra;
 
 class CustomSprite extends Sprite.class {
   // ...
 }
-</code></pre>
+</code></pre></section>
+  <section role="tabpanel" aria-labelledby=extending-a-sprite-es-tab data-tabpanel="es"><pre><code class="lang-js">import { Sprite } from kontra;
+
+class CustomSprite extends Sprite.class {
+  // ...
+}
+</code></pre></section>
+  <section role="tabpanel" aria-labelledby=extending-a-sprite-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">import { Sprite } from kontra;
+
+class CustomSprite extends Sprite.class {
+  // ...
+}
+</code></pre></section>
+</div>
         </section>
 
         <section>
@@ -665,7 +963,20 @@ class CustomSprite extends Sprite.class {
 
           <p>Move the sprite by its acceleration and velocity. If the sprite is an <a href="#animation-sprite">animation sprite</a>, it also advances the animation every frame.</p>
 <p>If you override the sprites <a href="#update">update()</a> function with your own update function, you can call this function to move the sprite normally.</p>
-<pre><code class="lang-js">import { Sprite } from &#39;kontra&#39;;
+<div class="tablist">
+  <ul role="tablist">
+    <li role="presentation" data-tab="global">
+      <button role="tab" id="advance-global-tab">Global Object</button>
+    </li>
+    <li role="presentation" data-tab="es">
+      <button role="tab" id="advance-es-tab">ES Module Import</button>
+    </li>
+    <li role="presentation" data-tab="bundle">
+      <button role="tab" id="advance-bundle-tab">Module Bundler</button>
+    </li>
+    <li role="presentation"></li>
+  </ul>
+  <section role="tabpanel" aria-labelledby=advance-global-tab data-tabpanel="global"><pre><code class="lang-js">let { Sprite } = kontra;
 
 let sprite = Sprite({
   x: 100,
@@ -689,7 +1000,58 @@ let sprite = Sprite({
     }
   }
 });
-</code></pre>
+</code></pre></section>
+  <section role="tabpanel" aria-labelledby=advance-es-tab data-tabpanel="es"><pre><code class="lang-js">import { Sprite } from 'path/to/kontra.mjs';
+
+let sprite = Sprite({
+  x: 100,
+  y: 200,
+  width: 20,
+  height: 40,
+  dx: 5,
+  dy: 2,
+  update: function() {
+    // move the sprite normally
+    sprite.advance();
+
+    // change the velocity at the edges of the canvas
+    if (this.x &lt; 0  or  or 
+        this.x - this.width &gt; this.context.canvas.width) {
+      this.dx = -this.dx;
+    }
+    if (this.y &lt; 0  or  or 
+        this.y - this.height &gt; this.context.canvas.height) {
+      this.dy = -this.dy;
+    }
+  }
+});
+</code></pre></section>
+  <section role="tabpanel" aria-labelledby=advance-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">import { Sprite } from &#39;kontra&#39;;
+
+let sprite = Sprite({
+  x: 100,
+  y: 200,
+  width: 20,
+  height: 40,
+  dx: 5,
+  dy: 2,
+  update: function() {
+    // move the sprite normally
+    sprite.advance();
+
+    // change the velocity at the edges of the canvas
+    if (this.x &lt; 0  or  or 
+        this.x - this.width &gt; this.context.canvas.width) {
+      this.dx = -this.dx;
+    }
+    if (this.y &lt; 0  or  or 
+        this.y - this.height &gt; this.context.canvas.height) {
+      this.dy = -this.dy;
+    }
+  }
+});
+</code></pre></section>
+</div>
           <h3 id="title-advance"><span class="visually-hidden">advance</span> Parameters</span></h3>
           <dl aria-labelledby="title-advance">
             <dt>
@@ -711,7 +1073,22 @@ let sprite = Sprite({
 
           <p>The x and y origin of the sprite. {x:0, y:0} is the top left corner of the sprite, {x:1, y:1} is the bottom right corner.</p>
 <canvas id="game-canvas-4"></canvas>
-<pre><code class="language-javascript">import { Sprite } from &#x27;kontra&#x27;;
+
+<div class="tablist">
+  <ul role="tablist">
+    <li role="presentation" data-tab="global">
+      <button role="tab" id="game-canvas-4-global-tab">Global Object</button>
+    </li>
+    <li role="presentation" data-tab="es">
+      <button role="tab" id="game-canvas-4-es-tab">ES Module Import</button>
+    </li>
+    <li role="presentation" data-tab="bundle">
+      <button role="tab" id="game-canvas-4-bundle-tab">Module Bundler</button>
+    </li>
+    <li role="presentation"></li>
+  </ul>
+  <section role="tabpanel" aria-labelledby=game-canvas-4-global-tab data-tabpanel="global">
+    <pre><code class="lang-js">let { Sprite } &#x3D; kontra
 
 let sprite &#x3D; Sprite({
   x: 150,
@@ -738,6 +1115,67 @@ sprite.render();
 sprite.anchor &#x3D; {x: 1, y: 1};
 sprite.x &#x3D; 450;
 sprite.render();</code></pre>
+  </section>
+  <section role="tabpanel" aria-labelledby=game-canvas-4-es-tab data-tabpanel="es">
+    <pre><code class="lang-js">import { Sprite } from &#x27;path/to/kontra.mjs&#x27;
+
+let sprite &#x3D; Sprite({
+  x: 150,
+  y: 100,
+  color: &#x27;red&#x27;,
+  width: 50,
+  height: 50,
+  render: function() {
+    this.draw();
+
+    // draw origin
+    this.context.fillStyle &#x3D; &#x27;yellow&#x27;;
+    this.context.beginPath();
+    this.context.arc(this.x, this.y, 3, 0, 2*Math.PI);
+    this.context.fill();
+  }
+});
+sprite.render();
+
+sprite.anchor &#x3D; {x: 0.5, y: 0.5};
+sprite.x &#x3D; 300;
+sprite.render();
+
+sprite.anchor &#x3D; {x: 1, y: 1};
+sprite.x &#x3D; 450;
+sprite.render();</code></pre>
+  </section>
+  <section role="tabpanel" aria-labelledby=game-canvas-4-bundle-tab data-tabpanel="bundle">
+    <pre><code class="lang-js">import { Sprite } from &#x27;kontra&#x27;;
+
+let sprite &#x3D; Sprite({
+  x: 150,
+  y: 100,
+  color: &#x27;red&#x27;,
+  width: 50,
+  height: 50,
+  render: function() {
+    this.draw();
+
+    // draw origin
+    this.context.fillStyle &#x3D; &#x27;yellow&#x27;;
+    this.context.beginPath();
+    this.context.arc(this.x, this.y, 3, 0, 2*Math.PI);
+    this.context.fill();
+  }
+});
+sprite.render();
+
+sprite.anchor &#x3D; {x: 0.5, y: 0.5};
+sprite.x &#x3D; 300;
+sprite.render();
+
+sprite.anchor &#x3D; {x: 1, y: 1};
+sprite.x &#x3D; 450;
+sprite.render();</code></pre>
+  </section>
+</div>
+
 <script>(function() {
   kontra.init("game-canvas-4");
   var canvas = document.querySelector("#game-canvas-4");
@@ -786,7 +1224,20 @@ sprite.render();
           </h2>
 
           <p>An object of <a href="animation">Animations</a> from a <a href="SpriteSheet">SpriteSheet</a> to animate the sprite. Each animation is named so that it can can be used by name for the sprites <a href="#playAnimation">playAnimation()</a> function.</p>
-<pre><code class="lang-js">import { Sprite, SpriteSheet } from &#39;kontra&#39;;
+<div class="tablist">
+  <ul role="tablist">
+    <li role="presentation" data-tab="global">
+      <button role="tab" id="animations-global-tab">Global Object</button>
+    </li>
+    <li role="presentation" data-tab="es">
+      <button role="tab" id="animations-es-tab">ES Module Import</button>
+    </li>
+    <li role="presentation" data-tab="bundle">
+      <button role="tab" id="animations-bundle-tab">Module Bundler</button>
+    </li>
+    <li role="presentation"></li>
+  </ul>
+  <section role="tabpanel" aria-labelledby=animations-global-tab data-tabpanel="global"><pre><code class="lang-js">let { Sprite, SpriteSheet } = kontra;
 
 let spriteSheet = SpriteSheet({
   // ...
@@ -808,7 +1259,54 @@ let sprite = Sprite({
 });
 
 sprite.playAnimation(&#39;idle&#39;);
-</code></pre>
+</code></pre></section>
+  <section role="tabpanel" aria-labelledby=animations-es-tab data-tabpanel="es"><pre><code class="lang-js">import { Sprite, SpriteSheet } from 'path/to/kontra.mjs';
+
+let spriteSheet = SpriteSheet({
+  // ...
+  animations: {
+    idle: {
+      frames: 1,
+      loop: false,
+    },
+    walk: {
+      frames: [1,2,3]
+    }
+  }
+});
+
+let sprite = Sprite({
+  x: 100,
+  y: 200,
+  animations: spriteSheet.animations
+});
+
+sprite.playAnimation(&#39;idle&#39;);
+</code></pre></section>
+  <section role="tabpanel" aria-labelledby=animations-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">import { Sprite, SpriteSheet } from &#39;kontra&#39;;
+
+let spriteSheet = SpriteSheet({
+  // ...
+  animations: {
+    idle: {
+      frames: 1,
+      loop: false,
+    },
+    walk: {
+      frames: [1,2,3]
+    }
+  }
+});
+
+let sprite = Sprite({
+  x: 100,
+  y: 200,
+  animations: spriteSheet.animations
+});
+
+sprite.playAnimation(&#39;idle&#39;);
+</code></pre></section>
+</div>
           
         </section>
         <section>
@@ -821,7 +1319,20 @@ sprite.playAnimation(&#39;idle&#39;);
 
           <p>Check if the sprite collide with the object. Uses a simple <a href="https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection#Axis-Aligned_Bounding_Box">Axis-Aligned Bounding Box (AABB) collision check</a>. Takes into account the sprites <a href="#anchor">anchor</a>.</p>
 <p><strong>NOTE:</strong> Does not take into account sprite rotation. If you need collision detection between rotated sprites you will need to implement your own <code>collidesWith()</code> function. I suggest looking at the Separate Axis Theorem.</p>
-<pre><code class="lang-js">import { Sprite } from &#39;kontra&#39;;
+<div class="tablist">
+  <ul role="tablist">
+    <li role="presentation" data-tab="global">
+      <button role="tab" id="collideswith-global-tab">Global Object</button>
+    </li>
+    <li role="presentation" data-tab="es">
+      <button role="tab" id="collideswith-es-tab">ES Module Import</button>
+    </li>
+    <li role="presentation" data-tab="bundle">
+      <button role="tab" id="collideswith-bundle-tab">Module Bundler</button>
+    </li>
+    <li role="presentation"></li>
+  </ul>
+  <section role="tabpanel" aria-labelledby=collideswith-global-tab data-tabpanel="global"><pre><code class="lang-js">let { Sprite } = kontra;
 let sprite = Sprite({
   x: 100,
   y: 200,
@@ -841,9 +1352,65 @@ sprite.collidesWith(sprite2);  //=&gt; false
 sprite2.x = 115;
 
 sprite.collidesWith(sprite2);  //=&gt; true
-</code></pre>
+</code></pre></section>
+  <section role="tabpanel" aria-labelledby=collideswith-es-tab data-tabpanel="es"><pre><code class="lang-js">import { Sprite } from 'path/to/kontra.mjs';
+let sprite = Sprite({
+  x: 100,
+  y: 200,
+  width: 20,
+  height: 40
+});
+
+let sprite2 = Sprite({
+  x: 150,
+  y: 200,
+  width: 20,
+  height: 20
+});
+
+sprite.collidesWith(sprite2);  //=&gt; false
+
+sprite2.x = 115;
+
+sprite.collidesWith(sprite2);  //=&gt; true
+</code></pre></section>
+  <section role="tabpanel" aria-labelledby=collideswith-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">import { Sprite } from &#39;kontra&#39;;
+let sprite = Sprite({
+  x: 100,
+  y: 200,
+  width: 20,
+  height: 40
+});
+
+let sprite2 = Sprite({
+  x: 150,
+  y: 200,
+  width: 20,
+  height: 20
+});
+
+sprite.collidesWith(sprite2);  //=&gt; false
+
+sprite2.x = 115;
+
+sprite.collidesWith(sprite2);  //=&gt; true
+</code></pre></section>
+</div>
 <p>If you need a different type of collision check, you can override this function by passing an argument by the same name.</p>
-<pre><code class="lang-js">// circle collision
+<div class="tablist">
+  <ul role="tablist">
+    <li role="presentation" data-tab="global">
+      <button role="tab" id="collideswith-global-tab">Global Object</button>
+    </li>
+    <li role="presentation" data-tab="es">
+      <button role="tab" id="collideswith-es-tab">ES Module Import</button>
+    </li>
+    <li role="presentation" data-tab="bundle">
+      <button role="tab" id="collideswith-bundle-tab">Module Bundler</button>
+    </li>
+    <li role="presentation"></li>
+  </ul>
+  <section role="tabpanel" aria-labelledby=collideswith-global-tab data-tabpanel="global"><pre><code class="lang-js">// circle collision
 function collidesWith(object) {
   let dx = this.x - object.x;
   let dy = this.y - object.y;
@@ -867,7 +1434,58 @@ let sprite2 = Sprite({
 });
 
 sprite.collidesWith(sprite2);  //=&gt; true
-</code></pre>
+</code></pre></section>
+  <section role="tabpanel" aria-labelledby=collideswith-es-tab data-tabpanel="es"><pre><code class="lang-js">// circle collision
+function collidesWith(object) {
+  let dx = this.x - object.x;
+  let dy = this.y - object.y;
+  let distance = Math.sqrt(dx * dx + dy * dy);
+
+  return distance &lt; this.radius + object.radius;
+}
+
+let sprite = Sprite({
+  x: 100,
+  y: 200,
+  radius: 25,
+  collidesWith: collidesWith
+});
+
+let sprite2 = Sprite({
+  x: 150,
+  y: 200,
+  radius: 30,
+  collidesWith: collidesWith
+});
+
+sprite.collidesWith(sprite2);  //=&gt; true
+</code></pre></section>
+  <section role="tabpanel" aria-labelledby=collideswith-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">// circle collision
+function collidesWith(object) {
+  let dx = this.x - object.x;
+  let dy = this.y - object.y;
+  let distance = Math.sqrt(dx * dx + dy * dy);
+
+  return distance &lt; this.radius + object.radius;
+}
+
+let sprite = Sprite({
+  x: 100,
+  y: 200,
+  radius: 25,
+  collidesWith: collidesWith
+});
+
+let sprite2 = Sprite({
+  x: 150,
+  y: 200,
+  radius: 30,
+  collidesWith: collidesWith
+});
+
+sprite.collidesWith(sprite2);  //=&gt; true
+</code></pre></section>
+</div>
           <h3 id="title-collidesWith"><span class="visually-hidden">collidesWith</span> Parameters</span></h3>
           <dl aria-labelledby="title-collidesWith">
             <dt>
@@ -947,7 +1565,20 @@ sprite.collidesWith(sprite2);  //=&gt; true
 
           <p>Draw the sprite at its X and Y position. This function changes based on the type of the sprite. For a <a href="#rectangle-sprite">rectangle sprite</a>, it uses <code>context.fillRect()</code>, for an <a href="#image-sprite">image sprite</a> it uses <code>context.drawImage()</code>, and for an <a href="#animation-sprite">animation sprite</a> it uses the <a href="#currentAnimation">currentAnimation</a> <code>render()</code> function.</p>
 <p>If you override the sprites <code>render()</code> function with your own render function, you can call this function to draw the sprite normally.</p>
-<pre><code class="lang-js">import { Sprite } from &#39;kontra&#39;;
+<div class="tablist">
+  <ul role="tablist">
+    <li role="presentation" data-tab="global">
+      <button role="tab" id="draw-global-tab">Global Object</button>
+    </li>
+    <li role="presentation" data-tab="es">
+      <button role="tab" id="draw-es-tab">ES Module Import</button>
+    </li>
+    <li role="presentation" data-tab="bundle">
+      <button role="tab" id="draw-bundle-tab">Module Bundler</button>
+    </li>
+    <li role="presentation"></li>
+  </ul>
+  <section role="tabpanel" aria-labelledby=draw-global-tab data-tabpanel="global"><pre><code class="lang-js">let { Sprite } = kontra;
 
 let sprite = Sprite({
  x: 290,
@@ -968,7 +1599,52 @@ let sprite = Sprite({
 });
 
 sprite.render();
-</code></pre>
+</code></pre></section>
+  <section role="tabpanel" aria-labelledby=draw-es-tab data-tabpanel="es"><pre><code class="lang-js">import { Sprite } from 'path/to/kontra.mjs';
+
+let sprite = Sprite({
+ x: 290,
+ y: 80,
+ color: &#39;red&#39;,
+ width: 20,
+ height: 40,
+
+ render: function() {
+   // draw the rectangle sprite normally
+   this.draw();
+
+   // outline the sprite
+   this.context.strokeStyle = &#39;yellow&#39;;
+   this.context.lineWidth = 2;
+   this.context.strokeRect(this.x, this.y, this.width, this.height);
+ }
+});
+
+sprite.render();
+</code></pre></section>
+  <section role="tabpanel" aria-labelledby=draw-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">import { Sprite } from &#39;kontra&#39;;
+
+let sprite = Sprite({
+ x: 290,
+ y: 80,
+ color: &#39;red&#39;,
+ width: 20,
+ height: 40,
+
+ render: function() {
+   // draw the rectangle sprite normally
+   this.draw();
+
+   // outline the sprite
+   this.context.strokeStyle = &#39;yellow&#39;;
+   this.context.lineWidth = 2;
+   this.context.strokeRect(this.x, this.y, this.width, this.height);
+ }
+});
+
+sprite.render();
+</code></pre></section>
+</div>
           
         </section>
         <section>
@@ -1058,7 +1734,20 @@ sprite.render();
           </h2>
 
           <p>Set the currently playing animation of an animation sprite.</p>
-<pre><code class="lang-js">import { Sprite, SpriteSheet } from &#39;kontra&#39;;
+<div class="tablist">
+  <ul role="tablist">
+    <li role="presentation" data-tab="global">
+      <button role="tab" id="playanimation-global-tab">Global Object</button>
+    </li>
+    <li role="presentation" data-tab="es">
+      <button role="tab" id="playanimation-es-tab">ES Module Import</button>
+    </li>
+    <li role="presentation" data-tab="bundle">
+      <button role="tab" id="playanimation-bundle-tab">Module Bundler</button>
+    </li>
+    <li role="presentation"></li>
+  </ul>
+  <section role="tabpanel" aria-labelledby=playanimation-global-tab data-tabpanel="global"><pre><code class="lang-js">let { Sprite, SpriteSheet } = kontra;
 
 let spriteSheet = SpriteSheet({
   // ...
@@ -1079,7 +1768,52 @@ let sprite = Sprite({
 });
 
 sprite.playAnimation(&#39;idle&#39;);
-</code></pre>
+</code></pre></section>
+  <section role="tabpanel" aria-labelledby=playanimation-es-tab data-tabpanel="es"><pre><code class="lang-js">import { Sprite, SpriteSheet } from 'path/to/kontra.mjs';
+
+let spriteSheet = SpriteSheet({
+  // ...
+  animations: {
+    idle: {
+      frames: 1
+    },
+    walk: {
+      frames: [1,2,3]
+    }
+  }
+});
+
+let sprite = Sprite({
+  x: 100,
+  y: 200,
+  animations: spriteSheet.animations
+});
+
+sprite.playAnimation(&#39;idle&#39;);
+</code></pre></section>
+  <section role="tabpanel" aria-labelledby=playanimation-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">import { Sprite, SpriteSheet } from &#39;kontra&#39;;
+
+let spriteSheet = SpriteSheet({
+  // ...
+  animations: {
+    idle: {
+      frames: 1
+    },
+    walk: {
+      frames: [1,2,3]
+    }
+  }
+});
+
+let sprite = Sprite({
+  x: 100,
+  y: 200,
+  animations: spriteSheet.animations
+});
+
+sprite.playAnimation(&#39;idle&#39;);
+</code></pre></section>
+</div>
           <h3 id="title-playAnimation"><span class="visually-hidden">playAnimation</span> Parameters</span></h3>
           <dl aria-labelledby="title-playAnimation">
             <dt>
@@ -1205,7 +1939,7 @@ sprite.playAnimation(&#39;idle&#39;);
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/prism.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/components/prism-javascript.min.js"></script>
   <script src="assets/js/navbar.js"></script>
+  <script src="assets/js/exampleTabList.js"></script>
 </body>
 </html>

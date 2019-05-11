@@ -69,14 +69,44 @@
 
         <p>Functions for initializing the Kontra library and getting the canvas and context
 objects.</p>
-<pre><code class="lang-js">import { getCanvas, getContext, init } from &#39;kontra&#39;;
+<div class="tablist">
+  <ul role="tablist">
+    <li role="presentation" data-tab="global">
+      <button role="tab" id="core-global-tab">Global Object</button>
+    </li>
+    <li role="presentation" data-tab="es">
+      <button role="tab" id="core-es-tab">ES Module Import</button>
+    </li>
+    <li role="presentation" data-tab="bundle">
+      <button role="tab" id="core-bundle-tab">Module Bundler</button>
+    </li>
+    <li role="presentation"></li>
+  </ul>
+  <section role="tabpanel" aria-labelledby=core-global-tab data-tabpanel="global"><pre><code class="lang-js">let { getCanvas, getContext, init } = kontra;
 
 let { canvas, context } = init();
 
 // or can get canvas and context through functions
 canvas = getCanvas();
 context = getContext();
-</code></pre>
+</code></pre></section>
+  <section role="tabpanel" aria-labelledby=core-es-tab data-tabpanel="es"><pre><code class="lang-js">import { getCanvas, getContext, init } from 'path/to/kontra.mjs';
+
+let { canvas, context } = init();
+
+// or can get canvas and context through functions
+canvas = getCanvas();
+context = getContext();
+</code></pre></section>
+  <section role="tabpanel" aria-labelledby=core-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">import { getCanvas, getContext, init } from &#39;kontra&#39;;
+
+let { canvas, context } = init();
+
+// or can get canvas and context through functions
+canvas = getCanvas();
+context = getContext();
+</code></pre></section>
+</div>
         
 
         <section class="toc">
@@ -146,8 +176,26 @@ context = getContext();
           </h2>
 
           <p>Initialize the library and set up the canvas. Typically you will call <code>init()</code> as the first thing and give it the canvas to use. This will allow all Kontra objects to reference the canvas when created.</p>
-<pre><code class="lang-js">let { canvas, context } = init(&#39;game&#39;);
-</code></pre>
+<div class="tablist">
+  <ul role="tablist">
+    <li role="presentation" data-tab="global">
+      <button role="tab" id="init-global-tab">Global Object</button>
+    </li>
+    <li role="presentation" data-tab="es">
+      <button role="tab" id="init-es-tab">ES Module Import</button>
+    </li>
+    <li role="presentation" data-tab="bundle">
+      <button role="tab" id="init-bundle-tab">Module Bundler</button>
+    </li>
+    <li role="presentation"></li>
+  </ul>
+  <section role="tabpanel" aria-labelledby=init-global-tab data-tabpanel="global"><pre><code class="lang-js">let { canvas, context } = init(&#39;game&#39;);
+</code></pre></section>
+  <section role="tabpanel" aria-labelledby=init-es-tab data-tabpanel="es"><pre><code class="lang-js">let { canvas, context } = init(&#39;game&#39;);
+</code></pre></section>
+  <section role="tabpanel" aria-labelledby=init-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">let { canvas, context } = init(&#39;game&#39;);
+</code></pre></section>
+</div>
           <h3 id="title-init"><span class="visually-hidden">init</span> Parameters</span></h3>
           <dl aria-labelledby="title-init">
             <dt>
@@ -168,7 +216,7 @@ context = getContext();
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/prism.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/components/prism-javascript.min.js"></script>
   <script src="assets/js/navbar.js"></script>
+  <script src="assets/js/exampleTabList.js"></script>
 </body>
 </html>

@@ -71,7 +71,20 @@
         <p>An object for drawing sprite sheet animations.</p>
 <p>An animation defines the sequence of frames to use from a sprite sheet. It also defines at what speed the animation should run using <code>frameRate</code>.</p>
 <p>Typically you don&#39;t create an <a href="Animation">Animation</a> directly, but rather you would create them from <a href="SpriteSheet">SpriteSheet</a> by passing the <code>animations</code> argument.</p>
-<pre><code class="lang-js">import { SpriteSheet, Animation } from &#39;kontra&#39;;
+<div class="tablist">
+  <ul role="tablist">
+    <li role="presentation" data-tab="global">
+      <button role="tab" id="animation-global-tab">Global Object</button>
+    </li>
+    <li role="presentation" data-tab="es">
+      <button role="tab" id="animation-es-tab">ES Module Import</button>
+    </li>
+    <li role="presentation" data-tab="bundle">
+      <button role="tab" id="animation-bundle-tab">Module Bundler</button>
+    </li>
+    <li role="presentation"></li>
+  </ul>
+  <section role="tabpanel" aria-labelledby=animation-global-tab data-tabpanel="global"><pre><code class="lang-js">let { SpriteSheet, Animation } = kontra;
 
 let image = new Image();
 image.src = &#39;assets/imgs/character_walk_sheet.png&#39;;
@@ -89,7 +102,46 @@ image.onload = function() {
     frameRate: 30
   });
 };
-</code></pre>
+</code></pre></section>
+  <section role="tabpanel" aria-labelledby=animation-es-tab data-tabpanel="es"><pre><code class="lang-js">import { SpriteSheet, Animation } from 'path/to/kontra.mjs';
+
+let image = new Image();
+image.src = &#39;assets/imgs/character_walk_sheet.png&#39;;
+image.onload = function() {
+  let spriteSheet = SpriteSheet({
+    image: image,
+    frameWidth: 72,
+    frameHeight: 97
+  });
+
+  // you typically wouldn&#39;t create an Animation this way
+  let animation = Animation({
+    spriteSheet: spriteSheet,
+    frames: [1,2,3,6],
+    frameRate: 30
+  });
+};
+</code></pre></section>
+  <section role="tabpanel" aria-labelledby=animation-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">import { SpriteSheet, Animation } from &#39;kontra&#39;;
+
+let image = new Image();
+image.src = &#39;assets/imgs/character_walk_sheet.png&#39;;
+image.onload = function() {
+  let spriteSheet = SpriteSheet({
+    image: image,
+    frameWidth: 72,
+    frameHeight: 97
+  });
+
+  // you typically wouldn&#39;t create an Animation this way
+  let animation = Animation({
+    spriteSheet: spriteSheet,
+    frames: [1,2,3,6],
+    frameRate: 30
+  });
+};
+</code></pre></section>
+</div>
         <h3 id="title-Animation"><span class="visually-hidden">Animation</span> Parameters</span></h3>
         <dl aria-labelledby="title-Animation">
           <dt>
@@ -378,7 +430,7 @@ image.onload = function() {
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/prism.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/components/prism-javascript.min.js"></script>
   <script src="assets/js/navbar.js"></script>
+  <script src="assets/js/exampleTabList.js"></script>
 </body>
 </html>

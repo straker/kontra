@@ -1,3 +1,27 @@
 <canvas id="{{ example.id }}"></canvas>
-<pre><code class="language-javascript">{{ example.codeOutput }}</code></pre>
+
+<div class="tablist">
+  <ul role="tablist">
+    <li role="presentation" data-tab="global">
+      <button role="tab" id="{{ example.id }}-global-tab">Global Object</button>
+    </li>
+    <li role="presentation" data-tab="es">
+      <button role="tab" id="{{ example.id }}-es-tab">ES Module Import</button>
+    </li>
+    <li role="presentation" data-tab="bundle">
+      <button role="tab" id="{{ example.id }}-bundle-tab">Module Bundler</button>
+    </li>
+    <li role="presentation"></li>
+  </ul>
+  <section role="tabpanel" aria-labelledby={{ example.id }}-global-tab data-tabpanel="global">
+    <pre><code class="lang-js">{{ example.globalOutput }}</code></pre>
+  </section>
+  <section role="tabpanel" aria-labelledby={{ example.id }}-es-tab data-tabpanel="es">
+    <pre><code class="lang-js">{{ example.esOutput }}</code></pre>
+  </section>
+  <section role="tabpanel" aria-labelledby={{ example.id }}-bundle-tab data-tabpanel="bundle">
+    <pre><code class="lang-js">{{ example.bundleOutput }}</code></pre>
+  </section>
+</div>
+
 <script>{{{ example.scriptOutput }}}</script>

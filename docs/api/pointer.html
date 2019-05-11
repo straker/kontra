@@ -70,7 +70,20 @@
         <p>A simple pointer API. You can use it move the main sprite or respond to a pointer event. Works with both mouse and touch events.</p>
 <p>Pointer events can be added on a global level or on individual sprites or objects. Before an object can receive pointer events, you must tell the pointer which objects to track and the object must haven been rendered to the canvas using <code>object.render()</code>.</p>
 <p>After an object is tracked and rendered, you can assign it an <code>onDown()</code>, <code>onUp()</code>, or <code>onOver()</code> functions which will be called whenever a pointer down, up, or over event happens on the object.</p>
-<pre><code class="lang-js">import { initPointer, track, Sprite } from &#39;kontra&#39;;
+<div class="tablist">
+  <ul role="tablist">
+    <li role="presentation" data-tab="global">
+      <button role="tab" id="pointer-global-tab">Global Object</button>
+    </li>
+    <li role="presentation" data-tab="es">
+      <button role="tab" id="pointer-es-tab">ES Module Import</button>
+    </li>
+    <li role="presentation" data-tab="bundle">
+      <button role="tab" id="pointer-bundle-tab">Module Bundler</button>
+    </li>
+    <li role="presentation"></li>
+  </ul>
+  <section role="tabpanel" aria-labelledby=pointer-global-tab data-tabpanel="global"><pre><code class="lang-js">let { initPointer, track, Sprite } = kontra;
 
 // this function must be called first before pointer
 // functions will work
@@ -90,10 +103,66 @@ let sprite = Sprite({
 
 track(sprite);
 sprite.render();
-</code></pre>
+</code></pre></section>
+  <section role="tabpanel" aria-labelledby=pointer-es-tab data-tabpanel="es"><pre><code class="lang-js">import { initPointer, track, Sprite } from 'path/to/kontra.mjs';
+
+// this function must be called first before pointer
+// functions will work
+initPointer();
+
+let sprite = Sprite({
+  onDown: function() {
+    // handle on down events on the sprite
+  },
+  onUp: function() {
+    // handle on up events on the sprite
+  },
+  onOver: function() {
+    // handle on over events on the sprite
+  }
+});
+
+track(sprite);
+sprite.render();
+</code></pre></section>
+  <section role="tabpanel" aria-labelledby=pointer-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">import { initPointer, track, Sprite } from &#39;kontra&#39;;
+
+// this function must be called first before pointer
+// functions will work
+initPointer();
+
+let sprite = Sprite({
+  onDown: function() {
+    // handle on down events on the sprite
+  },
+  onUp: function() {
+    // handle on up events on the sprite
+  },
+  onOver: function() {
+    // handle on over events on the sprite
+  }
+});
+
+track(sprite);
+sprite.render();
+</code></pre></section>
+</div>
 <p>By default, the pointer is treated as a circle and will check for collisions against objects assuming they are rectangular (have a width and height property).</p>
 <p>If you need to perform a different type of collision detection, assign the object a <code>collidesWithPointer()</code> function and it will be called instead. The function is passed the pointer object. Use this function to determine how the pointer circle should collide with the object.</p>
-<pre><code class="lang-js">import { Sprite } from &#39;kontra&#39;;
+<div class="tablist">
+  <ul role="tablist">
+    <li role="presentation" data-tab="global">
+      <button role="tab" id="pointer-global-tab">Global Object</button>
+    </li>
+    <li role="presentation" data-tab="es">
+      <button role="tab" id="pointer-es-tab">ES Module Import</button>
+    </li>
+    <li role="presentation" data-tab="bundle">
+      <button role="tab" id="pointer-bundle-tab">Module Bundler</button>
+    </li>
+    <li role="presentation"></li>
+  </ul>
+  <section role="tabpanel" aria-labelledby=pointer-global-tab data-tabpanel="global"><pre><code class="lang-js">let { Sprite } = kontra;
 
 let sprite = Srite({
   x: 10,
@@ -106,7 +175,36 @@ let sprite = Srite({
     return Math.sqrt(dx * dx + dy * dy) &lt; this.radius;
   }
 });
-</code></pre>
+</code></pre></section>
+  <section role="tabpanel" aria-labelledby=pointer-es-tab data-tabpanel="es"><pre><code class="lang-js">import { Sprite } from 'path/to/kontra.mjs';
+
+let sprite = Srite({
+  x: 10,
+  y: 10,
+  radius: 10
+  collidesWithPointer: function(pointer) {
+    // perform a circle v circle collision test
+    let dx = pointer.x - this.x;
+    let dy = pointer.y - this.y;
+    return Math.sqrt(dx * dx + dy * dy) &lt; this.radius;
+  }
+});
+</code></pre></section>
+  <section role="tabpanel" aria-labelledby=pointer-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">import { Sprite } from &#39;kontra&#39;;
+
+let sprite = Srite({
+  x: 10,
+  y: 10,
+  radius: 10
+  collidesWithPointer: function(pointer) {
+    // perform a circle v circle collision test
+    let dx = pointer.x - this.x;
+    let dy = pointer.y - this.y;
+    return Math.sqrt(dx * dx + dy * dy) &lt; this.radius;
+  }
+});
+</code></pre></section>
+</div>
         
 
         <section class="toc">
@@ -207,14 +305,44 @@ let sprite = Srite({
           </h2>
 
           <p>Register a function to be called on all pointer down events. Is passed the original Event and the target object (if there is one).</p>
-<pre><code class="lang-js">import { initPointer, onPointerDown } from &#39;kontra&#39;;
+<div class="tablist">
+  <ul role="tablist">
+    <li role="presentation" data-tab="global">
+      <button role="tab" id="onpointerdown-global-tab">Global Object</button>
+    </li>
+    <li role="presentation" data-tab="es">
+      <button role="tab" id="onpointerdown-es-tab">ES Module Import</button>
+    </li>
+    <li role="presentation" data-tab="bundle">
+      <button role="tab" id="onpointerdown-bundle-tab">Module Bundler</button>
+    </li>
+    <li role="presentation"></li>
+  </ul>
+  <section role="tabpanel" aria-labelledby=onpointerdown-global-tab data-tabpanel="global"><pre><code class="lang-js">let { initPointer, onPointerDown } = kontra;
 
 initPointer();
 
 onPointerDown(function(e, object) {
   // handle pointer down
 })
-</code></pre>
+</code></pre></section>
+  <section role="tabpanel" aria-labelledby=onpointerdown-es-tab data-tabpanel="es"><pre><code class="lang-js">import { initPointer, onPointerDown } from 'path/to/kontra.mjs';
+
+initPointer();
+
+onPointerDown(function(e, object) {
+  // handle pointer down
+})
+</code></pre></section>
+  <section role="tabpanel" aria-labelledby=onpointerdown-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">import { initPointer, onPointerDown } from &#39;kontra&#39;;
+
+initPointer();
+
+onPointerDown(function(e, object) {
+  // handle pointer down
+})
+</code></pre></section>
+</div>
           <h3 id="title-onPointerDown"><span class="visually-hidden">onPointerDown</span> Parameters</span></h3>
           <dl aria-labelledby="title-onPointerDown">
             <dt>
@@ -235,14 +363,44 @@ onPointerDown(function(e, object) {
           </h2>
 
           <p>Register a function to be called on all pointer up events. Is passed the original Event and the target object (if there is one).</p>
-<pre><code class="lang-js">import { initPointer, onPointerUp } from &#39;kontra&#39;;
+<div class="tablist">
+  <ul role="tablist">
+    <li role="presentation" data-tab="global">
+      <button role="tab" id="onpointerup-global-tab">Global Object</button>
+    </li>
+    <li role="presentation" data-tab="es">
+      <button role="tab" id="onpointerup-es-tab">ES Module Import</button>
+    </li>
+    <li role="presentation" data-tab="bundle">
+      <button role="tab" id="onpointerup-bundle-tab">Module Bundler</button>
+    </li>
+    <li role="presentation"></li>
+  </ul>
+  <section role="tabpanel" aria-labelledby=onpointerup-global-tab data-tabpanel="global"><pre><code class="lang-js">let { initPointer, onPointerUp } = kontra;
 
 initPointer();
 
 onPointerUp(function(e, object) {
   // handle pointer up
 })
-</code></pre>
+</code></pre></section>
+  <section role="tabpanel" aria-labelledby=onpointerup-es-tab data-tabpanel="es"><pre><code class="lang-js">import { initPointer, onPointerUp } from 'path/to/kontra.mjs';
+
+initPointer();
+
+onPointerUp(function(e, object) {
+  // handle pointer up
+})
+</code></pre></section>
+  <section role="tabpanel" aria-labelledby=onpointerup-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">import { initPointer, onPointerUp } from &#39;kontra&#39;;
+
+initPointer();
+
+onPointerUp(function(e, object) {
+  // handle pointer up
+})
+</code></pre></section>
+</div>
           <h3 id="title-onPointerUp"><span class="visually-hidden">onPointerUp</span> Parameters</span></h3>
           <dl aria-labelledby="title-onPointerUp">
             <dt>
@@ -263,12 +421,38 @@ onPointerUp(function(e, object) {
           </h2>
 
           <p>Object containing the <code>radius</code> and current <code>x</code> and <code>y</code> position of the pointer relative to the top-left corner of the canvas.</p>
-<pre><code class="lang-js">import { initPointer, pointer } from &#39;kontra&#39;;
+<div class="tablist">
+  <ul role="tablist">
+    <li role="presentation" data-tab="global">
+      <button role="tab" id="pointer-global-tab">Global Object</button>
+    </li>
+    <li role="presentation" data-tab="es">
+      <button role="tab" id="pointer-es-tab">ES Module Import</button>
+    </li>
+    <li role="presentation" data-tab="bundle">
+      <button role="tab" id="pointer-bundle-tab">Module Bundler</button>
+    </li>
+    <li role="presentation"></li>
+  </ul>
+  <section role="tabpanel" aria-labelledby=pointer-global-tab data-tabpanel="global"><pre><code class="lang-js">let { initPointer, pointer } = kontra;
 
 initPointer();
 
 console.log(pointer);  //=&gt; { x: 100, y: 200, radius: 5 };
-</code></pre>
+</code></pre></section>
+  <section role="tabpanel" aria-labelledby=pointer-es-tab data-tabpanel="es"><pre><code class="lang-js">import { initPointer, pointer } from 'path/to/kontra.mjs';
+
+initPointer();
+
+console.log(pointer);  //=&gt; { x: 100, y: 200, radius: 5 };
+</code></pre></section>
+  <section role="tabpanel" aria-labelledby=pointer-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">import { initPointer, pointer } from &#39;kontra&#39;;
+
+initPointer();
+
+console.log(pointer);  //=&gt; { x: 100, y: 200, radius: 5 };
+</code></pre></section>
+</div>
           
         </section>
         <section>
@@ -280,7 +464,20 @@ console.log(pointer);  //=&gt; { x: 100, y: 200, radius: 5 };
           </h2>
 
           <p>Check to see if the pointer is currently over the object. Since multiple objects may be rendered on top of one another, only the top most object under the pointer will return true.</p>
-<pre><code class="lang-js">import {
+<div class="tablist">
+  <ul role="tablist">
+    <li role="presentation" data-tab="global">
+      <button role="tab" id="pointerover-global-tab">Global Object</button>
+    </li>
+    <li role="presentation" data-tab="es">
+      <button role="tab" id="pointerover-es-tab">ES Module Import</button>
+    </li>
+    <li role="presentation" data-tab="bundle">
+      <button role="tab" id="pointerover-bundle-tab">Module Bundler</button>
+    </li>
+    <li role="presentation"></li>
+  </ul>
+  <section role="tabpanel" aria-labelledby=pointerover-global-tab data-tabpanel="global"><pre><code class="lang-js">import {
   initPointer,
   track,
   pointer,
@@ -313,7 +510,76 @@ pointer.y = 15;
 
 console.log(pointerOver(sprite1));  //=&gt; false
 console.log(pointerOver(sprite2));  //=&gt; true
-</code></pre>
+</code></pre></section>
+  <section role="tabpanel" aria-labelledby=pointerover-es-tab data-tabpanel="es"><pre><code class="lang-js">import {
+  initPointer,
+  track,
+  pointer,
+  pointerOver,
+  Sprite
+} from &#39;kontra&#39;;
+
+initPointer();
+
+let sprite1 = Sprite({
+  x: 10,
+  y: 10,
+  width: 10,
+  height: 10
+});
+let sprite2 = Sprite({
+  x: 15,
+  y: 10,
+  width: 10,
+  height: 10
+});
+
+track([sprite1, sprite2]);
+
+sprite1.render();
+sprite2.render();
+
+pointer.x = 14;
+pointer.y = 15;
+
+console.log(pointerOver(sprite1));  //=&gt; false
+console.log(pointerOver(sprite2));  //=&gt; true
+</code></pre></section>
+  <section role="tabpanel" aria-labelledby=pointerover-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">import {
+  initPointer,
+  track,
+  pointer,
+  pointerOver,
+  Sprite
+} from &#39;kontra&#39;;
+
+initPointer();
+
+let sprite1 = Sprite({
+  x: 10,
+  y: 10,
+  width: 10,
+  height: 10
+});
+let sprite2 = Sprite({
+  x: 15,
+  y: 10,
+  width: 10,
+  height: 10
+});
+
+track([sprite1, sprite2]);
+
+sprite1.render();
+sprite2.render();
+
+pointer.x = 14;
+pointer.y = 15;
+
+console.log(pointerOver(sprite1));  //=&gt; false
+console.log(pointerOver(sprite2));  //=&gt; true
+</code></pre></section>
+</div>
           <h3 id="title-pointerOver"><span class="visually-hidden">pointerOver</span> Parameters</span></h3>
           <dl aria-labelledby="title-pointerOver">
             <dt>
@@ -337,7 +603,20 @@ console.log(pointerOver(sprite2));  //=&gt; true
           </h2>
 
           <p>Check if a button is currently pressed. Use during an <code>update()</code> function to perform actions each frame.</p>
-<pre><code class="lang-js">import { initPointer, pointerPressed } from &#39;kontra&#39;;
+<div class="tablist">
+  <ul role="tablist">
+    <li role="presentation" data-tab="global">
+      <button role="tab" id="pointerpressed-global-tab">Global Object</button>
+    </li>
+    <li role="presentation" data-tab="es">
+      <button role="tab" id="pointerpressed-es-tab">ES Module Import</button>
+    </li>
+    <li role="presentation" data-tab="bundle">
+      <button role="tab" id="pointerpressed-bundle-tab">Module Bundler</button>
+    </li>
+    <li role="presentation"></li>
+  </ul>
+  <section role="tabpanel" aria-labelledby=pointerpressed-global-tab data-tabpanel="global"><pre><code class="lang-js">let { initPointer, pointerPressed } = kontra;
 
 initPointer();
 
@@ -351,7 +630,38 @@ Sprite({
     }
   }
 });
-</code></pre>
+</code></pre></section>
+  <section role="tabpanel" aria-labelledby=pointerpressed-es-tab data-tabpanel="es"><pre><code class="lang-js">import { initPointer, pointerPressed } from 'path/to/kontra.mjs';
+
+initPointer();
+
+Sprite({
+  update: function() {
+    if (pointerPressed(&#39;left&#39;)){
+      // left mouse button pressed
+    }
+    else if (pointerPressed(&#39;right&#39;)) {
+      // right mouse button pressed
+    }
+  }
+});
+</code></pre></section>
+  <section role="tabpanel" aria-labelledby=pointerpressed-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">import { initPointer, pointerPressed } from &#39;kontra&#39;;
+
+initPointer();
+
+Sprite({
+  update: function() {
+    if (pointerPressed(&#39;left&#39;)){
+      // left mouse button pressed
+    }
+    else if (pointerPressed(&#39;right&#39;)) {
+      // right mouse button pressed
+    }
+  }
+});
+</code></pre></section>
+</div>
           <h3 id="title-pointerPressed"><span class="visually-hidden">pointerPressed</span> Parameters</span></h3>
           <dl aria-labelledby="title-pointerPressed">
             <dt>
@@ -375,13 +685,41 @@ Sprite({
           </h2>
 
           <p>Begin tracking pointer events for a set of objects. Takes a single object or an array of objects.</p>
-<pre><code class="lang-js">import { initPointer, track } from &#39;kontra&#39;;
+<div class="tablist">
+  <ul role="tablist">
+    <li role="presentation" data-tab="global">
+      <button role="tab" id="track-global-tab">Global Object</button>
+    </li>
+    <li role="presentation" data-tab="es">
+      <button role="tab" id="track-es-tab">ES Module Import</button>
+    </li>
+    <li role="presentation" data-tab="bundle">
+      <button role="tab" id="track-bundle-tab">Module Bundler</button>
+    </li>
+    <li role="presentation"></li>
+  </ul>
+  <section role="tabpanel" aria-labelledby=track-global-tab data-tabpanel="global"><pre><code class="lang-js">let { initPointer, track } = kontra;
 
 initPointer();
 
 track(obj);
 track([obj1, obj2]);
-</code></pre>
+</code></pre></section>
+  <section role="tabpanel" aria-labelledby=track-es-tab data-tabpanel="es"><pre><code class="lang-js">import { initPointer, track } from 'path/to/kontra.mjs';
+
+initPointer();
+
+track(obj);
+track([obj1, obj2]);
+</code></pre></section>
+  <section role="tabpanel" aria-labelledby=track-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">import { initPointer, track } from &#39;kontra&#39;;
+
+initPointer();
+
+track(obj);
+track([obj1, obj2]);
+</code></pre></section>
+</div>
           <h3 id="title-track"><span class="visually-hidden">track</span> Parameters</span></h3>
           <dl aria-labelledby="title-track">
             <dt>
@@ -402,11 +740,35 @@ track([obj1, obj2]);
           </h2>
 
           <p>Remove the callback function for a bound set of objects.</p>
-<pre><code class="lang-js">import { untrack } from &#39;kontra&#39;;
+<div class="tablist">
+  <ul role="tablist">
+    <li role="presentation" data-tab="global">
+      <button role="tab" id="untrack-global-tab">Global Object</button>
+    </li>
+    <li role="presentation" data-tab="es">
+      <button role="tab" id="untrack-es-tab">ES Module Import</button>
+    </li>
+    <li role="presentation" data-tab="bundle">
+      <button role="tab" id="untrack-bundle-tab">Module Bundler</button>
+    </li>
+    <li role="presentation"></li>
+  </ul>
+  <section role="tabpanel" aria-labelledby=untrack-global-tab data-tabpanel="global"><pre><code class="lang-js">let { untrack } = kontra;
 
 untrack(obj);
 untrack([obj1, obj2]);
-</code></pre>
+</code></pre></section>
+  <section role="tabpanel" aria-labelledby=untrack-es-tab data-tabpanel="es"><pre><code class="lang-js">import { untrack } from 'path/to/kontra.mjs';
+
+untrack(obj);
+untrack([obj1, obj2]);
+</code></pre></section>
+  <section role="tabpanel" aria-labelledby=untrack-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">import { untrack } from &#39;kontra&#39;;
+
+untrack(obj);
+untrack([obj1, obj2]);
+</code></pre></section>
+</div>
           <h3 id="title-untrack"><span class="visually-hidden">untrack</span> Parameters</span></h3>
           <dl aria-labelledby="title-untrack">
             <dt>
@@ -424,7 +786,7 @@ untrack([obj1, obj2]);
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/prism.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/components/prism-javascript.min.js"></script>
   <script src="assets/js/navbar.js"></script>
+  <script src="assets/js/exampleTabList.js"></script>
 </body>
 </html>

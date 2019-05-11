@@ -71,7 +71,20 @@
         <p>The game loop updates and renders the game every frame. The game loop is stopped by default and will not start until the loops <code>start()</code> function is called.</p>
 <p>The game loop uses a time-based animation with a fixed <code>dt</code> to <a href="http://blog.sklambert.com/using-time-based-animation-implement/">avoid frame rate issues</a>. Each update call is guaranteed to equal 1/60 of a second.</p>
 <p>This means that you can avoid having to do time based calculations in your update functions  and instead do fixed updates.</p>
-<pre><code class="lang-js">import { Sprite, GameLoop } from &#39;kontra&#39;;
+<div class="tablist">
+  <ul role="tablist">
+    <li role="presentation" data-tab="global">
+      <button role="tab" id="gameloop-global-tab">Global Object</button>
+    </li>
+    <li role="presentation" data-tab="es">
+      <button role="tab" id="gameloop-es-tab">ES Module Import</button>
+    </li>
+    <li role="presentation" data-tab="bundle">
+      <button role="tab" id="gameloop-bundle-tab">Module Bundler</button>
+    </li>
+    <li role="presentation"></li>
+  </ul>
+  <section role="tabpanel" aria-labelledby=gameloop-global-tab data-tabpanel="global"><pre><code class="lang-js">let { Sprite, GameLoop } = kontra;
 
 let sprite = Sprite({
   x: 100,
@@ -97,7 +110,62 @@ let loop = GameLoop({
 });
 
 loop.start();
-</code></pre>
+</code></pre></section>
+  <section role="tabpanel" aria-labelledby=gameloop-es-tab data-tabpanel="es"><pre><code class="lang-js">import { Sprite, GameLoop } from 'path/to/kontra.mjs';
+
+let sprite = Sprite({
+  x: 100,
+  y: 200,
+  width: 20,
+  height: 40,
+  color: &#39;red&#39;
+});
+
+let loop = GameLoop({
+  update: function(dt) {
+    // no need to determine how many pixels you want to
+    // move every second and multiple by dt
+    // sprite.x += 180 * dt;
+
+    // instead just update by how many pixels you want
+    // to move every frame and the loop will ensure 60FPS
+    sprite.x += 3;
+  },
+  render: function() {
+    sprite.render();
+  }
+});
+
+loop.start();
+</code></pre></section>
+  <section role="tabpanel" aria-labelledby=gameloop-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">import { Sprite, GameLoop } from &#39;kontra&#39;;
+
+let sprite = Sprite({
+  x: 100,
+  y: 200,
+  width: 20,
+  height: 40,
+  color: &#39;red&#39;
+});
+
+let loop = GameLoop({
+  update: function(dt) {
+    // no need to determine how many pixels you want to
+    // move every second and multiple by dt
+    // sprite.x += 180 * dt;
+
+    // instead just update by how many pixels you want
+    // to move every frame and the loop will ensure 60FPS
+    sprite.x += 3;
+  },
+  render: function() {
+    sprite.render();
+  }
+});
+
+loop.start();
+</code></pre></section>
+</div>
         <h3 id="title-GameLoop"><span class="visually-hidden">GameLoop</span> Parameters</span></h3>
         <dl aria-labelledby="title-GameLoop">
           <dt>
@@ -187,7 +255,20 @@ loop.start();
           </h2>
 
           <p>If the game loop is currently stopped.</p>
-<pre><code class="lang-js">import { GameLoop } from &#39;kontra&#39;;
+<div class="tablist">
+  <ul role="tablist">
+    <li role="presentation" data-tab="global">
+      <button role="tab" id="isstopped-global-tab">Global Object</button>
+    </li>
+    <li role="presentation" data-tab="es">
+      <button role="tab" id="isstopped-es-tab">ES Module Import</button>
+    </li>
+    <li role="presentation" data-tab="bundle">
+      <button role="tab" id="isstopped-bundle-tab">Module Bundler</button>
+    </li>
+    <li role="presentation"></li>
+  </ul>
+  <section role="tabpanel" aria-labelledby=isstopped-global-tab data-tabpanel="global"><pre><code class="lang-js">let { GameLoop } = kontra;
 
 let loop = GameLoop({
   // ...
@@ -199,7 +280,34 @@ console.log(loop.isStopped);  //=&gt; false
 
 loop.stop();
 console.log(loop.isStopped);  //=&gt; true
-</code></pre>
+</code></pre></section>
+  <section role="tabpanel" aria-labelledby=isstopped-es-tab data-tabpanel="es"><pre><code class="lang-js">import { GameLoop } from 'path/to/kontra.mjs';
+
+let loop = GameLoop({
+  // ...
+});
+console.log(loop.isStopped);  //=&gt; true
+
+loop.start();
+console.log(loop.isStopped);  //=&gt; false
+
+loop.stop();
+console.log(loop.isStopped);  //=&gt; true
+</code></pre></section>
+  <section role="tabpanel" aria-labelledby=isstopped-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">import { GameLoop } from &#39;kontra&#39;;
+
+let loop = GameLoop({
+  // ...
+});
+console.log(loop.isStopped);  //=&gt; true
+
+loop.start();
+console.log(loop.isStopped);  //=&gt; false
+
+loop.stop();
+console.log(loop.isStopped);  //=&gt; true
+</code></pre></section>
+</div>
           
         </section>
         <section>
@@ -261,7 +369,7 @@ console.log(loop.isStopped);  //=&gt; true
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/prism.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/components/prism-javascript.min.js"></script>
   <script src="assets/js/navbar.js"></script>
+  <script src="assets/js/exampleTabList.js"></script>
 </body>
 </html>

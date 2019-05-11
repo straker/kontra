@@ -69,28 +69,74 @@
 
         <h2 id="download">Download</h2>
 <ul>
-<li><a href="https://raw.githubusercontent.com/straker/kontra/master/kontra.min.js">Production</a> and <a href="https://raw.githubusercontent.com/straker/kontra/master/kontra.js">development</a> versions</li>
+<li>Global object <a href="https://raw.githubusercontent.com/straker/kontra/master/kontra.min.js">production</a> and <a href="https://raw.githubusercontent.com/straker/kontra/master/kontra.js">development</a> versions</li>
+<li>ES module <a href="https://raw.githubusercontent.com/straker/kontra/master/kontra.min.mjs">production</a> and <a href="https://raw.githubusercontent.com/straker/kontra/master/kontra.mjs">development</a> versions</li>
 <li><code>$ npm install kontra</code></li>
 </ul>
 <h2 id="load">Load</h2>
-<p>Load the library by adding it as a script tag on the page.</p>
-<pre><code class="lang-js">&lt;script src=&quot;kontra.js&quot;&gt;&lt;/script&gt;
+<p>There are a few different ways to load the library depending on how you are going to use it.</p>
+<h3 id="global-object">Global Object</h3>
+<p>Load the library by adding it as a script tag. This will add a global <code>kontra</code> object to the page with all Kontra functions and properties.</p>
+<pre><code class="lang-html">&lt;script src=&quot;path/to/kontra.js&quot;&gt;&lt;/script&gt;
 </code></pre>
-<p>Kontra also supports ES modules and exports all API functions, allowing you to import it into your code as well. This is the recommended way to create <a href="download">custom builds</a> of the library.</p>
-<pre><code class="lang-js">import { Sprite } from &#39;kontra&#39;;
+<h3 id="es-module-import">ES Module Import</h3>
+<p>Kontra also supports ES modules and exports all API functions, allowing you to import it into your code as well. Import the file <code>kontra.mjs</code> and either use the entire <code>kontra</code> object or just import the functions you need.</p>
+<pre><code class="lang-js">import kontra from &#39;path/to/kontra.mjs&#39;;
 </code></pre>
+<h3 id="module-bundler">Module Bundler</h3>
+<p>If you&#39;re using a module bundler that supports npm dependency resolution (such as Webpack or Parcel), you can import the library directly from the module name. This is the recommended way to create <a href="download">custom builds</a> of the library.</p>
+<pre><code class="lang-js">import kontra from &#39;kontra&#39;;
+</code></pre>
+<h3 id="web-maker">Web Maker</h3>
 <p>Want to get started without all the hassle? <a href="https://webmakerapp.com/">Web Maker</a> has you covered! When you start a new project, select the Kontra Game Engine from the list of predefined templates and you&#39;re good to go. Learn more by reading the <a href="https://medium.com/web-maker/js13kgames-jam-with-web-maker-a3389cf2cbb">Web Maker and JS13k tutorial</a>.</p>
 <h2 id="initialize">Initialize</h2>
 <p>Initialize the game by calling <a href="api/core.html#init">init()</a> to create the drawing context. By default, it will use the first canvas element on the page, but you can also pass it the ID of the canvas or a Canvas element.</p>
 <p>The <code>init()</code> function returns the canvas and context used for the game.</p>
-<pre><code class="lang-js">import { init } from &#39;kontra&#39;;
+<div class="tablist">
+  <ul role="tablist">
+    <li role="presentation" data-tab="global">
+      <button role="tab" id="getting-started-global-tab">Global Object</button>
+    </li>
+    <li role="presentation" data-tab="es">
+      <button role="tab" id="getting-started-es-tab">ES Module Import</button>
+    </li>
+    <li role="presentation" data-tab="bundle">
+      <button role="tab" id="getting-started-bundle-tab">Module Bundler</button>
+    </li>
+    <li role="presentation"></li>
+  </ul>
+  <section role="tabpanel" aria-labelledby=getting-started-global-tab data-tabpanel="global"><pre><code class="lang-js">let { init } = kontra;
 
 let { canvas, context } = init();
-</code></pre>
+</code></pre></section>
+  <section role="tabpanel" aria-labelledby=getting-started-es-tab data-tabpanel="es"><pre><code class="lang-js">import { init } from 'path/to/kontra.mjs';
+
+let { canvas, context } = init();
+</code></pre></section>
+  <section role="tabpanel" aria-labelledby=getting-started-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">import { init } from &#39;kontra&#39;;
+
+let { canvas, context } = init();
+</code></pre></section>
+</div>
 <h2 id="create">Create</h2>
 <p>After the game is initialize, you can create a simple <a href="api/sprite.html">Sprite</a> and <a href="api/gameLoop.html">Game Loop</a> in just a few lines of code</p>
 <canvas id="game-canvas-8"></canvas>
-<pre><code class="language-javascript">import { init, Sprite, GameLoop } from &#x27;kontra&#x27;;
+
+<div class="tablist">
+  <ul role="tablist">
+    <li role="presentation" data-tab="global">
+      <button role="tab" id="game-canvas-8-global-tab">Global Object</button>
+    </li>
+    <li role="presentation" data-tab="es">
+      <button role="tab" id="game-canvas-8-es-tab">ES Module Import</button>
+    </li>
+    <li role="presentation" data-tab="bundle">
+      <button role="tab" id="game-canvas-8-bundle-tab">Module Bundler</button>
+    </li>
+    <li role="presentation"></li>
+  </ul>
+  <section role="tabpanel" aria-labelledby=game-canvas-8-global-tab data-tabpanel="global">
+    <pre><code class="lang-js">let { init, Sprite, GameLoop } &#x3D; kontra
 
 let { canvas } &#x3D; init();
 
@@ -119,6 +165,71 @@ let loop &#x3D; GameLoop({  // create the main game loop
 });
 
 loop.start();    // start the game</code></pre>
+  </section>
+  <section role="tabpanel" aria-labelledby=game-canvas-8-es-tab data-tabpanel="es">
+    <pre><code class="lang-js">import { init, Sprite, GameLoop } from &#x27;path/to/kontra.mjs&#x27;
+
+let { canvas } &#x3D; init();
+
+let sprite &#x3D; Sprite({
+  x: 100,        // starting x,y position of the sprite
+  y: 80,
+  color: &#x27;red&#x27;,  // fill color of the sprite rectangle
+  width: 20,     // width and height of the sprite rectangle
+  height: 40,
+  dx: 2          // move the sprite 2px to the right every frame
+});
+
+let loop &#x3D; GameLoop({  // create the main game loop
+  update: function() { // update the game state
+    sprite.update();
+
+    // wrap the sprites position when it reaches
+    // the edge of the screen
+    if (sprite.x &gt; canvas.width) {
+      sprite.x &#x3D; -sprite.width;
+    }
+  },
+  render: function() { // render the game state
+    sprite.render();
+  }
+});
+
+loop.start();    // start the game</code></pre>
+  </section>
+  <section role="tabpanel" aria-labelledby=game-canvas-8-bundle-tab data-tabpanel="bundle">
+    <pre><code class="lang-js">import { init, Sprite, GameLoop } from &#x27;kontra&#x27;;
+
+let { canvas } &#x3D; init();
+
+let sprite &#x3D; Sprite({
+  x: 100,        // starting x,y position of the sprite
+  y: 80,
+  color: &#x27;red&#x27;,  // fill color of the sprite rectangle
+  width: 20,     // width and height of the sprite rectangle
+  height: 40,
+  dx: 2          // move the sprite 2px to the right every frame
+});
+
+let loop &#x3D; GameLoop({  // create the main game loop
+  update: function() { // update the game state
+    sprite.update();
+
+    // wrap the sprites position when it reaches
+    // the edge of the screen
+    if (sprite.x &gt; canvas.width) {
+      sprite.x &#x3D; -sprite.width;
+    }
+  },
+  render: function() { // render the game state
+    sprite.render();
+  }
+});
+
+loop.start();    // start the game</code></pre>
+  </section>
+</div>
+
 <script>(function() {
   kontra.init("game-canvas-8");
   var canvas = document.querySelector("#game-canvas-8");
@@ -163,7 +274,7 @@ loop.start();    // start the game
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/prism.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/components/prism-javascript.min.js"></script>
   <script src="assets/js/navbar.js"></script>
+  <script src="assets/js/exampleTabList.js"></script>
 </body>
 </html>

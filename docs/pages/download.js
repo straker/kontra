@@ -6,8 +6,8 @@ Download the latest version of Kontra.
 
 - [Global object production version](https://raw.githubusercontent.com/straker/kontra/master/kontra.min.js)
 - [Global object development version](https://raw.githubusercontent.com/straker/kontra/master/kontra.js)
-- [ES Module production version](https://raw.githubusercontent.com/straker/kontra/master/kontra.min.js)
-- [ES Module development version](https://raw.githubusercontent.com/straker/kontra/master/kontra.js)
+- [ES Module production version](https://raw.githubusercontent.com/straker/kontra/master/kontra.min.mjs)
+- [ES Module development version](https://raw.githubusercontent.com/straker/kontra/master/kontra.mjs)
 - [TGZ file](https://registry.npmjs.org/kontra/-/kontra-{{ packageVersion }}.tgz)
 - [Github repo](https://github.com/straker/kontra)
 

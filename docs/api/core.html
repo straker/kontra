@@ -189,11 +189,17 @@ context = getContext();
     </li>
     <li role="presentation"></li>
   </ul>
-  <section role="tabpanel" aria-labelledby=init-global-tab data-tabpanel="global"><pre><code class="lang-js">let { canvas, context } = init(&#39;game&#39;);
+  <section role="tabpanel" aria-labelledby=init-global-tab data-tabpanel="global"><pre><code class="lang-js">let { init } = kontra;
+
+let { canvas, context } = init(&#39;game&#39;);
 </code></pre></section>
-  <section role="tabpanel" aria-labelledby=init-es-tab data-tabpanel="es"><pre><code class="lang-js">let { canvas, context } = init(&#39;game&#39;);
+  <section role="tabpanel" aria-labelledby=init-es-tab data-tabpanel="es"><pre><code class="lang-js">import { init } from 'path/to/kontra.mjs';
+
+let { canvas, context } = init(&#39;game&#39;);
 </code></pre></section>
-  <section role="tabpanel" aria-labelledby=init-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">let { canvas, context } = init(&#39;game&#39;);
+  <section role="tabpanel" aria-labelledby=init-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">import { init } from &#39;kontra&#39;;
+
+let { canvas, context } = init(&#39;game&#39;);
 </code></pre></section>
 </div>
           <h3 id="title-init"><span class="visually-hidden">init</span> Parameters</span></h3>

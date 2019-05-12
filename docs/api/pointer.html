@@ -477,13 +477,7 @@ console.log(pointer);  //=&gt; { x: 100, y: 200, radius: 5 };
     </li>
     <li role="presentation"></li>
   </ul>
-  <section role="tabpanel" aria-labelledby=pointerover-global-tab data-tabpanel="global"><pre><code class="lang-js">import {
-  initPointer,
-  track,
-  pointer,
-  pointerOver,
-  Sprite
-} from &#39;kontra&#39;;
+  <section role="tabpanel" aria-labelledby=pointerover-global-tab data-tabpanel="global"><pre><code class="lang-js">let { initPointer, track, pointer, pointerOver, Sprite } = kontra;
 
 initPointer();
 
@@ -511,13 +505,7 @@ pointer.y = 15;
 console.log(pointerOver(sprite1));  //=&gt; false
 console.log(pointerOver(sprite2));  //=&gt; true
 </code></pre></section>
-  <section role="tabpanel" aria-labelledby=pointerover-es-tab data-tabpanel="es"><pre><code class="lang-js">import {
-  initPointer,
-  track,
-  pointer,
-  pointerOver,
-  Sprite
-} from &#39;kontra&#39;;
+  <section role="tabpanel" aria-labelledby=pointerover-es-tab data-tabpanel="es"><pre><code class="lang-js">import { initPointer, track, pointer, pointerOver, Sprite } from 'path/to/kontra.mjs';
 
 initPointer();
 
@@ -545,13 +533,7 @@ pointer.y = 15;
 console.log(pointerOver(sprite1));  //=&gt; false
 console.log(pointerOver(sprite2));  //=&gt; true
 </code></pre></section>
-  <section role="tabpanel" aria-labelledby=pointerover-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">import {
-  initPointer,
-  track,
-  pointer,
-  pointerOver,
-  Sprite
-} from &#39;kontra&#39;;
+  <section role="tabpanel" aria-labelledby=pointerover-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">import { initPointer, track, pointer, pointerOver, Sprite } from &#39;kontra&#39;;
 
 initPointer();
 

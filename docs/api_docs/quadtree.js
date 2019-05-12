@@ -27,6 +27,7 @@
  * When you need to get all objects in the same node as another object, use the quadtrees [get()](#get) function.
  *
  * ```js
+ * // exclude-tablist
  * let objects = quadtree.get(player);  //=> [enemy]
  * ```
  * @sectionName Basic Use

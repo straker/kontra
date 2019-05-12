@@ -61,6 +61,7 @@ class Pool {
    * If you want to control when the sprite is ready for reuse, pass `Infinity` for `ttl`. You'll need to set the sprites `ttl` to `0` when you're ready for the sprite to be reused.
    *
    * ```js
+   * // exclude-tablist
    * let sprite = pool.get({
    *   // the object will get these properties and values
    *   x: 100,

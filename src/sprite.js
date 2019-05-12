@@ -324,6 +324,7 @@ class Sprite {
    *
    * ```js
    * import { Sprite } from 'kontra';
+   *
    * let sprite = Sprite({
    *   x: 100,
    *   y: 200,

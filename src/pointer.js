@@ -314,13 +314,7 @@ export function untrack(objects) {
  * Check to see if the pointer is currently over the object. Since multiple objects may be rendered on top of one another, only the top most object under the pointer will return true.
  *
  * ```js
- * import {
- *   initPointer,
- *   track,
- *   pointer,
- *   pointerOver,
- *   Sprite
- * } from 'kontra';
+ * import { initPointer, track, pointer, pointerOver, Sprite } from 'kontra';
  *
  * initPointer();
  *

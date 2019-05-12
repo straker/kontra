@@ -10,6 +10,7 @@
  * As the plugin author, you should not [register](#registerPlugin) the plugin yourself. You should only export the plugin object and let the consumer register it.
  *
  * ```js
+ * // exclude-tablist
  * // pluginCode.js
  * const loggingPlugin = {
  *   afterCollidesWith(sprite, result, object) {
@@ -52,6 +53,7 @@
  * The function will be passed the `this` context of the intercepted object as well as all arguments of the original call. The function should either return an Array of the arguments if modifying them or return `null` or nothing if not modifying the arguments.
  *
  * ```js
+ * // exclude-tablist
  * class MyObj {
  *   add(a, b) {
  *     return a + b;
@@ -73,6 +75,7 @@
  * Multiple before intercept functions can be registered for the same function. All functions will be run in the order they were registered. The functions return value will be passed to the next function. If the function doesn't modify the arguments (returned `null` or nothing) then the functions parameters will be passed to the next function instead.
  *
  * ```js
+ * // exclude-tablist
  * class MyObj {
  *   add(a, b) {
  *     return a + b;
@@ -105,6 +108,7 @@
  * The function will be passed the `this` context of the intercepted object, the result of the intercepted function, and the final arguments passed to the intercepted function. The function should either return a value if modifying the result or return `null` or nothing if not modifying the result.
  *
  * ```js
+ * // exclude-tablist
  * class MyObj {
  *   add(a, b) {
  *     return a + b;
@@ -125,6 +129,7 @@
  * Multiple after intercept functions can be registered for the same function. All functions will be run in the order they were registered. Each functions return value will be passed to the next function. If the function doesn't modify the result (returned `null` or nothing) then the functions parameters will be passed to the next function instead.
  *
  * ```js
+ * // exclude-tablist
  * class MyObj {
  *   add(a, b) {
  *     return a + b;

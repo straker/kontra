@@ -42,6 +42,8 @@ export function getContext() {
  * Initialize the library and set up the canvas. Typically you will call `init()` as the first thing and give it the canvas to use. This will allow all Kontra objects to reference the canvas when created.
  *
  * ```js
+ * import { init } from 'kontra';
+ *
  * let { canvas, context } = init('game');
  * ```
  * @function init

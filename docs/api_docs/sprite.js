@@ -164,7 +164,7 @@
  * To extend the Sprite class, use the `.class` property of the constructor.
  *
  * ```js
- * import { Sprite } from kontra;
+ * import { Sprite } from 'kontra';
  *
  * class CustomSprite extends Sprite.class {
  *   // ...

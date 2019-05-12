@@ -8,6 +8,8 @@
  * When you want an object from the pool, use the pools [get()](#get) function and pass it any properties you want the newly initialized object to have.
  *
  * ```js
+ * import { Pool, Sprite } from 'kontra';
+ *
  * let pool = Pool({
  *   // create a new sprite every time the pool needs a new object
  *   create: Sprite
@@ -27,6 +29,8 @@
  * When you want to update or render all alive objects in the pool, use the pools [update()](#update) and [render()](#render) functions.
  *
  * ```js
+ * import { GameLoop } from 'kontra';
+ *
  * let loop = GameLoop({
  *   update: function() {
  *     pool.update();

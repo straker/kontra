@@ -151,44 +151,14 @@ registerPlugin(Sprite, loggingPlugin);
 <p>For example, if you wish to add a function to run after a Sprites <code>collidesWidth()</code> function, the name of the intercept function would be <code>afterCollidesWidth</code> (note the capitalization of the <code>collidesWidth</code> function name). <code>beforeCollidesWidth</code> would run before the Sprites <code>collidesWidth()</code> function.</p>
 <p>A plugin can define any number of before and after intercept functions. When the plugin is registered for a Kontra object, only intercept functions that match a function name in the Kontra object will be intercepted.</p>
 <p>As the plugin author, you should not <a href="#registerPlugin">register</a> the plugin yourself. You should only export the plugin object and let the consumer register it.</p>
-<div class="tablist">
-  <ul role="tablist">
-    <li role="presentation" data-tab="global">
-      <button role="tab" id="how-to-create-a-plugin-global-tab">Global Object</button>
-    </li>
-    <li role="presentation" data-tab="es">
-      <button role="tab" id="how-to-create-a-plugin-es-tab">ES Module Import</button>
-    </li>
-    <li role="presentation" data-tab="bundle">
-      <button role="tab" id="how-to-create-a-plugin-bundle-tab">Module Bundler</button>
-    </li>
-    <li role="presentation"></li>
-  </ul>
-  <section role="tabpanel" aria-labelledby=how-to-create-a-plugin-global-tab data-tabpanel="global"><pre><code class="lang-js">// pluginCode.js
+<pre><code class="lang-js">// pluginCode.js
 const loggingPlugin = {
   afterCollidesWith(sprite, result, object) {
     console.log(&#39;collision between sprites!&#39;);
   }
 };
 export default loggingPlugin;
-</code></pre></section>
-  <section role="tabpanel" aria-labelledby=how-to-create-a-plugin-es-tab data-tabpanel="es"><pre><code class="lang-js">// pluginCode.js
-const loggingPlugin = {
-  afterCollidesWith(sprite, result, object) {
-    console.log(&#39;collision between sprites!&#39;);
-  }
-};
-export default loggingPlugin;
-</code></pre></section>
-  <section role="tabpanel" aria-labelledby=how-to-create-a-plugin-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">// pluginCode.js
-const loggingPlugin = {
-  afterCollidesWith(sprite, result, object) {
-    console.log(&#39;collision between sprites!&#39;);
-  }
-};
-export default loggingPlugin;
-</code></pre></section>
-</div>
+</code></pre>
 <div class="tablist">
   <ul role="tablist">
     <li role="presentation" data-tab="global">
@@ -283,20 +253,7 @@ sprite1.collidesWith(sprite2);  //=&gt; &#39;collision between sprites!&#39;; tr
 
           <p>A before intercept function can be used to modify or change the arguments that will be passed to the intercepted function.</p>
 <p>The function will be passed the <code>this</code> context of the intercepted object as well as all arguments of the original call. The function should either return an Array of the arguments if modifying them or return <code>null</code> or nothing if not modifying the arguments.</p>
-<div class="tablist">
-  <ul role="tablist">
-    <li role="presentation" data-tab="global">
-      <button role="tab" id="before-intercept-functions-global-tab">Global Object</button>
-    </li>
-    <li role="presentation" data-tab="es">
-      <button role="tab" id="before-intercept-functions-es-tab">ES Module Import</button>
-    </li>
-    <li role="presentation" data-tab="bundle">
-      <button role="tab" id="before-intercept-functions-bundle-tab">Module Bundler</button>
-    </li>
-    <li role="presentation"></li>
-  </ul>
-  <section role="tabpanel" aria-labelledby=before-intercept-functions-global-tab data-tabpanel="global"><pre><code class="lang-js">class MyObj {
+<pre><code class="lang-js">class MyObj {
   add(a, b) {
     return a + b;
   }
@@ -312,57 +269,9 @@ registerPlugin(MyObj, {
 
 const obj = new MyObj();
 obj.add(1, 2);  //=&gt; 6
-</code></pre></section>
-  <section role="tabpanel" aria-labelledby=before-intercept-functions-es-tab data-tabpanel="es"><pre><code class="lang-js">class MyObj {
-  add(a, b) {
-    return a + b;
-  }
-}
-
-// create a plugin that doubles the arguments before passing
-// them to the original add function
-registerPlugin(MyObj, {
-  beforeAdd(context, a, b) {
-    return [a * 2, b * 2];
-  }
-});
-
-const obj = new MyObj();
-obj.add(1, 2);  //=&gt; 6
-</code></pre></section>
-  <section role="tabpanel" aria-labelledby=before-intercept-functions-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">class MyObj {
-  add(a, b) {
-    return a + b;
-  }
-}
-
-// create a plugin that doubles the arguments before passing
-// them to the original add function
-registerPlugin(MyObj, {
-  beforeAdd(context, a, b) {
-    return [a * 2, b * 2];
-  }
-});
-
-const obj = new MyObj();
-obj.add(1, 2);  //=&gt; 6
-</code></pre></section>
-</div>
+</code></pre>
 <p>Multiple before intercept functions can be registered for the same function. All functions will be run in the order they were registered. The functions return value will be passed to the next function. If the function doesn&#39;t modify the arguments (returned <code>null</code> or nothing) then the functions parameters will be passed to the next function instead.</p>
-<div class="tablist">
-  <ul role="tablist">
-    <li role="presentation" data-tab="global">
-      <button role="tab" id="before-intercept-functions-global-tab">Global Object</button>
-    </li>
-    <li role="presentation" data-tab="es">
-      <button role="tab" id="before-intercept-functions-es-tab">ES Module Import</button>
-    </li>
-    <li role="presentation" data-tab="bundle">
-      <button role="tab" id="before-intercept-functions-bundle-tab">Module Bundler</button>
-    </li>
-    <li role="presentation"></li>
-  </ul>
-  <section role="tabpanel" aria-labelledby=before-intercept-functions-global-tab data-tabpanel="global"><pre><code class="lang-js">class MyObj {
+<pre><code class="lang-js">class MyObj {
   add(a, b) {
     return a + b;
   }
@@ -384,54 +293,7 @@ registerPlugin(MyObj, {
 
 const obj = new MyObj();
 obj.add(1, 2);  //=&gt; &#39;add passed: 1, 2&#39;; 6
-</code></pre></section>
-  <section role="tabpanel" aria-labelledby=before-intercept-functions-es-tab data-tabpanel="es"><pre><code class="lang-js">class MyObj {
-  add(a, b) {
-    return a + b;
-  }
-}
-
-// log the arguments of the call and pass them unchanged to
-// the next plugin
-registerPlugin(MyObj, {
-  beforeAdd(context, a, b) {
-    console.log(`add passed: ${a}, ${b}`);
-  }
-});
-
-registerPlugin(MyObj, {
-  beforeAdd(context, a, b) {  // receives a=1 and b=2
-    return [a * 2, b * 2];
-  }
-});
-
-const obj = new MyObj();
-obj.add(1, 2);  //=&gt; &#39;add passed: 1, 2&#39;; 6
-</code></pre></section>
-  <section role="tabpanel" aria-labelledby=before-intercept-functions-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">class MyObj {
-  add(a, b) {
-    return a + b;
-  }
-}
-
-// log the arguments of the call and pass them unchanged to
-// the next plugin
-registerPlugin(MyObj, {
-  beforeAdd(context, a, b) {
-    console.log(`add passed: ${a}, ${b}`);
-  }
-});
-
-registerPlugin(MyObj, {
-  beforeAdd(context, a, b) {  // receives a=1 and b=2
-    return [a * 2, b * 2];
-  }
-});
-
-const obj = new MyObj();
-obj.add(1, 2);  //=&gt; &#39;add passed: 1, 2&#39;; 6
-</code></pre></section>
-</div>
+</code></pre>
         </section>
         <section>
           <h2 id="after-intercept functions">
@@ -443,20 +305,7 @@ obj.add(1, 2);  //=&gt; &#39;add passed: 1, 2&#39;; 6
 
           <p>An after intercept function can be used to modify or change the results of the intercepted function.</p>
 <p>The function will be passed the <code>this</code> context of the intercepted object, the result of the intercepted function, and the final arguments passed to the intercepted function. The function should either return a value if modifying the result or return <code>null</code> or nothing if not modifying the result.</p>
-<div class="tablist">
-  <ul role="tablist">
-    <li role="presentation" data-tab="global">
-      <button role="tab" id="after-intercept-functions-global-tab">Global Object</button>
-    </li>
-    <li role="presentation" data-tab="es">
-      <button role="tab" id="after-intercept-functions-es-tab">ES Module Import</button>
-    </li>
-    <li role="presentation" data-tab="bundle">
-      <button role="tab" id="after-intercept-functions-bundle-tab">Module Bundler</button>
-    </li>
-    <li role="presentation"></li>
-  </ul>
-  <section role="tabpanel" aria-labelledby=after-intercept-functions-global-tab data-tabpanel="global"><pre><code class="lang-js">class MyObj {
+<pre><code class="lang-js">class MyObj {
   add(a, b) {
     return a + b;
   }
@@ -471,55 +320,9 @@ registerPlugin(MyObj, {
 
 const obj = new MyObj();
 obj.add(1, 2);  //=&gt; 6
-</code></pre></section>
-  <section role="tabpanel" aria-labelledby=after-intercept-functions-es-tab data-tabpanel="es"><pre><code class="lang-js">class MyObj {
-  add(a, b) {
-    return a + b;
-  }
-}
-
-// create a plugin that doubles the result
-registerPlugin(MyObj, {
-  afterAdd(context, result, a, b) {
-    return result * 2;
-  }
-});
-
-const obj = new MyObj();
-obj.add(1, 2);  //=&gt; 6
-</code></pre></section>
-  <section role="tabpanel" aria-labelledby=after-intercept-functions-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">class MyObj {
-  add(a, b) {
-    return a + b;
-  }
-}
-
-// create a plugin that doubles the result
-registerPlugin(MyObj, {
-  afterAdd(context, result, a, b) {
-    return result * 2;
-  }
-});
-
-const obj = new MyObj();
-obj.add(1, 2);  //=&gt; 6
-</code></pre></section>
-</div>
+</code></pre>
 <p>Multiple after intercept functions can be registered for the same function. All functions will be run in the order they were registered. Each functions return value will be passed to the next function. If the function doesn&#39;t modify the result (returned <code>null</code> or nothing) then the functions parameters will be passed to the next function instead.</p>
-<div class="tablist">
-  <ul role="tablist">
-    <li role="presentation" data-tab="global">
-      <button role="tab" id="after-intercept-functions-global-tab">Global Object</button>
-    </li>
-    <li role="presentation" data-tab="es">
-      <button role="tab" id="after-intercept-functions-es-tab">ES Module Import</button>
-    </li>
-    <li role="presentation" data-tab="bundle">
-      <button role="tab" id="after-intercept-functions-bundle-tab">Module Bundler</button>
-    </li>
-    <li role="presentation"></li>
-  </ul>
-  <section role="tabpanel" aria-labelledby=after-intercept-functions-global-tab data-tabpanel="global"><pre><code class="lang-js">class MyObj {
+<pre><code class="lang-js">class MyObj {
   add(a, b) {
     return a + b;
   }
@@ -541,54 +344,7 @@ registerPlugin(MyObj, {
 
 const obj = new MyObj();
 obj.add(1, 2);  //=&gt; &#39;add passed: 1, 2 and returned 3&#39;; 6
-</code></pre></section>
-  <section role="tabpanel" aria-labelledby=after-intercept-functions-es-tab data-tabpanel="es"><pre><code class="lang-js">class MyObj {
-  add(a, b) {
-    return a + b;
-  }
-}
-
-// log the arguments of the call and pass them unchanged to
-// the next plugin
-registerPlugin(MyObj, {
-  afterAdd(context, result, a, b) {
-    console.log(`add passed: ${a}, ${b} and returned ${result}`);
-  }
-});
-
-registerPlugin(MyObj, {
-  afterAdd(context, result, a, b) {  // receives result=3
-    return result * 2;
-  }
-});
-
-const obj = new MyObj();
-obj.add(1, 2);  //=&gt; &#39;add passed: 1, 2 and returned 3&#39;; 6
-</code></pre></section>
-  <section role="tabpanel" aria-labelledby=after-intercept-functions-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">class MyObj {
-  add(a, b) {
-    return a + b;
-  }
-}
-
-// log the arguments of the call and pass them unchanged to
-// the next plugin
-registerPlugin(MyObj, {
-  afterAdd(context, result, a, b) {
-    console.log(`add passed: ${a}, ${b} and returned ${result}`);
-  }
-});
-
-registerPlugin(MyObj, {
-  afterAdd(context, result, a, b) {  // receives result=3
-    return result * 2;
-  }
-});
-
-const obj = new MyObj();
-obj.add(1, 2);  //=&gt; &#39;add passed: 1, 2 and returned 3&#39;; 6
-</code></pre></section>
-</div>
+</code></pre>
         </section>
 
         <section>

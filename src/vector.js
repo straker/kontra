@@ -38,6 +38,8 @@ class Vector {
    * Clamp the Vector between two points, preventing `x` and `y` from going below or above the minimum and maximum values. Perfect for keeping a sprite from going outside the game boundaries.
    *
    * ```js
+   * import { Vector } from 'kontra';
+   *
    * let vector = Vector(100, 200);
    * vector.clamp(0, 0, 200, 300);
    *

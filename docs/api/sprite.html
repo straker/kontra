@@ -921,19 +921,19 @@ sprite.render();
     </li>
     <li role="presentation"></li>
   </ul>
-  <section role="tabpanel" aria-labelledby=extending-a-sprite-global-tab data-tabpanel="global"><pre><code class="lang-js">import { Sprite } from kontra;
+  <section role="tabpanel" aria-labelledby=extending-a-sprite-global-tab data-tabpanel="global"><pre><code class="lang-js">let { Sprite } = kontra;
 
 class CustomSprite extends Sprite.class {
   // ...
 }
 </code></pre></section>
-  <section role="tabpanel" aria-labelledby=extending-a-sprite-es-tab data-tabpanel="es"><pre><code class="lang-js">import { Sprite } from kontra;
+  <section role="tabpanel" aria-labelledby=extending-a-sprite-es-tab data-tabpanel="es"><pre><code class="lang-js">import { Sprite } from 'path/to/kontra.mjs';
 
 class CustomSprite extends Sprite.class {
   // ...
 }
 </code></pre></section>
-  <section role="tabpanel" aria-labelledby=extending-a-sprite-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">import { Sprite } from kontra;
+  <section role="tabpanel" aria-labelledby=extending-a-sprite-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">import { Sprite } from &#39;kontra&#39;;
 
 class CustomSprite extends Sprite.class {
   // ...
@@ -1333,6 +1333,7 @@ sprite.playAnimation(&#39;idle&#39;);
     <li role="presentation"></li>
   </ul>
   <section role="tabpanel" aria-labelledby=collideswith-global-tab data-tabpanel="global"><pre><code class="lang-js">let { Sprite } = kontra;
+
 let sprite = Sprite({
   x: 100,
   y: 200,
@@ -1354,6 +1355,7 @@ sprite2.x = 115;
 sprite.collidesWith(sprite2);  //=&gt; true
 </code></pre></section>
   <section role="tabpanel" aria-labelledby=collideswith-es-tab data-tabpanel="es"><pre><code class="lang-js">import { Sprite } from 'path/to/kontra.mjs';
+
 let sprite = Sprite({
   x: 100,
   y: 200,
@@ -1375,6 +1377,7 @@ sprite2.x = 115;
 sprite.collidesWith(sprite2);  //=&gt; true
 </code></pre></section>
   <section role="tabpanel" aria-labelledby=collideswith-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">import { Sprite } from &#39;kontra&#39;;
+
 let sprite = Sprite({
   x: 100,
   y: 200,

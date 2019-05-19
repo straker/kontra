@@ -76,7 +76,7 @@
             <li>
               <ul>
                 {{#each otherSections}}
-                <li><a href="/api/{{ ../id }}#{{ link }}">{{ name }}</a></li>
+                <li><a href="api/{{ ../id }}#{{ link }}">{{ name }}</a></li>
                 {{/each}}
               </ul>
             </li>
@@ -88,7 +88,7 @@
               <ul aria-labelledby="properties">
                 {{#each properties}}
                 <li>
-                  <a href="/api/{{ ../id }}#{{ name }}">
+                  <a href="api/{{ ../id }}#{{ name }}">
                     <span>{{#if memberof}}{{ memberof }}&#8203;.{{/if}}{{ name }}</span>
                   </a>
                 </li>
@@ -103,7 +103,7 @@
               <ul aria-labelledby="methods">
                 {{#each methods}}
                 <li>
-                  <a href="/api/{{ ../id }}#{{ name }}">
+                  <a href="api/{{ ../id }}#{{ name }}">
                     <span>{{#if memberof}}{{ memberof }}&#8203;.{{/if}}{{ name }}(&#8203;{{ paramList }})</span>
                   </a>
                 </li>
@@ -134,7 +134,7 @@
         {{#each methodsAndProperties}}
         <section>
           <h2 id="{{ name }}">
-            <a href="/api/{{ ../id }}#{{ name }}" class="section-link">
+            <a href="api/{{ ../id }}#{{ name }}" class="section-link">
               <span>{{#if memberof}}{{ memberof }}&#8203;.{{/if}}{{ name }}
               {{~#if function}}(&#8203;{{ paramList }}){{/if}}</span>
               <span aria-hidden="true">#</span>

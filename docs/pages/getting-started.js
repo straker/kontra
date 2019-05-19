@@ -1,5 +1,7 @@
 /**
 
+Kontra is written for modern ES6 capable browsers. If you need to run it in an ES5 browser, you will have to [transpile](https://babeljs.io/) and polyfill needed ES6 features (Assets requires `WeakMap` and `Promise`).
+
 ## Download
 
 - Global object [production](https://raw.githubusercontent.com/straker/kontra/master/kontra.min.js) and [development](https://raw.githubusercontent.com/straker/kontra/master/kontra.js) versions

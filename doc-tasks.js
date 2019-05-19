@@ -325,6 +325,11 @@ function livingcssPreprocess(context, template, Handlebars) {
     navbar = context.navbar;
   }
 
+  // fix lower casing of names
+  if (context.id === 'gameloop') context.id = 'gameLoop';
+  else if (context.id === 'spritesheet') context.id = 'spriteSheet';
+  else if (context.id === 'tileengine') context.id = 'tileEngine';
+
   // create 4 different sections that can be used to organize the page
   context.otherSections = [];
   context.methods = [];

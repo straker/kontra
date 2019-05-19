@@ -296,6 +296,49 @@ export default function TileEngine(properties = {}) {
       return -1;
     },
 
+    /**
+     * Set the tile at the specified layer using either x and y coordinates or row and column coordinates.
+     *
+     * ```js
+     * import { TileEngine } from 'kontra';
+     *
+     * let tileEngine = TileEngine({
+     *   tilewidth: 32,
+     *   tileheight: 32,
+     *   width: 4,
+     *   height: 4,
+     *   tilesets: [{
+     *     // ...
+     *   }],
+     *   layers: [{
+     *     name: 'collision',
+     *     data: [ 0,0,0,0,
+     *             0,1,4,0,
+     *             0,2,5,0,
+     *             0,0,0,0 ]
+     *   }]
+     * });
+     *
+     * tileEngine.setTileAtLayer('collision', {row: 2, col: 1}, 10);
+     * tileEngine.tileAtLayer('collision', {row: 2, col: 1});  //=> 10
+     * ```
+     * @memberof TileEngine
+     * @function setTileAtLayer
+     *
+     * @param {String} name - Name of the layer.
+     * @param {Object} position - Position of the tile in either {x, y} or {row, col} coordinates.
+     * @param {Number} tile - Tile index to set.
+     */
+    setTileAtLayer(name, position, tile) {
+      let row = position.row || getRow(position.y);
+      let col = position.col || getCol(position.x);
+
+      if (layerMap[name]) {
+        layerMap[name].data[col + row * tileEngine.width] = tile;
+        prerender();
+      }
+    },
+
     // expose for testing
     _r: renderLayer,
 

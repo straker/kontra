@@ -198,6 +198,52 @@ describe('tileEngine', () => {
 
 
   // --------------------------------------------------
+  // tileEngine.setTileAtLayer
+  // --------------------------------------------------
+  describe('setTileAtLayer', () => {
+    let tileEngine;
+
+    beforeEach(() => {
+      tileEngine = TileEngine({
+        tilewidth: 10,
+        tileheight: 10,
+        width: 50,
+        height: 50,
+        tilesets: [{
+          image: new Image()
+        }],
+        layers: [{
+          name: 'test',
+          data: [0,0,1,0,0]
+        }]
+      });
+    });
+
+    it('should set the tile using x, y coordinates', () => {
+      tileEngine.setTileAtLayer('test', {x: 0, y: 0}, 5);
+      expect(tileEngine.tileAtLayer('test', {x: 0, y: 0})).to.equal(5);
+    });
+
+    it('should set the tile using row, col coordinates', () => {
+      tileEngine.setTileAtLayer('test', {row: 1, col: 2}, 3);
+      expect(tileEngine.tileAtLayer('test', {row: 1, col: 2})).to.equal(3);
+    });
+
+    it('should not throw if there is no layer by the provided name', () => {
+      function fn() {
+        tileEngine.setTileAtLayer('foo', {row: 1, col: 2}, 3);
+      }
+
+      expect(fn).to.not.throw();
+    });
+
+  });
+
+
+
+
+
+  // --------------------------------------------------
   // tileEngine.renderLayer
   // --------------------------------------------------
   describe('renderLayer', () => {

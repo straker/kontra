@@ -109,6 +109,8 @@ function getContext() {
  * Initialize the library and set up the canvas. Typically you will call `init()` as the first thing and give it the canvas to use. This will allow all Kontra objects to reference the canvas when created.
  *
  * ```js
+ * import { init } from 'kontra';
+ *
  * let { canvas, context } = init('game');
  * ```
  * @function init
@@ -1573,13 +1575,7 @@ function untrack(objects) {
  * Check to see if the pointer is currently over the object. Since multiple objects may be rendered on top of one another, only the top most object under the pointer will return true.
  *
  * ```js
- * import {
- *   initPointer,
- *   track,
- *   pointer,
- *   pointerOver,
- *   Sprite
- * } from 'kontra';
+ * import { initPointer, track, pointer, pointerOver, Sprite } from 'kontra';
  *
  * initPointer();
  *
@@ -1751,6 +1747,7 @@ class Pool {
    * If you want to control when the sprite is ready for reuse, pass `Infinity` for `ttl`. You'll need to set the sprites `ttl` to `0` when you're ready for the sprite to be reused.
    *
    * ```js
+   * // exclude-tablist
    * let sprite = pool.get({
    *   // the object will get these properties and values
    *   x: 100,
@@ -2243,6 +2240,8 @@ class Vector {
    * Clamp the Vector between two points, preventing `x` and `y` from going below or above the minimum and maximum values. Perfect for keeping a sprite from going outside the game boundaries.
    *
    * ```js
+   * import { Vector } from 'kontra';
+   *
    * let vector = Vector(100, 200);
    * vector.clamp(0, 0, 200, 300);
    *
@@ -2627,6 +2626,7 @@ class Sprite {
    *
    * ```js
    * import { Sprite } from 'kontra';
+   *
    * let sprite = Sprite({
    *   x: 100,
    *   y: 200,
@@ -3453,6 +3453,49 @@ function TileEngine(properties = {}) {
       }
 
       return -1;
+    },
+
+    /**
+     * Set the tile at the specified layer using either x and y coordinates or row and column coordinates.
+     *
+     * ```js
+     * import { TileEngine } from 'kontra';
+     *
+     * let tileEngine = TileEngine({
+     *   tilewidth: 32,
+     *   tileheight: 32,
+     *   width: 4,
+     *   height: 4,
+     *   tilesets: [{
+     *     // ...
+     *   }],
+     *   layers: [{
+     *     name: 'collision',
+     *     data: [ 0,0,0,0,
+     *             0,1,4,0,
+     *             0,2,5,0,
+     *             0,0,0,0 ]
+     *   }]
+     * });
+     *
+     * tileEngine.setTileAtLayer('collision', {row: 2, col: 1}, 10);
+     * tileEngine.tileAtLayer('collision', {row: 2, col: 1});  //=> 10
+     * ```
+     * @memberof TileEngine
+     * @function setTileAtLayer
+     *
+     * @param {String} name - Name of the layer.
+     * @param {Object} position - Position of the tile in either {x, y} or {row, col} coordinates.
+     * @param {Number} tile - Tile index to set.
+     */
+    setTileAtLayer(name, position, tile) {
+      let row = position.row || getRow(position.y);
+      let col = position.col || getCol(position.x);
+
+      if (layerMap[name]) {
+        layerMap[name].data[col + row * tileEngine.width] = tile;
+        prerender();
+      }
     },
 
     // expose for testing

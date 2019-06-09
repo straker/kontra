@@ -481,11 +481,11 @@ class Sprite {
    *
    *     // change the velocity at the edges of the canvas
    *     if (this.x < 0 ||
-   *         this.x - this.width > this.context.canvas.width) {
+   *         this.x + this.width > this.context.canvas.width) {
    *       this.dx = -this.dx;
    *     }
    *     if (this.y < 0 ||
-   *         this.y - this.height > this.context.canvas.height) {
+   *         this.y + this.height > this.context.canvas.height) {
    *       this.dy = -this.dy;
    *     }
    *   }

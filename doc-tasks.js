@@ -68,7 +68,7 @@ function addSectionAndPage() {
     });
   }
 
-  this.comment.description = parseType(this.comment.description);
+  this.comment.description = resolveKontraType(this.comment.description);
 }
 
 /**
@@ -107,6 +107,18 @@ function buildImports(section) {
     });
 }
 
+function resolveKontraType(string, isArray) {
+  // parse kontra object types and turn them into links
+  return string.replace(kontraTypeRegex, function(match, p1) {
+    let url = p1;
+    if (isArray) {
+      url = url.substring(0, url.length - 1);
+    }
+
+    return `<a href="${url}">${p1}</a>`
+  });
+}
+
 /**
  * Parse information about the type.
  * @param {String} type
@@ -126,15 +138,7 @@ function parseType(type) {
     });
   }
 
-  // parse kontra object types and turn them into links
-  type = type.replace(kontraTypeRegex, function(match, p1) {
-    let url = p1;
-    if (isArray) {
-      url = url.substring(0, url.length - 1);
-    }
-
-    return `<a href="${url}">${p1}</a>`
-  });
+  type = resolveKontraType(type, isArray);
 
   // parse any types
   if (type === '*') {
@@ -182,7 +186,7 @@ let tags = {
     }
 
     type = parseType(type);
-    description = `${type}. ${parseType(description)}${entry.default ? ` Defaults to \`${entry.default}\`.` : ''}`;
+    description = `${type}. ${resolveKontraType(description)}${entry.default ? ` Defaults to \`${entry.default}\`.` : ''}`;
 
     entry.name = name;
     entry.description = marked(description);
@@ -200,7 +204,7 @@ let tags = {
   // output information about the function return value
   returns: function() {
     let type = parseType(this.tag.type);
-    let description = parseType(this.tag.description);
+    let description = resolveKontraType(this.tag.description);
 
     this.block.returns = {
       name: '',

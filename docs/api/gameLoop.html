@@ -84,7 +84,7 @@
     </li>
     <li role="presentation"></li>
   </ul>
-  <section role="tabpanel" aria-labelledby=gameloop-global-tab data-tabpanel="global"><pre><code class="lang-js">let { Sprite, GameLoop } = kontra;
+  <section role="tabpanel" aria-labelledby=gameloop-global-tab data-tabpanel="global"><pre><code class="language-js">let { Sprite, GameLoop } = kontra;
 
 let sprite = Sprite({
   x: 100,
@@ -109,9 +109,8 @@ let loop = GameLoop({
   }
 });
 
-loop.start();
-</code></pre></section>
-  <section role="tabpanel" aria-labelledby=gameloop-es-tab data-tabpanel="es"><pre><code class="lang-js">import { Sprite, GameLoop } from 'path/to/kontra.mjs';
+loop.start();</code></pre></section>
+  <section role="tabpanel" aria-labelledby=gameloop-es-tab data-tabpanel="es"><pre><code class="language-js">import { Sprite, GameLoop } from 'path/to/kontra.mjs';
 
 let sprite = Sprite({
   x: 100,
@@ -136,9 +135,8 @@ let loop = GameLoop({
   }
 });
 
-loop.start();
-</code></pre></section>
-  <section role="tabpanel" aria-labelledby=gameloop-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">import { Sprite, GameLoop } from &#39;kontra&#39;;
+loop.start();</code></pre></section>
+  <section role="tabpanel" aria-labelledby=gameloop-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { Sprite, GameLoop } from &#39;kontra&#39;;
 
 let sprite = Sprite({
   x: 100,
@@ -163,8 +161,7 @@ let loop = GameLoop({
   }
 });
 
-loop.start();
-</code></pre></section>
+loop.start();</code></pre></section>
 </div>
         <h3 id="title-GameLoop"><span class="visually-hidden">GameLoop</span> Parameters</span></h3>
         <dl aria-labelledby="title-GameLoop">
@@ -268,7 +265,7 @@ loop.start();
     </li>
     <li role="presentation"></li>
   </ul>
-  <section role="tabpanel" aria-labelledby=isstopped-global-tab data-tabpanel="global"><pre><code class="lang-js">let { GameLoop } = kontra;
+  <section role="tabpanel" aria-labelledby=isstopped-global-tab data-tabpanel="global"><pre><code class="language-js">let { GameLoop } = kontra;
 
 let loop = GameLoop({
   // ...
@@ -279,9 +276,8 @@ loop.start();
 console.log(loop.isStopped);  //=&gt; false
 
 loop.stop();
-console.log(loop.isStopped);  //=&gt; true
-</code></pre></section>
-  <section role="tabpanel" aria-labelledby=isstopped-es-tab data-tabpanel="es"><pre><code class="lang-js">import { GameLoop } from 'path/to/kontra.mjs';
+console.log(loop.isStopped);  //=&gt; true</code></pre></section>
+  <section role="tabpanel" aria-labelledby=isstopped-es-tab data-tabpanel="es"><pre><code class="language-js">import { GameLoop } from 'path/to/kontra.mjs';
 
 let loop = GameLoop({
   // ...
@@ -292,9 +288,8 @@ loop.start();
 console.log(loop.isStopped);  //=&gt; false
 
 loop.stop();
-console.log(loop.isStopped);  //=&gt; true
-</code></pre></section>
-  <section role="tabpanel" aria-labelledby=isstopped-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">import { GameLoop } from &#39;kontra&#39;;
+console.log(loop.isStopped);  //=&gt; true</code></pre></section>
+  <section role="tabpanel" aria-labelledby=isstopped-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { GameLoop } from &#39;kontra&#39;;
 
 let loop = GameLoop({
   // ...
@@ -305,8 +300,7 @@ loop.start();
 console.log(loop.isStopped);  //=&gt; false
 
 loop.stop();
-console.log(loop.isStopped);  //=&gt; true
-</code></pre></section>
+console.log(loop.isStopped);  //=&gt; true</code></pre></section>
 </div>
           
         </section>

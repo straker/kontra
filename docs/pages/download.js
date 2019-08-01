@@ -8,7 +8,7 @@ Download the latest version of Kontra.
 - [Global object development version](https://raw.githubusercontent.com/straker/kontra/master/kontra.js)
 - [ES Module production version](https://raw.githubusercontent.com/straker/kontra/master/kontra.min.mjs)
 - [ES Module development version](https://raw.githubusercontent.com/straker/kontra/master/kontra.mjs)
-- [TGZ file](https://registry.npmjs.org/kontra/-/kontra-{{ packageVersion }}.tgz)
+- [TGZ file](https://registry.npmjs.org/kontra/-/kontra-__packageVersion__.tgz)
 - [Github repo](https://github.com/straker/kontra)
 
 ## Package mangers
@@ -21,21 +21,21 @@ Download the latest version of Kontra.
 ### Global Object
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/kontra@{{ packageVersion }}/kontra.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/kontra@__packageVersion__/kontra.min.js"></script>
 ```
 ```html
-<script src="https://cdn.jsdelivr.net/npm/kontra@{{ packageVersion }}/kontra.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/kontra@__packageVersion__/kontra.js"></script>
 ```
 
 ### ES Module Import
 
 ```js
 // exclude-tablist
-import kontra from 'https://cdn.jsdelivr.net/npm/kontra@{{ packageVersion }}/kontra.min.mjs';
+import kontra from 'https://cdn.jsdelivr.net/npm/kontra@__packageVersion__/kontra.min.mjs';
 ```
 ```js
 // exclude-tablist
-import kontra from 'https://cdn.jsdelivr.net/npm/kontra@{{ packageVersion }}/kontra.mjs';
+import kontra from 'https://cdn.jsdelivr.net/npm/kontra@__packageVersion__/kontra.mjs';
 ```
 
 ## Custom Builds

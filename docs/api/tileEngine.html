@@ -749,7 +749,7 @@ load('assets/imgs/mapPack_tilesheet.png', 'assets/data/tile_engine_camera.json')
     </li>
     <li role="presentation"></li>
   </ul>
-  <section role="tabpanel" aria-labelledby=layercollideswith-global-tab data-tabpanel="global"><pre><code class="lang-js">let { TileEngine, Sprite } = kontra;
+  <section role="tabpanel" aria-labelledby=layercollideswith-global-tab data-tabpanel="global"><pre><code class="language-js">let { TileEngine, Sprite } = kontra;
 
 let tileEngine = TileEngine({
   tilewidth: 32,
@@ -779,9 +779,8 @@ tileEngine.layerCollidesWith(&#39;collision&#39;, sprite);  //=&gt; false
 
 sprite.y = 28;
 
-tileEngine.layerCollidesWith(&#39;collision&#39;, sprite);  //=&gt; true
-</code></pre></section>
-  <section role="tabpanel" aria-labelledby=layercollideswith-es-tab data-tabpanel="es"><pre><code class="lang-js">import { TileEngine, Sprite } from 'path/to/kontra.mjs';
+tileEngine.layerCollidesWith(&#39;collision&#39;, sprite);  //=&gt; true</code></pre></section>
+  <section role="tabpanel" aria-labelledby=layercollideswith-es-tab data-tabpanel="es"><pre><code class="language-js">import { TileEngine, Sprite } from 'path/to/kontra.mjs';
 
 let tileEngine = TileEngine({
   tilewidth: 32,
@@ -811,9 +810,8 @@ tileEngine.layerCollidesWith(&#39;collision&#39;, sprite);  //=&gt; false
 
 sprite.y = 28;
 
-tileEngine.layerCollidesWith(&#39;collision&#39;, sprite);  //=&gt; true
-</code></pre></section>
-  <section role="tabpanel" aria-labelledby=layercollideswith-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">import { TileEngine, Sprite } from &#39;kontra&#39;;
+tileEngine.layerCollidesWith(&#39;collision&#39;, sprite);  //=&gt; true</code></pre></section>
+  <section role="tabpanel" aria-labelledby=layercollideswith-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { TileEngine, Sprite } from &#39;kontra&#39;;
 
 let tileEngine = TileEngine({
   tilewidth: 32,
@@ -843,8 +841,7 @@ tileEngine.layerCollidesWith(&#39;collision&#39;, sprite);  //=&gt; false
 
 sprite.y = 28;
 
-tileEngine.layerCollidesWith(&#39;collision&#39;, sprite);  //=&gt; true
-</code></pre></section>
+tileEngine.layerCollidesWith(&#39;collision&#39;, sprite);  //=&gt; true</code></pre></section>
 </div>
           <h3 id="title-layerCollidesWith"><span class="visually-hidden">layerCollidesWith</span> Parameters</span></h3>
           <dl aria-labelledby="title-layerCollidesWith">
@@ -952,7 +949,7 @@ tileEngine.layerCollidesWith(&#39;collision&#39;, sprite);  //=&gt; true
     </li>
     <li role="presentation"></li>
   </ul>
-  <section role="tabpanel" aria-labelledby=settileatlayer-global-tab data-tabpanel="global"><pre><code class="lang-js">let { TileEngine } = kontra;
+  <section role="tabpanel" aria-labelledby=settileatlayer-global-tab data-tabpanel="global"><pre><code class="language-js">let { TileEngine } = kontra;
 
 let tileEngine = TileEngine({
   tilewidth: 32,
@@ -972,9 +969,8 @@ let tileEngine = TileEngine({
 });
 
 tileEngine.setTileAtLayer(&#39;collision&#39;, {row: 2, col: 1}, 10);
-tileEngine.tileAtLayer(&#39;collision&#39;, {row: 2, col: 1});  //=&gt; 10
-</code></pre></section>
-  <section role="tabpanel" aria-labelledby=settileatlayer-es-tab data-tabpanel="es"><pre><code class="lang-js">import { TileEngine } from 'path/to/kontra.mjs';
+tileEngine.tileAtLayer(&#39;collision&#39;, {row: 2, col: 1});  //=&gt; 10</code></pre></section>
+  <section role="tabpanel" aria-labelledby=settileatlayer-es-tab data-tabpanel="es"><pre><code class="language-js">import { TileEngine } from 'path/to/kontra.mjs';
 
 let tileEngine = TileEngine({
   tilewidth: 32,
@@ -994,9 +990,8 @@ let tileEngine = TileEngine({
 });
 
 tileEngine.setTileAtLayer(&#39;collision&#39;, {row: 2, col: 1}, 10);
-tileEngine.tileAtLayer(&#39;collision&#39;, {row: 2, col: 1});  //=&gt; 10
-</code></pre></section>
-  <section role="tabpanel" aria-labelledby=settileatlayer-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">import { TileEngine } from &#39;kontra&#39;;
+tileEngine.tileAtLayer(&#39;collision&#39;, {row: 2, col: 1});  //=&gt; 10</code></pre></section>
+  <section role="tabpanel" aria-labelledby=settileatlayer-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { TileEngine } from &#39;kontra&#39;;
 
 let tileEngine = TileEngine({
   tilewidth: 32,
@@ -1016,8 +1011,7 @@ let tileEngine = TileEngine({
 });
 
 tileEngine.setTileAtLayer(&#39;collision&#39;, {row: 2, col: 1}, 10);
-tileEngine.tileAtLayer(&#39;collision&#39;, {row: 2, col: 1});  //=&gt; 10
-</code></pre></section>
+tileEngine.tileAtLayer(&#39;collision&#39;, {row: 2, col: 1});  //=&gt; 10</code></pre></section>
 </div>
           <h3 id="title-setTileAtLayer"><span class="visually-hidden">setTileAtLayer</span> Parameters</span></h3>
           <dl aria-labelledby="title-setTileAtLayer">
@@ -1086,7 +1080,7 @@ tileEngine.tileAtLayer(&#39;collision&#39;, {row: 2, col: 1});  //=&gt; 10
     </li>
     <li role="presentation"></li>
   </ul>
-  <section role="tabpanel" aria-labelledby=tileatlayer-global-tab data-tabpanel="global"><pre><code class="lang-js">let { TileEngine } = kontra;
+  <section role="tabpanel" aria-labelledby=tileatlayer-global-tab data-tabpanel="global"><pre><code class="language-js">let { TileEngine } = kontra;
 
 let tileEngine = TileEngine({
   tilewidth: 32,
@@ -1106,9 +1100,8 @@ let tileEngine = TileEngine({
 });
 
 tileEngine.tileAtLayer(&#39;collision&#39;, {x: 50, y: 50});  //=&gt; 1
-tileEngine.tileAtLayer(&#39;collision&#39;, {row: 2, col: 1});  //=&gt; 2
-</code></pre></section>
-  <section role="tabpanel" aria-labelledby=tileatlayer-es-tab data-tabpanel="es"><pre><code class="lang-js">import { TileEngine } from 'path/to/kontra.mjs';
+tileEngine.tileAtLayer(&#39;collision&#39;, {row: 2, col: 1});  //=&gt; 2</code></pre></section>
+  <section role="tabpanel" aria-labelledby=tileatlayer-es-tab data-tabpanel="es"><pre><code class="language-js">import { TileEngine } from 'path/to/kontra.mjs';
 
 let tileEngine = TileEngine({
   tilewidth: 32,
@@ -1128,9 +1121,8 @@ let tileEngine = TileEngine({
 });
 
 tileEngine.tileAtLayer(&#39;collision&#39;, {x: 50, y: 50});  //=&gt; 1
-tileEngine.tileAtLayer(&#39;collision&#39;, {row: 2, col: 1});  //=&gt; 2
-</code></pre></section>
-  <section role="tabpanel" aria-labelledby=tileatlayer-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">import { TileEngine } from &#39;kontra&#39;;
+tileEngine.tileAtLayer(&#39;collision&#39;, {row: 2, col: 1});  //=&gt; 2</code></pre></section>
+  <section role="tabpanel" aria-labelledby=tileatlayer-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { TileEngine } from &#39;kontra&#39;;
 
 let tileEngine = TileEngine({
   tilewidth: 32,
@@ -1150,8 +1142,7 @@ let tileEngine = TileEngine({
 });
 
 tileEngine.tileAtLayer(&#39;collision&#39;, {x: 50, y: 50});  //=&gt; 1
-tileEngine.tileAtLayer(&#39;collision&#39;, {row: 2, col: 1});  //=&gt; 2
-</code></pre></section>
+tileEngine.tileAtLayer(&#39;collision&#39;, {row: 2, col: 1});  //=&gt; 2</code></pre></section>
 </div>
           <h3 id="title-tileAtLayer"><span class="visually-hidden">tileAtLayer</span> Parameters</span></h3>
           <dl aria-labelledby="title-tileAtLayer">

@@ -7,7 +7,7 @@ const fs = require('fs');
 
 const optionalRegex = /^\[.*\]$/;
 const kontraTypeRegex = /kontra\.(\w+)/g;
-const packageVersionRegex = /{{\s?packageVersion\s?}}/g;
+const packageVersionRegex = /__packageVersion__/g;
 const excludeCodeRegex = /\s*\/\/ exclude-code:start[\s\S]*?\/\/ exclude-code:end/g;
 const excludeScriptRegex = /\s*\/\/ exclude-script:start[\r\n]([\s\S]*?[\r\n])\/\/ exclude-script:end[\r\n]/g;
 const codeRegex =/<pre>[\s\S]*?<code class="(.*)">([\s\S]*?)<\/code><\/pre>/g;
@@ -78,7 +78,7 @@ function buildImports(section) {
   section.description = section.description
     .replace(codeRegex, (match, className) => {
 
-      if (className === 'lang-js' && !match.includes('// exclude-tablist')) {
+      if (className === 'language-js' && !match.includes('// exclude-tablist')) {
         let globalImport = match.replace(importRegex, `let {$1} = kontra`);
         let esImport = match.replace(importRegex, `import {$1} from 'path/to/kontra.mjs'`);
         let bundlerImport = match;
@@ -302,9 +302,14 @@ let tags = {
     let contents = fs.readFileSync(this.tag.description);
 
     let parseComments = require( path.join(require.resolve('livingcss'), '../lib/parseComments.js') );
-    let tags = require( path.join(require.resolve('livingcss'), '../lib/tags.js') );
+    let livingCSSTags = require( path.join(require.resolve('livingcss'), '../lib/tags.js') );
+    let tagList = {
+      ...livingCSSTags,
+      example: tags.example,
+      sectionName: tags.sectionName
+    };
 
-    parseComments(contents.toString(), this.tag.description, tags, {
+    parseComments(contents.toString(), this.tag.description, tagList, {
       pages: this.pages,
       sections: this.sections
     });

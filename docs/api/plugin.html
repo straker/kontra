@@ -81,24 +81,21 @@
     </li>
     <li role="presentation"></li>
   </ul>
-  <section role="tabpanel" aria-labelledby=plugin-global-tab data-tabpanel="global"><pre><code class="lang-js">let { registerPlugin, Sprite } = kontra;
+  <section role="tabpanel" aria-labelledby=plugin-global-tab data-tabpanel="global"><pre><code class="language-js">let { registerPlugin, Sprite } = kontra;
 import loggingPlugin from &#39;path/to/plugin/code.js&#39;
 
 // register a plugin that adds logging to all Sprites
-registerPlugin(Sprite, loggingPlugin);
-</code></pre></section>
-  <section role="tabpanel" aria-labelledby=plugin-es-tab data-tabpanel="es"><pre><code class="lang-js">import { registerPlugin, Sprite } from 'path/to/kontra.mjs';
+registerPlugin(Sprite, loggingPlugin);</code></pre></section>
+  <section role="tabpanel" aria-labelledby=plugin-es-tab data-tabpanel="es"><pre><code class="language-js">import { registerPlugin, Sprite } from 'path/to/kontra.mjs';
 import loggingPlugin from &#39;path/to/plugin/code.js&#39;
 
 // register a plugin that adds logging to all Sprites
-registerPlugin(Sprite, loggingPlugin);
-</code></pre></section>
-  <section role="tabpanel" aria-labelledby=plugin-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">import { registerPlugin, Sprite } from &#39;kontra&#39;;
+registerPlugin(Sprite, loggingPlugin);</code></pre></section>
+  <section role="tabpanel" aria-labelledby=plugin-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { registerPlugin, Sprite } from &#39;kontra&#39;;
 import loggingPlugin from &#39;path/to/plugin/code.js&#39;
 
 // register a plugin that adds logging to all Sprites
-registerPlugin(Sprite, loggingPlugin);
-</code></pre></section>
+registerPlugin(Sprite, loggingPlugin);</code></pre></section>
 </div>
         
 
@@ -151,14 +148,13 @@ registerPlugin(Sprite, loggingPlugin);
 <p>For example, if you wish to add a function to run after a Sprites <code>collidesWidth()</code> function, the name of the intercept function would be <code>afterCollidesWidth</code> (note the capitalization of the <code>collidesWidth</code> function name). <code>beforeCollidesWidth</code> would run before the Sprites <code>collidesWidth()</code> function.</p>
 <p>A plugin can define any number of before and after intercept functions. When the plugin is registered for a Kontra object, only intercept functions that match a function name in the Kontra object will be intercepted.</p>
 <p>As the plugin author, you should not <a href="#registerPlugin">register</a> the plugin yourself. You should only export the plugin object and let the consumer register it.</p>
-<pre><code class="lang-js">// pluginCode.js
+<pre><code class="language-js">// pluginCode.js
 const loggingPlugin = {
   afterCollidesWith(sprite, result, object) {
     console.log(&#39;collision between sprites!&#39;);
   }
 };
-export default loggingPlugin;
-</code></pre>
+export default loggingPlugin;</code></pre>
 <div class="tablist">
   <ul role="tablist">
     <li role="presentation" data-tab="global">
@@ -172,7 +168,7 @@ export default loggingPlugin;
     </li>
     <li role="presentation"></li>
   </ul>
-  <section role="tabpanel" aria-labelledby=how-to-create-a-plugin-global-tab data-tabpanel="global"><pre><code class="lang-js">// consumerCode.js
+  <section role="tabpanel" aria-labelledby=how-to-create-a-plugin-global-tab data-tabpanel="global"><pre><code class="language-js">// consumerCode.js
 let { registerPlugin, Sprite } = kontra;
 import loggingPlugin from pluginCode.js;
 
@@ -193,9 +189,8 @@ let sprite2 = Sprite({
   height: 10
 });
 
-sprite1.collidesWith(sprite2);  //=&gt; &#39;collision between sprites!&#39;; true
-</code></pre></section>
-  <section role="tabpanel" aria-labelledby=how-to-create-a-plugin-es-tab data-tabpanel="es"><pre><code class="lang-js">// consumerCode.js
+sprite1.collidesWith(sprite2);  //=&gt; &#39;collision between sprites!&#39;; true</code></pre></section>
+  <section role="tabpanel" aria-labelledby=how-to-create-a-plugin-es-tab data-tabpanel="es"><pre><code class="language-js">// consumerCode.js
 import { registerPlugin, Sprite } from 'path/to/kontra.mjs';
 import loggingPlugin from pluginCode.js;
 
@@ -216,9 +211,8 @@ let sprite2 = Sprite({
   height: 10
 });
 
-sprite1.collidesWith(sprite2);  //=&gt; &#39;collision between sprites!&#39;; true
-</code></pre></section>
-  <section role="tabpanel" aria-labelledby=how-to-create-a-plugin-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">// consumerCode.js
+sprite1.collidesWith(sprite2);  //=&gt; &#39;collision between sprites!&#39;; true</code></pre></section>
+  <section role="tabpanel" aria-labelledby=how-to-create-a-plugin-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">// consumerCode.js
 import { registerPlugin, Sprite } from &#39;kontra&#39;;
 import loggingPlugin from pluginCode.js;
 
@@ -239,8 +233,7 @@ let sprite2 = Sprite({
   height: 10
 });
 
-sprite1.collidesWith(sprite2);  //=&gt; &#39;collision between sprites!&#39;; true
-</code></pre></section>
+sprite1.collidesWith(sprite2);  //=&gt; &#39;collision between sprites!&#39;; true</code></pre></section>
 </div>
         </section>
         <section>
@@ -253,7 +246,7 @@ sprite1.collidesWith(sprite2);  //=&gt; &#39;collision between sprites!&#39;; tr
 
           <p>A before intercept function can be used to modify or change the arguments that will be passed to the intercepted function.</p>
 <p>The function will be passed the <code>this</code> context of the intercepted object as well as all arguments of the original call. The function should either return an Array of the arguments if modifying them or return <code>null</code> or nothing if not modifying the arguments.</p>
-<pre><code class="lang-js">class MyObj {
+<pre><code class="language-js">class MyObj {
   add(a, b) {
     return a + b;
   }
@@ -268,10 +261,9 @@ registerPlugin(MyObj, {
 });
 
 const obj = new MyObj();
-obj.add(1, 2);  //=&gt; 6
-</code></pre>
+obj.add(1, 2);  //=&gt; 6</code></pre>
 <p>Multiple before intercept functions can be registered for the same function. All functions will be run in the order they were registered. The functions return value will be passed to the next function. If the function doesn&#39;t modify the arguments (returned <code>null</code> or nothing) then the functions parameters will be passed to the next function instead.</p>
-<pre><code class="lang-js">class MyObj {
+<pre><code class="language-js">class MyObj {
   add(a, b) {
     return a + b;
   }
@@ -292,8 +284,7 @@ registerPlugin(MyObj, {
 });
 
 const obj = new MyObj();
-obj.add(1, 2);  //=&gt; &#39;add passed: 1, 2&#39;; 6
-</code></pre>
+obj.add(1, 2);  //=&gt; &#39;add passed: 1, 2&#39;; 6</code></pre>
         </section>
         <section>
           <h2 id="after-intercept functions">
@@ -305,7 +296,7 @@ obj.add(1, 2);  //=&gt; &#39;add passed: 1, 2&#39;; 6
 
           <p>An after intercept function can be used to modify or change the results of the intercepted function.</p>
 <p>The function will be passed the <code>this</code> context of the intercepted object, the result of the intercepted function, and the final arguments passed to the intercepted function. The function should either return a value if modifying the result or return <code>null</code> or nothing if not modifying the result.</p>
-<pre><code class="lang-js">class MyObj {
+<pre><code class="language-js">class MyObj {
   add(a, b) {
     return a + b;
   }
@@ -319,10 +310,9 @@ registerPlugin(MyObj, {
 });
 
 const obj = new MyObj();
-obj.add(1, 2);  //=&gt; 6
-</code></pre>
+obj.add(1, 2);  //=&gt; 6</code></pre>
 <p>Multiple after intercept functions can be registered for the same function. All functions will be run in the order they were registered. Each functions return value will be passed to the next function. If the function doesn&#39;t modify the result (returned <code>null</code> or nothing) then the functions parameters will be passed to the next function instead.</p>
-<pre><code class="lang-js">class MyObj {
+<pre><code class="language-js">class MyObj {
   add(a, b) {
     return a + b;
   }
@@ -343,8 +333,7 @@ registerPlugin(MyObj, {
 });
 
 const obj = new MyObj();
-obj.add(1, 2);  //=&gt; &#39;add passed: 1, 2 and returned 3&#39;; 6
-</code></pre>
+obj.add(1, 2);  //=&gt; &#39;add passed: 1, 2 and returned 3&#39;; 6</code></pre>
         </section>
 
         <section>
@@ -369,33 +358,30 @@ obj.add(1, 2);  //=&gt; &#39;add passed: 1, 2 and returned 3&#39;; 6
     </li>
     <li role="presentation"></li>
   </ul>
-  <section role="tabpanel" aria-labelledby=extendobject-global-tab data-tabpanel="global"><pre><code class="lang-js">let { extendObject, Vector } = kontra;
+  <section role="tabpanel" aria-labelledby=extendobject-global-tab data-tabpanel="global"><pre><code class="language-js">let { extendObject, Vector } = kontra;
 
 // add a subtract function to all Vectors
 extendObject(Vector, {
   subtract(vec) {
     return Vector(this.x - vec.x, this.y - vec.y);
   }
-});
-</code></pre></section>
-  <section role="tabpanel" aria-labelledby=extendobject-es-tab data-tabpanel="es"><pre><code class="lang-js">import { extendObject, Vector } from 'path/to/kontra.mjs';
+});</code></pre></section>
+  <section role="tabpanel" aria-labelledby=extendobject-es-tab data-tabpanel="es"><pre><code class="language-js">import { extendObject, Vector } from 'path/to/kontra.mjs';
 
 // add a subtract function to all Vectors
 extendObject(Vector, {
   subtract(vec) {
     return Vector(this.x - vec.x, this.y - vec.y);
   }
-});
-</code></pre></section>
-  <section role="tabpanel" aria-labelledby=extendobject-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">import { extendObject, Vector } from &#39;kontra&#39;;
+});</code></pre></section>
+  <section role="tabpanel" aria-labelledby=extendobject-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { extendObject, Vector } from &#39;kontra&#39;;
 
 // add a subtract function to all Vectors
 extendObject(Vector, {
   subtract(vec) {
     return Vector(this.x - vec.x, this.y - vec.y);
   }
-});
-</code></pre></section>
+});</code></pre></section>
 </div>
           <h3 id="title-extendObject"><span class="visually-hidden">extendObject</span> Parameters</span></h3>
           <dl aria-labelledby="title-extendObject">

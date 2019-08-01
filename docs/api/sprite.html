@@ -921,24 +921,21 @@ sprite.render();
     </li>
     <li role="presentation"></li>
   </ul>
-  <section role="tabpanel" aria-labelledby=extending-a-sprite-global-tab data-tabpanel="global"><pre><code class="lang-js">let { Sprite } = kontra;
+  <section role="tabpanel" aria-labelledby=extending-a-sprite-global-tab data-tabpanel="global"><pre><code class="language-js">let { Sprite } = kontra;
 
 class CustomSprite extends Sprite.class {
   // ...
-}
-</code></pre></section>
-  <section role="tabpanel" aria-labelledby=extending-a-sprite-es-tab data-tabpanel="es"><pre><code class="lang-js">import { Sprite } from 'path/to/kontra.mjs';
+}</code></pre></section>
+  <section role="tabpanel" aria-labelledby=extending-a-sprite-es-tab data-tabpanel="es"><pre><code class="language-js">import { Sprite } from 'path/to/kontra.mjs';
 
 class CustomSprite extends Sprite.class {
   // ...
-}
-</code></pre></section>
-  <section role="tabpanel" aria-labelledby=extending-a-sprite-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">import { Sprite } from &#39;kontra&#39;;
+}</code></pre></section>
+  <section role="tabpanel" aria-labelledby=extending-a-sprite-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { Sprite } from &#39;kontra&#39;;
 
 class CustomSprite extends Sprite.class {
   // ...
-}
-</code></pre></section>
+}</code></pre></section>
 </div>
         </section>
 
@@ -976,7 +973,7 @@ class CustomSprite extends Sprite.class {
     </li>
     <li role="presentation"></li>
   </ul>
-  <section role="tabpanel" aria-labelledby=advance-global-tab data-tabpanel="global"><pre><code class="lang-js">let { Sprite } = kontra;
+  <section role="tabpanel" aria-labelledby=advance-global-tab data-tabpanel="global"><pre><code class="language-js">let { Sprite } = kontra;
 
 let sprite = Sprite({
   x: 100,
@@ -999,9 +996,8 @@ let sprite = Sprite({
       this.dy = -this.dy;
     }
   }
-});
-</code></pre></section>
-  <section role="tabpanel" aria-labelledby=advance-es-tab data-tabpanel="es"><pre><code class="lang-js">import { Sprite } from 'path/to/kontra.mjs';
+});</code></pre></section>
+  <section role="tabpanel" aria-labelledby=advance-es-tab data-tabpanel="es"><pre><code class="language-js">import { Sprite } from 'path/to/kontra.mjs';
 
 let sprite = Sprite({
   x: 100,
@@ -1024,9 +1020,8 @@ let sprite = Sprite({
       this.dy = -this.dy;
     }
   }
-});
-</code></pre></section>
-  <section role="tabpanel" aria-labelledby=advance-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">import { Sprite } from &#39;kontra&#39;;
+});</code></pre></section>
+  <section role="tabpanel" aria-labelledby=advance-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { Sprite } from &#39;kontra&#39;;
 
 let sprite = Sprite({
   x: 100,
@@ -1049,8 +1044,7 @@ let sprite = Sprite({
       this.dy = -this.dy;
     }
   }
-});
-</code></pre></section>
+});</code></pre></section>
 </div>
           <h3 id="title-advance"><span class="visually-hidden">advance</span> Parameters</span></h3>
           <dl aria-labelledby="title-advance">
@@ -1237,7 +1231,7 @@ sprite.render();
     </li>
     <li role="presentation"></li>
   </ul>
-  <section role="tabpanel" aria-labelledby=animations-global-tab data-tabpanel="global"><pre><code class="lang-js">let { Sprite, SpriteSheet } = kontra;
+  <section role="tabpanel" aria-labelledby=animations-global-tab data-tabpanel="global"><pre><code class="language-js">let { Sprite, SpriteSheet } = kontra;
 
 let spriteSheet = SpriteSheet({
   // ...
@@ -1258,9 +1252,8 @@ let sprite = Sprite({
   animations: spriteSheet.animations
 });
 
-sprite.playAnimation(&#39;idle&#39;);
-</code></pre></section>
-  <section role="tabpanel" aria-labelledby=animations-es-tab data-tabpanel="es"><pre><code class="lang-js">import { Sprite, SpriteSheet } from 'path/to/kontra.mjs';
+sprite.playAnimation(&#39;idle&#39;);</code></pre></section>
+  <section role="tabpanel" aria-labelledby=animations-es-tab data-tabpanel="es"><pre><code class="language-js">import { Sprite, SpriteSheet } from 'path/to/kontra.mjs';
 
 let spriteSheet = SpriteSheet({
   // ...
@@ -1281,9 +1274,8 @@ let sprite = Sprite({
   animations: spriteSheet.animations
 });
 
-sprite.playAnimation(&#39;idle&#39;);
-</code></pre></section>
-  <section role="tabpanel" aria-labelledby=animations-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">import { Sprite, SpriteSheet } from &#39;kontra&#39;;
+sprite.playAnimation(&#39;idle&#39;);</code></pre></section>
+  <section role="tabpanel" aria-labelledby=animations-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { Sprite, SpriteSheet } from &#39;kontra&#39;;
 
 let spriteSheet = SpriteSheet({
   // ...
@@ -1304,8 +1296,7 @@ let sprite = Sprite({
   animations: spriteSheet.animations
 });
 
-sprite.playAnimation(&#39;idle&#39;);
-</code></pre></section>
+sprite.playAnimation(&#39;idle&#39;);</code></pre></section>
 </div>
           
         </section>
@@ -1332,7 +1323,7 @@ sprite.playAnimation(&#39;idle&#39;);
     </li>
     <li role="presentation"></li>
   </ul>
-  <section role="tabpanel" aria-labelledby=collideswith-global-tab data-tabpanel="global"><pre><code class="lang-js">let { Sprite } = kontra;
+  <section role="tabpanel" aria-labelledby=collideswith-global-tab data-tabpanel="global"><pre><code class="language-js">let { Sprite } = kontra;
 
 let sprite = Sprite({
   x: 100,
@@ -1352,9 +1343,8 @@ sprite.collidesWith(sprite2);  //=&gt; false
 
 sprite2.x = 115;
 
-sprite.collidesWith(sprite2);  //=&gt; true
-</code></pre></section>
-  <section role="tabpanel" aria-labelledby=collideswith-es-tab data-tabpanel="es"><pre><code class="lang-js">import { Sprite } from 'path/to/kontra.mjs';
+sprite.collidesWith(sprite2);  //=&gt; true</code></pre></section>
+  <section role="tabpanel" aria-labelledby=collideswith-es-tab data-tabpanel="es"><pre><code class="language-js">import { Sprite } from 'path/to/kontra.mjs';
 
 let sprite = Sprite({
   x: 100,
@@ -1374,9 +1364,8 @@ sprite.collidesWith(sprite2);  //=&gt; false
 
 sprite2.x = 115;
 
-sprite.collidesWith(sprite2);  //=&gt; true
-</code></pre></section>
-  <section role="tabpanel" aria-labelledby=collideswith-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">import { Sprite } from &#39;kontra&#39;;
+sprite.collidesWith(sprite2);  //=&gt; true</code></pre></section>
+  <section role="tabpanel" aria-labelledby=collideswith-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { Sprite } from &#39;kontra&#39;;
 
 let sprite = Sprite({
   x: 100,
@@ -1396,8 +1385,7 @@ sprite.collidesWith(sprite2);  //=&gt; false
 
 sprite2.x = 115;
 
-sprite.collidesWith(sprite2);  //=&gt; true
-</code></pre></section>
+sprite.collidesWith(sprite2);  //=&gt; true</code></pre></section>
 </div>
 <p>If you need a different type of collision check, you can override this function by passing an argument by the same name.</p>
 <div class="tablist">
@@ -1413,7 +1401,7 @@ sprite.collidesWith(sprite2);  //=&gt; true
     </li>
     <li role="presentation"></li>
   </ul>
-  <section role="tabpanel" aria-labelledby=collideswith-global-tab data-tabpanel="global"><pre><code class="lang-js">// circle collision
+  <section role="tabpanel" aria-labelledby=collideswith-global-tab data-tabpanel="global"><pre><code class="language-js">// circle collision
 function collidesWith(object) {
   let dx = this.x - object.x;
   let dy = this.y - object.y;
@@ -1436,9 +1424,8 @@ let sprite2 = Sprite({
   collidesWith: collidesWith
 });
 
-sprite.collidesWith(sprite2);  //=&gt; true
-</code></pre></section>
-  <section role="tabpanel" aria-labelledby=collideswith-es-tab data-tabpanel="es"><pre><code class="lang-js">// circle collision
+sprite.collidesWith(sprite2);  //=&gt; true</code></pre></section>
+  <section role="tabpanel" aria-labelledby=collideswith-es-tab data-tabpanel="es"><pre><code class="language-js">// circle collision
 function collidesWith(object) {
   let dx = this.x - object.x;
   let dy = this.y - object.y;
@@ -1461,9 +1448,8 @@ let sprite2 = Sprite({
   collidesWith: collidesWith
 });
 
-sprite.collidesWith(sprite2);  //=&gt; true
-</code></pre></section>
-  <section role="tabpanel" aria-labelledby=collideswith-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">// circle collision
+sprite.collidesWith(sprite2);  //=&gt; true</code></pre></section>
+  <section role="tabpanel" aria-labelledby=collideswith-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">// circle collision
 function collidesWith(object) {
   let dx = this.x - object.x;
   let dy = this.y - object.y;
@@ -1486,8 +1472,7 @@ let sprite2 = Sprite({
   collidesWith: collidesWith
 });
 
-sprite.collidesWith(sprite2);  //=&gt; true
-</code></pre></section>
+sprite.collidesWith(sprite2);  //=&gt; true</code></pre></section>
 </div>
           <h3 id="title-collidesWith"><span class="visually-hidden">collidesWith</span> Parameters</span></h3>
           <dl aria-labelledby="title-collidesWith">
@@ -1581,7 +1566,7 @@ sprite.collidesWith(sprite2);  //=&gt; true
     </li>
     <li role="presentation"></li>
   </ul>
-  <section role="tabpanel" aria-labelledby=draw-global-tab data-tabpanel="global"><pre><code class="lang-js">let { Sprite } = kontra;
+  <section role="tabpanel" aria-labelledby=draw-global-tab data-tabpanel="global"><pre><code class="language-js">let { Sprite } = kontra;
 
 let sprite = Sprite({
  x: 290,
@@ -1601,9 +1586,8 @@ let sprite = Sprite({
  }
 });
 
-sprite.render();
-</code></pre></section>
-  <section role="tabpanel" aria-labelledby=draw-es-tab data-tabpanel="es"><pre><code class="lang-js">import { Sprite } from 'path/to/kontra.mjs';
+sprite.render();</code></pre></section>
+  <section role="tabpanel" aria-labelledby=draw-es-tab data-tabpanel="es"><pre><code class="language-js">import { Sprite } from 'path/to/kontra.mjs';
 
 let sprite = Sprite({
  x: 290,
@@ -1623,9 +1607,8 @@ let sprite = Sprite({
  }
 });
 
-sprite.render();
-</code></pre></section>
-  <section role="tabpanel" aria-labelledby=draw-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">import { Sprite } from &#39;kontra&#39;;
+sprite.render();</code></pre></section>
+  <section role="tabpanel" aria-labelledby=draw-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { Sprite } from &#39;kontra&#39;;
 
 let sprite = Sprite({
  x: 290,
@@ -1645,8 +1628,7 @@ let sprite = Sprite({
  }
 });
 
-sprite.render();
-</code></pre></section>
+sprite.render();</code></pre></section>
 </div>
           
         </section>
@@ -1750,7 +1732,7 @@ sprite.render();
     </li>
     <li role="presentation"></li>
   </ul>
-  <section role="tabpanel" aria-labelledby=playanimation-global-tab data-tabpanel="global"><pre><code class="lang-js">let { Sprite, SpriteSheet } = kontra;
+  <section role="tabpanel" aria-labelledby=playanimation-global-tab data-tabpanel="global"><pre><code class="language-js">let { Sprite, SpriteSheet } = kontra;
 
 let spriteSheet = SpriteSheet({
   // ...
@@ -1770,9 +1752,8 @@ let sprite = Sprite({
   animations: spriteSheet.animations
 });
 
-sprite.playAnimation(&#39;idle&#39;);
-</code></pre></section>
-  <section role="tabpanel" aria-labelledby=playanimation-es-tab data-tabpanel="es"><pre><code class="lang-js">import { Sprite, SpriteSheet } from 'path/to/kontra.mjs';
+sprite.playAnimation(&#39;idle&#39;);</code></pre></section>
+  <section role="tabpanel" aria-labelledby=playanimation-es-tab data-tabpanel="es"><pre><code class="language-js">import { Sprite, SpriteSheet } from 'path/to/kontra.mjs';
 
 let spriteSheet = SpriteSheet({
   // ...
@@ -1792,9 +1773,8 @@ let sprite = Sprite({
   animations: spriteSheet.animations
 });
 
-sprite.playAnimation(&#39;idle&#39;);
-</code></pre></section>
-  <section role="tabpanel" aria-labelledby=playanimation-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">import { Sprite, SpriteSheet } from &#39;kontra&#39;;
+sprite.playAnimation(&#39;idle&#39;);</code></pre></section>
+  <section role="tabpanel" aria-labelledby=playanimation-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { Sprite, SpriteSheet } from &#39;kontra&#39;;
 
 let spriteSheet = SpriteSheet({
   // ...
@@ -1814,8 +1794,7 @@ let sprite = Sprite({
   animations: spriteSheet.animations
 });
 
-sprite.playAnimation(&#39;idle&#39;);
-</code></pre></section>
+sprite.playAnimation(&#39;idle&#39;);</code></pre></section>
 </div>
           <h3 id="title-playAnimation"><span class="visually-hidden">playAnimation</span> Parameters</span></h3>
           <dl aria-labelledby="title-playAnimation">

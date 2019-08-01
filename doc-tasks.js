@@ -7,7 +7,7 @@ const fs = require('fs');
 
 const optionalRegex = /^\[.*\]$/;
 const kontraTypeRegex = /kontra\.(\w+)/g;
-const packageVersionRegex = /{{\s?packageVersion\s?}}/g;
+const packageVersionRegex = /__packageVersion__/g;
 const excludeCodeRegex = /\s*\/\/ exclude-code:start[\s\S]*?\/\/ exclude-code:end/g;
 const excludeScriptRegex = /\s*\/\/ exclude-script:start[\r\n]([\s\S]*?[\r\n])\/\/ exclude-script:end[\r\n]/g;
 const codeRegex =/<pre>[\s\S]*?<code class="(.*)">([\s\S]*?)<\/code><\/pre>/g;
@@ -309,14 +309,9 @@ let tags = {
       sectionName: tags.sectionName
     };
 
-    console.log('\n\n\n');
-    console.log('contents.toString():', contents.toString());
-
     parseComments(contents.toString(), this.tag.description, tagList, {
       pages: this.pages,
       sections: this.sections
-    }, function(block) {
-      console.log(block);
     });
   }
 };

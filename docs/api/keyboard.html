@@ -81,7 +81,7 @@
     </li>
     <li role="presentation"></li>
   </ul>
-  <section role="tabpanel" aria-labelledby=keyboard-global-tab data-tabpanel="global"><pre><code class="lang-js">let { initKeys, keyPressed } = kontra;
+  <section role="tabpanel" aria-labelledby=keyboard-global-tab data-tabpanel="global"><pre><code class="language-js">let { initKeys, keyPressed } = kontra;
 
 // this function must be called first before keyboard
 // functions will work
@@ -91,9 +91,8 @@ function update() {
   if (keyPressed(&#39;left&#39;)) {
     // move left
   }
-}
-</code></pre></section>
-  <section role="tabpanel" aria-labelledby=keyboard-es-tab data-tabpanel="es"><pre><code class="lang-js">import { initKeys, keyPressed } from 'path/to/kontra.mjs';
+}</code></pre></section>
+  <section role="tabpanel" aria-labelledby=keyboard-es-tab data-tabpanel="es"><pre><code class="language-js">import { initKeys, keyPressed } from 'path/to/kontra.mjs';
 
 // this function must be called first before keyboard
 // functions will work
@@ -103,9 +102,8 @@ function update() {
   if (keyPressed(&#39;left&#39;)) {
     // move left
   }
-}
-</code></pre></section>
-  <section role="tabpanel" aria-labelledby=keyboard-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">import { initKeys, keyPressed } from &#39;kontra&#39;;
+}</code></pre></section>
+  <section role="tabpanel" aria-labelledby=keyboard-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { initKeys, keyPressed } from &#39;kontra&#39;;
 
 // this function must be called first before keyboard
 // functions will work
@@ -115,8 +113,7 @@ function update() {
   if (keyPressed(&#39;left&#39;)) {
     // move left
   }
-}
-</code></pre></section>
+}</code></pre></section>
 </div>
         
 
@@ -207,7 +204,7 @@ function update() {
     </li>
     <li role="presentation"></li>
   </ul>
-  <section role="tabpanel" aria-labelledby=bindkeys-global-tab data-tabpanel="global"><pre><code class="lang-js">let { initKeys, bindKeys } = kontra;
+  <section role="tabpanel" aria-labelledby=bindkeys-global-tab data-tabpanel="global"><pre><code class="language-js">let { initKeys, bindKeys } = kontra;
 
 initKeys();
 
@@ -217,9 +214,8 @@ bindKeys(&#39;p&#39;, function(e) {
 bindKeys([&#39;enter&#39;, &#39;space&#39;], function(e) {
   e.preventDefault();
   // fire gun
-});
-</code></pre></section>
-  <section role="tabpanel" aria-labelledby=bindkeys-es-tab data-tabpanel="es"><pre><code class="lang-js">import { initKeys, bindKeys } from 'path/to/kontra.mjs';
+});</code></pre></section>
+  <section role="tabpanel" aria-labelledby=bindkeys-es-tab data-tabpanel="es"><pre><code class="language-js">import { initKeys, bindKeys } from 'path/to/kontra.mjs';
 
 initKeys();
 
@@ -229,9 +225,8 @@ bindKeys(&#39;p&#39;, function(e) {
 bindKeys([&#39;enter&#39;, &#39;space&#39;], function(e) {
   e.preventDefault();
   // fire gun
-});
-</code></pre></section>
-  <section role="tabpanel" aria-labelledby=bindkeys-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">import { initKeys, bindKeys } from &#39;kontra&#39;;
+});</code></pre></section>
+  <section role="tabpanel" aria-labelledby=bindkeys-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { initKeys, bindKeys } from &#39;kontra&#39;;
 
 initKeys();
 
@@ -241,8 +236,7 @@ bindKeys(&#39;p&#39;, function(e) {
 bindKeys([&#39;enter&#39;, &#39;space&#39;], function(e) {
   e.preventDefault();
   // fire gun
-});
-</code></pre></section>
+});</code></pre></section>
 </div>
           <h3 id="title-bindKeys"><span class="visually-hidden">bindKeys</span> Parameters</span></h3>
           <dl aria-labelledby="title-bindKeys">
@@ -288,30 +282,27 @@ bindKeys([&#39;enter&#39;, &#39;space&#39;], function(e) {
     </li>
     <li role="presentation"></li>
   </ul>
-  <section role="tabpanel" aria-labelledby=keymap-global-tab data-tabpanel="global"><pre><code class="lang-js">let { keyMap, bindKeys } = kontra;
+  <section role="tabpanel" aria-labelledby=keymap-global-tab data-tabpanel="global"><pre><code class="language-js">let { keyMap, bindKeys } = kontra;
 
 keyMap[34] = &#39;pageDown&#39;;
 
 bindKeys(&#39;pageDown&#39;, function(e) {
   // handle pageDown key
-});
-</code></pre></section>
-  <section role="tabpanel" aria-labelledby=keymap-es-tab data-tabpanel="es"><pre><code class="lang-js">import { keyMap, bindKeys } from 'path/to/kontra.mjs';
+});</code></pre></section>
+  <section role="tabpanel" aria-labelledby=keymap-es-tab data-tabpanel="es"><pre><code class="language-js">import { keyMap, bindKeys } from 'path/to/kontra.mjs';
 
 keyMap[34] = &#39;pageDown&#39;;
 
 bindKeys(&#39;pageDown&#39;, function(e) {
   // handle pageDown key
-});
-</code></pre></section>
-  <section role="tabpanel" aria-labelledby=keymap-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">import { keyMap, bindKeys } from &#39;kontra&#39;;
+});</code></pre></section>
+  <section role="tabpanel" aria-labelledby=keymap-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { keyMap, bindKeys } from &#39;kontra&#39;;
 
 keyMap[34] = &#39;pageDown&#39;;
 
 bindKeys(&#39;pageDown&#39;, function(e) {
   // handle pageDown key
-});
-</code></pre></section>
+});</code></pre></section>
 </div>
           
         </section>
@@ -337,7 +328,7 @@ bindKeys(&#39;pageDown&#39;, function(e) {
     </li>
     <li role="presentation"></li>
   </ul>
-  <section role="tabpanel" aria-labelledby=keypressed-global-tab data-tabpanel="global"><pre><code class="lang-js">let { Sprite, initKeys, keyPressed } = kontra;
+  <section role="tabpanel" aria-labelledby=keypressed-global-tab data-tabpanel="global"><pre><code class="language-js">let { Sprite, initKeys, keyPressed } = kontra;
 
 initKeys();
 
@@ -357,9 +348,8 @@ let sprite = Sprite({
       // down arrow pressed
     }
   }
-});
-</code></pre></section>
-  <section role="tabpanel" aria-labelledby=keypressed-es-tab data-tabpanel="es"><pre><code class="lang-js">import { Sprite, initKeys, keyPressed } from 'path/to/kontra.mjs';
+});</code></pre></section>
+  <section role="tabpanel" aria-labelledby=keypressed-es-tab data-tabpanel="es"><pre><code class="language-js">import { Sprite, initKeys, keyPressed } from 'path/to/kontra.mjs';
 
 initKeys();
 
@@ -379,9 +369,8 @@ let sprite = Sprite({
       // down arrow pressed
     }
   }
-});
-</code></pre></section>
-  <section role="tabpanel" aria-labelledby=keypressed-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">import { Sprite, initKeys, keyPressed } from &#39;kontra&#39;;
+});</code></pre></section>
+  <section role="tabpanel" aria-labelledby=keypressed-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { Sprite, initKeys, keyPressed } from &#39;kontra&#39;;
 
 initKeys();
 
@@ -401,8 +390,7 @@ let sprite = Sprite({
       // down arrow pressed
     }
   }
-});
-</code></pre></section>
+});</code></pre></section>
 </div>
           <h3 id="title-keyPressed"><span class="visually-hidden">keyPressed</span> Parameters</span></h3>
           <dl aria-labelledby="title-keyPressed">
@@ -440,21 +428,18 @@ let sprite = Sprite({
     </li>
     <li role="presentation"></li>
   </ul>
-  <section role="tabpanel" aria-labelledby=unbindkeys-global-tab data-tabpanel="global"><pre><code class="lang-js">let { unbindKeys } = kontra;
+  <section role="tabpanel" aria-labelledby=unbindkeys-global-tab data-tabpanel="global"><pre><code class="language-js">let { unbindKeys } = kontra;
 
 unbindKeys(&#39;left&#39;);
-unbindKeys([&#39;enter&#39;, &#39;space&#39;]);
-</code></pre></section>
-  <section role="tabpanel" aria-labelledby=unbindkeys-es-tab data-tabpanel="es"><pre><code class="lang-js">import { unbindKeys } from 'path/to/kontra.mjs';
+unbindKeys([&#39;enter&#39;, &#39;space&#39;]);</code></pre></section>
+  <section role="tabpanel" aria-labelledby=unbindkeys-es-tab data-tabpanel="es"><pre><code class="language-js">import { unbindKeys } from 'path/to/kontra.mjs';
 
 unbindKeys(&#39;left&#39;);
-unbindKeys([&#39;enter&#39;, &#39;space&#39;]);
-</code></pre></section>
-  <section role="tabpanel" aria-labelledby=unbindkeys-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">import { unbindKeys } from &#39;kontra&#39;;
+unbindKeys([&#39;enter&#39;, &#39;space&#39;]);</code></pre></section>
+  <section role="tabpanel" aria-labelledby=unbindkeys-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { unbindKeys } from &#39;kontra&#39;;
 
 unbindKeys(&#39;left&#39;);
-unbindKeys([&#39;enter&#39;, &#39;space&#39;]);
-</code></pre></section>
+unbindKeys([&#39;enter&#39;, &#39;space&#39;]);</code></pre></section>
 </div>
           <h3 id="title-unbindKeys"><span class="visually-hidden">unbindKeys</span> Parameters</span></h3>
           <dl aria-labelledby="title-unbindKeys">

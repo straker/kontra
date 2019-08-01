@@ -81,7 +81,7 @@
     </li>
     <li role="presentation"></li>
   </ul>
-  <section role="tabpanel" aria-labelledby=events-global-tab data-tabpanel="global"><pre><code class="lang-js">let { on, off, emit } = kontra;
+  <section role="tabpanel" aria-labelledby=events-global-tab data-tabpanel="global"><pre><code class="language-js">let { on, off, emit } = kontra;
 
 function callback(a, b, c) {
   console.log({a, b, c});
@@ -89,9 +89,8 @@ function callback(a, b, c) {
 
 on(&#39;myEvent&#39;, callback);
 emit(&#39;myEvent&#39;, 1, 2, 3);  //=&gt; {a: 1, b: 2, c: 3}
-off(&#39;myEvent&#39;, callback);
-</code></pre></section>
-  <section role="tabpanel" aria-labelledby=events-es-tab data-tabpanel="es"><pre><code class="lang-js">import { on, off, emit } from 'path/to/kontra.mjs';
+off(&#39;myEvent&#39;, callback);</code></pre></section>
+  <section role="tabpanel" aria-labelledby=events-es-tab data-tabpanel="es"><pre><code class="language-js">import { on, off, emit } from 'path/to/kontra.mjs';
 
 function callback(a, b, c) {
   console.log({a, b, c});
@@ -99,9 +98,8 @@ function callback(a, b, c) {
 
 on(&#39;myEvent&#39;, callback);
 emit(&#39;myEvent&#39;, 1, 2, 3);  //=&gt; {a: 1, b: 2, c: 3}
-off(&#39;myEvent&#39;, callback);
-</code></pre></section>
-  <section role="tabpanel" aria-labelledby=events-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">import { on, off, emit } from &#39;kontra&#39;;
+off(&#39;myEvent&#39;, callback);</code></pre></section>
+  <section role="tabpanel" aria-labelledby=events-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { on, off, emit } from &#39;kontra&#39;;
 
 function callback(a, b, c) {
   console.log({a, b, c});
@@ -109,8 +107,7 @@ function callback(a, b, c) {
 
 on(&#39;myEvent&#39;, callback);
 emit(&#39;myEvent&#39;, 1, 2, 3);  //=&gt; {a: 1, b: 2, c: 3}
-off(&#39;myEvent&#39;, callback);
-</code></pre></section>
+off(&#39;myEvent&#39;, callback);</code></pre></section>
 </div>
         
 

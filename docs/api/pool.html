@@ -98,11 +98,6 @@
           <h2 id="toc"><a href="#toc" class="section-link">Table of Contents<span aria-hidden="true">#</span></a></h2>
 
           <ul aria-labelledby="toc">
-            <li>
-              <ul>
-                <li><a href="api/pool#basic-use">Basic Use</a></li>
-              </ul>
-            </li>
 
             <li>
               <h3 id="properties">Properties</h3>
@@ -158,132 +153,6 @@
           </ul>
         </section>
 
-        <section>
-          <h2 id="basic-use">
-            <a href="#basic-use" class="section-link">
-              <span>Basic Use</span>
-              <span aria-hidden="true">#</span>
-            </a>
-          </h2>
-
-          <p>To use the pool, you must pass the <code>create()</code> function argument, which should return a new <a href="Sprite">Sprite</a> or object. This object will be added to the pool every time there are no more alive objects.</p>
-<p>The object must implement the functions <code>update()</code>, <code>init()</code>, and <code>isAlive()</code>. If one of these functions is missing the pool will throw an error. <a href="Sprite">Sprite</a> defines these functions for you.</p>
-<p>An object is available for reuse when its <code>isAlive()</code> function returns <code>false</code>. For a sprite, this is typically when its ttl is <code>0</code>.</p>
-<p>When you want an object from the pool, use the pools <a href="#get">get()</a> function and pass it any properties you want the newly initialized object to have.</p>
-<div class="tablist">
-  <ul role="tablist">
-    <li role="presentation" data-tab="global">
-      <button role="tab" id="basic-use-global-tab">Global Object</button>
-    </li>
-    <li role="presentation" data-tab="es">
-      <button role="tab" id="basic-use-es-tab">ES Module Import</button>
-    </li>
-    <li role="presentation" data-tab="bundle">
-      <button role="tab" id="basic-use-bundle-tab">Module Bundler</button>
-    </li>
-    <li role="presentation"></li>
-  </ul>
-  <section role="tabpanel" aria-labelledby=basic-use-global-tab data-tabpanel="global"><pre><code class="lang-js">let { Pool, Sprite } = kontra;
-
-let pool = Pool({
-  // create a new sprite every time the pool needs a new object
-  create: Sprite
-});
-
-// properties will be passed to the sprites init() function
-pool.get({
-  x: 100,
-  y: 200,
-  width: 20,
-  height: 40,
-  color: &#39;red&#39;,
-  ttl: 60
-});
-</code></pre></section>
-  <section role="tabpanel" aria-labelledby=basic-use-es-tab data-tabpanel="es"><pre><code class="lang-js">import { Pool, Sprite } from 'path/to/kontra.mjs';
-
-let pool = Pool({
-  // create a new sprite every time the pool needs a new object
-  create: Sprite
-});
-
-// properties will be passed to the sprites init() function
-pool.get({
-  x: 100,
-  y: 200,
-  width: 20,
-  height: 40,
-  color: &#39;red&#39;,
-  ttl: 60
-});
-</code></pre></section>
-  <section role="tabpanel" aria-labelledby=basic-use-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">import { Pool, Sprite } from &#39;kontra&#39;;
-
-let pool = Pool({
-  // create a new sprite every time the pool needs a new object
-  create: Sprite
-});
-
-// properties will be passed to the sprites init() function
-pool.get({
-  x: 100,
-  y: 200,
-  width: 20,
-  height: 40,
-  color: &#39;red&#39;,
-  ttl: 60
-});
-</code></pre></section>
-</div>
-<p>When you want to update or render all alive objects in the pool, use the pools <a href="#update">update()</a> and <a href="#render">render()</a> functions.</p>
-<div class="tablist">
-  <ul role="tablist">
-    <li role="presentation" data-tab="global">
-      <button role="tab" id="basic-use-global-tab">Global Object</button>
-    </li>
-    <li role="presentation" data-tab="es">
-      <button role="tab" id="basic-use-es-tab">ES Module Import</button>
-    </li>
-    <li role="presentation" data-tab="bundle">
-      <button role="tab" id="basic-use-bundle-tab">Module Bundler</button>
-    </li>
-    <li role="presentation"></li>
-  </ul>
-  <section role="tabpanel" aria-labelledby=basic-use-global-tab data-tabpanel="global"><pre><code class="lang-js">let { GameLoop } = kontra;
-
-let loop = GameLoop({
-  update: function() {
-    pool.update();
-  },
-  render: function() {
-    pool.render();
-  }
-});
-</code></pre></section>
-  <section role="tabpanel" aria-labelledby=basic-use-es-tab data-tabpanel="es"><pre><code class="lang-js">import { GameLoop } from 'path/to/kontra.mjs';
-
-let loop = GameLoop({
-  update: function() {
-    pool.update();
-  },
-  render: function() {
-    pool.render();
-  }
-});
-</code></pre></section>
-  <section role="tabpanel" aria-labelledby=basic-use-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">import { GameLoop } from &#39;kontra&#39;;
-
-let loop = GameLoop({
-  update: function() {
-    pool.update();
-  },
-  render: function() {
-    pool.render();
-  }
-});
-</code></pre></section>
-</div>
-        </section>
 
         <section>
           <h2 id="clear">
@@ -306,7 +175,7 @@ let loop = GameLoop({
 
           <p>Get and return an object from the pool. The properties parameter will be passed directly to the objects <code>init()</code> function. If you&#39;re using a <a href="Sprite">Sprite</a>, you should also pass the <code>ttl</code> property to designate how many frames you want the object to be alive for.</p>
 <p>If you want to control when the sprite is ready for reuse, pass <code>Infinity</code> for <code>ttl</code>. You&#39;ll need to set the sprites <code>ttl</code> to <code>0</code> when you&#39;re ready for the sprite to be reused.</p>
-<pre><code class="lang-js">let sprite = pool.get({
+<pre><code class="language-js">let sprite = pool.get({
   // the object will get these properties and values
   x: 100,
   y: 200,
@@ -317,8 +186,7 @@ let loop = GameLoop({
   // pass Infinity for ttl to prevent the object from being reused
   // until you set it back to 0
   ttl: Infinity
-});
-</code></pre>
+});</code></pre>
           <h3 id="title-get"><span class="visually-hidden">get</span> Parameters</span></h3>
           <dl aria-labelledby="title-get">
             <dt>

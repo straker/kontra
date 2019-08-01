@@ -82,18 +82,15 @@
     </li>
     <li role="presentation"></li>
   </ul>
-  <section role="tabpanel" aria-labelledby=vector-global-tab data-tabpanel="global"><pre><code class="lang-js">let { Vector } = kontra;
+  <section role="tabpanel" aria-labelledby=vector-global-tab data-tabpanel="global"><pre><code class="language-js">let { Vector } = kontra;
 
-let vector = Vector(100, 200);
-</code></pre></section>
-  <section role="tabpanel" aria-labelledby=vector-es-tab data-tabpanel="es"><pre><code class="lang-js">import { Vector } from 'path/to/kontra.mjs';
+let vector = Vector(100, 200);</code></pre></section>
+  <section role="tabpanel" aria-labelledby=vector-es-tab data-tabpanel="es"><pre><code class="language-js">import { Vector } from 'path/to/kontra.mjs';
 
-let vector = Vector(100, 200);
-</code></pre></section>
-  <section role="tabpanel" aria-labelledby=vector-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">import { Vector } from &#39;kontra&#39;;
+let vector = Vector(100, 200);</code></pre></section>
+  <section role="tabpanel" aria-labelledby=vector-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { Vector } from &#39;kontra&#39;;
 
-let vector = Vector(100, 200);
-</code></pre></section>
+let vector = Vector(100, 200);</code></pre></section>
 </div>
         <h3 id="title-Vector"><span class="visually-hidden">Vector</span> Parameters</span></h3>
         <dl aria-labelledby="title-Vector">
@@ -203,7 +200,7 @@ let vector = Vector(100, 200);
     </li>
     <li role="presentation"></li>
   </ul>
-  <section role="tabpanel" aria-labelledby=clamp-global-tab data-tabpanel="global"><pre><code class="lang-js">let { Vector } = kontra;
+  <section role="tabpanel" aria-labelledby=clamp-global-tab data-tabpanel="global"><pre><code class="language-js">let { Vector } = kontra;
 
 let vector = Vector(100, 200);
 vector.clamp(0, 0, 200, 300);
@@ -215,9 +212,8 @@ vector.y -= 300;
 console.log(vector.y);  //=&gt; 0
 
 vector.add({x: -500, y: 500});
-console.log(vector);    //=&gt; {x: 0, y: 300}
-</code></pre></section>
-  <section role="tabpanel" aria-labelledby=clamp-es-tab data-tabpanel="es"><pre><code class="lang-js">import { Vector } from 'path/to/kontra.mjs';
+console.log(vector);    //=&gt; {x: 0, y: 300}</code></pre></section>
+  <section role="tabpanel" aria-labelledby=clamp-es-tab data-tabpanel="es"><pre><code class="language-js">import { Vector } from 'path/to/kontra.mjs';
 
 let vector = Vector(100, 200);
 vector.clamp(0, 0, 200, 300);
@@ -229,9 +225,8 @@ vector.y -= 300;
 console.log(vector.y);  //=&gt; 0
 
 vector.add({x: -500, y: 500});
-console.log(vector);    //=&gt; {x: 0, y: 300}
-</code></pre></section>
-  <section role="tabpanel" aria-labelledby=clamp-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">import { Vector } from &#39;kontra&#39;;
+console.log(vector);    //=&gt; {x: 0, y: 300}</code></pre></section>
+  <section role="tabpanel" aria-labelledby=clamp-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { Vector } from &#39;kontra&#39;;
 
 let vector = Vector(100, 200);
 vector.clamp(0, 0, 200, 300);
@@ -243,8 +238,7 @@ vector.y -= 300;
 console.log(vector.y);  //=&gt; 0
 
 vector.add({x: -500, y: 500});
-console.log(vector);    //=&gt; {x: 0, y: 300}
-</code></pre></section>
+console.log(vector);    //=&gt; {x: 0, y: 300}</code></pre></section>
 </div>
           <h3 id="title-clamp"><span class="visually-hidden">clamp</span> Parameters</span></h3>
           <dl aria-labelledby="title-clamp">

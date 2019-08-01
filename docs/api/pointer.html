@@ -83,7 +83,7 @@
     </li>
     <li role="presentation"></li>
   </ul>
-  <section role="tabpanel" aria-labelledby=pointer-global-tab data-tabpanel="global"><pre><code class="lang-js">let { initPointer, track, Sprite } = kontra;
+  <section role="tabpanel" aria-labelledby=pointer-global-tab data-tabpanel="global"><pre><code class="language-js">let { initPointer, track, Sprite } = kontra;
 
 // this function must be called first before pointer
 // functions will work
@@ -102,9 +102,8 @@ let sprite = Sprite({
 });
 
 track(sprite);
-sprite.render();
-</code></pre></section>
-  <section role="tabpanel" aria-labelledby=pointer-es-tab data-tabpanel="es"><pre><code class="lang-js">import { initPointer, track, Sprite } from 'path/to/kontra.mjs';
+sprite.render();</code></pre></section>
+  <section role="tabpanel" aria-labelledby=pointer-es-tab data-tabpanel="es"><pre><code class="language-js">import { initPointer, track, Sprite } from 'path/to/kontra.mjs';
 
 // this function must be called first before pointer
 // functions will work
@@ -123,9 +122,8 @@ let sprite = Sprite({
 });
 
 track(sprite);
-sprite.render();
-</code></pre></section>
-  <section role="tabpanel" aria-labelledby=pointer-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">import { initPointer, track, Sprite } from &#39;kontra&#39;;
+sprite.render();</code></pre></section>
+  <section role="tabpanel" aria-labelledby=pointer-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { initPointer, track, Sprite } from &#39;kontra&#39;;
 
 // this function must be called first before pointer
 // functions will work
@@ -144,8 +142,7 @@ let sprite = Sprite({
 });
 
 track(sprite);
-sprite.render();
-</code></pre></section>
+sprite.render();</code></pre></section>
 </div>
 <p>By default, the pointer is treated as a circle and will check for collisions against objects assuming they are rectangular (have a width and height property).</p>
 <p>If you need to perform a different type of collision detection, assign the object a <code>collidesWithPointer()</code> function and it will be called instead. The function is passed the pointer object. Use this function to determine how the pointer circle should collide with the object.</p>
@@ -162,7 +159,7 @@ sprite.render();
     </li>
     <li role="presentation"></li>
   </ul>
-  <section role="tabpanel" aria-labelledby=pointer-global-tab data-tabpanel="global"><pre><code class="lang-js">let { Sprite } = kontra;
+  <section role="tabpanel" aria-labelledby=pointer-global-tab data-tabpanel="global"><pre><code class="language-js">let { Sprite } = kontra;
 
 let sprite = Srite({
   x: 10,
@@ -174,9 +171,8 @@ let sprite = Srite({
     let dy = pointer.y - this.y;
     return Math.sqrt(dx * dx + dy * dy) &lt; this.radius;
   }
-});
-</code></pre></section>
-  <section role="tabpanel" aria-labelledby=pointer-es-tab data-tabpanel="es"><pre><code class="lang-js">import { Sprite } from 'path/to/kontra.mjs';
+});</code></pre></section>
+  <section role="tabpanel" aria-labelledby=pointer-es-tab data-tabpanel="es"><pre><code class="language-js">import { Sprite } from 'path/to/kontra.mjs';
 
 let sprite = Srite({
   x: 10,
@@ -188,9 +184,8 @@ let sprite = Srite({
     let dy = pointer.y - this.y;
     return Math.sqrt(dx * dx + dy * dy) &lt; this.radius;
   }
-});
-</code></pre></section>
-  <section role="tabpanel" aria-labelledby=pointer-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">import { Sprite } from &#39;kontra&#39;;
+});</code></pre></section>
+  <section role="tabpanel" aria-labelledby=pointer-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { Sprite } from &#39;kontra&#39;;
 
 let sprite = Srite({
   x: 10,
@@ -202,8 +197,7 @@ let sprite = Srite({
     let dy = pointer.y - this.y;
     return Math.sqrt(dx * dx + dy * dy) &lt; this.radius;
   }
-});
-</code></pre></section>
+});</code></pre></section>
 </div>
         
 
@@ -318,30 +312,27 @@ let sprite = Srite({
     </li>
     <li role="presentation"></li>
   </ul>
-  <section role="tabpanel" aria-labelledby=onpointerdown-global-tab data-tabpanel="global"><pre><code class="lang-js">let { initPointer, onPointerDown } = kontra;
+  <section role="tabpanel" aria-labelledby=onpointerdown-global-tab data-tabpanel="global"><pre><code class="language-js">let { initPointer, onPointerDown } = kontra;
 
 initPointer();
 
 onPointerDown(function(e, object) {
   // handle pointer down
-})
-</code></pre></section>
-  <section role="tabpanel" aria-labelledby=onpointerdown-es-tab data-tabpanel="es"><pre><code class="lang-js">import { initPointer, onPointerDown } from 'path/to/kontra.mjs';
+})</code></pre></section>
+  <section role="tabpanel" aria-labelledby=onpointerdown-es-tab data-tabpanel="es"><pre><code class="language-js">import { initPointer, onPointerDown } from 'path/to/kontra.mjs';
 
 initPointer();
 
 onPointerDown(function(e, object) {
   // handle pointer down
-})
-</code></pre></section>
-  <section role="tabpanel" aria-labelledby=onpointerdown-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">import { initPointer, onPointerDown } from &#39;kontra&#39;;
+})</code></pre></section>
+  <section role="tabpanel" aria-labelledby=onpointerdown-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { initPointer, onPointerDown } from &#39;kontra&#39;;
 
 initPointer();
 
 onPointerDown(function(e, object) {
   // handle pointer down
-})
-</code></pre></section>
+})</code></pre></section>
 </div>
           <h3 id="title-onPointerDown"><span class="visually-hidden">onPointerDown</span> Parameters</span></h3>
           <dl aria-labelledby="title-onPointerDown">
@@ -376,30 +367,27 @@ onPointerDown(function(e, object) {
     </li>
     <li role="presentation"></li>
   </ul>
-  <section role="tabpanel" aria-labelledby=onpointerup-global-tab data-tabpanel="global"><pre><code class="lang-js">let { initPointer, onPointerUp } = kontra;
+  <section role="tabpanel" aria-labelledby=onpointerup-global-tab data-tabpanel="global"><pre><code class="language-js">let { initPointer, onPointerUp } = kontra;
 
 initPointer();
 
 onPointerUp(function(e, object) {
   // handle pointer up
-})
-</code></pre></section>
-  <section role="tabpanel" aria-labelledby=onpointerup-es-tab data-tabpanel="es"><pre><code class="lang-js">import { initPointer, onPointerUp } from 'path/to/kontra.mjs';
+})</code></pre></section>
+  <section role="tabpanel" aria-labelledby=onpointerup-es-tab data-tabpanel="es"><pre><code class="language-js">import { initPointer, onPointerUp } from 'path/to/kontra.mjs';
 
 initPointer();
 
 onPointerUp(function(e, object) {
   // handle pointer up
-})
-</code></pre></section>
-  <section role="tabpanel" aria-labelledby=onpointerup-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">import { initPointer, onPointerUp } from &#39;kontra&#39;;
+})</code></pre></section>
+  <section role="tabpanel" aria-labelledby=onpointerup-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { initPointer, onPointerUp } from &#39;kontra&#39;;
 
 initPointer();
 
 onPointerUp(function(e, object) {
   // handle pointer up
-})
-</code></pre></section>
+})</code></pre></section>
 </div>
           <h3 id="title-onPointerUp"><span class="visually-hidden">onPointerUp</span> Parameters</span></h3>
           <dl aria-labelledby="title-onPointerUp">
@@ -434,24 +422,21 @@ onPointerUp(function(e, object) {
     </li>
     <li role="presentation"></li>
   </ul>
-  <section role="tabpanel" aria-labelledby=pointer-global-tab data-tabpanel="global"><pre><code class="lang-js">let { initPointer, pointer } = kontra;
+  <section role="tabpanel" aria-labelledby=pointer-global-tab data-tabpanel="global"><pre><code class="language-js">let { initPointer, pointer } = kontra;
 
 initPointer();
 
-console.log(pointer);  //=&gt; { x: 100, y: 200, radius: 5 };
-</code></pre></section>
-  <section role="tabpanel" aria-labelledby=pointer-es-tab data-tabpanel="es"><pre><code class="lang-js">import { initPointer, pointer } from 'path/to/kontra.mjs';
+console.log(pointer);  //=&gt; { x: 100, y: 200, radius: 5 };</code></pre></section>
+  <section role="tabpanel" aria-labelledby=pointer-es-tab data-tabpanel="es"><pre><code class="language-js">import { initPointer, pointer } from 'path/to/kontra.mjs';
 
 initPointer();
 
-console.log(pointer);  //=&gt; { x: 100, y: 200, radius: 5 };
-</code></pre></section>
-  <section role="tabpanel" aria-labelledby=pointer-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">import { initPointer, pointer } from &#39;kontra&#39;;
+console.log(pointer);  //=&gt; { x: 100, y: 200, radius: 5 };</code></pre></section>
+  <section role="tabpanel" aria-labelledby=pointer-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { initPointer, pointer } from &#39;kontra&#39;;
 
 initPointer();
 
-console.log(pointer);  //=&gt; { x: 100, y: 200, radius: 5 };
-</code></pre></section>
+console.log(pointer);  //=&gt; { x: 100, y: 200, radius: 5 };</code></pre></section>
 </div>
           
         </section>
@@ -477,7 +462,7 @@ console.log(pointer);  //=&gt; { x: 100, y: 200, radius: 5 };
     </li>
     <li role="presentation"></li>
   </ul>
-  <section role="tabpanel" aria-labelledby=pointerover-global-tab data-tabpanel="global"><pre><code class="lang-js">let { initPointer, track, pointer, pointerOver, Sprite } = kontra;
+  <section role="tabpanel" aria-labelledby=pointerover-global-tab data-tabpanel="global"><pre><code class="language-js">let { initPointer, track, pointer, pointerOver, Sprite } = kontra;
 
 initPointer();
 
@@ -503,9 +488,8 @@ pointer.x = 14;
 pointer.y = 15;
 
 console.log(pointerOver(sprite1));  //=&gt; false
-console.log(pointerOver(sprite2));  //=&gt; true
-</code></pre></section>
-  <section role="tabpanel" aria-labelledby=pointerover-es-tab data-tabpanel="es"><pre><code class="lang-js">import { initPointer, track, pointer, pointerOver, Sprite } from 'path/to/kontra.mjs';
+console.log(pointerOver(sprite2));  //=&gt; true</code></pre></section>
+  <section role="tabpanel" aria-labelledby=pointerover-es-tab data-tabpanel="es"><pre><code class="language-js">import { initPointer, track, pointer, pointerOver, Sprite } from 'path/to/kontra.mjs';
 
 initPointer();
 
@@ -531,9 +515,8 @@ pointer.x = 14;
 pointer.y = 15;
 
 console.log(pointerOver(sprite1));  //=&gt; false
-console.log(pointerOver(sprite2));  //=&gt; true
-</code></pre></section>
-  <section role="tabpanel" aria-labelledby=pointerover-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">import { initPointer, track, pointer, pointerOver, Sprite } from &#39;kontra&#39;;
+console.log(pointerOver(sprite2));  //=&gt; true</code></pre></section>
+  <section role="tabpanel" aria-labelledby=pointerover-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { initPointer, track, pointer, pointerOver, Sprite } from &#39;kontra&#39;;
 
 initPointer();
 
@@ -559,8 +542,7 @@ pointer.x = 14;
 pointer.y = 15;
 
 console.log(pointerOver(sprite1));  //=&gt; false
-console.log(pointerOver(sprite2));  //=&gt; true
-</code></pre></section>
+console.log(pointerOver(sprite2));  //=&gt; true</code></pre></section>
 </div>
           <h3 id="title-pointerOver"><span class="visually-hidden">pointerOver</span> Parameters</span></h3>
           <dl aria-labelledby="title-pointerOver">
@@ -598,7 +580,7 @@ console.log(pointerOver(sprite2));  //=&gt; true
     </li>
     <li role="presentation"></li>
   </ul>
-  <section role="tabpanel" aria-labelledby=pointerpressed-global-tab data-tabpanel="global"><pre><code class="lang-js">let { initPointer, pointerPressed } = kontra;
+  <section role="tabpanel" aria-labelledby=pointerpressed-global-tab data-tabpanel="global"><pre><code class="language-js">let { initPointer, pointerPressed } = kontra;
 
 initPointer();
 
@@ -611,9 +593,8 @@ Sprite({
       // right mouse button pressed
     }
   }
-});
-</code></pre></section>
-  <section role="tabpanel" aria-labelledby=pointerpressed-es-tab data-tabpanel="es"><pre><code class="lang-js">import { initPointer, pointerPressed } from 'path/to/kontra.mjs';
+});</code></pre></section>
+  <section role="tabpanel" aria-labelledby=pointerpressed-es-tab data-tabpanel="es"><pre><code class="language-js">import { initPointer, pointerPressed } from 'path/to/kontra.mjs';
 
 initPointer();
 
@@ -626,9 +607,8 @@ Sprite({
       // right mouse button pressed
     }
   }
-});
-</code></pre></section>
-  <section role="tabpanel" aria-labelledby=pointerpressed-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">import { initPointer, pointerPressed } from &#39;kontra&#39;;
+});</code></pre></section>
+  <section role="tabpanel" aria-labelledby=pointerpressed-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { initPointer, pointerPressed } from &#39;kontra&#39;;
 
 initPointer();
 
@@ -641,8 +621,7 @@ Sprite({
       // right mouse button pressed
     }
   }
-});
-</code></pre></section>
+});</code></pre></section>
 </div>
           <h3 id="title-pointerPressed"><span class="visually-hidden">pointerPressed</span> Parameters</span></h3>
           <dl aria-labelledby="title-pointerPressed">
@@ -680,27 +659,24 @@ Sprite({
     </li>
     <li role="presentation"></li>
   </ul>
-  <section role="tabpanel" aria-labelledby=track-global-tab data-tabpanel="global"><pre><code class="lang-js">let { initPointer, track } = kontra;
+  <section role="tabpanel" aria-labelledby=track-global-tab data-tabpanel="global"><pre><code class="language-js">let { initPointer, track } = kontra;
 
 initPointer();
 
 track(obj);
-track([obj1, obj2]);
-</code></pre></section>
-  <section role="tabpanel" aria-labelledby=track-es-tab data-tabpanel="es"><pre><code class="lang-js">import { initPointer, track } from 'path/to/kontra.mjs';
+track([obj1, obj2]);</code></pre></section>
+  <section role="tabpanel" aria-labelledby=track-es-tab data-tabpanel="es"><pre><code class="language-js">import { initPointer, track } from 'path/to/kontra.mjs';
 
 initPointer();
 
 track(obj);
-track([obj1, obj2]);
-</code></pre></section>
-  <section role="tabpanel" aria-labelledby=track-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">import { initPointer, track } from &#39;kontra&#39;;
+track([obj1, obj2]);</code></pre></section>
+  <section role="tabpanel" aria-labelledby=track-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { initPointer, track } from &#39;kontra&#39;;
 
 initPointer();
 
 track(obj);
-track([obj1, obj2]);
-</code></pre></section>
+track([obj1, obj2]);</code></pre></section>
 </div>
           <h3 id="title-track"><span class="visually-hidden">track</span> Parameters</span></h3>
           <dl aria-labelledby="title-track">
@@ -735,21 +711,18 @@ track([obj1, obj2]);
     </li>
     <li role="presentation"></li>
   </ul>
-  <section role="tabpanel" aria-labelledby=untrack-global-tab data-tabpanel="global"><pre><code class="lang-js">let { untrack } = kontra;
+  <section role="tabpanel" aria-labelledby=untrack-global-tab data-tabpanel="global"><pre><code class="language-js">let { untrack } = kontra;
 
 untrack(obj);
-untrack([obj1, obj2]);
-</code></pre></section>
-  <section role="tabpanel" aria-labelledby=untrack-es-tab data-tabpanel="es"><pre><code class="lang-js">import { untrack } from 'path/to/kontra.mjs';
+untrack([obj1, obj2]);</code></pre></section>
+  <section role="tabpanel" aria-labelledby=untrack-es-tab data-tabpanel="es"><pre><code class="language-js">import { untrack } from 'path/to/kontra.mjs';
 
 untrack(obj);
-untrack([obj1, obj2]);
-</code></pre></section>
-  <section role="tabpanel" aria-labelledby=untrack-bundle-tab data-tabpanel="bundle"><pre><code class="lang-js">import { untrack } from &#39;kontra&#39;;
+untrack([obj1, obj2]);</code></pre></section>
+  <section role="tabpanel" aria-labelledby=untrack-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { untrack } from &#39;kontra&#39;;
 
 untrack(obj);
-untrack([obj1, obj2]);
-</code></pre></section>
+untrack([obj1, obj2]);</code></pre></section>
 </div>
           <h3 id="title-untrack"><span class="visually-hidden">untrack</span> Parameters</span></h3>
           <dl aria-labelledby="title-untrack">

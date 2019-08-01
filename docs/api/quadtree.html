@@ -104,6 +104,11 @@
           <h2 id="toc"><a href="#toc" class="section-link">Table of Contents<span aria-hidden="true">#</span></a></h2>
 
           <ul aria-labelledby="toc">
+            <li>
+              <ul>
+                <li><a href="api/quadtree#basic-use">Basic Use</a></li>
+              </ul>
+            </li>
 
             <li>
               <h3 id="properties">Properties</h3>
@@ -149,6 +154,82 @@
           </ul>
         </section>
 
+        <section>
+          <h2 id="basic-use">
+            <a href="#basic-use" class="section-link">
+              <span>Basic Use</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
+
+          <p>Every frame you should remove all objects from the quadtree using its <a href="#clear">clear()</a> function and then add all objects back using its <a href="#add">add()</a> function. You can add a single object, a list of objects, or an array of objects.</p>
+<div class="tablist">
+  <ul role="tablist">
+    <li role="presentation" data-tab="global">
+      <button role="tab" id="basic-use-global-tab">Global Object</button>
+    </li>
+    <li role="presentation" data-tab="es">
+      <button role="tab" id="basic-use-es-tab">ES Module Import</button>
+    </li>
+    <li role="presentation" data-tab="bundle">
+      <button role="tab" id="basic-use-bundle-tab">Module Bundler</button>
+    </li>
+    <li role="presentation"></li>
+  </ul>
+  <section role="tabpanel" aria-labelledby=basic-use-global-tab data-tabpanel="global"><pre><code class="language-js">let { Quadtree, Sprite, GameLoop } = kontra;
+
+let quadtree = Quadtree();
+let player = Sprite({
+  // ...
+});
+let enemy = Sprite({
+  // ...
+});
+
+let loop = GameLoop({
+  update: function() {
+    quadtree.clear();
+    quadtree.add(player, enemy);
+  }
+});</code></pre></section>
+  <section role="tabpanel" aria-labelledby=basic-use-es-tab data-tabpanel="es"><pre><code class="language-js">import { Quadtree, Sprite, GameLoop } from 'path/to/kontra.mjs';
+
+let quadtree = Quadtree();
+let player = Sprite({
+  // ...
+});
+let enemy = Sprite({
+  // ...
+});
+
+let loop = GameLoop({
+  update: function() {
+    quadtree.clear();
+    quadtree.add(player, enemy);
+  }
+});</code></pre></section>
+  <section role="tabpanel" aria-labelledby=basic-use-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { Quadtree, Sprite, GameLoop } from &#39;kontra&#39;;
+
+let quadtree = Quadtree();
+let player = Sprite({
+  // ...
+});
+let enemy = Sprite({
+  // ...
+});
+
+let loop = GameLoop({
+  update: function() {
+    quadtree.clear();
+    quadtree.add(player, enemy);
+  }
+});</code></pre></section>
+</div>
+<p>You should clear the quadtree each frame since the quadtree is only a snapshot of the position of the objects when they were added. Since the quadtree doesn&#39;t know anything about those objects, it doesn&#39;t know when an object moved or when it should be removed from the tree.</p>
+<p>Objects added to the tree must have the properties <code>x</code>, <code>y</code>, <code>width</code>, and <code>height</code> so that their position in the quadtree can be calculated. <a href="Sprite">Sprite</a> defines these properties for you.</p>
+<p>When you need to get all objects in the same node as another object, use the quadtrees <a href="#get">get()</a> function.</p>
+<pre><code class="language-js">let objects = quadtree.get(player);  //=&gt; [enemy]</code></pre>
+        </section>
 
         <section>
           <h2 id="add">

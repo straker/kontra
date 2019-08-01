@@ -302,11 +302,21 @@ let tags = {
     let contents = fs.readFileSync(this.tag.description);
 
     let parseComments = require( path.join(require.resolve('livingcss'), '../lib/parseComments.js') );
-    let tags = require( path.join(require.resolve('livingcss'), '../lib/tags.js') );
+    let livingCSSTags = require( path.join(require.resolve('livingcss'), '../lib/tags.js') );
+    let tagList = {
+      ...livingCSSTags,
+      example: tags.example,
+      sectionName: tags.sectionName
+    };
 
-    parseComments(contents.toString(), this.tag.description, tags, {
+    console.log('\n\n\n');
+    console.log('contents.toString():', contents.toString());
+
+    parseComments(contents.toString(), this.tag.description, tagList, {
       pages: this.pages,
       sections: this.sections
+    }, function(block) {
+      console.log(block);
     });
   }
 };

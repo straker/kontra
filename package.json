@@ -2,8 +2,8 @@
   "name": "kontra",
   "version": "6.2.2",
   "description": "Kontra HTML5 game development library",
-  "main": "src/kontra.js",
-  "module": "src/kontra.mjs",
+  "main": "kontra.js",
+  "module": "kontra.mjs",
   "sideEffects": false,
   "scripts": {
     "test": "karma start --single-run",

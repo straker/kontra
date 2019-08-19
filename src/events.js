@@ -1,5 +1,5 @@
 /**
- * A simple event system, mostly created to support [Plugins](api/plugin). Allows you to hook into Kontra lifecycle events or create your own.
+ * A simple event system. Allows you to hook into Kontra lifecycle events or create your own, such as for [Plugins](api/plugin).
  *
  * ```js
  * import { on, off, emit } from 'kontra';
@@ -19,9 +19,10 @@
 export let callbacks = {};
 
 /**
- * There are currently only two lifecycle events:
- * - `init` - Emitted after `init()` is called.
+ * There are currently only three lifecycle events:
+ * - `init` - Emitted after `konta.init()` is called.
  * - `tick` - Emitted every frame of kontra.GameLoop before the loops `update()` and `render()` functions are called.
+ * - `assetLoaded` - Emitted after an asset has fully loaded using the asset loader. The callback function is passed the asset and the url of the asset as parameters.
  * @sectionName Lifecycle Events
  */
 

@@ -1,4 +1,5 @@
 import * as assets from '../../src/assets.js'
+import { on, off } from '../../src/events.js'
 
 // --------------------------------------------------
 // assets
@@ -101,6 +102,25 @@ describe('assets', () => {
       });
     });
 
+    it('should emit the assetLoaded event', done => {
+      function loaded(asset, url) {
+        // this needs to be called first otherwise every load event will call this
+        // emitted function
+        off('assetLoaded', loaded);
+
+        try {
+          expect(assets.imageAssets['/imgs/bullet.png']).to.equal(asset);
+          expect(url).to.equal('/imgs/bullet.png');
+        } catch(e) {
+          done(e);
+        }
+
+        done();
+      }
+      on('assetLoaded', loaded);
+      assets.loadImage('/imgs/bullet.png').catch(done);
+    });
+
   });
 
 
@@ -184,6 +204,25 @@ describe('assets', () => {
       .catch(e => {
         done();
       });
+    });
+
+    it('should emit the assetLoaded event', done => {
+      function loaded(asset, url) {
+        // this needs to be called first otherwise every load event will call this
+        // emitted function
+        off('assetLoaded', loaded);
+
+        try {
+          expect(assets.dataAssets['/data/test.txt']).to.equal(asset);
+          expect(url).to.equal('/data/test.txt');
+        } catch(e) {
+          return done(e);
+        }
+
+        done();
+      }
+      on('assetLoaded', loaded);
+      assets.loadData('/data/test.txt').catch(done);
     });
 
   });
@@ -315,6 +354,25 @@ describe('assets', () => {
       .catch(e => {
         done();
       });
+    });
+
+    it('should emit the assetLoaded event', done => {
+      function loaded(asset, url) {
+        // this needs to be called first otherwise every load event will call this
+        // emitted function
+        off('assetLoaded', loaded);
+
+        try {
+          expect(assets.audioAssets['/audio/shoot.mp3']).to.equal(asset);
+          expect(url).to.equal('/audio/shoot.mp3');
+        } catch(e) {
+          done(e);
+        }
+
+        done();
+      }
+      on('assetLoaded', loaded);
+      assets.loadAudio('/audio/shoot.mp3').catch(done);
     });
 
   });

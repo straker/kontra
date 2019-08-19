@@ -1,8 +1,18 @@
+import { emit } from './events.js'
+
 /**
- * A promise based asset loader for loading images, audio, and data files.
+ * A promise based asset loader for loading images, audio, and data files. An `assetLoaded` event is emitted after each asset is fully loaded. The callback for the event is passed the asset and the url to the asset as parameters.
  *
  * ```js
- * import { load } from 'kontra';
+ * import { load, on } from 'kontra';
+ *
+ * let numAssets = 3;
+ * let assetsLoaded = 0;
+ * on('assetLoaded', (asset, url) => {
+ *   assetsLoaded++;
+ *
+ *   // inform user or update progress bar
+ * });
  *
  * load(
  *   'assets/imgs/character.png',
@@ -264,6 +274,7 @@ export function loadImage(url) {
     image.onload = function loadImageOnLoad() {
       fullUrl = getUrl(resolvedUrl, window.location.href);
       imageAssets[ getName(url) ] = imageAssets[resolvedUrl] = imageAssets[fullUrl] = this;
+      emit('assetLoaded', this, url);
       resolve(this);
     };
 
@@ -324,6 +335,7 @@ export function loadAudio(url) {
     audioEl.addEventListener('canplay', function loadAudioOnLoad() {
       fullUrl = getUrl(resolvedUrl, window.location.href);
       audioAssets[ getName(url) ] = audioAssets[resolvedUrl] = audioAssets[fullUrl] = this;
+      emit('assetLoaded', this, url);
       resolve(this);
     });
 
@@ -371,6 +383,7 @@ export function loadData(url) {
     }
 
     dataAssets[ getName(url) ] = dataAssets[resolvedUrl] = dataAssets[fullUrl] = response;
+    emit('assetLoaded', response, url);
     return response;
   });
 }

@@ -103,7 +103,7 @@ export default function vectorFactory(x, y, vec = {}) {
   if (vec._c) {
     vector.clamp(vec._a, vec._b, vec._d, vec._e);
 
-    // enforce clamping on setting
+    // reset x and y so clamping takes effect
     vector.x = x;
     vector.y = y;
   }

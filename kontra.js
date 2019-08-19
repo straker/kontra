@@ -2,7 +2,7 @@ var kontra = (function () {
 'use strict';
 
 /**
- * A simple event system, mostly created to support [Plugins](api/plugin). Allows you to hook into Kontra lifecycle events or create your own.
+ * A simple event system. Allows you to hook into Kontra lifecycle events or create your own, such as for [Plugins](api/plugin).
  *
  * ```js
  * import { on, off, emit } from 'kontra';
@@ -22,9 +22,10 @@ var kontra = (function () {
 let callbacks = {};
 
 /**
- * There are currently only two lifecycle events:
- * - `init` - Emitted after `init()` is called.
+ * There are currently only three lifecycle events:
+ * - `init` - Emitted after `konta.init()` is called.
  * - `tick` - Emitted every frame of kontra.GameLoop before the loops `update()` and `render()` functions are called.
+ * - `assetLoaded` - Emitted after an asset has fully loaded using the asset loader. The callback function is passed the asset and the url of the asset as parameters.
  * @sectionName Lifecycle Events
  */
 
@@ -313,10 +314,18 @@ animationFactory.prototype = Animation.prototype;
 animationFactory.class = Animation;
 
 /**
- * A promise based asset loader for loading images, audio, and data files.
+ * A promise based asset loader for loading images, audio, and data files. An `assetLoaded` event is emitted after each asset is fully loaded. The callback for the event is passed the asset and the url to the asset as parameters.
  *
  * ```js
- * import { load } from 'kontra';
+ * import { load, on } from 'kontra';
+ *
+ * let numAssets = 3;
+ * let assetsLoaded = 0;
+ * on('assetLoaded', (asset, url) => {
+ *   assetsLoaded++;
+ *
+ *   // inform user or update progress bar
+ * });
  *
  * load(
  *   'assets/imgs/character.png',
@@ -578,6 +587,7 @@ function loadImage(url) {
     image.onload = function loadImageOnLoad() {
       fullUrl = getUrl(resolvedUrl, window.location.href);
       imageAssets[ getName(url) ] = imageAssets[resolvedUrl] = imageAssets[fullUrl] = this;
+      emit('assetLoaded', this, url);
       resolve(this);
     };
 
@@ -638,6 +648,7 @@ function loadAudio(url) {
     audioEl.addEventListener('canplay', function loadAudioOnLoad() {
       fullUrl = getUrl(resolvedUrl, window.location.href);
       audioAssets[ getName(url) ] = audioAssets[resolvedUrl] = audioAssets[fullUrl] = this;
+      emit('assetLoaded', this, url);
       resolve(this);
     });
 
@@ -685,6 +696,7 @@ function loadData(url) {
     }
 
     dataAssets[ getName(url) ] = dataAssets[resolvedUrl] = dataAssets[fullUrl] = response;
+    emit('assetLoaded', response, url);
     return response;
   });
 }
@@ -2214,9 +2226,9 @@ quadtreeFactory.class = Quadtree;
  * @param {Number} [y=0] - Y coordinate of the vector.
  */
 class Vector {
-  constructor(x, y) {
-    this._x = x || 0;
-    this._y = y || 0;
+  constructor(x = 0, y = 0) {
+    this._x = x;
+    this._y = y;
   }
 
   /**
@@ -2229,10 +2241,11 @@ class Vector {
    *
    * @returns {kontra.Vector} A new kontra.Vector instance.
    */
-  add(vec, dt) {
+  add(vec, dt = 1) {
     return vectorFactory(
-      this.x + (vec.x || 0) * (dt || 1),
-      this.y + (vec.y || 0) * (dt || 1)
+      this.x + (vec.x || 0) * dt,
+      this.y + (vec.y || 0) * dt,
+      this
     );
   }
 
@@ -2297,8 +2310,19 @@ class Vector {
   }
 }
 
-function vectorFactory(x, y) {
-  return new Vector(x, y);
+function vectorFactory(x, y, vec = {}) {
+  let vector = new Vector(x, y);
+
+  // preserve vector clamping when creating new vectors
+  if (vec._c) {
+    vector.clamp(vec._a, vec._b, vec._d, vec._e);
+
+    // reset x and y so clamping takes effect
+    vector.x = x;
+    vector.y = y;
+  }
+
+  return vector;
 }
 vectorFactory.prototype = Vector.prototype;
 vectorFactory.class = Vector;

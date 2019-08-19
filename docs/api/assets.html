@@ -67,7 +67,7 @@
 
         <h1>Assets        </h1>
 
-        <p>A promise based asset loader for loading images, audio, and data files.</p>
+        <p>A promise based asset loader for loading images, audio, and data files. An <code>assetLoaded</code> event is emitted after each asset is fully loaded. The callback for the event is passed the asset and the url to the asset as parameters.</p>
 <div class="tablist">
   <ul role="tablist">
     <li role="presentation" data-tab="global">
@@ -81,7 +81,15 @@
     </li>
     <li role="presentation"></li>
   </ul>
-  <section role="tabpanel" aria-labelledby=assets-global-tab data-tabpanel="global"><pre><code class="language-js">let { load } = kontra;
+  <section role="tabpanel" aria-labelledby=assets-global-tab data-tabpanel="global"><pre><code class="language-js">let { load, on } = kontra;
+
+let numAssets = 3;
+let assetsLoaded = 0;
+on(&#39;assetLoaded&#39;, (asset, url) =&gt; {
+  assetsLoaded++;
+
+  // inform user or update progress bar
+});
 
 load(
   &#39;assets/imgs/character.png&#39;,
@@ -92,7 +100,15 @@ load(
 }).catch(function(err) {
   // error loading an asset
 });</code></pre></section>
-  <section role="tabpanel" aria-labelledby=assets-es-tab data-tabpanel="es"><pre><code class="language-js">import { load } from 'path/to/kontra.mjs';
+  <section role="tabpanel" aria-labelledby=assets-es-tab data-tabpanel="es"><pre><code class="language-js">import { load, on } from 'path/to/kontra.mjs';
+
+let numAssets = 3;
+let assetsLoaded = 0;
+on(&#39;assetLoaded&#39;, (asset, url) =&gt; {
+  assetsLoaded++;
+
+  // inform user or update progress bar
+});
 
 load(
   &#39;assets/imgs/character.png&#39;,
@@ -103,7 +119,15 @@ load(
 }).catch(function(err) {
   // error loading an asset
 });</code></pre></section>
-  <section role="tabpanel" aria-labelledby=assets-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { load } from &#39;kontra&#39;;
+  <section role="tabpanel" aria-labelledby=assets-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { load, on } from &#39;kontra&#39;;
+
+let numAssets = 3;
+let assetsLoaded = 0;
+on(&#39;assetLoaded&#39;, (asset, url) =&gt; {
+  assetsLoaded++;
+
+  // inform user or update progress bar
+});
 
 load(
   &#39;assets/imgs/character.png&#39;,

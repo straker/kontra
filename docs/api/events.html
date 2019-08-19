@@ -67,7 +67,7 @@
 
         <h1>Events        </h1>
 
-        <p>A simple event system, mostly created to support <a href="api/plugin">Plugins</a>. Allows you to hook into Kontra lifecycle events or create your own.</p>
+        <p>A simple event system. Allows you to hook into Kontra lifecycle events or create your own, such as for <a href="api/plugin">Plugins</a>.</p>
 <div class="tablist">
   <ul role="tablist">
     <li role="presentation" data-tab="global">
@@ -153,10 +153,11 @@ off(&#39;myEvent&#39;, callback);</code></pre></section>
             </a>
           </h2>
 
-          <p>There are currently only two lifecycle events:</p>
+          <p>There are currently only three lifecycle events:</p>
 <ul>
-<li><code>init</code> - Emitted after <code>init()</code> is called.</li>
+<li><code>init</code> - Emitted after <code>konta.init()</code> is called.</li>
 <li><code>tick</code> - Emitted every frame of <a href="GameLoop">GameLoop</a> before the loops <code>update()</code> and <code>render()</code> functions are called.</li>
+<li><code>assetLoaded</code> - Emitted after an asset has fully loaded using the asset loader. The callback function is passed the asset and the url of the asset as parameters.</li>
 </ul>
         </section>
 

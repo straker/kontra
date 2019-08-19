@@ -98,6 +98,13 @@ describe('vector', () => {
       expect(vector.y).to.equal(75);
     });
 
+    it('should preserve clamp settings when adding vectors', () => {
+      let vec = vector.add(Vector(100, 100));
+
+      expect(vec.x).to.equal(50);
+      expect(vec.y).to.equal(75);
+    });
+
   });
 
 });

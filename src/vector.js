@@ -12,9 +12,9 @@
  * @param {Number} [y=0] - Y coordinate of the vector.
  */
 class Vector {
-  constructor(x, y) {
-    this._x = x || 0;
-    this._y = y || 0;
+  constructor(x = 0, y = 0) {
+    this._x = x;
+    this._y = y;
   }
 
   /**
@@ -27,10 +27,11 @@ class Vector {
    *
    * @returns {kontra.Vector} A new kontra.Vector instance.
    */
-  add(vec, dt) {
+  add(vec, dt = 1) {
     return vectorFactory(
-      this.x + (vec.x || 0) * (dt || 1),
-      this.y + (vec.y || 0) * (dt || 1)
+      this.x + (vec.x || 0) * dt,
+      this.y + (vec.y || 0) * dt,
+      this
     );
   }
 
@@ -95,8 +96,19 @@ class Vector {
   }
 }
 
-export default function vectorFactory(x, y) {
-  return new Vector(x, y);
+export default function vectorFactory(x, y, vec = {}) {
+  let vector = new Vector(x, y);
+
+  // preserve vector clamping when creating new vectors
+  if (vec._c) {
+    vector.clamp(vec._a, vec._b, vec._d, vec._e);
+
+    // reset x and y so clamping takes effect
+    vector.x = x;
+    vector.y = y;
+  }
+
+  return vector;
 }
 vectorFactory.prototype = Vector.prototype;
 vectorFactory.class = Vector;

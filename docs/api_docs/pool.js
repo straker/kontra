@@ -5,7 +5,7 @@
  *
  * An object is available for reuse when its `isAlive()` function returns `false`. For a sprite, this is typically when its ttl is `0`.
  *
- * When you want an object from the pool, use the pools [get()](#get) function and pass it any properties you want the newly initialized object to have.
+ * When you want an object from the pool, use the pools [get()](api/pool/#get) function and pass it any properties you want the newly initialized object to have.
  *
  * ```js
  * import { Pool, Sprite } from 'kontra';
@@ -26,7 +26,7 @@
  * });
  * ```
  *
- * When you want to update or render all alive objects in the pool, use the pools [update()](#update) and [render()](#render) functions.
+ * When you want to update or render all alive objects in the pool, use the pools [update()](api/pool/#update) and [render()](api/pool/#render) functions.
  *
  * ```js
  * import { GameLoop } from 'kontra';

@@ -7,7 +7,7 @@
  *
  * A plugin can define any number of before and after intercept functions. When the plugin is registered for a Kontra object, only intercept functions that match a function name in the Kontra object will be intercepted.
  *
- * As the plugin author, you should not [register](#registerPlugin) the plugin yourself. You should only export the plugin object and let the consumer register it.
+ * As the plugin author, you should not [register](api/plugin/#registerPlugin) the plugin yourself. You should only export the plugin object and let the consumer register it.
  *
  * ```js
  * // exclude-tablist

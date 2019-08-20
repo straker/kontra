@@ -68,7 +68,7 @@
         <h1>SpriteSheet(&#8203;properties)
         </h1>
 
-        <p>A sprite sheet to animate a sequence of images. Used to create <a href="./Sprite#animation-sprite">animation sprites</a>.</p>
+        <p>A sprite sheet to animate a sequence of images. Used to create <a href="api/sprite/#animation-sprite">animation sprites</a>.</p>
 <figure>
   <a href="assets/imgs/character_walk_sheet.png">
     <img src="assets/imgs/character_walk_sheet.png" alt="11 frames of a walking pill-like alien wearing a space helmet.">
@@ -205,7 +205,7 @@ image.onload = function() {
             <code>properties.animations</code>
             <span class="optional">Optional</span>
           </dt>
-          <dd><p>Object. Animations to create from the sprite sheet using <a href="Animation">Animation</a>. Passed directly into the sprite sheets <a href="#createAnimations">createAnimations()</a> function.</p>
+          <dd><p>Object. Animations to create from the sprite sheet using <a href="api/animation">Animation</a>. Passed directly into the sprite sheets <a href="api/spriteSheet/#createAnimations">createAnimations()</a> function.</p>
         </dd>
         </dl>
         
@@ -258,7 +258,7 @@ image.onload = function() {
             </a>
           </h2>
 
-          <p>An object of named <a href="Animation">Animation</a> objects. Typically you pass this object into <a href="Sprite">Sprite</a> to create an <a href="./Sprite#animation-sprite">animation sprites</a>.</p>
+          <p>An object of named <a href="api/animation">Animation</a> objects. Typically you pass this object into <a href="api/sprite">Sprite</a> to create an <a href="api/spriteSheet/#animation-sprite">animation sprites</a>.</p>
           
         </section>
         <section>
@@ -270,7 +270,7 @@ image.onload = function() {
           </h2>
 
           <p>Create named animations from the sprite sheet. Called from the constructor if the <code>animations</code> argument is passed.</p>
-<p>This function populates the sprite sheets <code>animations</code> property with <a href="Animation">Animation</a> objects. Each animation is accessible by its name.</p>
+<p>This function populates the sprite sheets <code>animations</code> property with <a href="api/animation">Animation</a> objects. Each animation is accessible by its name.</p>
 <div class="tablist">
   <ul role="tablist">
     <li role="presentation" data-tab="global">

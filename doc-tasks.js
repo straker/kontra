@@ -114,8 +114,9 @@ function resolveKontraType(string, isArray) {
     if (isArray) {
       url = url.substring(0, url.length - 1);
     }
+    url = url[0].toLowerCase() + url.slice(1);
 
-    return `<a href="${url}">${p1}</a>`
+    return `<a href="api/${url}">${p1}</a>`;
   });
 }
 

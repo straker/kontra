@@ -195,7 +195,7 @@ class SpriteSheet {
     let sequence, name;
 
     for (name in animations) {
-      let { frames, frameRate, loop } = animations[name];
+      let { frames, frameRate, loop, flipX, flipY } = animations[name];
 
       // array that holds the order of the animation
       sequence = [];
@@ -215,7 +215,9 @@ class SpriteSheet {
         spriteSheet: this,
         frames: sequence,
         frameRate,
-        loop
+        loop,
+        flipX,
+        flipY
       });
     }
   }

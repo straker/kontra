@@ -36,7 +36,7 @@ import { getContext } from './core.js'
  * @param {Boolean} [properties.loop=true] - If the animation should loop.
  */
 class Animation {
-  constructor({spriteSheet, frames, frameRate, loop = true} = {}) {
+  constructor({spriteSheet, frames, frameRate, loop = true, flipX = false, flipY=false} = {}) {
 
     /**
      * The sprite sheet to use for the animation.
@@ -65,6 +65,20 @@ class Animation {
      * @property {Boolean} loop
      */
     this.loop = loop;
+
+      /**
+     * If the frames should be flipped horizontally
+     * @memberof Animation
+     * @property {Boolean} flipX
+     */
+    this.flipX = flipX;
+
+    /**
+     * If the frames should be flipped vertically
+     * @memberof Animation
+     * @property {Boolean} flipY
+     */
+    this.flipY = flipY;
 
     let { width, height, margin = 0 } = spriteSheet.frame;
 
@@ -154,14 +168,19 @@ class Animation {
     let row = this.frames[this._f] / this.spriteSheet._f | 0;
     let col = this.frames[this._f] % this.spriteSheet._f | 0;
 
+    context.save();
+    context.scale(this.flipX ? -1 : 1, this.flipY ? -1 :1);
+
     context.drawImage(
       this.spriteSheet.image,
       col * this.width + (col * 2 + 1) * this.margin,
       row * this.height + (row * 2 + 1) * this.margin,
       this.width, this.height,
-      x, y,
+      x + this.flipX ? -width : 0, y + this.flipY ? -height : 0,
       width, height
     );
+
+    context.restore();
   }
 }
 

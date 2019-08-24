@@ -50,7 +50,7 @@ class Sprite {
     let { x, y, dx, dy, ddx, ddy, width, height, image } = properties;
 
     /**
-     * The sprites position vector. The sprites position is its position in the world, as opposed to the position in the [viewport](#viewX). Typically the position in the world and the viewport are the same value. If the sprite has been [added to a tileEngine](/api/tileEngine#addObject), the position vector represents where in the tile world the sprite while the viewport represents where to draw the sprite in relation to the tileEngine camera.
+     * The sprites position vector. The sprites position is its position in the world, as opposed to the position in the [viewport](#viewX). Typically the position in the world and the viewport are the same value. If the sprite has been [added to a tileEngine](/api/tileEngine#addObject), the position vector represents where in the tile world the sprite is while the viewport represents where to draw the sprite in relation to the top-left corner of the canvas.
      * @memberof Sprite
      * @property {kontra.Vector} position
      */

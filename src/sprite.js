@@ -586,10 +586,6 @@ class Sprite {
     this.context.save();
     this.context.translate(this.viewX, this.viewY);
 
-    if (this.width < 0) {
-      this.context.scale(-1, 1);
-    }
-
     if (this.rotation) {
       this.context.rotate(this.rotation);
     }

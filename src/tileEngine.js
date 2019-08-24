@@ -63,6 +63,9 @@ export default function TileEngine(properties = {}) {
   let layerMap = {};
   let layerCanvases = {};
 
+  //
+  let objects = [];
+
   /**
    * The width of tile map (in tiles).
    * @memberof TileEngine
@@ -147,10 +150,12 @@ export default function TileEngine(properties = {}) {
     // @see http://stackoverflow.com/questions/19338032/canvas-indexsizeerror-index-or-size-is-negative-or-greater-than-the-allowed-a
     set sx(value) {
       this._sx = Math.min( Math.max(0, value), mapwidth - getCanvas().width );
+      objects.forEach(obj => obj.sx = this._sx);
     },
 
     set sy(value) {
       this._sy = Math.min( Math.max(0, value), mapheight - getCanvas().height );
+      objects.forEach(obj => obj.sy = this._sy);
     },
 
     /**
@@ -159,6 +164,11 @@ export default function TileEngine(properties = {}) {
      * @function render
      */
     render() {
+      if (this._d) {
+        this._d = false;
+        prerender();
+      }
+
       render(offscreenCanvas);
     },
 
@@ -334,8 +344,37 @@ export default function TileEngine(properties = {}) {
       let col = position.col || getCol(position.x);
 
       if (layerMap[name]) {
+        // d = dirty
+        this._d = true;
         layerMap[name].data[col + row * tileEngine.width] = tile;
-        prerender();
+      }
+    },
+
+    /**
+     * Add an object to the tile engine. The tile engine will set the objects camera position (`sx`, `sy`) to be in sync with the tile engine camera.
+     * @memberof TileEngine
+     * @function addObject
+     *
+     * @param {Object} object - Object to add to the tile engine.
+     */
+    addObject(object) {
+      objects.push(object);
+      object.sx = this._sx;
+      object.sy = this._sy;
+    },
+
+    /**
+     * Remove an object from the tile engine.
+     * @memberof TileEngine
+     * @function removeObject
+     *
+     * @param {Object} object - Object to remove from the tile engine.
+     */
+    removeObject(object) {
+      let index = objects.indexOf(object);
+      if (index !== -1) {
+        objects.slice(index, 1);
+        object.sx = object.sy = 0;
       }
     },
 
@@ -400,7 +439,7 @@ export default function TileEngine(properties = {}) {
    * @return {Number}
    */
   function getRow(y) {
-    return (tileEngine.sy + y) / tileEngine.tileheight | 0;
+    return y / tileEngine.tileheight | 0;
   }
 
   /**
@@ -412,7 +451,7 @@ export default function TileEngine(properties = {}) {
    * @return {Number}
    */
   function getCol(x) {
-    return (tileEngine.sx + x) / tileEngine.tilewidth | 0;
+    return x / tileEngine.tilewidth | 0;
   }
 
   /**

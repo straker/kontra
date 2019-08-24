@@ -50,7 +50,7 @@ class Sprite {
     let { x, y, dx, dy, ddx, ddy, width, height, image } = properties;
 
     /**
-     * The sprites position vector.
+     * The sprites position vector. The sprites position is its position in the world, as opposed to the position in the [viewport](#viewX). Typically the position in the world and the viewport are the same value. If the sprite has been [added to a tileEngine](/api/tileEngine#addObject), the position vector represents where in the tile world the sprite while the viewport represents where to draw the sprite in relation to the tileEngine camera.
      * @memberof Sprite
      * @property {kontra.Vector} position
      */
@@ -171,6 +171,19 @@ class Sprite {
       this.width = (width !== undefined) ? width : image.width;
       this.height = (height !== undefined) ? height : image.height;
     }
+
+    /**
+     * The X coordinate of the camera. Used to determine [viewX](#viewX).
+     * @memberof Sprite
+     * @property {Number} sx
+     */
+
+     /**
+     * The Y coordinate of the camera. Used to determine [viewY](#viewY).
+     * @memberof Sprite
+     * @property {Number} sy
+     */
+    this.sx = this.sy = 0;
   }
 
   // define getter and setter shortcut functions to make it easier to work with the
@@ -262,6 +275,24 @@ class Sprite {
    */
   get animations() {
     return this._a;
+  }
+
+  /**
+   * Readonly. X coordinate of where to draw the sprite. Typically the same value of the [position vector](#position) unless the sprite has been added to a tileEngine.
+   * @memberof Sprite
+   * @property {Number} viewX
+   */
+  get viewX() {
+    return this.x - this.sx;
+  }
+
+  /**
+   * Readonly. Y coordinate of where to draw the sprite. Typically the same value of the [position vector](#position) unless the sprite has been added to a tileEngine.
+   * @memberof Sprite
+   * @property {Number} viewY
+   */
+  get viewY() {
+    return this.y - this.sy;
   }
 
   set x(value) {
@@ -544,7 +575,11 @@ class Sprite {
     let anchorHeight = -this.height * this.anchor.y;
 
     this.context.save();
-    this.context.translate(this.x, this.y);
+    this.context.translate(this.viewX, this.viewY);
+
+    if (this.width < 0) {
+      this.context.scale(-1, 1);
+    }
 
     if (this.rotation) {
       this.context.rotate(this.rotation);

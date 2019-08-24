@@ -2503,13 +2503,14 @@ class Sprite {
      * @memberof Sprite
      * @property {Number} sx
      */
+    this.sx = 0;
 
-     /**
+    /**
      * The Y coordinate of the camera. Used to determine [viewY](#viewY).
      * @memberof Sprite
      * @property {Number} sy
      */
-    this.sx = this.sy = 0;
+    this.sy = 0;
   }
 
   // define getter and setter shortcut functions to make it easier to work with the
@@ -2661,6 +2662,14 @@ class Sprite {
     this.currentAnimation = firstAnimation;
     this.width = this.width || firstAnimation.width;
     this.height = this.height || firstAnimation.height;
+  }
+
+  // readonly
+  set viewX(value) {
+    return;
+  }
+  set viewY(value) {
+    return;
   }
 
   /**
@@ -3598,7 +3607,7 @@ function TileEngine(properties = {}) {
     removeObject(object) {
       let index = objects.indexOf(object);
       if (index !== -1) {
-        objects.slice(index, 1);
+        objects.splice(index, 1);
         object.sx = object.sy = 0;
       }
     },

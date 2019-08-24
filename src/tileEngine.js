@@ -242,10 +242,17 @@ export default function TileEngine(properties = {}) {
      * @returns {boolean} `true` if the object collides with a tile, `false` otherwise.
      */
     layerCollidesWith(name, object) {
-      let row = getRow(object.y);
-      let col = getCol(object.x);
-      let endRow = getRow(object.y + object.height);
-      let endCol = getCol(object.x + object.width);
+      let x = object.x;
+      let y = object.y;
+      if (object.anchor) {
+        x -= object.width * object.anchor.x;
+        y -= object.height * object.anchor.y;
+      }
+
+      let row = getRow(y);
+      let col = getCol(x);
+      let endRow = getRow(y + object.height);
+      let endCol = getCol(x + object.width);
 
       let layer = layerMap[name];
 

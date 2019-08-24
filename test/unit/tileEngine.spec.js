@@ -390,4 +390,111 @@ describe('tileEngine', () => {
 
   });
 
+
+
+
+
+  // --------------------------------------------------
+  // tileEngine.addObject
+  // --------------------------------------------------
+  describe('addObject', () => {
+    let tileEngine = null;
+    let obj = null;
+
+    beforeEach(() => {
+      tileEngine = TileEngine({
+        tilewidth: 10,
+        tileheight: 10,
+        width: 100,
+        height: 100,
+        tilesets: [{
+          image: new Image()
+        }],
+        layers: [{
+          name: 'test',
+          data: [0,0,1,0,0]
+        }]
+      });
+      obj = {};
+    });
+
+
+    it('should set object sx and sy to tile engine camera', () => {
+      tileEngine.sx = 20;
+      tileEngine.sy = 30;
+
+      tileEngine.addObject(obj);
+
+      expect(obj.sx).to.equal(20);
+      expect(obj.sy).to.equal(30);
+    });
+
+    it('should update objects sx property when tile engine camera changes', () => {
+      tileEngine.addObject(obj);
+
+      expect(obj.sx).to.equal(0);
+      expect(obj.sy).to.equal(0);
+
+      tileEngine.sx = 20;
+      tileEngine.sy = 30;
+
+      expect(obj.sx).to.equal(20);
+      expect(obj.sy).to.equal(30);
+    });
+
+  });
+
+
+
+
+
+  // --------------------------------------------------
+  // tileEngine.removeObject
+  // --------------------------------------------------
+  describe('removeObject', () => {
+    let tileEngine = null;
+    let obj = null;
+
+    beforeEach(() => {
+      tileEngine = TileEngine({
+        tilewidth: 10,
+        tileheight: 10,
+        width: 100,
+        height: 100,
+        tilesets: [{
+          image: new Image()
+        }],
+        layers: [{
+          name: 'test',
+          data: [0,0,1,0,0]
+        }]
+      });
+      obj = {};
+    });
+
+    it('should not update objects sx property when tile engine camera changes', () => {
+      tileEngine.addObject(obj);
+
+      expect(obj.sx).to.equal(0);
+      expect(obj.sy).to.equal(0);
+
+      tileEngine.removeObject(obj);
+
+      tileEngine.sx = 20;
+      tileEngine.sy = 30;
+
+      expect(obj.sx).to.equal(0);
+      expect(obj.sy).to.equal(0);
+    });
+
+    it('should not error if the object was not added before', () => {
+      function fn() {
+        tileEngine.removeObject(obj);
+      }
+
+      expect(fn).to.not.throw();
+    });
+
+  });
+
 });

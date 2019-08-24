@@ -1,7 +1,17 @@
 import TileEngine from '../../src/tileEngine.js'
+import Sprite from '../../src/sprite.js'
 import { loadImage, loadData, load, _reset } from '../../src/assets.js'
+import { init, getCanvas } from '../../src/core.js'
 
 describe('tileEngine integration', () => {
+
+  before(() => {
+    if (!getCanvas()) {
+      let canvas = document.createElement('canvas');
+      canvas.width = canvas.height = 600;
+      init(canvas);
+    }
+  });
 
   beforeEach(() => {
     _reset();
@@ -103,6 +113,74 @@ describe('tileEngine integration', () => {
     }
 
     expect(func).to.throw();
+  });
+
+it('should sync camera with sprite camera when added', () => {
+    let data = {
+      tilewidth: 10,
+      tileheight: 10,
+      width: 50,
+      height: 50,
+      tilesets: [{
+        image: new Image()
+      }],
+      layers: [{
+        name: 'test',
+        data: [0,0,1,0,0]
+      }]
+    }
+    let tileEngine = TileEngine(data);
+
+    let sprite = Sprite({
+      x: 10,
+      y: 10
+    });
+
+    tileEngine.sx = 100;
+    tileEngine.sy = 100;
+    tileEngine.addObject(sprite);
+
+    expect(sprite.x).to.equal(10);
+    expect(sprite.y).to.equal(10);
+    expect(sprite.sx).to.equal(-100);
+    expect(sprite.sy).to.equal(-100);
+  });
+
+  it('should sync camera with sprite camera when camera is changed', () => {
+    let data = {
+      tilewidth: 10,
+      tileheight: 10,
+      width: 50,
+      height: 50,
+      tilesets: [{
+        image: new Image()
+      }],
+      layers: [{
+        name: 'test',
+        data: [0,0,1,0,0]
+      }]
+    }
+    let tileEngine = TileEngine(data);
+
+    let sprite = Sprite({
+      x: 10,
+      y: 10,
+    });
+
+    tileEngine.addObject(sprite);
+
+    expect(sprite.x).to.equal(10);
+    expect(sprite.y).to.equal(10);
+    expect(sprite.sx).to.equal(0);
+    expect(sprite.sy).to.equal(0);
+
+    tileEngine.sx = 100;
+    tileEngine.sy = 100;
+
+    expect(sprite.x).to.equal(10);
+    expect(sprite.y).to.equal(10);
+    expect(sprite.sx).to.equal(-100);
+    expect(sprite.sy).to.equal(-100);
   });
 
 });

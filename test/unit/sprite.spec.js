@@ -444,6 +444,28 @@ describe('sprite', () => {
       sprite.currentAnimation.render.restore();
     });
 
+    it('should draw the sprite and at the viewX and viewY', () => {
+      let sprite = Sprite({
+        x: 10,
+        y: 20
+      });
+
+      sinon.stub(sprite.context, 'translate').callsFake(noop);
+
+      sprite.render();
+
+      expect(sprite.context.translate.calledWith(10, 20)).to.be.ok;
+
+      sprite.sx = 200;
+      sprite.sy = 200;
+
+      sprite.render();
+
+      expect(sprite.context.translate.calledWith(-190, -180)).to.be.ok;
+
+      sprite.context.translate.restore();
+    });
+
   });
 
 
@@ -656,6 +678,46 @@ describe('sprite', () => {
       sprite.playAnimation('walk');
 
       expect(animations.walk.reset.called).to.be.true;
+    });
+
+  });
+
+
+
+
+
+  // --------------------------------------------------
+  // viewX/Y
+  // --------------------------------------------------
+  describe('viewX/Y', () => {
+
+    it('should return the position + camera', () => {
+      let sprite = Sprite({
+        x: 10,
+        y: 20
+      });
+
+      expect(sprite.viewX).to.equal(10);
+      expect(sprite.viewY).to.equal(20);
+
+      sprite.sx = 50;
+      sprite.sy = 50;
+
+      expect(sprite.viewX).to.equal(-40);
+      expect(sprite.viewY).to.equal(-30);
+    });
+
+    it('should be readonly', () => {
+      let sprite = Sprite({
+        x: 10,
+        y: 20
+      });
+
+      sprite.viewX = 100;
+      sprite.viewY = 100;
+
+      expect(sprite.viewX).to.equal(10);
+      expect(sprite.viewY).to.equal(20);
     });
 
   });

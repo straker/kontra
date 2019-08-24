@@ -380,7 +380,7 @@ export default function TileEngine(properties = {}) {
     removeObject(object) {
       let index = objects.indexOf(object);
       if (index !== -1) {
-        objects.slice(index, 1);
+        objects.splice(index, 1);
         object.sx = object.sy = 0;
       }
     },

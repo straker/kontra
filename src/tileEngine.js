@@ -63,7 +63,7 @@ export default function TileEngine(properties = {}) {
   let layerMap = {};
   let layerCanvases = {};
 
-  //
+  // objects added to tile engine to sync with the camera
   let objects = [];
 
   /**

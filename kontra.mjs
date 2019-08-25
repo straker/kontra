@@ -3581,7 +3581,7 @@ function TileEngine(properties = {}) {
     },
 
     /**
-     * Add an object to the tile engine. The tile engine will set the objects camera position (`sx`, `sy`) to be in sync with the tile engine camera.
+     * Add an object to the tile engine. The tile engine will set the objects camera position (`sx`, `sy`) to be in sync with the tile engine camera. kontra.Sprite uses this information to draw the sprite to the correct position on the canvas.
      * @memberof TileEngine
      * @function addObject
      *

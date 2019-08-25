@@ -360,7 +360,7 @@ function livingcssPreprocess(context, template, Handlebars) {
     // the first section is always the description of the API
     else if (index > 0) {
       context.otherSections.push(section);
-      section.link = section.name.toLowerCase().replace(' ', '-');
+      section.link = section.name.toLowerCase().replace(/ /g, '-');
     }
 
     context.methods.sort(sortByName);

@@ -202,7 +202,8 @@
               <ul>
                 <li><a href="api/tileEngine#basic-use">Basic Use</a></li>
                 <li><a href="api/tileEngine#advance-use">Advance Use</a></li>
-                <li><a href="api/tileEngine#moving-the camera">Moving the Camera</a></li>
+                <li><a href="api/tileEngine#moving-the-camera">Moving the Camera</a></li>
+                <li><a href="api/tileEngine#adding-objects-to-the-tilemap">Adding Objects to the TileMap</a></li>
               </ul>
             </li>
 
@@ -583,8 +584,8 @@ load('assets/imgs/mapPack_tilesheet.png', 'assets/data/tile_engine_basic.json')
   });
 })();</script>        </section>
         <section>
-          <h2 id="moving-the camera">
-            <a href="#moving-the camera" class="section-link">
+          <h2 id="moving-the-camera">
+            <a href="#moving-the-camera" class="section-link">
               <span>Moving the Camera</span>
               <span aria-hidden="true">#</span>
             </a>
@@ -714,6 +715,237 @@ load('assets/imgs/mapPack_tilesheet.png', 'assets/data/tile_engine_camera.json')
     loop.start();
   });
 })();</script>        </section>
+        <section>
+          <h2 id="adding-objects-to-the-tilemap">
+            <a href="#adding-objects-to-the-tilemap" class="section-link">
+              <span>Adding Objects to the TileMap</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
+
+          <p>Managing the correct x and y position of sprites on a large tile map can be tricky. You can add objects to the tile map which will sync the camera position with the sprite. <a href="api/sprite">Sprite</a> will automatically draw the sprite for you at the correct position on the tile map even while the camera moves.</p>
+<canvas id="game-canvas-9"></canvas>
+
+<div class="tablist">
+  <ul role="tablist">
+    <li role="presentation" data-tab="global">
+      <button role="tab" id="game-canvas-9-global-tab">Global Object</button>
+    </li>
+    <li role="presentation" data-tab="es">
+      <button role="tab" id="game-canvas-9-es-tab">ES Module Import</button>
+    </li>
+    <li role="presentation" data-tab="bundle">
+      <button role="tab" id="game-canvas-9-bundle-tab">Module Bundler</button>
+    </li>
+    <li role="presentation"></li>
+  </ul>
+  <section role="tabpanel" aria-labelledby=game-canvas-9-global-tab data-tabpanel="global">
+    <pre><code class="lang-js">let { load, TileEngine, dataAssets, imageAssets, SpriteSheet, Sprite, GameLoop } &#x3D; kontra
+
+load(&#x27;assets/imgs/mapPack_tilesheet.png&#x27;, &#x27;assets/data/tile_engine_add.json&#x27;)
+  .then(function() {
+    let tileEngine &#x3D; TileEngine(dataAssets[&#x27;assets/data/tile_engine_add&#x27;]);
+
+    let spriteSheet &#x3D; SpriteSheet({
+      image: imageAssets[&#x27;assets/imgs/mapPack_tilesheet.png&#x27;],
+      frameWidth: 64,
+      frameHeight: 64,
+      animations: {
+        player: {
+          frames: 168,
+          frameRate: 1
+        }
+      }
+    });
+
+    // draw the pink alien on the tile map at position {192,128}
+    let sprite &#x3D; Sprite({
+      x: 192,
+      y: 128,
+      animations: spriteSheet.animations
+    });
+
+    // sync the tile map camera and the sprite
+    tileEngine.addObject(sprite);
+
+    let sx &#x3D; 1;
+    let loop &#x3D; GameLoop({
+      update: function() {
+        tileEngine.sx +&#x3D; sx;
+
+        if (tileEngine.sx &lt;&#x3D; 0 || tileEngine.sx &gt;&#x3D; 256) {
+          sx &#x3D; -sx;
+        }
+      },
+      render: function() {
+        tileEngine.render();
+
+        // the alien will now draw to the correct spot even while the camera moves
+        sprite.render();
+      }
+    });
+
+    loop.start();
+  });</code></pre>
+  </section>
+  <section role="tabpanel" aria-labelledby=game-canvas-9-es-tab data-tabpanel="es">
+    <pre><code class="lang-js">import { load, TileEngine, dataAssets, imageAssets, SpriteSheet, Sprite, GameLoop } from &#x27;path/to/kontra.mjs&#x27;
+
+load(&#x27;assets/imgs/mapPack_tilesheet.png&#x27;, &#x27;assets/data/tile_engine_add.json&#x27;)
+  .then(function() {
+    let tileEngine &#x3D; TileEngine(dataAssets[&#x27;assets/data/tile_engine_add&#x27;]);
+
+    let spriteSheet &#x3D; SpriteSheet({
+      image: imageAssets[&#x27;assets/imgs/mapPack_tilesheet.png&#x27;],
+      frameWidth: 64,
+      frameHeight: 64,
+      animations: {
+        player: {
+          frames: 168,
+          frameRate: 1
+        }
+      }
+    });
+
+    // draw the pink alien on the tile map at position {192,128}
+    let sprite &#x3D; Sprite({
+      x: 192,
+      y: 128,
+      animations: spriteSheet.animations
+    });
+
+    // sync the tile map camera and the sprite
+    tileEngine.addObject(sprite);
+
+    let sx &#x3D; 1;
+    let loop &#x3D; GameLoop({
+      update: function() {
+        tileEngine.sx +&#x3D; sx;
+
+        if (tileEngine.sx &lt;&#x3D; 0 || tileEngine.sx &gt;&#x3D; 256) {
+          sx &#x3D; -sx;
+        }
+      },
+      render: function() {
+        tileEngine.render();
+
+        // the alien will now draw to the correct spot even while the camera moves
+        sprite.render();
+      }
+    });
+
+    loop.start();
+  });</code></pre>
+  </section>
+  <section role="tabpanel" aria-labelledby=game-canvas-9-bundle-tab data-tabpanel="bundle">
+    <pre><code class="lang-js">import { load, TileEngine, dataAssets, imageAssets, SpriteSheet, Sprite, GameLoop } from &#x27;kontra&#x27;;
+
+load(&#x27;assets/imgs/mapPack_tilesheet.png&#x27;, &#x27;assets/data/tile_engine_add.json&#x27;)
+  .then(function() {
+    let tileEngine &#x3D; TileEngine(dataAssets[&#x27;assets/data/tile_engine_add&#x27;]);
+
+    let spriteSheet &#x3D; SpriteSheet({
+      image: imageAssets[&#x27;assets/imgs/mapPack_tilesheet.png&#x27;],
+      frameWidth: 64,
+      frameHeight: 64,
+      animations: {
+        player: {
+          frames: 168,
+          frameRate: 1
+        }
+      }
+    });
+
+    // draw the pink alien on the tile map at position {192,128}
+    let sprite &#x3D; Sprite({
+      x: 192,
+      y: 128,
+      animations: spriteSheet.animations
+    });
+
+    // sync the tile map camera and the sprite
+    tileEngine.addObject(sprite);
+
+    let sx &#x3D; 1;
+    let loop &#x3D; GameLoop({
+      update: function() {
+        tileEngine.sx +&#x3D; sx;
+
+        if (tileEngine.sx &lt;&#x3D; 0 || tileEngine.sx &gt;&#x3D; 256) {
+          sx &#x3D; -sx;
+        }
+      },
+      render: function() {
+        tileEngine.render();
+
+        // the alien will now draw to the correct spot even while the camera moves
+        sprite.render();
+      }
+    });
+
+    loop.start();
+  });</code></pre>
+  </section>
+</div>
+
+<script>(function() {
+  kontra.init("game-canvas-9");
+  var canvas = document.querySelector("#game-canvas-9");
+  canvas.width = 576;
+  canvas.height = 576;
+  var context = canvas.getContext("2d");
+  // exclude-code:start
+let { TileEngine, load, dataAssets, imageAssets, SpriteSheet, Sprite, GameLoop } = kontra;
+// exclude-code:end
+load('assets/imgs/mapPack_tilesheet.png', 'assets/data/tile_engine_add.json')
+  .then(function() {
+    let tileEngine = TileEngine(dataAssets['assets/data/tile_engine_add']);
+    // exclude-code:start
+    tileEngine.context = context;
+    // exclude-code:end
+
+    let spriteSheet = SpriteSheet({
+      image: imageAssets['assets/imgs/mapPack_tilesheet.png'],
+      frameWidth: 64,
+      frameHeight: 64,
+      animations: {
+        player: {
+          frames: 168,
+          frameRate: 1
+        }
+      }
+    });
+
+    // draw the pink alien on the tile map at position {192,128}
+    let sprite = Sprite({
+      x: 192,
+      y: 128,
+      animations: spriteSheet.animations
+    });
+
+    // sync the tile map camera and the sprite
+    tileEngine.addObject(sprite);
+
+    let sx = 1;
+    let loop = GameLoop({
+      update: function() {
+        tileEngine.sx += sx;
+
+        if (tileEngine.sx <= 0 || tileEngine.sx >= 256) {
+          sx = -sx;
+        }
+      },
+      render: function() {
+        tileEngine.render();
+
+        // the alien will now draw to the correct spot even while the camera moves
+        sprite.render();
+      }
+    });
+
+    loop.start();
+  });
+})();</script>        </section>
 
         <section>
           <h2 id="addObject">
@@ -723,7 +955,7 @@ load('assets/imgs/mapPack_tilesheet.png', 'assets/data/tile_engine_camera.json')
             </a>
           </h2>
 
-          <p>Add an object to the tile engine. The tile engine will set the objects camera position (<code>sx</code>, <code>sy</code>) to be in sync with the tile engine camera.</p>
+          <p>Add an object to the tile engine. The tile engine will set the objects camera position (<code>sx</code>, <code>sy</code>) to be in sync with the tile engine camera. <a href="api/sprite">Sprite</a> uses this information to draw the sprite to the correct position on the canvas.</p>
           <h3 id="title-addObject"><span class="visually-hidden">addObject</span> Parameters</span></h3>
           <dl aria-labelledby="title-addObject">
             <dt>

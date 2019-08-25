@@ -124,3 +124,66 @@
  *     loop.start();
  *   });
  */
+
+/**
+ * Managing the correct x and y position of sprites on a large tile map can be tricky. You can add objects to the tile map which will sync the camera position with the sprite. kontra.Sprite will automatically draw the sprite for you at the correct position on the tile map even while the camera moves.
+ *
+ * @sectionName Adding Objects to the TileMap
+ * @example
+ * @example {576x576}
+ * // exclude-code:start
+ * let { TileEngine, load, dataAssets, imageAssets, SpriteSheet, Sprite, GameLoop } = kontra;
+ * // exclude-code:end
+ * // exclude-script:start
+ * import { load, TileEngine, dataAssets, imageAssets, SpriteSheet, Sprite, GameLoop } from 'kontra';
+ * // exclude-script:end
+ *
+ * load('assets/imgs/mapPack_tilesheet.png', 'assets/data/tile_engine_add.json')
+ *   .then(function() {
+ *     let tileEngine = TileEngine(dataAssets['assets/data/tile_engine_add']);
+ *     // exclude-code:start
+ *     tileEngine.context = context;
+ *     // exclude-code:end
+ *
+ *     let spriteSheet = SpriteSheet({
+ *       image: imageAssets['assets/imgs/mapPack_tilesheet.png'],
+ *       frameWidth: 64,
+ *       frameHeight: 64,
+ *       animations: {
+ *         player: {
+ *           frames: 168,
+ *           frameRate: 1
+ *         }
+ *       }
+ *     });
+ *
+ *     // draw the pink alien on the tile map at position {192,128}
+ *     let sprite = Sprite({
+ *       x: 192,
+ *       y: 128,
+ *       animations: spriteSheet.animations
+ *     });
+ *
+ *     // sync the tile map camera and the sprite
+ *     tileEngine.addObject(sprite);
+ *
+ *     let sx = 1;
+ *     let loop = GameLoop({
+ *       update: function() {
+ *         tileEngine.sx += sx;
+ *
+ *         if (tileEngine.sx <= 0 || tileEngine.sx >= 256) {
+ *           sx = -sx;
+ *         }
+ *       },
+ *       render: function() {
+ *         tileEngine.render();
+ *
+ *         // the alien will now draw to the correct spot even while the camera moves
+ *         sprite.render();
+ *       }
+ *     });
+ *
+ *     loop.start();
+ *   });
+ */

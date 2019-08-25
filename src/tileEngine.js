@@ -127,6 +127,10 @@ export default function TileEngine(properties = {}) {
     _sx: 0,
     _sy: 0,
 
+
+    // d = dirty
+    _d: false,
+
     /**
      * X coordinate of the tile map camera.
      * @memberof TileEngine
@@ -351,7 +355,6 @@ export default function TileEngine(properties = {}) {
       let col = position.col || getCol(position.x);
 
       if (layerMap[name]) {
-        // d = dirty
         this._d = true;
         layerMap[name].data[col + row * tileEngine.width] = tile;
       }

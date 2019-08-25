@@ -283,6 +283,12 @@ describe('tileEngine', () => {
       expect(fn).to.not.throw();
     });
 
+    it('should set the dirty flag', () => {
+      expect(tileEngine._d).to.equal(false);
+      tileEngine.setTileAtLayer('test', {row: 1, col: 2}, 3);
+      expect(tileEngine._d).to.equal(true);
+    });
+
   });
 
 

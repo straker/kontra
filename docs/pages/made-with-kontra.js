@@ -84,6 +84,14 @@ Have a game you want to add? [Let me know](https://github.com/straker/kontra/iss
       <span><span class="visually-hidden">. By </span><small>t3nshi, hermbit, and Failpositive</small></span>
     </a>
   </li>
+
+  <li>
+    <a href="http://js13kgames.com/entries/blackout">
+      <img src="assets/imgs/games/blackout.jpg" alt="" width="320" height="200"/>
+      <span>Blackout</span>
+      <span><span class="visually-hidden">. By </span><small>Avdeev Andrew</small></span>
+    </a>
+  </li>
 </ul>
 
 @section Games Made with Kontra.js

@@ -2912,10 +2912,6 @@ class Sprite {
     this.context.save();
     this.context.translate(this.viewX, this.viewY);
 
-    if (this.width < 0) {
-      this.context.scale(-1, 1);
-    }
-
     if (this.rotation) {
       this.context.rotate(this.rotation);
     }
@@ -3290,7 +3286,7 @@ function TileEngine(properties = {}) {
   let layerMap = {};
   let layerCanvases = {};
 
-  //
+  // objects added to tile engine to sync with the camera
   let objects = [];
 
   /**
@@ -3354,6 +3350,10 @@ function TileEngine(properties = {}) {
     _sx: 0,
     _sy: 0,
 
+
+    // d = dirty
+    _d: false,
+
     /**
      * X coordinate of the tile map camera.
      * @memberof TileEngine
@@ -3393,7 +3393,7 @@ function TileEngine(properties = {}) {
     render() {
       if (this._d) {
         this._d = false;
-        prerender();
+        this._p();
       }
 
       render(offscreenCanvas);
@@ -3578,7 +3578,6 @@ function TileEngine(properties = {}) {
       let col = position.col || getCol(position.x);
 
       if (layerMap[name]) {
-        // d = dirty
         this._d = true;
         layerMap[name].data[col + row * tileEngine.width] = tile;
       }
@@ -3614,6 +3613,7 @@ function TileEngine(properties = {}) {
 
     // expose for testing
     _r: renderLayer,
+    _p: prerender,
 
     // @if DEBUG
     layerCanvases: layerCanvases

@@ -70,7 +70,7 @@
 
         <p>An object for drawing sprite sheet animations.</p>
 <p>An animation defines the sequence of frames to use from a sprite sheet. It also defines at what speed the animation should run using <code>frameRate</code>.</p>
-<p>Typically you don&#39;t create an <a href="Animation">Animation</a> directly, but rather you would create them from <a href="SpriteSheet">SpriteSheet</a> by passing the <code>animations</code> argument.</p>
+<p>Typically you don&#39;t create an <a href="api/animation">Animation</a> directly, but rather you would create them from <a href="api/spriteSheet">SpriteSheet</a> by passing the <code>animations</code> argument.</p>
 <div class="tablist">
   <ul role="tablist">
     <li role="presentation" data-tab="global">
@@ -151,7 +151,7 @@ image.onload = function() {
             <code>properties.spriteSheet</code>
             
           </dt>
-          <dd><p><a href="SpriteSheet">SpriteSheet</a>. Sprite sheet for the animation.</p>
+          <dd><p><a href="api/spriteSheet">SpriteSheet</a>. Sprite sheet for the animation.</p>
         </dd>
           <dt>
             <code>properties.frames</code>
@@ -257,10 +257,10 @@ image.onload = function() {
             </a>
           </h2>
 
-          <p>Clone an animation so it can be used more than once. By default animations passed to <a href="Sprite">Sprite</a> will be cloned so no two sprites update the same animation. Otherwise two sprites who shared the same animation would make it update twice as fast.</p>
+          <p>Clone an animation so it can be used more than once. By default animations passed to <a href="api/sprite">Sprite</a> will be cloned so no two sprites update the same animation. Otherwise two sprites who shared the same animation would make it update twice as fast.</p>
           
           <h3><span class="visually-hidden">clone</span> Return value</h3>
-          <p><p>A new <a href="Animation">Animation</a> instance.</p>
+          <p><p>A new <a href="api/animation">Animation</a> instance.</p>
           </p>
         </section>
         <section>
@@ -293,7 +293,7 @@ image.onload = function() {
             </a>
           </h2>
 
-          <p>The height of an individual frame. Taken from the property of the same name in the <a href="#spriteSheet">spriteSheet</a>.</p>
+          <p>The height of an individual frame. Taken from the property of the same name in the <a href="api/animation/#spriteSheet">spriteSheet</a>.</p>
           
         </section>
         <section>
@@ -315,7 +315,7 @@ image.onload = function() {
             </a>
           </h2>
 
-          <p>The space between each frame. Taken from the property of the same name in the <a href="#spriteSheet">spriteSheet</a>.</p>
+          <p>The space between each frame. Taken from the property of the same name in the <a href="api/animation/#spriteSheet">spriteSheet</a>.</p>
           
         </section>
         <section>
@@ -418,7 +418,7 @@ image.onload = function() {
             </a>
           </h2>
 
-          <p>The width of an individual frame. Taken from the property of the same name in the <a href="#spriteSheet">spriteSheet</a>.</p>
+          <p>The width of an individual frame. Taken from the property of the same name in the <a href="api/animation/#spriteSheet">spriteSheet</a>.</p>
           
         </section>
 

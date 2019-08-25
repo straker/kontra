@@ -147,7 +147,7 @@ registerPlugin(Sprite, loggingPlugin);</code></pre></section>
 <p>An intercept function is named the same name as the function it will intercept. The function name is also prefixed with <code>before</code> to have the function run before the intercepted function, or <code>after</code> to run after the intercepted function.</p>
 <p>For example, if you wish to add a function to run after a Sprites <code>collidesWidth()</code> function, the name of the intercept function would be <code>afterCollidesWidth</code> (note the capitalization of the <code>collidesWidth</code> function name). <code>beforeCollidesWidth</code> would run before the Sprites <code>collidesWidth()</code> function.</p>
 <p>A plugin can define any number of before and after intercept functions. When the plugin is registered for a Kontra object, only intercept functions that match a function name in the Kontra object will be intercepted.</p>
-<p>As the plugin author, you should not <a href="#registerPlugin">register</a> the plugin yourself. You should only export the plugin object and let the consumer register it.</p>
+<p>As the plugin author, you should not <a href="api/plugin/#registerPlugin">register</a> the plugin yourself. You should only export the plugin object and let the consumer register it.</p>
 <pre><code class="language-js">// pluginCode.js
 const loggingPlugin = {
   afterCollidesWith(sprite, result, object) {

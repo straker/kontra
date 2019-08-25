@@ -24,7 +24,7 @@ import Vector from './vector.js'
  * @param {Canvas​Rendering​Context2D} [properties.context] - The context the sprite should draw to. Defaults to [core.getContext()](api/core#getContext).
  *
  * @param {Image|HTMLCanvasElement} [properties.image] - Use an image to draw the sprite.
- * @param {Object} [properties.animations] - An object of [Animations](animation) from a kontra.Spritesheet to animate the sprite.
+ * @param {Object} [properties.animations] - An object of [Animations](api/animation) from a kontra.Spritesheet to animate the sprite.
  *
  * @param {Function} [properties.update] - Function called every frame to update the sprite.
  * @param {Function} [properties.render] - Function called every frame to render the sprite.
@@ -73,13 +73,13 @@ class Sprite {
     // defaults
 
     /**
-     * The width of the sprite. If the sprite is a [rectangle sprite](#rectangle-sprite), it uses the passed in value. For an [image sprite](#image-sprite) it is the width of the image. And for an [animation sprite](#animation-sprite) it is the width of a single frame of the animation.
+     * The width of the sprite. If the sprite is a [rectangle sprite](api/sprite/#rectangle-sprite), it uses the passed in value. For an [image sprite](api/sprite/#image-sprite) it is the width of the image. And for an [animation sprite](api/sprite/#animation-sprite) it is the width of a single frame of the animation.
      * @memberof Sprite
      * @property {Number} width
      */
 
     /**
-     * The height of the sprite. If the sprite is a [rectangle sprite](#rectangle-sprite), it uses the passed in value. For an [image sprite](#image-sprite) it is the height of the image. And for an [animation sprite](#animation-sprite) it is the height of a single frame of the animation.
+     * The height of the sprite. If the sprite is a [rectangle sprite](api/sprite/#rectangle-sprite), it uses the passed in value. For an [image sprite](api/sprite/#image-sprite) it is the height of the image. And for an [animation sprite](api/sprite/#animation-sprite) it is the height of a single frame of the animation.
      * @memberof Sprite
      * @property {Number} height
      */
@@ -245,7 +245,7 @@ class Sprite {
   }
 
   /**
-   * An object of [Animations](animation) from a kontra.SpriteSheet to animate the sprite. Each animation is named so that it can can be used by name for the sprites [playAnimation()](#playAnimation) function.
+   * An object of [Animations](api/animation) from a kontra.SpriteSheet to animate the sprite. Each animation is named so that it can can be used by name for the sprites [playAnimation()](api/sprite/#playAnimation) function.
    *
    * ```js
    * import { Sprite, SpriteSheet } from 'kontra';
@@ -351,14 +351,14 @@ class Sprite {
    * @memberof Sprite
    * @function isAlive
    *
-   * @returns {Boolean} `true` if the sprites [ttl](#ttl) property is above `0`, `false` otherwise.
+   * @returns {Boolean} `true` if the sprites [ttl](api/sprite/#ttl) property is above `0`, `false` otherwise.
    */
   isAlive() {
     return this.ttl > 0;
   }
 
   /**
-   * Check if the sprite collide with the object. Uses a simple [Axis-Aligned Bounding Box (AABB) collision check](https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection#Axis-Aligned_Bounding_Box). Takes into account the sprites [anchor](#anchor).
+   * Check if the sprite collide with the object. Uses a simple [Axis-Aligned Bounding Box (AABB) collision check](https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection#Axis-Aligned_Bounding_Box). Takes into account the sprites [anchor](api/sprite/#anchor).
    *
    * **NOTE:** Does not take into account sprite rotation. If you need collision detection between rotated sprites you will need to implement your own `collidesWith()` function. I suggest looking at the Separate Axis Theorem.
    *
@@ -442,7 +442,7 @@ class Sprite {
   }
 
   /**
-   * Update the sprites position based on its velocity and acceleration. Calls the sprites [advance()](#advance) function.
+   * Update the sprites position based on its velocity and acceleration. Calls the sprites [advance()](api/sprite/#advance) function.
    * @memberof Sprite
    * @function update
    *
@@ -453,7 +453,7 @@ class Sprite {
   }
 
   /**
-   * Render the sprite. Calls the sprites [draw()](#draw) function.
+   * Render the sprite. Calls the sprites [draw()](api/sprite/#draw) function.
    * @memberof Sprite
    * @function render
    */
@@ -501,9 +501,9 @@ class Sprite {
   }
 
   /**
-   * Move the sprite by its acceleration and velocity. If the sprite is an [animation sprite](#animation-sprite), it also advances the animation every frame.
+   * Move the sprite by its acceleration and velocity. If the sprite is an [animation sprite](api/sprite/#animation-sprite), it also advances the animation every frame.
    *
-   * If you override the sprites [update()](#update) function with your own update function, you can call this function to move the sprite normally.
+   * If you override the sprites [update()](api/sprite/#update) function with your own update function, you can call this function to move the sprite normally.
    *
    * ```js
    * import { Sprite } from 'kontra';
@@ -549,7 +549,7 @@ class Sprite {
   }
 
   /**
-   * Draw the sprite at its X and Y position. This function changes based on the type of the sprite. For a [rectangle sprite](#rectangle-sprite), it uses `context.fillRect()`, for an [image sprite](#image-sprite) it uses `context.drawImage()`, and for an [animation sprite](#animation-sprite) it uses the [currentAnimation](#currentAnimation) `render()` function.
+   * Draw the sprite at its X and Y position. This function changes based on the type of the sprite. For a [rectangle sprite](api/sprite/#rectangle-sprite), it uses `context.fillRect()`, for an [image sprite](api/sprite/#image-sprite) it uses `context.drawImage()`, and for an [animation sprite](api/sprite/#animation-sprite) it uses the [currentAnimation](api/sprite/#currentAnimation) `render()` function.
    *
    * If you override the sprites `render()` function with your own render function, you can call this function to draw the sprite normally.
    *

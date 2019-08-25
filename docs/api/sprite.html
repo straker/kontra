@@ -135,7 +135,7 @@
             <code>properties.ttl</code>
             <span class="optional">Optional</span>
           </dt>
-          <dd><p>Number. How many frames the sprite should be alive. Used by <a href="Pool">Pool</a>. Defaults to <code>Infinity</code>.</p>
+          <dd><p>Number. How many frames the sprite should be alive. Used by <a href="api/pool">Pool</a>. Defaults to <code>Infinity</code>.</p>
         </dd>
           <dt>
             <code>properties.rotation</code>
@@ -165,7 +165,7 @@
             <code>properties.animations</code>
             <span class="optional">Optional</span>
           </dt>
-          <dd><p>Object. An object of <a href="animation">Animations</a> from a <a href="Spritesheet">Spritesheet</a> to animate the sprite.</p>
+          <dd><p>Object. An object of <a href="api/animation">Animations</a> from a <a href="api/spritesheet">Spritesheet</a> to animate the sprite.</p>
         </dd>
           <dt>
             <code>properties.update</code>
@@ -586,7 +586,7 @@ image.onload = function() {
           </h2>
 
           <p>A sprite can use a spritesheet animation as well. To create an animation sprite, pass the <code>animations</code> argument. The size of the sprite will automatically be set as the width and height of a frame of the spritesheet.</p>
-<p>A sprite can have multiple named animations. The easiest way to create animations is to use <a href="SpriteSheet">SpriteSheet</a>. All animations will automatically be <a href="animation#clone">cloned</a> so no two sprites update the same animation.</p>
+<p>A sprite can have multiple named animations. The easiest way to create animations is to use <a href="api/spriteSheet">SpriteSheet</a>. All animations will automatically be <a href="animation#clone">cloned</a> so no two sprites update the same animation.</p>
 <canvas id="game-canvas-2"></canvas>
 
 <div class="tablist">
@@ -978,8 +978,8 @@ class CustomSprite extends Sprite.class {
             </a>
           </h2>
 
-          <p>Move the sprite by its acceleration and velocity. If the sprite is an <a href="#animation-sprite">animation sprite</a>, it also advances the animation every frame.</p>
-<p>If you override the sprites <a href="#update">update()</a> function with your own update function, you can call this function to move the sprite normally.</p>
+          <p>Move the sprite by its acceleration and velocity. If the sprite is an <a href="api/sprite/#animation-sprite">animation sprite</a>, it also advances the animation every frame.</p>
+<p>If you override the sprites <a href="api/sprite/#update">update()</a> function with your own update function, you can call this function to move the sprite normally.</p>
 <div class="tablist">
   <ul role="tablist">
     <li role="presentation" data-tab="global">
@@ -1237,7 +1237,7 @@ sprite.render();
             </a>
           </h2>
 
-          <p>An object of <a href="animation">Animations</a> from a <a href="SpriteSheet">SpriteSheet</a> to animate the sprite. Each animation is named so that it can can be used by name for the sprites <a href="#playAnimation">playAnimation()</a> function.</p>
+          <p>An object of <a href="api/animation">Animations</a> from a <a href="api/spriteSheet">SpriteSheet</a> to animate the sprite. Each animation is named so that it can can be used by name for the sprites <a href="api/sprite/#playAnimation">playAnimation()</a> function.</p>
 <div class="tablist">
   <ul role="tablist">
     <li role="presentation" data-tab="global">
@@ -1328,7 +1328,7 @@ sprite.playAnimation(&#39;idle&#39;);</code></pre></section>
             </a>
           </h2>
 
-          <p>Check if the sprite collide with the object. Uses a simple <a href="https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection#Axis-Aligned_Bounding_Box">Axis-Aligned Bounding Box (AABB) collision check</a>. Takes into account the sprites <a href="#anchor">anchor</a>.</p>
+          <p>Check if the sprite collide with the object. Uses a simple <a href="https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection#Axis-Aligned_Bounding_Box">Axis-Aligned Bounding Box (AABB) collision check</a>. Takes into account the sprites <a href="api/sprite/#anchor">anchor</a>.</p>
 <p><strong>NOTE:</strong> Does not take into account sprite rotation. If you need collision detection between rotated sprites you will need to implement your own <code>collidesWith()</code> function. I suggest looking at the Separate Axis Theorem.</p>
 <div class="tablist">
   <ul role="tablist">
@@ -1571,7 +1571,7 @@ sprite.collidesWith(sprite2);  //=&gt; true</code></pre></section>
             </a>
           </h2>
 
-          <p>Draw the sprite at its X and Y position. This function changes based on the type of the sprite. For a <a href="#rectangle-sprite">rectangle sprite</a>, it uses <code>context.fillRect()</code>, for an <a href="#image-sprite">image sprite</a> it uses <code>context.drawImage()</code>, and for an <a href="#animation-sprite">animation sprite</a> it uses the <a href="#currentAnimation">currentAnimation</a> <code>render()</code> function.</p>
+          <p>Draw the sprite at its X and Y position. This function changes based on the type of the sprite. For a <a href="api/sprite/#rectangle-sprite">rectangle sprite</a>, it uses <code>context.fillRect()</code>, for an <a href="api/sprite/#image-sprite">image sprite</a> it uses <code>context.drawImage()</code>, and for an <a href="api/sprite/#animation-sprite">animation sprite</a> it uses the <a href="api/sprite/#currentAnimation">currentAnimation</a> <code>render()</code> function.</p>
 <p>If you override the sprites <code>render()</code> function with your own render function, you can call this function to draw the sprite normally.</p>
 <div class="tablist">
   <ul role="tablist">
@@ -1682,7 +1682,7 @@ sprite.render();</code></pre></section>
             </a>
           </h2>
 
-          <p>The height of the sprite. If the sprite is a <a href="#rectangle-sprite">rectangle sprite</a>, it uses the passed in value. For an <a href="#image-sprite">image sprite</a> it is the height of the image. And for an <a href="#animation-sprite">animation sprite</a> it is the height of a single frame of the animation.</p>
+          <p>The height of the sprite. If the sprite is a <a href="api/sprite/#rectangle-sprite">rectangle sprite</a>, it uses the passed in value. For an <a href="api/sprite/#image-sprite">image sprite</a> it is the height of the image. And for an <a href="api/sprite/#animation-sprite">animation sprite</a> it is the height of a single frame of the animation.</p>
           
         </section>
         <section>
@@ -1724,10 +1724,10 @@ sprite.render();</code></pre></section>
             </a>
           </h2>
 
-          <p>Check if the sprite is alive. Primarily used by <a href="Pool">Pool</a> to know when to recycle an object.</p>
+          <p>Check if the sprite is alive. Primarily used by <a href="api/pool">Pool</a> to know when to recycle an object.</p>
           
           <h3><span class="visually-hidden">isAlive</span> Return value</h3>
-          <p><p><code>true</code> if the sprites <a href="#ttl">ttl</a> property is above <code>0</code>, <code>false</code> otherwise.</p>
+          <p><p><code>true</code> if the sprites <a href="api/sprite/#ttl">ttl</a> property is above <code>0</code>, <code>false</code> otherwise.</p>
           </p>
         </section>
         <section>
@@ -1846,7 +1846,7 @@ sprite.playAnimation(&#39;idle&#39;);</code></pre></section>
             </a>
           </h2>
 
-          <p>Render the sprite. Calls the sprites <a href="#draw">draw()</a> function.</p>
+          <p>Render the sprite. Calls the sprites <a href="api/sprite/#draw">draw()</a> function.</p>
           
         </section>
         <section>
@@ -1890,7 +1890,7 @@ sprite.playAnimation(&#39;idle&#39;);</code></pre></section>
             </a>
           </h2>
 
-          <p>How may frames the sprite should be alive. Primarily used by <a href="Pool">Pool</a> to know when to recycle an object.</p>
+          <p>How may frames the sprite should be alive. Primarily used by <a href="api/pool">Pool</a> to know when to recycle an object.</p>
           
         </section>
         <section>
@@ -1901,7 +1901,7 @@ sprite.playAnimation(&#39;idle&#39;);</code></pre></section>
             </a>
           </h2>
 
-          <p>Update the sprites position based on its velocity and acceleration. Calls the sprites <a href="#advance">advance()</a> function.</p>
+          <p>Update the sprites position based on its velocity and acceleration. Calls the sprites <a href="api/sprite/#advance">advance()</a> function.</p>
           <h3 id="title-update"><span class="visually-hidden">update</span> Parameters</span></h3>
           <dl aria-labelledby="title-update">
             <dt>
@@ -1954,7 +1954,7 @@ sprite.playAnimation(&#39;idle&#39;);</code></pre></section>
             </a>
           </h2>
 
-          <p>The width of the sprite. If the sprite is a <a href="#rectangle-sprite">rectangle sprite</a>, it uses the passed in value. For an <a href="#image-sprite">image sprite</a> it is the width of the image. And for an <a href="#animation-sprite">animation sprite</a> it is the width of a single frame of the animation.</p>
+          <p>The width of the sprite. If the sprite is a <a href="api/sprite/#rectangle-sprite">rectangle sprite</a>, it uses the passed in value. For an <a href="api/sprite/#image-sprite">image sprite</a> it is the width of the image. And for an <a href="api/sprite/#animation-sprite">animation sprite</a> it is the width of a single frame of the animation.</p>
           
         </section>
         <section>

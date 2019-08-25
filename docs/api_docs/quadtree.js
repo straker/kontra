@@ -1,5 +1,5 @@
 /**
- * Every frame you should remove all objects from the quadtree using its [clear()](#clear) function and then add all objects back using its [add()](#add) function. You can add a single object, a list of objects, or an array of objects.
+ * Every frame you should remove all objects from the quadtree using its [clear()](api/quadtree/#clear) function and then add all objects back using its [add()](api/quadtree/#add) function. You can add a single object, a list of objects, or an array of objects.
  *
  * ```js
  * import { Quadtree, Sprite, GameLoop } from 'kontra';

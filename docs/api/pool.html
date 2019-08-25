@@ -166,10 +166,10 @@
             </a>
           </h2>
 
-          <p>To use the pool, you must pass the <code>create()</code> function argument, which should return a new <a href="Sprite">Sprite</a> or object. This object will be added to the pool every time there are no more alive objects.</p>
-<p>The object must implement the functions <code>update()</code>, <code>init()</code>, and <code>isAlive()</code>. If one of these functions is missing the pool will throw an error. <a href="Sprite">Sprite</a> defines these functions for you.</p>
+          <p>To use the pool, you must pass the <code>create()</code> function argument, which should return a new <a href="api/sprite">Sprite</a> or object. This object will be added to the pool every time there are no more alive objects.</p>
+<p>The object must implement the functions <code>update()</code>, <code>init()</code>, and <code>isAlive()</code>. If one of these functions is missing the pool will throw an error. <a href="api/sprite">Sprite</a> defines these functions for you.</p>
 <p>An object is available for reuse when its <code>isAlive()</code> function returns <code>false</code>. For a sprite, this is typically when its ttl is <code>0</code>.</p>
-<p>When you want an object from the pool, use the pools <a href="#get">get()</a> function and pass it any properties you want the newly initialized object to have.</p>
+<p>When you want an object from the pool, use the pools <a href="api/pool/#get">get()</a> function and pass it any properties you want the newly initialized object to have.</p>
 <div class="tablist">
   <ul role="tablist">
     <li role="presentation" data-tab="global">
@@ -232,7 +232,7 @@ pool.get({
   ttl: 60
 });</code></pre></section>
 </div>
-<p>When you want to update or render all alive objects in the pool, use the pools <a href="#update">update()</a> and <a href="#render">render()</a> functions.</p>
+<p>When you want to update or render all alive objects in the pool, use the pools <a href="api/pool/#update">update()</a> and <a href="api/pool/#render">render()</a> functions.</p>
 <div class="tablist">
   <ul role="tablist">
     <li role="presentation" data-tab="global">
@@ -287,7 +287,7 @@ let loop = GameLoop({
             </a>
           </h2>
 
-          <p>Clear the object pool. Removes all objects from the pool and resets its <a href="#size">size</a> to 1.</p>
+          <p>Clear the object pool. Removes all objects from the pool and resets its <a href="api/pool/#size">size</a> to 1.</p>
           
         </section>
         <section>
@@ -298,7 +298,7 @@ let loop = GameLoop({
             </a>
           </h2>
 
-          <p>Get and return an object from the pool. The properties parameter will be passed directly to the objects <code>init()</code> function. If you&#39;re using a <a href="Sprite">Sprite</a>, you should also pass the <code>ttl</code> property to designate how many frames you want the object to be alive for.</p>
+          <p>Get and return an object from the pool. The properties parameter will be passed directly to the objects <code>init()</code> function. If you&#39;re using a <a href="api/sprite">Sprite</a>, you should also pass the <code>ttl</code> property to designate how many frames you want the object to be alive for.</p>
 <p>If you want to control when the sprite is ready for reuse, pass <code>Infinity</code> for <code>ttl</code>. You&#39;ll need to set the sprites <code>ttl</code> to <code>0</code> when you&#39;re ready for the sprite to be reused.</p>
 <pre><code class="language-js">let sprite = pool.get({
   // the object will get these properties and values
@@ -334,7 +334,7 @@ let loop = GameLoop({
             </a>
           </h2>
 
-          <p>Returns an array of all alive objects. Useful if you need to do special processing on all alive objects outside of the pool, such as add all alive objects to a <a href="Quadtree">Quadtree</a>.</p>
+          <p>Returns an array of all alive objects. Useful if you need to do special processing on all alive objects outside of the pool, such as add all alive objects to a <a href="api/quadtree">Quadtree</a>.</p>
           
           <h3><span class="visually-hidden">getAliveObjects</span> Return value</h3>
           <p><p>An Array of all alive objects.</p>

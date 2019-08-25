@@ -107,7 +107,7 @@ function getCanPlay(audio) {
 }
 
 /**
- * Object of all loaded image assets by both file name and path. If the base [image path](#setImagePath) was set before the image was loaded, the file name and path will not include the base image path.
+ * Object of all loaded image assets by both file name and path. If the base [image path](api/assets/#setImagePath) was set before the image was loaded, the file name and path will not include the base image path.
  *
  * ```js
  * import { load, setImagePath, imageAssets } from 'kontra';
@@ -130,7 +130,7 @@ function getCanPlay(audio) {
 export let imageAssets = {};
 
 /**
- * Object of all loaded audio assets by both file name and path. If the base [audio path](#setAudioPath) was set before the audio was loaded, the file name and path will not include the base audio path.
+ * Object of all loaded audio assets by both file name and path. If the base [audio path](api/assets/#setAudioPath) was set before the audio was loaded, the file name and path will not include the base audio path.
  *
  * ```js
  * import { load, setAudioPath, audioAssets } from 'kontra';
@@ -153,7 +153,7 @@ export let imageAssets = {};
 export let audioAssets = {};
 
 /**
- * Object of all loaded data assets by both file name and path. If the base [data path](#setDataPath) was set before the data was loaded, the file name and path will not include the base data path.
+ * Object of all loaded data assets by both file name and path. If the base [data path](api/assets/#setDataPath) was set before the data was loaded, the file name and path will not include the base data path.
  *
  * ```js
  * import { load, setDataPath, dataAssets } from 'kontra';
@@ -243,9 +243,9 @@ export function setDataPath(path) {
 }
 
 /**
- * Load a single Image asset. Uses the base [image path](#setImagePath) to resolve the URL.
+ * Load a single Image asset. Uses the base [image path](api/assets/#setImagePath) to resolve the URL.
  *
- * Once loaded, the asset will be accessible on the the [imageAssets](#imageAssets) property.
+ * Once loaded, the asset will be accessible on the the [imageAssets](api/assets/#imageAssets) property.
  *
  * ```js
  * import { loadImage } from 'kontra';
@@ -287,9 +287,9 @@ export function loadImage(url) {
 }
 
 /**
- * Load a single Audio asset. Supports loading multiple audio formats which the loader will use to load the first audio format supported by the browser in the order listed. Uses the base [audio path](#setAudioPath) to resolve the URL.
+ * Load a single Audio asset. Supports loading multiple audio formats which the loader will use to load the first audio format supported by the browser in the order listed. Uses the base [audio path](api/assets/#setAudioPath) to resolve the URL.
  *
- * Once loaded, the asset will be accessible on the the [audioAssets](#audioAssets) property. Since the loader determines which audio asset to load based on browser support, you should only reference the audio by its name and not by its file path since there's no guarantee which asset was loaded.
+ * Once loaded, the asset will be accessible on the the [audioAssets](api/assets/#audioAssets) property. Since the loader determines which audio asset to load based on browser support, you should only reference the audio by its name and not by its file path since there's no guarantee which asset was loaded.
  *
  * ```js
  * import { loadAudio, audioAssets } from 'kontra';
@@ -349,9 +349,9 @@ export function loadAudio(url) {
 }
 
 /**
- * Load a single Data asset. Uses the base [data path](#setDataPath) to resolve the URL.
+ * Load a single Data asset. Uses the base [data path](api/assets/#setDataPath) to resolve the URL.
  *
- * Once loaded, the asset will be accessible on the the [dataAssets](#dataAssets) property.
+ * Once loaded, the asset will be accessible on the the [dataAssets](api/assets/#dataAssets) property.
  *
  * ```js
  * import { loadData } from 'kontra';
@@ -389,7 +389,7 @@ export function loadData(url) {
 }
 
 /**
- * Load Image, Audio, or data files. Uses the [loadImage](#loadImage), [loadAudio](#loadAudio), and [loadData](#loadData) functions to load each asset type.
+ * Load Image, Audio, or data files. Uses the [loadImage](api/assets/#loadImage), [loadAudio](api/assets/#loadAudio), and [loadData](api/assets/#loadData) functions to load each asset type.
  *
  * ```js
  * import { load } from 'kontra';

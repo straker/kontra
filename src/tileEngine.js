@@ -166,7 +166,7 @@ export default function TileEngine(properties = {}) {
     render() {
       if (this._d) {
         this._d = false;
-        prerender();
+        this._p();
       }
 
       render(offscreenCanvas);
@@ -387,6 +387,7 @@ export default function TileEngine(properties = {}) {
 
     // expose for testing
     _r: renderLayer,
+    _p: prerender,
 
     // @if DEBUG
     layerCanvases: layerCanvases

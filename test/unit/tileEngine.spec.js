@@ -78,6 +78,32 @@ describe('tileEngine', () => {
 
       context.drawImage.restore();
     });
+
+    it('calls prerender if the tile engine is dirty', () => {
+      let context = getContext();
+      let tileEngine = TileEngine({
+        tilewidth: 10,
+        tileheight: 10,
+        width: 50,
+        height: 50,
+        tilesets: [{
+          image: new Image()
+        }],
+        layers: [{
+          name: 'test',
+          data: [0,0,1,0,0]
+        }]
+      });
+
+      tileEngine._d = true;
+      sinon.stub(tileEngine, '_p').callsFake(noop);
+
+      tileEngine.render();
+
+      expect(tileEngine._p.called).to.be.ok;
+
+      tileEngine._p.restore();
+    });
   });
 
 
@@ -137,6 +163,26 @@ describe('tileEngine', () => {
       });
 
       expect(collides).to.equal(false);
+    });
+
+    it('should take into account object.anchor', () => {
+      let obj = {
+        x: 30,
+        y: 10,
+        height: 10,
+        width: 10
+      };
+      let collides = tileEngine.layerCollidesWith('test', obj);
+
+      expect(collides).to.equal(false);
+
+      obj.anchor = {
+        x: 0.5,
+        y: 0.5
+      };
+      collides = tileEngine.layerCollidesWith('test', obj);
+
+      expect(collides).to.equal(true);
     });
 
   });

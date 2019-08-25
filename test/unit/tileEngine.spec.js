@@ -78,6 +78,32 @@ describe('tileEngine', () => {
 
       context.drawImage.restore();
     });
+
+    it('calls prerender if the tile engine is dirty', () => {
+      let context = getContext();
+      let tileEngine = TileEngine({
+        tilewidth: 10,
+        tileheight: 10,
+        width: 50,
+        height: 50,
+        tilesets: [{
+          image: new Image()
+        }],
+        layers: [{
+          name: 'test',
+          data: [0,0,1,0,0]
+        }]
+      });
+
+      tileEngine._d = true;
+      sinon.stub(tileEngine, '_p').callsFake(noop);
+
+      tileEngine.render();
+
+      expect(tileEngine._p.called).to.be.ok;
+
+      tileEngine._p.restore();
+    });
   });
 
 
@@ -137,6 +163,26 @@ describe('tileEngine', () => {
       });
 
       expect(collides).to.equal(false);
+    });
+
+    it('should take into account object.anchor', () => {
+      let obj = {
+        x: 30,
+        y: 10,
+        height: 10,
+        width: 10
+      };
+      let collides = tileEngine.layerCollidesWith('test', obj);
+
+      expect(collides).to.equal(false);
+
+      obj.anchor = {
+        x: 0.5,
+        y: 0.5
+      };
+      collides = tileEngine.layerCollidesWith('test', obj);
+
+      expect(collides).to.equal(true);
     });
 
   });
@@ -235,6 +281,12 @@ describe('tileEngine', () => {
       }
 
       expect(fn).to.not.throw();
+    });
+
+    it('should set the dirty flag', () => {
+      expect(tileEngine._d).to.equal(false);
+      tileEngine.setTileAtLayer('test', {row: 1, col: 2}, 3);
+      expect(tileEngine._d).to.equal(true);
     });
 
   });
@@ -386,6 +438,113 @@ describe('tileEngine', () => {
       tileEngine.renderLayer('test');
 
       expect(called).to.be.ok;
+    });
+
+  });
+
+
+
+
+
+  // --------------------------------------------------
+  // tileEngine.addObject
+  // --------------------------------------------------
+  describe('addObject', () => {
+    let tileEngine = null;
+    let obj = null;
+
+    beforeEach(() => {
+      tileEngine = TileEngine({
+        tilewidth: 10,
+        tileheight: 10,
+        width: 100,
+        height: 100,
+        tilesets: [{
+          image: new Image()
+        }],
+        layers: [{
+          name: 'test',
+          data: [0,0,1,0,0]
+        }]
+      });
+      obj = {};
+    });
+
+
+    it('should set object sx and sy to tile engine camera', () => {
+      tileEngine.sx = 20;
+      tileEngine.sy = 30;
+
+      tileEngine.addObject(obj);
+
+      expect(obj.sx).to.equal(20);
+      expect(obj.sy).to.equal(30);
+    });
+
+    it('should update objects sx property when tile engine camera changes', () => {
+      tileEngine.addObject(obj);
+
+      expect(obj.sx).to.equal(0);
+      expect(obj.sy).to.equal(0);
+
+      tileEngine.sx = 20;
+      tileEngine.sy = 30;
+
+      expect(obj.sx).to.equal(20);
+      expect(obj.sy).to.equal(30);
+    });
+
+  });
+
+
+
+
+
+  // --------------------------------------------------
+  // tileEngine.removeObject
+  // --------------------------------------------------
+  describe('removeObject', () => {
+    let tileEngine = null;
+    let obj = null;
+
+    beforeEach(() => {
+      tileEngine = TileEngine({
+        tilewidth: 10,
+        tileheight: 10,
+        width: 100,
+        height: 100,
+        tilesets: [{
+          image: new Image()
+        }],
+        layers: [{
+          name: 'test',
+          data: [0,0,1,0,0]
+        }]
+      });
+      obj = {};
+    });
+
+    it('should not update objects sx property when tile engine camera changes', () => {
+      tileEngine.addObject(obj);
+
+      expect(obj.sx).to.equal(0);
+      expect(obj.sy).to.equal(0);
+
+      tileEngine.removeObject(obj);
+
+      tileEngine.sx = 20;
+      tileEngine.sy = 30;
+
+      expect(obj.sx).to.equal(0);
+      expect(obj.sy).to.equal(0);
+    });
+
+    it('should not error if the object was not added before', () => {
+      function fn() {
+        tileEngine.removeObject(obj);
+      }
+
+      expect(fn).to.not.throw();
     });
 
   });

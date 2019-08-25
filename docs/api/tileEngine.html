@@ -271,8 +271,18 @@
               <h3 id="methods">Methods</h3>
               <ul aria-labelledby="methods">
                 <li>
+                  <a href="api/tileEngine#addObject">
+                    <span>TileEngine&#8203;.addObject(&#8203;object)</span>
+                  </a>
+                </li>
+                <li>
                   <a href="api/tileEngine#layerCollidesWith">
                     <span>TileEngine&#8203;.layerCollidesWith(&#8203;name, object)</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="api/tileEngine#removeObject">
+                    <span>TileEngine&#8203;.removeObject(&#8203;object)</span>
                   </a>
                 </li>
                 <li>
@@ -706,6 +716,26 @@ load('assets/imgs/mapPack_tilesheet.png', 'assets/data/tile_engine_camera.json')
 })();</script>        </section>
 
         <section>
+          <h2 id="addObject">
+            <a href="api/tileEngine#addObject" class="section-link">
+              <span>TileEngine&#8203;.addObject(&#8203;object)</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
+
+          <p>Add an object to the tile engine. The tile engine will set the objects camera position (<code>sx</code>, <code>sy</code>) to be in sync with the tile engine camera.</p>
+          <h3 id="title-addObject"><span class="visually-hidden">addObject</span> Parameters</span></h3>
+          <dl aria-labelledby="title-addObject">
+            <dt>
+              <code>object</code>
+              
+            </dt>
+            <dd><p>Object. Object to add to the tile engine.</p>
+          </dd>
+          </dl>
+          
+        </section>
+        <section>
           <h2 id="context">
             <a href="api/tileEngine#context" class="section-link">
               <span>TileEngine&#8203;.context</span>
@@ -894,6 +924,26 @@ tileEngine.layerCollidesWith(&#39;collision&#39;, sprite);  //=&gt; true</code><
           </h2>
 
           <p>The width of the tile map (in pixels).</p>
+          
+        </section>
+        <section>
+          <h2 id="removeObject">
+            <a href="api/tileEngine#removeObject" class="section-link">
+              <span>TileEngine&#8203;.removeObject(&#8203;object)</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
+
+          <p>Remove an object from the tile engine.</p>
+          <h3 id="title-removeObject"><span class="visually-hidden">removeObject</span> Parameters</span></h3>
+          <dl aria-labelledby="title-removeObject">
+            <dt>
+              <code>object</code>
+              
+            </dt>
+            <dd><p>Object. Object to remove from the tile engine.</p>
+          </dd>
+          </dl>
           
         </section>
         <section>

@@ -2373,7 +2373,7 @@ class Sprite {
     let { x, y, dx, dy, ddx, ddy, width, height, image } = properties;
 
     /**
-     * The sprites position vector.
+     * The sprites position vector. The sprites position is its position in the world, as opposed to the position in the [viewport](#viewX). Typically the position in the world and the viewport are the same value. If the sprite has been [added to a tileEngine](/api/tileEngine#addObject), the position vector represents where in the tile world the sprite is while the viewport represents where to draw the sprite in relation to the top-left corner of the canvas.
      * @memberof Sprite
      * @property {kontra.Vector} position
      */
@@ -2494,6 +2494,20 @@ class Sprite {
       this.width = (width !== undefined) ? width : image.width;
       this.height = (height !== undefined) ? height : image.height;
     }
+
+    /**
+     * The X coordinate of the camera. Used to determine [viewX](#viewX).
+     * @memberof Sprite
+     * @property {Number} sx
+     */
+    this.sx = 0;
+
+    /**
+     * The Y coordinate of the camera. Used to determine [viewY](#viewY).
+     * @memberof Sprite
+     * @property {Number} sy
+     */
+    this.sy = 0;
   }
 
   // define getter and setter shortcut functions to make it easier to work with the
@@ -2587,6 +2601,24 @@ class Sprite {
     return this._a;
   }
 
+  /**
+   * Readonly. X coordinate of where to draw the sprite. Typically the same value of the [position vector](#position) unless the sprite has been added to a tileEngine.
+   * @memberof Sprite
+   * @property {Number} viewX
+   */
+  get viewX() {
+    return this.x - this.sx;
+  }
+
+  /**
+   * Readonly. Y coordinate of where to draw the sprite. Typically the same value of the [position vector](#position) unless the sprite has been added to a tileEngine.
+   * @memberof Sprite
+   * @property {Number} viewY
+   */
+  get viewY() {
+    return this.y - this.sy;
+  }
+
   set x(value) {
     this.position.x = value;
   }
@@ -2627,6 +2659,14 @@ class Sprite {
     this.currentAnimation = firstAnimation;
     this.width = this.width || firstAnimation.width;
     this.height = this.height || firstAnimation.height;
+  }
+
+  // readonly
+  set viewX(value) {
+    return;
+  }
+  set viewY(value) {
+    return;
   }
 
   /**
@@ -2867,7 +2907,11 @@ class Sprite {
     let anchorHeight = -this.height * this.anchor.y;
 
     this.context.save();
-    this.context.translate(this.x, this.y);
+    this.context.translate(this.viewX, this.viewY);
+
+    if (this.width < 0) {
+      this.context.scale(-1, 1);
+    }
 
     if (this.rotation) {
       this.context.rotate(this.rotation);
@@ -3243,6 +3287,9 @@ function TileEngine(properties = {}) {
   let layerMap = {};
   let layerCanvases = {};
 
+  //
+  let objects = [];
+
   /**
    * The width of tile map (in tiles).
    * @memberof TileEngine
@@ -3327,10 +3374,12 @@ function TileEngine(properties = {}) {
     // @see http://stackoverflow.com/questions/19338032/canvas-indexsizeerror-index-or-size-is-negative-or-greater-than-the-allowed-a
     set sx(value) {
       this._sx = Math.min( Math.max(0, value), mapwidth - getCanvas().width );
+      objects.forEach(obj => obj.sx = this._sx);
     },
 
     set sy(value) {
       this._sy = Math.min( Math.max(0, value), mapheight - getCanvas().height );
+      objects.forEach(obj => obj.sy = this._sy);
     },
 
     /**
@@ -3339,6 +3388,11 @@ function TileEngine(properties = {}) {
      * @function render
      */
     render() {
+      if (this._d) {
+        this._d = false;
+        prerender();
+      }
+
       render(offscreenCanvas);
     },
 
@@ -3412,10 +3466,17 @@ function TileEngine(properties = {}) {
      * @returns {boolean} `true` if the object collides with a tile, `false` otherwise.
      */
     layerCollidesWith(name, object) {
-      let row = getRow(object.y);
-      let col = getCol(object.x);
-      let endRow = getRow(object.y + object.height);
-      let endCol = getCol(object.x + object.width);
+      let x = object.x;
+      let y = object.y;
+      if (object.anchor) {
+        x -= object.width * object.anchor.x;
+        y -= object.height * object.anchor.y;
+      }
+
+      let row = getRow(y);
+      let col = getCol(x);
+      let endRow = getRow(y + object.height);
+      let endCol = getCol(x + object.width);
 
       let layer = layerMap[name];
 
@@ -3514,8 +3575,37 @@ function TileEngine(properties = {}) {
       let col = position.col || getCol(position.x);
 
       if (layerMap[name]) {
+        // d = dirty
+        this._d = true;
         layerMap[name].data[col + row * tileEngine.width] = tile;
-        prerender();
+      }
+    },
+
+    /**
+     * Add an object to the tile engine. The tile engine will set the objects camera position (`sx`, `sy`) to be in sync with the tile engine camera.
+     * @memberof TileEngine
+     * @function addObject
+     *
+     * @param {Object} object - Object to add to the tile engine.
+     */
+    addObject(object) {
+      objects.push(object);
+      object.sx = this._sx;
+      object.sy = this._sy;
+    },
+
+    /**
+     * Remove an object from the tile engine.
+     * @memberof TileEngine
+     * @function removeObject
+     *
+     * @param {Object} object - Object to remove from the tile engine.
+     */
+    removeObject(object) {
+      let index = objects.indexOf(object);
+      if (index !== -1) {
+        objects.splice(index, 1);
+        object.sx = object.sy = 0;
       }
     },
 
@@ -3580,7 +3670,7 @@ function TileEngine(properties = {}) {
    * @return {Number}
    */
   function getRow(y) {
-    return (tileEngine.sy + y) / tileEngine.tileheight | 0;
+    return y / tileEngine.tileheight | 0;
   }
 
   /**
@@ -3592,7 +3682,7 @@ function TileEngine(properties = {}) {
    * @return {Number}
    */
   function getCol(x) {
-    return (tileEngine.sx + x) / tileEngine.tilewidth | 0;
+    return x / tileEngine.tilewidth | 0;
   }
 
   /**

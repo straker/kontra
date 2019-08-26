@@ -11,7 +11,7 @@
  *
  * Lastly, you'll need to add at least one named layer with data. A layer tells the tile engine which tiles from the tileset image to use at what position on the map.
  *
- * Once all tileset images and all layers have been added, you can render the tile engine by calling its [render()](#render) function.
+ * Once all tileset images and all layers have been added, you can render the tile engine by calling its [render()](api/tileEngine#render) function.
  *
  * @sectionName Basic Use
  * @example {576x576}
@@ -87,7 +87,7 @@
  */
 
 /**
- * If your tilemap is larger than the canvas size, you can move the tilemap camera to change how the tilemap is drawn. Use the tile engines [sx](#sx) and [sy](#sy) properties to move the camera. Just like drawing an image, the cameras coordinates are the top left corner.
+ * If your tilemap is larger than the canvas size, you can move the tilemap camera to change how the tilemap is drawn. Use the tile engines [sx](api/tileEngine#sx) and [sy](api/tileEngine#sy) properties to move the camera. Just like drawing an image, the cameras coordinates are the top left corner.
  *
  * The `sx` and `sy` coordinates will never draw the tile map below 0 or beyond the last row or column of the tile map.
  *

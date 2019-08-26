@@ -24,7 +24,7 @@
  *
  * Objects added to the tree must have the properties `x`, `y`, `width`, and `height` so that their position in the quadtree can be calculated. kontra.Sprite defines these properties for you.
  *
- * When you need to get all objects in the same node as another object, use the quadtrees [get()](#get) function.
+ * When you need to get all objects in the same node as another object, use the quadtrees [get()](api/quadtree#get) function.
  *
  * ```js
  * // exclude-tablist

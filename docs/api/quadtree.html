@@ -227,7 +227,7 @@ let loop = GameLoop({
 </div>
 <p>You should clear the quadtree each frame since the quadtree is only a snapshot of the position of the objects when they were added. Since the quadtree doesn&#39;t know anything about those objects, it doesn&#39;t know when an object moved or when it should be removed from the tree.</p>
 <p>Objects added to the tree must have the properties <code>x</code>, <code>y</code>, <code>width</code>, and <code>height</code> so that their position in the quadtree can be calculated. <a href="api/sprite">Sprite</a> defines these properties for you.</p>
-<p>When you need to get all objects in the same node as another object, use the quadtrees <a href="#get">get()</a> function.</p>
+<p>When you need to get all objects in the same node as another object, use the quadtrees <a href="api/quadtree#get">get()</a> function.</p>
 <pre><code class="language-js">let objects = quadtree.get(player);  //=&gt; [enemy]</code></pre>
         </section>
 

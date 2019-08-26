@@ -328,7 +328,7 @@
 <p>To set up the tile engine, you&#39;ll need to pass it the width and height of a tile (in pixels) and the width and height of the map (in number of tiles).</p>
 <p>You&#39;ll then need to add at least one tileset with an image as well as firstgid, or first tile index of the tileset. The first tileset will always have a firstgid of 1 as 0 represents an empty tile.</p>
 <p>Lastly, you&#39;ll need to add at least one named layer with data. A layer tells the tile engine which tiles from the tileset image to use at what position on the map.</p>
-<p>Once all tileset images and all layers have been added, you can render the tile engine by calling its <a href="#render">render()</a> function.</p>
+<p>Once all tileset images and all layers have been added, you can render the tile engine by calling its <a href="api/tileEngine#render">render()</a> function.</p>
 <canvas id="game-canvas-5"></canvas>
 
 <div class="tablist">
@@ -591,7 +591,7 @@ load('assets/imgs/mapPack_tilesheet.png', 'assets/data/tile_engine_basic.json')
             </a>
           </h2>
 
-          <p>If your tilemap is larger than the canvas size, you can move the tilemap camera to change how the tilemap is drawn. Use the tile engines <a href="#sx">sx</a> and <a href="#sy">sy</a> properties to move the camera. Just like drawing an image, the cameras coordinates are the top left corner.</p>
+          <p>If your tilemap is larger than the canvas size, you can move the tilemap camera to change how the tilemap is drawn. Use the tile engines <a href="api/tileEngine#sx">sx</a> and <a href="api/tileEngine#sy">sy</a> properties to move the camera. Just like drawing an image, the cameras coordinates are the top left corner.</p>
 <p>The <code>sx</code> and <code>sy</code> coordinates will never draw the tile map below 0 or beyond the last row or column of the tile map.</p>
 <canvas id="game-canvas-7"></canvas>
 

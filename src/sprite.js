@@ -50,7 +50,7 @@ class Sprite {
     let { x, y, dx, dy, ddx, ddy, width, height, image } = properties;
 
     /**
-     * The sprites position vector. The sprites position is its position in the world, as opposed to the position in the [viewport](#viewX). Typically the position in the world and the viewport are the same value. If the sprite has been [added to a tileEngine](/api/tileEngine#addObject), the position vector represents where in the tile world the sprite is while the viewport represents where to draw the sprite in relation to the top-left corner of the canvas.
+     * The sprites position vector. The sprites position is its position in the world, as opposed to the position in the [viewport](api/sprite#viewX). Typically the position in the world and the viewport are the same value. If the sprite has been [added to a tileEngine](/api/tileEngine#addObject), the position vector represents where in the tile world the sprite is while the viewport represents where to draw the sprite in relation to the top-left corner of the canvas.
      * @memberof Sprite
      * @property {kontra.Vector} position
      */
@@ -173,14 +173,14 @@ class Sprite {
     }
 
     /**
-     * The X coordinate of the camera. Used to determine [viewX](#viewX).
+     * The X coordinate of the camera. Used to determine [viewX](api/sprite#viewX).
      * @memberof Sprite
      * @property {Number} sx
      */
     this.sx = 0;
 
     /**
-     * The Y coordinate of the camera. Used to determine [viewY](#viewY).
+     * The Y coordinate of the camera. Used to determine [viewY](api/sprite#viewY).
      * @memberof Sprite
      * @property {Number} sy
      */
@@ -279,7 +279,7 @@ class Sprite {
   }
 
   /**
-   * Readonly. X coordinate of where to draw the sprite. Typically the same value of the [position vector](#position) unless the sprite has been added to a tileEngine.
+   * Readonly. X coordinate of where to draw the sprite. Typically the same value as the [position vector](api/sprite#position) unless the sprite has been [added to a tileEngine](api/tileEngine#addObject).
    * @memberof Sprite
    * @property {Number} viewX
    */
@@ -288,7 +288,7 @@ class Sprite {
   }
 
   /**
-   * Readonly. Y coordinate of where to draw the sprite. Typically the same value of the [position vector](#position) unless the sprite has been added to a tileEngine.
+   * Readonly. Y coordinate of where to draw the sprite. Typically the same value as the [position vector](api/sprite#position) unless the sprite has been [added to a tileEngine](api/tileEngine#addObject).
    * @memberof Sprite
    * @property {Number} viewY
    */

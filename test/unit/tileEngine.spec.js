@@ -321,12 +321,15 @@ describe('tileEngine', () => {
       sinon.stub(context, 'drawImage').callsFake(noop);
       tileEngine.renderLayer('test');
 
+      const img = new Image()
+      img.src = tileEngine.layerCanvases.test.toDataURL()
+
       expect(context.drawImage.called).to.be.ok;
-      expect(context.drawImage.calledWith(
-        tileEngine.layerCanvases.test,
+      expect(context.drawImage.firstCall.args[0]).to.deep.equal(img);
+      expect(context.drawImage.firstCall.args.slice(1)).to.deep.equal([
         0, 0, canvas.width, canvas.height,
         0, 0, canvas.width, canvas.height
-      )).to.be.ok;
+      ]);
 
       context.drawImage.restore();
     });
@@ -367,12 +370,15 @@ describe('tileEngine', () => {
 
       tileEngine.renderLayer('test');
 
+      const img = new Image()
+      img.src = tileEngine.layerCanvases.test.toDataURL()
+
       expect(context.drawImage.called).to.be.ok;
-      expect(context.drawImage.calledWith(
-        tileEngine.layerCanvases.test,
+      expect(context.drawImage.firstCall.args[0]).to.deep.equal(img);
+      expect(context.drawImage.firstCall.args.slice(1)).to.deep.equal([
         tileEngine.sx, tileEngine.sy, canvas.width, canvas.height,
         0, 0, canvas.width, canvas.height
-      )).to.be.ok;
+      ])
 
       context.drawImage.restore();
     });

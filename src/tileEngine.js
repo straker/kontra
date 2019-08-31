@@ -540,9 +540,13 @@ export default function TileEngine(properties = {}) {
    * @param {HTMLCanvasElement} canvas - Tile engine canvas to draw.
    */
   function render(canvas) {
-    let { width, height } = getCanvas();
+    const { width, height } = getCanvas();
+    const image = new Image();
+    
+    image.src=canvas.toDataURL();
+    
     tileEngine.context.drawImage(
-      canvas,
+      image,
       tileEngine.sx, tileEngine.sy, width, height,
       0, 0, width, height
     );

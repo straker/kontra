@@ -325,7 +325,7 @@ describe('tileEngine', () => {
       expect(context.drawImage.calledWith(
         tileEngine.layerCanvases.test,
         0, 0, tileEngine.layerCanvases.test.width, tileEngine.layerCanvases.test.height,
-        0, 0, canvas.width, canvas.height
+        0, 0, tileEngine.layerCanvases.test.width, tileEngine.layerCanvases.test.height
       )).to.be.ok;
 
       context.drawImage.restore();
@@ -373,9 +373,9 @@ describe('tileEngine', () => {
       expect(context.drawImage.called).to.be.ok;
       expect(context.drawImage.calledWith(
         tileEngine.layerCanvases.test,
-        tileEngine.sx, tileEngine.sy, tileEngine.layerCanvases.test.width,
-        tileEngine.layerCanvases.test.height,
-        0, 0, canvas.width, canvas.height
+        tileEngine.sx, tileEngine.sy,
+        tileEngine.layerCanvases.test.width, tileEngine.layerCanvases.test.height,
+        0, 0, tileEngine.layerCanvases.test.width, tileEngine.layerCanvases.test.height
       )).to.be.ok;
 
       context.drawImage.restore();

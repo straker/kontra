@@ -547,7 +547,7 @@ export default function TileEngine(properties = {}) {
     tileEngine.context.drawImage(
       canvas,
       tileEngine.sx, tileEngine.sy, sWidth, sHeight,
-      0, 0, width, height
+      0, 0, sWidth, sHeight
     );
   }
 

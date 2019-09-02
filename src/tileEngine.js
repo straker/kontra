@@ -541,13 +541,12 @@ export default function TileEngine(properties = {}) {
    */
   function render(canvas) {
     const { width, height } = getCanvas();
-    const image = new Image();
-    
-    image.src=canvas.toDataURL();
-    
+    const sWidth = Math.min(canvas.width, width);
+    const sHeight = Math.min(canvas.height, height);
+
     tileEngine.context.drawImage(
-      image,
-      tileEngine.sx, tileEngine.sy, width, height,
+      canvas,
+      tileEngine.sx, tileEngine.sy, sWidth, sHeight,
       0, 0, width, height
     );
   }

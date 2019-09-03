@@ -30,6 +30,8 @@ describe('sprite', () => {
       expect(sprite.velocity.constructor.name).to.equal('Vector');
       expect(sprite.acceleration.constructor.name).to.equal('Vector');
       expect(sprite.ttl).to.equal(Infinity);
+      expect(sprite.scaleX).to.equal(1);
+      expect(sprite.scaleY).to.equal(1);
     });
 
     it('should set basic properties of width, height, color, x, and y', () => {
@@ -466,6 +468,38 @@ describe('sprite', () => {
       sprite.context.translate.restore();
     });
 
+    it('should scale the sprite to 1,1 by default', function() {
+      let sprite = Sprite({
+        x: 10,
+        y: 20,
+      });
+
+      sinon.stub(sprite.context, 'scale').callsFake(noop);
+
+      sprite.render();
+
+      expect(sprite.context.scale.calledWith(1,1)).to.be.ok;
+
+      sprite.context.scale.restore();
+    });
+
+    it('should scale the sprite by scaleX,scaleY', function() {
+      let sprite = Sprite({
+        x: 10,
+        y: 20,
+        scaleX: 2,
+        scaleY: 4
+      });
+
+      sinon.stub(sprite.context, 'scale').callsFake(noop);
+
+      sprite.render();
+
+      expect(sprite.context.scale.calledWith(2,4)).to.be.ok;
+
+      sprite.context.scale.restore();
+    });
+
   });
 
 
@@ -718,6 +752,69 @@ describe('sprite', () => {
 
       expect(sprite.viewX).to.equal(10);
       expect(sprite.viewY).to.equal(20);
+    });
+
+  });
+
+
+
+
+
+  // --------------------------------------------------
+  // width/height
+  // --------------------------------------------------
+  describe('width/height', () => {
+
+    it('should set scaleX to 1 when width is >= 0', function() {
+      let sprite = Sprite({
+        x: 10,
+        y: 20,
+      });
+
+      sprite.width = 0;
+
+      expect(sprite.scaleX).to.equal(1);
+
+      sprite.width = 100;
+
+      expect(sprite.scaleX).to.equal(1);
+    });
+
+    it('should set scaleX to -1 when width is < 0', function() {
+      let sprite = Sprite({
+        x: 10,
+        y: 20,
+      });
+
+      sprite.width = -20;
+
+      expect(sprite.scaleX).to.equal(-1);
+    });
+
+    it('should set scaleY to 1 when height is >= 0', function() {
+      let sprite = Sprite({
+        x: 10,
+        y: 20,
+      });
+
+      sprite.height = 0;
+
+      expect(sprite.scaleY).to.equal(1);
+
+      sprite.height = 100;
+
+      expect(sprite.scaleY).to.equal(1);
+    });
+
+    it('should set scaleY to -1 when height is < 0', function() {
+      let sprite = Sprite({
+        x: 10,
+        y: 20,
+      });
+
+      sprite.height = -20;
+
+      expect(sprite.scaleY).to.equal(-1);
     });
 
   });

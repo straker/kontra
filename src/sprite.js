@@ -73,18 +73,6 @@ class Sprite {
     // defaults
 
     /**
-     * The width of the sprite. If the sprite is a [rectangle sprite](api/sprite/#rectangle-sprite), it uses the passed in value. For an [image sprite](api/sprite/#image-sprite) it is the width of the image. And for an [animation sprite](api/sprite/#animation-sprite) it is the width of a single frame of the animation.
-     * @memberof Sprite
-     * @property {Number} width
-     */
-
-    /**
-     * The height of the sprite. If the sprite is a [rectangle sprite](api/sprite/#rectangle-sprite), it uses the passed in value. For an [image sprite](api/sprite/#image-sprite) it is the height of the image. And for an [animation sprite](api/sprite/#animation-sprite) it is the height of a single frame of the animation.
-     * @memberof Sprite
-     * @property {Number} height
-     */
-
-    /**
      * The rotation of the sprite around the origin in radians.
      * @memberof Sprite
      * @property {Number} rotation
@@ -97,6 +85,19 @@ class Sprite {
      * @property {Number} ttl
      */
     this.ttl = Infinity;
+
+    /**
+     * The horizontal scaling factor. A negative value flips the sprite across the vertical axis.
+     * @memberof Sprite
+     * @property {Number} scaleX
+     */
+
+    /**
+     * The vertical scaling factor. A negative value flips the sprite across the horizontal axis.
+     * @memberof Sprite
+     * @property {Number} scaleY
+     */
+    this.scaleX = this.scaleY = 1;
 
     /**
      * The x and y origin of the sprite. {x:0, y:0} is the top left corner of the sprite, {x:1, y:1} is the bottom right corner.
@@ -296,6 +297,24 @@ class Sprite {
     return this.y - this.sy;
   }
 
+  /**
+   * The width of the sprite. If the sprite is a [rectangle sprite](api/sprite/#rectangle-sprite), it uses the passed in value. For an [image sprite](api/sprite/#image-sprite) it is the width of the image. And for an [animation sprite](api/sprite/#animation-sprite) it is the width of a single frame of the animation.
+   * @memberof Sprite
+   * @property {Number} width
+   */
+  get width() {
+    return this._w;
+  }
+
+  /**
+   * The height of the sprite. If the sprite is a [rectangle sprite](api/sprite/#rectangle-sprite), it uses the passed in value. For an [image sprite](api/sprite/#image-sprite) it is the height of the image. And for an [animation sprite](api/sprite/#animation-sprite) it is the height of a single frame of the animation.
+   * @memberof Sprite
+   * @property {Number} height
+   */
+  get height() {
+    return this._h;
+  }
+
   set x(value) {
     this.position.x = value;
   }
@@ -344,6 +363,15 @@ class Sprite {
   }
   set viewY(value) {
     return;
+  }
+
+  set width(value) {
+    this.scaleX = value < 0 ? -1 : 1;
+    this._w = Math.abs(value);
+  }
+  set height(value) {
+    this.scaleY = value < 0 ? -1 : 1;
+    this._h = Math.abs(value);
   }
 
   /**
@@ -585,6 +613,7 @@ class Sprite {
 
     this.context.save();
     this.context.translate(this.viewX, this.viewY);
+    this.context.scale(this.scaleX, this.scaleY);
 
     if (this.rotation) {
       this.context.rotate(this.rotation);

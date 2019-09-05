@@ -2395,6 +2395,9 @@ class Sprite {
 
     // defaults
 
+    // sx = flipX, sy = flipY
+    this._fx = this._fy = 1;
+
     /**
      * The rotation of the sprite around the origin in radians.
      * @memberof Sprite
@@ -2476,9 +2479,6 @@ class Sprite {
     for (let prop in properties) {
       this[prop] = properties[prop];
     }
-
-    // sx = flipX, sy = flipY
-    this._fx = this._fy = 1;
 
     // image sprite
     if (image) {

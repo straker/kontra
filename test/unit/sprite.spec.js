@@ -740,10 +740,12 @@ describe('sprite', () => {
       sprite.width = 0;
 
       expect(sprite._fx).to.equal(1);
+      expect(sprite.width).to.equal(0);
 
       sprite.width = 100;
 
       expect(sprite._fx).to.equal(1);
+      expect(sprite.width).to.equal(100);
     });
 
     it('should set _fx to -1 when width is < 0', () => {
@@ -755,6 +757,7 @@ describe('sprite', () => {
       sprite.width = -20;
 
       expect(sprite._fx).to.equal(-1);
+      expect(sprite.width).to.equal(20);
     });
 
     it('should set _fy to 1 when height is >= 0', () => {
@@ -766,10 +769,12 @@ describe('sprite', () => {
       sprite.height = 0;
 
       expect(sprite._fy).to.equal(1);
+       expect(sprite.height).to.equal(0);
 
       sprite.height = 100;
 
       expect(sprite._fy).to.equal(1);
+      expect(sprite.height).to.equal(100);
     });
 
     it('should set _fy to -1 when height is < 0', () => {
@@ -781,6 +786,7 @@ describe('sprite', () => {
       sprite.height = -20;
 
       expect(sprite._fy).to.equal(-1);
+      expect(sprite.height).to.equal(20);
     });
 
     it('should not scale the sprite by default', () => {

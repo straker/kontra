@@ -360,12 +360,16 @@ class Sprite {
   }
 
   set width(value) {
-    this._fx = value < 0 ? -1 : 1;
-    this._w = Math.abs(value);
+    let sign = value < 0 ? -1 : 1;
+
+    this._fx = sign
+    this._w = value * sign;
   }
   set height(value) {
-    this._fy = value < 0 ? -1 : 1;
-    this._h = Math.abs(value);
+    let sign = value < 0 ? -1 : 1;
+
+    this._fy = sign;
+    this._h = value * sign;
   }
 
   /**

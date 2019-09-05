@@ -72,6 +72,9 @@ class Sprite {
 
     // defaults
 
+    // sx = flipX, sy = flipY
+    this._fx = this._fy = 1;
+
     /**
      * The rotation of the sprite around the origin in radians.
      * @memberof Sprite
@@ -85,19 +88,6 @@ class Sprite {
      * @property {Number} ttl
      */
     this.ttl = Infinity;
-
-    /**
-     * The horizontal scaling factor. A negative value flips the sprite across the vertical axis.
-     * @memberof Sprite
-     * @property {Number} scaleX
-     */
-
-    /**
-     * The vertical scaling factor. A negative value flips the sprite across the horizontal axis.
-     * @memberof Sprite
-     * @property {Number} scaleY
-     */
-    this.scaleX = this.scaleY = 1;
 
     /**
      * The x and y origin of the sprite. {x:0, y:0} is the top left corner of the sprite, {x:1, y:1} is the bottom right corner.
@@ -299,6 +289,8 @@ class Sprite {
 
   /**
    * The width of the sprite. If the sprite is a [rectangle sprite](api/sprite/#rectangle-sprite), it uses the passed in value. For an [image sprite](api/sprite/#image-sprite) it is the width of the image. And for an [animation sprite](api/sprite/#animation-sprite) it is the width of a single frame of the animation.
+   *
+   * Setting the value to a negative number will result in the sprite being flipped across the vertical axis while the width will remain a positive value.
    * @memberof Sprite
    * @property {Number} width
    */
@@ -308,6 +300,8 @@ class Sprite {
 
   /**
    * The height of the sprite. If the sprite is a [rectangle sprite](api/sprite/#rectangle-sprite), it uses the passed in value. For an [image sprite](api/sprite/#image-sprite) it is the height of the image. And for an [animation sprite](api/sprite/#animation-sprite) it is the height of a single frame of the animation.
+   *
+   * Setting the value to a negative number will result in the sprite being flipped across the horizontal axis while the height will remain a positive value.
    * @memberof Sprite
    * @property {Number} height
    */
@@ -366,11 +360,11 @@ class Sprite {
   }
 
   set width(value) {
-    this.scaleX = value < 0 ? -1 : 1;
+    this._fx = value < 0 ? -1 : 1;
     this._w = Math.abs(value);
   }
   set height(value) {
-    this.scaleY = value < 0 ? -1 : 1;
+    this._fy = value < 0 ? -1 : 1;
     this._h = Math.abs(value);
   }
 
@@ -613,10 +607,20 @@ class Sprite {
 
     this.context.save();
     this.context.translate(this.viewX, this.viewY);
-    this.context.scale(this.scaleX, this.scaleY);
 
+    // rotate around the anchor
     if (this.rotation) {
       this.context.rotate(this.rotation);
+    }
+
+    // flip sprite around the center so the x/y position does not change
+    if (this._fx == -1 || this._fy == -1) {
+      let x = this.width / 2 + anchorWidth;
+      let y = this.height / 2 + anchorHeight;
+
+      this.context.translate(x, y);
+      this.context.scale(this._fx, this._fy);
+      this.context.translate(-x, -y);
     }
 
     if (this.image) {

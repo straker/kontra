@@ -276,16 +276,6 @@
                   </a>
                 </li>
                 <li>
-                  <a href="api/sprite#scaleX">
-                    <span>Sprite&#8203;.scaleX</span>
-                  </a>
-                </li>
-                <li>
-                  <a href="api/sprite#scaleY">
-                    <span>Sprite&#8203;.scaleY</span>
-                  </a>
-                </li>
-                <li>
                   <a href="api/sprite#sx">
                     <span>Sprite&#8203;.sx</span>
                   </a>
@@ -1693,6 +1683,7 @@ sprite.render();</code></pre></section>
           </h2>
 
           <p>The height of the sprite. If the sprite is a <a href="api/sprite/#rectangle-sprite">rectangle sprite</a>, it uses the passed in value. For an <a href="api/sprite/#image-sprite">image sprite</a> it is the height of the image. And for an <a href="api/sprite/#animation-sprite">animation sprite</a> it is the height of a single frame of the animation.</p>
+<p>Setting the value to a negative number will result in the sprite being flipped across the horizontal axis while the height will remain a positive value.</p>
           
         </section>
         <section>
@@ -1871,28 +1862,6 @@ sprite.playAnimation(&#39;idle&#39;);</code></pre></section>
           
         </section>
         <section>
-          <h2 id="scaleX">
-            <a href="api/sprite#scaleX" class="section-link">
-              <span>Sprite&#8203;.scaleX</span>
-              <span aria-hidden="true">#</span>
-            </a>
-          </h2>
-
-          <p>The horizontal scaling factor. A negative value flips the sprite across the vertical axis.</p>
-          
-        </section>
-        <section>
-          <h2 id="scaleY">
-            <a href="api/sprite#scaleY" class="section-link">
-              <span>Sprite&#8203;.scaleY</span>
-              <span aria-hidden="true">#</span>
-            </a>
-          </h2>
-
-          <p>The vertical scaling factor. A negative value flips the sprite across the horizontal axis.</p>
-          
-        </section>
-        <section>
           <h2 id="sx">
             <a href="api/sprite#sx" class="section-link">
               <span>Sprite&#8203;.sx</span>
@@ -1987,6 +1956,7 @@ sprite.playAnimation(&#39;idle&#39;);</code></pre></section>
           </h2>
 
           <p>The width of the sprite. If the sprite is a <a href="api/sprite/#rectangle-sprite">rectangle sprite</a>, it uses the passed in value. For an <a href="api/sprite/#image-sprite">image sprite</a> it is the width of the image. And for an <a href="api/sprite/#animation-sprite">animation sprite</a> it is the width of a single frame of the animation.</p>
+<p>Setting the value to a negative number will result in the sprite being flipped across the vertical axis while the width will remain a positive value.</p>
           
         </section>
         <section>

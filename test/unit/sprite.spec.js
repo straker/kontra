@@ -722,4 +722,151 @@ describe('sprite', () => {
 
   });
 
+
+
+
+
+  // --------------------------------------------------
+  // scale
+  // --------------------------------------------------
+  describe('scale', () => {
+
+    it('should set _fx to 1 when width is >= 0', () => {
+      let sprite = Sprite({
+        x: 10,
+        y: 20,
+      });
+
+      sprite.width = 0;
+
+      expect(sprite._fx).to.equal(1);
+      expect(sprite.width).to.equal(0);
+
+      sprite.width = 100;
+
+      expect(sprite._fx).to.equal(1);
+      expect(sprite.width).to.equal(100);
+    });
+
+    it('should set _fx to -1 when width is < 0', () => {
+      let sprite = Sprite({
+        x: 10,
+        y: 20,
+      });
+
+      sprite.width = -20;
+
+      expect(sprite._fx).to.equal(-1);
+      expect(sprite.width).to.equal(20);
+    });
+
+    it('should set _fy to 1 when height is >= 0', () => {
+      let sprite = Sprite({
+        x: 10,
+        y: 20,
+      });
+
+      sprite.height = 0;
+
+      expect(sprite._fy).to.equal(1);
+       expect(sprite.height).to.equal(0);
+
+      sprite.height = 100;
+
+      expect(sprite._fy).to.equal(1);
+      expect(sprite.height).to.equal(100);
+    });
+
+    it('should set _fy to -1 when height is < 0', () => {
+      let sprite = Sprite({
+        x: 10,
+        y: 20,
+      });
+
+      sprite.height = -20;
+
+      expect(sprite._fy).to.equal(-1);
+      expect(sprite.height).to.equal(20);
+    });
+
+    it('should not scale the sprite by default', () => {
+      let sprite = Sprite({
+        x: 10,
+        y: 20,
+      });
+
+      sinon.spy(sprite.context, 'scale');
+
+      sprite.render();
+
+      expect(sprite.context.scale.notCalled).to.be.true;
+
+      sprite.context.scale.restore();
+    });
+
+    it('should scale the sprite by _fx', () => {
+      let sprite = Sprite({
+        x: 10,
+        y: 20,
+        width: -10
+      });
+
+      sinon.stub(sprite.context, 'scale').callsFake(noop);
+
+      sprite.render();
+
+      expect(sprite.context.scale.calledWith(-1,1)).to.be.ok;
+
+      sprite.context.scale.restore();
+    });
+
+    it('should scale the sprite by _fy', () => {
+      let sprite = Sprite({
+        x: 10,
+        y: 20,
+        height: -10
+      });
+
+      sinon.stub(sprite.context, 'scale').callsFake(noop);
+
+      sprite.render();
+
+      expect(sprite.context.scale.calledWith(1,-1)).to.be.ok;
+
+      sprite.context.scale.restore();
+    });
+
+    it('should scale the sprite at its center', () => {
+      let sprite = Sprite({
+        x: 10,
+        y: 20,
+        width: -10,
+        height: 20
+      });
+
+      sinon.stub(sprite.context, 'translate').callsFake(noop);
+
+      sprite.render();
+
+      expect(sprite.context.translate.secondCall.calledWith(sprite.width / 2, sprite.height / 2)).to.be.ok;
+
+      sprite.context.translate.resetHistory();
+      sprite.anchor = {x: 0.5, y: 0.5};
+
+      sprite.render();
+
+      expect(sprite.context.translate.secondCall.calledWith(0, 0)).to.be.ok;
+
+      sprite.context.translate.resetHistory();
+      sprite.anchor = {x: 1, y: 1};
+
+      sprite.render();
+
+      expect(sprite.context.translate.secondCall.calledWith(-sprite.width / 2, -sprite.height / 2)).to.be.ok;
+
+      sprite.context.translate.restore();
+    });
+
+  });
+
 });

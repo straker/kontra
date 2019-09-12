@@ -9,6 +9,7 @@
     "test": "karma start --single-run",
     "test-watch": "karma start",
     "build": "gulp build",
+    "build:docs": "gulp build:docs",
     "dist": "gulp dist"
   },
   "repository": {

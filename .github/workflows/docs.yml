@@ -13,9 +13,9 @@ jobs:
           node-version: 10.x
     - run: npm install
     - run: npm run build:docs
-    - run: |
-      git config --global user.email 'stevenlambert503@gmail.com'
-      git config --global user.name 'straker'
-      git add .
-      git commit -m "update docs" --allow-empty
+    - run: >-
+      git config --global user.email 'stevenlambert503@gmail.com' &&
+      git config --global user.name 'straker' &&
+      git add . &&
+      git commit -m "update docs" --allow-empty &&
       git push origin HEAD

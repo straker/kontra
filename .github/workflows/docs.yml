@@ -8,7 +8,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@master
-    - name: build docs
-    run: |
-      npm install
-      npm run build:docs
+    - uses: actions/setup-node@master
+      with:
+          node-version: 10.x
+    - run: npm install
+    - run: npm run build:docs

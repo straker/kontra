@@ -292,6 +292,55 @@ describe('tileEngine', () => {
   });
 
 
+  // --------------------------------------------------
+  // tileEngine.setLayer
+  // --------------------------------------------------
+  describe("setLayer", () => {
+    let tileEngine;
+
+    beforeEach(() => {
+      tileEngine = TileEngine({
+        tilewidth: 10,
+        tileheight: 10,
+        width: 2,
+        height: 2,
+        tilesets: [
+          {
+            image: new Image()
+          }
+        ],
+        layers: [
+          {
+            name: "test",
+            data: [0, 0, 1, 0]
+          }
+        ]
+      });
+    });
+
+    it('should set each tile on the layer', () => {
+      tileEngine.setLayer("test", [1, 2, 3, 4]);
+      expect(tileEngine.tileAtLayer('test', {row: 0, col: 0})).to.equal(1);
+      expect(tileEngine.tileAtLayer('test', {row: 0, col: 1})).to.equal(2);
+      expect(tileEngine.tileAtLayer('test', {row: 1, col: 0})).to.equal(3);
+      expect(tileEngine.tileAtLayer('test', {row: 1, col: 1})).to.equal(4);
+    });
+
+    it('should not throw if there is no layer by the provided name', () => {
+      function fn() {
+        tileEngine.setLayer("foo", [1, 1, 0, 1]);
+      }
+
+      expect(fn).to.not.throw();
+    });
+
+    it("should set the dirty flag", () => {
+      expect(tileEngine._d).to.equal(false);
+      tileEngine.setLayer("test", [1, 1, 0, 1]);
+      expect(tileEngine._d).to.equal(true);
+    });
+  });
+  
 
 
 

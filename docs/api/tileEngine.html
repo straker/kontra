@@ -297,6 +297,11 @@
                   </a>
                 </li>
                 <li>
+                  <a href="api/tileEngine#setLayer">
+                    <span>TileEngine&#8203;.setLayer(&#8203;{String} name, {Number[]} data)</span>
+                  </a>
+                </li>
+                <li>
                   <a href="api/tileEngine#setTileAtLayer">
                     <span>TileEngine&#8203;.setTileAtLayer(&#8203;name, position, tile)</span>
                   </a>
@@ -1205,6 +1210,112 @@ tileEngine.layerCollidesWith(&#39;collision&#39;, sprite);  //=&gt; true</code><
               
             </dt>
             <dd><p>String. Name of the layer to render.</p>
+          </dd>
+          </dl>
+          
+        </section>
+        <section>
+          <h2 id="setLayer">
+            <a href="api/tileEngine#setLayer" class="section-link">
+              <span>TileEngine&#8203;.setLayer(&#8203;{String} name, {Number[]} data)</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
+
+          <p>Set the data at the specified layer.</p>
+<div class="tablist">
+  <ul role="tablist">
+    <li role="presentation" data-tab="global">
+      <button role="tab" id="setlayer-global-tab">Global Object</button>
+    </li>
+    <li role="presentation" data-tab="es">
+      <button role="tab" id="setlayer-es-tab">ES Module Import</button>
+    </li>
+    <li role="presentation" data-tab="bundle">
+      <button role="tab" id="setlayer-bundle-tab">Module Bundler</button>
+    </li>
+    <li role="presentation"></li>
+  </ul>
+  <section role="tabpanel" aria-labelledby=setlayer-global-tab data-tabpanel="global"><pre><code class="language-js">let { TileEngine } = kontra;
+
+let tileEngine = TileEngine({
+  tilewidth: 32,
+  tileheight: 32,
+  width: 2,
+  height: 2,
+  tilesets: [{
+    // ...
+  }],
+  layers: [{
+    name: &#39;collision&#39;,
+    data: [ 0,1,
+            2,3 ]
+  }]
+});
+
+tileEngine.setLayer(&#39;collision&#39;, [ 4,5,6,7]);
+tileEngine.tileAtLayer(&#39;collision&#39;, {row: 0, col: 0});  //=&gt; 4
+tileEngine.tileAtLayer(&#39;collision&#39;, {row: 0, col: 1});  //=&gt; 5
+tileEngine.tileAtLayer(&#39;collision&#39;, {row: 1, col: 0});  //=&gt; 6
+tileEngine.tileAtLayer(&#39;collision&#39;, {row: 1, col: 1});  //=&gt; 7</code></pre></section>
+  <section role="tabpanel" aria-labelledby=setlayer-es-tab data-tabpanel="es"><pre><code class="language-js">import { TileEngine } from 'path/to/kontra.mjs';
+
+let tileEngine = TileEngine({
+  tilewidth: 32,
+  tileheight: 32,
+  width: 2,
+  height: 2,
+  tilesets: [{
+    // ...
+  }],
+  layers: [{
+    name: &#39;collision&#39;,
+    data: [ 0,1,
+            2,3 ]
+  }]
+});
+
+tileEngine.setLayer(&#39;collision&#39;, [ 4,5,6,7]);
+tileEngine.tileAtLayer(&#39;collision&#39;, {row: 0, col: 0});  //=&gt; 4
+tileEngine.tileAtLayer(&#39;collision&#39;, {row: 0, col: 1});  //=&gt; 5
+tileEngine.tileAtLayer(&#39;collision&#39;, {row: 1, col: 0});  //=&gt; 6
+tileEngine.tileAtLayer(&#39;collision&#39;, {row: 1, col: 1});  //=&gt; 7</code></pre></section>
+  <section role="tabpanel" aria-labelledby=setlayer-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { TileEngine } from &#39;kontra&#39;;
+
+let tileEngine = TileEngine({
+  tilewidth: 32,
+  tileheight: 32,
+  width: 2,
+  height: 2,
+  tilesets: [{
+    // ...
+  }],
+  layers: [{
+    name: &#39;collision&#39;,
+    data: [ 0,1,
+            2,3 ]
+  }]
+});
+
+tileEngine.setLayer(&#39;collision&#39;, [ 4,5,6,7]);
+tileEngine.tileAtLayer(&#39;collision&#39;, {row: 0, col: 0});  //=&gt; 4
+tileEngine.tileAtLayer(&#39;collision&#39;, {row: 0, col: 1});  //=&gt; 5
+tileEngine.tileAtLayer(&#39;collision&#39;, {row: 1, col: 0});  //=&gt; 6
+tileEngine.tileAtLayer(&#39;collision&#39;, {row: 1, col: 1});  //=&gt; 7</code></pre></section>
+</div>
+          <h3 id="title-setLayer"><span class="visually-hidden">setLayer</span> Parameters</span></h3>
+          <dl aria-labelledby="title-setLayer">
+            <dt>
+              <code>{String} name</code>
+              
+            </dt>
+            <dd><p>. Name of the layer.</p>
+          </dd>
+            <dt>
+              <code>{Number[]} data</code>
+              
+            </dt>
+            <dd><p>. 1D array of tile indices.</p>
           </dd>
           </dl>
           

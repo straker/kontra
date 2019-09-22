@@ -82,14 +82,14 @@ describe('keyboard', () => {
     });
 
     it('should return true for a single key', () => {
-      simulateEvent('keydown', {which: 65});
+      simulateEvent('keydown', {code: 'KeyA'});
 
       expect(keyboard.keyPressed('a')).to.be.true;
     });
 
     it('should return false if the key is no longer pressed', () => {
-      simulateEvent('keydown', {which: 65});
-      simulateEvent('keyup', {which: 65});
+      simulateEvent('keydown', {code: 'KeyA'});
+      simulateEvent('keyup', {code: 'KeyA'});
 
       expect(keyboard.keyPressed('a')).to.be.not.ok;
     });
@@ -110,7 +110,7 @@ describe('keyboard', () => {
         done();
       });
 
-      simulateEvent('keydown', {which: 65});
+      simulateEvent('keydown', {code: 'KeyA'});
 
       throw new Error('should not get here');
     });
@@ -120,7 +120,7 @@ describe('keyboard', () => {
         done();
       });
 
-      simulateEvent('keydown', {which: 66});
+      simulateEvent('keydown', {code: 'KeyA'});
 
       throw new Error('should not get here');
     });

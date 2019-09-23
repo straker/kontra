@@ -82,12 +82,25 @@ describe('keyboard', () => {
     });
 
     it('should return true for a single key', () => {
+      simulateEvent('keydown', {code: 'KeyA'});
+
+      expect(keyboard.keyPressed('a')).to.be.true;
+    });
+
+    it('should return true for a single key (edge)', () => {
       simulateEvent('keydown', {which: 65});
 
       expect(keyboard.keyPressed('a')).to.be.true;
     });
 
     it('should return false if the key is no longer pressed', () => {
+      simulateEvent('keydown', {code: 'KeyA'});
+      simulateEvent('keyup', {code: 'KeyA'});
+
+      expect(keyboard.keyPressed('a')).to.be.not.ok;
+    });
+
+    it('should return false if the key is no longer pressed (edge)', () => {
       simulateEvent('keydown', {which: 65});
       simulateEvent('keyup', {which: 65});
 
@@ -110,12 +123,32 @@ describe('keyboard', () => {
         done();
       });
 
+      simulateEvent('keydown', {code: 'KeyA'});
+
+      throw new Error('should not get here');
+    });
+
+    it('should call the callback when a single key combination is pressed (edge)', (done) => {
+      keyboard.bindKeys('a', evt => {
+        done();
+      });
+
       simulateEvent('keydown', {which: 65});
 
       throw new Error('should not get here');
     });
 
     it('should accept an array of key combinations to bind', (done) => {
+      keyboard.bindKeys(['a', 'b'], evt => {
+        done();
+      });
+
+      simulateEvent('keydown', {code: 'KeyB'});
+
+      throw new Error('should not get here');
+    });
+
+    it('should accept an array of key combinations to bind (edge)', (done) => {
       keyboard.bindKeys(['a', 'b'], evt => {
         done();
       });

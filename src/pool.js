@@ -150,19 +150,23 @@ class Pool {
     let index = Math.max(this.objects.length - this._i, 0);
 
     // only iterate over the objects that are alive
+    let doSort = false;
     while (i >= index) {
       obj = this.objects[i];
 
       obj.update(dt);
 
-      // if the object is dead, move it to the front of the pool
       if (!obj.isAlive()) {
-        this.objects = this.objects.splice(i, 1).concat(this.objects);
+        doSort = true;
         this._i--;
-        index++;
       }
       else {
         i--;
+      }
+
+      // if the object is dead, move it to the front of the pool
+      if (doSort) {
+        this.objects.sort((a, b) => a.isAlive() - b.isAlive());
       }
     }
   }

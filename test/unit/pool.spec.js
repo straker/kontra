@@ -153,13 +153,13 @@ describe('pool', () => {
         create: sprite
       });
 
-      expect(pool.size).to.equal(1);
+      expect(pool.size).to.equal(0);
 
       pool.get({alive: true});
       pool.get({alive: true});
       pool.get({alive: true});
 
-      expect(pool.size).to.not.equal(1);
+      expect(pool.size).to.not.equal(0);
     });
 
     it('should not increase the size of the pool past the max size', () => {
@@ -188,7 +188,7 @@ describe('pool', () => {
       }
 
       expect(pool.size).to.not.equal(pool.maxSize);
-      expect(pool.size).to.be.equal(256);
+      expect(pool.objects.length).to.be.equal(256);
     });
 
   });
@@ -279,7 +279,7 @@ describe('pool', () => {
       expect(count).to.equal(3);
     });
 
-    it('should move a dead object to the front of the pool', () => {
+    it('should move a dead object to the end of the pool', () => {
       let pool = Pool({
         create: sprite,
         maxSize: 5
@@ -291,11 +291,11 @@ describe('pool', () => {
       pool.objects[2].ttl = 1;
 
       let expected = [
-        pool.objects[2],
         pool.objects[0],
         pool.objects[1],
         pool.objects[3],
-        pool.objects[4]
+        pool.objects[4],
+        pool.objects[2]
       ];
 
       expect(pool.objects[0].isAlive()).to.be.true;
@@ -303,8 +303,9 @@ describe('pool', () => {
       pool.update();
 
       expect(pool.getAliveObjects().length).to.equal(4);
-      expect(pool.objects[0].isAlive()).to.be.false;
-      expect(pool.getAliveObjects().indexOf(pool.objects[0])).to.equal(-1);
+      expect(pool.objects[2].isAlive()).to.be.true;
+      expect(pool.objects[4].isAlive()).to.be.false;
+      expect(pool.getAliveObjects().indexOf(pool.objects[4])).to.equal(-1);
 
       expect(pool.objects[0]).to.equal(expected[0]);
       expect(pool.objects[1]).to.equal(expected[1]);
@@ -374,7 +375,7 @@ describe('pool', () => {
       pool.clear();
 
       expect(pool.objects.length).to.equal(1);
-      expect(pool.size).to.equal(1);
+      expect(pool.size).to.equal(0);
     });
 
   });

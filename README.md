@@ -12,6 +12,8 @@ All the documentation can be found on the [github page](https://straker.github.i
 
 ## Contributing
 
+Please note that this project is released with a [Contributor Code of Conduct](CODE_OF_CONDUCT.md). By participating in this project you agree to abide by its terms.
+
 ### Building
 
 To build the development code, run `npm run build`. To build the distribution version of the code, run `npm run dist`. Both should be built before submitting a pull request.

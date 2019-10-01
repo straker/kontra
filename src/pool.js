@@ -126,8 +126,13 @@ class Pool {
     this.objects.push(this._c());
   }
 
-  sortFn(a, b) {
-    return b.isAlive() - a.isAlive()
+  /**
+   * Sort utility function for update. Sorts dead objects to the end of the array.
+   * @memberof Pool
+   * @function _sfn
+   */
+  _sfn(a, b) {
+    return b.isAlive() - a.isAlive();
   }
 
   /**
@@ -154,7 +159,7 @@ class Pool {
     // sort all dead elements to the end of the pool
     if (doSort) {
       let front = this.objects.slice(0, oldSize);
-      front.sort(sortFn);
+      front.sort(this._sfn);
       this.objects = front.concat(this.objects.slice(oldSize));
     }
   }

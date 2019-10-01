@@ -126,6 +126,10 @@ class Pool {
     this.objects.push(this._c());
   }
 
+  sortFn(a, b) {
+    return b.isAlive() - a.isAlive()
+  }
+
   /**
    * Update all alive objects in the pool by calling the objects `update()` function. This function also manages when each object should be recycled, so it is recommended that you do not call the objects `update()` function outside of this function.
    * @memberof Pool
@@ -136,6 +140,7 @@ class Pool {
   update(dt) {
     let obj;
     let doSort = false;
+    let oldSize = this.size;
     for (let i = this.size; i--; ) {
       obj = this.objects[i];
 
@@ -148,7 +153,9 @@ class Pool {
     }
     // sort all dead elements to the end of the pool
     if (doSort) {
-      this.objects.sort((a, b) => b.isAlive() - a.isAlive());
+      let front = this.objects.slice(0, oldSize);
+      front.sort(sortFn);
+      this.objects = front.concat(this.objects.slice(oldSize));
     }
   }
 

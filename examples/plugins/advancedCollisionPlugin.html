@@ -93,6 +93,9 @@
 
     let sprites = [];
     let shapes = advacedCollisionPlugin.shapes;
+    let collidesWith = function (object) {
+      return kontra.spriteCollidesWith(this, object);
+    };
 
     // rec sprite
     sprites.push(kontra.Sprite({
@@ -104,6 +107,7 @@
       height: 40,
       shape: shapes.RECTANGLE,
       _color: 'red',
+      collidesWith: collidesWith,
       update: function() {
         this.advance();
         if (this.x > canvas.width) this.x = -this.width
@@ -120,6 +124,7 @@
       height: 40,
       shape: shapes.RECTANGLE,
       _color: 'blue',
+      collidesWith: collidesWith,
       update: function() {
         this.advance();
         if (this.x < -this.width) this.x = canvas.width
@@ -135,6 +140,7 @@
       radius: 20,
       shape: shapes.CIRCLE,
       _color: 'yellow',
+      collidesWith: collidesWith,
       update: function() {
         this.advance();
         if (this.x - 20 > canvas.width) this.x = -20
@@ -156,6 +162,7 @@
       radius: 20,
       shape: shapes.CIRCLE,
       _color: 'orange',
+      collidesWith: collidesWith,
       update: function() {
         this.advance();
         if (this.x + 20 < 0) this.x = canvas.width + 20;
@@ -178,6 +185,7 @@
       height: 40,
       shape: shapes.RECTANGLE,
       _color: 'green',
+      collidesWith: collidesWith,
       update: function() {
         this.advance();
         if (this.x > canvas.width) this.x = -this.width
@@ -193,6 +201,7 @@
       radius: 20,
       shape: shapes.CIRCLE,
       _color: 'purple',
+      collidesWith: collidesWith,
       update: function() {
         this.advance();
         if (this.x + 20 < 0) this.x = canvas.width + 20;

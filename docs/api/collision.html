@@ -99,14 +99,101 @@
             </a>
           </h2>
 
-          
+          <p>Check if the sprite collide with the object. Uses a simple <a href="https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection#Axis-Aligned_Bounding_Box">Axis-Aligned Bounding Box (AABB) collision check</a>. Takes into account the sprites <a href="api/sprite/#anchor">anchor</a>.</p>
+<p><strong>NOTE:</strong> Does not take into account sprite rotation. If you need collision detection between rotated sprites, I suggest looking at the Separate Axis Theorem.</p>
+<div class="tablist">
+  <ul role="tablist">
+    <li role="presentation" data-tab="global">
+      <button role="tab" id="spritecollideswith-global-tab">Global Object</button>
+    </li>
+    <li role="presentation" data-tab="es">
+      <button role="tab" id="spritecollideswith-es-tab">ES Module Import</button>
+    </li>
+    <li role="presentation" data-tab="bundle">
+      <button role="tab" id="spritecollideswith-bundle-tab">Module Bundler</button>
+    </li>
+    <li role="presentation"></li>
+  </ul>
+  <section role="tabpanel" aria-labelledby=spritecollideswith-global-tab data-tabpanel="global"><pre><code class="language-js">let { Sprite, spriteCollidesWith } = kontra;
+
+let sprite = Sprite({
+  x: 100,
+  y: 200,
+  width: 20,
+  height: 40,
+  collidesWith: function (object) {
+    return spriteCollidesWith(this, object);
+  },
+});
+
+let sprite2 = Sprite({
+  x: 150,
+  y: 200,
+  width: 20,
+  height: 20
+});
+
+sprite.collidesWith(sprite2);  //=&gt; false
+
+sprite2.x = 115;
+
+sprite.collidesWith(sprite2);  //=&gt; true</code></pre></section>
+  <section role="tabpanel" aria-labelledby=spritecollideswith-es-tab data-tabpanel="es"><pre><code class="language-js">import { Sprite, spriteCollidesWith } from 'path/to/kontra.mjs';
+
+let sprite = Sprite({
+  x: 100,
+  y: 200,
+  width: 20,
+  height: 40,
+  collidesWith: function (object) {
+    return spriteCollidesWith(this, object);
+  },
+});
+
+let sprite2 = Sprite({
+  x: 150,
+  y: 200,
+  width: 20,
+  height: 20
+});
+
+sprite.collidesWith(sprite2);  //=&gt; false
+
+sprite2.x = 115;
+
+sprite.collidesWith(sprite2);  //=&gt; true</code></pre></section>
+  <section role="tabpanel" aria-labelledby=spritecollideswith-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { Sprite, spriteCollidesWith } from &#39;kontra&#39;;
+
+let sprite = Sprite({
+  x: 100,
+  y: 200,
+  width: 20,
+  height: 40,
+  collidesWith: function (object) {
+    return spriteCollidesWith(this, object);
+  },
+});
+
+let sprite2 = Sprite({
+  x: 150,
+  y: 200,
+  width: 20,
+  height: 20
+});
+
+sprite.collidesWith(sprite2);  //=&gt; false
+
+sprite2.x = 115;
+
+sprite.collidesWith(sprite2);  //=&gt; true</code></pre></section>
+</div>
           <h3 id="title-spriteCollidesWith"><span class="visually-hidden">spriteCollidesWith</span> Parameters</span></h3>
           <dl aria-labelledby="title-spriteCollidesWith">
             <dt>
               <code>sprite</code>
               
             </dt>
-            <dd><p>Sprite. Sprite object.</p>
+            <dd><p>Sprite. Sprite base object.</p>
           </dd>
             <dt>
               <code>object</code>

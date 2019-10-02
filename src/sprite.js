@@ -1,6 +1,5 @@
 import { getContext } from './core.js'
 import Vector from './vector.js'
-import { spriteCollidesWith } from './collision.js'
 
 /**
  * A versatile way to update and draw your game objects. It can handle simple rectangles, images, and sprite sheet animations. It can be used for your main player object as well as tiny particles in a particle engine.
@@ -385,35 +384,8 @@ class Sprite {
   }
 
   /**
-   * Check if the sprite collide with the object. Uses a simple [Axis-Aligned Bounding Box (AABB) collision check](https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection#Axis-Aligned_Bounding_Box). Takes into account the sprites [anchor](api/sprite/#anchor).
-   *
-   * **NOTE:** Does not take into account sprite rotation. If you need collision detection between rotated sprites you will need to implement your own `collidesWith()` function. I suggest looking at the Separate Axis Theorem.
-   *
-   * ```js
-   * import { Sprite } from 'kontra';
-   *
-   * let sprite = Sprite({
-   *   x: 100,
-   *   y: 200,
-   *   width: 20,
-   *   height: 40
-   * });
-   *
-   * let sprite2 = Sprite({
-   *   x: 150,
-   *   y: 200,
-   *   width: 20,
-   *   height: 20
-   * });
-   *
-   * sprite.collidesWith(sprite2);  //=> false
-   *
-   * sprite2.x = 115;
-   *
-   * sprite.collidesWith(sprite2);  //=> true
-   * ```
-   *
-   * If you need a different type of collision check, you can override this function by passing an argument by the same name.
+   * Check if the sprite collides with the object. Actually this functions always returns false but it is declared here for documentation and plugins registration.
+   * You can check the [Collision](api/collision) section for basic collision detection functions.
    *
    * ```js
    * // circle collision
@@ -446,10 +418,10 @@ class Sprite {
    *
    * @param {Object} object - Object to check collision against.
    *
-   * @returns {Boolean|null} `true` if the objects collide, `false` otherwise. Will return `null` if the either of the two objects are rotated.
+   * @returns {Boolean|null} `false` always.
    */
   collidesWith(object) {
-    return spriteCollidesWith(this, object);
+    return false;
   }
 
   /**

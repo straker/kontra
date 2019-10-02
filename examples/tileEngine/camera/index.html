@@ -170,7 +170,10 @@
       x: tileEngine.sx + 400,
       y: tileEngine.sy + 50,
       count: 0,
-      animations: chickenSpritesheet.animations
+      animations: chickenSpritesheet.animations,
+      collidesWith: function (object) {
+        return kontra.spriteCollidesWith(this, object);
+      },
     });
     chicken.playAnimation('eat_right');
     tileEngine.addObject(chicken);

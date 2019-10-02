@@ -1,4 +1,4 @@
-let { canvas, contex} = kontra.init();
+let { canvas } = kontra.init();
 
 kontra.initKeys();
 
@@ -62,6 +62,10 @@ kontra.load(
       obj.audio.muted = !obj.audio.muted;
     }
   }
+
+  let collidesWith = function (object) {
+    return kontra.spriteCollidesWith(this, object);
+  };
 
   // create audio pools
   let laserPool = kontra.Pool({
@@ -136,6 +140,7 @@ kontra.load(
     y: 270,
     image: kontra.imageAssets.ship,
     counter: 15,
+    collidesWith: collidesWith,
     update: function() {
       this.counter++;
 
@@ -161,7 +166,8 @@ kontra.load(
             dy: -3,
             image: kontra.imageAssets.bullet,
             ttl: 130,
-            type: 'friendly'
+            type: 'friendly',
+            collidesWith: collidesWith,
           });
         }
 
@@ -199,6 +205,7 @@ kontra.load(
         bottomEdge: y + 140,
         speed: 2,
         type: 'enemy',
+        collidesWith: collidesWith,
         update: function() {
           this.advance();
 
@@ -223,7 +230,8 @@ kontra.load(
               dy: 2.5,
               image: kontra.imageAssets.bullet_enemy,
               ttl: 150,
-              type: 'hostile'
+              type: 'hostile',
+              collidesWith: collidesWith,
             });
           }
         },

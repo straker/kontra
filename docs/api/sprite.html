@@ -1329,86 +1329,8 @@ sprite.playAnimation(&#39;idle&#39;);</code></pre></section>
             </a>
           </h2>
 
-          <p>Check if the sprite collide with the object. Uses a simple <a href="https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection#Axis-Aligned_Bounding_Box">Axis-Aligned Bounding Box (AABB) collision check</a>. Takes into account the sprites <a href="api/sprite/#anchor">anchor</a>.</p>
-<p><strong>NOTE:</strong> Does not take into account sprite rotation. If you need collision detection between rotated sprites you will need to implement your own <code>collidesWith()</code> function. I suggest looking at the Separate Axis Theorem.</p>
-<div class="tablist">
-  <ul role="tablist">
-    <li role="presentation" data-tab="global">
-      <button role="tab" id="collideswith-global-tab">Global Object</button>
-    </li>
-    <li role="presentation" data-tab="es">
-      <button role="tab" id="collideswith-es-tab">ES Module Import</button>
-    </li>
-    <li role="presentation" data-tab="bundle">
-      <button role="tab" id="collideswith-bundle-tab">Module Bundler</button>
-    </li>
-    <li role="presentation"></li>
-  </ul>
-  <section role="tabpanel" aria-labelledby=collideswith-global-tab data-tabpanel="global"><pre><code class="language-js">let { Sprite } = kontra;
-
-let sprite = Sprite({
-  x: 100,
-  y: 200,
-  width: 20,
-  height: 40
-});
-
-let sprite2 = Sprite({
-  x: 150,
-  y: 200,
-  width: 20,
-  height: 20
-});
-
-sprite.collidesWith(sprite2);  //=&gt; false
-
-sprite2.x = 115;
-
-sprite.collidesWith(sprite2);  //=&gt; true</code></pre></section>
-  <section role="tabpanel" aria-labelledby=collideswith-es-tab data-tabpanel="es"><pre><code class="language-js">import { Sprite } from 'path/to/kontra.mjs';
-
-let sprite = Sprite({
-  x: 100,
-  y: 200,
-  width: 20,
-  height: 40
-});
-
-let sprite2 = Sprite({
-  x: 150,
-  y: 200,
-  width: 20,
-  height: 20
-});
-
-sprite.collidesWith(sprite2);  //=&gt; false
-
-sprite2.x = 115;
-
-sprite.collidesWith(sprite2);  //=&gt; true</code></pre></section>
-  <section role="tabpanel" aria-labelledby=collideswith-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { Sprite } from &#39;kontra&#39;;
-
-let sprite = Sprite({
-  x: 100,
-  y: 200,
-  width: 20,
-  height: 40
-});
-
-let sprite2 = Sprite({
-  x: 150,
-  y: 200,
-  width: 20,
-  height: 20
-});
-
-sprite.collidesWith(sprite2);  //=&gt; false
-
-sprite2.x = 115;
-
-sprite.collidesWith(sprite2);  //=&gt; true</code></pre></section>
-</div>
-<p>If you need a different type of collision check, you can override this function by passing an argument by the same name.</p>
+          <p>Check if the sprite collides with the object. Actually this functions always returns false but it is declared here for documentation and plugins registration.
+You can check the <a href="api/collision">Collision</a> section for basic collision detection functions.</p>
 <div class="tablist">
   <ul role="tablist">
     <li role="presentation" data-tab="global">
@@ -1506,7 +1428,7 @@ sprite.collidesWith(sprite2);  //=&gt; true</code></pre></section>
           </dl>
           
           <h3><span class="visually-hidden">collidesWith</span> Return value</h3>
-          <p><p><code>true</code> if the objects collide, <code>false</code> otherwise. Will return <code>null</code> if the either of the two objects are rotated.</p>
+          <p><p><code>false</code> always.</p>
           </p>
         </section>
         <section>

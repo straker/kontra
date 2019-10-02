@@ -18,7 +18,10 @@
       dy: 0,
       width: 60,
       height: 40,
-      color: 'red'
+      color: 'red',
+      collidesWith: function (object) {
+        return kontra.spriteCollidesWith(this, object);
+      }
     });
 
     // create a second basic sprite

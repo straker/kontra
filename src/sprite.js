@@ -1,5 +1,6 @@
 import { getContext } from './core.js'
 import Vector from './vector.js'
+import { spriteCollidesWith } from './collision.js'
 
 /**
  * A versatile way to update and draw your game objects. It can handle simple rectangles, images, and sprite sheet animations. It can be used for your main player object as well as tiny particles in a particle engine.
@@ -448,23 +449,7 @@ class Sprite {
    * @returns {Boolean|null} `true` if the objects collide, `false` otherwise. Will return `null` if the either of the two objects are rotated.
    */
   collidesWith(object) {
-    if (this.rotation || object.rotation) return null;
-
-    // take into account sprite anchors
-    let x = this.x - this.width * this.anchor.x;
-    let y = this.y - this.height * this.anchor.y;
-
-    let objX = object.x;
-    let objY = object.y;
-    if (object.anchor) {
-      objX -= object.width * object.anchor.x;
-      objY -= object.height * object.anchor.y;
-    }
-
-    return x < objX + object.width &&
-           x + this.width > objX &&
-           y < objY + object.height &&
-           y + this.height > objY;
+    return spriteCollidesWith(this, object);
   }
 
   /**

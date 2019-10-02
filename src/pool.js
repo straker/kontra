@@ -89,11 +89,8 @@ class Pool {
       }
       // double the size of the array by adding twice as many new objects to the end
       else {
-        for (let i = 0; i < this.size; i++) {
+        for (let i = 0; i < this.size && this.objects.length < this.maxSize; i++) {
           this.objects.push(this._c());
-          if (this.objects.length === this.maxSize) {
-            break;
-          }
         }
       }
     }

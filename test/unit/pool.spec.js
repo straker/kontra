@@ -110,44 +110,6 @@ describe('pool', () => {
       expect(spy.calledWith(args)).to.be.ok;
     });
 
-    it('should use the first object in the pool and move it to the back of the pool', () => {
-      let pool = Pool({
-        create: sprite,
-        maxSize: 5,
-      });
-
-      // fill the pool
-      pool.get({alive: true});
-      pool.get({alive: true});
-      pool.get({alive: true});
-      pool.get({alive: true});
-      pool.get({alive: true});
-
-      // kill objects in the pool
-      for (let i = 0; i < 5; i++) {
-        pool.objects[i].alive = false;
-      }
-
-      // update pool position
-      pool.update();
-
-      let expected = [
-        pool.objects[1],
-        pool.objects[2],
-        pool.objects[3],
-        pool.objects[4],
-        pool.objects[0]
-      ]
-
-      pool.get();
-
-      expect(pool.objects[0]).to.equal(expected[0]);
-      expect(pool.objects[1]).to.equal(expected[1]);
-      expect(pool.objects[2]).to.equal(expected[2]);
-      expect(pool.objects[3]).to.equal(expected[3]);
-      expect(pool.objects[4]).to.equal(expected[4]);
-    });
-
     it('should increase the size of the pool when there are no more objects', () => {
       let pool = Pool({
         create: sprite

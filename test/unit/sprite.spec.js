@@ -473,39 +473,6 @@ describe('sprite', () => {
 
 
   // --------------------------------------------------
-  // collidesWith
-  // --------------------------------------------------
-  describe('collidesWith', () => {
-
-    it('always returns false', () => {
-      let sprite1 = Sprite({
-        x: 10,
-        y: 20,
-        width: 10,
-        height: 20
-      });
-
-      let sprite2 = Sprite({
-        x: 19,
-        y: 39,
-        width: 10,
-        height: 20
-      });
-
-      expect(sprite1.collidesWith(sprite2)).to.be.false;
-      expect(sprite1.collidesWith(sprite1)).to.be.false;
-      expect(sprite1.collidesWith({})).to.be.false;
-      expect(sprite1.collidesWith(undefined)).to.be.false;
-      expect(sprite1.collidesWith(null)).to.be.false;
-    });
-
-  });
-
-
-
-
-
-  // --------------------------------------------------
   // isAlive
   // --------------------------------------------------
   describe('isAlive', () => {

@@ -384,47 +384,6 @@ class Sprite {
   }
 
   /**
-   * Check if the sprite collides with the object. Actually this functions always returns false but it is declared here for documentation and plugins registration.
-   * You can check the [Collision](api/collision) section for basic collision detection functions.
-   *
-   * ```js
-   * // circle collision
-   * function collidesWith(object) {
-   *   let dx = this.x - object.x;
-   *   let dy = this.y - object.y;
-   *   let distance = Math.sqrt(dx * dx + dy * dy);
-   *
-   *   return distance < this.radius + object.radius;
-   * }
-   *
-   * let sprite = Sprite({
-   *   x: 100,
-   *   y: 200,
-   *   radius: 25,
-   *   collidesWith: collidesWith
-   * });
-   *
-   * let sprite2 = Sprite({
-   *   x: 150,
-   *   y: 200,
-   *   radius: 30,
-   *   collidesWith: collidesWith
-   * });
-   *
-   * sprite.collidesWith(sprite2);  //=> true
-   * ```
-   * @memberof Sprite
-   * @function collidesWith
-   *
-   * @param {Object} object - Object to check collision against.
-   *
-   * @returns {Boolean|null} `false` always.
-   */
-  collidesWith(object) {
-    return false;
-  }
-
-  /**
    * Update the sprites position based on its velocity and acceleration. Calls the sprites [advance()](api/sprite/#advance) function.
    * @memberof Sprite
    * @function update

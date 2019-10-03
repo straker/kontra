@@ -333,11 +333,6 @@
                   </a>
                 </li>
                 <li>
-                  <a href="api/sprite#collidesWith">
-                    <span>Sprite&#8203;.collidesWith(&#8203;object)</span>
-                  </a>
-                </li>
-                <li>
                   <a href="api/sprite#draw">
                     <span>Sprite&#8203;.draw(&#8203;)</span>
                   </a>
@@ -1320,116 +1315,6 @@ let sprite = Sprite({
 sprite.playAnimation(&#39;idle&#39;);</code></pre></section>
 </div>
           
-        </section>
-        <section>
-          <h2 id="collidesWith">
-            <a href="api/sprite#collidesWith" class="section-link">
-              <span>Sprite&#8203;.collidesWith(&#8203;object)</span>
-              <span aria-hidden="true">#</span>
-            </a>
-          </h2>
-
-          <p>Check if the sprite collides with the object. Actually this functions always returns false but it is declared here for documentation and plugins registration.
-You can check the <a href="api/collision">Collision</a> section for basic collision detection functions.</p>
-<div class="tablist">
-  <ul role="tablist">
-    <li role="presentation" data-tab="global">
-      <button role="tab" id="collideswith-global-tab">Global Object</button>
-    </li>
-    <li role="presentation" data-tab="es">
-      <button role="tab" id="collideswith-es-tab">ES Module Import</button>
-    </li>
-    <li role="presentation" data-tab="bundle">
-      <button role="tab" id="collideswith-bundle-tab">Module Bundler</button>
-    </li>
-    <li role="presentation"></li>
-  </ul>
-  <section role="tabpanel" aria-labelledby=collideswith-global-tab data-tabpanel="global"><pre><code class="language-js">// circle collision
-function collidesWith(object) {
-  let dx = this.x - object.x;
-  let dy = this.y - object.y;
-  let distance = Math.sqrt(dx * dx + dy * dy);
-
-  return distance &lt; this.radius + object.radius;
-}
-
-let sprite = Sprite({
-  x: 100,
-  y: 200,
-  radius: 25,
-  collidesWith: collidesWith
-});
-
-let sprite2 = Sprite({
-  x: 150,
-  y: 200,
-  radius: 30,
-  collidesWith: collidesWith
-});
-
-sprite.collidesWith(sprite2);  //=&gt; true</code></pre></section>
-  <section role="tabpanel" aria-labelledby=collideswith-es-tab data-tabpanel="es"><pre><code class="language-js">// circle collision
-function collidesWith(object) {
-  let dx = this.x - object.x;
-  let dy = this.y - object.y;
-  let distance = Math.sqrt(dx * dx + dy * dy);
-
-  return distance &lt; this.radius + object.radius;
-}
-
-let sprite = Sprite({
-  x: 100,
-  y: 200,
-  radius: 25,
-  collidesWith: collidesWith
-});
-
-let sprite2 = Sprite({
-  x: 150,
-  y: 200,
-  radius: 30,
-  collidesWith: collidesWith
-});
-
-sprite.collidesWith(sprite2);  //=&gt; true</code></pre></section>
-  <section role="tabpanel" aria-labelledby=collideswith-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">// circle collision
-function collidesWith(object) {
-  let dx = this.x - object.x;
-  let dy = this.y - object.y;
-  let distance = Math.sqrt(dx * dx + dy * dy);
-
-  return distance &lt; this.radius + object.radius;
-}
-
-let sprite = Sprite({
-  x: 100,
-  y: 200,
-  radius: 25,
-  collidesWith: collidesWith
-});
-
-let sprite2 = Sprite({
-  x: 150,
-  y: 200,
-  radius: 30,
-  collidesWith: collidesWith
-});
-
-sprite.collidesWith(sprite2);  //=&gt; true</code></pre></section>
-</div>
-          <h3 id="title-collidesWith"><span class="visually-hidden">collidesWith</span> Parameters</span></h3>
-          <dl aria-labelledby="title-collidesWith">
-            <dt>
-              <code>object</code>
-              
-            </dt>
-            <dd><p>Object. Object to check collision against.</p>
-          </dd>
-          </dl>
-          
-          <h3><span class="visually-hidden">collidesWith</span> Return value</h3>
-          <p><p><code>false</code> always.</p>
-          </p>
         </section>
         <section>
           <h2 id="color">

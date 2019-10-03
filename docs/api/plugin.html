@@ -170,20 +170,27 @@ export default loggingPlugin;</code></pre>
     <li role="presentation"></li>
   </ul>
   <section role="tabpanel" aria-labelledby=how-to-create-a-plugin-global-tab data-tabpanel="global"><pre><code class="language-js">// consumerCode.js
-let { registerPlugin, Sprite, spriteCollidesWith } = kontra;
+let { registerPlugin, Sprite, collides } = kontra;
 import loggingPlugin from pluginCode.js;
 
-// have the plugin run for all Sprites
-registerPlugin(Sprite, loggingPlugin);
+class SpriteBox extends Sprite.class {
+  constructor(props) {
+    super(props);
+  }
 
-let sprite1 = Sprite({
+  collidesWith(object) {
+    return collides(this, object);
+  }
+}
+
+// have the plugin run for all Sprites
+registerPlugin(SpriteBox, loggingPlugin);
+
+let sprite1 = new SpriteBox({
   x: 10,
   y: 20,
   width: 10,
   height: 10,
-  collidesWith: function (object) {
-    return spriteCollidesWith(this, object);
-  },
 });
 
 let sprite2 = Sprite({
@@ -195,20 +202,27 @@ let sprite2 = Sprite({
 
 sprite1.collidesWith(sprite2);  //=&gt; &#39;collision between sprites!&#39;; true</code></pre></section>
   <section role="tabpanel" aria-labelledby=how-to-create-a-plugin-es-tab data-tabpanel="es"><pre><code class="language-js">// consumerCode.js
-import { registerPlugin, Sprite, spriteCollidesWith } from 'path/to/kontra.mjs';
+import { registerPlugin, Sprite, collides } from 'path/to/kontra.mjs';
 import loggingPlugin from pluginCode.js;
 
-// have the plugin run for all Sprites
-registerPlugin(Sprite, loggingPlugin);
+class SpriteBox extends Sprite.class {
+  constructor(props) {
+    super(props);
+  }
 
-let sprite1 = Sprite({
+  collidesWith(object) {
+    return collides(this, object);
+  }
+}
+
+// have the plugin run for all Sprites
+registerPlugin(SpriteBox, loggingPlugin);
+
+let sprite1 = new SpriteBox({
   x: 10,
   y: 20,
   width: 10,
   height: 10,
-  collidesWith: function (object) {
-    return spriteCollidesWith(this, object);
-  },
 });
 
 let sprite2 = Sprite({
@@ -220,20 +234,27 @@ let sprite2 = Sprite({
 
 sprite1.collidesWith(sprite2);  //=&gt; &#39;collision between sprites!&#39;; true</code></pre></section>
   <section role="tabpanel" aria-labelledby=how-to-create-a-plugin-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">// consumerCode.js
-import { registerPlugin, Sprite, spriteCollidesWith } from &#39;kontra&#39;;
+import { registerPlugin, Sprite, collides } from &#39;kontra&#39;;
 import loggingPlugin from pluginCode.js;
 
-// have the plugin run for all Sprites
-registerPlugin(Sprite, loggingPlugin);
+class SpriteBox extends Sprite.class {
+  constructor(props) {
+    super(props);
+  }
 
-let sprite1 = Sprite({
+  collidesWith(object) {
+    return collides(this, object);
+  }
+}
+
+// have the plugin run for all Sprites
+registerPlugin(SpriteBox, loggingPlugin);
+
+let sprite1 = new SpriteBox({
   x: 10,
   y: 20,
   width: 10,
   height: 10,
-  collidesWith: function (object) {
-    return spriteCollidesWith(this, object);
-  },
 });
 
 let sprite2 = Sprite({

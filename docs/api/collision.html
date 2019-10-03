@@ -81,8 +81,8 @@
               <h3 id="methods">Methods</h3>
               <ul aria-labelledby="methods">
                 <li>
-                  <a href="api/collision#spriteCollidesWith">
-                    <span>spriteCollidesWith(&#8203;sprite, object)</span>
+                  <a href="api/collision#collides">
+                    <span>collides(&#8203;object, object)</span>
                   </a>
                 </li>
               </ul>
@@ -92,38 +92,35 @@
 
 
         <section>
-          <h2 id="spriteCollidesWith">
-            <a href="api/collision#spriteCollidesWith" class="section-link">
-              <span>spriteCollidesWith(&#8203;sprite, object)</span>
+          <h2 id="collides">
+            <a href="api/collision#collides" class="section-link">
+              <span>collides(&#8203;object, object)</span>
               <span aria-hidden="true">#</span>
             </a>
           </h2>
 
-          <p>Check if the sprite collide with the object. Uses a simple <a href="https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection#Axis-Aligned_Bounding_Box">Axis-Aligned Bounding Box (AABB) collision check</a>. Takes into account the sprites <a href="api/sprite/#anchor">anchor</a>.</p>
-<p><strong>NOTE:</strong> Does not take into account sprite rotation. If you need collision detection between rotated sprites, I suggest looking at the Separate Axis Theorem.</p>
+          <p>Check if a two objects collide. Uses a simple <a href="https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection#Axis-Aligned_Bounding_Box">Axis-Aligned Bounding Box (AABB) collision check</a>. Takes into account the sprites <a href="api/sprite/#anchor">anchor</a>.</p>
+<p><strong>NOTE:</strong> Does not take into account object rotation. If you need collision detection between rotated objects you will need to implement your own <code>collides()</code> function. I suggest looking at the Separate Axis Theorem.</p>
 <div class="tablist">
   <ul role="tablist">
     <li role="presentation" data-tab="global">
-      <button role="tab" id="spritecollideswith-global-tab">Global Object</button>
+      <button role="tab" id="collides-global-tab">Global Object</button>
     </li>
     <li role="presentation" data-tab="es">
-      <button role="tab" id="spritecollideswith-es-tab">ES Module Import</button>
+      <button role="tab" id="collides-es-tab">ES Module Import</button>
     </li>
     <li role="presentation" data-tab="bundle">
-      <button role="tab" id="spritecollideswith-bundle-tab">Module Bundler</button>
+      <button role="tab" id="collides-bundle-tab">Module Bundler</button>
     </li>
     <li role="presentation"></li>
   </ul>
-  <section role="tabpanel" aria-labelledby=spritecollideswith-global-tab data-tabpanel="global"><pre><code class="language-js">let { Sprite, spriteCollidesWith } = kontra;
+  <section role="tabpanel" aria-labelledby=collides-global-tab data-tabpanel="global"><pre><code class="language-js">let { Sprite, collides } = kontra;
 
 let sprite = Sprite({
   x: 100,
   y: 200,
   width: 20,
-  height: 40,
-  collidesWith: function (object) {
-    return spriteCollidesWith(this, object);
-  },
+  height: 40
 });
 
 let sprite2 = Sprite({
@@ -133,21 +130,18 @@ let sprite2 = Sprite({
   height: 20
 });
 
-sprite.collidesWith(sprite2);  //=&gt; false
+collides(sprite, sprite2);  //=&gt; false
 
 sprite2.x = 115;
 
-sprite.collidesWith(sprite2);  //=&gt; true</code></pre></section>
-  <section role="tabpanel" aria-labelledby=spritecollideswith-es-tab data-tabpanel="es"><pre><code class="language-js">import { Sprite, spriteCollidesWith } from 'path/to/kontra.mjs';
+collides(sprite, sprite2);  //=&gt; true</code></pre></section>
+  <section role="tabpanel" aria-labelledby=collides-es-tab data-tabpanel="es"><pre><code class="language-js">import { Sprite, collides } from 'path/to/kontra.mjs';
 
 let sprite = Sprite({
   x: 100,
   y: 200,
   width: 20,
-  height: 40,
-  collidesWith: function (object) {
-    return spriteCollidesWith(this, object);
-  },
+  height: 40
 });
 
 let sprite2 = Sprite({
@@ -157,21 +151,18 @@ let sprite2 = Sprite({
   height: 20
 });
 
-sprite.collidesWith(sprite2);  //=&gt; false
+collides(sprite, sprite2);  //=&gt; false
 
 sprite2.x = 115;
 
-sprite.collidesWith(sprite2);  //=&gt; true</code></pre></section>
-  <section role="tabpanel" aria-labelledby=spritecollideswith-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { Sprite, spriteCollidesWith } from &#39;kontra&#39;;
+collides(sprite, sprite2);  //=&gt; true</code></pre></section>
+  <section role="tabpanel" aria-labelledby=collides-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { Sprite, collides } from &#39;kontra&#39;;
 
 let sprite = Sprite({
   x: 100,
   y: 200,
   width: 20,
-  height: 40,
-  collidesWith: function (object) {
-    return spriteCollidesWith(this, object);
-  },
+  height: 40
 });
 
 let sprite2 = Sprite({
@@ -181,19 +172,19 @@ let sprite2 = Sprite({
   height: 20
 });
 
-sprite.collidesWith(sprite2);  //=&gt; false
+collides(sprite, sprite2);  //=&gt; false
 
 sprite2.x = 115;
 
-sprite.collidesWith(sprite2);  //=&gt; true</code></pre></section>
+collides(sprite, sprite2);  //=&gt; true</code></pre></section>
 </div>
-          <h3 id="title-spriteCollidesWith"><span class="visually-hidden">spriteCollidesWith</span> Parameters</span></h3>
-          <dl aria-labelledby="title-spriteCollidesWith">
+          <h3 id="title-collides"><span class="visually-hidden">collides</span> Parameters</span></h3>
+          <dl aria-labelledby="title-collides">
             <dt>
-              <code>sprite</code>
+              <code>object</code>
               
             </dt>
-            <dd><p>Sprite. Sprite base object.</p>
+            <dd><p>Sprite. Object reference.</p>
           </dd>
             <dt>
               <code>object</code>
@@ -203,7 +194,7 @@ sprite.collidesWith(sprite2);  //=&gt; true</code></pre></section>
           </dd>
           </dl>
           
-          <h3><span class="visually-hidden">spriteCollidesWith</span> Return value</h3>
+          <h3><span class="visually-hidden">collides</span> Return value</h3>
           <p><p><code>true</code> if the objects collide, <code>false</code> otherwise. Will return <code>null</code> if the either of the two objects are rotated.</p>
           </p>
         </section>

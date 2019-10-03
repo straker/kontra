@@ -18,10 +18,7 @@
       dy: 0,
       width: 60,
       height: 40,
-      color: 'red',
-      collidesWith: function (object) {
-        return kontra.spriteCollidesWith(this, object);
-      }
+      color: 'red'
     });
 
     // create a second basic sprite
@@ -43,7 +40,7 @@
         sprite2.update();
 
         // check for collision
-        if (sprite1.collidesWith(sprite2)) {
+        if (kontra.collides(sprite1, sprite2)) {
           sprite1.color = 'purple';
           sprite2.color= 'purple';
         }

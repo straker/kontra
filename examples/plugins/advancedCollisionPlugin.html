@@ -88,17 +88,28 @@
     // initialize the game and setup the canvas
     let { canvas, context } = kontra.init();
 
+    class SpriteBox extends kontra.Sprite.class {
+      constructor(props) {
+        super(props);
+      }
+
+      collidesWith(object) {
+        return kontra.collides(this, object);
+      }
+    }
+
+    function newSpriteBox(properties) {
+      return new SpriteBox(properties);
+    }
+
     // register the plugin
-    kontra.registerPlugin(kontra.Sprite, advacedCollisionPlugin);
+    kontra.registerPlugin(SpriteBox, advacedCollisionPlugin);
 
     let sprites = [];
     let shapes = advacedCollisionPlugin.shapes;
-    let collidesWith = function (object) {
-      return kontra.spriteCollidesWith(this, object);
-    };
 
     // rec sprite
-    sprites.push(kontra.Sprite({
+    sprites.push(newSpriteBox({
       x: 100,
       y: 60,
       dx: 2,
@@ -107,7 +118,6 @@
       height: 40,
       shape: shapes.RECTANGLE,
       _color: 'red',
-      collidesWith: collidesWith,
       update: function() {
         this.advance();
         if (this.x > canvas.width) this.x = -this.width
@@ -115,7 +125,7 @@
     }));
 
     // rec sprite
-    sprites.push(kontra.Sprite({
+    sprites.push(newSpriteBox({
       x: canvas.width - 100 - 40,
       y: 60,
       dx: -2,
@@ -124,7 +134,6 @@
       height: 40,
       shape: shapes.RECTANGLE,
       _color: 'blue',
-      collidesWith: collidesWith,
       update: function() {
         this.advance();
         if (this.x < -this.width) this.x = canvas.width
@@ -132,7 +141,7 @@
     }));
 
     // circle sprite
-    sprites.push(kontra.Sprite({
+    sprites.push(newSpriteBox({
       x: 120,
       y: 180,
       dx: 2,
@@ -140,7 +149,6 @@
       radius: 20,
       shape: shapes.CIRCLE,
       _color: 'yellow',
-      collidesWith: collidesWith,
       update: function() {
         this.advance();
         if (this.x - 20 > canvas.width) this.x = -20
@@ -154,7 +162,7 @@
     }));
 
     // circle sprite
-    sprites.push(kontra.Sprite({
+    sprites.push(newSpriteBox({
       x: canvas.width - 100 - 20,
       y: 180,
       dx: -2,
@@ -162,7 +170,6 @@
       radius: 20,
       shape: shapes.CIRCLE,
       _color: 'orange',
-      collidesWith: collidesWith,
       update: function() {
         this.advance();
         if (this.x + 20 < 0) this.x = canvas.width + 20;
@@ -176,7 +183,7 @@
     }));
 
     // rec sprite
-    sprites.push(kontra.Sprite({
+    sprites.push(newSpriteBox({
       x: 100,
       y: 260,
       dx: 2,
@@ -185,7 +192,6 @@
       height: 40,
       shape: shapes.RECTANGLE,
       _color: 'green',
-      collidesWith: collidesWith,
       update: function() {
         this.advance();
         if (this.x > canvas.width) this.x = -this.width
@@ -193,7 +199,7 @@
     }));
 
     // circle sprite
-    sprites.push(kontra.Sprite({
+    sprites.push(newSpriteBox({
       x: canvas.width - 100 - 20,
       y: 280,
       dx: -2,
@@ -201,7 +207,6 @@
       radius: 20,
       shape: shapes.CIRCLE,
       _color: 'purple',
-      collidesWith: collidesWith,
       update: function() {
         this.advance();
         if (this.x + 20 < 0) this.x = canvas.width + 20;

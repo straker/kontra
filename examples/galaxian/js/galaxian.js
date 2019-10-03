@@ -63,10 +63,6 @@ kontra.load(
     }
   }
 
-  let collidesWith = function (object) {
-    return kontra.spriteCollidesWith(this, object);
-  };
-
   // create audio pools
   let laserPool = kontra.Pool({
     create: function() {
@@ -140,7 +136,6 @@ kontra.load(
     y: 270,
     image: kontra.imageAssets.ship,
     counter: 15,
-    collidesWith: collidesWith,
     update: function() {
       this.counter++;
 
@@ -166,8 +161,7 @@ kontra.load(
             dy: -3,
             image: kontra.imageAssets.bullet,
             ttl: 130,
-            type: 'friendly',
-            collidesWith: collidesWith,
+            type: 'friendly'
           });
         }
 
@@ -205,7 +199,6 @@ kontra.load(
         bottomEdge: y + 140,
         speed: 2,
         type: 'enemy',
-        collidesWith: collidesWith,
         update: function() {
           this.advance();
 
@@ -230,8 +223,7 @@ kontra.load(
               dy: 2.5,
               image: kontra.imageAssets.bullet_enemy,
               ttl: 150,
-              type: 'hostile',
-              collidesWith: collidesWith,
+              type: 'hostile'
             });
           }
         },
@@ -269,7 +261,7 @@ kontra.load(
       objects = quadtree.get(player);
 
       for (let i = 0, obj; obj = objects[i]; i++) {
-        if (obj.type === 'hostile' && obj.collidesWith(player)) {
+        if (obj.type === 'hostile' && kontra.collides(obj, player)) {
           gameOver();
         }
       }
@@ -279,7 +271,7 @@ kontra.load(
         objects = quadtree.get(bullet);
 
         for (let j = 0, obj; obj = objects[j]; j++) {
-          if (obj.type === 'enemy' && obj.collidesWith(bullet)) {
+          if (obj.type === 'enemy' && kontra.collides(obj, bullet)) {
             bullet.ttl = 0;
             obj.ttl = 0;
 

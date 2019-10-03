@@ -1,10 +1,10 @@
 import Sprite from '../../src/sprite.js'
-import { spriteCollidesWith } from '../../src/collision.js'
+import { collides } from '../../src/collision.js'
 
 // --------------------------------------------------
-// spriteCollidesWith
+// collides
 // --------------------------------------------------
-describe('spriteCollidesWith', () => {
+describe('collides', () => {
 
   it('should correctly detect collision between two objects', () => {
     let sprite1 = Sprite({
@@ -21,27 +21,27 @@ describe('spriteCollidesWith', () => {
       height: 20
     });
 
-    expect(spriteCollidesWith(sprite1, sprite2)).to.be.true;
+    expect(collides(sprite1, sprite2)).to.be.true;
 
     sprite2.x = 10;
     sprite2.y = 20;
 
-    expect(spriteCollidesWith(sprite1, sprite2)).to.be.true;
+    expect(collides(sprite1, sprite2)).to.be.true;
 
     sprite2.x = 1;
     sprite2.y = 1;
 
-    expect(spriteCollidesWith(sprite1, sprite2)).to.be.true;
+    expect(collides(sprite1, sprite2)).to.be.true;
 
     sprite2.x = 20;
     sprite2.y = 40;
 
-    expect(spriteCollidesWith(sprite1, sprite2)).to.be.false;
+    expect(collides(sprite1, sprite2)).to.be.false;
 
     sprite2.x = 0;
     sprite2.y = 0;
 
-    expect(spriteCollidesWith(sprite1, sprite2)).to.be.false;
+    expect(collides(sprite1, sprite2)).to.be.false;
   });
 
   it('should take into account sprite.anchor', () => {
@@ -63,15 +63,15 @@ describe('spriteCollidesWith', () => {
       height: 20
     });
 
-    expect(spriteCollidesWith(sprite1, sprite2)).to.be.true;
+    expect(collides(sprite1, sprite2)).to.be.true;
 
     sprite1.anchor = {x: 1, y: 0};
 
-    expect(spriteCollidesWith(sprite1, sprite2)).to.be.false;
+    expect(collides(sprite1, sprite2)).to.be.false;
 
     sprite2.anchor = {x: 1, y: 0};
 
-    expect(spriteCollidesWith(sprite1, sprite2)).to.be.true;
+    expect(collides(sprite1, sprite2)).to.be.true;
   });
 
   it('should return null if either sprite is rotated', () => {
@@ -90,12 +90,12 @@ describe('spriteCollidesWith', () => {
       height: 20
     });
 
-    expect(spriteCollidesWith(sprite1, sprite2)).to.equal(null);
+    expect(collides(sprite1, sprite2)).to.equal(null);
 
     sprite1.rotation = 0;
     sprite2.rotation = 1;
 
-    expect(spriteCollidesWith(sprite1, sprite2)).to.equal(null);
+    expect(collides(sprite1, sprite2)).to.equal(null);
   });
 
   it('should work for non-sprite objects', () => {
@@ -113,7 +113,8 @@ describe('spriteCollidesWith', () => {
       height: 20
     };
 
-    expect(spriteCollidesWith(sprite1, obj)).to.be.true;
+    expect(collides(sprite1, obj)).to.be.true;
+    expect(collides(obj, sprite1)).to.be.true;
   });
 
 });

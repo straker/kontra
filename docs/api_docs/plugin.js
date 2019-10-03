@@ -22,20 +22,27 @@
  *
  * ```js
  * // consumerCode.js
- * import { registerPlugin, Sprite, spriteCollidesWith } from 'kontra';
+ * import { registerPlugin, Sprite, collides } from 'kontra';
  * import loggingPlugin from pluginCode.js;
  *
- * // have the plugin run for all Sprites
- * registerPlugin(Sprite, loggingPlugin);
+ * class SpriteBox extends Sprite.class {
+ *   constructor(props) {
+ *     super(props);
+ *   }
  *
- * let sprite1 = Sprite({
+ *   collidesWith(object) {
+ *     return collides(this, object);
+ *   }
+ * }
+ *
+ * // have the plugin run for all Sprites
+ * registerPlugin(SpriteBox, loggingPlugin);
+ *
+ * let sprite1 = new SpriteBox({
  *   x: 10,
  *   y: 20,
  *   width: 10,
  *   height: 10,
- *   collidesWith: function (object) {
- *     return spriteCollidesWith(this, object);
- *   },
  * });
  *
  * let sprite2 = Sprite({

@@ -124,15 +124,6 @@ class Pool {
   }
 
   /**
-   * Sort utility function for update. Sorts dead objects to the end of the array.
-   * @memberof Pool
-   * @function _sfn
-   */
-  _sfn(a, b) {
-    return b.isAlive() - a.isAlive();
-  }
-
-  /**
    * Update all alive objects in the pool by calling the objects `update()` function. This function also manages when each object should be recycled, so it is recommended that you do not call the objects `update()` function outside of this function.
    * @memberof Pool
    * @function update
@@ -142,7 +133,6 @@ class Pool {
   update(dt) {
     let obj;
     let doSort = false;
-    let oldSize = this.size;
     for (let i = this.size; i--; ) {
       obj = this.objects[i];
 
@@ -155,9 +145,7 @@ class Pool {
     }
     // sort all dead elements to the end of the pool
     if (doSort) {
-      let front = this.objects.slice(0, oldSize);
-      front.sort(this._sfn);
-      this.objects = front.concat(this.objects.slice(oldSize));
+      this.objects.sort((a, b) => b.isAlive() - a.isAlive());
     }
   }
 

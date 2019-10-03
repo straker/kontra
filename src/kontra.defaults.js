@@ -11,6 +11,7 @@ import {
   loadData,
   load
 } from './assets.js'
+import { collides } from './collision.js'
 import { init, getCanvas, getContext } from './core.js'
 import { on, off, emit } from './events.js'
 import GameLoop from './gameLoop.js'
@@ -47,6 +48,8 @@ let kontra = {
   loadAudio,
   loadData,
   load,
+
+  collides,
 
   init,
   getCanvas,

@@ -2707,90 +2707,6 @@ class Sprite {
   }
 
   /**
-   * Check if the sprite collide with the object. Uses a simple [Axis-Aligned Bounding Box (AABB) collision check](https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection#Axis-Aligned_Bounding_Box). Takes into account the sprites [anchor](api/sprite/#anchor).
-   *
-   * **NOTE:** Does not take into account sprite rotation. If you need collision detection between rotated sprites you will need to implement your own `collidesWith()` function. I suggest looking at the Separate Axis Theorem.
-   *
-   * ```js
-   * import { Sprite } from 'kontra';
-   *
-   * let sprite = Sprite({
-   *   x: 100,
-   *   y: 200,
-   *   width: 20,
-   *   height: 40
-   * });
-   *
-   * let sprite2 = Sprite({
-   *   x: 150,
-   *   y: 200,
-   *   width: 20,
-   *   height: 20
-   * });
-   *
-   * sprite.collidesWith(sprite2);  //=> false
-   *
-   * sprite2.x = 115;
-   *
-   * sprite.collidesWith(sprite2);  //=> true
-   * ```
-   *
-   * If you need a different type of collision check, you can override this function by passing an argument by the same name.
-   *
-   * ```js
-   * // circle collision
-   * function collidesWith(object) {
-   *   let dx = this.x - object.x;
-   *   let dy = this.y - object.y;
-   *   let distance = Math.sqrt(dx * dx + dy * dy);
-   *
-   *   return distance < this.radius + object.radius;
-   * }
-   *
-   * let sprite = Sprite({
-   *   x: 100,
-   *   y: 200,
-   *   radius: 25,
-   *   collidesWith: collidesWith
-   * });
-   *
-   * let sprite2 = Sprite({
-   *   x: 150,
-   *   y: 200,
-   *   radius: 30,
-   *   collidesWith: collidesWith
-   * });
-   *
-   * sprite.collidesWith(sprite2);  //=> true
-   * ```
-   * @memberof Sprite
-   * @function collidesWith
-   *
-   * @param {Object} object - Object to check collision against.
-   *
-   * @returns {Boolean|null} `true` if the objects collide, `false` otherwise. Will return `null` if the either of the two objects are rotated.
-   */
-  collidesWith(object) {
-    if (this.rotation || object.rotation) return null;
-
-    // take into account sprite anchors
-    let x = this.x - this.width * this.anchor.x;
-    let y = this.y - this.height * this.anchor.y;
-
-    let objX = object.x;
-    let objY = object.y;
-    if (object.anchor) {
-      objX -= object.width * object.anchor.x;
-      objY -= object.height * object.anchor.y;
-    }
-
-    return x < objX + object.width &&
-           x + this.width > objX &&
-           y < objY + object.height &&
-           y + this.height > objY;
-  }
-
-  /**
    * Update the sprites position based on its velocity and acceleration. Calls the sprites [advance()](api/sprite/#advance) function.
    * @memberof Sprite
    * @function update
@@ -3855,6 +3771,73 @@ function TileEngine(properties = {}) {
   return tileEngine;
 }
 
+/**
+ * A collection of collision detection functions.
+ *
+ * @sectionName Collision
+ */
+
+/**
+ * Check if a two objects collide. Uses a simple [Axis-Aligned Bounding Box (AABB) collision check](https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection#Axis-Aligned_Bounding_Box). Takes into account the sprites [anchor](api/sprite/#anchor).
+ *
+ * **NOTE:** Does not take into account object rotation. If you need collision detection between rotated objects you will need to implement your own `collides()` function. I suggest looking at the Separate Axis Theorem.
+ *
+ *
+ * ```js
+ * import { Sprite, collides } from 'kontra';
+ *
+ * let sprite = Sprite({
+ *   x: 100,
+ *   y: 200,
+ *   width: 20,
+ *   height: 40
+ * });
+ *
+ * let sprite2 = Sprite({
+ *   x: 150,
+ *   y: 200,
+ *   width: 20,
+ *   height: 20
+ * });
+ *
+ * collides(sprite, sprite2);  //=> false
+ *
+ * sprite2.x = 115;
+ *
+ * collides(sprite, sprite2);  //=> true
+ * ```
+ * @function collides
+ *
+ * @param {Sprite} object - Object reference.
+ * @param {Object} object - Object to check collision against.
+ *
+ * @returns {Boolean|null} `true` if the objects collide, `false` otherwise. Will return `null` if the either of the two objects are rotated.
+ */
+
+function collides(object1, object2) {
+  if (object1.rotation || object2.rotation) return null;
+
+  // take into account object1 anchors
+  let x = object1.x;
+  let y = object1.y;
+  if (object1.anchor) {
+    x -= object1.width * object1.anchor.x;
+    y -= object1.height * object1.anchor.y;
+  }
+
+  let objX = object2.x;
+  let objY = object2.y;
+  if (object2.anchor) {
+    objX -= object2.width * object2.anchor.x;
+    objY -= object2.height * object2.anchor.y;
+  }
+
+  return x < objX + object2.width &&
+         x + object1.width > objX &&
+         y < objY + object2.height &&
+         y + object1.height > objY;
+}
+
 let kontra = {
   Animation: animationFactory,
 
@@ -3868,6 +3851,8 @@ let kontra = {
   loadAudio,
   loadData,
   load,
+
+  collides,
 
   init,
   getCanvas,

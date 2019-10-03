@@ -1,4 +1,4 @@
-let { canvas, contex} = kontra.init();
+let { canvas } = kontra.init();
 
 kontra.initKeys();
 
@@ -261,7 +261,7 @@ kontra.load(
       objects = quadtree.get(player);
 
       for (let i = 0, obj; obj = objects[i]; i++) {
-        if (obj.type === 'hostile' && obj.collidesWith(player)) {
+        if (obj.type === 'hostile' && kontra.collides(obj, player)) {
           gameOver();
         }
       }
@@ -271,7 +271,7 @@ kontra.load(
         objects = quadtree.get(bullet);
 
         for (let j = 0, obj; obj = objects[j]; j++) {
-          if (obj.type === 'enemy' && obj.collidesWith(bullet)) {
+          if (obj.type === 'enemy' && kontra.collides(obj, bullet)) {
             bullet.ttl = 0;
             obj.ttl = 0;
 

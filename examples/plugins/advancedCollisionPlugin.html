@@ -88,14 +88,28 @@
     // initialize the game and setup the canvas
     let { canvas, context } = kontra.init();
 
+    class SpriteBox extends kontra.Sprite.class {
+      constructor(props) {
+        super(props);
+      }
+
+      collidesWith(object) {
+        return kontra.collides(this, object);
+      }
+    }
+
+    function newSpriteBox(properties) {
+      return new SpriteBox(properties);
+    }
+
     // register the plugin
-    kontra.registerPlugin(kontra.Sprite, advacedCollisionPlugin);
+    kontra.registerPlugin(SpriteBox, advacedCollisionPlugin);
 
     let sprites = [];
     let shapes = advacedCollisionPlugin.shapes;
 
     // rec sprite
-    sprites.push(kontra.Sprite({
+    sprites.push(newSpriteBox({
       x: 100,
       y: 60,
       dx: 2,
@@ -111,7 +125,7 @@
     }));
 
     // rec sprite
-    sprites.push(kontra.Sprite({
+    sprites.push(newSpriteBox({
       x: canvas.width - 100 - 40,
       y: 60,
       dx: -2,
@@ -127,7 +141,7 @@
     }));
 
     // circle sprite
-    sprites.push(kontra.Sprite({
+    sprites.push(newSpriteBox({
       x: 120,
       y: 180,
       dx: 2,
@@ -148,7 +162,7 @@
     }));
 
     // circle sprite
-    sprites.push(kontra.Sprite({
+    sprites.push(newSpriteBox({
       x: canvas.width - 100 - 20,
       y: 180,
       dx: -2,
@@ -169,7 +183,7 @@
     }));
 
     // rec sprite
-    sprites.push(kontra.Sprite({
+    sprites.push(newSpriteBox({
       x: 100,
       y: 260,
       dx: 2,
@@ -185,7 +199,7 @@
     }));
 
     // circle sprite
-    sprites.push(kontra.Sprite({
+    sprites.push(newSpriteBox({
       x: canvas.width - 100 - 20,
       y: 280,
       dx: -2,

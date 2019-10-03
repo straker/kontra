@@ -33,6 +33,12 @@ Kontra prides itself in being:
 - Look at [games made with Kontra](made-with-kontra).
 - Gain in-depth knowledge from the API docs.
 
+## Support Future Development
+
+Kontra.js is made possible by users like you. Through helping find issues, opening pull requests, and [funding continuous development](https://www.patreon.com/straker), Kontra.js can continue to provide you with quality improvements and updates.
+
+When you become a Patron, you get access to behind the scenes development logs, the ability to vote on which features to work on next, and early access to development builds.
+
 @section What is Kontra.js?
 @page index
 

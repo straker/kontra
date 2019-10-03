@@ -1734,9 +1734,8 @@ class Pool {
     }
     // @endif
 
-    // c = create, i = inUse
+    // c = create
     this._c = create;
-    this._i = 0;
 
     /**
      * All objects currently in the pool, both alive and not alive.
@@ -1750,7 +1749,7 @@ class Pool {
      * @memberof Pool
      * @property {Number} size
      */
-    this.size = 1;
+    this.size = 0;
 
     /**
      * The maximum number of objects allowed in the pool. The pool will never grow beyond this size.
@@ -1789,26 +1788,23 @@ class Pool {
    */
   get(properties = {}) {
     // the pool is out of objects if the first object is in use and it can't grow
-    if (this.objects.length == this._i) {
+    if (this.size === this.objects.length) {
       if (this.size === this.maxSize) {
         return;
       }
-      // double the size of the array by filling it with twice as many objects
+      // double the size of the array by adding twice as many new objects to the end
       else {
-        for (let x = 0; x < this.size && this.objects.length < this.maxSize; x++) {
-          this.objects.unshift(this._c());
+        for (let i = 0; i < this.size && this.objects.length < this.maxSize; i++) {
+          this.objects.push(this._c());
         }
-
-        this.size = this.objects.length;
       }
     }
 
     // save off first object in pool to reassign to last object after unshift
-    let obj = this.objects.shift();
+    let obj = this.objects[this.size];
+    this.size++;
     obj.init(properties);
-    this.objects.push(obj);
-    this._i++;
-    return obj
+    return obj;
   }
 
   /**
@@ -1819,7 +1815,7 @@ class Pool {
    * @returns {Object[]} An Array of all alive objects.
    */
   getAliveObjects() {
-    return this.objects.slice(this.objects.length - this._i);
+    return this.objects.slice(0, this.size);
   }
 
   /**
@@ -1828,8 +1824,7 @@ class Pool {
    * @function clear
    */
   clear() {
-    this._i = this.objects.length = 0;
-    this.size = 1;
+    this.size = this.objects.length = 0;
     this.objects.push(this._c());
   }
 
@@ -1841,34 +1836,21 @@ class Pool {
    * @param {Number} [dt] - Time since last update.
    */
   update(dt) {
-    let i = this.size - 1;
     let obj;
-
-    // If the user kills an object outside of the update cycle, the pool won't know of
-    // the change until the next update and this._i won't be decremented. If the user then
-    // gets an object when this._i is the same size as objects.length, this._i will increment
-    // and this statement will evaluate to -1.
-    //
-    // I don't like having to go through the pool to kill an object as it forces you to
-    // know which object came from which pool. Instead, we'll just prevent the index from
-    // going below 0 and accept the fact that this._i may be out of sync for a frame.
-    let index = Math.max(this.objects.length - this._i, 0);
-
-    // only iterate over the objects that are alive
-    while (i >= index) {
+    let doSort = false;
+    for (let i = this.size; i--; ) {
       obj = this.objects[i];
 
       obj.update(dt);
 
-      // if the object is dead, move it to the front of the pool
       if (!obj.isAlive()) {
-        this.objects = this.objects.splice(i, 1).concat(this.objects);
-        this._i--;
-        index++;
+        doSort = true;
+        this.size--;
       }
-      else {
-        i--;
-      }
+    }
+    // sort all dead elements to the end of the pool
+    if (doSort) {
+      this.objects.sort((a, b) => b.isAlive() - a.isAlive());
     }
   }
 
@@ -1878,14 +1860,11 @@ class Pool {
    * @function render
    */
   render() {
-    let index = Math.max(this.objects.length - this._i, 0);
-
-    for (let i = this.size - 1; i >= index; i--) {
+    for (let i = this.size; i--; ) {
       this.objects[i].render();
     }
   }
 }
-
 
 function poolFactory(properties) {
   return new Pool(properties);

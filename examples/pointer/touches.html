@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Pointer</title>
+  <script src="../../kontra.js"></script>
+</head>
+<body style="margin:0;background:rgb(50,50,50)">
+  <canvas id="game" width="600" height="400" style="margin:auto;background:rgb(50,50,50)"></canvas>
+  <script id="code">
+    // initialize the game and setup the canvas
+    let { canvas, context, pointer } = kontra.init();
+    canvas.width = window.innerWidth - 20;
+    canvas.height = window.innerHeight;
+
+    kontra.initPointer();
+
+    // create a sprites
+    const size = canvas.width / 8;
+    window.sprites = [];
+    for (let x = 0; x < canvas.width; x += size) {
+      for (let y = 0; y < canvas.height; y += size) {
+        window.sprites.push(
+          kontra.Sprite({
+            x: x,
+            y: y,
+            width: size,
+            height: size,
+            color: 'rgb(50,50,50)',
+            shade: 50,
+            update: function() {
+              if (this.shade > 50) {
+                this.shade -= 5;
+                this.color = `rgb(${this.shade},${this.shade},${this.shade})`;
+              }
+            },
+            // change color of sprite on over
+            onOver: function() {
+              this.shade = 255;
+            }
+          })
+        );
+      }
+    }
+
+    // render and track pointer events on the sprite
+    sprites.map(sprite => sprite.render());
+    kontra.track(sprites);
+
+    // create the game loop to update and render the sprite
+    window.loop = kontra.GameLoop({
+      update: function() {
+        sprites.map(sprite => sprite.update());
+      },
+      render: function() {
+        sprites.map(sprite => sprite.render());
+        context.fillStyle = "#fff";
+        context.fillText(kontra.pointer, 0, 20);
+      }
+    });
+
+    // start the loop
+    loop.start();
+  </script>
+  <script src="../prism/codeOutput.js"></script>
+</body>
+</html>

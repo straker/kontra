@@ -202,24 +202,31 @@ function pointerHandler(evt, eventName) {
   let ratio = canvas.height / canvas.offsetHeight;
   let rect = canvas.getBoundingClientRect();
 
-  if (['touchstart', 'touchmove', 'touchend'].indexOf(evt.type) !== -1) {
-    const touches = eventName === "onUp"
+  let isTouchEvent = ['touchstart', 'touchmove', 'touchend'].indexOf(evt.type) !== -1;
+  if (isTouchEvent) {
+    // Handle all touches
+    const touches = eventName === 'onUp' && evt.changedTouches
       ? evt.changedTouches
       : evt.touches;
-    // Primary touch
-    clientX = touches[0].clientX;
-    clientY = touches[0].clientY;
-    // All other touches
-    for (let i = 1; i < touches.length; i++) {
+    for (var i = 0; i < touches.length; i++) {
+      // Make temp pointer
       let object = getCurrentObject({
         x: (touches[i].clientX - rect.left) * ratio,
         y: (touches[i].clientY - rect.top) * ratio,
         radius: pointer.radius
       });
+      // Trigger events
       if (object && object[eventName]) {
         object[eventName](evt);
       }
+
+      if (callbacks[eventName]) {
+        callbacks[eventName](evt, object);
+      }
     }
+    // Primary touch
+    clientX = (evt.touches[0] || evt.changedTouches[0]).clientX;
+    clientY = (evt.touches[0] || evt.changedTouches[0]).clientY;
   } else {
     clientX = evt.clientX;
     clientY = evt.clientY;
@@ -229,13 +236,16 @@ function pointerHandler(evt, eventName) {
   pointer.y = (clientY - rect.top) * ratio;
 
   evt.preventDefault();
-  let object = getCurrentObject();
-  if (object && object[eventName]) {
-    object[eventName](evt);
-  }
 
-  if (callbacks[eventName]) {
-    callbacks[eventName](evt, object);
+  if (!isTouchEvent) { // Prevent double touch event
+    let object = getCurrentObject();
+    if (object && object[eventName]) {
+      object[eventName](evt);
+    }
+
+    if (callbacks[eventName]) {
+      callbacks[eventName](evt, object);
+    }
   }
 }
 

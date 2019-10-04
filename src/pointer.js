@@ -203,14 +203,17 @@ function pointerHandler(evt, eventName) {
   let rect = canvas.getBoundingClientRect();
 
   if (['touchstart', 'touchmove', 'touchend'].indexOf(evt.type) !== -1) {
+    const touches = eventName === "onUp"
+      ? evt.changedTouches
+      : evt.touches;
     // Primary touch
-    clientX = (evt.touches[0] || evt.changedTouches[0]).clientX;
-    clientY = (evt.touches[0] || evt.changedTouches[0]).clientY;
+    clientX = touches[0].clientX;
+    clientY = touches[0].clientY;
     // All other touches
-    for (let i = 1; i < evt.touches.length; i++) {
+    for (let i = 1; i < touches.length; i++) {
       let object = getCurrentObject({
-        x: (evt.touches[i].clientX - rect.left) * ratio,
-        y: (evt.touches[i].clientY - rect.top) * ratio,
+        x: (touches[i].clientX - rect.left) * ratio,
+        y: (touches[i].clientY - rect.top) * ratio,
         radius: pointer.radius
       });
       if (object && object[eventName]) {

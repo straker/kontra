@@ -62,7 +62,7 @@
     kontra.track(sprites);
 
     // create the game loop to update and render the sprite
-    const fontSize = 24;
+    const fontSize = 32;
     context.font = fontSize + "px Arial";
     context.textAlign = "center";
     window.loop = kontra.GameLoop({
@@ -73,6 +73,16 @@
         sprites.map(sprite => sprite.render());
         context.fillStyle = "#fff";
         context.fillText("Drag Your Fingers All Over", canvas.width / 2, fontSize * 2);
+
+        context.fillStyle = "aqua";
+        for (let i = 0; i < kontra.pointer.touches.length; i++) {
+          const touch = kontra.pointer.touches[i];
+          context.fillText(
+            touch.identifier,
+            touch.clientX,
+            touch.clientY - 200
+          );
+        }
       }
     });
 

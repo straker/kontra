@@ -571,6 +571,16 @@ describe('pointer', () => {
         expect(object.onUp.called).to.be.ok;
       });
 
+      it('should update pointer.touches', () => {
+        simulateEvent('touchstart', {touches: [{clientX: 110, clientY: 55}], changedTouches: [{clientX: 110, clientY: 55}]});
+
+        expect(pointer.pointer.touches.length).to.equal(1);
+
+        simulateEvent('touchend', {touches: [], changedTouches: [{clientX: 95, clientY: 55}]});
+
+        expect(pointer.pointer.touches.length).to.equal(0);
+      });
+
     });
 
   });

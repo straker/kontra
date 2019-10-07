@@ -206,7 +206,7 @@ function pointerHandler(evt, eventName) {
   if (isTouchEvent) {
     // Update pointer.touches
     pointer.touches = [];
-    for (var i = evt.touches.length; i--;) {
+    for (var i = 0; i < evt.touches.length; i++) {
       pointer.touches.push({
         x: (evt.touches[i].clientX - rect.left) * ratio,
         y: (evt.touches[i].clientY - rect.top) * ratio,

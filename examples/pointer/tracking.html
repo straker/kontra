@@ -75,6 +75,9 @@
 
     // create a sprites
     onPointerDown(function(evt) {
+      if (!evt.changedTouches) {
+        return;
+      }
       for (let i = 0; i < evt.changedTouches.length; i++) {
         for (let j = 0; j < pointer.touches.length; j++) {
           if (pointer.touches[j].id === evt.changedTouches[i].identifier) {

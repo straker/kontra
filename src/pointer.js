@@ -204,18 +204,26 @@ function pointerHandler(evt, eventName) {
 
   let isTouchEvent = ['touchstart', 'touchmove', 'touchend'].indexOf(evt.type) !== -1;
   if (isTouchEvent) {
-    // Handle all touches
-    const touches = eventName === 'onUp' && evt.changedTouches
-      ? evt.changedTouches
-      : evt.touches;
-    for (var i = 0; i < touches.length; i++) {
-      // Make temp pointer
-      let object = getCurrentObject({
-        x: (touches[i].clientX - rect.left) * ratio,
-        y: (touches[i].clientY - rect.top) * ratio,
-        radius: pointer.radius
+    // Update pointer.touches
+    pointer.touches = [];
+    for (var i = evt.touches.length; i--;) {
+      pointer.touches.push({
+        x: (evt.touches[i].clientX - rect.left) * ratio,
+        y: (evt.touches[i].clientY - rect.top) * ratio,
+        id: evt.touches[i].identifier
       });
+    }
+    // Handle all touches
+    for (var i = evt.changedTouches.length; i--;) {
+      clientX = evt.changedTouches[i].clientX; // Save for later
+      clientY = evt.changedTouches[i].clientY;
       // Trigger events
+      let object = getCurrentObject({
+        x: (clientX - rect.left) * ratio,
+        y: (clientY - rect.top) * ratio,
+        radius: pointer.radius // only for collision
+      });
+
       if (object && object[eventName]) {
         object[eventName](evt);
       }
@@ -224,9 +232,6 @@ function pointerHandler(evt, eventName) {
         callbacks[eventName](evt, object);
       }
     }
-    // Primary touch
-    clientX = (evt.touches[0] || evt.changedTouches[0]).clientX;
-    clientY = (evt.touches[0] || evt.changedTouches[0]).clientY;
   } else {
     clientX = evt.clientX;
     clientY = evt.clientY;

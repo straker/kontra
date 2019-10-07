@@ -265,6 +265,7 @@ export function initPointer() {
   canvas.addEventListener('touchstart', pointerDownHandler);
   canvas.addEventListener('mouseup', pointerUpHandler);
   canvas.addEventListener('touchend', pointerUpHandler);
+  canvas.addEventListener('touchcancel', pointerUpHandler);
   canvas.addEventListener('blur', blurEventHandler);
   canvas.addEventListener('mousemove', mouseMoveHandler);
   canvas.addEventListener('touchmove', mouseMoveHandler);

@@ -130,14 +130,23 @@ describe('pointer', () => {
     });
 
     it('should return true for touchstart', () => {
-      simulateEvent('touchstart', {touches: [{clientX: 100, clientY: 50}]});
+      simulateEvent('touchstart', {
+        touches: [{clientX: 100, clientY: 50}],
+        changedTouches: [{clientX: 100, clientY: 50}]
+      });
 
       expect(pointer.pointerPressed('left')).to.be.true;
     });
 
     it('should return false for a touchend', () => {
-      simulateEvent('touchstart', {touches: [{clientX: 100, clientY: 50}]});
-      simulateEvent('touchend', {touches: [{clientX: 100, clientY: 50}]});
+      simulateEvent('touchstart', {
+        touches: [{clientX: 100, clientY: 50}],
+        changedTouches: [{clientX: 100, clientY: 50}]
+      });
+      simulateEvent('touchend', {
+        touches: [],
+        changedTouches: [{clientX: 100, clientY: 50}]
+      });
 
       expect(pointer.pointerPressed('left')).to.be.not.ok;
     });

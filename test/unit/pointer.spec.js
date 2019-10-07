@@ -130,19 +130,13 @@ describe('pointer', () => {
     });
 
     it('should return true for touchstart', () => {
-      simulateEvent('touchstart', {
-        touches: [{clientX: 100, clientY: 50}],
-        changedTouches: [{clientX: 100, clientY: 50}]
-      });
+      simulateEvent('touchstart', {touches: [], changedTouches: [{clientX: 100, clientY: 50}]});
 
       expect(pointer.pointerPressed('left')).to.be.true;
     });
 
     it('should return false for a touchend', () => {
-      simulateEvent('touchstart', {
-        touches: [{clientX: 100, clientY: 50}],
-        changedTouches: [{clientX: 100, clientY: 50}]
-      });
+      simulateEvent('touchstart', {touches: [], changedTouches: [{clientX: 100, clientY: 50}]});
       simulateEvent('touchend', {
         touches: [],
         changedTouches: [{clientX: 100, clientY: 50}]
@@ -443,7 +437,7 @@ describe('pointer', () => {
 
       it('should update the x and y pointer coordinates', () => {
         pointer.pointer.x = pointer.pointer.y = 0;
-        simulateEvent('touchstart', {touches: [{clientX: 100, clientY: 50}]});
+        simulateEvent('touchstart', {touches: [], changedTouches: [{clientX: 100, clientY: 50}]});
 
         expect(pointer.pointer.x).to.equal(100);
         expect(pointer.pointer.y).to.equal(50);
@@ -452,14 +446,14 @@ describe('pointer', () => {
       it('should call the onDown function', () => {
         let onDown = sinon.spy();
         pointer.onPointerDown(onDown);
-        simulateEvent('touchstart', {touches: [{clientX: 100, clientY: 50}]});
+        simulateEvent('touchstart', {touches: [], changedTouches: [{clientX: 100, clientY: 50}]});
 
         expect(onDown.called).to.be.ok;
       });
 
       it('should call the objects onDown function if it is the target', () => {
         object.onDown = sinon.spy();
-        simulateEvent('touchstart', {touches: [{clientX: 105, clientY: 55}]});
+        simulateEvent('touchstart', {touches: [], changedTouches: [{clientX: 105, clientY: 55}]});
 
         expect(object.onDown.called).to.be.ok;
       });
@@ -470,11 +464,11 @@ describe('pointer', () => {
           y: 0.5
         };
         object.onDown = sinon.spy();
-        simulateEvent('touchstart', {touches: [{clientX: 110, clientY: 55}]});
+        simulateEvent('touchstart', {touches: [], changedTouches: [{clientX: 110, clientY: 55}]});
 
         expect(object.onDown.called).to.not.be.ok;
 
-        simulateEvent('touchstart', {touches: [{clientX: 95, clientY: 55}]});
+        simulateEvent('touchstart', {touches: [], changedTouches: [{clientX: 95, clientY: 55}]});
 
         expect(object.onDown.called).to.be.ok;
       });
@@ -568,11 +562,11 @@ describe('pointer', () => {
           y: 0.5
         };
         object.onUp = sinon.spy();
-        simulateEvent('touchend', {touches: [{clientX: 110, clientY: 55}]});
+        simulateEvent('touchend', {touches: [], changedTouches: [{clientX: 110, clientY: 55}]});
 
         expect(object.onUp.called).to.not.be.ok;
 
-        simulateEvent('touchend', {touches: [{clientX: 95, clientY: 55}]});
+        simulateEvent('touchend', {touches: [], changedTouches: [{clientX: 95, clientY: 55}]});
 
         expect(object.onUp.called).to.be.ok;
       });

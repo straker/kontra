@@ -11,9 +11,15 @@
   <script id="code">
     // initialize the game and setup the canvas
     let { canvas, context } = kontra.init();
-    const { Pool, Sprite, pointer, onPointerDown } = kontra;
+    const { Pool, Sprite, pointer, pointerPressed, onPointerDown } = kontra;
     canvas.width = window.innerWidth;
     canvas.height = window.innerWidth;
+
+    let debugText = "DEBUG ENABLED";
+    function log(e) {
+      debugText = e;
+      console.error(e);
+    }
 
     kontra.initPointer();
     let pool = new Pool({
@@ -23,11 +29,19 @@
           update: function() {
             this.spin += Math.PI / 64;
             if (this.mode === "PULL") {
-              for (let touch of pointer.touches) {
-                if (touch.id === this.touchID) {
-                  this.x = touch.x;
-                  this.y = touch.y;
+              if (this.touchID === -1) {
+                this.x = pointer.x;
+                this.y = pointer.y;
+                if (pointerPressed("left")) {
                   return;
+                }
+              } else {
+                for (let touch of pointer.touches) {
+                  if (touch.id === this.touchID) {
+                    this.x = touch.x;
+                    this.y = touch.y;
+                    return;
+                  }
                 }
               }
               this.mode = "SHOOT";
@@ -75,23 +89,35 @@
 
     // create a sprites
     onPointerDown(function(evt) {
-      if (!evt.changedTouches) {
-        return;
-      }
-      for (let i = 0; i < evt.changedTouches.length; i++) {
-        for (let j = 0; j < pointer.touches.length; j++) {
-          if (pointer.touches[j].id === evt.changedTouches[i].identifier) {
-            pool.get({
-              startX: pointer.touches[j].x,
-              startY: pointer.touches[j].y,
-              touchID: pointer.touches[j].id,
-              mode: "PULL",
-              spin: 0,
-              ttl: Infinity
-            });
-            break;
+      try {
+        if (evt.changedTouches) {
+          for (let i = 0; i < evt.changedTouches.length; i++) {
+            for (let j = 0; j < pointer.touches.length; j++) {
+              if (pointer.touches[j].id === evt.changedTouches[i].identifier) {
+                pool.get({
+                  startX: pointer.touches[j].x,
+                  startY: pointer.touches[j].y,
+                  touchID: pointer.touches[j].id,
+                  mode: "PULL",
+                  spin: 0,
+                  ttl: Infinity
+                });
+                break;
+              }
+            }
           }
+        } else {
+          pool.get({
+            startX: pointer.x,
+            startY: pointer.y,
+            touchID: -1,
+            mode: "PULL",
+            spin: 0,
+            ttl: Infinity
+          });
         }
+      } catch(e) {
+        log(e);
       }
     });
 
@@ -103,9 +129,15 @@
       render: function() {
         context.fillStyle = "#000";
         context.fillRect(0, 0, canvas.width,  canvas.height);
-        context.strokeStyle = "#fff";
+        context.strokeStyle = "#ff5";
         context.lineWidth = 5;
+
         pool.render();
+
+        context.fillStyle = "#fff";
+        context.font = "24px Arial";
+        context.textAlign = "center";
+        context.fillText(debugText, canvas.width / 2, 28);
       }
     });
 

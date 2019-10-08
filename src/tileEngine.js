@@ -184,6 +184,12 @@ export default function TileEngine(properties = {}) {
      * @param {String} name - Name of the layer to render.
      */
     renderLayer(name) {
+      if (this._d) {
+        layerCanvases[name] = undefined;
+        this._d = false;
+        this._p();
+      }
+
       let canvas = layerCanvases[name];
       let layer = layerMap[name];
 

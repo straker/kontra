@@ -493,7 +493,7 @@ describe('tileEngine', () => {
       expect(called).to.be.ok;
     });
 
-    it('calls prerender if the tile engine is dirty', () => {
+    it('calls render if the tile engine is dirty', () => {
       let tileEngine = TileEngine({
         tilewidth: 10,
         tileheight: 10,
@@ -508,14 +508,17 @@ describe('tileEngine', () => {
         }]
       });
 
+      // Render once to create the canvas
+      tileEngine.renderLayer('test');
+
       tileEngine._d = true;
-      sinon.stub(tileEngine, '_p').callsFake(noop);
+      sinon.stub(tileEngine, '_r').callsFake(noop);
 
       tileEngine.renderLayer('test');
 
-      expect(tileEngine._p.called).to.be.ok;
+      expect(tileEngine._r.called).to.be.ok;
 
-      tileEngine._p.restore();
+      tileEngine._r.restore();
     });
 
   });

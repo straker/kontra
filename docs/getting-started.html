@@ -115,22 +115,22 @@ let { canvas, context } = init();</code></pre></section>
 </div>
 <h2 id="create">Create</h2>
 <p>After the game is initialize, you can create a simple <a href="api/sprite.html">Sprite</a> and <a href="api/gameLoop.html">Game Loop</a> in just a few lines of code</p>
-<canvas id="game-canvas-10"></canvas>
+<canvas id="game-canvas-241"></canvas>
 
 <div class="tablist">
   <ul role="tablist">
     <li role="presentation" data-tab="global">
-      <button role="tab" id="game-canvas-10-global-tab">Global Object</button>
+      <button role="tab" id="game-canvas-241-global-tab">Global Object</button>
     </li>
     <li role="presentation" data-tab="es">
-      <button role="tab" id="game-canvas-10-es-tab">ES Module Import</button>
+      <button role="tab" id="game-canvas-241-es-tab">ES Module Import</button>
     </li>
     <li role="presentation" data-tab="bundle">
-      <button role="tab" id="game-canvas-10-bundle-tab">Module Bundler</button>
+      <button role="tab" id="game-canvas-241-bundle-tab">Module Bundler</button>
     </li>
     <li role="presentation"></li>
   </ul>
-  <section role="tabpanel" aria-labelledby=game-canvas-10-global-tab data-tabpanel="global">
+  <section role="tabpanel" aria-labelledby=game-canvas-241-global-tab data-tabpanel="global">
     <pre><code class="lang-js">let { init, Sprite, GameLoop } &#x3D; kontra
 
 let { canvas } &#x3D; init();
@@ -161,7 +161,7 @@ let loop &#x3D; GameLoop({  // create the main game loop
 
 loop.start();    // start the game</code></pre>
   </section>
-  <section role="tabpanel" aria-labelledby=game-canvas-10-es-tab data-tabpanel="es">
+  <section role="tabpanel" aria-labelledby=game-canvas-241-es-tab data-tabpanel="es">
     <pre><code class="lang-js">import { init, Sprite, GameLoop } from &#x27;path/to/kontra.mjs&#x27;
 
 let { canvas } &#x3D; init();
@@ -192,7 +192,7 @@ let loop &#x3D; GameLoop({  // create the main game loop
 
 loop.start();    // start the game</code></pre>
   </section>
-  <section role="tabpanel" aria-labelledby=game-canvas-10-bundle-tab data-tabpanel="bundle">
+  <section role="tabpanel" aria-labelledby=game-canvas-241-bundle-tab data-tabpanel="bundle">
     <pre><code class="lang-js">import { init, Sprite, GameLoop } from &#x27;kontra&#x27;;
 
 let { canvas } &#x3D; init();
@@ -226,8 +226,8 @@ loop.start();    // start the game</code></pre>
 </div>
 
 <script>(function() {
-  kontra.init("game-canvas-10");
-  var canvas = document.querySelector("#game-canvas-10");
+  kontra.init("game-canvas-241");
+  var canvas = document.querySelector("#game-canvas-241");
   canvas.width = 600;
   canvas.height = 200;
   var context = canvas.getContext("2d");

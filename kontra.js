@@ -3432,15 +3432,21 @@ function TileEngine(properties = {}) {
     renderLayer(name) {
       let canvas = layerCanvases[name];
       let layer = layerMap[name];
-
+      
       if (!canvas) {
         // cache the rendered layer so we can render it again without redrawing
         // all tiles
         canvas = document.createElement('canvas');
         canvas.width = mapwidth;
         canvas.height = mapheight;
-
+        
         layerCanvases[name] = canvas;
+        tileEngine._r(layer, canvas.getContext('2d'));
+      }
+      
+      if (this._d) {
+        this._d = false;
+        canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
         tileEngine._r(layer, canvas.getContext('2d'));
       }
 

@@ -18,7 +18,7 @@
  */
 
 /**
- * Below is a list of keys that are provided by default. If you need to extend this list, you can use the [keyMap](api/keyboard/#keyMap) property.
+ * Below is a list of keys that are provided by default. If you need to extend this list, you can use the [keyMap](api/keyboard#keyMap) property.
  *
  * - a-z
  * - 0-9
@@ -30,7 +30,7 @@ let callbacks = {};
 let pressedKeys = {};
 
 /**
- * A map of keycodes to key names. Add to this object to expand the list of [available keys](api/keyboard/#available-keys).
+ * A map of keycodes to key names. Add to this object to expand the list of [available keys](api/keyboard#available-keys).
  *
  * ```js
  * import { keyMap, bindKeys } from 'kontra';

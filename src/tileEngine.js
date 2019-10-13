@@ -20,11 +20,11 @@ import { getCanvas, getContext } from './core.js'
  *
  * @param {Object[]} properties.tilesets - Array of tileset objects.
  * @param {Number} properties.tilesetN.firstgid - First tile index of the tileset. The first tileset will have a firstgid of 1 as 0 represents an empty tile.
- * @param {String|HTMLImageElement} properties.tilesetN.image - Relative path to the HTMLImageElement or an HTMLImageElement. If passing a relative path, the image file must have been [loaded](api/assets/#load) first.
+ * @param {String|HTMLImageElement} properties.tilesetN.image - Relative path to the HTMLImageElement or an HTMLImageElement. If passing a relative path, the image file must have been [loaded](api/assets#load) first.
  * @param {Number} [properties.tilesetN.margin=0] - The amount of whitespace between each tile (in pixels).
  * @param {Number} [properties.tilesetN.tilewidth] - Width of the tileset (in pixels). Defaults to properties.tilewidth.
  * @param {Number} [properties.tilesetN.tileheight] - Height of the tileset (in pixels). Defaults to properties.tileheight.
- * @param {String} [properties.tilesetN.source] - Relative path to the source JSON file. The source JSON file must have been [loaded](api/assets/#load) first.
+ * @param {String} [properties.tilesetN.source] - Relative path to the source JSON file. The source JSON file must have been [loaded](api/assets#load) first.
  * @param {Number} [properties.tilesetN.columns] - Number of columns in the tileset image.
  *
  * @param {Object[]} properties.layers - Array of layer objects.
@@ -186,18 +186,18 @@ export default function TileEngine(properties = {}) {
     renderLayer(name) {
       let canvas = layerCanvases[name];
       let layer = layerMap[name];
-      
+
       if (!canvas) {
         // cache the rendered layer so we can render it again without redrawing
         // all tiles
         canvas = document.createElement('canvas');
         canvas.width = mapwidth;
         canvas.height = mapheight;
-        
+
         layerCanvases[name] = canvas;
         tileEngine._r(layer, canvas.getContext('2d'));
       }
-      
+
       if (this._d) {
         this._d = false;
         canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);

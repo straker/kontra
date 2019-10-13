@@ -114,7 +114,7 @@ class Pool {
   }
 
   /**
-   * Clear the object pool. Removes all objects from the pool and resets its [size](api/pool/#size) to 1.
+   * Clear the object pool. Removes all objects from the pool and resets its [size](api/pool#size) to 1.
    * @memberof Pool
    * @function clear
    */

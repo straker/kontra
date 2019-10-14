@@ -496,7 +496,7 @@ dd > dl {
   padding: 0;
   display: grid;
   grid-gap: 1.312rem;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   text-align: center;
   list-style: none;
   width: calc(100vw - 19rem); /* go full width for the games */

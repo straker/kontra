@@ -496,9 +496,10 @@ dd > dl {
   padding: 0;
   display: grid;
   grid-gap: 1.312rem;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   text-align: center;
   list-style: none;
+  width: calc(100vw - 19rem); /* go full width for the games */
 }
 
 .games a {
@@ -556,12 +557,6 @@ dd > dl {
     padding-bottom: 0.8125rem;
     margin: 0 0 1.312rem 0;
     line-height: 4.25rem;
-  }
-}
-
-@media screen and (max-width: 350px) {
-  .games {
-    grid-template-columns: 1fr;
   }
 }
 

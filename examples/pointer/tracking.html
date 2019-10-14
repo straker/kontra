@@ -35,18 +35,15 @@
                 if (pointerPressed("left")) {
                   return;
                 }
-              } else {
-                for (let touch of pointer.touches) {
-                  if (touch.id === this.touchID) {
-                    this.x = touch.x;
-                    this.y = touch.y;
-                    return;
-                  }
-                }
+              } else if (typeof pointer.touches[this.touchID] !== "undefined") {
+                const touch = pointer.touches[this.touchID];
+                this.x = touch.x;
+                this.y = touch.y;
+                return;
               }
               this.mode = "SHOOT";
-              this.velocity.x = (this.startX - this.x) / 4;
-              this.velocity.y = (this.startY - this.y) / 4;
+              this.velocity.x = (this.startX - this.x) / 6;
+              this.velocity.y = (this.startY - this.y) / 6;
               if (this.velocity.x === 0 && this.velocity.y === 0) {
                 this.ttl = 0;
               }
@@ -90,20 +87,20 @@
     // create a sprites
     onPointerDown(function(evt) {
       try {
-        if (evt.changedTouches) {
-          for (let i = 0; i < evt.changedTouches.length; i++) {
-            for (let j = 0; j < pointer.touches.length; j++) {
-              if (pointer.touches[j].id === evt.changedTouches[i].identifier) {
-                pool.get({
-                  startX: pointer.touches[j].x,
-                  startY: pointer.touches[j].y,
-                  touchID: pointer.touches[j].id,
-                  mode: "PULL",
-                  spin: 0,
-                  ttl: Infinity
-                });
-                break;
-              }
+        if (pointer.touches) {
+          console.log(JSON.stringify(pointer.touches));
+          for (let id in pointer.touches) {
+            const touch = pointer.touches[id];
+            if (touch.changed) {
+              pool.get({
+                startX: touch.x,
+                startY: touch.y,
+                touchID: touch.id,
+                mode: "PULL",
+                spin: 0,
+                ttl: Infinity
+              });
+              break;
             }
           }
         } else {
@@ -117,7 +114,7 @@
           });
         }
       } catch(e) {
-        log(e);
+        log(e, JSON.stringify(pointer.touches));
       }
     });
 

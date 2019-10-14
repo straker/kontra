@@ -205,20 +205,28 @@ function pointerHandler(evt, eventName) {
   let isTouchEvent = ['touchstart', 'touchmove', 'touchend'].indexOf(evt.type) !== -1;
   if (isTouchEvent) {
     // Update pointer.touches
-    pointer.touches = [];
+    pointer.touches = {};
     for (var i = 0; i < evt.touches.length; i++) {
-      pointer.touches.push({
+      pointer.touches[evt.touches[i].identifier] = {
+        id: evt.touches[i].identifier,
         x: (evt.touches[i].clientX - rect.left) * ratio,
         y: (evt.touches[i].clientY - rect.top) * ratio,
-        id: evt.touches[i].identifier
-      });
+        changed: false
+      };
     }
     // Handle all touches
     for (var i = evt.changedTouches.length; i--;) {
+      const id = evt.changedTouches[i].identifier;
+      if (typeof pointer.touches[id] !== "undefined") {
+        pointer.touches[id].changed = true;
+      }
+
       clientX = evt.changedTouches[i].clientX; // Save for later
       clientY = evt.changedTouches[i].clientY;
+
       // Trigger events
       let object = getCurrentObject({
+        id,
         x: (clientX - rect.left) * ratio,
         y: (clientY - rect.top) * ratio,
         radius: pointer.radius // only for collision

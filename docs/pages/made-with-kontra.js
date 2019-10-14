@@ -347,6 +347,15 @@ Have a game you want to add? [Let me know](https://github.com/straker/kontra/iss
 </small></span>
     </a>
   </li>
+
+  <li>
+    <a href="https://yngwarr.itch.io/i-forgot-my-sword">
+      <img src="assets/imgs/games/i-forgot-my-sword.jpeg" alt="" width="320" height="200"/>
+      <span>I forgot my sword!</span>
+      <span><span class="visually-hidden">. By </span><small>Yngwarrx
+</small></span>
+    </a>
+  </li>
 </ul>
 
 @section Games Made with Kontra.js

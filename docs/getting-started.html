@@ -131,9 +131,11 @@ let { canvas, context } = init();</code></pre></section>
     <li role="presentation"></li>
   </ul>
   <section role="tabpanel" aria-labelledby=game-canvas-10-global-tab data-tabpanel="global">
-    <pre><code class="lang-js">let { init, Sprite, GameLoop } &#x3D; kontra
+    <pre><code class="lang-js">
+let { init, Sprite, GameLoop } &#x3D; kontra
 
 let { canvas } &#x3D; init();
+
 
 let sprite &#x3D; Sprite({
   x: 100,        // starting x,y position of the sprite
@@ -162,9 +164,11 @@ let loop &#x3D; GameLoop({  // create the main game loop
 loop.start();    // start the game</code></pre>
   </section>
   <section role="tabpanel" aria-labelledby=game-canvas-10-es-tab data-tabpanel="es">
-    <pre><code class="lang-js">import { init, Sprite, GameLoop } from &#x27;path/to/kontra.mjs&#x27;
+    <pre><code class="lang-js">
+import { init, Sprite, GameLoop } from &#x27;path/to/kontra.mjs&#x27;
 
 let { canvas } &#x3D; init();
+
 
 let sprite &#x3D; Sprite({
   x: 100,        // starting x,y position of the sprite
@@ -193,9 +197,11 @@ let loop &#x3D; GameLoop({  // create the main game loop
 loop.start();    // start the game</code></pre>
   </section>
   <section role="tabpanel" aria-labelledby=game-canvas-10-bundle-tab data-tabpanel="bundle">
-    <pre><code class="lang-js">import { init, Sprite, GameLoop } from &#x27;kontra&#x27;;
+    <pre><code class="lang-js">
+import { init, Sprite, GameLoop } from &#x27;kontra&#x27;;
 
 let { canvas } &#x3D; init();
+
 
 let sprite &#x3D; Sprite({
   x: 100,        // starting x,y position of the sprite
@@ -234,6 +240,7 @@ loop.start();    // start the game</code></pre>
   // exclude-code:start
 let { init, Sprite, GameLoop } = kontra;
 // exclude-code:end
+
 let sprite = Sprite({
   x: 100,        // starting x,y position of the sprite
   y: 80,

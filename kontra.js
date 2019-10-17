@@ -211,21 +211,21 @@ class Animation {
     let { width, height, margin = 0 } = spriteSheet.frame;
 
     /**
-     * The width of an individual frame. Taken from the property of the same name in the [spriteSheet](api/animation/#spriteSheet).
+     * The width of an individual frame. Taken from the property of the same name in the [spriteSheet](api/animation#spriteSheet).
      * @memberof Animation
      * @property {Number} width
      */
     this.width = width;
 
     /**
-     * The height of an individual frame. Taken from the property of the same name in the [spriteSheet](api/animation/#spriteSheet).
+     * The height of an individual frame. Taken from the property of the same name in the [spriteSheet](api/animation#spriteSheet).
      * @memberof Animation
      * @property {Number} height
      */
     this.height = height;
 
     /**
-     * The space between each frame. Taken from the property of the same name in the [spriteSheet](api/animation/#spriteSheet).
+     * The space between each frame. Taken from the property of the same name in the [spriteSheet](api/animation#spriteSheet).
      * @memberof Animation
      * @property {Number} margin
      */
@@ -420,7 +420,7 @@ function getCanPlay(audio) {
 }
 
 /**
- * Object of all loaded image assets by both file name and path. If the base [image path](api/assets/#setImagePath) was set before the image was loaded, the file name and path will not include the base image path.
+ * Object of all loaded image assets by both file name and path. If the base [image path](api/assets#setImagePath) was set before the image was loaded, the file name and path will not include the base image path.
  *
  * ```js
  * import { load, setImagePath, imageAssets } from 'kontra';
@@ -443,7 +443,7 @@ function getCanPlay(audio) {
 let imageAssets = {};
 
 /**
- * Object of all loaded audio assets by both file name and path. If the base [audio path](api/assets/#setAudioPath) was set before the audio was loaded, the file name and path will not include the base audio path.
+ * Object of all loaded audio assets by both file name and path. If the base [audio path](api/assets#setAudioPath) was set before the audio was loaded, the file name and path will not include the base audio path.
  *
  * ```js
  * import { load, setAudioPath, audioAssets } from 'kontra';
@@ -466,7 +466,7 @@ let imageAssets = {};
 let audioAssets = {};
 
 /**
- * Object of all loaded data assets by both file name and path. If the base [data path](api/assets/#setDataPath) was set before the data was loaded, the file name and path will not include the base data path.
+ * Object of all loaded data assets by both file name and path. If the base [data path](api/assets#setDataPath) was set before the data was loaded, the file name and path will not include the base data path.
  *
  * ```js
  * import { load, setDataPath, dataAssets } from 'kontra';
@@ -556,9 +556,9 @@ function setDataPath(path) {
 }
 
 /**
- * Load a single Image asset. Uses the base [image path](api/assets/#setImagePath) to resolve the URL.
+ * Load a single Image asset. Uses the base [image path](api/assets#setImagePath) to resolve the URL.
  *
- * Once loaded, the asset will be accessible on the the [imageAssets](api/assets/#imageAssets) property.
+ * Once loaded, the asset will be accessible on the the [imageAssets](api/assets#imageAssets) property.
  *
  * ```js
  * import { loadImage } from 'kontra';
@@ -600,9 +600,9 @@ function loadImage(url) {
 }
 
 /**
- * Load a single Audio asset. Supports loading multiple audio formats which the loader will use to load the first audio format supported by the browser in the order listed. Uses the base [audio path](api/assets/#setAudioPath) to resolve the URL.
+ * Load a single Audio asset. Supports loading multiple audio formats which the loader will use to load the first audio format supported by the browser in the order listed. Uses the base [audio path](api/assets#setAudioPath) to resolve the URL.
  *
- * Once loaded, the asset will be accessible on the the [audioAssets](api/assets/#audioAssets) property. Since the loader determines which audio asset to load based on browser support, you should only reference the audio by its name and not by its file path since there's no guarantee which asset was loaded.
+ * Once loaded, the asset will be accessible on the the [audioAssets](api/assets#audioAssets) property. Since the loader determines which audio asset to load based on browser support, you should only reference the audio by its name and not by its file path since there's no guarantee which asset was loaded.
  *
  * ```js
  * import { loadAudio, audioAssets } from 'kontra';
@@ -662,9 +662,9 @@ function loadAudio(url) {
 }
 
 /**
- * Load a single Data asset. Uses the base [data path](api/assets/#setDataPath) to resolve the URL.
+ * Load a single Data asset. Uses the base [data path](api/assets#setDataPath) to resolve the URL.
  *
- * Once loaded, the asset will be accessible on the the [dataAssets](api/assets/#dataAssets) property.
+ * Once loaded, the asset will be accessible on the the [dataAssets](api/assets#dataAssets) property.
  *
  * ```js
  * import { loadData } from 'kontra';
@@ -702,7 +702,7 @@ function loadData(url) {
 }
 
 /**
- * Load Image, Audio, or data files. Uses the [loadImage](api/assets/#loadImage), [loadAudio](api/assets/#loadAudio), and [loadData](api/assets/#loadData) functions to load each asset type.
+ * Load Image, Audio, or data files. Uses the [loadImage](api/assets#loadImage), [loadAudio](api/assets#loadAudio), and [loadData](api/assets#loadData) functions to load each asset type.
  *
  * ```js
  * import { load } from 'kontra';
@@ -938,7 +938,7 @@ function GameLoop({fps = 60, clearCanvas = true, update, render} = {}) {
  */
 
 /**
- * Below is a list of keys that are provided by default. If you need to extend this list, you can use the [keyMap](api/keyboard/#keyMap) property.
+ * Below is a list of keys that are provided by default. If you need to extend this list, you can use the [keyMap](api/keyboard#keyMap) property.
  *
  * - a-z
  * - 0-9
@@ -950,7 +950,7 @@ let callbacks$1 = {};
 let pressedKeys = {};
 
 /**
- * A map of keycodes to key names. Add to this object to expand the list of [available keys](api/keyboard/#available-keys).
+ * A map of keycodes to key names. Add to this object to expand the list of [available keys](api/keyboard#available-keys).
  *
  * ```js
  * import { keyMap, bindKeys } from 'kontra';
@@ -1819,7 +1819,7 @@ class Pool {
   }
 
   /**
-   * Clear the object pool. Removes all objects from the pool and resets its [size](api/pool/#size) to 1.
+   * Clear the object pool. Removes all objects from the pool and resets its [size](api/pool#size) to 1.
    * @memberof Pool
    * @function clear
    */
@@ -2548,7 +2548,7 @@ class Sprite {
   }
 
   /**
-   * An object of [Animations](api/animation) from a kontra.SpriteSheet to animate the sprite. Each animation is named so that it can can be used by name for the sprites [playAnimation()](api/sprite/#playAnimation) function.
+   * An object of [Animations](api/animation) from a kontra.SpriteSheet to animate the sprite. Each animation is named so that it can can be used by name for the sprites [playAnimation()](api/sprite#playAnimation) function.
    *
    * ```js
    * import { Sprite, SpriteSheet } from 'kontra';
@@ -2600,7 +2600,7 @@ class Sprite {
   }
 
   /**
-   * The width of the sprite. If the sprite is a [rectangle sprite](api/sprite/#rectangle-sprite), it uses the passed in value. For an [image sprite](api/sprite/#image-sprite) it is the width of the image. And for an [animation sprite](api/sprite/#animation-sprite) it is the width of a single frame of the animation.
+   * The width of the sprite. If the sprite is a [rectangle sprite](api/sprite#rectangle-sprite), it uses the passed in value. For an [image sprite](api/sprite#image-sprite) it is the width of the image. And for an [animation sprite](api/sprite#animation-sprite) it is the width of a single frame of the animation.
    *
    * Setting the value to a negative number will result in the sprite being flipped across the vertical axis while the width will remain a positive value.
    * @memberof Sprite
@@ -2611,7 +2611,7 @@ class Sprite {
   }
 
   /**
-   * The height of the sprite. If the sprite is a [rectangle sprite](api/sprite/#rectangle-sprite), it uses the passed in value. For an [image sprite](api/sprite/#image-sprite) it is the height of the image. And for an [animation sprite](api/sprite/#animation-sprite) it is the height of a single frame of the animation.
+   * The height of the sprite. If the sprite is a [rectangle sprite](api/sprite#rectangle-sprite), it uses the passed in value. For an [image sprite](api/sprite#image-sprite) it is the height of the image. And for an [animation sprite](api/sprite#animation-sprite) it is the height of a single frame of the animation.
    *
    * Setting the value to a negative number will result in the sprite being flipped across the horizontal axis while the height will remain a positive value.
    * @memberof Sprite
@@ -2689,14 +2689,14 @@ class Sprite {
    * @memberof Sprite
    * @function isAlive
    *
-   * @returns {Boolean} `true` if the sprites [ttl](api/sprite/#ttl) property is above `0`, `false` otherwise.
+   * @returns {Boolean} `true` if the sprites [ttl](api/sprite#ttl) property is above `0`, `false` otherwise.
    */
   isAlive() {
     return this.ttl > 0;
   }
 
   /**
-   * Check if the sprite collide with the object. Uses a simple [Axis-Aligned Bounding Box (AABB) collision check](https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection#Axis-Aligned_Bounding_Box). Takes into account the sprites [anchor](api/sprite/#anchor).
+   * Check if the sprite collide with the object. Uses a simple [Axis-Aligned Bounding Box (AABB) collision check](https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection#Axis-Aligned_Bounding_Box). Takes into account the sprites [anchor](api/sprite#anchor).
    *
    * **NOTE:** Does not take into account sprite rotation. If you need collision detection between rotated sprites you will need to implement your own `collidesWith()` function. I suggest looking at the Separate Axis Theorem.
    *
@@ -2780,7 +2780,7 @@ class Sprite {
   }
 
   /**
-   * Update the sprites position based on its velocity and acceleration. Calls the sprites [advance()](api/sprite/#advance) function.
+   * Update the sprites position based on its velocity and acceleration. Calls the sprites [advance()](api/sprite#advance) function.
    * @memberof Sprite
    * @function update
    *
@@ -2791,7 +2791,7 @@ class Sprite {
   }
 
   /**
-   * Render the sprite. Calls the sprites [draw()](api/sprite/#draw) function.
+   * Render the sprite. Calls the sprites [draw()](api/sprite#draw) function.
    * @memberof Sprite
    * @function render
    */
@@ -2839,9 +2839,9 @@ class Sprite {
   }
 
   /**
-   * Move the sprite by its acceleration and velocity. If the sprite is an [animation sprite](api/sprite/#animation-sprite), it also advances the animation every frame.
+   * Move the sprite by its acceleration and velocity. If the sprite is an [animation sprite](api/sprite#animation-sprite), it also advances the animation every frame.
    *
-   * If you override the sprites [update()](api/sprite/#update) function with your own update function, you can call this function to move the sprite normally.
+   * If you override the sprites [update()](api/sprite#update) function with your own update function, you can call this function to move the sprite normally.
    *
    * ```js
    * import { Sprite } from 'kontra';
@@ -2887,7 +2887,7 @@ class Sprite {
   }
 
   /**
-   * Draw the sprite at its X and Y position. This function changes based on the type of the sprite. For a [rectangle sprite](api/sprite/#rectangle-sprite), it uses `context.fillRect()`, for an [image sprite](api/sprite/#image-sprite) it uses `context.drawImage()`, and for an [animation sprite](api/sprite/#animation-sprite) it uses the [currentAnimation](api/sprite/#currentAnimation) `render()` function.
+   * Draw the sprite at its X and Y position. This function changes based on the type of the sprite. For a [rectangle sprite](api/sprite#rectangle-sprite), it uses `context.fillRect()`, for an [image sprite](api/sprite#image-sprite) it uses `context.drawImage()`, and for an [animation sprite](api/sprite#animation-sprite) it uses the [currentAnimation](api/sprite#currentAnimation) `render()` function.
    *
    * If you override the sprites `render()` function with your own render function, you can call this function to draw the sprite normally.
    *
@@ -3010,7 +3010,7 @@ function parseFrames(consecutiveFrames) {
 }
 
 /**
- * A sprite sheet to animate a sequence of images. Used to create [animation sprites](api/sprite/#animation-sprite).
+ * A sprite sheet to animate a sequence of images. Used to create [animation sprites](api/sprite#animation-sprite).
  *
  * <figure>
  *   <a href="assets/imgs/character_walk_sheet.png">
@@ -3056,7 +3056,7 @@ function parseFrames(consecutiveFrames) {
  * @param {Number} properties.frameWidth - The width of a single frame.
  * @param {Number} properties.frameHeight - The height of a single frame.
  * @param {Number} [properties.frameMargin=0] - The amount of whitespace between each frame.
- * @param {Object} [properties.animations] - Animations to create from the sprite sheet using kontra.Animation. Passed directly into the sprite sheets [createAnimations()](api/spriteSheet/#createAnimations) function.
+ * @param {Object} [properties.animations] - Animations to create from the sprite sheet using kontra.Animation. Passed directly into the sprite sheets [createAnimations()](api/spriteSheet#createAnimations) function.
  */
 class SpriteSheet {
   constructor({image, frameWidth, frameHeight, frameMargin, animations} = {}) {
@@ -3067,7 +3067,7 @@ class SpriteSheet {
     // @endif
 
     /**
-     * An object of named kontra.Animation objects. Typically you pass this object into kontra.Sprite to create an [animation sprites](api/spriteSheet/#animation-sprite).
+     * An object of named kontra.Animation objects. Typically you pass this object into kontra.Sprite to create an [animation sprites](api/spriteSheet#animation-sprite).
      * @memberof SpriteSheet
      * @property {Object} animations
      */
@@ -3266,11 +3266,11 @@ function getStoreItem(key) {
  *
  * @param {Object[]} properties.tilesets - Array of tileset objects.
  * @param {Number} properties.tilesetN.firstgid - First tile index of the tileset. The first tileset will have a firstgid of 1 as 0 represents an empty tile.
- * @param {String|HTMLImageElement} properties.tilesetN.image - Relative path to the HTMLImageElement or an HTMLImageElement. If passing a relative path, the image file must have been [loaded](api/assets/#load) first.
+ * @param {String|HTMLImageElement} properties.tilesetN.image - Relative path to the HTMLImageElement or an HTMLImageElement. If passing a relative path, the image file must have been [loaded](api/assets#load) first.
  * @param {Number} [properties.tilesetN.margin=0] - The amount of whitespace between each tile (in pixels).
  * @param {Number} [properties.tilesetN.tilewidth] - Width of the tileset (in pixels). Defaults to properties.tilewidth.
  * @param {Number} [properties.tilesetN.tileheight] - Height of the tileset (in pixels). Defaults to properties.tileheight.
- * @param {String} [properties.tilesetN.source] - Relative path to the source JSON file. The source JSON file must have been [loaded](api/assets/#load) first.
+ * @param {String} [properties.tilesetN.source] - Relative path to the source JSON file. The source JSON file must have been [loaded](api/assets#load) first.
  * @param {Number} [properties.tilesetN.columns] - Number of columns in the tileset image.
  *
  * @param {Object[]} properties.layers - Array of layer objects.
@@ -3432,20 +3432,20 @@ function TileEngine(properties = {}) {
     renderLayer(name) {
       let canvas = layerCanvases[name];
       let layer = layerMap[name];
-      
+
       if (!canvas) {
         // cache the rendered layer so we can render it again without redrawing
         // all tiles
         canvas = document.createElement('canvas');
         canvas.width = mapwidth;
         canvas.height = mapheight;
-        
+
         layerCanvases[name] = canvas;
         tileEngine._r(layer, canvas.getContext('2d'));
       }
-      
-      if (this._d) {
-        this._d = false;
+
+      if (layer._d) {
+        layer._d = false;
         canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
         tileEngine._r(layer, canvas.getContext('2d'));
       }
@@ -3607,7 +3607,7 @@ function TileEngine(properties = {}) {
       let col = position.col || getCol(position.x);
 
       if (layerMap[name]) {
-        this._d = true;
+        layerMap[name]._d = true;
         layerMap[name].data[col + row * tileEngine.width] = tile;
       }
     },
@@ -3648,7 +3648,7 @@ function TileEngine(properties = {}) {
     */
     setLayer(name, data) {
       if (layerMap[name]) {
-        this._d = true;
+        layerMap[name]._d = true;
         layerMap[name].data = data;
       }
     },
@@ -3688,7 +3688,8 @@ function TileEngine(properties = {}) {
     _p: prerender,
 
     // @if DEBUG
-    layerCanvases: layerCanvases
+    layerCanvases: layerCanvases,
+    layerMap: layerMap
     // @endif
   }, properties);
 
@@ -3819,6 +3820,7 @@ function TileEngine(properties = {}) {
   function prerender() {
     if (tileEngine.layers) {
       tileEngine.layers.map(layer => {
+        layer._d = false;
         layerMap[layer.name] = layer;
 
         if (layer.visible !== false) {

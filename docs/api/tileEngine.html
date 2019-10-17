@@ -350,7 +350,9 @@
     <li role="presentation"></li>
   </ul>
   <section role="tabpanel" aria-labelledby=game-canvas-5-global-tab data-tabpanel="global">
-    <pre><code class="lang-js">let { TileEngine } &#x3D; kontra
+    <pre><code class="lang-js">
+let { TileEngine } &#x3D; kontra
+
 
 let img &#x3D; new Image();
 img.src &#x3D; &#x27;assets/imgs/mapPack_tilesheet.png&#x27;;
@@ -389,7 +391,9 @@ img.onload &#x3D; function() {
 }</code></pre>
   </section>
   <section role="tabpanel" aria-labelledby=game-canvas-5-es-tab data-tabpanel="es">
-    <pre><code class="lang-js">import { TileEngine } from &#x27;path/to/kontra.mjs&#x27;
+    <pre><code class="lang-js">
+import { TileEngine } from &#x27;path/to/kontra.mjs&#x27;
+
 
 let img &#x3D; new Image();
 img.src &#x3D; &#x27;assets/imgs/mapPack_tilesheet.png&#x27;;
@@ -428,7 +432,9 @@ img.onload &#x3D; function() {
 }</code></pre>
   </section>
   <section role="tabpanel" aria-labelledby=game-canvas-5-bundle-tab data-tabpanel="bundle">
-    <pre><code class="lang-js">import { TileEngine } from &#x27;kontra&#x27;;
+    <pre><code class="lang-js">
+import { TileEngine } from &#x27;kontra&#x27;;
+
 
 let img &#x3D; new Image();
 img.src &#x3D; &#x27;assets/imgs/mapPack_tilesheet.png&#x27;;
@@ -477,6 +483,7 @@ img.onload &#x3D; function() {
   // exclude-code:start
 let { TileEngine } = kontra;
 // exclude-code:end
+
 let img = new Image();
 img.src = 'assets/imgs/mapPack_tilesheet.png';
 img.onload = function() {
@@ -542,7 +549,9 @@ img.onload = function() {
     <li role="presentation"></li>
   </ul>
   <section role="tabpanel" aria-labelledby=game-canvas-6-global-tab data-tabpanel="global">
-    <pre><code class="lang-js">let { load, TileEngine, dataAssets } &#x3D; kontra
+    <pre><code class="lang-js">
+let { load, TileEngine, dataAssets } &#x3D; kontra
+
 
 load(&#x27;assets/imgs/mapPack_tilesheet.png&#x27;, &#x27;assets/data/tile_engine_basic.json&#x27;)
   .then(assets &#x3D;&gt; {
@@ -551,7 +560,9 @@ load(&#x27;assets/imgs/mapPack_tilesheet.png&#x27;, &#x27;assets/data/tile_engin
   });</code></pre>
   </section>
   <section role="tabpanel" aria-labelledby=game-canvas-6-es-tab data-tabpanel="es">
-    <pre><code class="lang-js">import { load, TileEngine, dataAssets } from &#x27;path/to/kontra.mjs&#x27;
+    <pre><code class="lang-js">
+import { load, TileEngine, dataAssets } from &#x27;path/to/kontra.mjs&#x27;
+
 
 load(&#x27;assets/imgs/mapPack_tilesheet.png&#x27;, &#x27;assets/data/tile_engine_basic.json&#x27;)
   .then(assets &#x3D;&gt; {
@@ -560,7 +571,9 @@ load(&#x27;assets/imgs/mapPack_tilesheet.png&#x27;, &#x27;assets/data/tile_engin
   });</code></pre>
   </section>
   <section role="tabpanel" aria-labelledby=game-canvas-6-bundle-tab data-tabpanel="bundle">
-    <pre><code class="lang-js">import { load, TileEngine, dataAssets } from &#x27;kontra&#x27;;
+    <pre><code class="lang-js">
+import { load, TileEngine, dataAssets } from &#x27;kontra&#x27;;
+
 
 load(&#x27;assets/imgs/mapPack_tilesheet.png&#x27;, &#x27;assets/data/tile_engine_basic.json&#x27;)
   .then(assets &#x3D;&gt; {
@@ -579,6 +592,7 @@ load(&#x27;assets/imgs/mapPack_tilesheet.png&#x27;, &#x27;assets/data/tile_engin
   // exclude-code:start
 let { TileEngine, load, dataAssets } = kontra;
 // exclude-code:end
+
 load('assets/imgs/mapPack_tilesheet.png', 'assets/data/tile_engine_basic.json')
   .then(assets => {
     let tileEngine = TileEngine(dataAssets['assets/data/tile_engine_basic']);
@@ -614,7 +628,9 @@ load('assets/imgs/mapPack_tilesheet.png', 'assets/data/tile_engine_basic.json')
     <li role="presentation"></li>
   </ul>
   <section role="tabpanel" aria-labelledby=game-canvas-7-global-tab data-tabpanel="global">
-    <pre><code class="lang-js">let { load, TileEngine, dataAssets, GameLoop } &#x3D; kontra
+    <pre><code class="lang-js">
+let { load, TileEngine, dataAssets, GameLoop } &#x3D; kontra
+
 
 load(&#x27;assets/imgs/mapPack_tilesheet.png&#x27;, &#x27;assets/data/tile_engine_camera.json&#x27;)
   .then(function() {
@@ -638,7 +654,9 @@ load(&#x27;assets/imgs/mapPack_tilesheet.png&#x27;, &#x27;assets/data/tile_engin
   });</code></pre>
   </section>
   <section role="tabpanel" aria-labelledby=game-canvas-7-es-tab data-tabpanel="es">
-    <pre><code class="lang-js">import { load, TileEngine, dataAssets, GameLoop } from &#x27;path/to/kontra.mjs&#x27;
+    <pre><code class="lang-js">
+import { load, TileEngine, dataAssets, GameLoop } from &#x27;path/to/kontra.mjs&#x27;
+
 
 load(&#x27;assets/imgs/mapPack_tilesheet.png&#x27;, &#x27;assets/data/tile_engine_camera.json&#x27;)
   .then(function() {
@@ -662,7 +680,9 @@ load(&#x27;assets/imgs/mapPack_tilesheet.png&#x27;, &#x27;assets/data/tile_engin
   });</code></pre>
   </section>
   <section role="tabpanel" aria-labelledby=game-canvas-7-bundle-tab data-tabpanel="bundle">
-    <pre><code class="lang-js">import { load, TileEngine, dataAssets, GameLoop } from &#x27;kontra&#x27;;
+    <pre><code class="lang-js">
+import { load, TileEngine, dataAssets, GameLoop } from &#x27;kontra&#x27;;
+
 
 load(&#x27;assets/imgs/mapPack_tilesheet.png&#x27;, &#x27;assets/data/tile_engine_camera.json&#x27;)
   .then(function() {
@@ -696,6 +716,7 @@ load(&#x27;assets/imgs/mapPack_tilesheet.png&#x27;, &#x27;assets/data/tile_engin
   // exclude-code:start
 let { TileEngine, load, dataAssets, GameLoop } = kontra;
 // exclude-code:end
+
 load('assets/imgs/mapPack_tilesheet.png', 'assets/data/tile_engine_camera.json')
   .then(function() {
     let tileEngine = TileEngine(dataAssets['assets/data/tile_engine_camera']);
@@ -745,7 +766,9 @@ load('assets/imgs/mapPack_tilesheet.png', 'assets/data/tile_engine_camera.json')
     <li role="presentation"></li>
   </ul>
   <section role="tabpanel" aria-labelledby=game-canvas-9-global-tab data-tabpanel="global">
-    <pre><code class="lang-js">let { load, TileEngine, dataAssets, imageAssets, SpriteSheet, Sprite, GameLoop } &#x3D; kontra
+    <pre><code class="lang-js">
+let { load, TileEngine, dataAssets, imageAssets, SpriteSheet, Sprite, GameLoop } &#x3D; kontra
+
 
 load(&#x27;assets/imgs/mapPack_tilesheet.png&#x27;, &#x27;assets/data/tile_engine_add.json&#x27;)
   .then(function() {
@@ -794,7 +817,9 @@ load(&#x27;assets/imgs/mapPack_tilesheet.png&#x27;, &#x27;assets/data/tile_engin
   });</code></pre>
   </section>
   <section role="tabpanel" aria-labelledby=game-canvas-9-es-tab data-tabpanel="es">
-    <pre><code class="lang-js">import { load, TileEngine, dataAssets, imageAssets, SpriteSheet, Sprite, GameLoop } from &#x27;path/to/kontra.mjs&#x27;
+    <pre><code class="lang-js">
+import { load, TileEngine, dataAssets, imageAssets, SpriteSheet, Sprite, GameLoop } from &#x27;path/to/kontra.mjs&#x27;
+
 
 load(&#x27;assets/imgs/mapPack_tilesheet.png&#x27;, &#x27;assets/data/tile_engine_add.json&#x27;)
   .then(function() {
@@ -843,7 +868,9 @@ load(&#x27;assets/imgs/mapPack_tilesheet.png&#x27;, &#x27;assets/data/tile_engin
   });</code></pre>
   </section>
   <section role="tabpanel" aria-labelledby=game-canvas-9-bundle-tab data-tabpanel="bundle">
-    <pre><code class="lang-js">import { load, TileEngine, dataAssets, imageAssets, SpriteSheet, Sprite, GameLoop } from &#x27;kontra&#x27;;
+    <pre><code class="lang-js">
+import { load, TileEngine, dataAssets, imageAssets, SpriteSheet, Sprite, GameLoop } from &#x27;kontra&#x27;;
+
 
 load(&#x27;assets/imgs/mapPack_tilesheet.png&#x27;, &#x27;assets/data/tile_engine_add.json&#x27;)
   .then(function() {
@@ -902,6 +929,7 @@ load(&#x27;assets/imgs/mapPack_tilesheet.png&#x27;, &#x27;assets/data/tile_engin
   // exclude-code:start
 let { TileEngine, load, dataAssets, imageAssets, SpriteSheet, Sprite, GameLoop } = kontra;
 // exclude-code:end
+
 load('assets/imgs/mapPack_tilesheet.png', 'assets/data/tile_engine_add.json')
   .then(function() {
     let tileEngine = TileEngine(dataAssets['assets/data/tile_engine_add']);

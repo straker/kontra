@@ -284,9 +284,9 @@ describe('tileEngine', () => {
     });
 
     it('should set the dirty flag', () => {
-      expect(tileEngine._d).to.equal(false);
+      expect(tileEngine.layerMap.test._d).to.equal(false);
       tileEngine.setTileAtLayer('test', {row: 1, col: 2}, 3);
-      expect(tileEngine._d).to.equal(true);
+      expect(tileEngine.layerMap.test._d).to.equal(true);
     });
 
   });
@@ -335,9 +335,9 @@ describe('tileEngine', () => {
     });
 
     it("should set the dirty flag", () => {
-      expect(tileEngine._d).to.equal(false);
+      expect(tileEngine.layerMap.test._d).to.equal(false);
       tileEngine.setLayer("test", [1, 1, 0, 1]);
-      expect(tileEngine._d).to.equal(true);
+      expect(tileEngine.layerMap.test._d).to.equal(true);
     });
   });
   
@@ -511,7 +511,7 @@ describe('tileEngine', () => {
       // Render once to create the canvas
       tileEngine.renderLayer('test');
 
-      tileEngine._d = true;
+      tileEngine.layerMap.test._d = true;
       sinon.stub(tileEngine, '_r').callsFake(noop);
 
       tileEngine.renderLayer('test');

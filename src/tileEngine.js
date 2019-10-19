@@ -198,8 +198,8 @@ export default function TileEngine(properties = {}) {
         tileEngine._r(layer, canvas.getContext('2d'));
       }
 
-      if (this._d) {
-        this._d = false;
+      if (layer._d) {
+        layer._d = false;
         canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
         tileEngine._r(layer, canvas.getContext('2d'));
       }
@@ -361,7 +361,7 @@ export default function TileEngine(properties = {}) {
       let col = position.col || getCol(position.x);
 
       if (layerMap[name]) {
-        this._d = true;
+        layerMap[name]._d = true;
         layerMap[name].data[col + row * tileEngine.width] = tile;
       }
     },
@@ -402,7 +402,7 @@ export default function TileEngine(properties = {}) {
     */
     setLayer(name, data) {
       if (layerMap[name]) {
-        this._d = true;
+        layerMap[name]._d = true;
         layerMap[name].data = data;
       }
     },
@@ -442,7 +442,8 @@ export default function TileEngine(properties = {}) {
     _p: prerender,
 
     // @if DEBUG
-    layerCanvases: layerCanvases
+    layerCanvases: layerCanvases,
+    layerMap: layerMap
     // @endif
   }, properties);
 
@@ -573,6 +574,7 @@ export default function TileEngine(properties = {}) {
   function prerender() {
     if (tileEngine.layers) {
       tileEngine.layers.map(layer => {
+        layer._d = false;
         layerMap[layer.name] = layer;
 
         if (layer.visible !== false) {

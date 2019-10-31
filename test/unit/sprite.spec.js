@@ -559,6 +559,7 @@ describe('sprite with properties: ' + JSON.stringify(properties,null,4), () => {
 
   });
 
+
   // --------------------------------------------------
   // isAlive
   // --------------------------------------------------

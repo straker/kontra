@@ -82,7 +82,7 @@
           collisionBox.y -= this.speed;
 
           // don't move the player if he collides with the collision layer
-          if (tileEngine.layerCollidesWith('collision', collisionBox) || chicken.collidesWith(collisionBox)) {
+          if (tileEngine.layerCollidesWith('collision', collisionBox) || kontra.collides(chicken, collisionBox)) {
             return;
           }
 
@@ -99,7 +99,7 @@
           collisionBox.y += this.speed;
 
           // don't move the player if he collides with the collision layer
-          if (tileEngine.layerCollidesWith('collision', collisionBox) || chicken.collidesWith(collisionBox)) {
+          if (tileEngine.layerCollidesWith('collision', collisionBox) || kontra.collides(chicken, collisionBox)) {
             return;
           }
 
@@ -116,7 +116,7 @@
           collisionBox.x -= this.speed;
 
           // don't move the player if he collides with the collision layer
-          if (tileEngine.layerCollidesWith('collision', collisionBox) || chicken.collidesWith(collisionBox)) {
+          if (tileEngine.layerCollidesWith('collision', collisionBox) || kontra.collides(chicken, collisionBox)) {
             return;
           }
 
@@ -133,7 +133,7 @@
           collisionBox.x += this.speed;
 
           // don't move the player if he collides with the collision layer
-          if (tileEngine.layerCollidesWith('collision', collisionBox) || chicken.collidesWith(collisionBox)) {
+          if (tileEngine.layerCollidesWith('collision', collisionBox) || kontra.collides(chicken, collisionBox)) {
             return;
           }
 

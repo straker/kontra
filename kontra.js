@@ -746,6 +746,73 @@ function load(...urls) {
 // Override the getCanPlay function to provide a specific return type for tests
 
 /**
+ * A collection of collision detection functions.
+ *
+ * @sectionName Collision
+ */
+
+/**
+ * Check if a two objects collide. Uses a simple [Axis-Aligned Bounding Box (AABB) collision check](https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection#Axis-Aligned_Bounding_Box). Takes into account the sprites [anchor](api/sprite/#anchor).
+ *
+ * **NOTE:** Does not take into account object rotation. If you need collision detection between rotated objects you will need to implement your own `collides()` function. I suggest looking at the Separate Axis Theorem.
+ *
+ *
+ * ```js
+ * import { Sprite, collides } from 'kontra';
+ *
+ * let sprite = Sprite({
+ *   x: 100,
+ *   y: 200,
+ *   width: 20,
+ *   height: 40
+ * });
+ *
+ * let sprite2 = Sprite({
+ *   x: 150,
+ *   y: 200,
+ *   width: 20,
+ *   height: 20
+ * });
+ *
+ * collides(sprite, sprite2);  //=> false
+ *
+ * sprite2.x = 115;
+ *
+ * collides(sprite, sprite2);  //=> true
+ * ```
+ * @function collides
+ *
+ * @param {Sprite} object - Object reference.
+ * @param {Object} object - Object to check collision against.
+ *
+ * @returns {Boolean|null} `true` if the objects collide, `false` otherwise. Will return `null` if the either of the two objects are rotated.
+ */
+
+function collides(object1, object2) {
+  if (object1.rotation || object2.rotation) return null;
+
+  // take into account object1 anchors
+  let x = object1.x;
+  let y = object1.y;
+  if (object1.anchor) {
+    x -= object1.width * object1.anchor.x;
+    y -= object1.height * object1.anchor.y;
+  }
+
+  let objX = object2.x;
+  let objY = object2.y;
+  if (object2.anchor) {
+    objX -= object2.width * object2.anchor.x;
+    objY -= object2.height * object2.anchor.y;
+  }
+
+  return x < objX + object2.width &&
+         x + object1.width > objX &&
+         y < objY + object2.height &&
+         y + object1.height > objY;
+}
+
+/**
  * Noop function
  */
 const noop = () => {};
@@ -2541,6 +2608,11 @@ class Sprite {
     // @endif
 
     // @ifdef IMAGE
+    /**
+     * The image the sprite will use when drawn if passed as an argument.
+     * @memberof Sprite
+     * @property {Image|HTMLCanvasElement} image
+     */
     this.image = null;
     // @endif
 
@@ -2554,6 +2626,12 @@ class Sprite {
       this.height = (height !== undefined) ? height : image.height;
     }
     // @endif
+
+    /**
+     * The color of the sprite if it was passed as an argument.
+     * @memberof Sprite
+     * @property {String} color
+     */
   }
 
   // define getter and setter shortcut functions to make it easier to work with the
@@ -2642,10 +2720,20 @@ class Sprite {
   // @endif
 
   // @ifdef CAMERA
+  /**
+   * Readonly. X coordinate of where to draw the sprite. Typically the same value as the [position vector](api/sprite#position) unless the sprite has been [added to a tileEngine](api/tileEngine#addObject).
+   * @memberof Sprite
+   * @property {Number} viewX
+   */
   get viewX() {
     return this.x - this.sx;
   }
 
+  /**
+   * Readonly. Y coordinate of where to draw the sprite. Typically the same value as the [position vector](api/sprite#position) unless the sprite has been [added to a tileEngine](api/tileEngine#addObject).
+   * @memberof Sprite
+   * @property {Number} viewY
+   */
   get viewY() {
     return this.y - this.sy;
   }
@@ -2721,6 +2809,11 @@ class Sprite {
       firstAnimation = firstAnimation || this._a[prop];
     }
 
+    /**
+     * The currently playing Animation object if `animations` was passed as an argument.
+     * @memberof Sprite
+     * @property {kontra.Animation} currentAnimation
+     */
     this.currentAnimation = firstAnimation;
     this.width = this.width || firstAnimation.width;
     this.height = this.height || firstAnimation.height;
@@ -3873,6 +3966,8 @@ let kontra = {
   loadAudio,
   loadData,
   load,
+
+  collides,
 
   init,
   getCanvas,

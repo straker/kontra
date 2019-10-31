@@ -40,7 +40,7 @@
         sprite2.update();
 
         // check for collision
-        if (sprite1.collidesWith(sprite2)) {
+        if (kontra.collides(sprite1, sprite2)) {
           sprite1.color = 'purple';
           sprite2.color= 'purple';
         }

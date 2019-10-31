@@ -42,6 +42,7 @@
             <ul aria-labelledby="api">
               <li><a href="api/animation" >Animation</a></li>
               <li><a href="api/assets" >Assets</a></li>
+              <li><a href="api/collision" >Collision</a></li>
               <li><a href="api/core" >Core</a></li>
               <li><a href="api/events" >Events</a></li>
               <li><a href="api/gameLoop" >GameLoop</a></li>
@@ -146,7 +147,7 @@ registerPlugin(Sprite, loggingPlugin);</code></pre></section>
 
           <p>A plugin is an object that defines a set of intercept functions that should be run before or after a Kontra objects functions. These functions allow you to modify the code or change the behavior of the intercepted functions.</p>
 <p>An intercept function is named the same name as the function it will intercept. The function name is also prefixed with <code>before</code> to have the function run before the intercepted function, or <code>after</code> to run after the intercepted function.</p>
-<p>For example, if you wish to add a function to run after a Sprites <code>collidesWidth()</code> function, the name of the intercept function would be <code>afterCollidesWidth</code> (note the capitalization of the <code>collidesWidth</code> function name). <code>beforeCollidesWidth</code> would run before the Sprites <code>collidesWidth()</code> function.</p>
+<p>For example, if you wish to add a function to run after a Sprites <code>collidesWith()</code> function, the name of the intercept function would be <code>afterCollidesWith</code> (note the capitalization of the <code>collidesWith</code> function name). <code>beforeCollidesWith</code> would run before the Sprites <code>collidesWith()</code> function.</p>
 <p>A plugin can define any number of before and after intercept functions. When the plugin is registered for a Kontra object, only intercept functions that match a function name in the Kontra object will be intercepted.</p>
 <p>As the plugin author, you should not <a href="api/plugin/#registerPlugin">register</a> the plugin yourself. You should only export the plugin object and let the consumer register it.</p>
 <pre><code class="language-js">// pluginCode.js
@@ -170,17 +171,27 @@ export default loggingPlugin;</code></pre>
     <li role="presentation"></li>
   </ul>
   <section role="tabpanel" aria-labelledby=how-to-create-a-plugin-global-tab data-tabpanel="global"><pre><code class="language-js">// consumerCode.js
-let { registerPlugin, Sprite } = kontra;
+let { registerPlugin, Sprite, collides } = kontra;
 import loggingPlugin from pluginCode.js;
 
-// have the plugin run for all Sprites
-registerPlugin(Sprite, loggingPlugin);
+class SpriteBox extends Sprite.class {
+  constructor(props) {
+    super(props);
+  }
 
-let sprite1 = Sprite({
+  collidesWith(object) {
+    return collides(this, object);
+  }
+}
+
+// have the plugin run for all Sprites
+registerPlugin(SpriteBox, loggingPlugin);
+
+let sprite1 = new SpriteBox({
   x: 10,
   y: 20,
   width: 10,
-  height: 10
+  height: 10,
 });
 
 let sprite2 = Sprite({
@@ -192,17 +203,27 @@ let sprite2 = Sprite({
 
 sprite1.collidesWith(sprite2);  //=&gt; &#39;collision between sprites!&#39;; true</code></pre></section>
   <section role="tabpanel" aria-labelledby=how-to-create-a-plugin-es-tab data-tabpanel="es"><pre><code class="language-js">// consumerCode.js
-import { registerPlugin, Sprite } from 'path/to/kontra.mjs';
+import { registerPlugin, Sprite, collides } from 'path/to/kontra.mjs';
 import loggingPlugin from pluginCode.js;
 
-// have the plugin run for all Sprites
-registerPlugin(Sprite, loggingPlugin);
+class SpriteBox extends Sprite.class {
+  constructor(props) {
+    super(props);
+  }
 
-let sprite1 = Sprite({
+  collidesWith(object) {
+    return collides(this, object);
+  }
+}
+
+// have the plugin run for all Sprites
+registerPlugin(SpriteBox, loggingPlugin);
+
+let sprite1 = new SpriteBox({
   x: 10,
   y: 20,
   width: 10,
-  height: 10
+  height: 10,
 });
 
 let sprite2 = Sprite({
@@ -214,17 +235,27 @@ let sprite2 = Sprite({
 
 sprite1.collidesWith(sprite2);  //=&gt; &#39;collision between sprites!&#39;; true</code></pre></section>
   <section role="tabpanel" aria-labelledby=how-to-create-a-plugin-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">// consumerCode.js
-import { registerPlugin, Sprite } from &#39;kontra&#39;;
+import { registerPlugin, Sprite, collides } from &#39;kontra&#39;;
 import loggingPlugin from pluginCode.js;
 
-// have the plugin run for all Sprites
-registerPlugin(Sprite, loggingPlugin);
+class SpriteBox extends Sprite.class {
+  constructor(props) {
+    super(props);
+  }
 
-let sprite1 = Sprite({
+  collidesWith(object) {
+    return collides(this, object);
+  }
+}
+
+// have the plugin run for all Sprites
+registerPlugin(SpriteBox, loggingPlugin);
+
+let sprite1 = new SpriteBox({
   x: 10,
   y: 20,
   width: 10,
-  height: 10
+  height: 10,
 });
 
 let sprite2 = Sprite({

@@ -6,14 +6,14 @@ const path = require('path');
 const execSync = require('child_process').execSync;
 
 const options = [
-  'VELOCITY',
-  'ACCELERATION',
-  'ROTATION',
-  'TTL',
-  'ANCHOR',
-  'CAMERA',
-  'IMAGE',
-  'ANIMATION'
+  'SPRITE_VELOCITY',
+  'SPRITE_ACCELERATION',
+  'SPRITE_ROTATION',
+  'SPRITE_TTL',
+  'SPRITE_ANCHOR',
+  'SPRITE_CAMERA',
+  'SPRITE_IMAGE',
+  'SPRITE_ANIMATION'
 ];
 
 // copy sprite test so it's up-to-date

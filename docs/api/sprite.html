@@ -222,6 +222,11 @@
                   </a>
                 </li>
                 <li>
+                  <a href="api/sprite#color">
+                    <span>Sprite&#8203;.color</span>
+                  </a>
+                </li>
+                <li>
                   <a href="api/sprite#context">
                     <span>Sprite&#8203;.context</span>
                   </a>
@@ -252,6 +257,11 @@
                   </a>
                 </li>
                 <li>
+                  <a href="api/sprite#image">
+                    <span>Sprite&#8203;.image</span>
+                  </a>
+                </li>
+                <li>
                   <a href="api/sprite#position">
                     <span>Sprite&#8203;.position</span>
                   </a>
@@ -279,6 +289,16 @@
                 <li>
                   <a href="api/sprite#velocity">
                     <span>Sprite&#8203;.velocity</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="api/sprite#viewX">
+                    <span>Sprite&#8203;.viewX</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="api/sprite#viewY">
+                    <span>Sprite&#8203;.viewY</span>
                   </a>
                 </li>
                 <li>
@@ -1292,6 +1312,17 @@ sprite.playAnimation(&#39;idle&#39;);</code></pre></section>
           
         </section>
         <section>
+          <h2 id="color">
+            <a href="api/sprite#color" class="section-link">
+              <span>Sprite&#8203;.color</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
+
+          <p>The color of the sprite if it was passed as an argument.</p>
+          
+        </section>
+        <section>
           <h2 id="context">
             <a href="api/sprite#context" class="section-link">
               <span>Sprite&#8203;.context</span>
@@ -1445,6 +1476,17 @@ sprite.render();</code></pre></section>
 
           <p>The height of the sprite. If the sprite is a <a href="api/sprite#rectangle-sprite">rectangle sprite</a>, it uses the passed in value. For an <a href="api/sprite#image-sprite">image sprite</a> it is the height of the image. And for an <a href="api/sprite#animation-sprite">animation sprite</a> it is the height of a single frame of the animation.</p>
 <p>Setting the value to a negative number will result in the sprite being flipped across the horizontal axis while the height will remain a positive value.</p>
+          
+        </section>
+        <section>
+          <h2 id="image">
+            <a href="api/sprite#image" class="section-link">
+              <span>Sprite&#8203;.image</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
+
+          <p>The image the sprite will use when drawn if passed as an argument.</p>
           
         </section>
         <section>
@@ -1673,6 +1715,28 @@ sprite.playAnimation(&#39;idle&#39;);</code></pre></section>
           </h2>
 
           <p>The sprites velocity vector.</p>
+          
+        </section>
+        <section>
+          <h2 id="viewX">
+            <a href="api/sprite#viewX" class="section-link">
+              <span>Sprite&#8203;.viewX</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
+
+          <p>Readonly. X coordinate of where to draw the sprite. Typically the same value as the <a href="api/sprite#position">position vector</a> unless the sprite has been <a href="api/tileEngine#addObject">added to a tileEngine</a>.</p>
+          
+        </section>
+        <section>
+          <h2 id="viewY">
+            <a href="api/sprite#viewY" class="section-link">
+              <span>Sprite&#8203;.viewY</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
+
+          <p>Readonly. Y coordinate of where to draw the sprite. Typically the same value as the <a href="api/sprite#position">position vector</a> unless the sprite has been <a href="api/tileEngine#addObject">added to a tileEngine</a>.</p>
           
         </section>
         <section>

@@ -391,6 +391,11 @@ class Sprite {
       firstAnimation = firstAnimation || this._a[prop];
     }
 
+    /**
+     * The currently playing Animation object if `animations` was passed as an argument.
+     * @memberof Sprite
+     * @property {kontra.Animation} currentAnimation
+     */
     this.currentAnimation = firstAnimation;
     this.width = this.width || firstAnimation.width;
     this.height = this.height || firstAnimation.height;

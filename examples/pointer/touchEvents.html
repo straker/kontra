@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Pointer</title>
+  <script src="../../kontra.js"></script>
+</head>
+<body style="margin:0;background:rgb(50,50,50);overflow-x:hidden">
+  <canvas id="game" width="600" height="400" style="margin:auto;background:rgb(50,50,50)"></canvas>
+  <script id="code">
+    // initialize the game and setup the canvas
+    let { canvas, context, pointer } = kontra.init();
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerWidth;
+
+    kontra.initPointer();
+
+    // create a sprites
+    const size = canvas.width / 6;
+    window.sprites = [];
+    for (let x = 0; x < canvas.width; x += size) {
+      for (let y = 0; y < canvas.height; y += size) {
+        window.sprites.push(
+          kontra.Sprite({
+            x: x,
+            y: y,
+            width: size,
+            height: size,
+            color: 'hsl(0,0%,25%)',
+            hue: 50,
+            saturation: 50,
+            lightness: 50,
+            update: function() {
+              this.saturation -= this.saturation / 10;
+              this.lightness += (25 - this.lightness) / 10;
+              this.color = `hsl(${this.hue},${this.saturation}%,${this.lightness}%)`;
+            },
+            // change color of sprite on events
+            onDown: function() { // Blue onDown
+              this.hue = 240;
+              this.saturation = 100;
+              this.lightness = 50;
+            },
+            onOver: function() { // Green onOver
+              this.hue = 120;
+              this.saturation = 100;
+              this.lightness = 25;
+            },
+            onUp: function() { // Red onUp
+              this.hue = 0;
+              this.saturation = 100;
+              this.lightness = 50;
+            }
+          })
+        );
+      }
+    }
+
+    // render and track pointer events on the sprite
+    sprites.map(sprite => sprite.render());
+    kontra.track(sprites);
+
+    // create the game loop to update and render the sprite
+    const fontSize = 32;
+    context.font = fontSize + "px Arial";
+    context.textAlign = "center";
+    window.loop = kontra.GameLoop({
+      update: function() {
+        sprites.map(sprite => sprite.update());
+      },
+      render: function() {
+        sprites.map(sprite => sprite.render());
+        context.fillStyle = "#fff";
+        context.fillText("Drag Your Fingers All Over", canvas.width / 2, fontSize * 2);
+
+        context.fillStyle = "aqua";
+        for (let i = 0; i < kontra.pointer.touches.length; i++) {
+          const touch = kontra.pointer.touches[i];
+          context.fillText(
+            touch.identifier,
+            touch.clientX,
+            touch.clientY - 200
+          );
+        }
+      }
+    });
+
+    // start the loop
+    loop.start();
+  </script>
+  <script src="../prism/codeOutput.js"></script>
+</body>
+</html>

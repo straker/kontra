@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Pointer</title>
+  <script src="../../kontra.js"></script>
+</head>
+<body style="margin:0;background:rgb(50,50,50);overflow-x:hidden">
+  <canvas id="game" width="600" height="400" style="margin:auto;background:rgb(50,50,50)"></canvas>
+  <script id="code">
+    // initialize the game and setup the canvas
+    let { canvas, context } = kontra.init();
+    const { Pool, Sprite, pointer, pointerPressed, onPointerDown } = kontra;
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerWidth;
+
+    let debugText = "";
+    function log(e) {
+      debugText = e;
+      console.error(e);
+    }
+
+    kontra.initPointer();
+    let pool = new Pool({
+      maxSize: 20,
+      create: function() {
+        return new Sprite({
+          update: function() {
+            this.spin += Math.PI / 64;
+            if (this.mode === "PULL") {
+              if (this.touchID === -1) {
+                this.x = pointer.x;
+                this.y = pointer.y;
+                if (pointerPressed("left")) {
+                  return;
+                }
+              } else if (typeof pointer.touches[this.touchID] !== "undefined") {
+                const touch = pointer.touches[this.touchID];
+                this.x = touch.x;
+                this.y = touch.y;
+                return;
+              }
+              this.mode = "SHOOT";
+              this.velocity.x = (this.startX - this.x) / 6;
+              this.velocity.y = (this.startY - this.y) / 6;
+              if (this.velocity.x === 0 && this.velocity.y === 0) {
+                this.ttl = 0;
+              }
+            }
+            if (
+              this.x < -100 ||
+              this.y < -100 ||
+              this.x > canvas.width + 100 ||
+              this.y > canvas.height + 100
+            ) {
+              this.ttl = 0;
+            }
+            this.advance();
+          },
+          render: function() {
+            if (this.mode === "PULL") {
+              context.beginPath();
+              context.moveTo(this.startX, this.startY);
+              context.lineTo(this.x, this.y);
+              context.stroke();
+              context.closePath();
+              context.fillRect(this.startX - 4, this.startY - 4, 9, 9);
+              context.strokeRect(this.startX - 4, this.startY - 4, 9, 9);
+              context.fillStyle = "#fff";
+              context.font = "32px Arial";
+              context.textAlign = "center";
+              context.fillText(this.touchID, this.startX, this.startY - 12);
+            }
+            context.fillStyle = "#000";
+            context.save();
+            context.translate(this.x, this.y);
+            context.rotate(this.spin);
+            context.fillRect(-75, -75, 150, 150);
+            context.strokeRect(-75, -75, 150, 150);
+            context.restore();
+          }
+        });
+      }
+    });
+
+    // create a sprites
+    onPointerDown(function(evt) {
+      try {
+        if (pointer.touches) {
+          console.log(JSON.stringify(pointer.touches));
+          for (let id in pointer.touches) {
+            const touch = pointer.touches[id];
+            if (touch.changed) {
+              pool.get({
+                startX: touch.x,
+                startY: touch.y,
+                touchID: touch.id,
+                mode: "PULL",
+                spin: 0,
+                ttl: Infinity
+              });
+              break;
+            }
+          }
+        } else {
+          pool.get({
+            startX: pointer.x,
+            startY: pointer.y,
+            touchID: -1,
+            mode: "PULL",
+            spin: 0,
+            ttl: Infinity
+          });
+        }
+      } catch(e) {
+        log(e, JSON.stringify(pointer.touches));
+      }
+    });
+
+    // create the game loop to update and render the sprite
+    window.loop = kontra.GameLoop({
+      update: function(dt) {
+        pool.update(dt);
+      },
+      render: function() {
+        context.fillStyle = "#000";
+        context.fillRect(0, 0, canvas.width,  canvas.height);
+        context.strokeStyle = "#ff5";
+        context.lineWidth = 5;
+
+        pool.render();
+
+        context.fillStyle = "#fff";
+        context.font = "24px Arial";
+        context.textAlign = "center";
+        context.fillText(debugText, canvas.width / 2, 28);
+      }
+    });
+
+    // start the loop
+    loop.start();
+  </script>
+  <script src="../prism/codeOutput.js"></script>
+</body>
+</html>

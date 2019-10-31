@@ -974,8 +974,8 @@ class CustomSprite extends Sprite.class {
             </a>
           </h2>
 
-          <p>Move the sprite by its acceleration and velocity. If the sprite is an <a href="api/sprite/#animation-sprite">animation sprite</a>, it also advances the animation every frame.</p>
-<p>If you override the sprites <a href="api/sprite/#update">update()</a> function with your own update function, you can call this function to move the sprite normally.</p>
+          <p>Move the sprite by its acceleration and velocity. If the sprite is an <a href="api/sprite#animation-sprite">animation sprite</a>, it also advances the animation every frame.</p>
+<p>If you override the sprites <a href="api/sprite#update">update()</a> function with your own update function, you can call this function to move the sprite normally.</p>
 <div class="tablist">
   <ul role="tablist">
     <li role="presentation" data-tab="global">
@@ -1233,7 +1233,7 @@ sprite.render();
             </a>
           </h2>
 
-          <p>An object of <a href="api/animation">Animations</a> from a <a href="api/spriteSheet">SpriteSheet</a> to animate the sprite. Each animation is named so that it can can be used by name for the sprites <a href="api/sprite/#playAnimation">playAnimation()</a> function.</p>
+          <p>An object of <a href="api/animation">Animations</a> from a <a href="api/spriteSheet">SpriteSheet</a> to animate the sprite. Each animation is named so that it can can be used by name for the sprites <a href="api/sprite#playAnimation">playAnimation()</a> function.</p>
 <div class="tablist">
   <ul role="tablist">
     <li role="presentation" data-tab="global">
@@ -1379,7 +1379,7 @@ sprite.playAnimation(&#39;idle&#39;);</code></pre></section>
             </a>
           </h2>
 
-          <p>Draw the sprite at its X and Y position. This function changes based on the type of the sprite. For a <a href="api/sprite/#rectangle-sprite">rectangle sprite</a>, it uses <code>context.fillRect()</code>, for an <a href="api/sprite/#image-sprite">image sprite</a> it uses <code>context.drawImage()</code>, and for an <a href="api/sprite/#animation-sprite">animation sprite</a> it uses the <a href="api/sprite/#currentAnimation">currentAnimation</a> <code>render()</code> function.</p>
+          <p>Draw the sprite at its X and Y position. This function changes based on the type of the sprite. For a <a href="api/sprite#rectangle-sprite">rectangle sprite</a>, it uses <code>context.fillRect()</code>, for an <a href="api/sprite#image-sprite">image sprite</a> it uses <code>context.drawImage()</code>, and for an <a href="api/sprite#animation-sprite">animation sprite</a> it uses the <a href="api/sprite#currentAnimation">currentAnimation</a> <code>render()</code> function.</p>
 <p>If you override the sprites <code>render()</code> function with your own render function, you can call this function to draw the sprite normally.</p>
 <div class="tablist">
   <ul role="tablist">
@@ -1490,7 +1490,7 @@ sprite.render();</code></pre></section>
             </a>
           </h2>
 
-          <p>The height of the sprite. If the sprite is a <a href="api/sprite/#rectangle-sprite">rectangle sprite</a>, it uses the passed in value. For an <a href="api/sprite/#image-sprite">image sprite</a> it is the height of the image. And for an <a href="api/sprite/#animation-sprite">animation sprite</a> it is the height of a single frame of the animation.</p>
+          <p>The height of the sprite. If the sprite is a <a href="api/sprite#rectangle-sprite">rectangle sprite</a>, it uses the passed in value. For an <a href="api/sprite#image-sprite">image sprite</a> it is the height of the image. And for an <a href="api/sprite#animation-sprite">animation sprite</a> it is the height of a single frame of the animation.</p>
 <p>Setting the value to a negative number will result in the sprite being flipped across the horizontal axis while the height will remain a positive value.</p>
           
         </section>
@@ -1536,7 +1536,7 @@ sprite.render();</code></pre></section>
           <p>Check if the sprite is alive. Primarily used by <a href="api/pool">Pool</a> to know when to recycle an object.</p>
           
           <h3><span class="visually-hidden">isAlive</span> Return value</h3>
-          <p><p><code>true</code> if the sprites <a href="api/sprite/#ttl">ttl</a> property is above <code>0</code>, <code>false</code> otherwise.</p>
+          <p><p><code>true</code> if the sprites <a href="api/sprite#ttl">ttl</a> property is above <code>0</code>, <code>false</code> otherwise.</p>
           </p>
         </section>
         <section>
@@ -1655,7 +1655,7 @@ sprite.playAnimation(&#39;idle&#39;);</code></pre></section>
             </a>
           </h2>
 
-          <p>Render the sprite. Calls the sprites <a href="api/sprite/#draw">draw()</a> function.</p>
+          <p>Render the sprite. Calls the sprites <a href="api/sprite#draw">draw()</a> function.</p>
           
         </section>
         <section>
@@ -1763,7 +1763,7 @@ sprite.playAnimation(&#39;idle&#39;);</code></pre></section>
             </a>
           </h2>
 
-          <p>The width of the sprite. If the sprite is a <a href="api/sprite/#rectangle-sprite">rectangle sprite</a>, it uses the passed in value. For an <a href="api/sprite/#image-sprite">image sprite</a> it is the width of the image. And for an <a href="api/sprite/#animation-sprite">animation sprite</a> it is the width of a single frame of the animation.</p>
+          <p>The width of the sprite. If the sprite is a <a href="api/sprite#rectangle-sprite">rectangle sprite</a>, it uses the passed in value. For an <a href="api/sprite#image-sprite">image sprite</a> it is the width of the image. And for an <a href="api/sprite#animation-sprite">animation sprite</a> it is the width of a single frame of the animation.</p>
 <p>Setting the value to a negative number will result in the sprite being flipped across the vertical axis while the width will remain a positive value.</p>
           
         </section>

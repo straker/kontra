@@ -208,21 +208,21 @@ class Animation {
     let { width, height, margin = 0 } = spriteSheet.frame;
 
     /**
-     * The width of an individual frame. Taken from the property of the same name in the [spriteSheet](api/animation/#spriteSheet).
+     * The width of an individual frame. Taken from the property of the same name in the [spriteSheet](api/animation#spriteSheet).
      * @memberof Animation
      * @property {Number} width
      */
     this.width = width;
 
     /**
-     * The height of an individual frame. Taken from the property of the same name in the [spriteSheet](api/animation/#spriteSheet).
+     * The height of an individual frame. Taken from the property of the same name in the [spriteSheet](api/animation#spriteSheet).
      * @memberof Animation
      * @property {Number} height
      */
     this.height = height;
 
     /**
-     * The space between each frame. Taken from the property of the same name in the [spriteSheet](api/animation/#spriteSheet).
+     * The space between each frame. Taken from the property of the same name in the [spriteSheet](api/animation#spriteSheet).
      * @memberof Animation
      * @property {Number} margin
      */
@@ -417,7 +417,7 @@ function getCanPlay(audio) {
 }
 
 /**
- * Object of all loaded image assets by both file name and path. If the base [image path](api/assets/#setImagePath) was set before the image was loaded, the file name and path will not include the base image path.
+ * Object of all loaded image assets by both file name and path. If the base [image path](api/assets#setImagePath) was set before the image was loaded, the file name and path will not include the base image path.
  *
  * ```js
  * import { load, setImagePath, imageAssets } from 'kontra';
@@ -440,7 +440,7 @@ function getCanPlay(audio) {
 let imageAssets = {};
 
 /**
- * Object of all loaded audio assets by both file name and path. If the base [audio path](api/assets/#setAudioPath) was set before the audio was loaded, the file name and path will not include the base audio path.
+ * Object of all loaded audio assets by both file name and path. If the base [audio path](api/assets#setAudioPath) was set before the audio was loaded, the file name and path will not include the base audio path.
  *
  * ```js
  * import { load, setAudioPath, audioAssets } from 'kontra';
@@ -463,7 +463,7 @@ let imageAssets = {};
 let audioAssets = {};
 
 /**
- * Object of all loaded data assets by both file name and path. If the base [data path](api/assets/#setDataPath) was set before the data was loaded, the file name and path will not include the base data path.
+ * Object of all loaded data assets by both file name and path. If the base [data path](api/assets#setDataPath) was set before the data was loaded, the file name and path will not include the base data path.
  *
  * ```js
  * import { load, setDataPath, dataAssets } from 'kontra';
@@ -553,9 +553,9 @@ function setDataPath(path) {
 }
 
 /**
- * Load a single Image asset. Uses the base [image path](api/assets/#setImagePath) to resolve the URL.
+ * Load a single Image asset. Uses the base [image path](api/assets#setImagePath) to resolve the URL.
  *
- * Once loaded, the asset will be accessible on the the [imageAssets](api/assets/#imageAssets) property.
+ * Once loaded, the asset will be accessible on the the [imageAssets](api/assets#imageAssets) property.
  *
  * ```js
  * import { loadImage } from 'kontra';
@@ -597,9 +597,9 @@ function loadImage(url) {
 }
 
 /**
- * Load a single Audio asset. Supports loading multiple audio formats which the loader will use to load the first audio format supported by the browser in the order listed. Uses the base [audio path](api/assets/#setAudioPath) to resolve the URL.
+ * Load a single Audio asset. Supports loading multiple audio formats which the loader will use to load the first audio format supported by the browser in the order listed. Uses the base [audio path](api/assets#setAudioPath) to resolve the URL.
  *
- * Once loaded, the asset will be accessible on the the [audioAssets](api/assets/#audioAssets) property. Since the loader determines which audio asset to load based on browser support, you should only reference the audio by its name and not by its file path since there's no guarantee which asset was loaded.
+ * Once loaded, the asset will be accessible on the the [audioAssets](api/assets#audioAssets) property. Since the loader determines which audio asset to load based on browser support, you should only reference the audio by its name and not by its file path since there's no guarantee which asset was loaded.
  *
  * ```js
  * import { loadAudio, audioAssets } from 'kontra';
@@ -659,9 +659,9 @@ function loadAudio(url) {
 }
 
 /**
- * Load a single Data asset. Uses the base [data path](api/assets/#setDataPath) to resolve the URL.
+ * Load a single Data asset. Uses the base [data path](api/assets#setDataPath) to resolve the URL.
  *
- * Once loaded, the asset will be accessible on the the [dataAssets](api/assets/#dataAssets) property.
+ * Once loaded, the asset will be accessible on the the [dataAssets](api/assets#dataAssets) property.
  *
  * ```js
  * import { loadData } from 'kontra';
@@ -699,7 +699,7 @@ function loadData(url) {
 }
 
 /**
- * Load Image, Audio, or data files. Uses the [loadImage](api/assets/#loadImage), [loadAudio](api/assets/#loadAudio), and [loadData](api/assets/#loadData) functions to load each asset type.
+ * Load Image, Audio, or data files. Uses the [loadImage](api/assets#loadImage), [loadAudio](api/assets#loadAudio), and [loadData](api/assets#loadData) functions to load each asset type.
  *
  * ```js
  * import { load } from 'kontra';
@@ -935,7 +935,7 @@ function GameLoop({fps = 60, clearCanvas = true, update, render} = {}) {
  */
 
 /**
- * Below is a list of keys that are provided by default. If you need to extend this list, you can use the [keyMap](api/keyboard/#keyMap) property.
+ * Below is a list of keys that are provided by default. If you need to extend this list, you can use the [keyMap](api/keyboard#keyMap) property.
  *
  * - a-z
  * - 0-9
@@ -947,7 +947,7 @@ let callbacks$1 = {};
 let pressedKeys = {};
 
 /**
- * A map of keycodes to key names. Add to this object to expand the list of [available keys](api/keyboard/#available-keys).
+ * A map of keycodes to key names. Add to this object to expand the list of [available keys](api/keyboard#available-keys).
  *
  * ```js
  * import { keyMap, bindKeys } from 'kontra';
@@ -962,6 +962,14 @@ let pressedKeys = {};
  */
 let keyMap = {
   // named keys
+  'Enter': 'enter',
+  'Escape': 'esc',
+  'Space': 'space',
+  'ArrowLeft': 'left',
+  'ArrowUp': 'up',
+  'ArrowRight': 'right',
+  'ArrowDown': 'down',
+  // for Edge compatibility
   13: 'enter',
   27: 'esc',
   32: 'space',
@@ -977,7 +985,7 @@ let keyMap = {
  * @param {KeyboardEvent} evt
  */
 function keydownEventHandler(evt) {
-  let key = keyMap[evt.which];
+  let key = keyMap[evt.code || evt.which];
   pressedKeys[key] = true;
 
   if (callbacks$1[key]) {
@@ -991,7 +999,7 @@ function keydownEventHandler(evt) {
  * @param {KeyboardEvent} evt
  */
 function keyupEventHandler(evt) {
-  pressedKeys[ keyMap[evt.which] ] = false;
+  pressedKeys[ keyMap[evt.code || evt.which] ] = false;
 }
 
 /**
@@ -1013,13 +1021,12 @@ function initKeys() {
   for (i = 0; i < 26; i++) {
     // rollupjs considers this a side-effect (for now), so we'll do it in the
     // initKeys function
-    // @see https://twitter.com/lukastaegert/status/1107011988515893249?s=20
-    keyMap[65+i] = (10 + i).toString(36);
+    keyMap[i + 65] = keyMap['Key' + String.fromCharCode(i + 65)] = String.fromCharCode(i + 97);
   }
 
   // numeric keys
   for (i = 0; i < 10; i++) {
-    keyMap[48+i] = ''+i;
+    keyMap[48+i] = keyMap['Digit'+i] = ''+i;
   }
 
   window.addEventListener('keydown', keydownEventHandler);
@@ -1372,7 +1379,9 @@ let pointer = {
  *
  * @param {Object} object - Object to check collision against.
  */
-function circleRectCollision(object) {
+function circleRectCollision(object, _pntr) {
+  const pntr = _pntr || pointer;
+
   let x = object.x;
   let y = object.y;
   if (object.anchor) {
@@ -1380,9 +1389,9 @@ function circleRectCollision(object) {
     y -= object.height * object.anchor.y;
   }
 
-  let dx = pointer.x - Math.max(x, Math.min(pointer.x, x + object.width));
-  let dy = pointer.y - Math.max(y, Math.min(pointer.y, y + object.height));
-  return (dx * dx + dy * dy) < (pointer.radius * pointer.radius);
+  let dx = pntr.x - Math.max(x, Math.min(pntr.x, x + object.width));
+  let dy = pntr.y - Math.max(y, Math.min(pntr.y, y + object.height));
+  return (dx * dx + dy * dy) < (pntr.radius * pntr.radius);
 }
 
 /**
@@ -1390,7 +1399,8 @@ function circleRectCollision(object) {
  *
  * @returns {Object} First object to collide with the pointer.
  */
-function getCurrentObject() {
+function getCurrentObject(_pntr) {
+  const pntr = _pntr || pointer;
 
   // if pointer events are required on the very first frame or without a game
   // loop, use the current frame order array
@@ -1402,10 +1412,10 @@ function getCurrentObject() {
     object = frameOrder[i];
 
     if (object.collidesWithPointer) {
-      collides = object.collidesWithPointer(pointer);
+      collides = object.collidesWithPointer(pntr);
     }
     else {
-      collides = circleRectCollision(object);
+      collides = circleRectCollision(object, pntr);
     }
 
     if (collides) {
@@ -1466,31 +1476,66 @@ function pointerHandler(evt, eventName) {
   if (!canvas) return;
 
   let clientX, clientY;
+  let ratio = canvas.height / canvas.offsetHeight;
+  let rect = canvas.getBoundingClientRect();
 
-  if (['touchstart', 'touchmove', 'touchend'].indexOf(evt.type) !== -1) {
-    clientX = (evt.touches[0] || evt.changedTouches[0]).clientX;
-    clientY = (evt.touches[0] || evt.changedTouches[0]).clientY;
+  let isTouchEvent = ['touchstart', 'touchmove', 'touchend'].indexOf(evt.type) !== -1;
+  if (isTouchEvent) {
+    // Update pointer.touches
+    pointer.touches = {};
+    for (var i = 0; i < evt.touches.length; i++) {
+      pointer.touches[evt.touches[i].identifier] = {
+        id: evt.touches[i].identifier,
+        x: (evt.touches[i].clientX - rect.left) * ratio,
+        y: (evt.touches[i].clientY - rect.top) * ratio,
+        changed: false
+      };
+    }
+    // Handle all touches
+    for (var i = evt.changedTouches.length; i--;) {
+      const id = evt.changedTouches[i].identifier;
+      if (typeof pointer.touches[id] !== "undefined") {
+        pointer.touches[id].changed = true;
+      }
+
+      clientX = evt.changedTouches[i].clientX; // Save for later
+      clientY = evt.changedTouches[i].clientY;
+
+      // Trigger events
+      let object = getCurrentObject({
+        id,
+        x: (clientX - rect.left) * ratio,
+        y: (clientY - rect.top) * ratio,
+        radius: pointer.radius // only for collision
+      });
+
+      if (object && object[eventName]) {
+        object[eventName](evt);
+      }
+
+      if (callbacks$2[eventName]) {
+        callbacks$2[eventName](evt, object);
+      }
+    }
   } else {
     clientX = evt.clientX;
     clientY = evt.clientY;
   }
 
-  let ratio = canvas.height / canvas.offsetHeight;
-  let rect = canvas.getBoundingClientRect();
-  let x = (clientX - rect.left) * ratio;
-  let y = (clientY - rect.top) * ratio;
-
-  pointer.x = x;
-  pointer.y = y;
+  pointer.x = (clientX - rect.left) * ratio;
+  pointer.y = (clientY - rect.top) * ratio;
 
   evt.preventDefault();
-  let object = getCurrentObject();
-  if (object && object[eventName]) {
-    object[eventName](evt);
-  }
 
-  if (callbacks$2[eventName]) {
-    callbacks$2[eventName](evt, object);
+  if (!isTouchEvent) { // Prevent double touch event
+    let object = getCurrentObject();
+    if (object && object[eventName]) {
+      object[eventName](evt);
+    }
+
+    if (callbacks$2[eventName]) {
+      callbacks$2[eventName](evt, object);
+    }
   }
 }
 
@@ -1505,6 +1550,7 @@ function initPointer() {
   canvas.addEventListener('touchstart', pointerDownHandler);
   canvas.addEventListener('mouseup', pointerUpHandler);
   canvas.addEventListener('touchend', pointerUpHandler);
+  canvas.addEventListener('touchcancel', pointerUpHandler);
   canvas.addEventListener('blur', blurEventHandler$1);
   canvas.addEventListener('mousemove', mouseMoveHandler);
   canvas.addEventListener('touchmove', mouseMoveHandler);
@@ -1724,9 +1770,8 @@ class Pool {
     }
     // @endif
 
-    // c = create, i = inUse
+    // c = create
     this._c = create;
-    this._i = 0;
 
     /**
      * All objects currently in the pool, both alive and not alive.
@@ -1740,7 +1785,7 @@ class Pool {
      * @memberof Pool
      * @property {Number} size
      */
-    this.size = 1;
+    this.size = 0;
 
     /**
      * The maximum number of objects allowed in the pool. The pool will never grow beyond this size.
@@ -1779,26 +1824,23 @@ class Pool {
    */
   get(properties = {}) {
     // the pool is out of objects if the first object is in use and it can't grow
-    if (this.objects.length == this._i) {
+    if (this.size === this.objects.length) {
       if (this.size === this.maxSize) {
         return;
       }
-      // double the size of the array by filling it with twice as many objects
+      // double the size of the array by adding twice as many new objects to the end
       else {
-        for (let x = 0; x < this.size && this.objects.length < this.maxSize; x++) {
-          this.objects.unshift(this._c());
+        for (let i = 0; i < this.size && this.objects.length < this.maxSize; i++) {
+          this.objects.push(this._c());
         }
-
-        this.size = this.objects.length;
       }
     }
 
     // save off first object in pool to reassign to last object after unshift
-    let obj = this.objects.shift();
+    let obj = this.objects[this.size];
+    this.size++;
     obj.init(properties);
-    this.objects.push(obj);
-    this._i++;
-    return obj
+    return obj;
   }
 
   /**
@@ -1809,17 +1851,16 @@ class Pool {
    * @returns {Object[]} An Array of all alive objects.
    */
   getAliveObjects() {
-    return this.objects.slice(this.objects.length - this._i);
+    return this.objects.slice(0, this.size);
   }
 
   /**
-   * Clear the object pool. Removes all objects from the pool and resets its [size](api/pool/#size) to 1.
+   * Clear the object pool. Removes all objects from the pool and resets its [size](api/pool#size) to 1.
    * @memberof Pool
    * @function clear
    */
   clear() {
-    this._i = this.objects.length = 0;
-    this.size = 1;
+    this.size = this.objects.length = 0;
     this.objects.push(this._c());
   }
 
@@ -1831,34 +1872,21 @@ class Pool {
    * @param {Number} [dt] - Time since last update.
    */
   update(dt) {
-    let i = this.size - 1;
     let obj;
-
-    // If the user kills an object outside of the update cycle, the pool won't know of
-    // the change until the next update and this._i won't be decremented. If the user then
-    // gets an object when this._i is the same size as objects.length, this._i will increment
-    // and this statement will evaluate to -1.
-    //
-    // I don't like having to go through the pool to kill an object as it forces you to
-    // know which object came from which pool. Instead, we'll just prevent the index from
-    // going below 0 and accept the fact that this._i may be out of sync for a frame.
-    let index = Math.max(this.objects.length - this._i, 0);
-
-    // only iterate over the objects that are alive
-    while (i >= index) {
+    let doSort = false;
+    for (let i = this.size; i--; ) {
       obj = this.objects[i];
 
       obj.update(dt);
 
-      // if the object is dead, move it to the front of the pool
       if (!obj.isAlive()) {
-        this.objects = this.objects.splice(i, 1).concat(this.objects);
-        this._i--;
-        index++;
+        doSort = true;
+        this.size--;
       }
-      else {
-        i--;
-      }
+    }
+    // sort all dead elements to the end of the pool
+    if (doSort) {
+      this.objects.sort((a, b) => b.isAlive() - a.isAlive());
     }
   }
 
@@ -1868,14 +1896,11 @@ class Pool {
    * @function render
    */
   render() {
-    let index = Math.max(this.objects.length - this._i, 0);
-
-    for (let i = this.size - 1; i >= index; i--) {
+    for (let i = this.size; i--; ) {
       this.objects[i].render();
     }
   }
 }
-
 
 function poolFactory(properties) {
   return new Pool(properties);
@@ -2559,7 +2584,7 @@ class Sprite {
   }
 
   /**
-   * An object of [Animations](api/animation) from a kontra.SpriteSheet to animate the sprite. Each animation is named so that it can can be used by name for the sprites [playAnimation()](api/sprite/#playAnimation) function.
+   * An object of [Animations](api/animation) from a kontra.SpriteSheet to animate the sprite. Each animation is named so that it can can be used by name for the sprites [playAnimation()](api/sprite#playAnimation) function.
    *
    * ```js
    * import { Sprite, SpriteSheet } from 'kontra';
@@ -2611,7 +2636,7 @@ class Sprite {
   }
 
   /**
-   * The width of the sprite. If the sprite is a [rectangle sprite](api/sprite/#rectangle-sprite), it uses the passed in value. For an [image sprite](api/sprite/#image-sprite) it is the width of the image. And for an [animation sprite](api/sprite/#animation-sprite) it is the width of a single frame of the animation.
+   * The width of the sprite. If the sprite is a [rectangle sprite](api/sprite#rectangle-sprite), it uses the passed in value. For an [image sprite](api/sprite#image-sprite) it is the width of the image. And for an [animation sprite](api/sprite#animation-sprite) it is the width of a single frame of the animation.
    *
    * Setting the value to a negative number will result in the sprite being flipped across the vertical axis while the width will remain a positive value.
    * @memberof Sprite
@@ -2622,7 +2647,7 @@ class Sprite {
   }
 
   /**
-   * The height of the sprite. If the sprite is a [rectangle sprite](api/sprite/#rectangle-sprite), it uses the passed in value. For an [image sprite](api/sprite/#image-sprite) it is the height of the image. And for an [animation sprite](api/sprite/#animation-sprite) it is the height of a single frame of the animation.
+   * The height of the sprite. If the sprite is a [rectangle sprite](api/sprite#rectangle-sprite), it uses the passed in value. For an [image sprite](api/sprite#image-sprite) it is the height of the image. And for an [animation sprite](api/sprite#animation-sprite) it is the height of a single frame of the animation.
    *
    * Setting the value to a negative number will result in the sprite being flipped across the horizontal axis while the height will remain a positive value.
    * @memberof Sprite
@@ -2700,7 +2725,7 @@ class Sprite {
    * @memberof Sprite
    * @function isAlive
    *
-   * @returns {Boolean} `true` if the sprites [ttl](api/sprite/#ttl) property is above `0`, `false` otherwise.
+   * @returns {Boolean} `true` if the sprites [ttl](api/sprite#ttl) property is above `0`, `false` otherwise.
    */
   isAlive() {
     return this.ttl > 0;
@@ -2718,7 +2743,7 @@ class Sprite {
   }
 
   /**
-   * Render the sprite. Calls the sprites [draw()](api/sprite/#draw) function.
+   * Render the sprite. Calls the sprites [draw()](api/sprite#draw) function.
    * @memberof Sprite
    * @function render
    */
@@ -2766,9 +2791,9 @@ class Sprite {
   }
 
   /**
-   * Move the sprite by its acceleration and velocity. If the sprite is an [animation sprite](api/sprite/#animation-sprite), it also advances the animation every frame.
+   * Move the sprite by its acceleration and velocity. If the sprite is an [animation sprite](api/sprite#animation-sprite), it also advances the animation every frame.
    *
-   * If you override the sprites [update()](api/sprite/#update) function with your own update function, you can call this function to move the sprite normally.
+   * If you override the sprites [update()](api/sprite#update) function with your own update function, you can call this function to move the sprite normally.
    *
    * ```js
    * import { Sprite } from 'kontra';
@@ -2814,7 +2839,7 @@ class Sprite {
   }
 
   /**
-   * Draw the sprite at its X and Y position. This function changes based on the type of the sprite. For a [rectangle sprite](api/sprite/#rectangle-sprite), it uses `context.fillRect()`, for an [image sprite](api/sprite/#image-sprite) it uses `context.drawImage()`, and for an [animation sprite](api/sprite/#animation-sprite) it uses the [currentAnimation](api/sprite/#currentAnimation) `render()` function.
+   * Draw the sprite at its X and Y position. This function changes based on the type of the sprite. For a [rectangle sprite](api/sprite#rectangle-sprite), it uses `context.fillRect()`, for an [image sprite](api/sprite#image-sprite) it uses `context.drawImage()`, and for an [animation sprite](api/sprite#animation-sprite) it uses the [currentAnimation](api/sprite#currentAnimation) `render()` function.
    *
    * If you override the sprites `render()` function with your own render function, you can call this function to draw the sprite normally.
    *
@@ -2937,7 +2962,7 @@ function parseFrames(consecutiveFrames) {
 }
 
 /**
- * A sprite sheet to animate a sequence of images. Used to create [animation sprites](api/sprite/#animation-sprite).
+ * A sprite sheet to animate a sequence of images. Used to create [animation sprites](api/sprite#animation-sprite).
  *
  * <figure>
  *   <a href="assets/imgs/character_walk_sheet.png">
@@ -2983,7 +3008,7 @@ function parseFrames(consecutiveFrames) {
  * @param {Number} properties.frameWidth - The width of a single frame.
  * @param {Number} properties.frameHeight - The height of a single frame.
  * @param {Number} [properties.frameMargin=0] - The amount of whitespace between each frame.
- * @param {Object} [properties.animations] - Animations to create from the sprite sheet using kontra.Animation. Passed directly into the sprite sheets [createAnimations()](api/spriteSheet/#createAnimations) function.
+ * @param {Object} [properties.animations] - Animations to create from the sprite sheet using kontra.Animation. Passed directly into the sprite sheets [createAnimations()](api/spriteSheet#createAnimations) function.
  */
 class SpriteSheet {
   constructor({image, frameWidth, frameHeight, frameMargin, animations} = {}) {
@@ -2994,7 +3019,7 @@ class SpriteSheet {
     // @endif
 
     /**
-     * An object of named kontra.Animation objects. Typically you pass this object into kontra.Sprite to create an [animation sprites](api/spriteSheet/#animation-sprite).
+     * An object of named kontra.Animation objects. Typically you pass this object into kontra.Sprite to create an [animation sprites](api/spriteSheet#animation-sprite).
      * @memberof SpriteSheet
      * @property {Object} animations
      */
@@ -3193,11 +3218,11 @@ function getStoreItem(key) {
  *
  * @param {Object[]} properties.tilesets - Array of tileset objects.
  * @param {Number} properties.tilesetN.firstgid - First tile index of the tileset. The first tileset will have a firstgid of 1 as 0 represents an empty tile.
- * @param {String|HTMLImageElement} properties.tilesetN.image - Relative path to the HTMLImageElement or an HTMLImageElement. If passing a relative path, the image file must have been [loaded](api/assets/#load) first.
+ * @param {String|HTMLImageElement} properties.tilesetN.image - Relative path to the HTMLImageElement or an HTMLImageElement. If passing a relative path, the image file must have been [loaded](api/assets#load) first.
  * @param {Number} [properties.tilesetN.margin=0] - The amount of whitespace between each tile (in pixels).
  * @param {Number} [properties.tilesetN.tilewidth] - Width of the tileset (in pixels). Defaults to properties.tilewidth.
  * @param {Number} [properties.tilesetN.tileheight] - Height of the tileset (in pixels). Defaults to properties.tileheight.
- * @param {String} [properties.tilesetN.source] - Relative path to the source JSON file. The source JSON file must have been [loaded](api/assets/#load) first.
+ * @param {String} [properties.tilesetN.source] - Relative path to the source JSON file. The source JSON file must have been [loaded](api/assets#load) first.
  * @param {Number} [properties.tilesetN.columns] - Number of columns in the tileset image.
  *
  * @param {Object[]} properties.layers - Array of layer objects.
@@ -3371,6 +3396,12 @@ function TileEngine(properties = {}) {
         tileEngine._r(layer, canvas.getContext('2d'));
       }
 
+      if (layer._d) {
+        layer._d = false;
+        canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+        tileEngine._r(layer, canvas.getContext('2d'));
+      }
+
       render(canvas);
     },
 
@@ -3528,7 +3559,7 @@ function TileEngine(properties = {}) {
       let col = position.col || getCol(position.x);
 
       if (layerMap[name]) {
-        this._d = true;
+        layerMap[name]._d = true;
         layerMap[name].data[col + row * tileEngine.width] = tile;
       }
     },
@@ -3569,7 +3600,7 @@ function TileEngine(properties = {}) {
     */
     setLayer(name, data) {
       if (layerMap[name]) {
-        this._d = true;
+        layerMap[name]._d = true;
         layerMap[name].data = data;
       }
     },
@@ -3609,7 +3640,8 @@ function TileEngine(properties = {}) {
     _p: prerender,
 
     // @if DEBUG
-    layerCanvases: layerCanvases
+    layerCanvases: layerCanvases,
+    layerMap: layerMap
     // @endif
   }, properties);
 
@@ -3740,6 +3772,7 @@ function TileEngine(properties = {}) {
   function prerender() {
     if (tileEngine.layers) {
       tileEngine.layers.map(layer => {
+        layer._d = false;
         layerMap[layer.name] = layer;
 
         if (layer.visible !== false) {

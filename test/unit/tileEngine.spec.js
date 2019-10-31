@@ -284,9 +284,9 @@ describe('tileEngine', () => {
     });
 
     it('should set the dirty flag', () => {
-      expect(tileEngine._d).to.equal(false);
+      expect(tileEngine.layerMap.test._d).to.equal(false);
       tileEngine.setTileAtLayer('test', {row: 1, col: 2}, 3);
-      expect(tileEngine._d).to.equal(true);
+      expect(tileEngine.layerMap.test._d).to.equal(true);
     });
 
   });
@@ -335,9 +335,9 @@ describe('tileEngine', () => {
     });
 
     it("should set the dirty flag", () => {
-      expect(tileEngine._d).to.equal(false);
+      expect(tileEngine.layerMap.test._d).to.equal(false);
       tileEngine.setLayer("test", [1, 1, 0, 1]);
-      expect(tileEngine._d).to.equal(true);
+      expect(tileEngine.layerMap.test._d).to.equal(true);
     });
   });
   
@@ -491,6 +491,34 @@ describe('tileEngine', () => {
       tileEngine.renderLayer('test');
 
       expect(called).to.be.ok;
+    });
+
+    it('calls render if the tile engine is dirty', () => {
+      let tileEngine = TileEngine({
+        tilewidth: 10,
+        tileheight: 10,
+        width: 50,
+        height: 50,
+        tilesets: [{
+          image: new Image()
+        }],
+        layers: [{
+          name: 'test',
+          data: [0,0,1,0,0]
+        }]
+      });
+
+      // Render once to create the canvas
+      tileEngine.renderLayer('test');
+
+      tileEngine.layerMap.test._d = true;
+      sinon.stub(tileEngine, '_r').callsFake(noop);
+
+      tileEngine.renderLayer('test');
+
+      expect(tileEngine._r.called).to.be.ok;
+
+      tileEngine._r.restore();
     });
 
   });

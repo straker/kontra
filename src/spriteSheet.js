@@ -40,7 +40,7 @@ function parseFrames(consecutiveFrames) {
 }
 
 /**
- * A sprite sheet to animate a sequence of images. Used to create [animation sprites](api/sprite/#animation-sprite).
+ * A sprite sheet to animate a sequence of images. Used to create [animation sprites](api/sprite#animation-sprite).
  *
  * <figure>
  *   <a href="assets/imgs/character_walk_sheet.png">
@@ -86,7 +86,7 @@ function parseFrames(consecutiveFrames) {
  * @param {Number} properties.frameWidth - The width of a single frame.
  * @param {Number} properties.frameHeight - The height of a single frame.
  * @param {Number} [properties.frameMargin=0] - The amount of whitespace between each frame.
- * @param {Object} [properties.animations] - Animations to create from the sprite sheet using kontra.Animation. Passed directly into the sprite sheets [createAnimations()](api/spriteSheet/#createAnimations) function.
+ * @param {Object} [properties.animations] - Animations to create from the sprite sheet using kontra.Animation. Passed directly into the sprite sheets [createAnimations()](api/spriteSheet#createAnimations) function.
  */
 class SpriteSheet {
   constructor({image, frameWidth, frameHeight, frameMargin, animations} = {}) {
@@ -97,7 +97,7 @@ class SpriteSheet {
     // @endif
 
     /**
-     * An object of named kontra.Animation objects. Typically you pass this object into kontra.Sprite to create an [animation sprites](api/spriteSheet/#animation-sprite).
+     * An object of named kontra.Animation objects. Typically you pass this object into kontra.Sprite to create an [animation sprites](api/spriteSheet#animation-sprite).
      * @memberof SpriteSheet
      * @property {Object} animations
      */

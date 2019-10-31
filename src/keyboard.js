@@ -18,7 +18,7 @@
  */
 
 /**
- * Below is a list of keys that are provided by default. If you need to extend this list, you can use the [keyMap](api/keyboard/#keyMap) property.
+ * Below is a list of keys that are provided by default. If you need to extend this list, you can use the [keyMap](api/keyboard#keyMap) property.
  *
  * - a-z
  * - 0-9
@@ -30,7 +30,7 @@ let callbacks = {};
 let pressedKeys = {};
 
 /**
- * A map of keycodes to key names. Add to this object to expand the list of [available keys](api/keyboard/#available-keys).
+ * A map of keycodes to key names. Add to this object to expand the list of [available keys](api/keyboard#available-keys).
  *
  * ```js
  * import { keyMap, bindKeys } from 'kontra';
@@ -45,6 +45,14 @@ let pressedKeys = {};
  */
 export let keyMap = {
   // named keys
+  'Enter': 'enter',
+  'Escape': 'esc',
+  'Space': 'space',
+  'ArrowLeft': 'left',
+  'ArrowUp': 'up',
+  'ArrowRight': 'right',
+  'ArrowDown': 'down',
+  // for Edge compatibility
   13: 'enter',
   27: 'esc',
   32: 'space',
@@ -60,7 +68,7 @@ export let keyMap = {
  * @param {KeyboardEvent} evt
  */
 function keydownEventHandler(evt) {
-  let key = keyMap[evt.which];
+  let key = keyMap[evt.code || evt.which];
   pressedKeys[key] = true;
 
   if (callbacks[key]) {
@@ -74,7 +82,7 @@ function keydownEventHandler(evt) {
  * @param {KeyboardEvent} evt
  */
 function keyupEventHandler(evt) {
-  pressedKeys[ keyMap[evt.which] ] = false;
+  pressedKeys[ keyMap[evt.code || evt.which] ] = false;
 }
 
 /**
@@ -96,13 +104,12 @@ export function initKeys() {
   for (i = 0; i < 26; i++) {
     // rollupjs considers this a side-effect (for now), so we'll do it in the
     // initKeys function
-    // @see https://twitter.com/lukastaegert/status/1107011988515893249?s=20
-    keyMap[65+i] = (10 + i).toString(36);
+    keyMap[i + 65] = keyMap['Key' + String.fromCharCode(i + 65)] = String.fromCharCode(i + 97);
   }
 
   // numeric keys
   for (i = 0; i < 10; i++) {
-    keyMap[48+i] = ''+i;
+    keyMap[48+i] = keyMap['Digit'+i] = ''+i;
   }
 
   window.addEventListener('keydown', keydownEventHandler);

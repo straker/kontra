@@ -10,6 +10,12 @@ A lightweight JavaScript gaming micro-library, optimized for js13kGames.
 
 All the documentation can be found on the [github page](https://straker.github.io/kontra/).
 
+## Supporting
+
+Kontra.js is made possible by users like you. Through helping find issues, opening pull requests, and [funding continuous development](https://www.patreon.com/straker), Kontra.js can continue to provide you with quality improvements and updates.
+
+When you become a Patron, you get access to behind the scenes development logs, the ability to vote on which features to work on next, and early access to development builds. 
+
 ## Contributing
 
 Please note that this project is released with a [Contributor Code of Conduct](CODE_OF_CONDUCT.md). By participating in this project you agree to abide by its terms.

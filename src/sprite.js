@@ -190,6 +190,11 @@ class Sprite {
     // @endif
 
     // @ifdef IMAGE
+    /**
+     * The image the sprite will use when drawn if passed as an argument.
+     * @memberof Sprite
+     * @property {Image|HTMLCanvasElement} image
+     */
     this.image = null;
     // @endif
 
@@ -203,6 +208,12 @@ class Sprite {
       this.height = (height !== undefined) ? height : image.height;
     }
     // @endif
+
+    /**
+     * The color of the sprite if it was passed as an argument.
+     * @memberof Sprite
+     * @property {String} color
+     */
   }
 
   // define getter and setter shortcut functions to make it easier to work with the
@@ -291,10 +302,20 @@ class Sprite {
   // @endif
 
   // @ifdef CAMERA
+  /**
+   * Readonly. X coordinate of where to draw the sprite. Typically the same value as the [position vector](api/sprite#position) unless the sprite has been [added to a tileEngine](api/tileEngine#addObject).
+   * @memberof Sprite
+   * @property {Number} viewX
+   */
   get viewX() {
     return this.x - this.sx;
   }
 
+  /**
+   * Readonly. Y coordinate of where to draw the sprite. Typically the same value as the [position vector](api/sprite#position) unless the sprite has been [added to a tileEngine](api/tileEngine#addObject).
+   * @memberof Sprite
+   * @property {Number} viewY
+   */
   get viewY() {
     return this.y - this.sy;
   }

@@ -292,7 +292,7 @@ class Quadtree {
 
       // d = depth, p = parent
       this._s[i]._d = this._d+1;
-      /* @if VISUAL_DEBUG */
+      /* @ifdef VISUAL_DEBUG */
       this._s[i]._p = this;
       /* @endif */
     }
@@ -301,7 +301,7 @@ class Quadtree {
   /**
    * Draw the quadtree. Useful for visual debugging.
    */
-   /* @if VISUAL_DEBUG **
+   /* @ifdef VISUAL_DEBUG **
    render() {
      // don't draw empty leaf nodes, always draw branch nodes and the first node
      if (this._o.length || this._d === 0 ||

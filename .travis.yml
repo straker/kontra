@@ -5,4 +5,5 @@ dist: trusty
 sudo: required
 addons:
   chrome: stable
+script: npm test && npm test-sprite
 after_script: "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"

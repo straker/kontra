@@ -8,6 +8,7 @@
   "scripts": {
     "test": "karma start --single-run",
     "test-watch": "karma start",
+    "test-sprite": "node test/spritePermutations",
     "build": "gulp build",
     "dist": "gulp dist"
   },
@@ -53,6 +54,7 @@
     "livingcss": "^6.0.2",
     "marked": "^0.7.0",
     "mocha": "^6.1.4",
+    "preprocess": "github:straker/preprocess",
     "rollup": "^1.6.0",
     "rollup-stream": "^1.24.1",
     "sinon": "^7.2.7",

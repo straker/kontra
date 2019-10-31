@@ -8,11 +8,16 @@ const rollup = require('rollup-stream');
 const source = require('vinyl-source-stream');
 require('./doc-tasks.js');
 
-// Enables/Disables visual debugging in Kontra
-const VISUAL_DEBUG = false;
-
-// Enables/Disables DEBUG mode in Kontra
-const DEBUG = false;
+const spriteContext = {
+  VELOCITY: true,
+  ACCELERATION: true,
+  ROTATION: true,
+  TTL: true,
+  ANCHOR: true,
+  CAMERA: true,
+  IMAGE: true,
+  ANIMATION: true
+};
 
 function buildIife() {
   return rollup({
@@ -35,7 +40,7 @@ function buildModule() {
 
 function distIife() {
   return gulp.src('kontra.js')
-    .pipe(preprocess({context: { DEBUG: DEBUG, VISUAL_DEBUG: VISUAL_DEBUG }}))
+    .pipe(preprocess(spriteContext))
     .pipe(plumber())
     .pipe(terser())
     .pipe(plumber.stop())
@@ -53,7 +58,7 @@ function distIife() {
 
 function distModule() {
   return gulp.src('kontra.mjs')
-    .pipe(preprocess({context: { DEBUG: DEBUG, VISUAL_DEBUG: VISUAL_DEBUG }}))
+    .pipe(preprocess(spriteContext))
     .pipe(plumber())
     .pipe(terser())
     .pipe(plumber.stop())

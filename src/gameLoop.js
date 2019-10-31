@@ -55,7 +55,7 @@ function clear() {
  */
 export default function GameLoop({fps = 60, clearCanvas = true, update, render} = {}) {
   // check for required functions
-  // @if DEBUG
+  // @ifdef DEBUG
   if ( !(update && render) ) {
     throw Error('You must provide update() and render() functions');
   }
@@ -159,7 +159,7 @@ export default function GameLoop({fps = 60, clearCanvas = true, update, render} 
     },
 
     // expose properties for testing
-    // @if DEBUG
+    // @ifdef DEBUG
     _frame: frame,
     set _last(value) {
       last = value;

@@ -441,7 +441,7 @@ export default function TileEngine(properties = {}) {
     _r: renderLayer,
     _p: prerender,
 
-    // @if DEBUG
+    // @ifdef DEBUG
     layerCanvases: layerCanvases,
     layerMap: layerMap
     // @endif
@@ -453,7 +453,7 @@ export default function TileEngine(properties = {}) {
     let url = (window.__k ? window.__k.dm.get(properties) : '') || window.location.href;
 
     if (tileset.source) {
-      // @if DEBUG
+      // @ifdef DEBUG
       if (!window.__k) {
         throw Error(`You must use "load" or "loadData" to resolve tileset.source`);
       }
@@ -461,7 +461,7 @@ export default function TileEngine(properties = {}) {
 
       let source = window.__k.d[window.__k.u(tileset.source, url)];
 
-      // @if DEBUG
+      // @ifdef DEBUG
       if (!source) {
         throw Error(`You must load the tileset source "${tileset.source}" before loading the tileset`);
       }
@@ -473,7 +473,7 @@ export default function TileEngine(properties = {}) {
     }
 
     if (''+tileset.image === tileset.image) {
-      // @if DEBUG
+      // @ifdef DEBUG
       if (!window.__k) {
         throw Error(`You must use "load" or "loadImage" to resolve tileset.image`);
       }
@@ -481,7 +481,7 @@ export default function TileEngine(properties = {}) {
 
       let image = window.__k.i[window.__k.u(tileset.image, url)];
 
-      // @if DEBUG
+      // @ifdef DEBUG
       if (!image) {
         throw Error(`You must load the image "${tileset.image}" before loading the tileset`);
       }

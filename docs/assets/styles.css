@@ -87,6 +87,15 @@ p, ul, ol, dl, table, pre[class*=language-], canvas, form, figure, .tablist {
   margin: 0 0 1.312rem;
 }
 
+table {
+  border-collapse: collapse;
+}
+
+td, th {
+  border: 1px solid;
+  padding: 0.4rem;
+}
+
 ul, dl {
   padding-left: 1.312rem;
 }

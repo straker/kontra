@@ -47,48 +47,83 @@ class Sprite {
    * @param {Object} properties - Properties of the sprite.
    */
   init(properties = {}) {
-    let { x, y, dx, dy, ddx, ddy, width, height, image } = properties;
+
+    // --------------------------------------------------
+    // defaults
+    // --------------------------------------------------
 
     /**
      * The sprites position vector. The sprites position is its position in the world, as opposed to the position in the [viewport](api/sprite#viewX). Typically the position in the world and the viewport are the same value. If the sprite has been [added to a tileEngine](/api/tileEngine#addObject), the position vector represents where in the tile world the sprite is while the viewport represents where to draw the sprite in relation to the top-left corner of the canvas.
      * @memberof Sprite
      * @property {kontra.Vector} position
      */
-    this.position = Vector(x, y);
+    this.position = Vector();
 
+    /**
+     * The width of the sprite. If the sprite is a [rectangle sprite](api/sprite#rectangle-sprite), it uses the passed in value. For an [image sprite](api/sprite#image-sprite) it is the width of the image. And for an [animation sprite](api/sprite#animation-sprite) it is the width of a single frame of the animation.
+     *
+     * Setting the value to a negative number will result in the sprite being flipped across the vertical axis while the width will remain a positive value.
+     * @memberof Sprite
+     * @property {Number} width
+     */
+
+    /**
+     * The height of the sprite. If the sprite is a [rectangle sprite](api/sprite#rectangle-sprite), it uses the passed in value. For an [image sprite](api/sprite#image-sprite) it is the height of the image. And for an [animation sprite](api/sprite#animation-sprite) it is the height of a single frame of the animation.
+     *
+     * Setting the value to a negative number will result in the sprite being flipped across the horizontal axis while the height will remain a positive value.
+     * @memberof Sprite
+     * @property {Number} height
+     */
+    this.width = this.height = 0;
+
+    /**
+     * The context the sprite will draw to.
+     * @memberof Sprite
+     * @property {Canvas​Rendering​Context2D} context
+     */
+    this.context = getContext();
+
+    // --------------------------------------------------
+    // optionals
+    // --------------------------------------------------
+
+    // @ifdef VELOCITY
     /**
      * The sprites velocity vector.
      * @memberof Sprite
      * @property {kontra.Vector} velocity
      */
-    this.velocity = Vector(dx, dy);
+    this.velocity = Vector();
+    // @endif
 
+    // @ifdef ACCELERATION
     /**
      * The sprites acceleration vector.
      * @memberof Sprite
      * @property {kontra.Vector} acceleration
      */
-    this.acceleration = Vector(ddx, ddy);
+    this.acceleration = Vector();
+    // @endif
 
-    // defaults
-
-    // sx = flipX, sy = flipY
-    this._fx = this._fy = 1;
-
+    // @ifdef ROTATION
     /**
      * The rotation of the sprite around the origin in radians.
      * @memberof Sprite
      * @property {Number} rotation
      */
-    this.width = this.height = this.rotation = 0;
+    this.rotation = 0;
+    // @endif
 
+    // @ifdef TTL
     /**
      * How may frames the sprite should be alive. Primarily used by kontra.Pool to know when to recycle an object.
      * @memberof Sprite
      * @property {Number} ttl
      */
     this.ttl = Infinity;
+    // @endif
 
+    // @ifdef ANCHOR
     /**
      * The x and y origin of the sprite. {x:0, y:0} is the top left corner of the sprite, {x:1, y:1} is the bottom right corner.
      * @memberof Sprite
@@ -132,50 +167,42 @@ class Sprite {
      * sprite.render();
      */
     this.anchor = {x: 0, y: 0};
+    // @endif
 
-    /**
-     * The context the sprite will draw to.
-     * @memberof Sprite
-     * @property {Canvas​Rendering​Context2D} context
-     */
-    this.context = getContext();
-
-    /**
-     * The color of the sprite if it was passed as an argument.
-     * @memberof Sprite
-     * @property {String} color
-     */
-
-     /**
-     * The image the sprite will use when drawn if passed as an argument.
-     * @memberof Sprite
-     * @property {Image|HTMLCanvasElement} image
-     */
-
-    // add all properties to the sprite, overriding any defaults
-    for (let prop in properties) {
-      this[prop] = properties[prop];
-    }
-
-    // image sprite
-    if (image) {
-      this.width = (width !== undefined) ? width : image.width;
-      this.height = (height !== undefined) ? height : image.height;
-    }
-
+    // @ifdef CAMERA
     /**
      * The X coordinate of the camera. Used to determine [viewX](api/sprite#viewX).
      * @memberof Sprite
      * @property {Number} sx
      */
-    this.sx = 0;
 
     /**
      * The Y coordinate of the camera. Used to determine [viewY](api/sprite#viewY).
      * @memberof Sprite
      * @property {Number} sy
      */
-    this.sy = 0;
+    this.sx = this.sy = 0;
+    // @endif
+
+    // @ifdef IMAGE||ANIMATION
+    // fx = flipX, fy = flipY
+    this._fx = this._fy = 1;
+    // @endif
+
+    // @ifdef IMAGE
+    this.image = null;
+    // @endif
+
+    // add all properties to the sprite, overriding any defaults
+    Object.assign(this, properties);
+
+    // @ifdef IMAGE
+    let { width, height, image } = properties;
+    if (image) {
+      this.width = (width !== undefined) ? width : image.width;
+      this.height = (height !== undefined) ? height : image.height;
+    }
+    // @endif
   }
 
   // define getter and setter shortcut functions to make it easier to work with the
@@ -199,6 +226,15 @@ class Sprite {
     return this.position.y;
   }
 
+  set x(value) {
+    this.position.x = value;
+  }
+
+  set y(value) {
+    this.position.y = value;
+  }
+
+  // @ifdef VELOCITY
   /**
    * X coordinate of the velocity vector.
    * @memberof Sprite
@@ -217,6 +253,16 @@ class Sprite {
     return this.velocity.y;
   }
 
+  set dx(value) {
+    this.velocity.x = value;
+  }
+
+  set dy(value) {
+    this.velocity.y = value;
+  }
+  // @endif
+
+  // @ifdef ACCELERATION
   /**
    * X coordinate of the acceleration vector.
    * @memberof Sprite
@@ -235,6 +281,48 @@ class Sprite {
     return this.acceleration.y;
   }
 
+  set ddx(value) {
+    this.acceleration.x = value;
+  }
+
+  set ddy(value) {
+    this.acceleration.y = value;
+  }
+  // @endif
+
+  // @ifdef CAMERA
+  get viewX() {
+    return this.x - this.sx;
+  }
+
+  get viewY() {
+    return this.y - this.sy;
+  }
+
+  // readonly
+  set viewX(value) {
+    return;
+  }
+
+  set viewY(value) {
+    return;
+  }
+  // @endif
+
+  // @ifdef TTL
+  /**
+   * Check if the sprite is alive. Primarily used by kontra.Pool to know when to recycle an object.
+   * @memberof Sprite
+   * @function isAlive
+   *
+   * @returns {Boolean} `true` if the sprites [ttl](api/sprite#ttl) property is above `0`, `false` otherwise.
+   */
+  isAlive() {
+    return this.ttl > 0;
+  }
+  // @endif
+
+  // @ifdef ANIMATION
   /**
    * An object of [Animations](api/animation) from a kontra.SpriteSheet to animate the sprite. Each animation is named so that it can can be used by name for the sprites [playAnimation()](api/sprite#playAnimation) function.
    *
@@ -269,65 +357,6 @@ class Sprite {
     return this._a;
   }
 
-  /**
-   * Readonly. X coordinate of where to draw the sprite. Typically the same value as the [position vector](api/sprite#position) unless the sprite has been [added to a tileEngine](api/tileEngine#addObject).
-   * @memberof Sprite
-   * @property {Number} viewX
-   */
-  get viewX() {
-    return this.x - this.sx;
-  }
-
-  /**
-   * Readonly. Y coordinate of where to draw the sprite. Typically the same value as the [position vector](api/sprite#position) unless the sprite has been [added to a tileEngine](api/tileEngine#addObject).
-   * @memberof Sprite
-   * @property {Number} viewY
-   */
-  get viewY() {
-    return this.y - this.sy;
-  }
-
-  /**
-   * The width of the sprite. If the sprite is a [rectangle sprite](api/sprite#rectangle-sprite), it uses the passed in value. For an [image sprite](api/sprite#image-sprite) it is the width of the image. And for an [animation sprite](api/sprite#animation-sprite) it is the width of a single frame of the animation.
-   *
-   * Setting the value to a negative number will result in the sprite being flipped across the vertical axis while the width will remain a positive value.
-   * @memberof Sprite
-   * @property {Number} width
-   */
-  get width() {
-    return this._w;
-  }
-
-  /**
-   * The height of the sprite. If the sprite is a [rectangle sprite](api/sprite#rectangle-sprite), it uses the passed in value. For an [image sprite](api/sprite#image-sprite) it is the height of the image. And for an [animation sprite](api/sprite#animation-sprite) it is the height of a single frame of the animation.
-   *
-   * Setting the value to a negative number will result in the sprite being flipped across the horizontal axis while the height will remain a positive value.
-   * @memberof Sprite
-   * @property {Number} height
-   */
-  get height() {
-    return this._h;
-  }
-
-  set x(value) {
-    this.position.x = value;
-  }
-  set y(value) {
-    this.position.y = value;
-  }
-  set dx(value) {
-    this.velocity.x = value;
-  }
-  set dy(value) {
-    this.velocity.y = value;
-  }
-  set ddx(value) {
-    this.acceleration.x = value;
-  }
-  set ddy(value) {
-    this.acceleration.y = value;
-  }
-
   set animations(value) {
     let prop, firstAnimation;
     // a = animations
@@ -341,150 +370,9 @@ class Sprite {
       firstAnimation = firstAnimation || this._a[prop];
     }
 
-    /**
-     * The currently playing Animation object if `animations` was passed as an argument.
-     * @memberof Sprite
-     * @property {kontra.Animation} currentAnimation
-     */
     this.currentAnimation = firstAnimation;
     this.width = this.width || firstAnimation.width;
     this.height = this.height || firstAnimation.height;
-  }
-
-  // readonly
-  set viewX(value) {
-    return;
-  }
-  set viewY(value) {
-    return;
-  }
-
-  set width(value) {
-    let sign = value < 0 ? -1 : 1;
-
-    this._fx = sign
-    this._w = value * sign;
-  }
-  set height(value) {
-    let sign = value < 0 ? -1 : 1;
-
-    this._fy = sign;
-    this._h = value * sign;
-  }
-
-  /**
-   * Check if the sprite is alive. Primarily used by kontra.Pool to know when to recycle an object.
-   * @memberof Sprite
-   * @function isAlive
-   *
-   * @returns {Boolean} `true` if the sprites [ttl](api/sprite#ttl) property is above `0`, `false` otherwise.
-   */
-  isAlive() {
-    return this.ttl > 0;
-  }
-
-  /**
-   * Check if the sprite collide with the object. Uses a simple [Axis-Aligned Bounding Box (AABB) collision check](https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection#Axis-Aligned_Bounding_Box). Takes into account the sprites [anchor](api/sprite#anchor).
-   *
-   * **NOTE:** Does not take into account sprite rotation. If you need collision detection between rotated sprites you will need to implement your own `collidesWith()` function. I suggest looking at the Separate Axis Theorem.
-   *
-   * ```js
-   * import { Sprite } from 'kontra';
-   *
-   * let sprite = Sprite({
-   *   x: 100,
-   *   y: 200,
-   *   width: 20,
-   *   height: 40
-   * });
-   *
-   * let sprite2 = Sprite({
-   *   x: 150,
-   *   y: 200,
-   *   width: 20,
-   *   height: 20
-   * });
-   *
-   * sprite.collidesWith(sprite2);  //=> false
-   *
-   * sprite2.x = 115;
-   *
-   * sprite.collidesWith(sprite2);  //=> true
-   * ```
-   *
-   * If you need a different type of collision check, you can override this function by passing an argument by the same name.
-   *
-   * ```js
-   * // circle collision
-   * function collidesWith(object) {
-   *   let dx = this.x - object.x;
-   *   let dy = this.y - object.y;
-   *   let distance = Math.sqrt(dx * dx + dy * dy);
-   *
-   *   return distance < this.radius + object.radius;
-   * }
-   *
-   * let sprite = Sprite({
-   *   x: 100,
-   *   y: 200,
-   *   radius: 25,
-   *   collidesWith: collidesWith
-   * });
-   *
-   * let sprite2 = Sprite({
-   *   x: 150,
-   *   y: 200,
-   *   radius: 30,
-   *   collidesWith: collidesWith
-   * });
-   *
-   * sprite.collidesWith(sprite2);  //=> true
-   * ```
-   * @memberof Sprite
-   * @function collidesWith
-   *
-   * @param {Object} object - Object to check collision against.
-   *
-   * @returns {Boolean|null} `true` if the objects collide, `false` otherwise. Will return `null` if the either of the two objects are rotated.
-   */
-  collidesWith(object) {
-    if (this.rotation || object.rotation) return null;
-
-    // take into account sprite anchors
-    let x = this.x - this.width * this.anchor.x;
-    let y = this.y - this.height * this.anchor.y;
-
-    let objX = object.x;
-    let objY = object.y;
-    if (object.anchor) {
-      objX -= object.width * object.anchor.x;
-      objY -= object.height * object.anchor.y;
-    }
-
-    return x < objX + object.width &&
-           x + this.width > objX &&
-           y < objY + object.height &&
-           y + this.height > objY;
-  }
-
-  /**
-   * Update the sprites position based on its velocity and acceleration. Calls the sprites [advance()](api/sprite#advance) function.
-   * @memberof Sprite
-   * @function update
-   *
-   * @param {Number} [dt] - Time since last update.
-   */
-  update(dt) {
-    this.advance(dt);
-  }
-
-  /**
-   * Render the sprite. Calls the sprites [draw()](api/sprite#draw) function.
-   * @memberof Sprite
-   * @function render
-   */
-  render() {
-    this.draw();
   }
 
   /**
@@ -525,7 +413,46 @@ class Sprite {
       this.currentAnimation.reset();
     }
   }
+  // @endif
 
+  // @ifdef IMAGE||ANIMATION
+  get width() {
+    return this._w;
+  }
+
+  get height() {
+    return this._h;
+  }
+
+  set width(value) {
+    let sign = value < 0 ? -1 : 1;
+
+    this._fx = sign;
+    this._w = value * sign;
+  }
+
+  set height(value) {
+    let sign = value < 0 ? -1 : 1;
+
+    this._fy = sign;
+    this._h = value * sign;
+  }
+  // @endif
+
+  /**
+   * Update the sprites position based on its velocity and acceleration. Calls the sprites [advance()](api/sprite#advance) function.
+   * @memberof Sprite
+   * @function update
+   *
+   * @param {Number} [dt] - Time since last update.
+   */
+  update(dt) {
+    // @ifdef VELOCITY||ACCELERATION||TTL||ANIMATION
+    this.advance(dt)
+    // @endif
+  }
+
+  // @ifdef VELOCITY||ACCELERATION||TTL
   /**
    * Move the sprite by its acceleration and velocity. If the sprite is an [animation sprite](api/sprite#animation-sprite), it also advances the animation every frame.
    *
@@ -564,14 +491,34 @@ class Sprite {
    *
    */
   advance(dt) {
+    // @ifdef VELOCITY
+
+    // @ifdef ACCELERATION
     this.velocity = this.velocity.add(this.acceleration, dt);
+    // @endif
+
     this.position = this.position.add(this.velocity, dt);
+    // @endif
 
+    // @ifdef TTL
     this.ttl--;
+    // @endif
 
+    // @ifdef ANIMATION
     if (this.currentAnimation) {
       this.currentAnimation.update(dt);
     }
+    // @endif
+  }
+  // @endif
+
+  /**
+   * Render the sprite. Calls the sprites [draw()](api/sprite#draw) function.
+   * @memberof Sprite
+   * @function render
+   */
+  render() {
+    this.draw();
   }
 
   /**
@@ -606,17 +553,32 @@ class Sprite {
    * @function draw
    */
   draw() {
-    let anchorWidth = -this.width * this.anchor.x;
-    let anchorHeight = -this.height * this.anchor.y;
+    let anchorWidth = 0;
+    let anchorHeight = 0;
+    let viewX = this.x;
+    let viewY = this.y;
+
+    // @ifdef ANCHOR
+    anchorWidth = -this.width * this.anchor.x;
+    anchorHeight = -this.height * this.anchor.y;
+    // @endif
+
+    // @ifdef CAMERA
+    viewX = this.viewX;
+    viewY = this.viewY;
+    // @endif
 
     this.context.save();
-    this.context.translate(this.viewX, this.viewY);
+    this.context.translate(viewX, viewY);
 
+    // @ifdef ROTATION
     // rotate around the anchor
     if (this.rotation) {
       this.context.rotate(this.rotation);
     }
+    // @endif
 
+    // @ifdef IMAGE||ANIMATION
     // flip sprite around the center so the x/y position does not change
     if (this._fx == -1 || this._fy == -1) {
       let x = this.width / 2 + anchorWidth;
@@ -626,7 +588,9 @@ class Sprite {
       this.context.scale(this._fx, this._fy);
       this.context.translate(-x, -y);
     }
+    // @endif
 
+    // @ifdef IMAGE
     if (this.image) {
       this.context.drawImage(
         this.image,
@@ -634,7 +598,10 @@ class Sprite {
         anchorWidth, anchorHeight, this.width, this.height
       );
     }
-    else if (this.currentAnimation) {
+    // @endif
+
+    // @ifdef ANIMATION
+    if (this.currentAnimation) {
       this.currentAnimation.render({
         x: anchorWidth,
         y: anchorHeight,
@@ -643,14 +610,16 @@ class Sprite {
         context: this.context
       });
     }
-    else {
+    // @endif
+
+    if (this.color) {
       this.context.fillStyle = this.color;
       this.context.fillRect(anchorWidth, anchorHeight, this.width, this.height);
     }
 
     this.context.restore();
   }
-};
+}
 
 export default function spriteFactory(properties) {
   return new Sprite(properties);

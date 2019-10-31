@@ -18,7 +18,7 @@ class Pool {
 
     // check for the correct structure of the objects added to pools so we know that the
     // rest of the pool code will work without errors
-    // @if DEBUG
+    // @ifdef DEBUG
     let obj;
     if (!create ||
         ( !( obj = create() ) ||

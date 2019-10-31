@@ -104,13 +104,16 @@ export default {
   dest: &#39;bundle.js&#39;,
   plugins: [
     kontra({
-      // enable only velocity and rotation functionality
-      velocity: true,
-      rotation: true
+      sprite: {
+        // enable only velocity and rotation functionality
+        velocity: true,
+        rotation: true
+      }
     })
   ]
 }</code></pre>
 <h3 id="available-options">Available options</h3>
+<p>Sprite options:</p>
 <table>
 <thead>
 <tr>

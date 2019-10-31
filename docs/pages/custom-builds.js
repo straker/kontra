@@ -48,15 +48,19 @@ __Note:__ All options default to `false` when using rollup-plugin-kontra, so onl
 *   dest: 'bundle.js',
 *   plugins: [
 *     kontra({
-*       // enable only velocity and rotation functionality
-*       velocity: true,
-*       rotation: true
+*       sprite: {
+*         // enable only velocity and rotation functionality
+*         velocity: true,
+*         rotation: true
+*       }
 *     })
 *   ]
 * }
 * ```
 
 ### Available options
+
+Sprite options:
 
 | Name          | Functionality Enabled |
 | ------------- | ------------- |

@@ -125,7 +125,7 @@ function init(canvas) {
              canvas ||
              document.querySelector('canvas');
 
-  // @if DEBUG
+  // @ifdef DEBUG
   if (!canvasEl) {
     throw Error('You must provide a canvas element for the game');
   }
@@ -589,7 +589,7 @@ function loadImage(url) {
     };
 
     image.onerror = function loadImageOnError() {
-      reject(/* @if DEBUG */ 'Unable to load image ' + /* @endif */ resolvedUrl);
+      reject(/* @ifdef DEBUG */ 'Unable to load image ' + /* @endif */ resolvedUrl);
     };
 
     image.src = resolvedUrl;
@@ -636,7 +636,7 @@ function loadAudio(url) {
             , 0);  // 0 is the shortest falsy value
 
     if (!url) {
-      return reject(/* @if DEBUG */ 'cannot play any of the audio formats provided' + /* @endif */ url);
+      return reject(/* @ifdef DEBUG */ 'cannot play any of the audio formats provided' + /* @endif */ url);
     }
 
     resolvedUrl = joinPath(audioPath, url);
@@ -650,7 +650,7 @@ function loadAudio(url) {
     });
 
     audioEl.onerror = function loadAudioOnError() {
-      reject(/* @if DEBUG */ 'Unable to load audio ' + /* @endif */ resolvedUrl);
+      reject(/* @ifdef DEBUG */ 'Unable to load audio ' + /* @endif */ resolvedUrl);
     };
 
     audioEl.src = resolvedUrl;
@@ -800,7 +800,7 @@ function clear() {
  */
 function GameLoop({fps = 60, clearCanvas = true, update, render} = {}) {
   // check for required functions
-  // @if DEBUG
+  // @ifdef DEBUG
   if ( !(update && render) ) {
     throw Error('You must provide update() and render() functions');
   }
@@ -904,7 +904,7 @@ function GameLoop({fps = 60, clearCanvas = true, update, render} = {}) {
     },
 
     // expose properties for testing
-    // @if DEBUG
+    // @ifdef DEBUG
     _frame: frame,
     set _last(value) {
       last = value;
@@ -1759,7 +1759,7 @@ class Pool {
 
     // check for the correct structure of the objects added to pools so we know that the
     // rest of the pool code will work without errors
-    // @if DEBUG
+    // @ifdef DEBUG
     let obj;
     if (!create ||
         ( !( obj = create() ) ||
@@ -2200,7 +2200,7 @@ class Quadtree {
 
       // d = depth, p = parent
       this._s[i]._d = this._d+1;
-      /* @if VISUAL_DEBUG */
+      /* @ifdef VISUAL_DEBUG */
       this._s[i]._p = this;
       /* @endif */
     }
@@ -2209,7 +2209,7 @@ class Quadtree {
   /**
    * Draw the quadtree. Useful for visual debugging.
    */
-   /* @if VISUAL_DEBUG **
+   /* @ifdef VISUAL_DEBUG **
    render() {
      // don't draw empty leaf nodes, always draw branch nodes and the first node
      if (this._o.length || this._d === 0 ||
@@ -2395,48 +2395,89 @@ class Sprite {
    * @param {Object} properties - Properties of the sprite.
    */
   init(properties = {}) {
-    let { x, y, dx, dy, ddx, ddy, width, height, image } = properties;
+
+    // --------------------------------------------------
+    // defaults
+    // --------------------------------------------------
 
     /**
      * The sprites position vector. The sprites position is its position in the world, as opposed to the position in the [viewport](api/sprite#viewX). Typically the position in the world and the viewport are the same value. If the sprite has been [added to a tileEngine](/api/tileEngine#addObject), the position vector represents where in the tile world the sprite is while the viewport represents where to draw the sprite in relation to the top-left corner of the canvas.
      * @memberof Sprite
      * @property {kontra.Vector} position
      */
-    this.position = vectorFactory(x, y);
+    this.position = vectorFactory();
 
+    /**
+     * The width of the sprite. If the sprite is a [rectangle sprite](api/sprite#rectangle-sprite), it uses the passed in value. For an [image sprite](api/sprite#image-sprite) it is the width of the image. And for an [animation sprite](api/sprite#animation-sprite) it is the width of a single frame of the animation.
+     *
+     * Setting the value to a negative number will result in the sprite being flipped across the vertical axis while the width will remain a positive value.
+     * @memberof Sprite
+     * @property {Number} width
+     */
+
+    /**
+     * The height of the sprite. If the sprite is a [rectangle sprite](api/sprite#rectangle-sprite), it uses the passed in value. For an [image sprite](api/sprite#image-sprite) it is the height of the image. And for an [animation sprite](api/sprite#animation-sprite) it is the height of a single frame of the animation.
+     *
+     * Setting the value to a negative number will result in the sprite being flipped across the horizontal axis while the height will remain a positive value.
+     * @memberof Sprite
+     * @property {Number} height
+     */
+    this.width = this.height = 0;
+
+    /**
+     * The context the sprite will draw to.
+     * @memberof Sprite
+     * @property {Canvas​Rendering​Context2D} context
+     */
+    this.context = getContext();
+
+    /**
+     * The color of the sprite if it was passed as an argument.
+     * @memberof Sprite
+     * @property {String} color
+     */
+
+    // --------------------------------------------------
+    // optionals
+    // --------------------------------------------------
+
+    // @ifdef SPRITE_VELOCITY
     /**
      * The sprites velocity vector.
      * @memberof Sprite
      * @property {kontra.Vector} velocity
      */
-    this.velocity = vectorFactory(dx, dy);
+    this.velocity = vectorFactory();
+    // @endif
 
+    // @ifdef SPRITE_ACCELERATION
     /**
      * The sprites acceleration vector.
      * @memberof Sprite
      * @property {kontra.Vector} acceleration
      */
-    this.acceleration = vectorFactory(ddx, ddy);
+    this.acceleration = vectorFactory();
+    // @endif
 
-    // defaults
-
-    // sx = flipX, sy = flipY
-    this._fx = this._fy = 1;
-
+    // @ifdef SPRITE_ROTATION
     /**
      * The rotation of the sprite around the origin in radians.
      * @memberof Sprite
      * @property {Number} rotation
      */
-    this.width = this.height = this.rotation = 0;
+    this.rotation = 0;
+    // @endif
 
+    // @ifdef SPRITE_TTL
     /**
      * How may frames the sprite should be alive. Primarily used by kontra.Pool to know when to recycle an object.
      * @memberof Sprite
      * @property {Number} ttl
      */
     this.ttl = Infinity;
+    // @endif
 
+    // @ifdef SPRITE_ANCHOR
     /**
      * The x and y origin of the sprite. {x:0, y:0} is the top left corner of the sprite, {x:1, y:1} is the bottom right corner.
      * @memberof Sprite
@@ -2480,50 +2521,44 @@ class Sprite {
      * sprite.render();
      */
     this.anchor = {x: 0, y: 0};
+    // @endif
 
-    /**
-     * The context the sprite will draw to.
-     * @memberof Sprite
-     * @property {Canvas​Rendering​Context2D} context
-     */
-    this.context = getContext();
-
-    /**
-     * The color of the sprite if it was passed as an argument.
-     * @memberof Sprite
-     * @property {String} color
-     */
-
-     /**
-     * The image the sprite will use when drawn if passed as an argument.
-     * @memberof Sprite
-     * @property {Image|HTMLCanvasElement} image
-     */
-
-    // add all properties to the sprite, overriding any defaults
-    for (let prop in properties) {
-      this[prop] = properties[prop];
-    }
-
-    // image sprite
-    if (image) {
-      this.width = (width !== undefined) ? width : image.width;
-      this.height = (height !== undefined) ? height : image.height;
-    }
-
+    // @ifdef SPRITE_CAMERA
     /**
      * The X coordinate of the camera. Used to determine [viewX](api/sprite#viewX).
      * @memberof Sprite
      * @property {Number} sx
      */
-    this.sx = 0;
 
     /**
      * The Y coordinate of the camera. Used to determine [viewY](api/sprite#viewY).
      * @memberof Sprite
      * @property {Number} sy
      */
-    this.sy = 0;
+    this.sx = this.sy = 0;
+    // @endif
+
+    // @ifdef SPRITE_IMAGE||SPRITE_ANIMATION
+    // fx = flipX, fy = flipY
+    this._fx = this._fy = 1;
+    // @endif
+
+    // add all properties to the sprite, overriding any defaults
+    Object.assign(this, properties);
+
+    // @ifdef SPRITE_IMAGE
+    /**
+     * The image the sprite will use when drawn if passed as an argument.
+     * @memberof Sprite
+     * @property {Image|HTMLCanvasElement} image
+     */
+
+    let { width, height, image } = properties;
+    if (image) {
+      this.width = (width !== undefined) ? width : image.width;
+      this.height = (height !== undefined) ? height : image.height;
+    }
+    // @endif
   }
 
   // define getter and setter shortcut functions to make it easier to work with the
@@ -2547,6 +2582,15 @@ class Sprite {
     return this.position.y;
   }
 
+  set x(value) {
+    this.position.x = value;
+  }
+
+  set y(value) {
+    this.position.y = value;
+  }
+
+  // @ifdef SPRITE_VELOCITY
   /**
    * X coordinate of the velocity vector.
    * @memberof Sprite
@@ -2565,6 +2609,16 @@ class Sprite {
     return this.velocity.y;
   }
 
+  set dx(value) {
+    this.velocity.x = value;
+  }
+
+  set dy(value) {
+    this.velocity.y = value;
+  }
+  // @endif
+
+  // @ifdef SPRITE_ACCELERATION
   /**
    * X coordinate of the acceleration vector.
    * @memberof Sprite
@@ -2583,6 +2637,58 @@ class Sprite {
     return this.acceleration.y;
   }
 
+  set ddx(value) {
+    this.acceleration.x = value;
+  }
+
+  set ddy(value) {
+    this.acceleration.y = value;
+  }
+  // @endif
+
+  // @ifdef SPRITE_CAMERA
+  /**
+   * Readonly. X coordinate of where to draw the sprite. Typically the same value as the [position vector](api/sprite#position) unless the sprite has been [added to a tileEngine](api/tileEngine#addObject).
+   * @memberof Sprite
+   * @property {Number} viewX
+   */
+  get viewX() {
+    return this.x - this.sx;
+  }
+
+  /**
+   * Readonly. Y coordinate of where to draw the sprite. Typically the same value as the [position vector](api/sprite#position) unless the sprite has been [added to a tileEngine](api/tileEngine#addObject).
+   * @memberof Sprite
+   * @property {Number} viewY
+   */
+  get viewY() {
+    return this.y - this.sy;
+  }
+
+  // readonly
+  set viewX(value) {
+    return;
+  }
+
+  set viewY(value) {
+    return;
+  }
+  // @endif
+
+  // @ifdef SPRITE_TTL
+  /**
+   * Check if the sprite is alive. Primarily used by kontra.Pool to know when to recycle an object.
+   * @memberof Sprite
+   * @function isAlive
+   *
+   * @returns {Boolean} `true` if the sprites [ttl](api/sprite#ttl) property is above `0`, `false` otherwise.
+   */
+  isAlive() {
+    return this.ttl > 0;
+  }
+  // @endif
+
+  // @ifdef SPRITE_ANIMATION
   /**
    * An object of [Animations](api/animation) from a kontra.SpriteSheet to animate the sprite. Each animation is named so that it can can be used by name for the sprites [playAnimation()](api/sprite#playAnimation) function.
    *
@@ -2617,65 +2723,6 @@ class Sprite {
     return this._a;
   }
 
-  /**
-   * Readonly. X coordinate of where to draw the sprite. Typically the same value as the [position vector](api/sprite#position) unless the sprite has been [added to a tileEngine](api/tileEngine#addObject).
-   * @memberof Sprite
-   * @property {Number} viewX
-   */
-  get viewX() {
-    return this.x - this.sx;
-  }
-
-  /**
-   * Readonly. Y coordinate of where to draw the sprite. Typically the same value as the [position vector](api/sprite#position) unless the sprite has been [added to a tileEngine](api/tileEngine#addObject).
-   * @memberof Sprite
-   * @property {Number} viewY
-   */
-  get viewY() {
-    return this.y - this.sy;
-  }
-
-  /**
-   * The width of the sprite. If the sprite is a [rectangle sprite](api/sprite#rectangle-sprite), it uses the passed in value. For an [image sprite](api/sprite#image-sprite) it is the width of the image. And for an [animation sprite](api/sprite#animation-sprite) it is the width of a single frame of the animation.
-   *
-   * Setting the value to a negative number will result in the sprite being flipped across the vertical axis while the width will remain a positive value.
-   * @memberof Sprite
-   * @property {Number} width
-   */
-  get width() {
-    return this._w;
-  }
-
-  /**
-   * The height of the sprite. If the sprite is a [rectangle sprite](api/sprite#rectangle-sprite), it uses the passed in value. For an [image sprite](api/sprite#image-sprite) it is the height of the image. And for an [animation sprite](api/sprite#animation-sprite) it is the height of a single frame of the animation.
-   *
-   * Setting the value to a negative number will result in the sprite being flipped across the horizontal axis while the height will remain a positive value.
-   * @memberof Sprite
-   * @property {Number} height
-   */
-  get height() {
-    return this._h;
-  }
-
-  set x(value) {
-    this.position.x = value;
-  }
-  set y(value) {
-    this.position.y = value;
-  }
-  set dx(value) {
-    this.velocity.x = value;
-  }
-  set dy(value) {
-    this.velocity.y = value;
-  }
-  set ddx(value) {
-    this.acceleration.x = value;
-  }
-  set ddy(value) {
-    this.acceleration.y = value;
-  }
-
   set animations(value) {
     let prop, firstAnimation;
     // a = animations
@@ -2697,58 +2744,6 @@ class Sprite {
     this.currentAnimation = firstAnimation;
     this.width = this.width || firstAnimation.width;
     this.height = this.height || firstAnimation.height;
-  }
-
-  // readonly
-  set viewX(value) {
-    return;
-  }
-  set viewY(value) {
-    return;
-  }
-
-  set width(value) {
-    let sign = value < 0 ? -1 : 1;
-
-    this._fx = sign;
-    this._w = value * sign;
-  }
-  set height(value) {
-    let sign = value < 0 ? -1 : 1;
-
-    this._fy = sign;
-    this._h = value * sign;
-  }
-
-  /**
-   * Check if the sprite is alive. Primarily used by kontra.Pool to know when to recycle an object.
-   * @memberof Sprite
-   * @function isAlive
-   *
-   * @returns {Boolean} `true` if the sprites [ttl](api/sprite#ttl) property is above `0`, `false` otherwise.
-   */
-  isAlive() {
-    return this.ttl > 0;
-  }
-
-  /**
-   * Update the sprites position based on its velocity and acceleration. Calls the sprites [advance()](api/sprite/#advance) function.
-   * @memberof Sprite
-   * @function update
-   *
-   * @param {Number} [dt] - Time since last update.
-   */
-  update(dt) {
-    this.advance(dt);
-  }
-
-  /**
-   * Render the sprite. Calls the sprites [draw()](api/sprite#draw) function.
-   * @memberof Sprite
-   * @function render
-   */
-  render() {
-    this.draw();
   }
 
   /**
@@ -2789,7 +2784,46 @@ class Sprite {
       this.currentAnimation.reset();
     }
   }
+  // @endif
 
+  // @ifdef SPRITE_IMAGE||SPRITE_ANIMATION
+  get width() {
+    return this._w;
+  }
+
+  get height() {
+    return this._h;
+  }
+
+  set width(value) {
+    let sign = value < 0 ? -1 : 1;
+
+    this._fx = sign;
+    this._w = value * sign;
+  }
+
+  set height(value) {
+    let sign = value < 0 ? -1 : 1;
+
+    this._fy = sign;
+    this._h = value * sign;
+  }
+  // @endif
+
+  /**
+   * Update the sprites position based on its velocity and acceleration. Calls the sprites [advance()](api/sprite#advance) function.
+   * @memberof Sprite
+   * @function update
+   *
+   * @param {Number} [dt] - Time since last update.
+   */
+  update(dt) {
+    // @ifdef SPRITE_VELOCITY||SPRITE_ACCELERATION||SPRITE_TTL||SPRITE_ANIMATION
+    this.advance(dt);
+    // @endif
+  }
+
+  // @ifdef SPRITE_VELOCITY||SPRITE_ACCELERATION||SPRITE_TTL
   /**
    * Move the sprite by its acceleration and velocity. If the sprite is an [animation sprite](api/sprite#animation-sprite), it also advances the animation every frame.
    *
@@ -2828,14 +2862,34 @@ class Sprite {
    *
    */
   advance(dt) {
+    // @ifdef SPRITE_VELOCITY
+
+    // @ifdef SPRITE_ACCELERATION
     this.velocity = this.velocity.add(this.acceleration, dt);
+    // @endif
+
     this.position = this.position.add(this.velocity, dt);
+    // @endif
 
+    // @ifdef SPRITE_TTL
     this.ttl--;
+    // @endif
 
+    // @ifdef SPRITE_ANIMATION
     if (this.currentAnimation) {
       this.currentAnimation.update(dt);
     }
+    // @endif
+  }
+  // @endif
+
+  /**
+   * Render the sprite. Calls the sprites [draw()](api/sprite#draw) function.
+   * @memberof Sprite
+   * @function render
+   */
+  render() {
+    this.draw();
   }
 
   /**
@@ -2870,17 +2924,32 @@ class Sprite {
    * @function draw
    */
   draw() {
-    let anchorWidth = -this.width * this.anchor.x;
-    let anchorHeight = -this.height * this.anchor.y;
+    let anchorWidth = 0;
+    let anchorHeight = 0;
+    let viewX = this.x;
+    let viewY = this.y;
+
+    // @ifdef SPRITE_ANCHOR
+    anchorWidth = -this.width * this.anchor.x;
+    anchorHeight = -this.height * this.anchor.y;
+    // @endif
+
+    // @ifdef SPRITE_CAMERA
+    viewX = this.viewX;
+    viewY = this.viewY;
+    // @endif
 
     this.context.save();
-    this.context.translate(this.viewX, this.viewY);
+    this.context.translate(viewX, viewY);
 
+    // @ifdef SPRITE_ROTATION
     // rotate around the anchor
     if (this.rotation) {
       this.context.rotate(this.rotation);
     }
+    // @endif
 
+    // @ifdef SPRITE_IMAGE||SPRITE_ANIMATION
     // flip sprite around the center so the x/y position does not change
     if (this._fx == -1 || this._fy == -1) {
       let x = this.width / 2 + anchorWidth;
@@ -2890,7 +2959,9 @@ class Sprite {
       this.context.scale(this._fx, this._fy);
       this.context.translate(-x, -y);
     }
+    // @endif
 
+    // @ifdef SPRITE_IMAGE
     if (this.image) {
       this.context.drawImage(
         this.image,
@@ -2898,7 +2969,10 @@ class Sprite {
         anchorWidth, anchorHeight, this.width, this.height
       );
     }
-    else if (this.currentAnimation) {
+    // @endif
+
+    // @ifdef SPRITE_ANIMATION
+    if (this.currentAnimation) {
       this.currentAnimation.render({
         x: anchorWidth,
         y: anchorHeight,
@@ -2907,7 +2981,9 @@ class Sprite {
         context: this.context
       });
     }
-    else {
+    // @endif
+
+    if (this.color) {
       this.context.fillStyle = this.color;
       this.context.fillRect(anchorWidth, anchorHeight, this.width, this.height);
     }
@@ -3012,7 +3088,7 @@ function parseFrames(consecutiveFrames) {
  */
 class SpriteSheet {
   constructor({image, frameWidth, frameHeight, frameMargin, animations} = {}) {
-    // @if DEBUG
+    // @ifdef DEBUG
     if (!image) {
       throw Error('You must provide an Image for the SpriteSheet');
     }
@@ -3122,7 +3198,7 @@ class SpriteSheet {
       // array that holds the order of the animation
       sequence = [];
 
-      // @if DEBUG
+      // @ifdef DEBUG
       if (frames === undefined) {
         throw Error('Animation ' + name + ' must provide a frames property');
       }
@@ -3639,7 +3715,7 @@ function TileEngine(properties = {}) {
     _r: renderLayer,
     _p: prerender,
 
-    // @if DEBUG
+    // @ifdef DEBUG
     layerCanvases: layerCanvases,
     layerMap: layerMap
     // @endif
@@ -3651,7 +3727,7 @@ function TileEngine(properties = {}) {
     let url = (window.__k ? window.__k.dm.get(properties) : '') || window.location.href;
 
     if (tileset.source) {
-      // @if DEBUG
+      // @ifdef DEBUG
       if (!window.__k) {
         throw Error(`You must use "load" or "loadData" to resolve tileset.source`);
       }
@@ -3659,7 +3735,7 @@ function TileEngine(properties = {}) {
 
       let source = window.__k.d[window.__k.u(tileset.source, url)];
 
-      // @if DEBUG
+      // @ifdef DEBUG
       if (!source) {
         throw Error(`You must load the tileset source "${tileset.source}" before loading the tileset`);
       }
@@ -3671,7 +3747,7 @@ function TileEngine(properties = {}) {
     }
 
     if (''+tileset.image === tileset.image) {
-      // @if DEBUG
+      // @ifdef DEBUG
       if (!window.__k) {
         throw Error(`You must use "load" or "loadImage" to resolve tileset.image`);
       }
@@ -3679,7 +3755,7 @@ function TileEngine(properties = {}) {
 
       let image = window.__k.i[window.__k.u(tileset.image, url)];
 
-      // @if DEBUG
+      // @ifdef DEBUG
       if (!image) {
         throw Error(`You must load the image "${tileset.image}" before loading the tileset`);
       }

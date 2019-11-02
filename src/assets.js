@@ -279,7 +279,7 @@ export function loadImage(url) {
     };
 
     image.onerror = function loadImageOnError() {
-      reject(/* @if DEBUG */ 'Unable to load image ' + /* @endif */ resolvedUrl);
+      reject(/* @ifdef DEBUG */ 'Unable to load image ' + /* @endif */ resolvedUrl);
     };
 
     image.src = resolvedUrl;
@@ -326,7 +326,7 @@ export function loadAudio(url) {
             , 0);  // 0 is the shortest falsy value
 
     if (!url) {
-      return reject(/* @if DEBUG */ 'cannot play any of the audio formats provided' + /* @endif */ url);
+      return reject(/* @ifdef DEBUG */ 'cannot play any of the audio formats provided' + /* @endif */ url);
     }
 
     resolvedUrl = joinPath(audioPath, url);
@@ -340,7 +340,7 @@ export function loadAudio(url) {
     });
 
     audioEl.onerror = function loadAudioOnError() {
-      reject(/* @if DEBUG */ 'Unable to load audio ' + /* @endif */ resolvedUrl);
+      reject(/* @ifdef DEBUG */ 'Unable to load audio ' + /* @endif */ resolvedUrl);
     };
 
     audioEl.src = resolvedUrl;

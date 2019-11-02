@@ -33,6 +33,7 @@
           <li><a href="." >Introduction</a></li>
           <li><a href="getting-started" >Getting Started</a></li>
           <li><a href="download" aria-current="page">Download</a></li>
+          <li><a href="custom-builds" >Custom Builds</a></li>
           <li><a href="tutorials" >Tutorials</a></li>
           <li><a href="made-with-kontra" >Made With Kontra</a></li>
 
@@ -90,31 +91,6 @@
 <h3 id="es-module-import">ES Module Import</h3>
 <pre><code class="language-js">import kontra from &#39;https://cdn.jsdelivr.net/npm/kontra@6.9.0/kontra.min.mjs&#39;;</code></pre>
 <pre><code class="language-js">import kontra from &#39;https://cdn.jsdelivr.net/npm/kontra@6.9.0/kontra.mjs&#39;;</code></pre>
-<h2 id="custom-builds">Custom Builds</h2>
-<p>As of kontra 6.0.0, custom builds can be achieved by using a module bundler such as <a href="https://rollupjs.org/">Rollup</a> or <a href="https://webpack.js.org/">webpack</a>. Kontra supports ES modules, allowing you to use <a href="https://rollupjs.org/guide/en#tree-shaking">tree-shaking</a> to only bundle the code you need.</p>
-<pre><code class="language-js">// game.js
-import { Sprite, GameLoop } from &#39;kontra&#39;;
-
-let sprite = Sprite({
-  x: 100,
-  y: 100,
-  dx: 2,
-  width: 20,
-  height: 40,
-  color: &#39;red&#39;
-});
-
-let loop = GameLoop({
-  update() {
-    sprite.update();
-  },
-  render() {
-    sprite.render();
-  }
-});
-
-loop.start();</code></pre>
-<pre><code class="language-bash">$ rollup game.js --format iife --file game.bundle.js</code></pre>
         
 
 

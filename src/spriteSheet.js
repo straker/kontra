@@ -90,7 +90,7 @@ function parseFrames(consecutiveFrames) {
  */
 class SpriteSheet {
   constructor({image, frameWidth, frameHeight, frameMargin, animations} = {}) {
-    // @if DEBUG
+    // @ifdef DEBUG
     if (!image) {
       throw Error('You must provide an Image for the SpriteSheet');
     }
@@ -200,7 +200,7 @@ class SpriteSheet {
       // array that holds the order of the animation
       sequence = [];
 
-      // @if DEBUG
+      // @ifdef DEBUG
       if (frames === undefined) {
         throw Error('Animation ' + name + ' must provide a frames property');
       }

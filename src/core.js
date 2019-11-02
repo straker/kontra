@@ -60,7 +60,7 @@ export function init(canvas) {
              canvas ||
              document.querySelector('canvas');
 
-  // @if DEBUG
+  // @ifdef DEBUG
   if (!canvasEl) {
     throw Error('You must provide a canvas element for the game');
   }

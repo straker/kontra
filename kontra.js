@@ -2505,7 +2505,7 @@ class Sprite {
     // optionals
     // --------------------------------------------------
 
-    // @ifdef VELOCITY
+    // @ifdef SPRITE_VELOCITY
     /**
      * The sprites velocity vector.
      * @memberof Sprite
@@ -2514,7 +2514,7 @@ class Sprite {
     this.velocity = vectorFactory();
     // @endif
 
-    // @ifdef ACCELERATION
+    // @ifdef SPRITE_ACCELERATION
     /**
      * The sprites acceleration vector.
      * @memberof Sprite
@@ -2523,7 +2523,7 @@ class Sprite {
     this.acceleration = vectorFactory();
     // @endif
 
-    // @ifdef ROTATION
+    // @ifdef SPRITE_ROTATION
     /**
      * The rotation of the sprite around the origin in radians.
      * @memberof Sprite
@@ -2532,7 +2532,7 @@ class Sprite {
     this.rotation = 0;
     // @endif
 
-    // @ifdef TTL
+    // @ifdef SPRITE_TTL
     /**
      * How may frames the sprite should be alive. Primarily used by kontra.Pool to know when to recycle an object.
      * @memberof Sprite
@@ -2541,7 +2541,7 @@ class Sprite {
     this.ttl = Infinity;
     // @endif
 
-    // @ifdef ANCHOR
+    // @ifdef SPRITE_ANCHOR
     /**
      * The x and y origin of the sprite. {x:0, y:0} is the top left corner of the sprite, {x:1, y:1} is the bottom right corner.
      * @memberof Sprite
@@ -2587,7 +2587,7 @@ class Sprite {
     this.anchor = {x: 0, y: 0};
     // @endif
 
-    // @ifdef CAMERA
+    // @ifdef SPRITE_CAMERA
     /**
      * The X coordinate of the camera. Used to determine [viewX](api/sprite#viewX).
      * @memberof Sprite
@@ -2602,12 +2602,12 @@ class Sprite {
     this.sx = this.sy = 0;
     // @endif
 
-    // @ifdef IMAGE||ANIMATION
+    // @ifdef SPRITE_IMAGE||SPRITE_ANIMATION
     // fx = flipX, fy = flipY
     this._fx = this._fy = 1;
     // @endif
 
-    // @ifdef IMAGE
+    // @ifdef SPRITE_IMAGE
     /**
      * The image the sprite will use when drawn if passed as an argument.
      * @memberof Sprite
@@ -2619,7 +2619,7 @@ class Sprite {
     // add all properties to the sprite, overriding any defaults
     Object.assign(this, properties);
 
-    // @ifdef IMAGE
+    // @ifdef SPRITE_IMAGE
     let { width, height, image } = properties;
     if (image) {
       this.width = (width !== undefined) ? width : image.width;
@@ -2663,7 +2663,7 @@ class Sprite {
     this.position.y = value;
   }
 
-  // @ifdef VELOCITY
+  // @ifdef SPRITE_VELOCITY
   /**
    * X coordinate of the velocity vector.
    * @memberof Sprite
@@ -2691,7 +2691,7 @@ class Sprite {
   }
   // @endif
 
-  // @ifdef ACCELERATION
+  // @ifdef SPRITE_ACCELERATION
   /**
    * X coordinate of the acceleration vector.
    * @memberof Sprite
@@ -2719,7 +2719,7 @@ class Sprite {
   }
   // @endif
 
-  // @ifdef CAMERA
+  // @ifdef SPRITE_CAMERA
   /**
    * Readonly. X coordinate of where to draw the sprite. Typically the same value as the [position vector](api/sprite#position) unless the sprite has been [added to a tileEngine](api/tileEngine#addObject).
    * @memberof Sprite
@@ -2748,7 +2748,7 @@ class Sprite {
   }
   // @endif
 
-  // @ifdef TTL
+  // @ifdef SPRITE_TTL
   /**
    * Check if the sprite is alive. Primarily used by kontra.Pool to know when to recycle an object.
    * @memberof Sprite
@@ -2761,7 +2761,7 @@ class Sprite {
   }
   // @endif
 
-  // @ifdef ANIMATION
+  // @ifdef SPRITE_ANIMATION
   /**
    * An object of [Animations](api/animation) from a kontra.SpriteSheet to animate the sprite. Each animation is named so that it can can be used by name for the sprites [playAnimation()](api/sprite#playAnimation) function.
    *
@@ -2859,7 +2859,7 @@ class Sprite {
   }
   // @endif
 
-  // @ifdef IMAGE||ANIMATION
+  // @ifdef SPRITE_IMAGE||SPRITE_ANIMATION
   get width() {
     return this._w;
   }
@@ -2891,12 +2891,12 @@ class Sprite {
    * @param {Number} [dt] - Time since last update.
    */
   update(dt) {
-    // @ifdef VELOCITY||ACCELERATION||TTL||ANIMATION
+    // @ifdef SPRITE_VELOCITY||SPRITE_ACCELERATION||SPRITE_TTL||SPRITE_ANIMATION
     this.advance(dt);
     // @endif
   }
 
-  // @ifdef VELOCITY||ACCELERATION||TTL
+  // @ifdef SPRITE_VELOCITY||SPRITE_ACCELERATION||SPRITE_TTL
   /**
    * Move the sprite by its acceleration and velocity. If the sprite is an [animation sprite](api/sprite#animation-sprite), it also advances the animation every frame.
    *
@@ -2935,20 +2935,20 @@ class Sprite {
    *
    */
   advance(dt) {
-    // @ifdef VELOCITY
+    // @ifdef SPRITE_VELOCITY
 
-    // @ifdef ACCELERATION
+    // @ifdef SPRITE_ACCELERATION
     this.velocity = this.velocity.add(this.acceleration, dt);
     // @endif
 
     this.position = this.position.add(this.velocity, dt);
     // @endif
 
-    // @ifdef TTL
+    // @ifdef SPRITE_TTL
     this.ttl--;
     // @endif
 
-    // @ifdef ANIMATION
+    // @ifdef SPRITE_ANIMATION
     if (this.currentAnimation) {
       this.currentAnimation.update(dt);
     }
@@ -3002,12 +3002,12 @@ class Sprite {
     let viewX = this.x;
     let viewY = this.y;
 
-    // @ifdef ANCHOR
+    // @ifdef SPRITE_ANCHOR
     anchorWidth = -this.width * this.anchor.x;
     anchorHeight = -this.height * this.anchor.y;
     // @endif
 
-    // @ifdef CAMERA
+    // @ifdef SPRITE_CAMERA
     viewX = this.viewX;
     viewY = this.viewY;
     // @endif
@@ -3015,14 +3015,14 @@ class Sprite {
     this.context.save();
     this.context.translate(viewX, viewY);
 
-    // @ifdef ROTATION
+    // @ifdef SPRITE_ROTATION
     // rotate around the anchor
     if (this.rotation) {
       this.context.rotate(this.rotation);
     }
     // @endif
 
-    // @ifdef IMAGE||ANIMATION
+    // @ifdef SPRITE_IMAGE||SPRITE_ANIMATION
     // flip sprite around the center so the x/y position does not change
     if (this._fx == -1 || this._fy == -1) {
       let x = this.width / 2 + anchorWidth;
@@ -3034,7 +3034,7 @@ class Sprite {
     }
     // @endif
 
-    // @ifdef IMAGE
+    // @ifdef SPRITE_IMAGE
     if (this.image) {
       this.context.drawImage(
         this.image,
@@ -3044,7 +3044,7 @@ class Sprite {
     }
     // @endif
 
-    // @ifdef ANIMATION
+    // @ifdef SPRITE_ANIMATION
     if (this.currentAnimation) {
       this.currentAnimation.render({
         x: anchorWidth,

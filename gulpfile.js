@@ -8,15 +8,17 @@ const rollup = require('rollup-stream');
 const source = require('vinyl-source-stream');
 require('./doc-tasks.js');
 
-const spriteContext = {
-  VELOCITY: true,
-  ACCELERATION: true,
-  ROTATION: true,
-  TTL: true,
-  ANCHOR: true,
-  CAMERA: true,
-  IMAGE: true,
-  ANIMATION: true
+const context = {
+  SPRITE_VELOCITY: true,
+  SPRITE_ACCELERATION: true,
+  SPRITE_ROTATION: true,
+  SPRITE_TTL: true,
+  SPRITE_ANCHOR: true,
+  SPRITE_CAMERA: true,
+  SPRITE_IMAGE: true,
+  SPRITE_ANIMATION: true
+
+  // DEBUG and VISUAL_DEBUG are turned off
 };
 
 function buildIife() {
@@ -40,7 +42,7 @@ function buildModule() {
 
 function distIife() {
   return gulp.src('kontra.js')
-    .pipe(preprocess(spriteContext))
+    .pipe(preprocess(context))
     .pipe(plumber())
     .pipe(terser())
     .pipe(plumber.stop())
@@ -58,7 +60,7 @@ function distIife() {
 
 function distModule() {
   return gulp.src('kontra.mjs')
-    .pipe(preprocess(spriteContext))
+    .pipe(preprocess(context))
     .pipe(plumber())
     .pipe(terser())
     .pipe(plumber.stop())

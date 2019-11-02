@@ -42,7 +42,7 @@ function buildModule() {
 
 function distIife() {
   return gulp.src('kontra.js')
-    .pipe(preprocess(context))
+    .pipe(preprocess({context}))
     .pipe(plumber())
     .pipe(terser())
     .pipe(plumber.stop())
@@ -60,7 +60,7 @@ function distIife() {
 
 function distModule() {
   return gulp.src('kontra.mjs')
-    .pipe(preprocess(context))
+    .pipe(preprocess({context}))
     .pipe(plumber())
     .pipe(terser())
     .pipe(plumber.stop())

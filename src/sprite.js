@@ -83,6 +83,12 @@ class Sprite {
      */
     this.context = getContext();
 
+    /**
+     * The color of the sprite if it was passed as an argument.
+     * @memberof Sprite
+     * @property {String} color
+     */
+
     // --------------------------------------------------
     // optionals
     // --------------------------------------------------
@@ -189,31 +195,22 @@ class Sprite {
     this._fx = this._fy = 1;
     // @endif
 
+    // add all properties to the sprite, overriding any defaults
+    Object.assign(this, properties);
+
     // @ifdef SPRITE_IMAGE
     /**
      * The image the sprite will use when drawn if passed as an argument.
      * @memberof Sprite
      * @property {Image|HTMLCanvasElement} image
      */
-    this.image = null;
-    // @endif
 
-    // add all properties to the sprite, overriding any defaults
-    Object.assign(this, properties);
-
-    // @ifdef SPRITE_IMAGE
     let { width, height, image } = properties;
     if (image) {
       this.width = (width !== undefined) ? width : image.width;
       this.height = (height !== undefined) ? height : image.height;
     }
     // @endif
-
-    /**
-     * The color of the sprite if it was passed as an argument.
-     * @memberof Sprite
-     * @property {String} color
-     */
   }
 
   // define getter and setter shortcut functions to make it easier to work with the

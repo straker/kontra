@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title></title>
+</head>
+<body>
+  <canvas id="game" style="border: 1px solid black" width="600" height="600"></canvas>
+  <script type="module">
+    import Sprite from './sprite.js';
+    import Text from './text.js';
+    import { init } from './core.js';
+
+    init(game);
+
+    window.sprite = new Sprite({
+      x: 100,
+      y: 100,
+      width: 100,
+      height: 100,
+      color: 'black'
+    });
+    window.sprite2 = new Sprite({
+      x: sprite.x + 50,
+      y: sprite.y + 50,
+      width: 25,
+      height: 25,
+      color: 'yellow',
+      anchor: {x: 0.5, y: 0.5}
+    });
+    window.sprite3 = new Sprite({
+      x: sprite.x + 75,
+      y: sprite.y + 75,
+      width: 10,
+      height: 10,
+      color: 'red',
+      anchor: {x: 0.5, y: 0.5}
+    });
+    sprite.addChild(sprite2)
+    sprite2.addChild(sprite3)
+    sprite.render();
+
+    window.text = new Text({
+      x: game.width / 2,
+      y: game.height / 2,
+      // width: 150,
+      color: 'black',
+      text: 'Hello my wonderful world!',
+      // dir: 'rtl',
+      // text: 'في XHMTL 1.0 يتم تحقيق ذلك بإضافة العنصر المضمن bdo.',
+      font: '26px Arial',
+      anchor: {x: 0.5, y: 0.5}
+    });
+
+    // window.text2 = new Text({
+    //   x: game.width / 2,
+    //   y: game.height / 2 + 50,
+    //   // width: 350,
+    //   color: 'black',
+    //   // dir: 'rtl',
+    //   text: 'Hello world!',
+    //   font: '26px Arial',
+    //   anchor: {x: 0.5, y: 0.5}
+    // });
+    text.render();
+    // text2.render();
+  </script>
+</body>
+</html>

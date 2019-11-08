@@ -1,4 +1,5 @@
 import { getContext } from './core.js'
+import { Factory } from './utils.js'
 
 /**
  * An object for drawing sprite sheet animations.
@@ -102,7 +103,7 @@ class Animation {
    * @returns {kontra.Animation} A new kontra.Animation instance.
    */
   clone() {
-    return animationFactory(this);
+    return new Animation(this);
   }
 
   /**
@@ -165,8 +166,4 @@ class Animation {
   }
 }
 
-export default function animationFactory(properties) {
-  return new Animation(properties);
-}
-animationFactory.prototype = Animation.prototype;
-animationFactory.class = Animation;
+export default Factory(Animation)

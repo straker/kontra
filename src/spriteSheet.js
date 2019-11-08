@@ -1,4 +1,5 @@
 import Animation from './animation.js'
+import { Factory } from './utils.js'
 
 /**
  * Parse a string of consecutive frames.
@@ -221,8 +222,4 @@ class SpriteSheet {
   }
 }
 
-export default function spriteSheetFactory(properties) {
-  return new SpriteSheet(properties);
-}
-spriteSheetFactory.prototype = SpriteSheet.prototype;
-spriteSheetFactory.class = SpriteSheet;
+export default Factory(SpriteSheet)

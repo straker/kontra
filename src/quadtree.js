@@ -1,4 +1,5 @@
 import { getCanvas } from './core.js'
+import { Factory } from './utils.js'
 
 /**
  * Determine which subnodes the object intersects with
@@ -279,7 +280,7 @@ class Quadtree {
     subHeight = this.bounds.height / 2 | 0;
 
     for (i = 0; i < 4; i++) {
-      this._s[i] = quadtreeFactory({
+      this._s[i] = new Quadtree({
         bounds: {
           x: this.bounds.x + (i % 2 === 1 ? subWidth : 0),  // nodes 1 and 3
           y: this.bounds.y + (i >= 2 ? subHeight : 0),      // nodes 2 and 3
@@ -320,8 +321,4 @@ class Quadtree {
    /* @endif */
 }
 
-export default function quadtreeFactory(properties) {
-  return new Quadtree(properties);
-}
-quadtreeFactory.prototype = Quadtree.prototype;
-quadtreeFactory.class = Quadtree;
+export default Factory(Quadtree)

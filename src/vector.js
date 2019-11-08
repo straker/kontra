@@ -1,3 +1,5 @@
+import { Factory } from './utils.js'
+
 /**
  * A simple 2d vector object.
  *
@@ -12,9 +14,18 @@
  * @param {Number} [y=0] - Y coordinate of the vector.
  */
 class Vector {
-  constructor(x = 0, y = 0) {
+  constructor(x = 0, y = 0, vec = {}) {
     this._x = x;
     this._y = y;
+
+    // preserve vector clamping when creating new vectors
+    if (vec._c) {
+      this.clamp(vec._a, vec._b, vec._d, vec._e);
+
+      // reset x and y so clamping takes effect
+      this.x = x;
+      this.y = y;
+    }
   }
 
   /**
@@ -28,7 +39,7 @@ class Vector {
    * @returns {kontra.Vector} A new kontra.Vector instance.
    */
   add(vec, dt = 1) {
-    return vectorFactory(
+    return new Vector(
       this.x + (vec.x || 0) * dt,
       this.y + (vec.y || 0) * dt,
       this
@@ -96,19 +107,4 @@ class Vector {
   }
 }
 
-export default function vectorFactory(x, y, vec = {}) {
-  let vector = new Vector(x, y);
-
-  // preserve vector clamping when creating new vectors
-  if (vec._c) {
-    vector.clamp(vec._a, vec._b, vec._d, vec._e);
-
-    // reset x and y so clamping takes effect
-    vector.x = x;
-    vector.y = y;
-  }
-
-  return vector;
-}
-vectorFactory.prototype = Vector.prototype;
-vectorFactory.class = Vector;
+export default Factory(Vector)

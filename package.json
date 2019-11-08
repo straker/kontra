@@ -7,8 +7,8 @@
   "sideEffects": false,
   "scripts": {
     "test": "karma start --single-run",
-    "test-watch": "karma start",
-    "test-sprite": "node test/spritePermutations",
+    "test:watch": "karma start",
+    "test:permutations": "node test/permutations",
     "build": "gulp build",
     "dist": "gulp dist"
   },

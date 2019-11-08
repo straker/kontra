@@ -1,4 +1,4 @@
-import GameObject from '../../src/gameObject.js'
+import GameObject from './gameObject.js'
 import { init, getCanvas, getContext } from '../../src/core.js'
 import { noop } from '../../src/utils.js'
 

@@ -8,8 +8,8 @@ module.exports = function(config) {
     frameworks: ['mocha', 'chai', 'sinon'],
     files: [
       {pattern: path.join(__dirname, '../../src/*.js'), type: 'module', included: false },
-      {pattern: path.join(__dirname, 'sprite.js'), type: 'module', included: false },
-      {pattern: path.join(__dirname, 'sprite.spec.js'), type: 'module' },
+      {pattern: path.join(__dirname, 'gameObject.js'), type: 'module', included: false },
+      {pattern: path.join(__dirname, 'gameObject.spec.js'), type: 'module' },
     ],
     proxies: {
       '/src': path.join('/absolute', __dirname, '../../src')

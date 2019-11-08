@@ -37,18 +37,6 @@ class Text extends GameObject {
     this._d = true;
   }
 
-  // @ifdef TEXT_RTL
-  get dir() {
-    // r = diRection
-    return this._r;
-  }
-
-  set dir(value) {
-    this._r = value;
-    this._d = true;
-  }
-  // @endif
-
   get width() {
     return this._w;
   }
@@ -122,7 +110,7 @@ class Text extends GameObject {
     let textAlign = this.textAlign;
 
     // @ifdef TEXT_RTL
-    textAlign = this.textAlign || this._r === 'rtl' ? 'right' : 'left';
+    textAlign = this.textAlign || this.context.canvas.dir === 'rtl' ? 'right' : 'left';
     // @endif
 
     // @ifdef TEXT_ALIGN||TEXT_RTL

@@ -1,5 +1,7 @@
 node_modules
 .DS_Store
 coverage
-test/spritePermutations/gameObject.js
-test/spritePermutations/*.spec.js
+test/permutations/*.js
+test/permutations/*.spec.js
+
+!test/permutations/index.js

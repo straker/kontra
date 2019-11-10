@@ -126,7 +126,7 @@
  */
 
 /**
- * Managing the correct x and y position of sprites on a large tile map can be tricky. You can add objects to the tile map which will sync the camera position with the sprite. kontra.Sprite will automatically draw the sprite for you at the correct position on the tile map even while the camera moves.
+ * Managing the correct x and y position of sprites on a large tile map can be tricky. You can add objects to the tile map which will sync the camera position with the sprite. [Sprite](api/sprite) will automatically draw the sprite for you at the correct position on the tile map even while the camera moves.
  *
  * @sectionName Adding Objects to the TileMap
  * @example

@@ -6,7 +6,8 @@ const plumber = require('gulp-plumber');
 const preprocess = require('gulp-preprocess');
 const rollup = require('rollup-stream');
 const source = require('vinyl-source-stream');
-require('./doc-tasks.js');
+require('./tasks/docs.js');
+require('./tasks/typescript.js');
 
 const context = {
   SPRITE_VELOCITY: true,

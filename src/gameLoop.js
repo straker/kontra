@@ -45,7 +45,7 @@ function clear() {
  *
  * loop.start();
  * ```
- * @sectionName GameLoop
+ * @class GameLoop
  *
  * @param {Object}   properties - Properties of the game loop.
  * @param {Function} properties.update - Function called every frame to update the game. Is passed the fixed `dt` as a parameter.

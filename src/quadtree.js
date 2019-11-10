@@ -210,7 +210,7 @@ class Quadtree {
    * @memberof Quadtree
    * @function add
    *
-   * @param {Object|Object[]} objectsN - Objects to add to the quadtree.
+   * @param {Object|Object[]} objects - Objects to add to the quadtree.
    */
   add() {
     let i, j, object, obj, indices, index;

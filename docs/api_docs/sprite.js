@@ -61,7 +61,7 @@
 /**
  * A sprite can use a spritesheet animation as well. To create an animation sprite, pass the `animations` argument. The size of the sprite will automatically be set as the width and height of a frame of the spritesheet.
  *
- * A sprite can have multiple named animations. The easiest way to create animations is to use kontra.SpriteSheet. All animations will automatically be [cloned](animation#clone) so no two sprites update the same animation.
+ * A sprite can have multiple named animations. The easiest way to create animations is to use [SpriteSheet](api/spriteSheet). All animations will automatically be [cloned](animation#clone) so no two sprites update the same animation.
  *
  * @sectionName Animation Sprite
  * @example

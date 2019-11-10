@@ -258,7 +258,7 @@ export function setDataPath(path) {
  *
  * @param {String} url - The URL to the Image file.
  *
- * @returns {Promise} A deferred promise. Promise resolves with the Image.
+ * @returns {Promise<HTMLImageElement>} A deferred promise. Promise resolves with the Image.
  */
 export function loadImage(url) {
   addGlobal();
@@ -307,7 +307,7 @@ export function loadImage(url) {
  *
  * @param {String} url - The URL to the Audio file.
  *
- * @returns {Promise} A deferred promise. Promise resolves with the Audio.
+ * @returns {Promise<HTMLAudioElement>} A deferred promise. Promise resolves with the Audio.
  */
 export function loadAudio(url) {
   return new Promise((resolve, reject) => {

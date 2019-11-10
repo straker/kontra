@@ -65,6 +65,9 @@
         {{#if example}}
             {{~> example-output ~}}
           {{/if}}
+        {{#if extends }}
+          <p><strong>Extends:</strong> {{{ extends }}}</p>
+        {{/if}}
         {{> parameter-table}}
         {{/with}}
 

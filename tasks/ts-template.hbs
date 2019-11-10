@@ -1,0 +1,27 @@
+declare namespace kontra {
+  {{#each allSections}}
+    {{#if class}}
+  class {{class}}{{#if extends}} extends {{extends}}{{/if}} {
+    constructor({{param}});
+    {{#each children}}
+      {{#if function}}
+    {{name}}({{{param}}}): {{{returns}}};
+      {{/if}}
+      {{#if property}}
+    {{property.name}}: {{property.type}};
+      {{/if}}
+    {{/each}}
+  }
+    {{/if}}
+    {{#unless memberof}}
+      {{#if function}}
+  function {{name}}({{{param}}}): {{{returns}}};
+      {{/if}}
+      {{#if property}}
+  let {{property.name}}: {{property.type}};
+      {{/if}}
+    {{/unless}}
+  {{/each}}
+}
+
+export = kontra

@@ -17,15 +17,15 @@ import Vector from './vector.js'
  * @param {Number} [properties.width] - Width of the game object.
  * @param {Number} [properties.height] - Height of the game object.
  *
- * @param {Number} [properties.ttl=Infinity] - How many frames the game object should be alive. Used by kontra.Pool.
+ * @param {Number} [properties.ttl=Infinity] - How many frames the game object should be alive. Used by [Pool](api/pool).
  * @param {Number} [properties.rotation=0] - game objects rotation around the origin in radians.
  * @param {Number} [properties.anchor={x:0,y:0}] - The x and y origin of the game object. {x:0, y:0} is the top left corner of the game object, {x:1, y:1} is the bottomright corner.
  *
- * @param {Canvas​Rendering​Context2D} [properties.context] - The context the game object should draw to. Defaults to [core.getContext()](api/core#getContext).
+ * @param {CanvasRenderingContext2D} [properties.context] - The context the game object should draw to. Defaults to [core.getContext()](api/core#getContext).
  *
  * @param {Function} [properties.update] - Function called every frame to update the game object.
  * @param {Function} [properties.render] - Function called every frame to render the game object.
- * @param {*} [properties.*] - Any additional properties you need added to the game object. For example, if you pass `gameObject({type: 'player'})` then the game object will also have a property of the same name and value. You can pass as many additional properties as you want.
+ * @param {...*} [properties.props] - Any additional properties you need added to the game object. For example, if you pass `gameObject({type: 'player'})` then the game object will also have a property of the same name and value. You can pass as many additional properties as you want.
  */
 class GameObject {
   constructor(properties) {
@@ -48,7 +48,7 @@ class GameObject {
     /**
      * The game objects position vector. The game objects position is its position in the world, as opposed to the position in the [viewport](api/gameObject#viewX) or [local position](api/gameObject#localPosition). Typically the position in the world, viewport, and local position are the same value. If the game object has been [added to a tileEngine](/api/tileEngine#addObject), the position vector represents where in the tile world the game object is while the viewport represents where to draw the game object in relation to the top-left corner of the canvas.
      * @memberof GameObject
-     * @property {kontra.Vector} position
+     * @property {Vector} position
      */
     this.position = Vector();
 
@@ -68,7 +68,7 @@ class GameObject {
     /**
      * The context the game object will draw to.
      * @memberof GameObject
-     * @property {Canvas​Rendering​Context2D} context
+     * @property {CanvasRenderingContext2D} context
      */
     this.context = getContext();
 
@@ -86,7 +86,7 @@ class GameObject {
     /**
      * The game objects local position vector, which is its position relative to a parent object. If the game object does not have a parent object, the local position will be the same as the [position vector](api/gameObject#position].
      * @memberof GameObject
-     * @property {kontra.Vector} localPosition
+     * @property {Vector} localPosition
      */
     this.localPosition = Vector();
 
@@ -94,7 +94,7 @@ class GameObject {
     /**
      * The game objects local rotation, which is its rotation relative to a parent object. If the game object does not have a parent object, the local rotation will be the same as the [rotation](api/gameObject#rotation].
      * @memberof GameObject
-     * @property {kontra.Vector} localPosition
+     * @property {Vector} localRotation
      */
     this.localRotation = 0;
 
@@ -105,13 +105,13 @@ class GameObject {
     /**
      * The game objects parent object.
      * @memberof GameObject
-     * @property {kontra.GameObject} parent
+     * @property {GameObject} parent
      */
 
     /**
      * The game objects children objects.
      * @memberof GameObject
-     * @property {kontra.GameObject[]} children
+     * @property {GameObject[]} children
      */
     this.children = [];
     // @endif
@@ -120,7 +120,7 @@ class GameObject {
     /**
      * The game objects velocity vector.
      * @memberof GameObject
-     * @property {kontra.Vector} velocity
+     * @property {Vector} velocity
      */
     this.velocity = Vector();
     // @endif
@@ -129,7 +129,7 @@ class GameObject {
     /**
      * The game objects acceleration vector.
      * @memberof GameObject
-     * @property {kontra.Vector} acceleration
+     * @property {Vector} acceleration
      */
     this.acceleration = Vector();
     // @endif
@@ -145,7 +145,7 @@ class GameObject {
 
     // @ifdef GAMEOBJECT_TTL
     /**
-     * How may frames the game object should be alive. Primarily used by kontra.Pool to know when to recycle an object.
+     * How may frames the game object should be alive. Primarily used by [Pool](api/pool) to know when to recycle an object.
      * @memberof GameObject
      * @property {Number} ttl
      */
@@ -351,7 +351,7 @@ class GameObject {
 
   // @ifdef GAMEOBJECT_TTL
   /**
-   * Check if the game object is alive. Primarily used by kontra.Pool to know when to recycle an object.
+   * Check if the game object is alive. Primarily used by [Pool](api/pool) to know when to recycle an object.
    * @memberof GameObject
    * @function isAlive
    *

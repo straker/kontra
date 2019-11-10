@@ -55,6 +55,7 @@
               <li><a href="api/sprite" aria-current="page">Sprite</a></li>
               <li><a href="api/spriteSheet" >SpriteSheet</a></li>
               <li><a href="api/store" >Store</a></li>
+              <li><a href="api/text" >Text</a></li>
               <li><a href="api/tileEngine" >TileEngine</a></li>
               <li><a href="api/vector" >Vector</a></li>
             </ul>
@@ -71,7 +72,8 @@
         <h1>Sprite(&#8203;properties)
         </h1>
 
-        <p>A versatile way to update and draw your game objects. It can handle simple rectangles, images, and sprite sheet animations. It can be used for your main player object as well as tiny particles in a particle engine.</p>
+        <p>A versatile way to update and draw your sprites. It can handle simple rectangles, images, and sprite sheet animations. It can be used for your main player object as well as tiny particles in a particle engine.</p>
+          <p><strong>Extends:</strong> GameObject</p>
         <h3 id="title-Sprite"><span class="visually-hidden">Sprite</span> Parameters</span></h3>
         <dl aria-labelledby="title-Sprite">
           <dt>
@@ -81,112 +83,16 @@
           <dd><p>Object. Properties of the sprite.</p>
         </dd>
           <dt>
-            <code>properties.x</code>
-            
-          </dt>
-          <dd><p>Number. X coordinate of the position vector.</p>
-        </dd>
-          <dt>
-            <code>properties.y</code>
-            
-          </dt>
-          <dd><p>Number. Y coordinate of the position vector.</p>
-        </dd>
-          <dt>
-            <code>properties.dx</code>
-            <span class="optional">Optional</span>
-          </dt>
-          <dd><p>Number. X coordinate of the velocity vector.</p>
-        </dd>
-          <dt>
-            <code>properties.dy</code>
-            <span class="optional">Optional</span>
-          </dt>
-          <dd><p>Number. Y coordinate of the velocity vector.</p>
-        </dd>
-          <dt>
-            <code>properties.ddx</code>
-            <span class="optional">Optional</span>
-          </dt>
-          <dd><p>Number. X coordinate of the acceleration vector.</p>
-        </dd>
-          <dt>
-            <code>properties.ddy</code>
-            <span class="optional">Optional</span>
-          </dt>
-          <dd><p>Number. Y coordinate of the acceleration vector.</p>
-        </dd>
-          <dt>
-            <code>properties.color</code>
-            <span class="optional">Optional</span>
-          </dt>
-          <dd><p>String. Fill color for the sprite if no image or animation is provided.</p>
-        </dd>
-          <dt>
-            <code>properties.width</code>
-            <span class="optional">Optional</span>
-          </dt>
-          <dd><p>Number. Width of the sprite.</p>
-        </dd>
-          <dt>
-            <code>properties.height</code>
-            <span class="optional">Optional</span>
-          </dt>
-          <dd><p>Number. Height of the sprite.</p>
-        </dd>
-          <dt>
-            <code>properties.ttl</code>
-            <span class="optional">Optional</span>
-          </dt>
-          <dd><p>Number. How many frames the sprite should be alive. Used by <a href="api/pool">Pool</a>. Defaults to <code>Infinity</code>.</p>
-        </dd>
-          <dt>
-            <code>properties.rotation</code>
-            <span class="optional">Optional</span>
-          </dt>
-          <dd><p>Number. Sprites rotation around the origin in radians. Defaults to <code>0</code>.</p>
-        </dd>
-          <dt>
-            <code>properties.anchor</code>
-            <span class="optional">Optional</span>
-          </dt>
-          <dd><p>Number. The x and y origin of the sprite. {x:0, y:0} is the top left corner of the sprite, {x:1, y:1} is the bottomright corner. Defaults to <code>{x:0,y:0}</code>.</p>
-        </dd>
-          <dt>
-            <code>properties.context</code>
-            <span class="optional">Optional</span>
-          </dt>
-          <dd><p>Canvas​Rendering​Context2D. The context the sprite should draw to. Defaults to <a href="api/core#getContext">core.getContext()</a>.</p>
-        </dd>
-          <dt>
             <code>properties.image</code>
             <span class="optional">Optional</span>
           </dt>
-          <dd><p>Image or HTMLCanvasElement. Use an image to draw the sprite.</p>
+          <dd><p>HTMLImageElement or HTMLCanvasElement. Use an image to draw the sprite.</p>
         </dd>
           <dt>
             <code>properties.animations</code>
             <span class="optional">Optional</span>
           </dt>
-          <dd><p>Object. An object of <a href="api/animation">Animations</a> from a <a href="api/spritesheet">Spritesheet</a> to animate the sprite.</p>
-        </dd>
-          <dt>
-            <code>properties.update</code>
-            <span class="optional">Optional</span>
-          </dt>
-          <dd><p>Function. Function called every frame to update the sprite.</p>
-        </dd>
-          <dt>
-            <code>properties.render</code>
-            <span class="optional">Optional</span>
-          </dt>
-          <dd><p>Function. Function called every frame to render the sprite.</p>
-        </dd>
-          <dt>
-            <code>properties.*</code>
-            <span class="optional">Optional</span>
-          </dt>
-          <dd><p>Any type. Any additional properties you need added to the sprite. For example, if you pass <code>Sprite({type: &#39;player&#39;})</code> then the sprite will also have a property of the same name and value. You can pass as many additional properties as you want.</p>
+          <dd><p>Object. An object of <a href="api/animation">Animations</a> from a <a href="api/spriteSheet">Spritesheet</a> to animate the sprite.</p>
         </dd>
         </dl>
         
@@ -219,8 +125,18 @@
                   </a>
                 </li>
                 <li>
+                  <a href="api/sprite#height">
+                    <span>Sprite&#8203;.height</span>
+                  </a>
+                </li>
+                <li>
                   <a href="api/sprite#image">
                     <span>Sprite&#8203;.image</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="api/sprite#width">
+                    <span>Sprite&#8203;.width</span>
                   </a>
                 </li>
               </ul>
@@ -248,22 +164,22 @@
           </h2>
 
           <p>In its most basic form, a sprite is a rectangle with a fill color. To create a rectangle sprite, pass the arguments <code>width</code>, <code>height</code>, and <code>color</code>. A rectangle sprite is great for initial prototyping and particles.</p>
-<canvas id="game-canvas-474"></canvas>
+<canvas id="game-canvas-177"></canvas>
 
 <div class="tablist">
   <ul role="tablist">
     <li role="presentation" data-tab="global">
-      <button role="tab" id="game-canvas-474-global-tab">Global Object</button>
+      <button role="tab" id="game-canvas-177-global-tab">Global Object</button>
     </li>
     <li role="presentation" data-tab="es">
-      <button role="tab" id="game-canvas-474-es-tab">ES Module Import</button>
+      <button role="tab" id="game-canvas-177-es-tab">ES Module Import</button>
     </li>
     <li role="presentation" data-tab="bundle">
-      <button role="tab" id="game-canvas-474-bundle-tab">Module Bundler</button>
+      <button role="tab" id="game-canvas-177-bundle-tab">Module Bundler</button>
     </li>
     <li role="presentation"></li>
   </ul>
-  <section role="tabpanel" aria-labelledby=game-canvas-474-global-tab data-tabpanel="global">
+  <section role="tabpanel" aria-labelledby=game-canvas-177-global-tab data-tabpanel="global">
     <pre><code class="lang-js">let { Sprite } &#x3D; kontra
 
 let sprite &#x3D; Sprite({
@@ -279,7 +195,7 @@ let sprite &#x3D; Sprite({
 
 sprite.render();</code></pre>
   </section>
-  <section role="tabpanel" aria-labelledby=game-canvas-474-es-tab data-tabpanel="es">
+  <section role="tabpanel" aria-labelledby=game-canvas-177-es-tab data-tabpanel="es">
     <pre><code class="lang-js">import { Sprite } from &#x27;path/to/kontra.mjs&#x27;
 
 let sprite &#x3D; Sprite({
@@ -295,7 +211,7 @@ let sprite &#x3D; Sprite({
 
 sprite.render();</code></pre>
   </section>
-  <section role="tabpanel" aria-labelledby=game-canvas-474-bundle-tab data-tabpanel="bundle">
+  <section role="tabpanel" aria-labelledby=game-canvas-177-bundle-tab data-tabpanel="bundle">
     <pre><code class="lang-js">import { Sprite } from &#x27;kontra&#x27;;
 
 let sprite &#x3D; Sprite({
@@ -314,8 +230,8 @@ sprite.render();</code></pre>
 </div>
 
 <script>(function() {
-  kontra.init("game-canvas-474");
-  var canvas = document.querySelector("#game-canvas-474");
+  kontra.init("game-canvas-177");
+  var canvas = document.querySelector("#game-canvas-177");
   canvas.width = 600;
   canvas.height = 200;
   var context = canvas.getContext("2d");
@@ -347,22 +263,22 @@ sprite.render();
           </h2>
 
           <p>A sprite can use an image instead of drawing a rectangle. To create an image sprite, pass the <code>image</code> argument. The size of the sprite will automatically be set as the width and height of the image.</p>
-<canvas id="game-canvas-475"></canvas>
+<canvas id="game-canvas-178"></canvas>
 
 <div class="tablist">
   <ul role="tablist">
     <li role="presentation" data-tab="global">
-      <button role="tab" id="game-canvas-475-global-tab">Global Object</button>
+      <button role="tab" id="game-canvas-178-global-tab">Global Object</button>
     </li>
     <li role="presentation" data-tab="es">
-      <button role="tab" id="game-canvas-475-es-tab">ES Module Import</button>
+      <button role="tab" id="game-canvas-178-es-tab">ES Module Import</button>
     </li>
     <li role="presentation" data-tab="bundle">
-      <button role="tab" id="game-canvas-475-bundle-tab">Module Bundler</button>
+      <button role="tab" id="game-canvas-178-bundle-tab">Module Bundler</button>
     </li>
     <li role="presentation"></li>
   </ul>
-  <section role="tabpanel" aria-labelledby=game-canvas-475-global-tab data-tabpanel="global">
+  <section role="tabpanel" aria-labelledby=game-canvas-178-global-tab data-tabpanel="global">
     <pre><code class="lang-js">let { Sprite } &#x3D; kontra
 
 let image &#x3D; new Image();
@@ -380,7 +296,7 @@ image.onload &#x3D; function() {
   sprite.render();
 };</code></pre>
   </section>
-  <section role="tabpanel" aria-labelledby=game-canvas-475-es-tab data-tabpanel="es">
+  <section role="tabpanel" aria-labelledby=game-canvas-178-es-tab data-tabpanel="es">
     <pre><code class="lang-js">import { Sprite } from &#x27;path/to/kontra.mjs&#x27;
 
 let image &#x3D; new Image();
@@ -398,7 +314,7 @@ image.onload &#x3D; function() {
   sprite.render();
 };</code></pre>
   </section>
-  <section role="tabpanel" aria-labelledby=game-canvas-475-bundle-tab data-tabpanel="bundle">
+  <section role="tabpanel" aria-labelledby=game-canvas-178-bundle-tab data-tabpanel="bundle">
     <pre><code class="lang-js">import { Sprite } from &#x27;kontra&#x27;;
 
 let image &#x3D; new Image();
@@ -419,8 +335,8 @@ image.onload &#x3D; function() {
 </div>
 
 <script>(function() {
-  kontra.init("game-canvas-475");
-  var canvas = document.querySelector("#game-canvas-475");
+  kontra.init("game-canvas-178");
+  var canvas = document.querySelector("#game-canvas-178");
   canvas.width = 600;
   canvas.height = 200;
   var context = canvas.getContext("2d");
@@ -455,22 +371,22 @@ image.onload = function() {
 
           <p>A sprite can use a spritesheet animation as well. To create an animation sprite, pass the <code>animations</code> argument. The size of the sprite will automatically be set as the width and height of a frame of the spritesheet.</p>
 <p>A sprite can have multiple named animations. The easiest way to create animations is to use <a href="api/spriteSheet">SpriteSheet</a>. All animations will automatically be <a href="animation#clone">cloned</a> so no two sprites update the same animation.</p>
-<canvas id="game-canvas-476"></canvas>
+<canvas id="game-canvas-179"></canvas>
 
 <div class="tablist">
   <ul role="tablist">
     <li role="presentation" data-tab="global">
-      <button role="tab" id="game-canvas-476-global-tab">Global Object</button>
+      <button role="tab" id="game-canvas-179-global-tab">Global Object</button>
     </li>
     <li role="presentation" data-tab="es">
-      <button role="tab" id="game-canvas-476-es-tab">ES Module Import</button>
+      <button role="tab" id="game-canvas-179-es-tab">ES Module Import</button>
     </li>
     <li role="presentation" data-tab="bundle">
-      <button role="tab" id="game-canvas-476-bundle-tab">Module Bundler</button>
+      <button role="tab" id="game-canvas-179-bundle-tab">Module Bundler</button>
     </li>
     <li role="presentation"></li>
   </ul>
-  <section role="tabpanel" aria-labelledby=game-canvas-476-global-tab data-tabpanel="global">
+  <section role="tabpanel" aria-labelledby=game-canvas-179-global-tab data-tabpanel="global">
     <pre><code class="lang-js">let { Sprite, SpriteSheet, GameLoop } &#x3D; kontra
 
 let image &#x3D; new Image();
@@ -513,7 +429,7 @@ image.onload &#x3D; function() {
   loop.start();
 };</code></pre>
   </section>
-  <section role="tabpanel" aria-labelledby=game-canvas-476-es-tab data-tabpanel="es">
+  <section role="tabpanel" aria-labelledby=game-canvas-179-es-tab data-tabpanel="es">
     <pre><code class="lang-js">import { Sprite, SpriteSheet, GameLoop } from &#x27;path/to/kontra.mjs&#x27;
 
 let image &#x3D; new Image();
@@ -556,7 +472,7 @@ image.onload &#x3D; function() {
   loop.start();
 };</code></pre>
   </section>
-  <section role="tabpanel" aria-labelledby=game-canvas-476-bundle-tab data-tabpanel="bundle">
+  <section role="tabpanel" aria-labelledby=game-canvas-179-bundle-tab data-tabpanel="bundle">
     <pre><code class="lang-js">import { Sprite, SpriteSheet, GameLoop } from &#x27;kontra&#x27;;
 
 let image &#x3D; new Image();
@@ -602,8 +518,8 @@ image.onload &#x3D; function() {
 </div>
 
 <script>(function() {
-  kontra.init("game-canvas-476");
-  var canvas = document.querySelector("#game-canvas-476");
+  kontra.init("game-canvas-179");
+  var canvas = document.querySelector("#game-canvas-179");
   canvas.width = 600;
   canvas.height = 200;
   var context = canvas.getContext("2d");
@@ -668,22 +584,22 @@ image.onload = function() {
           </h2>
 
           <p>If you need to draw a different shape, such as a circle, you can pass in custom properties and a render function to handle drawing the sprite.</p>
-<canvas id="game-canvas-477"></canvas>
+<canvas id="game-canvas-180"></canvas>
 
 <div class="tablist">
   <ul role="tablist">
     <li role="presentation" data-tab="global">
-      <button role="tab" id="game-canvas-477-global-tab">Global Object</button>
+      <button role="tab" id="game-canvas-180-global-tab">Global Object</button>
     </li>
     <li role="presentation" data-tab="es">
-      <button role="tab" id="game-canvas-477-es-tab">ES Module Import</button>
+      <button role="tab" id="game-canvas-180-es-tab">ES Module Import</button>
     </li>
     <li role="presentation" data-tab="bundle">
-      <button role="tab" id="game-canvas-477-bundle-tab">Module Bundler</button>
+      <button role="tab" id="game-canvas-180-bundle-tab">Module Bundler</button>
     </li>
     <li role="presentation"></li>
   </ul>
-  <section role="tabpanel" aria-labelledby=game-canvas-477-global-tab data-tabpanel="global">
+  <section role="tabpanel" aria-labelledby=game-canvas-180-global-tab data-tabpanel="global">
     <pre><code class="lang-js">let { Sprite } &#x3D; kontra
 
 let sprite &#x3D; Sprite({
@@ -706,7 +622,7 @@ let sprite &#x3D; Sprite({
 
 sprite.render();</code></pre>
   </section>
-  <section role="tabpanel" aria-labelledby=game-canvas-477-es-tab data-tabpanel="es">
+  <section role="tabpanel" aria-labelledby=game-canvas-180-es-tab data-tabpanel="es">
     <pre><code class="lang-js">import { Sprite } from &#x27;path/to/kontra.mjs&#x27;
 
 let sprite &#x3D; Sprite({
@@ -729,7 +645,7 @@ let sprite &#x3D; Sprite({
 
 sprite.render();</code></pre>
   </section>
-  <section role="tabpanel" aria-labelledby=game-canvas-477-bundle-tab data-tabpanel="bundle">
+  <section role="tabpanel" aria-labelledby=game-canvas-180-bundle-tab data-tabpanel="bundle">
     <pre><code class="lang-js">import { Sprite } from &#x27;kontra&#x27;;
 
 let sprite &#x3D; Sprite({
@@ -755,8 +671,8 @@ sprite.render();</code></pre>
 </div>
 
 <script>(function() {
-  kontra.init("game-canvas-477");
-  var canvas = document.querySelector("#game-canvas-477");
+  kontra.init("game-canvas-180");
+  var canvas = document.querySelector("#game-canvas-180");
   canvas.width = 600;
   canvas.height = 200;
   var context = canvas.getContext("2d");
@@ -930,6 +846,18 @@ sprite.playAnimation(&#39;idle&#39;);</code></pre></section>
           
         </section>
         <section>
+          <h2 id="height">
+            <a href="api/sprite#height" class="section-link">
+              <span>Sprite&#8203;.height</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
+
+          <p>The height of the sprite. If the sprite is a <a href="api/sprite#rectangle-sprite">rectangle sprite</a>, it uses the passed in value. For an <a href="api/sprite#image-sprite">image sprite</a> it is the height of the image. And for an <a href="api/sprite#animation-sprite">animation sprite</a> it is the height of a single frame of the animation.</p>
+<p>Setting the value to a negative number will result in the sprite being flipped across the horizontal axis while the height will remain a positive value.</p>
+          
+        </section>
+        <section>
           <h2 id="image">
             <a href="api/sprite#image" class="section-link">
               <span>Sprite&#8203;.image</span>
@@ -1035,6 +963,18 @@ sprite.playAnimation(&#39;idle&#39;);</code></pre></section>
             <dd><p>String. Name of the animation to play.</p>
           </dd>
           </dl>
+          
+        </section>
+        <section>
+          <h2 id="width">
+            <a href="api/sprite#width" class="section-link">
+              <span>Sprite&#8203;.width</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
+
+          <p>The width of the sprite. If the sprite is a <a href="api/sprite#rectangle-sprite">rectangle sprite</a>, it uses the passed in value. For an <a href="api/sprite#image-sprite">image sprite</a> it is the width of the image. And for an <a href="api/sprite#animation-sprite">animation sprite</a> it is the width of a single frame of the animation.</p>
+<p>Setting the value to a negative number will result in the sprite being flipped across the vertical axis while the width will remain a positive value.</p>
           
         </section>
 

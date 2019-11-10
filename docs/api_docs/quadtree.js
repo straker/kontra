@@ -22,7 +22,7 @@
  *
  * You should clear the quadtree each frame since the quadtree is only a snapshot of the position of the objects when they were added. Since the quadtree doesn't know anything about those objects, it doesn't know when an object moved or when it should be removed from the tree.
  *
- * Objects added to the tree must have the properties `x`, `y`, `width`, and `height` so that their position in the quadtree can be calculated. kontra.Sprite defines these properties for you.
+ * Objects added to the tree must have the properties `x`, `y`, `width`, and `height` so that their position in the quadtree can be calculated. [Sprite](api/sprite) defines these properties for you.
  *
  * When you need to get all objects in the same node as another object, use the quadtrees [get()](api/quadtree#get) function.
  *

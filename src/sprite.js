@@ -7,8 +7,8 @@ import { Factory } from './utils.js';
  * @extends GameObject
  *
  * @param {Object} properties - Properties of the sprite.
- * @param {Image|HTMLCanvasElement} [properties.image] - Use an image to draw the sprite.
- * @param {Object} [properties.animations] - An object of [Animations](api/animation) from a kontra.Spritesheet to animate the sprite.
+ * @param {HTMLImageElement|HTMLCanvasElement} [properties.image] - Use an image to draw the sprite.
+ * @param {Object} [properties.animations] - An object of [Animations](api/animation) from a [Spritesheet](api/spriteSheet) to animate the sprite.
  */
 class Sprite extends GameObject {
   /**
@@ -44,7 +44,7 @@ class Sprite extends GameObject {
     /**
      * The image the sprite will use when drawn if passed as an argument.
      * @memberof Sprite
-     * @property {Image|HTMLCanvasElement} image
+     * @property {HTMLImageElement|HTMLCanvasElement} image
      */
 
     let { width, height, image } = properties;
@@ -57,7 +57,7 @@ class Sprite extends GameObject {
 
   // @ifdef SPRITE_ANIMATION
   /**
-   * An object of [Animations](api/animation) from a kontra.SpriteSheet to animate the sprite. Each animation is named so that it can can be used by name for the sprites [playAnimation()](api/sprite#playAnimation) function.
+   * An object of [Animations](api/animation) from a [SpriteSheet](api/spriteSheet) to animate the sprite. Each animation is named so that it can can be used by name for the sprites [playAnimation()](api/sprite#playAnimation) function.
    *
    * ```js
    * import { Sprite, SpriteSheet } from 'kontra';
@@ -106,7 +106,7 @@ class Sprite extends GameObject {
     /**
      * The currently playing Animation object if `animations` was passed as an argument.
      * @memberof Sprite
-     * @property {kontra.Animation} currentAnimation
+     * @property {Animation} currentAnimation
      */
     this.currentAnimation = firstAnimation;
     this.width = this.width || firstAnimation.width;

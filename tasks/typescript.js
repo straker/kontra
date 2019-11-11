@@ -47,7 +47,6 @@ function parseType(type) {
     if (baseTypes.includes(t)) {
       t = t.toLowerCase();
     }
-    t = t.replace('object', 'any');
     if (t === 'function') {
       t = 'Function'
     }
@@ -103,14 +102,22 @@ const tags = {
       return;
     }
 
-    entity.name = name + (optional ? '?' : '');
+    entity.name = name;
     entity.type = type;
+    entity.optional = optional;
 
     this.block.param = this.block.param || [];
 
     if (parentName) {
       let parentEntity = this.block.param.find(param => param.name === parentName);
       parentEntity.children = parentEntity.children || [];
+
+      // turn nested rest parameter into [name: string]: any
+      // @see https://stackoverflow.com/questions/50288205/destructuring-a-function-parameter-object-and-rest
+      if (name.startsWith('...')) {
+        entity.name = `[${name.substr(3)}: string]`;
+      }
+
       parentEntity.children.push(entity);
     }
     else {
@@ -168,24 +175,49 @@ function normalizeParams(param) {
   let children = '';
   if (param.children) {
     children = param.children
-      .map(child => `${child.name}: ${child.type}`)
+      .map(child => `${child.name}${child.optional ? '?' : ''}: ${child.type}`)
       .join(', ');
   }
 
-  let str = `${param.name}: ${param.type}`;
+  let str = `${param.name}${param.optional ? '?' : ''}: ${param.type}`;
 
   if (children) {
-    str = `${param.name}: {${children}}`;
+    str = `${param.name}${param.optional ? '?' : ''}: {${children}}`;
   }
 
   return str;
 }
 
+function mergeParam(obj1, obj2) {
+  obj2.param.forEach(param => {
+    let rootParam = obj1.param.find(p => p.name === param.name);
+    if (rootParam && rootParam.children && param.children) {
+      rootParam.children = rootParam.children.concat(param.children);
+    }
+  });
+}
+
 function livingcssPreprocess(context, template, Handlebars) {
   context.allSections.forEach(section => {
-    // console.log('\n\n', section);
+    // add any prop to GameObject
+    if (section.name === 'GameObject') {
+      section.children.push({
+        memberof: 'GameObject',
+        property: {
+          name: '[prop: string]',
+          type: 'any'
+        }
+      });
+    }
+
+    // merge parent function parameters onto child
+    if (section.extends) {
+      let parentSection = context.allSections.find(parent => parent.name === section.extends);
+      mergeParam(section, parentSection);
+    }
+
     if (section.param) {
-      section.param = section.param
+      section.params = section.param
         .map(normalizeParams)
         .join(', ');
     }
@@ -193,7 +225,7 @@ function livingcssPreprocess(context, template, Handlebars) {
       section.children = section.children
         .map(child => {
           if (child.param) {
-            child.param = child.param
+            child.params = child.param
               .map(normalizeParams)
               .join(', ');
           }

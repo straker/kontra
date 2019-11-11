@@ -1,31 +1,31 @@
 import { getContext } from './core.js'
 import Vector from './vector.js'
+import { Factory } from './utils.js'
 
 /**
  * A versatile way to update and draw your game objects. It can handle simple rectangles, images, and game object sheet animations. It can be used for your main player object as well as tiny particles in a particle engine.
  * @class GameObject
  *
- * @param {Object} properties - Properties of the game object.
- * @param {Number} properties.x - X coordinate of the position vector.
- * @param {Number} properties.y - Y coordinate of the position vector.
+ * @param {Object} [properties] - Properties of the game object.
+ * @param {Number} [properties.x] - X coordinate of the position vector.
+ * @param {Number} [properties.y] - Y coordinate of the position vector.
  * @param {Number} [properties.dx] - X coordinate of the velocity vector.
  * @param {Number} [properties.dy] - Y coordinate of the velocity vector.
  * @param {Number} [properties.ddx] - X coordinate of the acceleration vector.
  * @param {Number} [properties.ddy] - Y coordinate of the acceleration vector.
  *
- * @param {String} [properties.color] - Fill color for the game object if no image or animation is provided.
  * @param {Number} [properties.width] - Width of the game object.
  * @param {Number} [properties.height] - Height of the game object.
  *
  * @param {Number} [properties.ttl=Infinity] - How many frames the game object should be alive. Used by [Pool](api/pool).
  * @param {Number} [properties.rotation=0] - game objects rotation around the origin in radians.
- * @param {Number} [properties.anchor={x:0,y:0}] - The x and y origin of the game object. {x:0, y:0} is the top left corner of the game object, {x:1, y:1} is the bottomright corner.
+ * @param {Object} [properties.anchor={x:0,y:0}] - The x and y origin of the game object. {x:0, y:0} is the top left corner of the game object, {x:1, y:1} is the bottomright corner.
  *
  * @param {CanvasRenderingContext2D} [properties.context] - The context the game object should draw to. Defaults to [core.getContext()](api/core#getContext).
  *
  * @param {Function} [properties.update] - Function called every frame to update the game object.
  * @param {Function} [properties.render] - Function called every frame to render the game object.
- * @param {...*} [properties.props] - Any additional properties you need added to the game object. For example, if you pass `gameObject({type: 'player'})` then the game object will also have a property of the same name and value. You can pass as many additional properties as you want.
+ * @param {...*} properties.props - Any additional properties you need added to the game object. For example, if you pass `gameObject({type: 'player'})` then the game object will also have a property of the same name and value. You can pass as many additional properties as you want.
  */
 class GameObject {
   constructor(properties) {
@@ -71,12 +71,6 @@ class GameObject {
      * @property {CanvasRenderingContext2D} context
      */
     this.context = getContext();
-
-    /**
-     * The color of the game object if it was passed as an argument.
-     * @memberof GameObject
-     * @property {String} color
-     */
 
     // --------------------------------------------------
     // optionals
@@ -325,6 +319,7 @@ class GameObject {
    * Readonly. X coordinate of where to draw the game object. Typically the same value as the [position vector](api/gameObject#position) unless the game object has been [added to a tileEngine](api/tileEngine#addObject).
    * @memberof GameObject
    * @property {Number} viewX
+   * @readonly
    */
   get viewX() {
     return this.x - this.sx;
@@ -334,6 +329,7 @@ class GameObject {
    * Readonly. Y coordinate of where to draw the game object. Typically the same value as the [position vector](api/gameObject#position) unless the game object has been [added to a tileEngine](api/tileEngine#addObject).
    * @memberof GameObject
    * @property {Number} viewY
+   * @readonly
    */
   get viewY() {
     return this.y - this.sy;
@@ -566,4 +562,4 @@ class GameObject {
   _dc() {}
 }
 
-export default GameObject
+export default Factory(GameObject)

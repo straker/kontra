@@ -1,7 +1,7 @@
 import GameObject from './gameObject.js'
 import { Factory } from './utils.js'
 
-class Text extends GameObject {
+class Text extends GameObject.class {
   /**
    * An object for drawing text to the screen. Supports newline characters as well as automatic new lines when setting the `width` property.
    *

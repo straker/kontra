@@ -338,22 +338,22 @@
 <p>You&#39;ll then need to add at least one tileset with an image as well as firstgid, or first tile index of the tileset. The first tileset will always have a firstgid of 1 as 0 represents an empty tile.</p>
 <p>Lastly, you&#39;ll need to add at least one named layer with data. A layer tells the tile engine which tiles from the tileset image to use at what position on the map.</p>
 <p>Once all tileset images and all layers have been added, you can render the tile engine by calling its <a href="api/tileEngine#render">render()</a> function.</p>
-<canvas id="game-canvas-181"></canvas>
+<canvas id="game-canvas-599"></canvas>
 
 <div class="tablist">
   <ul role="tablist">
     <li role="presentation" data-tab="global">
-      <button role="tab" id="game-canvas-181-global-tab">Global Object</button>
+      <button role="tab" id="game-canvas-599-global-tab">Global Object</button>
     </li>
     <li role="presentation" data-tab="es">
-      <button role="tab" id="game-canvas-181-es-tab">ES Module Import</button>
+      <button role="tab" id="game-canvas-599-es-tab">ES Module Import</button>
     </li>
     <li role="presentation" data-tab="bundle">
-      <button role="tab" id="game-canvas-181-bundle-tab">Module Bundler</button>
+      <button role="tab" id="game-canvas-599-bundle-tab">Module Bundler</button>
     </li>
     <li role="presentation"></li>
   </ul>
-  <section role="tabpanel" aria-labelledby=game-canvas-181-global-tab data-tabpanel="global">
+  <section role="tabpanel" aria-labelledby=game-canvas-599-global-tab data-tabpanel="global">
     <pre><code class="lang-js">let { TileEngine } &#x3D; kontra
 
 let img &#x3D; new Image();
@@ -392,7 +392,7 @@ img.onload &#x3D; function() {
   tileEngine.render();
 }</code></pre>
   </section>
-  <section role="tabpanel" aria-labelledby=game-canvas-181-es-tab data-tabpanel="es">
+  <section role="tabpanel" aria-labelledby=game-canvas-599-es-tab data-tabpanel="es">
     <pre><code class="lang-js">import { TileEngine } from &#x27;path/to/kontra.mjs&#x27;
 
 let img &#x3D; new Image();
@@ -431,7 +431,7 @@ img.onload &#x3D; function() {
   tileEngine.render();
 }</code></pre>
   </section>
-  <section role="tabpanel" aria-labelledby=game-canvas-181-bundle-tab data-tabpanel="bundle">
+  <section role="tabpanel" aria-labelledby=game-canvas-599-bundle-tab data-tabpanel="bundle">
     <pre><code class="lang-js">import { TileEngine } from &#x27;kontra&#x27;;
 
 let img &#x3D; new Image();
@@ -473,8 +473,8 @@ img.onload &#x3D; function() {
 </div>
 
 <script>(function() {
-  kontra.init("game-canvas-181");
-  var canvas = document.querySelector("#game-canvas-181");
+  kontra.init("game-canvas-599");
+  var canvas = document.querySelector("#game-canvas-599");
   canvas.width = 576;
   canvas.height = 576;
   var context = canvas.getContext("2d");
@@ -530,22 +530,22 @@ img.onload = function() {
 
           <p>Adding all the tileset images and layers to a tile engine can be tedious, especially if you have multiple layers. If you want a simpler way to create a tile engine, Kontra has been written to work directly with the JSON output of the <a href="http://www.mapeditor.org/">Tiled Map Editor</a>.</p>
 <p>The one requirement is that you must preload all of the tileset images and tileset sources using the appropriate <a href="./assets">asset loader functions</a> before you create the tile engine.</p>
-<canvas id="game-canvas-182"></canvas>
+<canvas id="game-canvas-600"></canvas>
 
 <div class="tablist">
   <ul role="tablist">
     <li role="presentation" data-tab="global">
-      <button role="tab" id="game-canvas-182-global-tab">Global Object</button>
+      <button role="tab" id="game-canvas-600-global-tab">Global Object</button>
     </li>
     <li role="presentation" data-tab="es">
-      <button role="tab" id="game-canvas-182-es-tab">ES Module Import</button>
+      <button role="tab" id="game-canvas-600-es-tab">ES Module Import</button>
     </li>
     <li role="presentation" data-tab="bundle">
-      <button role="tab" id="game-canvas-182-bundle-tab">Module Bundler</button>
+      <button role="tab" id="game-canvas-600-bundle-tab">Module Bundler</button>
     </li>
     <li role="presentation"></li>
   </ul>
-  <section role="tabpanel" aria-labelledby=game-canvas-182-global-tab data-tabpanel="global">
+  <section role="tabpanel" aria-labelledby=game-canvas-600-global-tab data-tabpanel="global">
     <pre><code class="lang-js">let { load, TileEngine, dataAssets } &#x3D; kontra
 
 load(&#x27;assets/imgs/mapPack_tilesheet.png&#x27;, &#x27;assets/data/tile_engine_basic.json&#x27;)
@@ -554,7 +554,7 @@ load(&#x27;assets/imgs/mapPack_tilesheet.png&#x27;, &#x27;assets/data/tile_engin
     tileEngine.render();
   });</code></pre>
   </section>
-  <section role="tabpanel" aria-labelledby=game-canvas-182-es-tab data-tabpanel="es">
+  <section role="tabpanel" aria-labelledby=game-canvas-600-es-tab data-tabpanel="es">
     <pre><code class="lang-js">import { load, TileEngine, dataAssets } from &#x27;path/to/kontra.mjs&#x27;
 
 load(&#x27;assets/imgs/mapPack_tilesheet.png&#x27;, &#x27;assets/data/tile_engine_basic.json&#x27;)
@@ -563,7 +563,7 @@ load(&#x27;assets/imgs/mapPack_tilesheet.png&#x27;, &#x27;assets/data/tile_engin
     tileEngine.render();
   });</code></pre>
   </section>
-  <section role="tabpanel" aria-labelledby=game-canvas-182-bundle-tab data-tabpanel="bundle">
+  <section role="tabpanel" aria-labelledby=game-canvas-600-bundle-tab data-tabpanel="bundle">
     <pre><code class="lang-js">import { load, TileEngine, dataAssets } from &#x27;kontra&#x27;;
 
 load(&#x27;assets/imgs/mapPack_tilesheet.png&#x27;, &#x27;assets/data/tile_engine_basic.json&#x27;)
@@ -575,8 +575,8 @@ load(&#x27;assets/imgs/mapPack_tilesheet.png&#x27;, &#x27;assets/data/tile_engin
 </div>
 
 <script>(function() {
-  kontra.init("game-canvas-182");
-  var canvas = document.querySelector("#game-canvas-182");
+  kontra.init("game-canvas-600");
+  var canvas = document.querySelector("#game-canvas-600");
   canvas.width = 576;
   canvas.height = 576;
   var context = canvas.getContext("2d");
@@ -602,22 +602,22 @@ load('assets/imgs/mapPack_tilesheet.png', 'assets/data/tile_engine_basic.json')
 
           <p>If your tilemap is larger than the canvas size, you can move the tilemap camera to change how the tilemap is drawn. Use the tile engines <a href="api/tileEngine#sx">sx</a> and <a href="api/tileEngine#sy">sy</a> properties to move the camera. Just like drawing an image, the cameras coordinates are the top left corner.</p>
 <p>The <code>sx</code> and <code>sy</code> coordinates will never draw the tile map below 0 or beyond the last row or column of the tile map.</p>
-<canvas id="game-canvas-183"></canvas>
+<canvas id="game-canvas-601"></canvas>
 
 <div class="tablist">
   <ul role="tablist">
     <li role="presentation" data-tab="global">
-      <button role="tab" id="game-canvas-183-global-tab">Global Object</button>
+      <button role="tab" id="game-canvas-601-global-tab">Global Object</button>
     </li>
     <li role="presentation" data-tab="es">
-      <button role="tab" id="game-canvas-183-es-tab">ES Module Import</button>
+      <button role="tab" id="game-canvas-601-es-tab">ES Module Import</button>
     </li>
     <li role="presentation" data-tab="bundle">
-      <button role="tab" id="game-canvas-183-bundle-tab">Module Bundler</button>
+      <button role="tab" id="game-canvas-601-bundle-tab">Module Bundler</button>
     </li>
     <li role="presentation"></li>
   </ul>
-  <section role="tabpanel" aria-labelledby=game-canvas-183-global-tab data-tabpanel="global">
+  <section role="tabpanel" aria-labelledby=game-canvas-601-global-tab data-tabpanel="global">
     <pre><code class="lang-js">let { load, TileEngine, dataAssets, GameLoop } &#x3D; kontra
 
 load(&#x27;assets/imgs/mapPack_tilesheet.png&#x27;, &#x27;assets/data/tile_engine_camera.json&#x27;)
@@ -641,7 +641,7 @@ load(&#x27;assets/imgs/mapPack_tilesheet.png&#x27;, &#x27;assets/data/tile_engin
     loop.start();
   });</code></pre>
   </section>
-  <section role="tabpanel" aria-labelledby=game-canvas-183-es-tab data-tabpanel="es">
+  <section role="tabpanel" aria-labelledby=game-canvas-601-es-tab data-tabpanel="es">
     <pre><code class="lang-js">import { load, TileEngine, dataAssets, GameLoop } from &#x27;path/to/kontra.mjs&#x27;
 
 load(&#x27;assets/imgs/mapPack_tilesheet.png&#x27;, &#x27;assets/data/tile_engine_camera.json&#x27;)
@@ -665,7 +665,7 @@ load(&#x27;assets/imgs/mapPack_tilesheet.png&#x27;, &#x27;assets/data/tile_engin
     loop.start();
   });</code></pre>
   </section>
-  <section role="tabpanel" aria-labelledby=game-canvas-183-bundle-tab data-tabpanel="bundle">
+  <section role="tabpanel" aria-labelledby=game-canvas-601-bundle-tab data-tabpanel="bundle">
     <pre><code class="lang-js">import { load, TileEngine, dataAssets, GameLoop } from &#x27;kontra&#x27;;
 
 load(&#x27;assets/imgs/mapPack_tilesheet.png&#x27;, &#x27;assets/data/tile_engine_camera.json&#x27;)
@@ -692,8 +692,8 @@ load(&#x27;assets/imgs/mapPack_tilesheet.png&#x27;, &#x27;assets/data/tile_engin
 </div>
 
 <script>(function() {
-  kontra.init("game-canvas-183");
-  var canvas = document.querySelector("#game-canvas-183");
+  kontra.init("game-canvas-601");
+  var canvas = document.querySelector("#game-canvas-601");
   canvas.width = 576;
   canvas.height = 576;
   var context = canvas.getContext("2d");
@@ -733,22 +733,22 @@ load('assets/imgs/mapPack_tilesheet.png', 'assets/data/tile_engine_camera.json')
           </h2>
 
           <p>Managing the correct x and y position of sprites on a large tile map can be tricky. You can add objects to the tile map which will sync the camera position with the sprite. <a href="api/sprite">Sprite</a> will automatically draw the sprite for you at the correct position on the tile map even while the camera moves.</p>
-<canvas id="game-canvas-185"></canvas>
+<canvas id="game-canvas-603"></canvas>
 
 <div class="tablist">
   <ul role="tablist">
     <li role="presentation" data-tab="global">
-      <button role="tab" id="game-canvas-185-global-tab">Global Object</button>
+      <button role="tab" id="game-canvas-603-global-tab">Global Object</button>
     </li>
     <li role="presentation" data-tab="es">
-      <button role="tab" id="game-canvas-185-es-tab">ES Module Import</button>
+      <button role="tab" id="game-canvas-603-es-tab">ES Module Import</button>
     </li>
     <li role="presentation" data-tab="bundle">
-      <button role="tab" id="game-canvas-185-bundle-tab">Module Bundler</button>
+      <button role="tab" id="game-canvas-603-bundle-tab">Module Bundler</button>
     </li>
     <li role="presentation"></li>
   </ul>
-  <section role="tabpanel" aria-labelledby=game-canvas-185-global-tab data-tabpanel="global">
+  <section role="tabpanel" aria-labelledby=game-canvas-603-global-tab data-tabpanel="global">
     <pre><code class="lang-js">let { load, TileEngine, dataAssets, imageAssets, SpriteSheet, Sprite, GameLoop } &#x3D; kontra
 
 load(&#x27;assets/imgs/mapPack_tilesheet.png&#x27;, &#x27;assets/data/tile_engine_add.json&#x27;)
@@ -797,7 +797,7 @@ load(&#x27;assets/imgs/mapPack_tilesheet.png&#x27;, &#x27;assets/data/tile_engin
     loop.start();
   });</code></pre>
   </section>
-  <section role="tabpanel" aria-labelledby=game-canvas-185-es-tab data-tabpanel="es">
+  <section role="tabpanel" aria-labelledby=game-canvas-603-es-tab data-tabpanel="es">
     <pre><code class="lang-js">import { load, TileEngine, dataAssets, imageAssets, SpriteSheet, Sprite, GameLoop } from &#x27;path/to/kontra.mjs&#x27;
 
 load(&#x27;assets/imgs/mapPack_tilesheet.png&#x27;, &#x27;assets/data/tile_engine_add.json&#x27;)
@@ -846,7 +846,7 @@ load(&#x27;assets/imgs/mapPack_tilesheet.png&#x27;, &#x27;assets/data/tile_engin
     loop.start();
   });</code></pre>
   </section>
-  <section role="tabpanel" aria-labelledby=game-canvas-185-bundle-tab data-tabpanel="bundle">
+  <section role="tabpanel" aria-labelledby=game-canvas-603-bundle-tab data-tabpanel="bundle">
     <pre><code class="lang-js">import { load, TileEngine, dataAssets, imageAssets, SpriteSheet, Sprite, GameLoop } from &#x27;kontra&#x27;;
 
 load(&#x27;assets/imgs/mapPack_tilesheet.png&#x27;, &#x27;assets/data/tile_engine_add.json&#x27;)
@@ -898,8 +898,8 @@ load(&#x27;assets/imgs/mapPack_tilesheet.png&#x27;, &#x27;assets/data/tile_engin
 </div>
 
 <script>(function() {
-  kontra.init("game-canvas-185");
-  var canvas = document.querySelector("#game-canvas-185");
+  kontra.init("game-canvas-603");
+  var canvas = document.querySelector("#game-canvas-603");
   canvas.width = 576;
   canvas.height = 576;
   var context = canvas.getContext("2d");

@@ -3,5 +3,6 @@ node_modules
 coverage
 test/permutations/*.js
 test/permutations/*.spec.js
+test/typings/*.js
 
 !test/permutations/index.js

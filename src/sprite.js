@@ -6,16 +6,23 @@ import { Factory } from './utils.js';
  * @class Sprite
  * @extends GameObject
  *
- * @param {Object} properties - Properties of the sprite.
+ * @param {Object} [properties] - Properties of the sprite.
+ * @param {String} [properties.color] - Fill color for the game object if no image or animation is provided.
  * @param {HTMLImageElement|HTMLCanvasElement} [properties.image] - Use an image to draw the sprite.
  * @param {Object} [properties.animations] - An object of [Animations](api/animation) from a [Spritesheet](api/spriteSheet) to animate the sprite.
  */
-class Sprite extends GameObject {
+class Sprite extends GameObject.class {
   /**
    * @docs docs/api_docs/sprite.js
    */
 
   init(properties = {}) {
+
+    /**
+     * The color of the game object if it was passed as an argument.
+     * @memberof GameObject
+     * @property {String} color
+     */
 
     /**
      * The width of the sprite. If the sprite is a [rectangle sprite](api/sprite#rectangle-sprite), it uses the passed in value. For an [image sprite](api/sprite#image-sprite) it is the width of the image. And for an [animation sprite](api/sprite#animation-sprite) it is the width of a single frame of the animation.

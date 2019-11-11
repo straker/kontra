@@ -136,6 +136,7 @@ export function initKeys() {
  * @function bindKeys
  *
  * @param {String|String[]} keys - Key or keys to bind.
+ * @param {Function} callback - The function to be called when the key is pressed.
  */
 export function bindKeys(keys, callback) {
   // smaller than doing `Array.isArray(keys) ? keys : [keys]`

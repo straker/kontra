@@ -118,7 +118,7 @@ function getContext() {
  *
  * @param {String|HTMLCanvasElement} [canvas] - The canvas for Kontra to use. Can either be the ID of the canvas element or the canvas element itself. Defaults to using the first canvas element on the page.
  *
- * @returns {Object} An object with properties `canvas` and `context`. `canvas` it the canvas element for the game and `context` is the context object the game draws to.
+ * @returns {{canvas: HTMLCanvasElement, context: CanvasRenderingContext2D}} An object with properties `canvas` and `context`. `canvas` it the canvas element for the game and `context` is the context object the game draws to.
  */
 function init(canvas) {
 
@@ -449,7 +449,7 @@ function getCanPlay(audio) {
  *   // path: imageAssets['character_walk_sheet.png']
  * });
  * ```
- * @property {Object} imageAssets
+ * @property {{[name: string]: HTMLImageElement}} imageAssets
  */
 let imageAssets = {};
 
@@ -472,7 +472,7 @@ let imageAssets = {};
  *   // path: audioAssets['sound.ogg']
  * });
  * ```
- * @property {Object} audioAssets
+ * @property {{[name: string]: HTMLAudioElement}} audioAssets
  */
 let audioAssets = {};
 
@@ -495,7 +495,7 @@ let audioAssets = {};
  *   // path: dataAssets['info.json']
  * });
  * ```
- * @property {Object} dataAssets
+ * @property {{[name: string]: any}} dataAssets
  */
 let dataAssets = {};
 
@@ -992,6 +992,677 @@ function GameLoop({fps = 60, clearCanvas = true, update, render} = {}) {
 }
 
 /**
+ * A simple 2d vector object.
+ *
+ * ```js
+ * import { Vector } from 'kontra';
+ *
+ * let vector = Vector(100, 200);
+ * ```
+ * @class Vector
+ *
+ * @param {Number} [x=0] - X coordinate of the vector.
+ * @param {Number} [y=0] - Y coordinate of the vector.
+ */
+class Vector {
+  constructor(x = 0, y = 0, vec = {}) {
+    this._x = x;
+    this._y = y;
+
+    // preserve vector clamping when creating new vectors
+    if (vec._c) {
+      this.clamp(vec._a, vec._b, vec._d, vec._e);
+
+      // reset x and y so clamping takes effect
+      this.x = x;
+      this.y = y;
+    }
+  }
+
+  /**
+   * Return a new Vector whose value is the addition of the current Vector and the passed in Vector. If `dt` is provided, the result is multiplied by the value.
+   * @memberof Vector
+   * @function add
+   *
+   * @param {Vector} vector - Vector to add to the current Vector.
+   * @param {Number} [dt=1] - Time since last update.
+   *
+   * @returns {Vector} A new Vector instance.
+   */
+  add(vec, dt = 1) {
+    return new Vector(
+      this.x + (vec.x || 0) * dt,
+      this.y + (vec.y || 0) * dt,
+      this
+    );
+  }
+
+  /**
+   * Clamp the Vector between two points, preventing `x` and `y` from going below or above the minimum and maximum values. Perfect for keeping a sprite from going outside the game boundaries.
+   *
+   * ```js
+   * import { Vector } from 'kontra';
+   *
+   * let vector = Vector(100, 200);
+   * vector.clamp(0, 0, 200, 300);
+   *
+   * vector.x += 200;
+   * console.log(vector.x);  //=> 200
+   *
+   * vector.y -= 300;
+   * console.log(vector.y);  //=> 0
+   *
+   * vector.add({x: -500, y: 500});
+   * console.log(vector);    //=> {x: 0, y: 300}
+   * ```
+   * @memberof Vector
+   * @function clamp
+   *
+   * @param {Number} xMin - Minimum x value.
+   * @param {Number} yMin - Minimum y value.
+   * @param {Number} xMax - Maximum x value.
+   * @param {Number} yMax - Maximum y value.
+   */
+  clamp(xMin, yMin, xMax, yMax) {
+    this._c = true;
+    this._a = xMin;
+    this._b = yMin;
+    this._d = xMax;
+    this._e = yMax;
+  }
+
+  /**
+   * X coordinate of the vector.
+   * @memberof Vector
+   * @property {Number} x
+   */
+  get x() {
+    return this._x;
+  }
+
+  /**
+   * Y coordinate of the vector.
+   * @memberof Vector
+   * @property {Number} y
+   */
+  get y() {
+    return this._y;
+  }
+
+  set x(value) {
+    this._x = (this._c ? Math.min( Math.max(this._a, value), this._d ) : value);
+  }
+
+  set y(value) {
+    this._y = (this._c ? Math.min( Math.max(this._b, value), this._e ) : value);
+  }
+}
+
+var Vector$1 = Factory(Vector);
+
+/**
+ * A versatile way to update and draw your game objects. It can handle simple rectangles, images, and game object sheet animations. It can be used for your main player object as well as tiny particles in a particle engine.
+ * @class GameObject
+ *
+ * @param {Object} [properties] - Properties of the game object.
+ * @param {Number} [properties.x] - X coordinate of the position vector.
+ * @param {Number} [properties.y] - Y coordinate of the position vector.
+ * @param {Number} [properties.dx] - X coordinate of the velocity vector.
+ * @param {Number} [properties.dy] - Y coordinate of the velocity vector.
+ * @param {Number} [properties.ddx] - X coordinate of the acceleration vector.
+ * @param {Number} [properties.ddy] - Y coordinate of the acceleration vector.
+ *
+ * @param {Number} [properties.width] - Width of the game object.
+ * @param {Number} [properties.height] - Height of the game object.
+ *
+ * @param {Number} [properties.ttl=Infinity] - How many frames the game object should be alive. Used by [Pool](api/pool).
+ * @param {Number} [properties.rotation=0] - game objects rotation around the origin in radians.
+ * @param {Object} [properties.anchor={x:0,y:0}] - The x and y origin of the game object. {x:0, y:0} is the top left corner of the game object, {x:1, y:1} is the bottomright corner.
+ *
+ * @param {CanvasRenderingContext2D} [properties.context] - The context the game object should draw to. Defaults to [core.getContext()](api/core#getContext).
+ *
+ * @param {Function} [properties.update] - Function called every frame to update the game object.
+ * @param {Function} [properties.render] - Function called every frame to render the game object.
+ * @param {...*} properties.props - Any additional properties you need added to the game object. For example, if you pass `gameObject({type: 'player'})` then the game object will also have a property of the same name and value. You can pass as many additional properties as you want.
+ */
+class GameObject {
+  constructor(properties) {
+    this.init(properties);
+  }
+
+  /**
+   * Use this function to reinitialize a game object. It takes the same properties object as the constructor. Useful it you want to repurpose a game object.
+   * @memberof GameObject
+   * @function init
+   *
+   * @param {Object} properties - Properties of the game object.
+   */
+  init(properties = {}) {
+
+    // --------------------------------------------------
+    // defaults
+    // --------------------------------------------------
+
+    /**
+     * The game objects position vector. The game objects position is its position in the world, as opposed to the position in the [viewport](api/gameObject#viewX) or [local position](api/gameObject#localPosition). Typically the position in the world, viewport, and local position are the same value. If the game object has been [added to a tileEngine](/api/tileEngine#addObject), the position vector represents where in the tile world the game object is while the viewport represents where to draw the game object in relation to the top-left corner of the canvas.
+     * @memberof GameObject
+     * @property {Vector} position
+     */
+    this.position = Vector$1();
+
+    /**
+     * The width of the game object.
+     * @memberof GameObject
+     * @property {Number} width
+     */
+
+    /**
+     * The height of the game object.
+     * @memberof GameObject
+     * @property {Number} height
+     */
+    this.width = this.height = 0;
+
+    /**
+     * The context the game object will draw to.
+     * @memberof GameObject
+     * @property {CanvasRenderingContext2D} context
+     */
+    this.context = getContext();
+
+    // --------------------------------------------------
+    // optionals
+    // --------------------------------------------------
+
+    // @ifdef GAMEOBJECT_GROUP
+    /**
+     * The game objects local position vector, which is its position relative to a parent object. If the game object does not have a parent object, the local position will be the same as the [position vector](api/gameObject#position].
+     * @memberof GameObject
+     * @property {Vector} localPosition
+     */
+    this.localPosition = Vector$1();
+
+    // @ifdef GAMEOBJECT_ROTATION
+    /**
+     * The game objects local rotation, which is its rotation relative to a parent object. If the game object does not have a parent object, the local rotation will be the same as the [rotation](api/gameObject#rotation].
+     * @memberof GameObject
+     * @property {Vector} localRotation
+     */
+    this.localRotation = 0;
+
+    // rot = rotation
+    this._rot = 0;
+    // @endif
+
+    /**
+     * The game objects parent object.
+     * @memberof GameObject
+     * @property {GameObject} parent
+     */
+
+    /**
+     * The game objects children objects.
+     * @memberof GameObject
+     * @property {GameObject[]} children
+     */
+    this.children = [];
+    // @endif
+
+    // @ifdef GAMEOBJECT_VELOCITY
+    /**
+     * The game objects velocity vector.
+     * @memberof GameObject
+     * @property {Vector} velocity
+     */
+    this.velocity = Vector$1();
+    // @endif
+
+    // @ifdef GAMEOBJECT_ACCELERATION
+    /**
+     * The game objects acceleration vector.
+     * @memberof GameObject
+     * @property {Vector} acceleration
+     */
+    this.acceleration = Vector$1();
+    // @endif
+
+    // @ifdef GAMEOBJECT_ROTATION
+    /**
+     * The rotation of the game object around the origin in radians. This rotation takes into account rotations from parent objects and represents the final rotation value.
+     * @memberof GameObject
+     * @property {Number} rotation
+     */
+    this.rotation = 0;
+    // @endif
+
+    // @ifdef GAMEOBJECT_TTL
+    /**
+     * How may frames the game object should be alive. Primarily used by [Pool](api/pool) to know when to recycle an object.
+     * @memberof GameObject
+     * @property {Number} ttl
+     */
+    this.ttl = Infinity;
+    // @endif
+
+    // @ifdef GAMEOBJECT_ANCHOR
+    /**
+     * The x and y origin of the game object. {x:0, y:0} is the top left corner of the game object, {x:1, y:1} is the bottom right corner.
+     * @memberof GameObject
+     * @property {Object} anchor
+     *
+     * @example
+     * // exclude-code:start
+     * let { game object } = kontra;
+     * // exclude-code:end
+     * // exclude-script:start
+     * import { game object } from 'kontra';
+     * // exclude-script:end
+     *
+     * let gameObject = game object({
+     *   x: 150,
+     *   y: 100,
+     *   color: 'red',
+     *   width: 50,
+     *   height: 50,
+     *   // exclude-code:start
+     *   context: context,
+     *   // exclude-code:end
+     *   render: function() {
+     *     this.draw();
+     *
+     *     // draw origin
+     *     this.context.fillStyle = 'yellow';
+     *     this.context.beginPath();
+     *     this.context.arc(this.x, this.y, 3, 0, 2*Math.PI);
+     *     this.context.fill();
+     *   }
+     * });
+     * gameObject.render();
+     *
+     * game object.anchor = {x: 0.5, y: 0.5};
+     * game object.x = 300;
+     * gameObject.render();
+     *
+     * game object.anchor = {x: 1, y: 1};
+     * game object.x = 450;
+     * gameObject.render();
+     */
+    this.anchor = {x: 0, y: 0};
+    // @endif
+
+    // @ifdef GAMEOBJECT_CAMERA
+    /**
+     * The X coordinate of the camera. Used to determine [viewX](api/gameObject#viewX).
+     * @memberof GameObject
+     * @property {Number} sx
+     */
+
+    /**
+     * The Y coordinate of the camera. Used to determine [viewY](api/gameObject#viewY).
+     * @memberof GameObject
+     * @property {Number} sy
+     */
+    this.sx = this.sy = 0;
+    // @endif
+
+    // add all properties to the game object, overriding any defaults
+    Object.assign(this, properties);
+  }
+
+  // define getter and setter shortcut functions to make it easier to work with the
+  // position, velocity, and acceleration vectors.
+
+  /**
+   * X coordinate of the position vector.
+   * @memberof GameObject
+   * @property {Number} x
+   */
+  get x() {
+    return this.position.x;
+  }
+
+  /**
+   * Y coordinate of the position vector.
+   * @memberof GameObject
+   * @property {Number} y
+   */
+  get y() {
+    return this.position.y;
+  }
+
+  set x(value) {
+    this.position.x = value;
+
+    // @ifdef GAMEOBJECT_GROUP
+    this.localPosition.x = this.parent ? value - this.parent.x : value;
+    this.children.map(child => {
+      if (child.localPosition) {
+        child.x = value + child.localPosition.x;
+      }
+    });
+    // @endif
+  }
+
+  set y(value) {
+    this.position.y = value;
+
+    // @ifdef GAMEOBJECT_GROUP
+    this.localPosition.y = this.parent ? value - this.parent.y : value;
+    this.children.map(child => {
+      if (child.localPosition) {
+        child.y = value + child.localPosition.y;
+      }
+    });
+    // @endif
+  }
+
+  // @ifdef GAMEOBJECT_VELOCITY
+  /**
+   * X coordinate of the velocity vector.
+   * @memberof GameObject
+   * @property {Number} dx
+   */
+  get dx() {
+    return this.velocity.x;
+  }
+
+  /**
+   * Y coordinate of the velocity vector.
+   * @memberof GameObject
+   * @property {Number} dy
+   */
+  get dy() {
+    return this.velocity.y;
+  }
+
+  set dx(value) {
+    this.velocity.x = value;
+  }
+
+  set dy(value) {
+    this.velocity.y = value;
+  }
+  // @endif
+
+  // @ifdef GAMEOBJECT_ACCELERATION
+  /**
+   * X coordinate of the acceleration vector.
+   * @memberof GameObject
+   * @property {Number} ddx
+   */
+  get ddx() {
+    return this.acceleration.x;
+  }
+
+  /**
+   * Y coordinate of the acceleration vector.
+   * @memberof GameObject
+   * @property {Number} ddy
+   */
+  get ddy() {
+    return this.acceleration.y;
+  }
+
+  set ddx(value) {
+    this.acceleration.x = value;
+  }
+
+  set ddy(value) {
+    this.acceleration.y = value;
+  }
+  // @endif
+
+  // @ifdef GAMEOBJECT_CAMERA
+  /**
+   * Readonly. X coordinate of where to draw the game object. Typically the same value as the [position vector](api/gameObject#position) unless the game object has been [added to a tileEngine](api/tileEngine#addObject).
+   * @memberof GameObject
+   * @property {Number} viewX
+   * @readonly
+   */
+  get viewX() {
+    return this.x - this.sx;
+  }
+
+  /**
+   * Readonly. Y coordinate of where to draw the game object. Typically the same value as the [position vector](api/gameObject#position) unless the game object has been [added to a tileEngine](api/tileEngine#addObject).
+   * @memberof GameObject
+   * @property {Number} viewY
+   * @readonly
+   */
+  get viewY() {
+    return this.y - this.sy;
+  }
+
+  // readonly
+  set viewX(value) {
+    return;
+  }
+
+  set viewY(value) {
+    return;
+  }
+  // @endif
+
+  // @ifdef GAMEOBJECT_TTL
+  /**
+   * Check if the game object is alive. Primarily used by [Pool](api/pool) to know when to recycle an object.
+   * @memberof GameObject
+   * @function isAlive
+   *
+   * @returns {Boolean} `true` if the game objects [ttl](api/gameObject#ttl) property is above `0`, `false` otherwise.
+   */
+  isAlive() {
+    return this.ttl > 0;
+  }
+  // @endif
+
+  // @ifdef GAMEOBJECT_GROUP
+  get rotation() {
+    return this._rot;
+  }
+
+  // override rotation to take into account parent rotations and to set
+  // localRotation
+  set rotation(value) {
+    this._rot = value;
+
+    this.localRotation = this.parent ? value - this.parent.rotation : value;
+    this.children.map(child => {
+      if (child.localRotation) {
+        child.rotation = value + child.localRotation;
+      }
+    });
+  }
+
+  addChild(child) {
+    this.children.push(child);
+    child.parent = this;
+
+    // set the childs x/y/rotation to trigger localPosition/localRotation
+    // calculations
+    child.x = child.x;
+    child.y = child.y;
+    child.rotation = child.rotation;
+  }
+
+  removeChild(child) {
+    let index = this.children.indexOf(child);
+    if (index !== -1) {
+      this.children.splice(index, 1);
+      child.parent = null;
+
+      // set the childs x/y/rotation to trigger localPosition/localRotation
+      // calculations
+      child.x = child.x;
+      child.y = child.y;
+      child.rotation = child.rotation;
+    }
+  }
+  // @endif
+
+  /**
+   * Update the game objects position based on its velocity and acceleration. Calls the game objects [advance()](api/gameObject#advance) function.
+   * @memberof GameObject
+   * @function update
+   *
+   * @param {Number} [dt] - Time since last update.
+   */
+  update(dt) {
+    // @ifdef GAMEOBJECT_VELOCITY||GAMEOBJECT_ACCELERATION||GAMEOBJECT_TTL
+    this.advance(dt);
+    // @endif
+  }
+
+  // @ifdef GAMEOBJECT_VELOCITY||GAMEOBJECT_ACCELERATION||GAMEOBJECT_TTL
+  /**
+   * Move the game object by its acceleration and velocity. If the game object is an [animation game object](api/gameObject#animation-game object), it also advances the animation every frame.
+   *
+   * If you override the game objects [update()](api/gameObject#update) function with your own update function, you can call this function to move the game object normally.
+   *
+   * ```js
+   * import { game object } from 'kontra';
+   *
+   * let gameObject = game object({
+   *   x: 100,
+   *   y: 200,
+   *   width: 20,
+   *   height: 40,
+   *   dx: 5,
+   *   dy: 2,
+   *   update: function() {
+   *     // move the game object normally
+   *     game object.advance();
+   *
+   *     // change the velocity at the edges of the canvas
+   *     if (this.x < 0 ||
+   *         this.x + this.width > this.context.canvas.width) {
+   *       this.dx = -this.dx;
+   *     }
+   *     if (this.y < 0 ||
+   *         this.y + this.height > this.context.canvas.height) {
+   *       this.dy = -this.dy;
+   *     }
+   *   }
+   * });
+   * ```
+   * @memberof GameObject
+   * @function advance
+   *
+   * @param {Number} [dt] - Time since last update.
+   *
+   */
+  advance(dt) {
+    // @ifdef GAMEOBJECT_VELOCITY
+
+    // @ifdef GAMEOBJECT_ACCELERATION
+    this.velocity = this.velocity.add(this.acceleration, dt);
+    // @endif
+
+    this.position = this.position.add(this.velocity, dt);
+    // @endif
+
+    // @ifdef GAMEOBJECT_TTL
+    this.ttl--;
+    // @endif
+  }
+  // @endif
+
+  /**
+   * Render the game object. Calls the game objects [draw()](api/gameObject#draw) function.
+   * @memberof GameObject
+   * @function render
+   */
+  render() {
+    this.draw();
+  }
+
+  /**
+   * Draw the game object at its X and Y position. This function changes based on the type of the game object. For a [rectangle game object](api/gameObject#rectangle-game object), it uses `context.fillRect()`, for an [image game object](api/gameObject#image-game object) it uses `context.drawImage()`, and for an [animation game object](api/gameObject#animation-game object) it uses the [currentAnimation](api/gameObject#currentAnimation) `render()` function.
+   *
+   * If you override the game objects `render()` function with your own render function, you can call this function to draw the game object normally.
+   *
+   * ```js
+   * import { game object } from 'kontra';
+   *
+   * let gameObject = game object({
+   *  x: 290,
+   *  y: 80,
+   *  color: 'red',
+   *  width: 20,
+   *  height: 40,
+   *
+   *  render: function() {
+   *    // draw the rectangle game object normally
+   *    this.draw();
+   *
+   *    // outline the game object
+   *    this.context.strokeStyle = 'yellow';
+   *    this.context.lineWidth = 2;
+   *    this.context.strokeRect(this.x, this.y, this.width, this.height);
+   *  }
+   * });
+   *
+   * gameObject.render();
+   * ```
+   * @memberof GameObject
+   * @function draw
+   */
+  draw() {
+    let x = 0;
+    let y = 0;
+    let viewX = this.x;
+    let viewY = this.y;
+
+    // @ifdef GAMEOBJECT_ANCHOR
+    x = -this.width * this.anchor.x;
+    y = -this.height * this.anchor.y;
+    // @endif
+
+    // @ifdef GAMEOBJECT_CAMERA
+    viewX = this.viewX;
+    viewY = this.viewY;
+    // @endif
+
+    // @ifdef GAMEOBJECT_GROUP
+    if (this.parent) {
+      viewX = this.localPosition.x;
+      viewY = this.localPosition.y;
+    }
+    // @endif
+
+    this.context.save();
+    this.context.translate(viewX, viewY);
+
+    // @ifdef GAMEOBJECT_ROTATION
+    // rotate around the anchor
+    if (this.rotation) {
+      let rotation = this.rotation;
+
+      // @ifdef GAMEOBJECT_GROUP
+      rotation = this.localRotation;
+      // @endif
+
+      this.context.rotate(rotation);
+    }
+    // @endif
+
+    // dc = draw code
+    this._dc(x, y);
+
+    // @ifdef GAMEOBJECT_GROUP
+    // perform all transforms on the parent before rendering the children
+    this.children.map(child => child.render && child.render());
+    // @endif
+
+    this.context.restore();
+  }
+
+  _dc() {}
+}
+
+var GameObject$1 = Factory(GameObject);
+
+/**
  * A minimalistic keyboard API. You can use it move the main sprite or respond to a key press.
  *
  * ```js
@@ -1129,6 +1800,7 @@ function initKeys() {
  * @function bindKeys
  *
  * @param {String|String[]} keys - Key or keys to bind.
+ * @param {Function} callback - The function to be called when the key is pressed.
  */
 function bindKeys(keys, callback) {
   // smaller than doing `Array.isArray(keys) ? keys : [keys]`
@@ -2303,694 +2975,27 @@ class Quadtree {
 var Quadtree$1 = Factory(Quadtree);
 
 /**
- * A simple 2d vector object.
+ * A versatile way to update and draw your sprites. It can handle simple rectangles, images, and sprite sheet animations. It can be used for your main player object as well as tiny particles in a particle engine.
+ * @class Sprite
+ * @extends GameObject
  *
- * ```js
- * import { Vector } from 'kontra';
- *
- * let vector = Vector(100, 200);
- * ```
- * @class Vector
- *
- * @param {Number} [x=0] - X coordinate of the vector.
- * @param {Number} [y=0] - Y coordinate of the vector.
- */
-class Vector {
-  constructor(x = 0, y = 0, vec = {}) {
-    this._x = x;
-    this._y = y;
-
-    // preserve vector clamping when creating new vectors
-    if (vec._c) {
-      this.clamp(vec._a, vec._b, vec._d, vec._e);
-
-      // reset x and y so clamping takes effect
-      this.x = x;
-      this.y = y;
-    }
-  }
-
-  /**
-   * Return a new Vector whose value is the addition of the current Vector and the passed in Vector. If `dt` is provided, the result is multiplied by the value.
-   * @memberof Vector
-   * @function add
-   *
-   * @param {Vector} vector - Vector to add to the current Vector.
-   * @param {Number} [dt=1] - Time since last update.
-   *
-   * @returns {Vector} A new Vector instance.
-   */
-  add(vec, dt = 1) {
-    return new Vector(
-      this.x + (vec.x || 0) * dt,
-      this.y + (vec.y || 0) * dt,
-      this
-    );
-  }
-
-  /**
-   * Clamp the Vector between two points, preventing `x` and `y` from going below or above the minimum and maximum values. Perfect for keeping a sprite from going outside the game boundaries.
-   *
-   * ```js
-   * import { Vector } from 'kontra';
-   *
-   * let vector = Vector(100, 200);
-   * vector.clamp(0, 0, 200, 300);
-   *
-   * vector.x += 200;
-   * console.log(vector.x);  //=> 200
-   *
-   * vector.y -= 300;
-   * console.log(vector.y);  //=> 0
-   *
-   * vector.add({x: -500, y: 500});
-   * console.log(vector);    //=> {x: 0, y: 300}
-   * ```
-   * @memberof Vector
-   * @function clamp
-   *
-   * @param {Number} xMin - Minimum x value.
-   * @param {Number} yMin - Minimum y value.
-   * @param {Number} xMax - Maximum x value.
-   * @param {Number} yMax - Maximum y value.
-   */
-  clamp(xMin, yMin, xMax, yMax) {
-    this._c = true;
-    this._a = xMin;
-    this._b = yMin;
-    this._d = xMax;
-    this._e = yMax;
-  }
-
-  /**
-   * X coordinate of the vector.
-   * @memberof Vector
-   * @property {Number} x
-   */
-  get x() {
-    return this._x;
-  }
-
-  /**
-   * Y coordinate of the vector.
-   * @memberof Vector
-   * @property {Number} y
-   */
-  get y() {
-    return this._y;
-  }
-
-  set x(value) {
-    this._x = (this._c ? Math.min( Math.max(this._a, value), this._d ) : value);
-  }
-
-  set y(value) {
-    this._y = (this._c ? Math.min( Math.max(this._b, value), this._e ) : value);
-  }
-}
-
-var Vector$1 = Factory(Vector);
-
-/**
- * A versatile way to update and draw your game objects. It can handle simple rectangles, images, and game object sheet animations. It can be used for your main player object as well as tiny particles in a particle engine.
- * @class GameObject
- *
- * @param {Object} properties - Properties of the game object.
- * @param {Number} properties.x - X coordinate of the position vector.
- * @param {Number} properties.y - Y coordinate of the position vector.
- * @param {Number} [properties.dx] - X coordinate of the velocity vector.
- * @param {Number} [properties.dy] - Y coordinate of the velocity vector.
- * @param {Number} [properties.ddx] - X coordinate of the acceleration vector.
- * @param {Number} [properties.ddy] - Y coordinate of the acceleration vector.
- *
+ * @param {Object} [properties] - Properties of the sprite.
  * @param {String} [properties.color] - Fill color for the game object if no image or animation is provided.
- * @param {Number} [properties.width] - Width of the game object.
- * @param {Number} [properties.height] - Height of the game object.
- *
- * @param {Number} [properties.ttl=Infinity] - How many frames the game object should be alive. Used by [Pool](api/pool).
- * @param {Number} [properties.rotation=0] - game objects rotation around the origin in radians.
- * @param {Number} [properties.anchor={x:0,y:0}] - The x and y origin of the game object. {x:0, y:0} is the top left corner of the game object, {x:1, y:1} is the bottomright corner.
- *
- * @param {CanvasRenderingContext2D} [properties.context] - The context the game object should draw to. Defaults to [core.getContext()](api/core#getContext).
- *
- * @param {Function} [properties.update] - Function called every frame to update the game object.
- * @param {Function} [properties.render] - Function called every frame to render the game object.
- * @param {...*} [properties.props] - Any additional properties you need added to the game object. For example, if you pass `gameObject({type: 'player'})` then the game object will also have a property of the same name and value. You can pass as many additional properties as you want.
+ * @param {HTMLImageElement|HTMLCanvasElement} [properties.image] - Use an image to draw the sprite.
+ * @param {Object} [properties.animations] - An object of [Animations](api/animation) from a [Spritesheet](api/spriteSheet) to animate the sprite.
  */
-class GameObject {
-  constructor(properties) {
-    this.init(properties);
-  }
-
+class Sprite extends GameObject$1.class {
   /**
-   * Use this function to reinitialize a game object. It takes the same properties object as the constructor. Useful it you want to repurpose a game object.
-   * @memberof GameObject
-   * @function init
-   *
-   * @param {Object} properties - Properties of the game object.
+   * @docs docs/api_docs/sprite.js
    */
+
   init(properties = {}) {
-
-    // --------------------------------------------------
-    // defaults
-    // --------------------------------------------------
-
-    /**
-     * The game objects position vector. The game objects position is its position in the world, as opposed to the position in the [viewport](api/gameObject#viewX) or [local position](api/gameObject#localPosition). Typically the position in the world, viewport, and local position are the same value. If the game object has been [added to a tileEngine](/api/tileEngine#addObject), the position vector represents where in the tile world the game object is while the viewport represents where to draw the game object in relation to the top-left corner of the canvas.
-     * @memberof GameObject
-     * @property {Vector} position
-     */
-    this.position = Vector$1();
-
-    /**
-     * The width of the game object.
-     * @memberof GameObject
-     * @property {Number} width
-     */
-
-    /**
-     * The height of the game object.
-     * @memberof GameObject
-     * @property {Number} height
-     */
-    this.width = this.height = 0;
-
-    /**
-     * The context the game object will draw to.
-     * @memberof GameObject
-     * @property {CanvasRenderingContext2D} context
-     */
-    this.context = getContext();
 
     /**
      * The color of the game object if it was passed as an argument.
      * @memberof GameObject
      * @property {String} color
      */
-
-    // --------------------------------------------------
-    // optionals
-    // --------------------------------------------------
-
-    // @ifdef GAMEOBJECT_GROUP
-    /**
-     * The game objects local position vector, which is its position relative to a parent object. If the game object does not have a parent object, the local position will be the same as the [position vector](api/gameObject#position].
-     * @memberof GameObject
-     * @property {Vector} localPosition
-     */
-    this.localPosition = Vector$1();
-
-    // @ifdef GAMEOBJECT_ROTATION
-    /**
-     * The game objects local rotation, which is its rotation relative to a parent object. If the game object does not have a parent object, the local rotation will be the same as the [rotation](api/gameObject#rotation].
-     * @memberof GameObject
-     * @property {Vector} localRotation
-     */
-    this.localRotation = 0;
-
-    // rot = rotation
-    this._rot = 0;
-    // @endif
-
-    /**
-     * The game objects parent object.
-     * @memberof GameObject
-     * @property {GameObject} parent
-     */
-
-    /**
-     * The game objects children objects.
-     * @memberof GameObject
-     * @property {GameObject[]} children
-     */
-    this.children = [];
-    // @endif
-
-    // @ifdef GAMEOBJECT_VELOCITY
-    /**
-     * The game objects velocity vector.
-     * @memberof GameObject
-     * @property {Vector} velocity
-     */
-    this.velocity = Vector$1();
-    // @endif
-
-    // @ifdef GAMEOBJECT_ACCELERATION
-    /**
-     * The game objects acceleration vector.
-     * @memberof GameObject
-     * @property {Vector} acceleration
-     */
-    this.acceleration = Vector$1();
-    // @endif
-
-    // @ifdef GAMEOBJECT_ROTATION
-    /**
-     * The rotation of the game object around the origin in radians. This rotation takes into account rotations from parent objects and represents the final rotation value.
-     * @memberof GameObject
-     * @property {Number} rotation
-     */
-    this.rotation = 0;
-    // @endif
-
-    // @ifdef GAMEOBJECT_TTL
-    /**
-     * How may frames the game object should be alive. Primarily used by [Pool](api/pool) to know when to recycle an object.
-     * @memberof GameObject
-     * @property {Number} ttl
-     */
-    this.ttl = Infinity;
-    // @endif
-
-    // @ifdef GAMEOBJECT_ANCHOR
-    /**
-     * The x and y origin of the game object. {x:0, y:0} is the top left corner of the game object, {x:1, y:1} is the bottom right corner.
-     * @memberof GameObject
-     * @property {Object} anchor
-     *
-     * @example
-     * // exclude-code:start
-     * let { game object } = kontra;
-     * // exclude-code:end
-     * // exclude-script:start
-     * import { game object } from 'kontra';
-     * // exclude-script:end
-     *
-     * let gameObject = game object({
-     *   x: 150,
-     *   y: 100,
-     *   color: 'red',
-     *   width: 50,
-     *   height: 50,
-     *   // exclude-code:start
-     *   context: context,
-     *   // exclude-code:end
-     *   render: function() {
-     *     this.draw();
-     *
-     *     // draw origin
-     *     this.context.fillStyle = 'yellow';
-     *     this.context.beginPath();
-     *     this.context.arc(this.x, this.y, 3, 0, 2*Math.PI);
-     *     this.context.fill();
-     *   }
-     * });
-     * gameObject.render();
-     *
-     * game object.anchor = {x: 0.5, y: 0.5};
-     * game object.x = 300;
-     * gameObject.render();
-     *
-     * game object.anchor = {x: 1, y: 1};
-     * game object.x = 450;
-     * gameObject.render();
-     */
-    this.anchor = {x: 0, y: 0};
-    // @endif
-
-    // @ifdef GAMEOBJECT_CAMERA
-    /**
-     * The X coordinate of the camera. Used to determine [viewX](api/gameObject#viewX).
-     * @memberof GameObject
-     * @property {Number} sx
-     */
-
-    /**
-     * The Y coordinate of the camera. Used to determine [viewY](api/gameObject#viewY).
-     * @memberof GameObject
-     * @property {Number} sy
-     */
-    this.sx = this.sy = 0;
-    // @endif
-
-    // add all properties to the game object, overriding any defaults
-    Object.assign(this, properties);
-  }
-
-  // define getter and setter shortcut functions to make it easier to work with the
-  // position, velocity, and acceleration vectors.
-
-  /**
-   * X coordinate of the position vector.
-   * @memberof GameObject
-   * @property {Number} x
-   */
-  get x() {
-    return this.position.x;
-  }
-
-  /**
-   * Y coordinate of the position vector.
-   * @memberof GameObject
-   * @property {Number} y
-   */
-  get y() {
-    return this.position.y;
-  }
-
-  set x(value) {
-    this.position.x = value;
-
-    // @ifdef GAMEOBJECT_GROUP
-    this.localPosition.x = this.parent ? value - this.parent.x : value;
-    this.children.map(child => {
-      if (child.localPosition) {
-        child.x = value + child.localPosition.x;
-      }
-    });
-    // @endif
-  }
-
-  set y(value) {
-    this.position.y = value;
-
-    // @ifdef GAMEOBJECT_GROUP
-    this.localPosition.y = this.parent ? value - this.parent.y : value;
-    this.children.map(child => {
-      if (child.localPosition) {
-        child.y = value + child.localPosition.y;
-      }
-    });
-    // @endif
-  }
-
-  // @ifdef GAMEOBJECT_VELOCITY
-  /**
-   * X coordinate of the velocity vector.
-   * @memberof GameObject
-   * @property {Number} dx
-   */
-  get dx() {
-    return this.velocity.x;
-  }
-
-  /**
-   * Y coordinate of the velocity vector.
-   * @memberof GameObject
-   * @property {Number} dy
-   */
-  get dy() {
-    return this.velocity.y;
-  }
-
-  set dx(value) {
-    this.velocity.x = value;
-  }
-
-  set dy(value) {
-    this.velocity.y = value;
-  }
-  // @endif
-
-  // @ifdef GAMEOBJECT_ACCELERATION
-  /**
-   * X coordinate of the acceleration vector.
-   * @memberof GameObject
-   * @property {Number} ddx
-   */
-  get ddx() {
-    return this.acceleration.x;
-  }
-
-  /**
-   * Y coordinate of the acceleration vector.
-   * @memberof GameObject
-   * @property {Number} ddy
-   */
-  get ddy() {
-    return this.acceleration.y;
-  }
-
-  set ddx(value) {
-    this.acceleration.x = value;
-  }
-
-  set ddy(value) {
-    this.acceleration.y = value;
-  }
-  // @endif
-
-  // @ifdef GAMEOBJECT_CAMERA
-  /**
-   * Readonly. X coordinate of where to draw the game object. Typically the same value as the [position vector](api/gameObject#position) unless the game object has been [added to a tileEngine](api/tileEngine#addObject).
-   * @memberof GameObject
-   * @property {Number} viewX
-   */
-  get viewX() {
-    return this.x - this.sx;
-  }
-
-  /**
-   * Readonly. Y coordinate of where to draw the game object. Typically the same value as the [position vector](api/gameObject#position) unless the game object has been [added to a tileEngine](api/tileEngine#addObject).
-   * @memberof GameObject
-   * @property {Number} viewY
-   */
-  get viewY() {
-    return this.y - this.sy;
-  }
-
-  // readonly
-  set viewX(value) {
-    return;
-  }
-
-  set viewY(value) {
-    return;
-  }
-  // @endif
-
-  // @ifdef GAMEOBJECT_TTL
-  /**
-   * Check if the game object is alive. Primarily used by [Pool](api/pool) to know when to recycle an object.
-   * @memberof GameObject
-   * @function isAlive
-   *
-   * @returns {Boolean} `true` if the game objects [ttl](api/gameObject#ttl) property is above `0`, `false` otherwise.
-   */
-  isAlive() {
-    return this.ttl > 0;
-  }
-  // @endif
-
-  // @ifdef GAMEOBJECT_GROUP
-  get rotation() {
-    return this._rot;
-  }
-
-  // override rotation to take into account parent rotations and to set
-  // localRotation
-  set rotation(value) {
-    this._rot = value;
-
-    this.localRotation = this.parent ? value - this.parent.rotation : value;
-    this.children.map(child => {
-      if (child.localRotation) {
-        child.rotation = value + child.localRotation;
-      }
-    });
-  }
-
-  addChild(child) {
-    this.children.push(child);
-    child.parent = this;
-
-    // set the childs x/y/rotation to trigger localPosition/localRotation
-    // calculations
-    child.x = child.x;
-    child.y = child.y;
-    child.rotation = child.rotation;
-  }
-
-  removeChild(child) {
-    let index = this.children.indexOf(child);
-    if (index !== -1) {
-      this.children.splice(index, 1);
-      child.parent = null;
-
-      // set the childs x/y/rotation to trigger localPosition/localRotation
-      // calculations
-      child.x = child.x;
-      child.y = child.y;
-      child.rotation = child.rotation;
-    }
-  }
-  // @endif
-
-  /**
-   * Update the game objects position based on its velocity and acceleration. Calls the game objects [advance()](api/gameObject#advance) function.
-   * @memberof GameObject
-   * @function update
-   *
-   * @param {Number} [dt] - Time since last update.
-   */
-  update(dt) {
-    // @ifdef GAMEOBJECT_VELOCITY||GAMEOBJECT_ACCELERATION||GAMEOBJECT_TTL
-    this.advance(dt);
-    // @endif
-  }
-
-  // @ifdef GAMEOBJECT_VELOCITY||GAMEOBJECT_ACCELERATION||GAMEOBJECT_TTL
-  /**
-   * Move the game object by its acceleration and velocity. If the game object is an [animation game object](api/gameObject#animation-game object), it also advances the animation every frame.
-   *
-   * If you override the game objects [update()](api/gameObject#update) function with your own update function, you can call this function to move the game object normally.
-   *
-   * ```js
-   * import { game object } from 'kontra';
-   *
-   * let gameObject = game object({
-   *   x: 100,
-   *   y: 200,
-   *   width: 20,
-   *   height: 40,
-   *   dx: 5,
-   *   dy: 2,
-   *   update: function() {
-   *     // move the game object normally
-   *     game object.advance();
-   *
-   *     // change the velocity at the edges of the canvas
-   *     if (this.x < 0 ||
-   *         this.x + this.width > this.context.canvas.width) {
-   *       this.dx = -this.dx;
-   *     }
-   *     if (this.y < 0 ||
-   *         this.y + this.height > this.context.canvas.height) {
-   *       this.dy = -this.dy;
-   *     }
-   *   }
-   * });
-   * ```
-   * @memberof GameObject
-   * @function advance
-   *
-   * @param {Number} [dt] - Time since last update.
-   *
-   */
-  advance(dt) {
-    // @ifdef GAMEOBJECT_VELOCITY
-
-    // @ifdef GAMEOBJECT_ACCELERATION
-    this.velocity = this.velocity.add(this.acceleration, dt);
-    // @endif
-
-    this.position = this.position.add(this.velocity, dt);
-    // @endif
-
-    // @ifdef GAMEOBJECT_TTL
-    this.ttl--;
-    // @endif
-  }
-  // @endif
-
-  /**
-   * Render the game object. Calls the game objects [draw()](api/gameObject#draw) function.
-   * @memberof GameObject
-   * @function render
-   */
-  render() {
-    this.draw();
-  }
-
-  /**
-   * Draw the game object at its X and Y position. This function changes based on the type of the game object. For a [rectangle game object](api/gameObject#rectangle-game object), it uses `context.fillRect()`, for an [image game object](api/gameObject#image-game object) it uses `context.drawImage()`, and for an [animation game object](api/gameObject#animation-game object) it uses the [currentAnimation](api/gameObject#currentAnimation) `render()` function.
-   *
-   * If you override the game objects `render()` function with your own render function, you can call this function to draw the game object normally.
-   *
-   * ```js
-   * import { game object } from 'kontra';
-   *
-   * let gameObject = game object({
-   *  x: 290,
-   *  y: 80,
-   *  color: 'red',
-   *  width: 20,
-   *  height: 40,
-   *
-   *  render: function() {
-   *    // draw the rectangle game object normally
-   *    this.draw();
-   *
-   *    // outline the game object
-   *    this.context.strokeStyle = 'yellow';
-   *    this.context.lineWidth = 2;
-   *    this.context.strokeRect(this.x, this.y, this.width, this.height);
-   *  }
-   * });
-   *
-   * gameObject.render();
-   * ```
-   * @memberof GameObject
-   * @function draw
-   */
-  draw() {
-    let x = 0;
-    let y = 0;
-    let viewX = this.x;
-    let viewY = this.y;
-
-    // @ifdef GAMEOBJECT_ANCHOR
-    x = -this.width * this.anchor.x;
-    y = -this.height * this.anchor.y;
-    // @endif
-
-    // @ifdef GAMEOBJECT_CAMERA
-    viewX = this.viewX;
-    viewY = this.viewY;
-    // @endif
-
-    // @ifdef GAMEOBJECT_GROUP
-    if (this.parent) {
-      viewX = this.localPosition.x;
-      viewY = this.localPosition.y;
-    }
-    // @endif
-
-    this.context.save();
-    this.context.translate(viewX, viewY);
-
-    // @ifdef GAMEOBJECT_ROTATION
-    // rotate around the anchor
-    if (this.rotation) {
-      let rotation = this.rotation;
-
-      // @ifdef GAMEOBJECT_GROUP
-      rotation = this.localRotation;
-      // @endif
-
-      this.context.rotate(rotation);
-    }
-    // @endif
-
-    // dc = draw code
-    this._dc(x, y);
-
-    // @ifdef GAMEOBJECT_GROUP
-    // perform all transforms on the parent before rendering the children
-    this.children.map(child => child.render && child.render());
-    // @endif
-
-    this.context.restore();
-  }
-
-  _dc() {}
-}
-
-/**
- * A versatile way to update and draw your sprites. It can handle simple rectangles, images, and sprite sheet animations. It can be used for your main player object as well as tiny particles in a particle engine.
- * @class Sprite
- * @extends GameObject
- *
- * @param {Object} properties - Properties of the sprite.
- * @param {HTMLImageElement|HTMLCanvasElement} [properties.image] - Use an image to draw the sprite.
- * @param {Object} [properties.animations] - An object of [Animations](api/animation) from a [Spritesheet](api/spriteSheet) to animate the sprite.
- */
-class Sprite extends GameObject {
-  /**
-   * @docs docs/api_docs/sprite.js
-   */
-
-  init(properties = {}) {
 
     /**
      * The width of the sprite. If the sprite is a [rectangle sprite](api/sprite#rectangle-sprite), it uses the passed in value. For an [image sprite](api/sprite#image-sprite) it is the width of the image. And for an [animation sprite](api/sprite#animation-sprite) it is the width of a single frame of the animation.
@@ -3479,6 +3484,191 @@ function getStoreItem(key) {
 
   return value;
 }
+
+class Text extends GameObject$1.class {
+  /**
+   * An object for drawing text to the screen. Supports newline characters as well as automatic new lines when setting the `width` property.
+   *
+   * You can also display RTL languages by setting the attribute `dir="rtl"` on the main canvas element. Due to the limited support for individual text to have RTL settings, it must be set globally for the entire game.
+   * ```js
+   * import { Text } from 'kontra';
+   *
+   * let text = Text({
+   *   text: 'Hello World!',
+   *   font: '32px Arial',
+   *   color: 'black'
+   *   x: 100,
+   *   y: 100,
+   *   anchor: {x: 0.5, y: 0.5}
+   * });
+   * text.render();
+   * ```
+   * @class Text
+   * @extends GameObject
+   *
+   * @param {Object} properties - Properties of the text.
+   * @param {String} properties.text - The text to display.
+   * @param {String} properties.font - The [font](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/font) style.
+   * @param {String} properties.color - Fill color for the text.
+   * @param {Number} [properties.width] - Set a fixed width for the text. If set, the text will automatically be split into new lines that will fit the size when possible.
+   * @param {String} [properties.textAlign='left'] - The [textAlign](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/textAlign) for the context. If the `dir` attribute is set to `rtl` on the main canvas, the text will automatically be aligned to the right, but you can override that by setting this property.
+   */
+
+  init(properties) {
+
+    /**
+     * The color of the text.
+     * @type {String} color
+     */
+    this.color = null;
+
+    /**
+     * The text alignment.
+     * @type {String} textAlign
+     */
+    this.textAlign = 'left';
+
+    super.init(properties);
+
+    // p = prerender
+    this._p();
+  }
+
+  /**
+   * The string of text.
+   * @type {String} text
+   */
+  get text() {
+    // t = text
+    return this._t;
+  }
+
+  set text(value) {
+    this._t = value;
+
+    // s = strings
+    this._s = [];
+
+    // d = dirty
+    this._d = true;
+  }
+
+  /**
+   * The font style.
+   * @type {String} font
+   */
+  get font() {
+    // f = font
+    return this._f;
+  }
+
+  set font(value) {
+    this._f = value;
+
+    // fs = font size
+    this._fs = parseInt(value);
+    this._d = true;
+  }
+
+  get width() {
+    return this._w;
+  }
+
+  set width(value) {
+    this._w = value;
+    this._d = true;
+
+    // @ifdef TEXT_AUTONEWLINE
+    // fw = fixed width
+    this._fw = value;
+    this._s = [];
+    // @endif
+  }
+
+  render() {
+    if (this._d) {
+
+      // p = prerender
+      this._p();
+    }
+    super.render();
+  }
+
+  /**
+   * Calculate the font width, height, and text strings before rendering.
+   */
+  _p() {
+    this._d = false;
+    this.context.font = this.font;
+
+    // @ifdef TEXT_AUTONEWLINE
+    if (!this._s.length && this._fw) {
+      let parts = this._t.split(' ');
+      let start = 0;
+      let i = 2;
+
+      // split the string into lines that all fit within the fixed width
+      for (; i <= parts.length; i++) {
+        let str = parts.slice(start, i).join(' ');
+        let width = this.context.measureText(str).width;
+
+        if (width > this._fw) {
+          this._s.push(parts.slice(start, i - 1).join(' '));
+          start = i - 1;
+        }
+      }
+
+      this._s.push(parts.slice(start, i).join(' '));
+    }
+    // @endif
+
+    // @ifdef TEXT_NEWLINE
+    if (!this._s.length && this._t.includes('\n')) {
+      let width = 0;
+      this._t.split('\n').map(str => {
+        this._s.push(str);
+        width = Math.max(width, this.context.measureText(str).width);
+      });
+
+      this._w = width;
+    }
+    // @endif
+
+    if (!this._s.length) {
+      this._s.push(this.text);
+      this._w = this.context.measureText(this._t).width;
+    }
+
+    this.height = this._s.length * this._fs;
+  }
+
+  _dc(x, y) {
+    let alignX = x;
+    let textAlign = this.textAlign;
+
+    // @ifdef TEXT_RTL
+    textAlign = this.textAlign || this.context.canvas.dir === 'rtl' ? 'right' : 'left';
+    // @endif
+
+    // @ifdef TEXT_ALIGN||TEXT_RTL
+    alignX = textAlign === 'right'
+      ? x + this.width
+      : textAlign === 'center'
+        ? x + this.width / 2 | 0
+        : x;
+    // @endif
+
+    this._s.map((str, index) => {
+      this.context.textBaseline = 'top';
+      this.context.textAlign = textAlign;
+      this.context.fillStyle = this.color;
+      this.context.font = this.font;
+      this.context.fillText(str, alignX, y + this._fs * index);
+    });
+  }
+}
+
+var Text$1 = Factory(Text);
 
 /**
  * A tile engine for managing and drawing tilesets.
@@ -4109,6 +4299,7 @@ let kontra = {
   emit,
 
   GameLoop,
+  GameObject: GameObject$1,
 
   keyMap,
   initKeys,
@@ -4137,6 +4328,7 @@ let kontra = {
   setStoreItem,
   getStoreItem,
 
+  Text: Text$1,
   TileEngine,
   Vector: Vector$1
 };

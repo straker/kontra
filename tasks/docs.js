@@ -135,6 +135,14 @@ function resolveKontraType(string, isArray) {
  * @param {String} type
  */
 function parseType(type) {
+  // parse typescript specific typings
+  if (type.startsWith('(')) {
+    type = 'Function';
+  }
+  if (type.startsWith('{')) {
+    type = 'Object';
+  }
+
   // parse or types
   if (type.includes('|')) {
     type = type.split('|').join(' or ');

@@ -87,7 +87,7 @@
             <code>properties.create</code>
             
           </dt>
-          <dd><p>Function. Function that returns a new object to be added to the pool when there are no more alive objects.</p>
+          <dd><p>() =&gt; {update: (dt?: number) =&gt; void, render: Function, init: (properties?: object) =&gt; void, isAlive: () =&gt; boolean}. Function that returns a new object to be added to the pool when there are no more alive objects.</p>
         </dd>
           <dt>
             <code>properties.maxSize</code>
@@ -139,7 +139,7 @@
                 </li>
                 <li>
                   <a href="api/pool#get">
-                    <span>Pool&#8203;.get(&#8203;properties)</span>
+                    <span>Pool&#8203;.get(&#8203;[properties])</span>
                   </a>
                 </li>
                 <li>
@@ -171,7 +171,7 @@
           </h2>
 
           <p>To use the pool, you must pass the <code>create()</code> function argument, which should return a new <a href="api/sprite">Sprite</a> or object. This object will be added to the pool every time there are no more alive objects.</p>
-<p>The object must implement the functions <code>update()</code>, <code>init()</code>, and <code>isAlive()</code>. If one of these functions is missing the pool will throw an error. <a href="api/sprite">Sprite</a> defines these functions for you.</p>
+<p>The object must implement the functions <code>update()</code>, <code>render()</code>, <code>init()</code>, and <code>isAlive()</code>. If one of these functions is missing the pool will throw an error. <a href="api/sprite">Sprite</a> defines these functions for you.</p>
 <p>An object is available for reuse when its <code>isAlive()</code> function returns <code>false</code>. For a sprite, this is typically when its ttl is <code>0</code>.</p>
 <p>When you want an object from the pool, use the pools <a href="api/pool/#get">get()</a> function and pass it any properties you want the newly initialized object to have.</p>
 <div class="tablist">
@@ -297,7 +297,7 @@ let loop = GameLoop({
         <section>
           <h2 id="get">
             <a href="api/pool#get" class="section-link">
-              <span>Pool&#8203;.get(&#8203;properties)</span>
+              <span>Pool&#8203;.get(&#8203;[properties])</span>
               <span aria-hidden="true">#</span>
             </a>
           </h2>
@@ -320,7 +320,7 @@ let loop = GameLoop({
           <dl aria-labelledby="title-get">
             <dt>
               <code>properties</code>
-              
+              <span class="optional">Optional</span>
             </dt>
             <dd><p>Object. Properties to pass to the objects <code>init()</code> function.</p>
           </dd>

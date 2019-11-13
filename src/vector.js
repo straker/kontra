@@ -33,7 +33,7 @@ class Vector {
    * @memberof Vector
    * @function add
    *
-   * @param {Vector} vector - Vector to add to the current Vector.
+   * @param {Vector|{x: number, y: number}} vector - Vector to add to the current Vector.
    * @param {Number} [dt=1] - Time since last update.
    *
    * @returns {Vector} A new Vector instance.

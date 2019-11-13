@@ -406,9 +406,9 @@ export function loadData(url) {
  * ```
  * @function load
  *
- * @param {String|String[]} urls - Comma separated list of asset urls to load.
+ * @param {...String[]} urls - Comma separated list of asset urls to load.
  *
- * @returns {Promise} A deferred promise. Resolves with all the loaded assets.
+ * @returns {Promise<any[]>} A deferred promise. Resolves with all the loaded assets.
  */
 export function load(...urls) {
   addGlobal();

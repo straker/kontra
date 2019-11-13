@@ -8,7 +8,7 @@ import { Factory } from './utils.js'
  * @class Pool
  *
  * @param {Object} properties - Properties of the pool.
- * @param {Function} properties.create - Function that returns a new object to be added to the pool when there are no more alive objects.
+ * @param {() => {update: (dt?: number) => void, render: Function, init: (properties?: object) => void, isAlive: () => boolean}} properties.create - Function that returns a new object to be added to the pool when there are no more alive objects.
  * @param {Number} [properties.maxSize=1024] - The maximum number of objects allowed in the pool. The pool will never grow beyond this size.
  */
 class Pool {
@@ -25,9 +25,9 @@ class Pool {
     if (!create ||
         ( !( obj = create() ) ||
           !( obj.update && obj.init &&
-             obj.isAlive )
+             obj.isAlive && obj.render)
        )) {
-      throw Error('Must provide create() function which returns an object with init(), update(), and isAlive() functions');
+      throw Error('Must provide create() function which returns an object with init(), update(), render(), and isAlive() functions');
     }
     // @endif
 
@@ -79,7 +79,7 @@ class Pool {
    * @memberof Pool
    * @function get
    *
-   * @param {Object} properties - Properties to pass to the objects `init()` function.
+   * @param {Object} [properties] - Properties to pass to the objects `init()` function.
    *
    * @returns {Object} The newly initialized object.
    */

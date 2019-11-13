@@ -63,10 +63,10 @@ The quadrant indices are numbered as follows (following a z-order curve):
  * <script src="assets/js/quadtree.js"></script>
  * @class Quadtree
  *
- * @param {Object} properties - Properties of the quadtree.
+ * @param {Object} [properties] - Properties of the quadtree.
  * @param {Number} [properties.maxDepth=3] - Maximum node depth of the quadtree.
  * @param {Number} [properties.maxObjects=25] - Maximum number of objects a node can have before splitting.
- * @param {Object} [properties.bounds] - The 2D space (x, y, width, height) the quadtree occupies. Defaults to the entire canvas width and height.
+ * @param {{x: number, y: number, width: number, height: number}} [properties.bounds] - The 2D space (x, y, width, height) the quadtree occupies. Defaults to the entire canvas width and height.
  */
 class Quadtree {
   /**
@@ -151,7 +151,7 @@ class Quadtree {
    * @memberof Quadtree
    * @function get
    *
-   * @param {Object} object - Object to use for finding other objects. The object must have the properties `x`, `y`, `width`, and `height` so that its position in the quadtree can be calculated.
+   * @param {{x: number, y: number, width: number, height: number}} object - Object to use for finding other objects. The object must have the properties `x`, `y`, `width`, and `height` so that its position in the quadtree can be calculated.
    *
    * @returns {Object[]} A list of objects in the same node as the object, not including the object itself.
    */
@@ -210,7 +210,7 @@ class Quadtree {
    * @memberof Quadtree
    * @function add
    *
-   * @param {Object|Object[]} objects - Objects to add to the quadtree.
+   * @param {...Object[]} objects - Objects to add to the quadtree.
    */
   add() {
     let i, j, object, obj, indices, index;

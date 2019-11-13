@@ -9,15 +9,15 @@ declare namespace kontra {
     {{name}}({{{params}}}): {{{returns}}};
       {{/if}}
       {{#if property}}
-    {{#if readonly}}readonly {{/if}}{{property.name}}: {{property.type}};
+    {{#if readonly}}readonly {{/if}}{{property.name}}: {{{property.type}}};
       {{/if}}
     {{/each}}
   }
   interface {{class}}Constructor {
     readonly class: {{class}}Constructor;
     readonly prototype: {{class}};
-    new({{params}}): {{class}};
-    ({{params}}): {{class}};
+    new({{{params}}}): {{class}};
+    ({{{params}}}): {{class}};
   }
   var {{class}}: {{class}}Constructor
     {{/if}}
@@ -26,7 +26,7 @@ declare namespace kontra {
   function {{name}}({{{params}}}): {{{returns}}};
       {{/if}}
       {{#if property}}
-  var {{property.name}}: {{property.type}};
+  var {{property.name}}: {{{property.type}}};
       {{/if}}
     {{/unless}}
   {{/each}}

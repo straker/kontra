@@ -4,16 +4,7 @@ const rename = require('gulp-rename');
 const path = require('path');
 
 const optionalRegex = /^\[.*\]$/;
-const baseTypes = [
-  'String',
-  'String[]',
-  'Boolean',
-  'Boolean[]',
-  'Number',
-  'Number[]',
-  'Object',
-  'Object[]'
-]
+const baseTypesRegex = /\b(String|Boolean|Number|Object)\b/g;
 
 function addSection() {
   let description = path.basename(this.file, '.js');
@@ -44,9 +35,7 @@ function addSection() {
 
 function parseType(type) {
   type = type.split('|').map(t => {
-    if (baseTypes.includes(t)) {
-      t = t.toLowerCase();
-    }
+    t = t.replace(baseTypesRegex, (match, p1) => p1.toLowerCase());
     if (t === 'function') {
       t = 'Function'
     }
@@ -192,7 +181,13 @@ function mergeParam(obj1, obj2) {
   obj2.param.forEach(param => {
     let rootParam = obj1.param.find(p => p.name === param.name);
     if (rootParam && rootParam.children && param.children) {
-      rootParam.children = rootParam.children.concat(param.children);
+      rootParam.children = rootParam.children
+        .concat(param.children)
+        // unique set
+        .filter((p, index, array) => {
+          let item = array.find(pa => pa.name === p.name);
+          return array.indexOf(item) === index;
+        });
     }
   });
 }

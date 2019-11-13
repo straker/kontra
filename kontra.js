@@ -730,9 +730,9 @@ function loadData(url) {
  * ```
  * @function load
  *
- * @param {String|String[]} urls - Comma separated list of asset urls to load.
+ * @param {...String[]} urls - Comma separated list of asset urls to load.
  *
- * @returns {Promise} A deferred promise. Resolves with all the loaded assets.
+ * @returns {Promise<any[]>} A deferred promise. Resolves with all the loaded assets.
  */
 function load(...urls) {
   addGlobal();
@@ -925,7 +925,7 @@ function GameLoop({fps = 60, clearCanvas = true, update, render} = {}) {
      * @memberof GameLoop
      * @function update
      *
-     * @param {Number} dt - The fixed dt time of 1/60 of a frame.
+     * @param {Number} [dt] - The fixed dt time of 1/60 of a frame.
      */
     update,
 
@@ -1024,7 +1024,7 @@ class Vector {
    * @memberof Vector
    * @function add
    *
-   * @param {Vector} vector - Vector to add to the current Vector.
+   * @param {Vector|{x: number, y: number}} vector - Vector to add to the current Vector.
    * @param {Number} [dt=1] - Time since last update.
    *
    * @returns {Vector} A new Vector instance.
@@ -1705,7 +1705,7 @@ let pressedKeys = {};
  *   // handle pageDown key
  * });
  * ```
- * @property {Object} keyMap
+ * @property {{[name: string]: string}} keyMap
  */
 let keyMap = {
   // named keys
@@ -1800,7 +1800,7 @@ function initKeys() {
  * @function bindKeys
  *
  * @param {String|String[]} keys - Key or keys to bind.
- * @param {Function} callback - The function to be called when the key is pressed.
+ * @param {(evt: KeyboardEvent) => void} callback - The function to be called when the key is pressed.
  */
 function bindKeys(keys, callback) {
   // smaller than doing `Array.isArray(keys) ? keys : [keys]`
@@ -2113,7 +2113,7 @@ let buttonMap = {
  *
  * console.log(pointer);  //=> { x: 100, y: 200, radius: 5 };
  * ```
- * @property {Object} pointer
+ * @property {{x: number, y: number, radius: number}} pointer
  */
 let pointer = {
   x: 0,
@@ -2328,10 +2328,10 @@ function initPointer() {
  * ```
  * @function track
  *
- * @param {Object|Object[]} objects - Objects to track.
+ * @param {...Object[]} objects - Objects to track.
  */
-function track(objects) {
-  [].concat(objects).map(object => {
+function track(...objects) {
+  objects.map(object => {
 
     // override the objects render function to keep track of render order
     if (!object._r) {
@@ -2358,10 +2358,10 @@ function track(objects) {
  * ```
  * @function untrack
  *
- * @param {Object|Object[]} objects - Object or objects to stop tracking.
+ * @param {...Object[]} objects - Object or objects to stop tracking.
  */
-function untrack(objects) {
-  [].concat(objects).map(object => {
+function untrack(...objects) {
+  objects.map(object => {
 
     // restore original render function to no longer track render order
     object.render = object._r;
@@ -2432,7 +2432,7 @@ function pointerOver(object) {
  * ```
  * @function onPointerDown
  *
- * @param {Function} callback - Function to call on pointer down.
+ * @param {(evt: MouseEvent|TouchEvent, object?: Object) => void} callback - Function to call on pointer down.
  */
 function onPointerDown(callback) {
   callbacks$2.onDown = callback;
@@ -2452,7 +2452,7 @@ function onPointerDown(callback) {
  * ```
  * @function onPointerUp
  *
- * @param {Function} callback - Function to call on pointer up.
+ * @param {(evt: MouseEvent|TouchEvent, object?: Object) => void} callback - Function to call on pointer up.
  */
 function onPointerUp(callback) {
   callbacks$2.onUp = callback;
@@ -2495,7 +2495,7 @@ function pointerPressed(button) {
  * @class Pool
  *
  * @param {Object} properties - Properties of the pool.
- * @param {Function} properties.create - Function that returns a new object to be added to the pool when there are no more alive objects.
+ * @param {() => {update: (dt?: number) => void, render: Function, init: (properties?: object) => void, isAlive: () => boolean}} properties.create - Function that returns a new object to be added to the pool when there are no more alive objects.
  * @param {Number} [properties.maxSize=1024] - The maximum number of objects allowed in the pool. The pool will never grow beyond this size.
  */
 class Pool {
@@ -2512,9 +2512,9 @@ class Pool {
     if (!create ||
         ( !( obj = create() ) ||
           !( obj.update && obj.init &&
-             obj.isAlive )
+             obj.isAlive && obj.render)
        )) {
-      throw Error('Must provide create() function which returns an object with init(), update(), and isAlive() functions');
+      throw Error('Must provide create() function which returns an object with init(), update(), render(), and isAlive() functions');
     }
     // @endif
 
@@ -2566,7 +2566,7 @@ class Pool {
    * @memberof Pool
    * @function get
    *
-   * @param {Object} properties - Properties to pass to the objects `init()` function.
+   * @param {Object} [properties] - Properties to pass to the objects `init()` function.
    *
    * @returns {Object} The newly initialized object.
    */
@@ -2714,10 +2714,10 @@ The quadrant indices are numbered as follows (following a z-order curve):
  * <script src="assets/js/quadtree.js"></script>
  * @class Quadtree
  *
- * @param {Object} properties - Properties of the quadtree.
+ * @param {Object} [properties] - Properties of the quadtree.
  * @param {Number} [properties.maxDepth=3] - Maximum node depth of the quadtree.
  * @param {Number} [properties.maxObjects=25] - Maximum number of objects a node can have before splitting.
- * @param {Object} [properties.bounds] - The 2D space (x, y, width, height) the quadtree occupies. Defaults to the entire canvas width and height.
+ * @param {{x: number, y: number, width: number, height: number}} [properties.bounds] - The 2D space (x, y, width, height) the quadtree occupies. Defaults to the entire canvas width and height.
  */
 class Quadtree {
   /**
@@ -2802,7 +2802,7 @@ class Quadtree {
    * @memberof Quadtree
    * @function get
    *
-   * @param {Object} object - Object to use for finding other objects. The object must have the properties `x`, `y`, `width`, and `height` so that its position in the quadtree can be calculated.
+   * @param {{x: number, y: number, width: number, height: number}} object - Object to use for finding other objects. The object must have the properties `x`, `y`, `width`, and `height` so that its position in the quadtree can be calculated.
    *
    * @returns {Object[]} A list of objects in the same node as the object, not including the object itself.
    */
@@ -2861,7 +2861,7 @@ class Quadtree {
    * @memberof Quadtree
    * @function add
    *
-   * @param {Object|Object[]} objects - Objects to add to the quadtree.
+   * @param {...Object[]} objects - Objects to add to the quadtree.
    */
   add() {
     let i, j, object, obj;
@@ -3490,6 +3490,7 @@ class Text extends GameObject$1.class {
    * An object for drawing text to the screen. Supports newline characters as well as automatic new lines when setting the `width` property.
    *
    * You can also display RTL languages by setting the attribute `dir="rtl"` on the main canvas element. Due to the limited support for individual text to have RTL settings, it must be set globally for the entire game.
+   *
    * ```js
    * import { Text } from 'kontra';
    *
@@ -3520,7 +3521,6 @@ class Text extends GameObject$1.class {
      * The color of the text.
      * @type {String} color
      */
-    this.color = null;
 
     /**
      * The text alignment.
@@ -3546,9 +3546,6 @@ class Text extends GameObject$1.class {
   set text(value) {
     this._t = value;
 
-    // s = strings
-    this._s = [];
-
     // d = dirty
     this._d = true;
   }
@@ -3571,6 +3568,7 @@ class Text extends GameObject$1.class {
   }
 
   get width() {
+    // w = width
     return this._w;
   }
 
@@ -3581,14 +3579,11 @@ class Text extends GameObject$1.class {
     // @ifdef TEXT_AUTONEWLINE
     // fw = fixed width
     this._fw = value;
-    this._s = [];
     // @endif
   }
 
   render() {
     if (this._d) {
-
-      // p = prerender
       this._p();
     }
     super.render();
@@ -3598,6 +3593,8 @@ class Text extends GameObject$1.class {
    * Calculate the font width, height, and text strings before rendering.
    */
   _p() {
+    // s = strings
+    this._s = [];
     this._d = false;
     this.context.font = this.font;
 

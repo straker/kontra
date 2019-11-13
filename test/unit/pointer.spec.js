@@ -223,8 +223,8 @@ describe('pointer', () => {
     it('should take multiple objects', () => {
       let obj = { render: noop };
       let obj2 = { render: noop }
-      pointer.track([obj, obj2]);
-      pointer.untrack([obj, obj2]);
+      pointer.track(obj, obj2);
+      pointer.untrack(obj, obj2);
 
       expect(obj.render).to.equal(noop);
       expect(obj._r).to.not.be.ok;

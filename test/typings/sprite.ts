@@ -1,7 +1,7 @@
 import * as kontra from '../../kontra.js';
 
 // null
-let nullSprite = kontra.Sprite();
+let nullSprite: kontra.Sprite = kontra.Sprite();
 
 // inheritance
 nullSprite.x += 20;
@@ -52,6 +52,8 @@ let animSprite = kontra.Sprite({
 });
 
 animSprite.playAnimation('walk');
+let anims = animSprite.animations;
+let currAnim = animSprite.currentAnimation;
 
 // class
 class CustomSprite extends kontra.Sprite.class {
@@ -59,7 +61,14 @@ class CustomSprite extends kontra.Sprite.class {
     super(properties);
   }
 }
+
 let customSprite = new CustomSprite({
   x: 12,
   y: 10
 });
+
+// custom props
+let propSrpite = kontra.Sprite({
+  custom: 'foo'
+});
+let prop = propSrpite.custom;

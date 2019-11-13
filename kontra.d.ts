@@ -34,10 +34,10 @@ declare namespace kontra {
   function loadImage(url: string): Promise<HTMLImageElement>;
   function loadAudio(url: string): Promise<HTMLAudioElement>;
   function loadData(url: string): Promise<any>;
-  function load(urls: string | string[]): Promise<any>;
+  function load(...urls: string[]): Promise<any[]>;
   function collides(object1: object, object2: object): boolean | null;
   interface GameLoop {
-    update(dt: number): void;
+    update(dt?: number): void;
     render(): void;
     isStopped: boolean;
     start(): void;
@@ -50,56 +50,8 @@ declare namespace kontra {
     (properties: {update: Function, render: Function, fps?: number, clearCanvas?: boolean}): GameLoop;
   }
   var GameLoop: GameLoopConstructor
-  var keyMap: object;
-  function initKeys(): void;
-  function bindKeys(keys: string | string[], callback: Function): void;
-  function unbindKeys(keys: string | string[]): void;
-  function keyPressed(key: string): boolean;
-  function registerPlugin(kontraObj: object, pluginObj: object): void;
-  function unregisterPlugin(kontraObj: object, pluginObj: object): void;
-  function extendObject(kontraObj: object, properties: object): void;
-  var pointer: object;
-  function initPointer(): void;
-  function track(objects: object | object[]): void;
-  function untrack(objects: object | object[]): void;
-  function pointerOver(object: object): boolean;
-  function onPointerDown(callback: Function): void;
-  function onPointerUp(callback: Function): void;
-  function pointerPressed(button: string): boolean;
-  interface Pool {
-    objects: object[];
-    size: number;
-    maxSize: number;
-    get(properties: object): object;
-    getAliveObjects(): object[];
-    clear(): void;
-    update(dt?: number): void;
-    render(): void;
-  }
-  interface PoolConstructor {
-    readonly class: PoolConstructor;
-    readonly prototype: Pool;
-    new(properties: {create: Function, maxSize?: number}): Pool;
-    (properties: {create: Function, maxSize?: number}): Pool;
-  }
-  var Pool: PoolConstructor
-  interface Quadtree {
-    maxDepth: number;
-    maxObjects: number;
-    bounds: object;
-    clear(): void;
-    get(object: object): object[];
-    add(objects: object | object[]): void;
-  }
-  interface QuadtreeConstructor {
-    readonly class: QuadtreeConstructor;
-    readonly prototype: Quadtree;
-    new(properties: {maxDepth?: number, maxObjects?: number, bounds?: object}): Quadtree;
-    (properties: {maxDepth?: number, maxObjects?: number, bounds?: object}): Quadtree;
-  }
-  var Quadtree: QuadtreeConstructor
   interface Vector {
-    add(vector: Vector, dt?: number): Vector;
+    add(vector: Vector | {x: number, y: number}, dt?: number): Vector;
     clamp(xMin: number, yMin: number, xMax: number, yMax: number): void;
     x: number;
     y: number;
@@ -151,6 +103,54 @@ declare namespace kontra {
     (properties?: {x?: number, y?: number, dx?: number, dy?: number, ddx?: number, ddy?: number, width?: number, height?: number, ttl?: number, rotation?: number, anchor?: object, context?: CanvasRenderingContext2D, update?: Function, render?: Function, [props: string]: any}): GameObject;
   }
   var GameObject: GameObjectConstructor
+  var keyMap: {[name: string]: string};
+  function initKeys(): void;
+  function bindKeys(keys: string | string[], callback: (evt: KeyboardEvent) => void): void;
+  function unbindKeys(keys: string | string[]): void;
+  function keyPressed(key: string): boolean;
+  function registerPlugin(kontraObj: object, pluginObj: object): void;
+  function unregisterPlugin(kontraObj: object, pluginObj: object): void;
+  function extendObject(kontraObj: object, properties: object): void;
+  var pointer: {x: number, y: number, radius: number};
+  function initPointer(): void;
+  function track(...objects: object[]): void;
+  function untrack(...objects: object[]): void;
+  function pointerOver(object: object): boolean;
+  function onPointerDown(callback: (evt: MouseEvent | TouchEvent, object?: object) => void): void;
+  function onPointerUp(callback: (evt: MouseEvent | TouchEvent, object?: object) => void): void;
+  function pointerPressed(button: string): boolean;
+  interface Pool {
+    objects: object[];
+    size: number;
+    maxSize: number;
+    get(properties?: object): object;
+    getAliveObjects(): object[];
+    clear(): void;
+    update(dt?: number): void;
+    render(): void;
+  }
+  interface PoolConstructor {
+    readonly class: PoolConstructor;
+    readonly prototype: Pool;
+    new(properties: {create: () => {update: (dt?: number) => void, render: Function, init: (properties?: object) => void, isAlive: () => boolean}, maxSize?: number}): Pool;
+    (properties: {create: () => {update: (dt?: number) => void, render: Function, init: (properties?: object) => void, isAlive: () => boolean}, maxSize?: number}): Pool;
+  }
+  var Pool: PoolConstructor
+  interface Quadtree {
+    maxDepth: number;
+    maxObjects: number;
+    bounds: object;
+    clear(): void;
+    get(object: {x: number, y: number, width: number, height: number}): object[];
+    add(...objects: object[]): void;
+  }
+  interface QuadtreeConstructor {
+    readonly class: QuadtreeConstructor;
+    readonly prototype: Quadtree;
+    new(properties?: {maxDepth?: number, maxObjects?: number, bounds?: {x: number, y: number, width: number, height: number}}): Quadtree;
+    (properties?: {maxDepth?: number, maxObjects?: number, bounds?: {x: number, y: number, width: number, height: number}}): Quadtree;
+  }
+  var Quadtree: QuadtreeConstructor
   interface Sprite extends GameObject {
     width: number;
     height: number;
@@ -181,6 +181,15 @@ declare namespace kontra {
   var SpriteSheet: SpriteSheetConstructor
   function setStoreItem(key: string, value: any): void;
   function getStoreItem(key: string): any;
+  interface Text extends GameObject {
+  }
+  interface TextConstructor {
+    readonly class: TextConstructor;
+    readonly prototype: Text;
+    new(properties: {text: string, font: string, color: string, width?: number, textAlign?: string, x?: number, y?: number, dx?: number, dy?: number, ddx?: number, ddy?: number, height?: number, ttl?: number, rotation?: number, anchor?: object, context?: CanvasRenderingContext2D, update?: Function, render?: Function, [props: string]: any}): Text;
+    (properties: {text: string, font: string, color: string, width?: number, textAlign?: string, x?: number, y?: number, dx?: number, dy?: number, ddx?: number, ddy?: number, height?: number, ttl?: number, rotation?: number, anchor?: object, context?: CanvasRenderingContext2D, update?: Function, render?: Function, [props: string]: any}): Text;
+  }
+  var Text: TextConstructor
   interface TileEngine {
     width: number;
     height: number;

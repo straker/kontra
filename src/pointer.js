@@ -88,7 +88,7 @@ let buttonMap = {
  *
  * console.log(pointer);  //=> { x: 100, y: 200, radius: 5 };
  * ```
- * @property {Object} pointer
+ * @property {{x: number, y: number, radius: number}} pointer
  */
 export let pointer = {
   x: 0,
@@ -303,10 +303,10 @@ export function initPointer() {
  * ```
  * @function track
  *
- * @param {Object|Object[]} objects - Objects to track.
+ * @param {...Object[]} objects - Objects to track.
  */
-export function track(objects) {
-  [].concat(objects).map(object => {
+export function track(...objects) {
+  objects.map(object => {
 
     // override the objects render function to keep track of render order
     if (!object._r) {
@@ -333,10 +333,10 @@ export function track(objects) {
  * ```
  * @function untrack
  *
- * @param {Object|Object[]} objects - Object or objects to stop tracking.
+ * @param {...Object[]} objects - Object or objects to stop tracking.
  */
-export function untrack(objects) {
-  [].concat(objects).map(object => {
+export function untrack(...objects) {
+  objects.map(object => {
 
     // restore original render function to no longer track render order
     object.render = object._r;
@@ -407,7 +407,7 @@ export function pointerOver(object) {
  * ```
  * @function onPointerDown
  *
- * @param {Function} callback - Function to call on pointer down.
+ * @param {(evt: MouseEvent|TouchEvent, object?: Object) => void} callback - Function to call on pointer down.
  */
 export function onPointerDown(callback) {
   callbacks.onDown = callback;
@@ -427,7 +427,7 @@ export function onPointerDown(callback) {
  * ```
  * @function onPointerUp
  *
- * @param {Function} callback - Function to call on pointer up.
+ * @param {(evt: MouseEvent|TouchEvent, object?: Object) => void} callback - Function to call on pointer up.
  */
 export function onPointerUp(callback) {
   callbacks.onUp = callback;

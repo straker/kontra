@@ -6,6 +6,7 @@ class Text extends GameObject.class {
    * An object for drawing text to the screen. Supports newline characters as well as automatic new lines when setting the `width` property.
    *
    * You can also display RTL languages by setting the attribute `dir="rtl"` on the main canvas element. Due to the limited support for individual text to have RTL settings, it must be set globally for the entire game.
+   *
    * ```js
    * import { Text } from 'kontra';
    *
@@ -36,7 +37,6 @@ class Text extends GameObject.class {
      * The color of the text.
      * @type {String} color
      */
-    this.color = null;
 
     /**
      * The text alignment.
@@ -62,9 +62,6 @@ class Text extends GameObject.class {
   set text(value) {
     this._t = value;
 
-    // s = strings
-    this._s = [];
-
     // d = dirty
     this._d = true;
   }
@@ -87,6 +84,7 @@ class Text extends GameObject.class {
   }
 
   get width() {
+    // w = width
     return this._w;
   }
 
@@ -97,14 +95,11 @@ class Text extends GameObject.class {
     // @ifdef TEXT_AUTONEWLINE
     // fw = fixed width
     this._fw = value;
-    this._s = [];
     // @endif
   }
 
   render() {
     if (this._d) {
-
-      // p = prerender
       this._p();
     }
     super.render();
@@ -114,6 +109,8 @@ class Text extends GameObject.class {
    * Calculate the font width, height, and text strings before rendering.
    */
   _p() {
+    // s = strings
+    this._s = [];
     this._d = false;
     this.context.font = this.font;
 

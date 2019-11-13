@@ -104,7 +104,7 @@ export default function GameLoop({fps = 60, clearCanvas = true, update, render} 
      * @memberof GameLoop
      * @function update
      *
-     * @param {Number} dt - The fixed dt time of 1/60 of a frame.
+     * @param {Number} [dt] - The fixed dt time of 1/60 of a frame.
      */
     update,
 

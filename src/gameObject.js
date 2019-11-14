@@ -19,7 +19,7 @@ import { Factory } from './utils.js'
  *
  * @param {Number} [properties.ttl=Infinity] - How many frames the game object should be alive. Used by [Pool](api/pool).
  * @param {Number} [properties.rotation=0] - game objects rotation around the origin in radians.
- * @param {Object} [properties.anchor={x:0,y:0}] - The x and y origin of the game object. {x:0, y:0} is the top left corner of the game object, {x:1, y:1} is the bottomright corner.
+ * @param {{x: number, y: number}} [properties.anchor={x:0,y:0}] - The x and y origin of the game object. {x:0, y:0} is the top left corner of the game object, {x:1, y:1} is the bottomright corner.
  *
  * @param {CanvasRenderingContext2D} [properties.context] - The context the game object should draw to. Defaults to [core.getContext()](api/core#getContext).
  *
@@ -88,7 +88,7 @@ class GameObject {
     /**
      * The game objects local rotation, which is its rotation relative to a parent object. If the game object does not have a parent object, the local rotation will be the same as the [rotation](api/gameObject#rotation].
      * @memberof GameObject
-     * @property {Vector} localRotation
+     * @property {Number} localRotation
      */
     this.localRotation = 0;
 
@@ -99,7 +99,7 @@ class GameObject {
     /**
      * The game objects parent object.
      * @memberof GameObject
-     * @property {GameObject} parent
+     * @property {GameObject|null} parent
      */
 
     /**
@@ -150,20 +150,19 @@ class GameObject {
     /**
      * The x and y origin of the game object. {x:0, y:0} is the top left corner of the game object, {x:1, y:1} is the bottom right corner.
      * @memberof GameObject
-     * @property {Object} anchor
+     * @property {{x: number, y: number}} anchor
      *
      * @example
      * // exclude-code:start
-     * let { game object } = kontra;
+     * let { GameObject } = kontra;
      * // exclude-code:end
      * // exclude-script:start
-     * import { game object } from 'kontra';
+     * import { GameObject } from 'kontra';
      * // exclude-script:end
      *
-     * let gameObject = game object({
+     * let gameObject = GameObject({
      *   x: 150,
      *   y: 100,
-     *   color: 'red',
      *   width: 50,
      *   height: 50,
      *   // exclude-code:start
@@ -181,12 +180,12 @@ class GameObject {
      * });
      * gameObject.render();
      *
-     * game object.anchor = {x: 0.5, y: 0.5};
-     * game object.x = 300;
+     * gameObject.anchor = {x: 0.5, y: 0.5};
+     * gameObject.x = 300;
      * gameObject.render();
      *
-     * game object.anchor = {x: 1, y: 1};
-     * game object.x = 450;
+     * gameObject.anchor = {x: 1, y: 1};
+     * gameObject.x = 450;
      * gameObject.render();
      */
     this.anchor = {x: 0, y: 0};
@@ -376,6 +375,13 @@ class GameObject {
     });
   }
 
+  /**
+   * Add an object as a child to this object. The child objects position and rotation will be calculated based on this objects position and rotation.
+   * @memberof GameObject
+   * @function addChild
+   *
+   * @param {GameObject} child - Object to add as a child.
+   */
   addChild(child) {
     this.children.push(child);
     child.parent = this;
@@ -387,6 +393,13 @@ class GameObject {
     child.rotation = child.rotation;
   }
 
+  /**
+   * Remove an object as a child of this object. The removed objects position and rotation will no longer be calculated based off this objects position and rotation.
+   * @memberof GameObject
+   * @function removeChild
+   *
+   * @param {GameObject} child - Object to remove as a child.
+   */
   removeChild(child) {
     let index = this.children.indexOf(child);
     if (index !== -1) {
@@ -422,9 +435,9 @@ class GameObject {
    * If you override the game objects [update()](api/gameObject#update) function with your own update function, you can call this function to move the game object normally.
    *
    * ```js
-   * import { game object } from 'kontra';
+   * import { GameObject } from 'kontra';
    *
-   * let gameObject = game object({
+   * let gameObject = GameObject({
    *   x: 100,
    *   y: 200,
    *   width: 20,
@@ -433,7 +446,7 @@ class GameObject {
    *   dy: 2,
    *   update: function() {
    *     // move the game object normally
-   *     game object.advance();
+   *     this.advance();
    *
    *     // change the velocity at the edges of the canvas
    *     if (this.x < 0 ||
@@ -484,17 +497,16 @@ class GameObject {
    * If you override the game objects `render()` function with your own render function, you can call this function to draw the game object normally.
    *
    * ```js
-   * import { game object } from 'kontra';
+   * import { GameObject } from 'kontra';
    *
-   * let gameObject = game object({
+   * let gameObject = GameObject({
    *  x: 290,
    *  y: 80,
-   *  color: 'red',
    *  width: 20,
    *  height: 40,
    *
    *  render: function() {
-   *    // draw the rectangle game object normally
+   *    // draw the game object normally (perform rotation and other transforms)
    *    this.draw();
    *
    *    // outline the game object

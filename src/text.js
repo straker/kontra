@@ -42,7 +42,7 @@ class Text extends GameObject.class {
      * The text alignment.
      * @type {String} textAlign
      */
-    this.textAlign = 'left';
+    this.textAlign = '';
 
     super.init(properties);
 
@@ -160,7 +160,7 @@ class Text extends GameObject.class {
     let textAlign = this.textAlign;
 
     // @ifdef TEXT_RTL
-    textAlign = this.textAlign || this.context.canvas.dir === 'rtl' ? 'right' : 'left';
+    textAlign = this.textAlign || (this.context.canvas.dir === 'rtl' ? 'right' : 'left');
     // @endif
 
     // @ifdef TEXT_ALIGN||TEXT_RTL

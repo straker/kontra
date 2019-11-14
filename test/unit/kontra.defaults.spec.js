@@ -93,11 +93,11 @@ describe('kontra.defaults', () => {
   });
 
   it('should add gameObject api', () => {
-    expect(kontra.GameObject).to.expect;
+    expect(kontra.GameObject).to.exist;
   });
 
   it('should add text api', () => {
-    expect(kontra.Text).to.expect;
+    expect(kontra.Text).to.exist;
   });
 
 });

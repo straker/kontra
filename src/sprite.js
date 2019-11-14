@@ -20,7 +20,7 @@ class Sprite extends GameObject.class {
 
     /**
      * The color of the game object if it was passed as an argument.
-     * @memberof GameObject
+     * @memberof Sprite
      * @property {String} color
      */
 

@@ -145,7 +145,7 @@
             <code>properties.anchor</code>
             <span class="optional">Optional</span>
           </dt>
-          <dd><p>Object. The x and y origin of the game object. {x:0, y:0} is the top left corner of the game object, {x:1, y:1} is the bottomright corner. Defaults to <code>{x:0,y:0}</code>.</p>
+          <dd><p>{x: number, y: number}. The x and y origin of the game object. {x:0, y:0} is the top left corner of the game object, {x:1, y:1} is the bottomright corner. Defaults to <code>{x:0,y:0}</code>.</p>
         </dd>
           <dt>
             <code>properties.context</code>
@@ -304,6 +304,11 @@
               <h3 id="methods">Methods</h3>
               <ul aria-labelledby="methods">
                 <li>
+                  <a href="api/gameobject#addChild">
+                    <span>GameObject&#8203;.addChild(&#8203;child)</span>
+                  </a>
+                </li>
+                <li>
                   <a href="api/gameobject#advance">
                     <span>GameObject&#8203;.advance(&#8203;[dt])</span>
                   </a>
@@ -321,6 +326,11 @@
                 <li>
                   <a href="api/gameobject#isAlive">
                     <span>GameObject&#8203;.isAlive(&#8203;)</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="api/gameobject#removeChild">
+                    <span>GameObject&#8203;.removeChild(&#8203;child)</span>
                   </a>
                 </li>
                 <li>
@@ -351,6 +361,26 @@
           
         </section>
         <section>
+          <h2 id="addChild">
+            <a href="api/gameobject#addChild" class="section-link">
+              <span>GameObject&#8203;.addChild(&#8203;child)</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
+
+          <p>Add an object as a child to this object. The child objects position and rotation will be calculated based on this objects position and rotation.</p>
+          <h3 id="title-addChild"><span class="visually-hidden">addChild</span> Parameters</span></h3>
+          <dl aria-labelledby="title-addChild">
+            <dt>
+              <code>child</code>
+              
+            </dt>
+            <dd><p><a href="api/gameObject">GameObject</a>. Object to add as a child.</p>
+          </dd>
+          </dl>
+          
+        </section>
+        <section>
           <h2 id="advance">
             <a href="api/gameobject#advance" class="section-link">
               <span>GameObject&#8203;.advance(&#8203;[dt])</span>
@@ -373,9 +403,9 @@
     </li>
     <li role="presentation"></li>
   </ul>
-  <section role="tabpanel" aria-labelledby=advance-global-tab data-tabpanel="global"><pre><code class="language-js">let { game object } = kontra;
+  <section role="tabpanel" aria-labelledby=advance-global-tab data-tabpanel="global"><pre><code class="language-js">let { GameObject } = kontra;
 
-let gameObject = game object({
+let gameObject = GameObject({
   x: 100,
   y: 200,
   width: 20,
@@ -384,7 +414,7 @@ let gameObject = game object({
   dy: 2,
   update: function() {
     // move the game object normally
-    game object.advance();
+    this.advance();
 
     // change the velocity at the edges of the canvas
     if (this.x &lt; 0 ||
@@ -397,9 +427,9 @@ let gameObject = game object({
     }
   }
 });</code></pre></section>
-  <section role="tabpanel" aria-labelledby=advance-es-tab data-tabpanel="es"><pre><code class="language-js">import { game object } from 'path/to/kontra.mjs';
+  <section role="tabpanel" aria-labelledby=advance-es-tab data-tabpanel="es"><pre><code class="language-js">import { GameObject } from 'path/to/kontra.mjs';
 
-let gameObject = game object({
+let gameObject = GameObject({
   x: 100,
   y: 200,
   width: 20,
@@ -408,7 +438,7 @@ let gameObject = game object({
   dy: 2,
   update: function() {
     // move the game object normally
-    game object.advance();
+    this.advance();
 
     // change the velocity at the edges of the canvas
     if (this.x &lt; 0 ||
@@ -421,9 +451,9 @@ let gameObject = game object({
     }
   }
 });</code></pre></section>
-  <section role="tabpanel" aria-labelledby=advance-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { game object } from &#39;kontra&#39;;
+  <section role="tabpanel" aria-labelledby=advance-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { GameObject } from &#39;kontra&#39;;
 
-let gameObject = game object({
+let gameObject = GameObject({
   x: 100,
   y: 200,
   width: 20,
@@ -432,7 +462,7 @@ let gameObject = game object({
   dy: 2,
   update: function() {
     // move the game object normally
-    game object.advance();
+    this.advance();
 
     // change the velocity at the edges of the canvas
     if (this.x &lt; 0 ||
@@ -466,28 +496,27 @@ let gameObject = game object({
           </h2>
 
           <p>The x and y origin of the game object. {x:0, y:0} is the top left corner of the game object, {x:1, y:1} is the bottom right corner.</p>
-<canvas id="game-canvas-1199"></canvas>
+<canvas id="game-canvas-1430"></canvas>
 
 <div class="tablist">
   <ul role="tablist">
     <li role="presentation" data-tab="global">
-      <button role="tab" id="game-canvas-1199-global-tab">Global Object</button>
+      <button role="tab" id="game-canvas-1430-global-tab">Global Object</button>
     </li>
     <li role="presentation" data-tab="es">
-      <button role="tab" id="game-canvas-1199-es-tab">ES Module Import</button>
+      <button role="tab" id="game-canvas-1430-es-tab">ES Module Import</button>
     </li>
     <li role="presentation" data-tab="bundle">
-      <button role="tab" id="game-canvas-1199-bundle-tab">Module Bundler</button>
+      <button role="tab" id="game-canvas-1430-bundle-tab">Module Bundler</button>
     </li>
     <li role="presentation"></li>
   </ul>
-  <section role="tabpanel" aria-labelledby=game-canvas-1199-global-tab data-tabpanel="global">
-    <pre><code class="lang-js">let { game object } &#x3D; kontra
+  <section role="tabpanel" aria-labelledby=game-canvas-1430-global-tab data-tabpanel="global">
+    <pre><code class="lang-js">let { GameObject } &#x3D; kontra
 
-let gameObject &#x3D; game object({
+let gameObject &#x3D; GameObject({
   x: 150,
   y: 100,
-  color: &#x27;red&#x27;,
   width: 50,
   height: 50,
   render: function() {
@@ -502,21 +531,20 @@ let gameObject &#x3D; game object({
 });
 gameObject.render();
 
-game object.anchor &#x3D; {x: 0.5, y: 0.5};
-game object.x &#x3D; 300;
+gameObject.anchor &#x3D; {x: 0.5, y: 0.5};
+gameObject.x &#x3D; 300;
 gameObject.render();
 
-game object.anchor &#x3D; {x: 1, y: 1};
-game object.x &#x3D; 450;
+gameObject.anchor &#x3D; {x: 1, y: 1};
+gameObject.x &#x3D; 450;
 gameObject.render();</code></pre>
   </section>
-  <section role="tabpanel" aria-labelledby=game-canvas-1199-es-tab data-tabpanel="es">
-    <pre><code class="lang-js">import { game object } from &#x27;path/to/kontra.mjs&#x27;
+  <section role="tabpanel" aria-labelledby=game-canvas-1430-es-tab data-tabpanel="es">
+    <pre><code class="lang-js">import { GameObject } from &#x27;path/to/kontra.mjs&#x27;
 
-let gameObject &#x3D; game object({
+let gameObject &#x3D; GameObject({
   x: 150,
   y: 100,
-  color: &#x27;red&#x27;,
   width: 50,
   height: 50,
   render: function() {
@@ -531,21 +559,20 @@ let gameObject &#x3D; game object({
 });
 gameObject.render();
 
-game object.anchor &#x3D; {x: 0.5, y: 0.5};
-game object.x &#x3D; 300;
+gameObject.anchor &#x3D; {x: 0.5, y: 0.5};
+gameObject.x &#x3D; 300;
 gameObject.render();
 
-game object.anchor &#x3D; {x: 1, y: 1};
-game object.x &#x3D; 450;
+gameObject.anchor &#x3D; {x: 1, y: 1};
+gameObject.x &#x3D; 450;
 gameObject.render();</code></pre>
   </section>
-  <section role="tabpanel" aria-labelledby=game-canvas-1199-bundle-tab data-tabpanel="bundle">
-    <pre><code class="lang-js">import { game object } from &#x27;kontra&#x27;;
+  <section role="tabpanel" aria-labelledby=game-canvas-1430-bundle-tab data-tabpanel="bundle">
+    <pre><code class="lang-js">import { GameObject } from &#x27;kontra&#x27;;
 
-let gameObject &#x3D; game object({
+let gameObject &#x3D; GameObject({
   x: 150,
   y: 100,
-  color: &#x27;red&#x27;,
   width: 50,
   height: 50,
   render: function() {
@@ -560,29 +587,28 @@ let gameObject &#x3D; game object({
 });
 gameObject.render();
 
-game object.anchor &#x3D; {x: 0.5, y: 0.5};
-game object.x &#x3D; 300;
+gameObject.anchor &#x3D; {x: 0.5, y: 0.5};
+gameObject.x &#x3D; 300;
 gameObject.render();
 
-game object.anchor &#x3D; {x: 1, y: 1};
-game object.x &#x3D; 450;
+gameObject.anchor &#x3D; {x: 1, y: 1};
+gameObject.x &#x3D; 450;
 gameObject.render();</code></pre>
   </section>
 </div>
 
 <script>(function() {
-  kontra.init("game-canvas-1199");
-  var canvas = document.querySelector("#game-canvas-1199");
+  kontra.init("game-canvas-1430");
+  var canvas = document.querySelector("#game-canvas-1430");
   canvas.width = 600;
   canvas.height = 200;
   var context = canvas.getContext("2d");
   // exclude-code:start
-let { game object } = kontra;
+let { GameObject } = kontra;
 // exclude-code:end
-let gameObject = game object({
+let gameObject = GameObject({
   x: 150,
   y: 100,
-  color: 'red',
   width: 50,
   height: 50,
   // exclude-code:start
@@ -600,12 +626,12 @@ let gameObject = game object({
 });
 gameObject.render();
 
-game object.anchor = {x: 0.5, y: 0.5};
-game object.x = 300;
+gameObject.anchor = {x: 0.5, y: 0.5};
+gameObject.x = 300;
 gameObject.render();
 
-game object.anchor = {x: 1, y: 1};
-game object.x = 450;
+gameObject.anchor = {x: 1, y: 1};
+gameObject.x = 450;
 gameObject.render();
 })();</script>          
         </section>
@@ -676,17 +702,16 @@ gameObject.render();
     </li>
     <li role="presentation"></li>
   </ul>
-  <section role="tabpanel" aria-labelledby=draw-global-tab data-tabpanel="global"><pre><code class="language-js">let { game object } = kontra;
+  <section role="tabpanel" aria-labelledby=draw-global-tab data-tabpanel="global"><pre><code class="language-js">let { GameObject } = kontra;
 
-let gameObject = game object({
+let gameObject = GameObject({
  x: 290,
  y: 80,
- color: &#39;red&#39;,
  width: 20,
  height: 40,
 
  render: function() {
-   // draw the rectangle game object normally
+   // draw the game object normally (perform rotation and other transforms)
    this.draw();
 
    // outline the game object
@@ -697,17 +722,16 @@ let gameObject = game object({
 });
 
 gameObject.render();</code></pre></section>
-  <section role="tabpanel" aria-labelledby=draw-es-tab data-tabpanel="es"><pre><code class="language-js">import { game object } from 'path/to/kontra.mjs';
+  <section role="tabpanel" aria-labelledby=draw-es-tab data-tabpanel="es"><pre><code class="language-js">import { GameObject } from 'path/to/kontra.mjs';
 
-let gameObject = game object({
+let gameObject = GameObject({
  x: 290,
  y: 80,
- color: &#39;red&#39;,
  width: 20,
  height: 40,
 
  render: function() {
-   // draw the rectangle game object normally
+   // draw the game object normally (perform rotation and other transforms)
    this.draw();
 
    // outline the game object
@@ -718,17 +742,16 @@ let gameObject = game object({
 });
 
 gameObject.render();</code></pre></section>
-  <section role="tabpanel" aria-labelledby=draw-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { game object } from &#39;kontra&#39;;
+  <section role="tabpanel" aria-labelledby=draw-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { GameObject } from &#39;kontra&#39;;
 
-let gameObject = game object({
+let gameObject = GameObject({
  x: 290,
  y: 80,
- color: &#39;red&#39;,
  width: 20,
  height: 40,
 
  render: function() {
-   // draw the rectangle game object normally
+   // draw the game object normally (perform rotation and other transforms)
    this.draw();
 
    // outline the game object
@@ -851,6 +874,26 @@ gameObject.render();</code></pre></section>
           </h2>
 
           <p>The game objects position vector. The game objects position is its position in the world, as opposed to the position in the <a href="api/gameObject#viewX">viewport</a> or <a href="api/gameObject#localPosition">local position</a>. Typically the position in the world, viewport, and local position are the same value. If the game object has been <a href="/api/tileEngine#addObject">added to a tileEngine</a>, the position vector represents where in the tile world the game object is while the viewport represents where to draw the game object in relation to the top-left corner of the canvas.</p>
+          
+        </section>
+        <section>
+          <h2 id="removeChild">
+            <a href="api/gameobject#removeChild" class="section-link">
+              <span>GameObject&#8203;.removeChild(&#8203;child)</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
+
+          <p>Remove an object as a child of this object. The removed objects position and rotation will no longer be calculated based off this objects position and rotation.</p>
+          <h3 id="title-removeChild"><span class="visually-hidden">removeChild</span> Parameters</span></h3>
+          <dl aria-labelledby="title-removeChild">
+            <dt>
+              <code>child</code>
+              
+            </dt>
+            <dd><p><a href="api/gameObject">GameObject</a>. Object to remove as a child.</p>
+          </dd>
+          </dl>
           
         </section>
         <section>

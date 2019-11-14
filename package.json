@@ -6,7 +6,7 @@
   "module": "kontra.mjs",
   "sideEffects": false,
   "scripts": {
-    "test": "karma start --single-run",
+    "test": "karma start --single-run && tsc test/typings/*.ts",
     "test:watch": "karma start",
     "test:permutations": "node test/permutations",
     "build": "gulp build",

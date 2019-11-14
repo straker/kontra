@@ -76,7 +76,7 @@ function distModule() {
     .pipe(gulp.dest('.'));
 }
 
-gulp.task('build', gulp.series(buildIife, buildModule, 'build:docs'));
+gulp.task('build', gulp.series(buildIife, buildModule, 'build:docs', 'build:ts'));
 
 gulp.task('dist', gulp.series(distIife, distModule));
 

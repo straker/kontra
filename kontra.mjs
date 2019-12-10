@@ -1379,7 +1379,9 @@ let pointer = {
  *
  * @param {Object} object - Object to check collision against.
  */
-function circleRectCollision(object) {
+function circleRectCollision(object, _pntr) {
+  const pntr = _pntr || pointer;
+
   let x = object.x;
   let y = object.y;
   if (object.anchor) {
@@ -1387,9 +1389,9 @@ function circleRectCollision(object) {
     y -= object.height * object.anchor.y;
   }
 
-  let dx = pointer.x - Math.max(x, Math.min(pointer.x, x + object.width));
-  let dy = pointer.y - Math.max(y, Math.min(pointer.y, y + object.height));
-  return (dx * dx + dy * dy) < (pointer.radius * pointer.radius);
+  let dx = pntr.x - Math.max(x, Math.min(pntr.x, x + object.width));
+  let dy = pntr.y - Math.max(y, Math.min(pntr.y, y + object.height));
+  return (dx * dx + dy * dy) < (pntr.radius * pntr.radius);
 }
 
 /**
@@ -1397,7 +1399,8 @@ function circleRectCollision(object) {
  *
  * @returns {Object} First object to collide with the pointer.
  */
-function getCurrentObject() {
+function getCurrentObject(_pntr) {
+  const pntr = _pntr || pointer;
 
   // if pointer events are required on the very first frame or without a game
   // loop, use the current frame order array
@@ -1409,10 +1412,10 @@ function getCurrentObject() {
     object = frameOrder[i];
 
     if (object.collidesWithPointer) {
-      collides = object.collidesWithPointer(pointer);
+      collides = object.collidesWithPointer(pntr);
     }
     else {
-      collides = circleRectCollision(object);
+      collides = circleRectCollision(object, pntr);
     }
 
     if (collides) {
@@ -1473,31 +1476,66 @@ function pointerHandler(evt, eventName) {
   if (!canvas) return;
 
   let clientX, clientY;
+  let ratio = canvas.height / canvas.offsetHeight;
+  let rect = canvas.getBoundingClientRect();
 
-  if (['touchstart', 'touchmove', 'touchend'].indexOf(evt.type) !== -1) {
-    clientX = (evt.touches[0] || evt.changedTouches[0]).clientX;
-    clientY = (evt.touches[0] || evt.changedTouches[0]).clientY;
+  let isTouchEvent = ['touchstart', 'touchmove', 'touchend'].indexOf(evt.type) !== -1;
+  if (isTouchEvent) {
+    // Update pointer.touches
+    pointer.touches = {};
+    for (var i = 0; i < evt.touches.length; i++) {
+      pointer.touches[evt.touches[i].identifier] = {
+        id: evt.touches[i].identifier,
+        x: (evt.touches[i].clientX - rect.left) * ratio,
+        y: (evt.touches[i].clientY - rect.top) * ratio,
+        changed: false
+      };
+    }
+    // Handle all touches
+    for (var i = evt.changedTouches.length; i--;) {
+      const id = evt.changedTouches[i].identifier;
+      if (typeof pointer.touches[id] !== "undefined") {
+        pointer.touches[id].changed = true;
+      }
+
+      clientX = evt.changedTouches[i].clientX; // Save for later
+      clientY = evt.changedTouches[i].clientY;
+
+      // Trigger events
+      let object = getCurrentObject({
+        id,
+        x: (clientX - rect.left) * ratio,
+        y: (clientY - rect.top) * ratio,
+        radius: pointer.radius // only for collision
+      });
+
+      if (object && object[eventName]) {
+        object[eventName](evt);
+      }
+
+      if (callbacks$2[eventName]) {
+        callbacks$2[eventName](evt, object);
+      }
+    }
   } else {
     clientX = evt.clientX;
     clientY = evt.clientY;
   }
 
-  let ratio = canvas.height / canvas.offsetHeight;
-  let rect = canvas.getBoundingClientRect();
-  let x = (clientX - rect.left) * ratio;
-  let y = (clientY - rect.top) * ratio;
-
-  pointer.x = x;
-  pointer.y = y;
+  pointer.x = (clientX - rect.left) * ratio;
+  pointer.y = (clientY - rect.top) * ratio;
 
   evt.preventDefault();
-  let object = getCurrentObject();
-  if (object && object[eventName]) {
-    object[eventName](evt);
-  }
 
-  if (callbacks$2[eventName]) {
-    callbacks$2[eventName](evt, object);
+  if (!isTouchEvent) { // Prevent double touch event
+    let object = getCurrentObject();
+    if (object && object[eventName]) {
+      object[eventName](evt);
+    }
+
+    if (callbacks$2[eventName]) {
+      callbacks$2[eventName](evt, object);
+    }
   }
 }
 
@@ -1512,6 +1550,7 @@ function initPointer() {
   canvas.addEventListener('touchstart', pointerDownHandler);
   canvas.addEventListener('mouseup', pointerUpHandler);
   canvas.addEventListener('touchend', pointerUpHandler);
+  canvas.addEventListener('touchcancel', pointerUpHandler);
   canvas.addEventListener('blur', blurEventHandler$1);
   canvas.addEventListener('mousemove', mouseMoveHandler);
   canvas.addEventListener('touchmove', mouseMoveHandler);
@@ -3769,7 +3808,7 @@ function TileEngine(properties = {}) {
     context.save();
     context.globalAlpha = layer.opacity;
 
-    layer.data.map((tile, index) => {
+    (layer.data || []).map((tile, index) => {
 
       // skip empty tiles (0)
       if (!tile) return;

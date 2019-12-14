@@ -1382,8 +1382,8 @@ let pointer = {
 function circleRectCollision(object, _pntr) {
   const pntr = _pntr || pointer;
 
-  let x = object.x;
-  let y = object.y;
+  let x = object.viewX;
+  let y = object.viewY;
   if (object.anchor) {
     x -= object.width * object.anchor.x;
     y -= object.height * object.anchor.y;

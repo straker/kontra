@@ -125,7 +125,7 @@ function getCanPlay(audio) {
  *   // path: imageAssets['character_walk_sheet.png']
  * });
  * ```
- * @property {{[name: string]: HTMLImageElement}} imageAssets
+ * @property {{[name: String]: HTMLImageElement}} imageAssets
  */
 export let imageAssets = {};
 
@@ -148,7 +148,7 @@ export let imageAssets = {};
  *   // path: audioAssets['sound.ogg']
  * });
  * ```
- * @property {{[name: string]: HTMLAudioElement}} audioAssets
+ * @property {{[name: String]: HTMLAudioElement}} audioAssets
  */
 export let audioAssets = {};
 
@@ -171,7 +171,7 @@ export let audioAssets = {};
  *   // path: dataAssets['info.json']
  * });
  * ```
- * @property {{[name: string]: any}} dataAssets
+ * @property {{[name: String]: any}} dataAssets
  */
 export let dataAssets = {};
 

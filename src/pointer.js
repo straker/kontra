@@ -88,7 +88,7 @@ let buttonMap = {
  *
  * console.log(pointer);  //=> { x: 100, y: 200, radius: 5 };
  * ```
- * @property {{x: number, y: number, radius: number}} pointer
+ * @property {{x: Number, y: Number, radius: Number}} pointer
  */
 export let pointer = {
   x: 0,

@@ -66,7 +66,7 @@ The quadrant indices are numbered as follows (following a z-order curve):
  * @param {Object} [properties] - Properties of the quadtree.
  * @param {Number} [properties.maxDepth=3] - Maximum node depth of the quadtree.
  * @param {Number} [properties.maxObjects=25] - Maximum number of objects a node can have before splitting.
- * @param {{x: number, y: number, width: number, height: number}} [properties.bounds] - The 2D space (x, y, width, height) the quadtree occupies. Defaults to the entire canvas width and height.
+ * @param {{x: Number, y: Number, width: Number, height: Number}} [properties.bounds] - The 2D space (x, y, width, height) the quadtree occupies. Defaults to the entire canvas width and height.
  */
 class Quadtree {
   /**
@@ -92,7 +92,7 @@ class Quadtree {
     /**
      * The 2D space (x, y, width, height) the quadtree occupies.
      * @memberof Quadtree
-     * @property {{x: number, y: number, width: number, height: number}} bounds
+     * @property {{x: Number, y: Number, width: Number, height: Number}} bounds
      */
     let canvas = getCanvas();
     this.bounds = bounds || {
@@ -151,7 +151,7 @@ class Quadtree {
    * @memberof Quadtree
    * @function get
    *
-   * @param {{x: number, y: number, width: number, height: number}} object - Object to use for finding other objects. The object must have the properties `x`, `y`, `width`, and `height` so that its position in the quadtree can be calculated.
+   * @param {{x: Number, y: Number, width: Number, height: Number}} object - Object to use for finding other objects. The object must have the properties `x`, `y`, `width`, and `height` so that its position in the quadtree can be calculated.
    *
    * @returns {Object[]} A list of objects in the same node as the object, not including the object itself.
    */

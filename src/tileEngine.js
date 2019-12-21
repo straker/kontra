@@ -308,7 +308,7 @@ export default function TileEngine(properties = {}) {
      * @function tileAtLayer
      *
      * @param {String} name - Name of the layer.
-     * @param {{x: number, y: number}|{row: number, col: number}} position - Position of the tile in either {x, y} or {row, col} coordinates.
+     * @param {{x: Number, y: Number}|{row: Number, col: Number}} position - Position of the tile in either {x, y} or {row, col} coordinates.
      *
      * @returns {Number} The tile index. Will return `-1` if no layer exists by the provided name.
      */
@@ -353,7 +353,7 @@ export default function TileEngine(properties = {}) {
      * @function setTileAtLayer
      *
      * @param {String} name - Name of the layer.
-     * @param {{x: number, y: number}|{row: number, col: number}} position - Position of the tile in either {x, y} or {row, col} coordinates.
+     * @param {{x: Number, y: Number}|{row: Number, col: Number}} position - Position of the tile in either {x, y} or {row, col} coordinates.
      * @param {Number} tile - Tile index to set.
      */
     setTileAtLayer(name, position, tile) {

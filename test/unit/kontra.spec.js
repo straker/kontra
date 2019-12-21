@@ -93,6 +93,14 @@ describe('kontra', () => {
     expect(kontraExports.Vector).to.exist;
   });
 
+  it('should export gameObject api', () => {
+    expect(kontraExports.GameObject).to.exist;
+  });
+
+  it('should export text api', () => {
+    expect(kontraExports.Text).to.exist;
+  });
+
   it('should export kontra object', () => {
     expect(kontraExports.default).to.exist;
     expect(kontraExports.default).to.equal(kontra);

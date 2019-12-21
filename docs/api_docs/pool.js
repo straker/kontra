@@ -1,7 +1,7 @@
 /**
- * To use the pool, you must pass the `create()` function argument, which should return a new kontra.Sprite or object. This object will be added to the pool every time there are no more alive objects.
+ * To use the pool, you must pass the `create()` function argument, which should return a new [Sprite](api/sprite) or object. This object will be added to the pool every time there are no more alive objects.
  *
- * The object must implement the functions `update()`, `init()`, and `isAlive()`. If one of these functions is missing the pool will throw an error. kontra.Sprite defines these functions for you.
+ * The object must implement the functions `update()`, `render()`, `init()`, and `isAlive()`. If one of these functions is missing the pool will throw an error. [Sprite](api/sprite) defines these functions for you.
  *
  * An object is available for reuse when its `isAlive()` function returns `false`. For a sprite, this is typically when its ttl is `0`.
  *

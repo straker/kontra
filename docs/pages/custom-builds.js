@@ -48,7 +48,7 @@ __Note:__ All options default to `false` when using rollup-plugin-kontra, so onl
 *   dest: 'bundle.js',
 *   plugins: [
 *     kontra({
-*       sprite: {
+*       gameObject: {
 *         // enable only velocity and rotation functionality
 *         velocity: true,
 *         rotation: true
@@ -60,7 +60,7 @@ __Note:__ All options default to `false` when using rollup-plugin-kontra, so onl
 
 ### Available options
 
-Sprite options:
+GameObject options:
 
 | Name          | Functionality Enabled |
 | ------------- | ------------- |
@@ -70,8 +70,24 @@ Sprite options:
 | ttl           | `ttl`, `isAlive` |
 | anchor        | `anchor` |
 | camera        | `sx`, `sy`, `viewX`, `viewY` |
+| group         | `children`, `parent`, `localPosition`, `localRotation` |
+
+Sprite options:
+
+| Name          | Functionality Enabled |
+| ------------- | ------------- |
 | image         | `image`, flip image using negative width |
 | animation     | `animations`, `playAnimation`, flip image using negative width |
+
+Text options:
+
+| Name          | Functionality Enabled |
+| ------------- | ------------- |
+| autoNewline   | Setting a fixed with that automatically adds new lines to the text |
+| newline       | Support for new line characters (`\n`) in the text |
+| textAlign     | `textAlign` |
+| rtl           | Support for RTL languages |
+
 
 @section Custom Builds
 @page custom-builds

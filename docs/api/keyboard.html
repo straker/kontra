@@ -55,6 +55,7 @@
               <li><a href="api/sprite" >Sprite</a></li>
               <li><a href="api/spriteSheet" >SpriteSheet</a></li>
               <li><a href="api/store" >Store</a></li>
+              <li><a href="api/text" >Text</a></li>
               <li><a href="api/tileEngine" >TileEngine</a></li>
               <li><a href="api/vector" >Vector</a></li>
             </ul>
@@ -146,7 +147,7 @@ function update() {
               <ul aria-labelledby="methods">
                 <li>
                   <a href="api/keyboard#bindKeys">
-                    <span>bindKeys(&#8203;keys)</span>
+                    <span>bindKeys(&#8203;keys, callback)</span>
                   </a>
                 </li>
                 <li>
@@ -188,7 +189,7 @@ function update() {
         <section>
           <h2 id="bindKeys">
             <a href="api/keyboard#bindKeys" class="section-link">
-              <span>bindKeys(&#8203;keys)</span>
+              <span>bindKeys(&#8203;keys, callback)</span>
               <span aria-hidden="true">#</span>
             </a>
           </h2>
@@ -248,6 +249,12 @@ bindKeys([&#39;enter&#39;, &#39;space&#39;], function(e) {
               
             </dt>
             <dd><p>String or an Array of Strings. Key or keys to bind.</p>
+          </dd>
+            <dt>
+              <code>callback</code>
+              
+            </dt>
+            <dd><p>Function. The function to be called when the key is pressed.</p>
           </dd>
           </dl>
           

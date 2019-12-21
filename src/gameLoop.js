@@ -45,7 +45,7 @@ function clear() {
  *
  * loop.start();
  * ```
- * @sectionName GameLoop
+ * @class GameLoop
  *
  * @param {Object}   properties - Properties of the game loop.
  * @param {Function} properties.update - Function called every frame to update the game. Is passed the fixed `dt` as a parameter.
@@ -104,7 +104,7 @@ export default function GameLoop({fps = 60, clearCanvas = true, update, render} 
      * @memberof GameLoop
      * @function update
      *
-     * @param {Number} dt - The fixed dt time of 1/60 of a frame.
+     * @param {Number} [dt] - The fixed dt time of 1/60 of a frame.
      */
     update,
 

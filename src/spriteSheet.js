@@ -83,11 +83,11 @@ function parseFrames(consecutiveFrames) {
  * @class SpriteSheet
  *
  * @param {Object} properties - Properties of the sprite sheet.
- * @param {Image|HTMLCanvasElement} properties.image - The sprite sheet image.
+ * @param {HTMLImageElement|HTMLCanvasElement} properties.image - The sprite sheet image.
  * @param {Number} properties.frameWidth - The width of a single frame.
  * @param {Number} properties.frameHeight - The height of a single frame.
  * @param {Number} [properties.frameMargin=0] - The amount of whitespace between each frame.
- * @param {Object} [properties.animations] - Animations to create from the sprite sheet using kontra.Animation. Passed directly into the sprite sheets [createAnimations()](api/spriteSheet#createAnimations) function.
+ * @param {Object} [properties.animations] - Animations to create from the sprite sheet using [Animation](api/animation). Passed directly into the sprite sheets [createAnimations()](api/spriteSheet#createAnimations) function.
  */
 class SpriteSheet {
   constructor({image, frameWidth, frameHeight, frameMargin, animations} = {}) {
@@ -98,7 +98,7 @@ class SpriteSheet {
     // @endif
 
     /**
-     * An object of named kontra.Animation objects. Typically you pass this object into kontra.Sprite to create an [animation sprites](api/spriteSheet#animation-sprite).
+     * An object of named [Animation](api/animation) objects. Typically you pass this object into [Sprite](api/sprite) to create an [animation sprites](api/spriteSheet#animation-sprite).
      * @memberof SpriteSheet
      * @property {Object} animations
      */
@@ -107,7 +107,7 @@ class SpriteSheet {
     /**
      * The sprite sheet image.
      * @memberof SpriteSheet
-     * @property {Image|HTMLCanvasElement} image
+     * @property {HTMLImageElement|HTMLCanvasElement} image
      */
     this.image = image;
 
@@ -133,7 +133,7 @@ class SpriteSheet {
   /**
    * Create named animations from the sprite sheet. Called from the constructor if the `animations` argument is passed.
    *
-   * This function populates the sprite sheets `animations` property with kontra.Animation objects. Each animation is accessible by its name.
+   * This function populates the sprite sheets `animations` property with [Animation](api/animation) objects. Each animation is accessible by its name.
    *
    * ```js
    * import { Sprite, SpriteSheet } from 'kontra';

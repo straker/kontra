@@ -55,6 +55,7 @@
               <li><a href="api/sprite" >Sprite</a></li>
               <li><a href="api/spriteSheet" >SpriteSheet</a></li>
               <li><a href="api/store" >Store</a></li>
+              <li><a href="api/text" >Text</a></li>
               <li><a href="api/tileEngine" >TileEngine</a></li>
               <li><a href="api/vector" >Vector</a></li>
             </ul>
@@ -73,7 +74,7 @@
 
         <p>An object for drawing sprite sheet animations.</p>
 <p>An animation defines the sequence of frames to use from a sprite sheet. It also defines at what speed the animation should run using <code>frameRate</code>.</p>
-<p>Typically you don&#39;t create an <a href="api/animation">Animation</a> directly, but rather you would create them from <a href="api/spriteSheet">SpriteSheet</a> by passing the <code>animations</code> argument.</p>
+<p>Typically you don&#39;t create an Animation directly, but rather you would create them from a <a href="api/spriteSheet">SpriteSheet</a> by passing the <code>animations</code> argument.</p>
 <div class="tablist">
   <ul role="tablist">
     <li role="presentation" data-tab="global">
@@ -263,7 +264,7 @@ image.onload = function() {
           <p>Clone an animation so it can be used more than once. By default animations passed to <a href="api/sprite">Sprite</a> will be cloned so no two sprites update the same animation. Otherwise two sprites who shared the same animation would make it update twice as fast.</p>
           
           <h3><span class="visually-hidden">clone</span> Return value</h3>
-          <p><p>A new <a href="api/animation">Animation</a> instance.</p>
+          <p><p>A new Animation instance.</p>
           </p>
         </section>
         <section>
@@ -366,7 +367,7 @@ image.onload = function() {
               <code>properties.context</code>
               <span class="optional">Optional</span>
             </dt>
-            <dd><p>Canvas​Rendering​Context2D. The context the animation should draw to. Defaults to <a href="api/core#getContext">core.getContext()</a>.</p>
+            <dd><p>CanvasRenderingContext2D. The context the animation should draw to. Defaults to <a href="api/core#getContext">core.getContext()</a>.</p>
           </dd>
           </dl>
           

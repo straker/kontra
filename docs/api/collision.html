@@ -55,6 +55,7 @@
               <li><a href="api/sprite" >Sprite</a></li>
               <li><a href="api/spriteSheet" >SpriteSheet</a></li>
               <li><a href="api/store" >Store</a></li>
+              <li><a href="api/text" >Text</a></li>
               <li><a href="api/tileEngine" >TileEngine</a></li>
               <li><a href="api/vector" >Vector</a></li>
             </ul>
@@ -84,7 +85,7 @@
               <ul aria-labelledby="methods">
                 <li>
                   <a href="api/collision#collides">
-                    <span>collides(&#8203;object, object)</span>
+                    <span>collides(&#8203;object1, object2)</span>
                   </a>
                 </li>
               </ul>
@@ -96,12 +97,12 @@
         <section>
           <h2 id="collides">
             <a href="api/collision#collides" class="section-link">
-              <span>collides(&#8203;object, object)</span>
+              <span>collides(&#8203;object1, object2)</span>
               <span aria-hidden="true">#</span>
             </a>
           </h2>
 
-          <p>Check if a two objects collide. Uses a simple <a href="https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection#Axis-Aligned_Bounding_Box">Axis-Aligned Bounding Box (AABB) collision check</a>. Takes into account the sprites <a href="api/sprite/#anchor">anchor</a>.</p>
+          <p>Check if a two objects collide. Uses a simple <a href="https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection#Axis-Aligned_Bounding_Box">Axis-Aligned Bounding Box (AABB) collision check</a>. Takes into account the sprites <a href="api/sprite#anchor">anchor</a>.</p>
 <p><strong>NOTE:</strong> Does not take into account object rotation. If you need collision detection between rotated objects you will need to implement your own <code>collides()</code> function. I suggest looking at the Separate Axis Theorem.</p>
 <div class="tablist">
   <ul role="tablist">
@@ -183,13 +184,13 @@ collides(sprite, sprite2);  //=&gt; true</code></pre></section>
           <h3 id="title-collides"><span class="visually-hidden">collides</span> Parameters</span></h3>
           <dl aria-labelledby="title-collides">
             <dt>
-              <code>object</code>
+              <code>object1</code>
               
             </dt>
-            <dd><p>Sprite. Object reference.</p>
+            <dd><p>Object. Object reference.</p>
           </dd>
             <dt>
-              <code>object</code>
+              <code>object2</code>
               
             </dt>
             <dd><p>Object. Object to check collision against.</p>

@@ -9,14 +9,14 @@ import { getCanvas, getContext } from './core.js'
  *   </a>
  *   <figcaption>Tileset image courtesy of <a href="https://kenney.nl/assets">Kenney</a>.</figcaption>
  * </figure>
- * @sectionName TileEngine
+ * @class TileEngine
  *
  * @param {Object} properties - Properties of the tile engine.
  * @param {Number} properties.width - Width of the tile map (in number of tiles).
  * @param {Number} properties.height - Height of the tile map (in number of tiles).
  * @param {Number} properties.tilewidth - Width of a single tile (in pixels).
  * @param {Number} properties.tileheight - Height of a single tile (in pixels).
- * @param {Canvas​Rendering​Context2D} [properties.context] - The context the tile engine should draw to. Defaults to [core.getContext()](api/core#getContext)
+ * @param {CanvasRenderingContext2D} [properties.context] - The context the tile engine should draw to. Defaults to [core.getContext()](api/core#getContext)
  *
  * @param {Object[]} properties.tilesets - Array of tileset objects.
  * @param {Number} properties.tilesetN.firstgid - First tile index of the tileset. The first tileset will have a firstgid of 1 as 0 represents an empty tile.
@@ -208,7 +208,7 @@ export default function TileEngine(properties = {}) {
     },
 
     /**
-     * Check if the object collides with the layer (shares a gird coordinate with any positive tile index in layers data). The object being checked must have the properties `x`, `y`, `width`, and `height` so that its position in the grid can be calculated. kontra.Sprite defines these properties for you.
+     * Check if the object collides with the layer (shares a gird coordinate with any positive tile index in layers data). The object being checked must have the properties `x`, `y`, `width`, and `height` so that its position in the grid can be calculated. [Sprite](api/sprite) defines these properties for you.
      *
      * ```js
      * import { TileEngine, Sprite } from 'kontra';
@@ -308,7 +308,7 @@ export default function TileEngine(properties = {}) {
      * @function tileAtLayer
      *
      * @param {String} name - Name of the layer.
-     * @param {Object} position - Position of the tile in either {x, y} or {row, col} coordinates.
+     * @param {{x: number, y: number}|{row: number, col: number}} position - Position of the tile in either {x, y} or {row, col} coordinates.
      *
      * @returns {Number} The tile index. Will return `-1` if no layer exists by the provided name.
      */
@@ -353,7 +353,7 @@ export default function TileEngine(properties = {}) {
      * @function setTileAtLayer
      *
      * @param {String} name - Name of the layer.
-     * @param {Object} position - Position of the tile in either {x, y} or {row, col} coordinates.
+     * @param {{x: number, y: number}|{row: number, col: number}} position - Position of the tile in either {x, y} or {row, col} coordinates.
      * @param {Number} tile - Tile index to set.
      */
     setTileAtLayer(name, position, tile) {
@@ -397,8 +397,8 @@ export default function TileEngine(properties = {}) {
     * @memberof TileEngine
     * @function setLayer
     * 
-    * @param {String} name - Name of the layer.
-    * @param {Number[]} data - 1D array of tile indices.
+    * @param {String} name - Name of the layer.
+    * @param {Number[]} data - 1D array of tile indices.
     */
     setLayer(name, data) {
       if (layerMap[name]) {
@@ -407,10 +407,8 @@ export default function TileEngine(properties = {}) {
       }
     },
 
-
-
     /**
-     * Add an object to the tile engine. The tile engine will set the objects camera position (`sx`, `sy`) to be in sync with the tile engine camera. kontra.Sprite uses this information to draw the sprite to the correct position on the canvas.
+     * Add an object to the tile engine. The tile engine will set the objects camera position (`sx`, `sy`) to be in sync with the tile engine camera. [Sprite](api/sprite) uses this information to draw the sprite to the correct position on the canvas.
      * @memberof TileEngine
      * @function addObject
      *

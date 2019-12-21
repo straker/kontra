@@ -55,6 +55,7 @@
               <li><a href="api/sprite" >Sprite</a></li>
               <li><a href="api/spriteSheet" >SpriteSheet</a></li>
               <li><a href="api/store" >Store</a></li>
+              <li><a href="api/text" >Text</a></li>
               <li><a href="api/tileEngine" >TileEngine</a></li>
               <li><a href="api/vector" >Vector</a></li>
             </ul>
@@ -255,12 +256,12 @@ let sprite = Srite({
                 </li>
                 <li>
                   <a href="api/pointer#track">
-                    <span>track(&#8203;objects)</span>
+                    <span>track(&#8203;...objects)</span>
                   </a>
                 </li>
                 <li>
                   <a href="api/pointer#untrack">
-                    <span>untrack(&#8203;objects)</span>
+                    <span>untrack(&#8203;...objects)</span>
                   </a>
                 </li>
               </ul>
@@ -643,7 +644,7 @@ Sprite({
         <section>
           <h2 id="track">
             <a href="api/pointer#track" class="section-link">
-              <span>track(&#8203;objects)</span>
+              <span>track(&#8203;...objects)</span>
               <span aria-hidden="true">#</span>
             </a>
           </h2>
@@ -684,10 +685,10 @@ track([obj1, obj2]);</code></pre></section>
           <h3 id="title-track"><span class="visually-hidden">track</span> Parameters</span></h3>
           <dl aria-labelledby="title-track">
             <dt>
-              <code>objects</code>
+              <code>...objects</code>
               
             </dt>
-            <dd><p>Object or an Array of Objects. Objects to track.</p>
+            <dd><p>A list of Objects. Objects to track.</p>
           </dd>
           </dl>
           
@@ -695,7 +696,7 @@ track([obj1, obj2]);</code></pre></section>
         <section>
           <h2 id="untrack">
             <a href="api/pointer#untrack" class="section-link">
-              <span>untrack(&#8203;objects)</span>
+              <span>untrack(&#8203;...objects)</span>
               <span aria-hidden="true">#</span>
             </a>
           </h2>
@@ -730,10 +731,10 @@ untrack([obj1, obj2]);</code></pre></section>
           <h3 id="title-untrack"><span class="visually-hidden">untrack</span> Parameters</span></h3>
           <dl aria-labelledby="title-untrack">
             <dt>
-              <code>objects</code>
+              <code>...objects</code>
               
             </dt>
-            <dd><p>Object or an Array of Objects. Object or objects to stop tracking.</p>
+            <dd><p>A list of Objects. Object or objects to stop tracking.</p>
           </dd>
           </dl>
           

@@ -55,6 +55,7 @@
               <li><a href="api/sprite" >Sprite</a></li>
               <li><a href="api/spriteSheet" >SpriteSheet</a></li>
               <li><a href="api/store" >Store</a></li>
+              <li><a href="api/text" >Text</a></li>
               <li><a href="api/tileEngine" >TileEngine</a></li>
               <li><a href="api/vector" >Vector</a></li>
             </ul>
@@ -105,7 +106,7 @@ export default {
   dest: &#39;bundle.js&#39;,
   plugins: [
     kontra({
-      sprite: {
+      gameObject: {
         // enable only velocity and rotation functionality
         velocity: true,
         rotation: true
@@ -114,7 +115,7 @@ export default {
   ]
 }</code></pre>
 <h3 id="available-options">Available options</h3>
-<p>Sprite options:</p>
+<p>GameObject options:</p>
 <table>
 <thead>
 <tr>
@@ -147,12 +148,50 @@ export default {
 <td><code>sx</code>, <code>sy</code>, <code>viewX</code>, <code>viewY</code></td>
 </tr>
 <tr>
+<td>group</td>
+<td><code>children</code>, <code>parent</code>, <code>localPosition</code>, <code>localRotation</code></td>
+</tr>
+</tbody></table>
+<p>Sprite options:</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Functionality Enabled</th>
+</tr>
+</thead>
+<tbody><tr>
 <td>image</td>
 <td><code>image</code>, flip image using negative width</td>
 </tr>
 <tr>
 <td>animation</td>
 <td><code>animations</code>, <code>playAnimation</code>, flip image using negative width</td>
+</tr>
+</tbody></table>
+<p>Text options:</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Functionality Enabled</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>autoNewline</td>
+<td>Setting a fixed with that automatically adds new lines to the text</td>
+</tr>
+<tr>
+<td>newline</td>
+<td>Support for new line characters (<code>\n</code>) in the text</td>
+</tr>
+<tr>
+<td>textAlign</td>
+<td><code>textAlign</code></td>
+</tr>
+<tr>
+<td>rtl</td>
+<td>Support for RTL languages</td>
 </tr>
 </tbody></table>
         

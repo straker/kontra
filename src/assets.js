@@ -125,7 +125,7 @@ function getCanPlay(audio) {
  *   // path: imageAssets['character_walk_sheet.png']
  * });
  * ```
- * @property {Object} imageAssets
+ * @property {{[name: string]: HTMLImageElement}} imageAssets
  */
 export let imageAssets = {};
 
@@ -148,7 +148,7 @@ export let imageAssets = {};
  *   // path: audioAssets['sound.ogg']
  * });
  * ```
- * @property {Object} audioAssets
+ * @property {{[name: string]: HTMLAudioElement}} audioAssets
  */
 export let audioAssets = {};
 
@@ -171,7 +171,7 @@ export let audioAssets = {};
  *   // path: dataAssets['info.json']
  * });
  * ```
- * @property {Object} dataAssets
+ * @property {{[name: string]: any}} dataAssets
  */
 export let dataAssets = {};
 
@@ -258,7 +258,7 @@ export function setDataPath(path) {
  *
  * @param {String} url - The URL to the Image file.
  *
- * @returns {Promise} A deferred promise. Promise resolves with the Image.
+ * @returns {Promise<HTMLImageElement>} A deferred promise. Promise resolves with the Image.
  */
 export function loadImage(url) {
   addGlobal();
@@ -307,7 +307,7 @@ export function loadImage(url) {
  *
  * @param {String} url - The URL to the Audio file.
  *
- * @returns {Promise} A deferred promise. Promise resolves with the Audio.
+ * @returns {Promise<HTMLAudioElement>} A deferred promise. Promise resolves with the Audio.
  */
 export function loadAudio(url) {
   return new Promise((resolve, reject) => {
@@ -406,9 +406,9 @@ export function loadData(url) {
  * ```
  * @function load
  *
- * @param {String|String[]} urls - Comma separated list of asset urls to load.
+ * @param {...String[]} urls - Comma separated list of asset urls to load.
  *
- * @returns {Promise} A deferred promise. Resolves with all the loaded assets.
+ * @returns {Promise<any[]>} A deferred promise. Resolves with all the loaded assets.
  */
 export function load(...urls) {
   addGlobal();

@@ -2,11 +2,17 @@ const gulp = require('gulp');
 const livingcss = require('gulp-livingcss');
 const path = require('path');
 const marked = require('marked');
-const packageJson = require('./package.json');
+const packageJson = require('../package.json');
 const fs = require('fs');
+const glob = require('glob');
 
 const optionalRegex = /^\[.*\]$/;
-const kontraTypeRegex = /kontra\.(\w+)/g;
+const kontraTypesRegex = new RegExp(`(${
+  glob.sync('src/*.js')
+    .map(fileName => getPageName(path.basename(fileName, '.js')))
+    .sort((a,b) => b.length - a.length)
+    .join('|')
+})`, 'g');
 const packageVersionRegex = /__packageVersion__/g;
 const excludeCodeRegex = /\s*\/\/ exclude-code:start[\s\S]*?\/\/ exclude-code:end/g;
 const excludeScriptRegex = /\s*\/\/ exclude-script:start[\r\n]([\s\S]*?[\r\n])\/\/ exclude-script:end[\r\n]/g;
@@ -14,6 +20,10 @@ const codeRegex =/<pre>[\s\S]*?<code class="(.*)">([\s\S]*?)<\/code><\/pre>/g;
 const importRegex = /import \{(.*)\} from .+kontra.+?;/g;
 let uuid = 0;
 let navbar;
+
+function getPageName(file) {
+  return file[0].toUpperCase() + file.substring(1)
+}
 
 /**
  * Sort sections by name
@@ -61,14 +71,14 @@ function addSectionAndPage() {
   if (!page) {
     this.comment.tags.push({
       tag: 'page',
-      description: description[0].toUpperCase() + description.substring(1),
+      description: getPageName(description),
       type: '',
       name: '',
       source: `@page ${description}`
     });
   }
 
-  this.comment.description = resolveKontraType(this.comment.description);
+  this.comment.description = this.comment.description;
 }
 
 /**
@@ -109,7 +119,7 @@ function buildImports(section) {
 
 function resolveKontraType(string, isArray) {
   // parse kontra object types and turn them into links
-  return string.replace(kontraTypeRegex, function(match, p1) {
+  return string.replace(kontraTypesRegex, function(match, p1) {
     let url = p1;
     if (isArray) {
       url = url.substring(0, url.length - 1);
@@ -125,6 +135,20 @@ function resolveKontraType(string, isArray) {
  * @param {String} type
  */
 function parseType(type) {
+  // parse typescript specific typings
+  if (type.startsWith('(')) {
+    type = 'Function';
+  }
+  if (type.startsWith('{')) {
+    type = 'Object';
+  }
+  if (type.startsWith('...')) {
+    type = type.replace('...', 'A list of ');
+
+    // make the type plural instead of an array for reset parameters
+    type = type.replace('[]', 's');
+  }
+
   // parse or types
   if (type.includes('|')) {
     type = type.split('|').join(' or ');
@@ -142,9 +166,7 @@ function parseType(type) {
   type = resolveKontraType(type, isArray);
 
   // parse any types
-  if (type === '*') {
-    type = 'Any type';
-  }
+  type = type.replace('*', type.startsWith('*') ? 'Any type' : 'any type');
 
   return type;
 }
@@ -174,6 +196,11 @@ let tags = {
       entry.default = parts[1];
     }
 
+    // rest param
+    if (type.indexOf('...') !== -1) {
+      name = '...' + name;
+    }
+
     // build paramList
     if (entry.optional) {
       paramValue += '['
@@ -187,7 +214,7 @@ let tags = {
     }
 
     type = parseType(type);
-    description = `${type}. ${resolveKontraType(description)}${entry.default ? ` Defaults to \`${entry.default}\`.` : ''}`;
+    description = `${type}. ${description}${entry.default ? ` Defaults to \`${entry.default}\`.` : ''}`;
 
     entry.name = name;
     entry.description = marked(description);
@@ -197,7 +224,7 @@ let tags = {
     this.block.param.push(entry);
 
     // don't list nested params (e.g. properties.foo.bar)
-    if (name.indexOf('.') === -1) {
+    if (name.indexOf('.') === -1 || name.startsWith('...')) {
       this.block.paramList += paramValue;
     }
   },
@@ -205,7 +232,7 @@ let tags = {
   // output information about the function return value
   returns: function() {
     let type = parseType(this.tag.type);
-    let description = resolveKontraType(this.tag.description);
+    let description = this.tag.description;
 
     this.block.returns = {
       name: '',
@@ -265,6 +292,9 @@ let tags = {
   class: function() {
     this.block.class = this.tag.description;
     addSectionAndPage.call(this);
+  },
+  extends: function() {
+    this.block.extends = parseType(this.tag.description);
   },
   function: function() {
     this.block.function = this.tag.description;
@@ -384,7 +414,7 @@ function buildPages() {
     navItem.selected = false;
   });
 
-  return gulp.src('./docs/pages/*.js')
+  return gulp.src('docs/pages/*.js')
     .pipe(livingcss('docs', {
       loadcss: false,
       template: 'docs/template/template.hbs',
@@ -411,7 +441,9 @@ function buildPages() {
 }
 
 function buildApi() {
-  return gulp.src('./src/*.js')
+  uuid = 0;
+
+  return gulp.src('src/*.js')
     .pipe(livingcss('docs/api', {
       loadcss: false,
       template: 'docs/template/template.hbs',
@@ -424,5 +456,5 @@ function buildApi() {
 gulp.task('build:docs', gulp.series(buildApi, buildPages));
 
 gulp.task('watch:docs', function() {
-  gulp.watch(['./src/*.js','./docs/pages/*.js','./docs/template/**/*.hbs'], gulp.series('build:docs'));
+  gulp.watch(['src/*.js','docs/pages/*.js','docs/template/**/*.hbs'], gulp.series('build:docs'));
 });

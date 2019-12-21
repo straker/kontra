@@ -23,6 +23,7 @@ fs.writeFileSync(path.join(__dirname, 'gameObject.spec.js'), test, 'utf-8');
 let gameObject = fs.readFileSync(path.join(__dirname, '../../src/gameObject.js'), 'utf-8');
 gameObject = gameObject.replace('./core.js', '../../src/core.js');
 gameObject = gameObject.replace('./vector.js', '../../src/vector.js');
+gameObject = gameObject.replace('./utils.js', '../../src/utils.js');
 
 // generate each option and run tests
 const numPermutations = 2**(options.length);

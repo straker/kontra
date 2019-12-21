@@ -1,31 +1,33 @@
 import { getContext } from './core.js'
 import Vector from './vector.js'
+import { Factory } from './utils.js'
 
 /**
- * A versatile way to update and draw your game objects. It can handle simple rectangles, images, and game object sheet animations. It can be used for your main player object as well as tiny particles in a particle engine.
+ * The base class of most renderable classes. Handles things such as position, rotation, anchor, and the update and render life cycle.
+ *
+ * Typically you don't create a GameObject directly, but rather extend it for new classes. Because of this, trying to draw using a GameOjbect directly will prove difficult.
  * @class GameObject
  *
- * @param {Object} properties - Properties of the game object.
- * @param {Number} properties.x - X coordinate of the position vector.
- * @param {Number} properties.y - Y coordinate of the position vector.
+ * @param {Object} [properties] - Properties of the game object.
+ * @param {Number} [properties.x] - X coordinate of the position vector.
+ * @param {Number} [properties.y] - Y coordinate of the position vector.
  * @param {Number} [properties.dx] - X coordinate of the velocity vector.
  * @param {Number} [properties.dy] - Y coordinate of the velocity vector.
  * @param {Number} [properties.ddx] - X coordinate of the acceleration vector.
  * @param {Number} [properties.ddy] - Y coordinate of the acceleration vector.
  *
- * @param {String} [properties.color] - Fill color for the game object if no image or animation is provided.
  * @param {Number} [properties.width] - Width of the game object.
  * @param {Number} [properties.height] - Height of the game object.
  *
- * @param {Number} [properties.ttl=Infinity] - How many frames the game object should be alive. Used by kontra.Pool.
+ * @param {Number} [properties.ttl=Infinity] - How many frames the game object should be alive. Used by [Pool](api/pool).
  * @param {Number} [properties.rotation=0] - game objects rotation around the origin in radians.
- * @param {Number} [properties.anchor={x:0,y:0}] - The x and y origin of the game object. {x:0, y:0} is the top left corner of the game object, {x:1, y:1} is the bottomright corner.
+ * @param {{x: number, y: number}} [properties.anchor={x:0,y:0}] - The x and y origin of the game object. {x:0, y:0} is the top left corner of the game object, {x:1, y:1} is the bottomright corner.
  *
- * @param {Canvas​Rendering​Context2D} [properties.context] - The context the game object should draw to. Defaults to [core.getContext()](api/core#getContext).
+ * @param {CanvasRenderingContext2D} [properties.context] - The context the game object should draw to. Defaults to [core.getContext()](api/core#getContext).
  *
- * @param {Function} [properties.update] - Function called every frame to update the game object.
+ * @param {(dt?: number) => void} [properties.update] - Function called every frame to update the game object.
  * @param {Function} [properties.render] - Function called every frame to render the game object.
- * @param {*} [properties.*] - Any additional properties you need added to the game object. For example, if you pass `gameObject({type: 'player'})` then the game object will also have a property of the same name and value. You can pass as many additional properties as you want.
+ * @param {...*} properties.props - Any additional properties you need added to the game object. For example, if you pass `gameObject({type: 'player'})` then the game object will also have a property of the same name and value. You can pass as many additional properties as you want.
  */
 class GameObject {
   constructor(properties) {
@@ -48,7 +50,7 @@ class GameObject {
     /**
      * The game objects position vector. The game objects position is its position in the world, as opposed to the position in the [viewport](api/gameObject#viewX) or [local position](api/gameObject#localPosition). Typically the position in the world, viewport, and local position are the same value. If the game object has been [added to a tileEngine](/api/tileEngine#addObject), the position vector represents where in the tile world the game object is while the viewport represents where to draw the game object in relation to the top-left corner of the canvas.
      * @memberof GameObject
-     * @property {kontra.Vector} position
+     * @property {Vector} position
      */
     this.position = Vector();
 
@@ -68,15 +70,9 @@ class GameObject {
     /**
      * The context the game object will draw to.
      * @memberof GameObject
-     * @property {Canvas​Rendering​Context2D} context
+     * @property {CanvasRenderingContext2D} context
      */
     this.context = getContext();
-
-    /**
-     * The color of the game object if it was passed as an argument.
-     * @memberof GameObject
-     * @property {String} color
-     */
 
     // --------------------------------------------------
     // optionals
@@ -84,17 +80,17 @@ class GameObject {
 
     // @ifdef GAMEOBJECT_GROUP
     /**
-     * The game objects local position vector, which is its position relative to a parent object. If the game object does not have a parent object, the local position will be the same as the [position vector](api/gameObject#position].
+     * The game objects local position vector, which is its position relative to a parent object. If the game object does not have a parent object, the local position will be the same as the [position vector](api/gameObject#position).
      * @memberof GameObject
-     * @property {kontra.Vector} localPosition
+     * @property {Vector} localPosition
      */
     this.localPosition = Vector();
 
     // @ifdef GAMEOBJECT_ROTATION
     /**
-     * The game objects local rotation, which is its rotation relative to a parent object. If the game object does not have a parent object, the local rotation will be the same as the [rotation](api/gameObject#rotation].
+     * The game objects local rotation, which is its rotation relative to a parent object. If the game object does not have a parent object, the local rotation will be the same as the [rotation](api/gameObject#rotation).
      * @memberof GameObject
-     * @property {kontra.Vector} localPosition
+     * @property {Number} localRotation
      */
     this.localRotation = 0;
 
@@ -105,13 +101,13 @@ class GameObject {
     /**
      * The game objects parent object.
      * @memberof GameObject
-     * @property {kontra.GameObject} parent
+     * @property {GameObject|null} parent
      */
 
     /**
      * The game objects children objects.
      * @memberof GameObject
-     * @property {kontra.GameObject[]} children
+     * @property {GameObject[]} children
      */
     this.children = [];
     // @endif
@@ -120,7 +116,7 @@ class GameObject {
     /**
      * The game objects velocity vector.
      * @memberof GameObject
-     * @property {kontra.Vector} velocity
+     * @property {Vector} velocity
      */
     this.velocity = Vector();
     // @endif
@@ -129,7 +125,7 @@ class GameObject {
     /**
      * The game objects acceleration vector.
      * @memberof GameObject
-     * @property {kontra.Vector} acceleration
+     * @property {Vector} acceleration
      */
     this.acceleration = Vector();
     // @endif
@@ -145,7 +141,7 @@ class GameObject {
 
     // @ifdef GAMEOBJECT_TTL
     /**
-     * How may frames the game object should be alive. Primarily used by kontra.Pool to know when to recycle an object.
+     * How may frames the game object should be alive. Primarily used by [Pool](api/pool) to know when to recycle an object.
      * @memberof GameObject
      * @property {Number} ttl
      */
@@ -156,20 +152,19 @@ class GameObject {
     /**
      * The x and y origin of the game object. {x:0, y:0} is the top left corner of the game object, {x:1, y:1} is the bottom right corner.
      * @memberof GameObject
-     * @property {Object} anchor
+     * @property {{x: number, y: number}} anchor
      *
      * @example
      * // exclude-code:start
-     * let { game object } = kontra;
+     * let { GameObject } = kontra;
      * // exclude-code:end
      * // exclude-script:start
-     * import { game object } from 'kontra';
+     * import { GameObject } from 'kontra';
      * // exclude-script:end
      *
-     * let gameObject = game object({
+     * let gameObject = GameObject({
      *   x: 150,
      *   y: 100,
-     *   color: 'red',
      *   width: 50,
      *   height: 50,
      *   // exclude-code:start
@@ -187,12 +182,12 @@ class GameObject {
      * });
      * gameObject.render();
      *
-     * game object.anchor = {x: 0.5, y: 0.5};
-     * game object.x = 300;
+     * gameObject.anchor = {x: 0.5, y: 0.5};
+     * gameObject.x = 300;
      * gameObject.render();
      *
-     * game object.anchor = {x: 1, y: 1};
-     * game object.x = 450;
+     * gameObject.anchor = {x: 1, y: 1};
+     * gameObject.x = 450;
      * gameObject.render();
      */
     this.anchor = {x: 0, y: 0};
@@ -217,8 +212,8 @@ class GameObject {
     Object.assign(this, properties);
   }
 
-  // define getter and setter shortcut functions to make it easier to work with the
-  // position, velocity, and acceleration vectors.
+  // define getter and setter shortcut functions to make it easier to work
+  // with the position, velocity, and acceleration vectors.
 
   /**
    * X coordinate of the position vector.
@@ -325,6 +320,7 @@ class GameObject {
    * Readonly. X coordinate of where to draw the game object. Typically the same value as the [position vector](api/gameObject#position) unless the game object has been [added to a tileEngine](api/tileEngine#addObject).
    * @memberof GameObject
    * @property {Number} viewX
+   * @readonly
    */
   get viewX() {
     return this.x - this.sx;
@@ -334,6 +330,7 @@ class GameObject {
    * Readonly. Y coordinate of where to draw the game object. Typically the same value as the [position vector](api/gameObject#position) unless the game object has been [added to a tileEngine](api/tileEngine#addObject).
    * @memberof GameObject
    * @property {Number} viewY
+   * @readonly
    */
   get viewY() {
     return this.y - this.sy;
@@ -351,7 +348,7 @@ class GameObject {
 
   // @ifdef GAMEOBJECT_TTL
   /**
-   * Check if the game object is alive. Primarily used by kontra.Pool to know when to recycle an object.
+   * Check if the game object is alive. Primarily used by [Pool](api/pool) to know when to recycle an object.
    * @memberof GameObject
    * @function isAlive
    *
@@ -380,6 +377,13 @@ class GameObject {
     });
   }
 
+  /**
+   * Add an object as a child to this object. The child objects position and rotation will be calculated based on this objects position and rotation.
+   * @memberof GameObject
+   * @function addChild
+   *
+   * @param {GameObject} child - Object to add as a child.
+   */
   addChild(child) {
     this.children.push(child);
     child.parent = this;
@@ -391,6 +395,13 @@ class GameObject {
     child.rotation = child.rotation;
   }
 
+  /**
+   * Remove an object as a child of this object. The removed objects position and rotation will no longer be calculated based off this objects position and rotation.
+   * @memberof GameObject
+   * @function removeChild
+   *
+   * @param {GameObject} child - Object to remove as a child.
+   */
   removeChild(child) {
     let index = this.children.indexOf(child);
     if (index !== -1) {
@@ -426,9 +437,9 @@ class GameObject {
    * If you override the game objects [update()](api/gameObject#update) function with your own update function, you can call this function to move the game object normally.
    *
    * ```js
-   * import { game object } from 'kontra';
+   * import { GameObject } from 'kontra';
    *
-   * let gameObject = game object({
+   * let gameObject = GameObject({
    *   x: 100,
    *   y: 200,
    *   width: 20,
@@ -437,7 +448,7 @@ class GameObject {
    *   dy: 2,
    *   update: function() {
    *     // move the game object normally
-   *     game object.advance();
+   *     this.advance();
    *
    *     // change the velocity at the edges of the canvas
    *     if (this.x < 0 ||
@@ -483,22 +494,21 @@ class GameObject {
   }
 
   /**
-   * Draw the game object at its X and Y position. This function changes based on the type of the game object. For a [rectangle game object](api/gameObject#rectangle-game object), it uses `context.fillRect()`, for an [image game object](api/gameObject#image-game object) it uses `context.drawImage()`, and for an [animation game object](api/gameObject#animation-game object) it uses the [currentAnimation](api/gameObject#currentAnimation) `render()` function.
+   * Draw the game object at its X and Y position, taking into account rotation and anchor.
    *
    * If you override the game objects `render()` function with your own render function, you can call this function to draw the game object normally.
    *
    * ```js
-   * import { game object } from 'kontra';
+   * let { GameObject } = kontra;
    *
-   * let gameObject = game object({
+   * let gameObject = GameObject({
    *  x: 290,
    *  y: 80,
-   *  color: 'red',
    *  width: 20,
    *  height: 40,
    *
    *  render: function() {
-   *    // draw the rectangle game object normally
+   *    // draw the game object normally (perform rotation and other transforms)
    *    this.draw();
    *
    *    // outline the game object
@@ -566,4 +576,4 @@ class GameObject {
   _dc() {}
 }
 
-export default GameObject
+export default Factory(GameObject)

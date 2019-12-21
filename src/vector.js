@@ -33,10 +33,10 @@ class Vector {
    * @memberof Vector
    * @function add
    *
-   * @param {kontra.Vector} vector - Vector to add to the current Vector.
+   * @param {Vector|{x: number, y: number}} vector - Vector to add to the current Vector.
    * @param {Number} [dt=1] - Time since last update.
    *
-   * @returns {kontra.Vector} A new kontra.Vector instance.
+   * @returns {Vector} A new Vector instance.
    */
   add(vec, dt = 1) {
     return new Vector(

@@ -15,6 +15,7 @@ import { collides } from './collision.js'
 import { init, getCanvas, getContext } from './core.js'
 import { on, off, emit } from './events.js'
 import GameLoop from './gameLoop.js'
+import GameObject from './gameObject.js'
 import { keyMap, initKeys, bindKeys, unbindKeys, keyPressed } from './keyboard.js'
 import { registerPlugin, unregisterPlugin, extendObject } from './plugin.js'
 import {
@@ -32,6 +33,7 @@ import Quadtree from './quadtree.js'
 import Sprite from './sprite.js'
 import SpriteSheet from './spriteSheet.js'
 import { setStoreItem, getStoreItem } from './store.js'
+import Text from './text.js'
 import TileEngine from './tileEngine.js'
 import Vector from './vector.js'
 
@@ -60,6 +62,7 @@ let kontra = {
   emit,
 
   GameLoop,
+  GameObject,
 
   keyMap,
   initKeys,
@@ -88,6 +91,7 @@ let kontra = {
   setStoreItem,
   getStoreItem,
 
+  Text,
   TileEngine,
   Vector
 };

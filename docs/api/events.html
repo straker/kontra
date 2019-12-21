@@ -55,6 +55,7 @@
               <li><a href="api/sprite" >Sprite</a></li>
               <li><a href="api/spriteSheet" >SpriteSheet</a></li>
               <li><a href="api/store" >Store</a></li>
+              <li><a href="api/text" >Text</a></li>
               <li><a href="api/tileEngine" >TileEngine</a></li>
               <li><a href="api/vector" >Vector</a></li>
             </ul>
@@ -130,7 +131,7 @@ off(&#39;myEvent&#39;, callback);</code></pre></section>
               <ul aria-labelledby="methods">
                 <li>
                   <a href="api/events#emit">
-                    <span>emit(&#8203;event[, args])</span>
+                    <span>emit(&#8203;event, ...args)</span>
                   </a>
                 </li>
                 <li>
@@ -167,7 +168,7 @@ off(&#39;myEvent&#39;, callback);</code></pre></section>
         <section>
           <h2 id="emit">
             <a href="api/events#emit" class="section-link">
-              <span>emit(&#8203;event[, args])</span>
+              <span>emit(&#8203;event, ...args)</span>
               <span aria-hidden="true">#</span>
             </a>
           </h2>
@@ -182,10 +183,10 @@ off(&#39;myEvent&#39;, callback);</code></pre></section>
             <dd><p>String. Name of the event.</p>
           </dd>
             <dt>
-              <code>args</code>
-              <span class="optional">Optional</span>
+              <code>...args</code>
+              
             </dt>
-            <dd><p>Any type. Arguments passed to all callbacks.</p>
+            <dd><p>A list of any type. Comma separated list of arguments passed to all callbacks.</p>
           </dd>
           </dl>
           

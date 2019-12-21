@@ -6,17 +6,23 @@ const plumber = require('gulp-plumber');
 const preprocess = require('gulp-preprocess');
 const rollup = require('rollup-stream');
 const source = require('vinyl-source-stream');
-require('./doc-tasks.js');
+require('./tasks/docs.js');
+require('./tasks/typescript.js');
 
 const context = {
-  SPRITE_VELOCITY: true,
-  SPRITE_ACCELERATION: true,
-  SPRITE_ROTATION: true,
-  SPRITE_TTL: true,
-  SPRITE_ANCHOR: true,
-  SPRITE_CAMERA: true,
+  GAMEOBJECT_GROUP: true,
+  GAMEOBJECT_ROTATION: true,
+  GAMEOBJECT_VELOCITY: true,
+  GAMEOBJECT_ACCELERATION: true,
+  GAMEOBJECT_TTL: true,
+  GAMEOBJECT_ANCHOR: true,
+  GAMEOBJECT_CAMERA: true,
   SPRITE_IMAGE: true,
-  SPRITE_ANIMATION: true
+  SPRITE_ANIMATION: true,
+  TEXT_AUTONEWLINE: true,
+  TEXT_NEWLINE: true,
+  TEXT_RTL: true,
+  TEXT_ALIGN: true
 
   // DEBUG and VISUAL_DEBUG are turned off
 };
@@ -75,7 +81,7 @@ function distModule() {
     .pipe(gulp.dest('.'));
 }
 
-gulp.task('build', gulp.series(buildIife, buildModule, 'build:docs'));
+gulp.task('build', gulp.series(buildIife, buildModule, 'build:docs', 'build:ts'));
 
 gulp.task('dist', gulp.series(distIife, distModule));
 

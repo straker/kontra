@@ -1,14 +1,62 @@
 import GameObject from './gameObject.js'
 import { Factory } from './utils.js'
 
-class Text extends GameObject {
+class Text extends GameObject.class {
+  /**
+   * An object for drawing text to the screen. Supports newline characters as well as automatic new lines when setting the `width` property.
+   *
+   * You can also display RTL languages by setting the attribute `dir="rtl"` on the main canvas element. Due to the limited support for individual text to have RTL settings, it must be set globally for the entire game.
+   *
+   * ```js
+   * import { Text } from 'kontra';
+   *
+   * let text = Text({
+   *   text: 'Hello World!',
+   *   font: '32px Arial',
+   *   color: 'black'
+   *   x: 100,
+   *   y: 100,
+   *   anchor: {x: 0.5, y: 0.5}
+   * });
+   * text.render();
+   * ```
+   * @class Text
+   * @extends GameObject
+   *
+   * @param {Object} properties - Properties of the text.
+   * @param {String} properties.text - The text to display.
+   * @param {String} properties.font - The [font](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/font) style.
+   * @param {String} properties.color - Fill color for the text.
+   * @param {Number} [properties.width] - Set a fixed width for the text. If set, the text will automatically be split into new lines that will fit the size when possible.
+   * @param {String} [properties.textAlign='left'] - The [textAlign](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/textAlign) for the context. If the `dir` attribute is set to `rtl` on the main canvas, the text will automatically be aligned to the right, but you can override that by setting this property.
+   */
+
   init(properties) {
+
+    /**
+     * The color of the text.
+     * @memberof Text
+     * @property {String} color
+     */
+
+    /**
+     * The text alignment.
+     * @memberof Text
+     * @property {String} textAlign
+     */
+    this.textAlign = '';
+
     super.init(properties);
 
     // p = prerender
     this._p();
   }
 
+  /**
+   * The string of text.
+   * @memberof Text
+   * @property {String} text
+   */
   get text() {
     // t = text
     return this._t;
@@ -17,13 +65,15 @@ class Text extends GameObject {
   set text(value) {
     this._t = value;
 
-    // s = strings
-    this._s = [];
-
     // d = dirty
     this._d = true;
   }
 
+  /**
+   * The font style.
+   * @memberof Text
+   * @property {String} font
+   */
   get font() {
     // f = font
     return this._f;
@@ -38,6 +88,7 @@ class Text extends GameObject {
   }
 
   get width() {
+    // w = width
     return this._w;
   }
 
@@ -48,20 +99,22 @@ class Text extends GameObject {
     // @ifdef TEXT_AUTONEWLINE
     // fw = fixed width
     this._fw = value;
-    this._s = [];
     // @endif
   }
 
   render() {
     if (this._d) {
-
-      // p = prerender
       this._p();
     }
     super.render();
   }
 
+  /**
+   * Calculate the font width, height, and text strings before rendering.
+   */
   _p() {
+    // s = strings
+    this._s = [];
     this._d = false;
     this.context.font = this.font;
 
@@ -71,6 +124,7 @@ class Text extends GameObject {
       let start = 0;
       let i = 2;
 
+      // split the string into lines that all fit within the fixed width
       for (; i <= parts.length; i++) {
         let str = parts.slice(start, i).join(' ');
         let width = this.context.measureText(str).width;
@@ -110,7 +164,7 @@ class Text extends GameObject {
     let textAlign = this.textAlign;
 
     // @ifdef TEXT_RTL
-    textAlign = this.textAlign || this.context.canvas.dir === 'rtl' ? 'right' : 'left';
+    textAlign = this.textAlign || (this.context.canvas.dir === 'rtl' ? 'right' : 'left');
     // @endif
 
     // @ifdef TEXT_ALIGN||TEXT_RTL

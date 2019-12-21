@@ -159,10 +159,6 @@ class Sprite extends GameObject.class {
     }
   }
 
-  update(dt) {
-    super.update(dt);
-  }
-
   advance(dt) {
     super.advance(dt);
 

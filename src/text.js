@@ -35,12 +35,14 @@ class Text extends GameObject.class {
 
     /**
      * The color of the text.
-     * @type {String} color
+     * @memberof Text
+     * @property {String} color
      */
 
     /**
      * The text alignment.
-     * @type {String} textAlign
+     * @memberof Text
+     * @property {String} textAlign
      */
     this.textAlign = '';
 
@@ -52,7 +54,8 @@ class Text extends GameObject.class {
 
   /**
    * The string of text.
-   * @type {String} text
+   * @memberof Text
+   * @property {String} text
    */
   get text() {
     // t = text
@@ -68,7 +71,8 @@ class Text extends GameObject.class {
 
   /**
    * The font style.
-   * @type {String} font
+   * @memberof Text
+   * @property {String} font
    */
   get font() {
     // f = font

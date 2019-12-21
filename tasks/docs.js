@@ -142,6 +142,12 @@ function parseType(type) {
   if (type.startsWith('{')) {
     type = 'Object';
   }
+  if (type.startsWith('...')) {
+    type = type.replace('...', 'A list of ');
+
+    // make the type plural instead of an array for reset parameters
+    type = type.replace('[]', 's');
+  }
 
   // parse or types
   if (type.includes('|')) {
@@ -160,9 +166,7 @@ function parseType(type) {
   type = resolveKontraType(type, isArray);
 
   // parse any types
-  if (type === '*') {
-    type = 'Any type';
-  }
+  type = type.replace('*', type.startsWith('*') ? 'Any type' : 'any type');
 
   return type;
 }
@@ -192,6 +196,11 @@ let tags = {
       entry.default = parts[1];
     }
 
+    // rest param
+    if (type.indexOf('...') !== -1) {
+      name = '...' + name;
+    }
+
     // build paramList
     if (entry.optional) {
       paramValue += '['
@@ -215,7 +224,7 @@ let tags = {
     this.block.param.push(entry);
 
     // don't list nested params (e.g. properties.foo.bar)
-    if (name.indexOf('.') === -1) {
+    if (name.indexOf('.') === -1 || name.startsWith('...')) {
       this.block.paramList += paramValue;
     }
   },
@@ -283,6 +292,9 @@ let tags = {
   class: function() {
     this.block.class = this.tag.description;
     addSectionAndPage.call(this);
+  },
+  extends: function() {
+    this.block.extends = parseType(this.tag.description);
   },
   function: function() {
     this.block.function = this.tag.description;
@@ -429,6 +441,8 @@ function buildPages() {
 }
 
 function buildApi() {
+  uuid = 0;
+
   return gulp.src('src/*.js')
     .pipe(livingcss('docs/api', {
       loadcss: false,

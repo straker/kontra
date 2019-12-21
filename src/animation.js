@@ -6,7 +6,7 @@ import { Factory } from './utils.js'
  *
  * An animation defines the sequence of frames to use from a sprite sheet. It also defines at what speed the animation should run using `frameRate`.
  *
- * Typically you don't create an Animation directly, but rather you would create them from [Sprite](api/sprite)Sheet by passing the `animations` argument.
+ * Typically you don't create an Animation directly, but rather you would create them from a [SpriteSheet](api/spriteSheet) by passing the `animations` argument.
  *
  * ```js
  * import { SpriteSheet, Animation } from 'kontra';

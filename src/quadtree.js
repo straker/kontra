@@ -92,7 +92,7 @@ class Quadtree {
     /**
      * The 2D space (x, y, width, height) the quadtree occupies.
      * @memberof Quadtree
-     * @property {Object} bounds
+     * @property {{x: number, y: number, width: number, height: number}} bounds
      */
     let canvas = getCanvas();
     this.bounds = bounds || {

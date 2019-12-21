@@ -41,7 +41,7 @@ let pressedKeys = {};
  *   // handle pageDown key
  * });
  * ```
- * @property {{[name: string]: string}} keyMap
+ * @property {{[key: string|number]: string}} keyMap
  */
 export let keyMap = {
   // named keys

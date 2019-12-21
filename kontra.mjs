@@ -57,7 +57,7 @@ function off(event, callback) {
  * @function emit
  *
  * @param {String} event - Name of the event.
- * @param {...*} args - Arguments passed to all callbacks.
+ * @param {...*} args - Comma separated list of arguments passed to all callbacks.
  */
 function emit(event, ...args) {
   if (!callbacks[event]) return;
@@ -159,7 +159,7 @@ function Factory(classObj) {
  *
  * An animation defines the sequence of frames to use from a sprite sheet. It also defines at what speed the animation should run using `frameRate`.
  *
- * Typically you don't create an Animation directly, but rather you would create them from [Sprite](api/sprite)Sheet by passing the `animations` argument.
+ * Typically you don't create an Animation directly, but rather you would create them from a [SpriteSheet](api/spriteSheet) by passing the `animations` argument.
  *
  * ```js
  * import { SpriteSheet, Animation } from 'kontra';
@@ -1031,7 +1031,9 @@ class Vector {
 var Vector$1 = Factory(Vector);
 
 /**
- * A versatile way to update and draw your game objects. It can handle simple rectangles, images, and game object sheet animations. It can be used for your main player object as well as tiny particles in a particle engine.
+ * The base class of most renderable classes. Handles things such as position, rotation, anchor, and the update and render life cycle.
+ *
+ * Typically you don't create a GameObject directly, but rather extend it for new classes. Because of this, trying to draw using a GameOjbect directly will prove difficult.
  * @class GameObject
  *
  * @param {Object} [properties] - Properties of the game object.
@@ -1051,8 +1053,8 @@ var Vector$1 = Factory(Vector);
  *
  * @param {CanvasRenderingContext2D} [properties.context] - The context the game object should draw to. Defaults to [core.getContext()](api/core#getContext).
  *
- * @param {Function} [properties.update] - Function called every frame to update the game object.
- * @param {Function} [properties.render] - Function called every frame to render the game object.
+ * @param {(dt?: number) => void} [properties.update] - Function called every frame to update the game object.
+ * @param {(x: number, y: number) => void} [properties.render] - Function called every frame to render the game object. Is passed the current x and y position after rotation and anchor transforms have been applied. Use these to correctly draw the object.
  * @param {...*} properties.props - Any additional properties you need added to the game object. For example, if you pass `gameObject({type: 'player'})` then the game object will also have a property of the same name and value. You can pass as many additional properties as you want.
  */
 class GameObject {
@@ -1106,7 +1108,7 @@ class GameObject {
 
     // @ifdef GAMEOBJECT_GROUP
     /**
-     * The game objects local position vector, which is its position relative to a parent object. If the game object does not have a parent object, the local position will be the same as the [position vector](api/gameObject#position].
+     * The game objects local position vector, which is its position relative to a parent object. If the game object does not have a parent object, the local position will be the same as the [position vector](api/gameObject#position).
      * @memberof GameObject
      * @property {Vector} localPosition
      */
@@ -1114,7 +1116,7 @@ class GameObject {
 
     // @ifdef GAMEOBJECT_ROTATION
     /**
-     * The game objects local rotation, which is its rotation relative to a parent object. If the game object does not have a parent object, the local rotation will be the same as the [rotation](api/gameObject#rotation].
+     * The game objects local rotation, which is its rotation relative to a parent object. If the game object does not have a parent object, the local rotation will be the same as the [rotation](api/gameObject#rotation).
      * @memberof GameObject
      * @property {Number} localRotation
      */
@@ -1238,8 +1240,8 @@ class GameObject {
     Object.assign(this, properties);
   }
 
-  // define getter and setter shortcut functions to make it easier to work with the
-  // position, velocity, and acceleration vectors.
+  // define getter and setter shortcut functions to make it easier to work
+  // with the position, velocity, and acceleration vectors.
 
   /**
    * X coordinate of the position vector.
@@ -1512,6 +1514,8 @@ class GameObject {
 
   /**
    * Render the game object. Calls the game objects [draw()](api/gameObject#draw) function.
+   *
+   * If you override the game objects render() function with your own render function, you can call `this.draw()` to draw the game object normally.
    * @memberof GameObject
    * @function render
    */
@@ -1520,12 +1524,12 @@ class GameObject {
   }
 
   /**
-   * Draw the game object at its X and Y position. This function changes based on the type of the game object. For a [rectangle game object](api/gameObject#rectangle-game object), it uses `context.fillRect()`, for an [image game object](api/gameObject#image-game object) it uses `context.drawImage()`, and for an [animation game object](api/gameObject#animation-game object) it uses the [currentAnimation](api/gameObject#currentAnimation) `render()` function.
+   * Draw the game object at its X and Y position, taking into account rotation and anchor.
    *
-   * If you override the game objects `render()` function with your own render function, you can call this function to draw the game object normally.
+   * If you override the game objects `render()`` function with your own render function, you can call this function to draw the game object normally.
    *
    * ```js
-   * import { GameObject } from 'kontra';
+   * let { GameObject } = kontra;
    *
    * let gameObject = GameObject({
    *  x: 290,
@@ -1647,7 +1651,7 @@ let pressedKeys = {};
  *   // handle pageDown key
  * });
  * ```
- * @property {{[name: string]: string}} keyMap
+ * @property {{[key: string|number]: string}} keyMap
  */
 let keyMap = {
   // named keys
@@ -2685,7 +2689,7 @@ class Quadtree {
     /**
      * The 2D space (x, y, width, height) the quadtree occupies.
      * @memberof Quadtree
-     * @property {Object} bounds
+     * @property {{x: number, y: number, width: number, height: number}} bounds
      */
     let canvas = getCanvas();
     this.bounds = bounds || {
@@ -3074,10 +3078,6 @@ class Sprite extends GameObject$1.class {
     }
   }
 
-  update(dt) {
-    super.update(dt);
-  }
-
   advance(dt) {
     super.advance(dt);
 
@@ -3461,12 +3461,14 @@ class Text extends GameObject$1.class {
 
     /**
      * The color of the text.
-     * @type {String} color
+     * @memberof Text
+     * @property {String} color
      */
 
     /**
      * The text alignment.
-     * @type {String} textAlign
+     * @memberof Text
+     * @property {String} textAlign
      */
     this.textAlign = '';
 
@@ -3478,7 +3480,8 @@ class Text extends GameObject$1.class {
 
   /**
    * The string of text.
-   * @type {String} text
+   * @memberof Text
+   * @property {String} text
    */
   get text() {
     // t = text
@@ -3494,7 +3497,8 @@ class Text extends GameObject$1.class {
 
   /**
    * The font style.
-   * @type {String} font
+   * @memberof Text
+   * @property {String} font
    */
   get font() {
     // f = font

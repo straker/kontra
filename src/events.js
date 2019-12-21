@@ -57,7 +57,7 @@ export function off(event, callback) {
  * @function emit
  *
  * @param {String} event - Name of the event.
- * @param {...*} args - Arguments passed to all callbacks.
+ * @param {...*} args - Comma separated list of arguments passed to all callbacks.
  */
 export function emit(event, ...args) {
   if (!callbacks[event]) return;

@@ -104,7 +104,7 @@ declare namespace kontra {
     (properties?: {x?: number, y?: number, dx?: number, dy?: number, ddx?: number, ddy?: number, width?: number, height?: number, ttl?: number, rotation?: number, anchor?: {x: number, y: number}, context?: CanvasRenderingContext2D, update?: (dt?: number) => void, render?: (x: number, y: number) => void, [props: string]: any}): GameObject;
   }
   var GameObject: GameObjectConstructor
-  var keyMap: {[key: string | number]: string};
+  var keyMap: {[key in (string | number)]: string};
   function initKeys(): void;
   function bindKeys(keys: string | string[], callback: (evt: KeyboardEvent) => void): void;
   function unbindKeys(keys: string | string[]): void;

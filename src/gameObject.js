@@ -26,7 +26,7 @@ import { Factory } from './utils.js'
  * @param {CanvasRenderingContext2D} [properties.context] - The context the game object should draw to. Defaults to [core.getContext()](api/core#getContext).
  *
  * @param {(dt?: number) => void} [properties.update] - Function called every frame to update the game object.
- * @param {(x: number, y: number) => void} [properties.render] - Function called every frame to render the game object. Is passed the current x and y position after rotation and anchor transforms have been applied. Use these to correctly draw the object.
+ * @param {Function} [properties.render] - Function called every frame to render the game object.
  * @param {...*} properties.props - Any additional properties you need added to the game object. For example, if you pass `gameObject({type: 'player'})` then the game object will also have a property of the same name and value. You can pass as many additional properties as you want.
  */
 class GameObject {
@@ -486,8 +486,6 @@ class GameObject {
 
   /**
    * Render the game object. Calls the game objects [draw()](api/gameObject#draw) function.
-   *
-   * If you override the game objects render() function with your own render function, you can call `this.draw()` to draw the game object normally.
    * @memberof GameObject
    * @function render
    */
@@ -498,7 +496,7 @@ class GameObject {
   /**
    * Draw the game object at its X and Y position, taking into account rotation and anchor.
    *
-   * If you override the game objects `render()`` function with your own render function, you can call this function to draw the game object normally.
+   * If you override the game objects `render()` function with your own render function, you can call this function to draw the game object normally.
    *
    * ```js
    * let { GameObject } = kontra;

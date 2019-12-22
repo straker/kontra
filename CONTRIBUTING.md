@@ -17,7 +17,7 @@ Below is a list of features the library will not support or add:
 
 ## Code Style
 
-To help keep the code small the library follows some unconventional code patterns. Take a look at these [byte-saving techniques](Byte saving techniques) and follow these recommendations:
+To help keep the code small the library follows some unconventional code patterns. Take a look at these [byte-saving techniques](https://github.com/jed/140bytes/wiki/Byte-saving-techniques) and follow these recommendations:
 
 - Use `==` over `===` (save a byte)
 - Use `| 0` over `Math.floor()`

@@ -38,8 +38,8 @@ function sortByName(a, b) {
       : 0;
 }
 
-// hack to add @section and @page to every jsdoc section without explicitly having
-// to add them to every block :)
+// hack to add @section and @page to every jsdoc section without explicitly
+// having to add them to every block :)
 function addSectionAndPage() {
   let description = path.basename(this.file, '.js');
   let property = this.block.property;
@@ -83,6 +83,7 @@ function addSectionAndPage() {
 
 /**
  * Create a tab panel to show the different ways to load the library automatically from the code output of a section description. Don't do this for any code output that has '// exclude-tablist'
+ * @param {Object} section
  */
 function buildImports(section) {
   section.description = section.description
@@ -117,8 +118,12 @@ function buildImports(section) {
     });
 }
 
+/**
+ * Parse kontra defined types and turn them into links.
+ * @param {String} string - The string containing the kontra type.
+ * @param {Boolean} isArray - If the type is an array.
+ */
 function resolveKontraType(string, isArray) {
-  // parse kontra object types and turn them into links
   return string.replace(kontraTypesRegex, function(match, p1) {
     let url = p1;
     if (isArray) {
@@ -132,24 +137,25 @@ function resolveKontraType(string, isArray) {
 
 /**
  * Parse information about the type.
- * @param {String} type
+ * @param {String} type - The JSDoc type string.
+ * @returns {String}
  */
 function parseType(type) {
   // parse typescript specific typings
   if (type.startsWith('(')) {
     type = 'Function';
   }
-  if (type.startsWith('{')) {
+  else if (type.startsWith('{')) {
     type = 'Object';
   }
-  if (type.startsWith('...')) {
+  else if (type.startsWith('...')) {
     type = type.replace('...', 'A list of ');
 
     // make the type plural instead of an array for reset parameters
     type = type.replace('[]', 's');
   }
 
-  // parse or types
+  // parse OR types
   if (type.includes('|')) {
     type = type.split('|').join(' or ');
   }
@@ -173,7 +179,7 @@ function parseType(type) {
 
 let tags = {
 
-  // output information about the function parameter
+  // output information about the parameter
   param: function() {
     let { name, description, type } = this.tag;
     let paramValue = '';
@@ -229,7 +235,7 @@ let tags = {
     }
   },
 
-  // output information about the function return value
+  // output information about the returns value
   returns: function() {
     let type = parseType(this.tag.type);
     let description = this.tag.description;
@@ -241,8 +247,8 @@ let tags = {
     };
   },
 
-  // create a canvas element and code block that shows code and it actually working
-  // as written.
+  // create a canvas element and code block that shows code and it actually
+  // working as written.
   example: function() {
     let width = 600;
     let height = 200;
@@ -287,8 +293,8 @@ let tags = {
     };
   },
 
-  // automatically make @class, @function, @property, and @sectionName add their own
-  // @section and @page tags for ease of use
+  // automatically make @class, @function, @property, and @sectionName add
+  // their own @section and @page tags for ease of use
   class: function() {
     this.block.class = this.tag.description;
     addSectionAndPage.call(this);
@@ -322,8 +328,8 @@ let tags = {
     addSectionAndPage.call(this);
   },
 
-  // put the package version anywhere there is `{{ packageVersion }}` in the description.
-  // primarily used for the download page
+  // put the package version anywhere there is `{{ packageVersion }}` in the
+  // description. primarily used for the download page
   packageVersion: function() {
     this.block.description = this.block.description.replace(packageVersionRegex, packageJson.version);
   },

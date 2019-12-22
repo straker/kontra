@@ -1,6 +1,6 @@
 # Contributing
 
-By participating in this project you agree to abide by the terms in the[Contributor Code of Conduct](CODE_OF_CONDUCT.md). 
+By participating in this project you agree to abide by the terms in the [Contributor Code of Conduct](CODE_OF_CONDUCT.md). 
 
 ## Goal
 
@@ -14,7 +14,6 @@ Below is a list of features the library will not support or add:
 
 - Physics engine
 - Math helpers
-- 
 
 ## Code Style
 
@@ -72,7 +71,7 @@ All documentation related gulp tasks and `@tag` information can be found in [tas
 
 Use uppercase for the first letter of each basic type: `Number`, `Boolean`, `String`, `Object`, `Function`.
 
-If the type is a `Function` and takes no arguments and doesn't return anything, use `Function`. Otherwise declare the arguments and return using the syntax `(params) => return`. 
+If the type is a `Function` and takes no arguments and doesn't return anything, use `Function`. Otherwise declare the arguments and return using the syntax `(params: Type) => ReturnType`. 
 
 ```js
 /** 

@@ -6,6 +6,8 @@ const path = require('path');
 const optionalRegex = /^\[.*\]$/;
 const baseTypesRegex = /\b(String|Boolean|Number|Object)\b/g;
 
+// hack to add @section to every jsdoc section without explicitly
+// having to add them to every block :)
 function addSection() {
   let description = path.basename(this.file, '.js');
   let property = this.block.property;
@@ -33,18 +35,31 @@ function addSection() {
   }
 }
 
+/**
+ * Parse information about the type.
+ * @param {String} type - The JSDoc type string.
+ * @returns {String}
+ */
 function parseType(type) {
   type = type.split('|').map(t => {
+
+    // lowercase types for TypeScript (except for Function which needs
+    // to be uppercase)
     t = t.replace(baseTypesRegex, (match, p1) => p1.toLowerCase());
     if (t === 'function') {
       t = 'Function'
     }
+
+    // parse any types
     if (type === '*') {
       t = 'any';
     }
+
+    // parse Promise types
     if (type === 'Promise') {
       t = 'Promise<any>'
     }
+
     return t;
   }).join(' | ');
 
@@ -52,37 +67,45 @@ function parseType(type) {
 }
 
 const tags = {
+
+  // output information about the parameter
   param: function() {
     let { name, type } = this.tag;
     let entity = {};
     let optional = false;
 
+    // optional param
     if (optionalRegex.test(name)) {
       optional = true;
       name = name.substring(1, name.length - 1);
     }
 
+    //
     if (name.indexOf('=') !== -1) {
       let parts = name.split('=');
       name = parts[0];
     }
 
+    // only handle root object and direct properties
     let parentName = '';
     if (name.split('.').length > 2) {
       return;
     }
 
+    // root object and child property
     if (name.includes('.')) {
       parentName = name.split('.')[0];
       name = name.split('.')[1];
     }
 
+    // rest param
     type = parseType(type);
     if (type.startsWith('...')) {
       type = type.substr(3);
       name = '...' + name;
     }
 
+    // any type
     if (type === '*') {
       type = 'any';
     }
@@ -97,11 +120,12 @@ const tags = {
 
     this.block.param = this.block.param || [];
 
+    // add the child property to the parent object type declaration
     if (parentName) {
       let parentEntity = this.block.param.find(param => param.name === parentName);
       parentEntity.children = parentEntity.children || [];
 
-      // turn nested rest parameter into [name: string]: any
+      // turn a nested rest parameter into `[name: string]: any`
       // @see https://stackoverflow.com/questions/50288205/destructuring-a-function-parameter-object-and-rest
       if (name.startsWith('...')) {
         entity.name = `[${name.substr(3)}: string]`;
@@ -114,6 +138,7 @@ const tags = {
     }
   },
 
+  // add property and functions of a class to the class declaration
   memberof: function() {
     this.block.memberof = this.tag.description;
     let parent = this.sections.find(section => section.class === this.tag.description);
@@ -125,12 +150,13 @@ const tags = {
     parent.children.push(this.block);
   },
 
+  // output information about the returns value
   returns: function() {
     this.block.returns = parseType(this.tag.type);
   },
 
-  // automatically make @class, @function, @property, and @sectionName add their own
-  // @section and @page tags for ease of use
+  // automatically make @class, @function, @property, and @sectionName add
+  // their own @section and @page tags for ease of use
   class: function() {
     this.block.class = this.tag.description;
     addSection.call(this);
@@ -160,6 +186,11 @@ const tags = {
   }
 }
 
+/**
+ * Create the type declaration string for output to the declaration file.
+ * @param {Object} param - The param object.
+ * @returns {String}
+ */
 function normalizeParams(param) {
   let children = '';
   if (param.children) {
@@ -177,9 +208,14 @@ function normalizeParams(param) {
   return str;
 }
 
-function mergeParam(obj1, obj2) {
-  obj2.param.forEach(param => {
-    let rootParam = obj1.param.find(p => p.name === param.name);
+/**
+ * Merge a child param onto the parent param.
+ * @param {Object} obj1 - The parent param
+ * @param {Object} obj2 - the child param
+ */
+function mergeParam(parent, child) {
+  child.param.forEach(param => {
+    let rootParam = parent.param.find(p => p.name === param.name);
     if (rootParam && rootParam.children && param.children) {
       rootParam.children = rootParam.children
         .slice()
@@ -212,11 +248,14 @@ function livingcssPreprocess(context, template, Handlebars) {
       mergeParam(section, parentSection);
     }
 
+    // normalize params
     if (section.param) {
       section.params = section.param
         .map(normalizeParams)
         .join(', ');
     }
+
+    // normalize child params
     if (section.children) {
       section.children = section.children
         .map(child => {
@@ -230,8 +269,6 @@ function livingcssPreprocess(context, template, Handlebars) {
         });
     }
   });
-
-  // console.log(JSON.stringify(context,null,2));
 }
 
 function buildDeclarationFile() {

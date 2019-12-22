@@ -449,7 +449,7 @@ function getCanPlay(audio) {
  *   // path: imageAssets['character_walk_sheet.png']
  * });
  * ```
- * @property {{[name: string]: HTMLImageElement}} imageAssets
+ * @property {{[name: String]: HTMLImageElement}} imageAssets
  */
 let imageAssets = {};
 
@@ -472,7 +472,7 @@ let imageAssets = {};
  *   // path: audioAssets['sound.ogg']
  * });
  * ```
- * @property {{[name: string]: HTMLAudioElement}} audioAssets
+ * @property {{[name: String]: HTMLAudioElement}} audioAssets
  */
 let audioAssets = {};
 
@@ -495,7 +495,7 @@ let audioAssets = {};
  *   // path: dataAssets['info.json']
  * });
  * ```
- * @property {{[name: string]: any}} dataAssets
+ * @property {{[name: String]: any}} dataAssets
  */
 let dataAssets = {};
 
@@ -869,7 +869,7 @@ function clear() {
  * @class GameLoop
  *
  * @param {Object}   properties - Properties of the game loop.
- * @param {Function} properties.update - Function called every frame to update the game. Is passed the fixed `dt` as a parameter.
+ * @param {(dt?: Number) => void} properties.update - Function called every frame to update the game. Is passed the fixed `dt` as a parameter.
  * @param {Function} properties.render - Function called every frame to render the game.
  * @param {Number}   [properties.fps=60] - Desired frame rate.
  * @param {Boolean}  [properties.clearCanvas=true] - Clear the canvas every frame before the `render()` function is called.
@@ -1119,12 +1119,12 @@ var Vector$1 = Factory(Vector);
  *
  * @param {Number} [properties.ttl=Infinity] - How many frames the game object should be alive. Used by [Pool](api/pool).
  * @param {Number} [properties.rotation=0] - game objects rotation around the origin in radians.
- * @param {{x: number, y: number}} [properties.anchor={x:0,y:0}] - The x and y origin of the game object. {x:0, y:0} is the top left corner of the game object, {x:1, y:1} is the bottomright corner.
+ * @param {{x: number, y: number}} [properties.anchor={x:0,y:0}] - The x and y origin of the game object. {x:0, y:0} is the top left corner of the game object, {x:1, y:1} is the bottom right corner.
  *
  * @param {CanvasRenderingContext2D} [properties.context] - The context the game object should draw to. Defaults to [core.getContext()](api/core#getContext).
  *
  * @param {(dt?: number) => void} [properties.update] - Function called every frame to update the game object.
- * @param {(x: number, y: number) => void} [properties.render] - Function called every frame to render the game object. Is passed the current x and y position after rotation and anchor transforms have been applied. Use these to correctly draw the object.
+ * @param {Function} [properties.render] - Function called every frame to render the game object.
  * @param {...*} properties.props - Any additional properties you need added to the game object. For example, if you pass `gameObject({type: 'player'})` then the game object will also have a property of the same name and value. You can pass as many additional properties as you want.
  */
 class GameObject {
@@ -1584,8 +1584,6 @@ class GameObject {
 
   /**
    * Render the game object. Calls the game objects [draw()](api/gameObject#draw) function.
-   *
-   * If you override the game objects render() function with your own render function, you can call `this.draw()` to draw the game object normally.
    * @memberof GameObject
    * @function render
    */
@@ -1596,7 +1594,7 @@ class GameObject {
   /**
    * Draw the game object at its X and Y position, taking into account rotation and anchor.
    *
-   * If you override the game objects `render()`` function with your own render function, you can call this function to draw the game object normally.
+   * If you override the game objects `render()` function with your own render function, you can call this function to draw the game object normally.
    *
    * ```js
    * let { GameObject } = kontra;
@@ -1721,7 +1719,7 @@ let pressedKeys = {};
  *   // handle pageDown key
  * });
  * ```
- * @property {{[key in (string|number)]: string}} keyMap
+ * @property {{[key in (String|Number)]: string}} keyMap
  */
 let keyMap = {
   // named keys
@@ -2129,7 +2127,7 @@ let buttonMap = {
  *
  * console.log(pointer);  //=> { x: 100, y: 200, radius: 5 };
  * ```
- * @property {{x: number, y: number, radius: number}} pointer
+ * @property {{x: Number, y: Number, radius: Number}} pointer
  */
 let pointer = {
   x: 0,
@@ -2733,7 +2731,7 @@ The quadrant indices are numbered as follows (following a z-order curve):
  * @param {Object} [properties] - Properties of the quadtree.
  * @param {Number} [properties.maxDepth=3] - Maximum node depth of the quadtree.
  * @param {Number} [properties.maxObjects=25] - Maximum number of objects a node can have before splitting.
- * @param {{x: number, y: number, width: number, height: number}} [properties.bounds] - The 2D space (x, y, width, height) the quadtree occupies. Defaults to the entire canvas width and height.
+ * @param {{x: Number, y: Number, width: Number, height: Number}} [properties.bounds] - The 2D space (x, y, width, height) the quadtree occupies. Defaults to the entire canvas width and height.
  */
 class Quadtree {
   /**
@@ -2759,7 +2757,7 @@ class Quadtree {
     /**
      * The 2D space (x, y, width, height) the quadtree occupies.
      * @memberof Quadtree
-     * @property {{x: number, y: number, width: number, height: number}} bounds
+     * @property {{x: Number, y: Number, width: Number, height: Number}} bounds
      */
     let canvas = getCanvas();
     this.bounds = bounds || {
@@ -2818,7 +2816,7 @@ class Quadtree {
    * @memberof Quadtree
    * @function get
    *
-   * @param {{x: number, y: number, width: number, height: number}} object - Object to use for finding other objects. The object must have the properties `x`, `y`, `width`, and `height` so that its position in the quadtree can be calculated.
+   * @param {{x: Number, y: Number, width: Number, height: Number}} object - Object to use for finding other objects. The object must have the properties `x`, `y`, `width`, and `height` so that its position in the quadtree can be calculated.
    *
    * @returns {Object[]} A list of objects in the same node as the object, not including the object itself.
    */
@@ -3991,7 +3989,7 @@ function TileEngine(properties = {}) {
      * @function tileAtLayer
      *
      * @param {String} name - Name of the layer.
-     * @param {{x: number, y: number}|{row: number, col: number}} position - Position of the tile in either {x, y} or {row, col} coordinates.
+     * @param {{x: Number, y: Number}|{row: Number, col: Number}} position - Position of the tile in either {x, y} or {row, col} coordinates.
      *
      * @returns {Number} The tile index. Will return `-1` if no layer exists by the provided name.
      */
@@ -4036,7 +4034,7 @@ function TileEngine(properties = {}) {
      * @function setTileAtLayer
      *
      * @param {String} name - Name of the layer.
-     * @param {{x: number, y: number}|{row: number, col: number}} position - Position of the tile in either {x, y} or {row, col} coordinates.
+     * @param {{x: Number, y: Number}|{row: Number, col: Number}} position - Position of the tile in either {x, y} or {row, col} coordinates.
      * @param {Number} tile - Tile index to set.
      */
     setTileAtLayer(name, position, tile) {

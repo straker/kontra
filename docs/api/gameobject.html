@@ -146,7 +146,7 @@
             <code>properties.anchor</code>
             <span class="optional">Optional</span>
           </dt>
-          <dd><p>Object. The x and y origin of the game object. {x:0, y:0} is the top left corner of the game object, {x:1, y:1} is the bottomright corner. Defaults to <code>{x:0,y:0}</code>.</p>
+          <dd><p>Object. The x and y origin of the game object. {x:0, y:0} is the top left corner of the game object, {x:1, y:1} is the bottom right corner. Defaults to <code>{x:0,y:0}</code>.</p>
         </dd>
           <dt>
             <code>properties.context</code>
@@ -164,7 +164,7 @@
             <code>properties.render</code>
             <span class="optional">Optional</span>
           </dt>
-          <dd><p>Function. Function called every frame to render the game object. Is passed the current x and y position after rotation and anchor transforms have been applied. Use these to correctly draw the object.</p>
+          <dd><p>Function. Function called every frame to render the game object.</p>
         </dd>
           <dt>
             <code>...properties.props</code>
@@ -689,7 +689,7 @@ gameObject.render();
           </h2>
 
           <p>Draw the game object at its X and Y position, taking into account rotation and anchor.</p>
-<p>If you override the game objects `render()`` function with your own render function, you can call this function to draw the game object normally.</p>
+<p>If you override the game objects <code>render()</code> function with your own render function, you can call this function to draw the game object normally.</p>
 <div class="tablist">
   <ul role="tablist">
     <li role="presentation" data-tab="global">
@@ -906,7 +906,6 @@ gameObject.render();</code></pre></section>
           </h2>
 
           <p>Render the game object. Calls the game objects <a href="api/gameObject#draw">draw()</a> function.</p>
-<p>If you override the game objects render() function with your own render function, you can call <code>this.draw()</code> to draw the game object normally.</p>
           
         </section>
         <section>

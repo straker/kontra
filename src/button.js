@@ -122,7 +122,7 @@ class Button extends Text.class {
      */
     this.focused = true;
     // prevent infinite loop
-    if (document.activeElement !== this._b) this._b.focus();
+    if (document.activeElement != this._b) this._b.focus();
 
     this.onFocus();
   }
@@ -135,7 +135,7 @@ class Button extends Text.class {
   blur() {
     this.focused = false;
     // prevent infinite loop
-    if (document.activeElement === this._b) this._b.blur();
+    if (document.activeElement == this._b) this._b.blur();
 
     this.onBlur();
   }

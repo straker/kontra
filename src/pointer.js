@@ -189,6 +189,7 @@ function mouseMoveHandler(evt) {
  */
 function blurEventHandler() {
   pressedButtons = {};
+  overObject = null;
 }
 
 /**
@@ -258,26 +259,19 @@ function pointerHandler(evt, eventName) {
     let object = getCurrentObject();
     if (object && object[eventName]) {
       object[eventName](evt);
-
-      if (eventName === 'onOver') {
-
-        // blur previous hover object
-        if (overObject && object !== overObject && overObject.onOut) {
-          overObject.onOut(evt);
-        }
-        overObject = object;
-      }
-    }
-    // blur previous hover object
-    else if (eventName === 'onOver' && overObject) {
-      if (overObject.onOut) {
-        overObject.onOut(evt);
-      }
-      overObject = null;
     }
 
     if (callbacks[eventName]) {
       callbacks[eventName](evt, object);
+    }
+
+    // handle onOut events
+    if (eventName == 'onOver') {
+      if (object != overObject && overObject && overObject.onOut) {
+        overObject.onOut(evt);
+      }
+
+      overObject = object;
     }
   }
 }

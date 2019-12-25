@@ -1758,7 +1758,7 @@ class Button extends Text$1.class {
      */
     this.focused = true;
     // prevent infinite loop
-    if (document.activeElement !== this._b) this._b.focus();
+    if (document.activeElement != this._b) this._b.focus();
 
     this.onFocus();
   }
@@ -1771,7 +1771,7 @@ class Button extends Text$1.class {
   blur() {
     this.focused = false;
     // prevent infinite loop
-    if (document.activeElement === this._b) this._b.blur();
+    if (document.activeElement == this._b) this._b.blur();
 
     this.onBlur();
   }
@@ -2513,6 +2513,7 @@ function mouseMoveHandler(evt) {
  */
 function blurEventHandler$1() {
   pressedButtons = {};
+  overObject = null;
 }
 
 /**
@@ -2582,26 +2583,19 @@ function pointerHandler(evt, eventName) {
     let object = getCurrentObject();
     if (object && object[eventName]) {
       object[eventName](evt);
-
-      if (eventName === 'onOver') {
-
-        // blur previous hover object
-        if (overObject && object !== overObject && overObject.onOut) {
-          overObject.onOut(evt);
-        }
-        overObject = object;
-      }
-    }
-    // blur previous hover object
-    else if (eventName === 'onOver' && overObject) {
-      if (overObject.onOut) {
-        overObject.onOut(evt);
-      }
-      overObject = null;
     }
 
     if (callbacks$2[eventName]) {
       callbacks$2[eventName](evt, object);
+    }
+
+    // handle onOut events
+    if (eventName == 'onOver') {
+      if (object != overObject && overObject && overObject.onOut) {
+        overObject.onOut(evt);
+      }
+
+      overObject = object;
     }
   }
 }

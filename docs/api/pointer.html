@@ -42,6 +42,7 @@
             <ul aria-labelledby="api">
               <li><a href="api/animation" >Animation</a></li>
               <li><a href="api/assets" >Assets</a></li>
+              <li><a href="api/button" >Button</a></li>
               <li><a href="api/collision" >Collision</a></li>
               <li><a href="api/core" >Core</a></li>
               <li><a href="api/events" >Events</a></li>
@@ -73,7 +74,7 @@
 
         <p>A simple pointer API. You can use it move the main sprite or respond to a pointer event. Works with both mouse and touch events.</p>
 <p>Pointer events can be added on a global level or on individual sprites or objects. Before an object can receive pointer events, you must tell the pointer which objects to track and the object must haven been rendered to the canvas using <code>object.render()</code>.</p>
-<p>After an object is tracked and rendered, you can assign it an <code>onDown()</code>, <code>onUp()</code>, or <code>onOver()</code> functions which will be called whenever a pointer down, up, or over event happens on the object.</p>
+<p>After an object is tracked and rendered, you can assign it an <code>onDown()</code>, <code>onUp()</code>, <code>onOver()</code>, or <code>onOut()</code> functions which will be called whenever a pointer down, up, over, or out event happens on the object.</p>
 <div class="tablist">
   <ul role="tablist">
     <li role="presentation" data-tab="global">
@@ -102,6 +103,9 @@ let sprite = Sprite({
   },
   onOver: function() {
     // handle on over events on the sprite
+  },
+  onOut: function() {
+    // handle on out events on the sprite
   }
 });
 
@@ -122,6 +126,9 @@ let sprite = Sprite({
   },
   onOver: function() {
     // handle on over events on the sprite
+  },
+  onOut: function() {
+    // handle on out events on the sprite
   }
 });
 
@@ -142,6 +149,9 @@ let sprite = Sprite({
   },
   onOver: function() {
     // handle on over events on the sprite
+  },
+  onOut: function() {
+    // handle on out events on the sprite
   }
 });
 

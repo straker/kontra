@@ -359,6 +359,35 @@ describe('pointer', () => {
         expect(object.onOver.called).to.be.ok;
       });
 
+      it('should call the objects onOut function if it is no longer the target', () => {
+        object.onOut = sinon.spy();
+        simulateEvent('mousemove', {clientX: 105, clientY: 55});
+        simulateEvent('mousemove', {clientX: 150, clientY: 55});
+
+        expect(object.onOut.called).to.be.ok;
+      });
+
+      it('should call the objects onOut function if another object is the target', () => {
+        let obj = {
+          x: 150,
+          y: 50,
+          width: 10,
+          height: 20,
+          render: sinon.spy()
+        };
+        pointer.track(obj);
+        object.render();
+        obj.render();
+        emit('tick');
+
+        object.onOut = sinon.spy();
+        simulateEvent('mousemove', {clientX: 105, clientY: 55});
+        simulateEvent('mousemove', {clientX: 155, clientY: 55});
+
+        expect(pointer.pointerOver(obj)).to.be.ok;
+        expect(object.onOut.called).to.be.ok;
+      });
+
       it('should take into account object anchor', () => {
         object.anchor = {
           x: 0.5,

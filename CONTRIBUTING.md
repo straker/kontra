@@ -8,7 +8,7 @@ The goal of Kontra is not to implement everything you could possibly need to mak
 
 Instead, Kontra aims to implement basic game requirements like asset loading, input, the game loop, and spites to keep the library very small and focused. This allows it to be used when your game size is limited (like the [js13k games competition](https://js13kgames.com/)).
 
-### Features Kontra won't support
+### Features Kontra Won't Support
 
 Below is a list of features the library will not support or add:
 

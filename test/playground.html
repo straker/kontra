@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kontra Playground</title>
+  <style>
+  html, body {
+    height: 100%;
+  }
+  body {
+    background: black;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .container {
+    max-height: 672px;
+    height: 100%;
+    max-width: 480px;
+    width: 100%;
+    text-align: center;
+  }
+  canvas {
+      border: 1px solid white;
+      max-height: 100%;
+      height: auto;
+      max-width: 100%;
+      width: auto;
+  }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <canvas id="game" width="480" height="672"></canvas>
+  </div>
+  <script src="../kontra.js"></script>
+  <script>
+    let { canvas, context } = kontra.init();
+
+    sprite = kontra.Sprite({
+      x: 100,
+      y: 100,
+      width: 20,
+      height: 40,
+      color: 'red'
+    });
+
+    loop = kontra.GameLoop({
+      update() {
+        sprite.update();
+      },
+      render() {
+        sprite.render();
+      }
+    });
+
+    loop.start();
+  </script>
+</body>
+</html>

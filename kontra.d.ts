@@ -35,21 +35,6 @@ declare namespace kontra {
   function loadAudio(url: string): Promise<HTMLAudioElement>;
   function loadData(url: string): Promise<any>;
   function load(...urls: string[]): Promise<any[]>;
-  function collides(object1: object, object2: object): boolean | null;
-  interface GameLoop {
-    update(dt?: number): void;
-    render(): void;
-    isStopped: boolean;
-    start(): void;
-    stop(): void;
-  }
-  interface GameLoopConstructor {
-    readonly class: GameLoopConstructor;
-    readonly prototype: GameLoop;
-    new(properties: {update: (dt?: number) => void, render: Function, fps?: number, clearCanvas?: boolean}): GameLoop;
-    (properties: {update: (dt?: number) => void, render: Function, fps?: number, clearCanvas?: boolean}): GameLoop;
-  }
-  var GameLoop: GameLoopConstructor
   interface Vector {
     add(vector: Vector | {x: number, y: number}, dt?: number): Vector;
     clamp(xMin: number, yMin: number, xMax: number, yMax: number): void;
@@ -104,6 +89,50 @@ declare namespace kontra {
     (properties?: {x?: number, y?: number, dx?: number, dy?: number, ddx?: number, ddy?: number, width?: number, height?: number, ttl?: number, rotation?: number, anchor?: {x: number, y: number}, context?: CanvasRenderingContext2D, update?: (dt?: number) => void, render?: Function, [props: string]: any}): GameObject;
   }
   var GameObject: GameObjectConstructor
+  interface Text extends GameObject {
+    textAlign: string;
+    font: string;
+    color: string;
+    text: string;
+  }
+  interface TextConstructor {
+    readonly class: TextConstructor;
+    readonly prototype: Text;
+    new(properties: {text: string, font?: string, color?: string, width?: number, textAlign?: string, x?: number, y?: number, dx?: number, dy?: number, ddx?: number, ddy?: number, height?: number, ttl?: number, rotation?: number, anchor?: {x: number, y: number}, context?: CanvasRenderingContext2D, update?: (dt?: number) => void, render?: Function, [props: string]: any}): Text;
+    (properties: {text: string, font?: string, color?: string, width?: number, textAlign?: string, x?: number, y?: number, dx?: number, dy?: number, ddx?: number, ddy?: number, height?: number, ttl?: number, rotation?: number, anchor?: {x: number, y: number}, context?: CanvasRenderingContext2D, update?: (dt?: number) => void, render?: Function, [props: string]: any}): Text;
+  }
+  var Text: TextConstructor
+  interface Button extends Text {
+    Destroy(): void;
+    enable(): void;
+    disabled: boolean;
+    disable(): void;
+    focus(): void;
+    focused: boolean;
+    blur(): void;
+  }
+  interface ButtonConstructor {
+    readonly class: ButtonConstructor;
+    readonly prototype: Button;
+    new(properties: {onEnable?: Function, onDisable?: Function, onFocus?: Function, onBlur?: Function, onUp?: Function, text: string, font?: string, color?: string, width?: number, textAlign?: string, x?: number, y?: number, dx?: number, dy?: number, ddx?: number, ddy?: number, height?: number, ttl?: number, rotation?: number, anchor?: {x: number, y: number}, context?: CanvasRenderingContext2D, update?: (dt?: number) => void, render?: Function, [props: string]: any}): Button;
+    (properties: {onEnable?: Function, onDisable?: Function, onFocus?: Function, onBlur?: Function, onUp?: Function, text: string, font?: string, color?: string, width?: number, textAlign?: string, x?: number, y?: number, dx?: number, dy?: number, ddx?: number, ddy?: number, height?: number, ttl?: number, rotation?: number, anchor?: {x: number, y: number}, context?: CanvasRenderingContext2D, update?: (dt?: number) => void, render?: Function, [props: string]: any}): Button;
+  }
+  var Button: ButtonConstructor
+  function collides(object1: object, object2: object): boolean | null;
+  interface GameLoop {
+    update(dt?: number): void;
+    render(): void;
+    isStopped: boolean;
+    start(): void;
+    stop(): void;
+  }
+  interface GameLoopConstructor {
+    readonly class: GameLoopConstructor;
+    readonly prototype: GameLoop;
+    new(properties: {update: (dt?: number) => void, render: Function, fps?: number, clearCanvas?: boolean}): GameLoop;
+    (properties: {update: (dt?: number) => void, render: Function, fps?: number, clearCanvas?: boolean}): GameLoop;
+  }
+  var GameLoop: GameLoopConstructor
   var keyMap: {[key in (string | number)]: string};
   function initKeys(): void;
   function bindKeys(keys: string | string[], callback: (evt: KeyboardEvent) => void): void;
@@ -183,19 +212,6 @@ declare namespace kontra {
   var SpriteSheet: SpriteSheetConstructor
   function setStoreItem(key: string, value: any): void;
   function getStoreItem(key: string): any;
-  interface Text extends GameObject {
-    color: string;
-    textAlign: string;
-    text: string;
-    font: string;
-  }
-  interface TextConstructor {
-    readonly class: TextConstructor;
-    readonly prototype: Text;
-    new(properties: {text: string, font: string, color: string, width?: number, textAlign?: string, x?: number, y?: number, dx?: number, dy?: number, ddx?: number, ddy?: number, height?: number, ttl?: number, rotation?: number, anchor?: {x: number, y: number}, context?: CanvasRenderingContext2D, update?: (dt?: number) => void, render?: Function, [props: string]: any}): Text;
-    (properties: {text: string, font: string, color: string, width?: number, textAlign?: string, x?: number, y?: number, dx?: number, dy?: number, ddx?: number, ddy?: number, height?: number, ttl?: number, rotation?: number, anchor?: {x: number, y: number}, context?: CanvasRenderingContext2D, update?: (dt?: number) => void, render?: Function, [props: string]: any}): Text;
-  }
-  var Text: TextConstructor
   interface TileEngine {
     width: number;
     height: number;

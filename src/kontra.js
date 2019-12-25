@@ -11,6 +11,7 @@ export {
   loadData,
   load
 } from './assets.js'
+export { default as Button } from './button.js'
 export { init, getCanvas, getContext } from './core.js'
 export { on, off, emit } from './events.js'
 export { default as GameLoop } from './gameLoop.js'

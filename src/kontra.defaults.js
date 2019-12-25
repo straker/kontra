@@ -11,6 +11,7 @@ import {
   loadData,
   load
 } from './assets.js'
+import Button from './button.js'
 import { collides } from './collision.js'
 import { init, getCanvas, getContext } from './core.js'
 import { on, off, emit } from './events.js'
@@ -50,6 +51,8 @@ let kontra = {
   loadAudio,
   loadData,
   load,
+
+  Button,
 
   collides,
 

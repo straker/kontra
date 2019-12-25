@@ -42,6 +42,7 @@
             <ul aria-labelledby="api">
               <li><a href="api/animation" >Animation</a></li>
               <li><a href="api/assets" >Assets</a></li>
+              <li><a href="api/button" >Button</a></li>
               <li><a href="api/collision" >Collision</a></li>
               <li><a href="api/core" >Core</a></li>
               <li><a href="api/events" >Events</a></li>
@@ -73,7 +74,7 @@
         </h1>
 
         <p>An object for drawing text to the screen. Supports newline characters as well as automatic new lines when setting the <code>width</code> property.</p>
-<p>You can also display RTL languages by setting the attribute <code>dir=&quot;rtl&quot;</code> on the main canvas element. Due to the limited support for individual text to have RTL settings, it must be set globally for the entire game.</p>
+<p>You can also display RTL languages by setting the attribute <code>dir=&quot;rtl&quot;</code> on the main canvas element. Due to the limited browser support for individual text to have RTL settings, it must be set globally for the entire game.</p>
 <div class="tablist">
   <ul role="tablist">
     <li role="presentation" data-tab="global">
@@ -138,15 +139,15 @@ text.render();</code></pre></section>
         </dd>
           <dt>
             <code>properties.font</code>
-            
+            <span class="optional">Optional</span>
           </dt>
-          <dd><p>String. The <a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/font">font</a> style.</p>
+          <dd><p>String. The <a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/font">font</a> style. Defaults to the main context font.</p>
         </dd>
           <dt>
             <code>properties.color</code>
-            
+            <span class="optional">Optional</span>
           </dt>
-          <dd><p>String. Fill color for the text.</p>
+          <dd><p>String. Fill color for the text. Defaults to the main context fillStyle.</p>
         </dd>
           <dt>
             <code>properties.width</code>

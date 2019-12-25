@@ -147,6 +147,10 @@ function init(canvas) {
  */
 const noop = () => {};
 
+/**
+ * Factory function that wraps all kontra classes.
+ * @param {Object} classObj - Class to wrap in a factory function
+ */
 function Factory(classObj) {
   function factory() {
     return new classObj(...arguments);
@@ -156,6 +160,9 @@ function Factory(classObj) {
 
   return factory;
 }
+
+// style used for DOM nodes needed for screen readers
+const srOnlyStyle = 'position:absolute;left:-9999px';
 
 /**
  * An object for drawing sprite sheet animations.
@@ -755,241 +762,6 @@ function load(...urls) {
 
 
 // Override the getCanPlay function to provide a specific return type for tests
-
-/**
- * A collection of collision detection functions.
- *
- * @sectionName Collision
- */
-
-/**
- * Check if a two objects collide. Uses a simple [Axis-Aligned Bounding Box (AABB) collision check](https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection#Axis-Aligned_Bounding_Box). Takes into account the sprites [anchor](api/sprite#anchor).
- *
- * **NOTE:** Does not take into account object rotation. If you need collision detection between rotated objects you will need to implement your own `collides()` function. I suggest looking at the Separate Axis Theorem.
- *
- *
- * ```js
- * import { Sprite, collides } from 'kontra';
- *
- * let sprite = Sprite({
- *   x: 100,
- *   y: 200,
- *   width: 20,
- *   height: 40
- * });
- *
- * let sprite2 = Sprite({
- *   x: 150,
- *   y: 200,
- *   width: 20,
- *   height: 20
- * });
- *
- * collides(sprite, sprite2);  //=> false
- *
- * sprite2.x = 115;
- *
- * collides(sprite, sprite2);  //=> true
- * ```
- * @function collides
- *
- * @param {Object} object1 - Object reference.
- * @param {Object} object2 - Object to check collision against.
- *
- * @returns {Boolean|null} `true` if the objects collide, `false` otherwise. Will return `null` if the either of the two objects are rotated.
- */
-
-function collides(object1, object2) {
-  if (object1.rotation || object2.rotation) return null;
-
-  // take into account object1 anchors
-  let x = object1.x;
-  let y = object1.y;
-  if (object1.anchor) {
-    x -= object1.width * object1.anchor.x;
-    y -= object1.height * object1.anchor.y;
-  }
-
-  let objX = object2.x;
-  let objY = object2.y;
-  if (object2.anchor) {
-    objX -= object2.width * object2.anchor.x;
-    objY -= object2.height * object2.anchor.y;
-  }
-
-  return x < objX + object2.width &&
-         x + object1.width > objX &&
-         y < objY + object2.height &&
-         y + object1.height > objY;
-}
-
-/**
- * Clear the canvas.
- */
-function clear() {
-  let canvas = getCanvas();
-  getContext().clearRect(0, 0, canvas.width, canvas.height);
-}
-
-/**
- * The game loop updates and renders the game every frame. The game loop is stopped by default and will not start until the loops `start()` function is called.
- *
- * The game loop uses a time-based animation with a fixed `dt` to [avoid frame rate issues](http://blog.sklambert.com/using-time-based-animation-implement/). Each update call is guaranteed to equal 1/60 of a second.
- *
- * This means that you can avoid having to do time based calculations in your update functions  and instead do fixed updates.
- *
- * ```js
- * import { Sprite, GameLoop } from 'kontra';
- *
- * let sprite = Sprite({
- *   x: 100,
- *   y: 200,
- *   width: 20,
- *   height: 40,
- *   color: 'red'
- * });
- *
- * let loop = GameLoop({
- *   update: function(dt) {
- *     // no need to determine how many pixels you want to
- *     // move every second and multiple by dt
- *     // sprite.x += 180 * dt;
- *
- *     // instead just update by how many pixels you want
- *     // to move every frame and the loop will ensure 60FPS
- *     sprite.x += 3;
- *   },
- *   render: function() {
- *     sprite.render();
- *   }
- * });
- *
- * loop.start();
- * ```
- * @class GameLoop
- *
- * @param {Object}   properties - Properties of the game loop.
- * @param {(dt?: Number) => void} properties.update - Function called every frame to update the game. Is passed the fixed `dt` as a parameter.
- * @param {Function} properties.render - Function called every frame to render the game.
- * @param {Number}   [properties.fps=60] - Desired frame rate.
- * @param {Boolean}  [properties.clearCanvas=true] - Clear the canvas every frame before the `render()` function is called.
- */
-function GameLoop({fps = 60, clearCanvas = true, update, render} = {}) {
-  // check for required functions
-  // @ifdef DEBUG
-  if ( !(update && render) ) {
-    throw Error('You must provide update() and render() functions');
-  }
-  // @endif
-
-  // animation variables
-  let accumulator = 0;
-  let delta = 1E3 / fps;  // delta between performance.now timings (in ms)
-  let step = 1 / fps;
-  let clearFn = clearCanvas ? clear : noop;
-  let last, rAF, now, dt, loop;
-
-  /**
-   * Called every frame of the game loop.
-   */
-  function frame() {
-    rAF = requestAnimationFrame(frame);
-
-    now = performance.now();
-    dt = now - last;
-    last = now;
-
-    // prevent updating the game with a very large dt if the game were to lose focus
-    // and then regain focus later
-    if (dt > 1E3) {
-      return;
-    }
-
-    emit('tick');
-    accumulator += dt;
-
-    while (accumulator >= delta) {
-      loop.update(step);
-
-      accumulator -= delta;
-    }
-
-    clearFn();
-    loop.render();
-  }
-
-  // game loop object
-  loop = {
-    /**
-     * Called every frame to update the game. Put all of your games update logic here.
-     * @memberof GameLoop
-     * @function update
-     *
-     * @param {Number} [dt] - The fixed dt time of 1/60 of a frame.
-     */
-    update,
-
-    /**
-     * Called every frame to render the game. Put all of your games render logic here.
-     * @memberof GameLoop
-     * @function render
-     */
-    render,
-
-    /**
-     * If the game loop is currently stopped.
-     *
-     * ```js
-     * import { GameLoop } from 'kontra';
-     *
-     * let loop = GameLoop({
-     *   // ...
-     * });
-     * console.log(loop.isStopped);  //=> true
-     *
-     * loop.start();
-     * console.log(loop.isStopped);  //=> false
-     *
-     * loop.stop();
-     * console.log(loop.isStopped);  //=> true
-     * ```
-     * @memberof GameLoop
-     * @property {Boolean} isStopped
-     */
-    isStopped: true,
-
-    /**
-     * Start the game loop.
-     * @memberof GameLoop
-     * @function start
-     */
-    start() {
-      last = performance.now();
-      this.isStopped = false;
-      requestAnimationFrame(frame);
-    },
-
-    /**
-     * Stop the game loop.
-     * @memberof GameLoop
-     * @function stop
-     */
-    stop() {
-      this.isStopped = true;
-      cancelAnimationFrame(rAF);
-    },
-
-    // expose properties for testing
-    // @ifdef DEBUG
-    _frame: frame,
-    set _last(value) {
-      last = value;
-    }
-    // @endif
-  };
-
-  return loop;
-}
 
 /**
  * A simple 2d vector object.
@@ -1676,6 +1448,589 @@ class GameObject {
 
 var GameObject$1 = Factory(GameObject);
 
+class Text extends GameObject$1.class {
+  /**
+   * An object for drawing text to the screen. Supports newline characters as well as automatic new lines when setting the `width` property.
+   *
+   * You can also display RTL languages by setting the attribute `dir="rtl"` on the main canvas element. Due to the limited browser support for individual text to have RTL settings, it must be set globally for the entire game.
+   *
+   * ```js
+   * import { Text } from 'kontra';
+   *
+   * let text = Text({
+   *   text: 'Hello World!',
+   *   font: '32px Arial',
+   *   color: 'black'
+   *   x: 100,
+   *   y: 100,
+   *   anchor: {x: 0.5, y: 0.5}
+   * });
+   * text.render();
+   * ```
+   * @class Text
+   * @extends GameObject
+   *
+   * @param {Object} properties - Properties of the text.
+   * @param {String} properties.text - The text to display.
+   * @param {String} [properties.font] - The [font](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/font) style. Defaults to the main context font.
+   * @param {String} [properties.color] - Fill color for the text. Defaults to the main context fillStyle.
+   * @param {Number} [properties.width] - Set a fixed width for the text. If set, the text will automatically be split into new lines that will fit the size when possible.
+   * @param {String} [properties.textAlign='left'] - The [textAlign](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/textAlign) for the context. If the `dir` attribute is set to `rtl` on the main canvas, the text will automatically be aligned to the right, but you can override that by setting this property.
+   */
+
+  init(properties) {
+
+    // --------------------------------------------------
+    // defaults
+    // --------------------------------------------------
+
+    /**
+     * The text alignment.
+     * @memberof Text
+     * @property {String} textAlign
+     */
+    this.textAlign = '';
+
+   /**
+    * The font style.
+    * @memberof Text
+    * @property {String} font
+    */
+    this.font = getContext().font;
+
+    /**
+     * The color of the text.
+     * @memberof Text
+     * @property {String} color
+     */
+
+    super.init(properties);
+
+    // p = prerender
+    this._p();
+  }
+
+  /**
+   * The string of text.
+   * @memberof Text
+   * @property {String} text
+   */
+  get text() {
+    // t = text
+    return this._t;
+  }
+
+  set text(value) {
+    this._t = value;
+
+    // d = dirty
+    this._d = true;
+  }
+
+  get font() {
+    // f = font
+    return this._f;
+  }
+
+  set font(value) {
+    this._f = value;
+
+    // fs = font size
+    this._fs = parseInt(value);
+    this._d = true;
+  }
+
+  get width() {
+    // w = width
+    return this._w;
+  }
+
+  set width(value) {
+    this._w = value;
+    this._d = true;
+
+    // @ifdef TEXT_AUTONEWLINE
+    // fw = fixed width
+    this._fw = value;
+    // @endif
+  }
+
+  render() {
+    if (this._d) {
+      this._p();
+    }
+    super.render();
+  }
+
+  /**
+   * Calculate the font width, height, and text strings before rendering.
+   */
+  _p() {
+    // s = strings
+    this._s = [];
+    this._d = false;
+    this.context.font = this.font;
+
+    // @ifdef TEXT_AUTONEWLINE
+    if (!this._s.length && this._fw) {
+      let parts = this._t.split(' ');
+      let start = 0;
+      let i = 2;
+
+      // split the string into lines that all fit within the fixed width
+      for (; i <= parts.length; i++) {
+        let str = parts.slice(start, i).join(' ');
+        let width = this.context.measureText(str).width;
+
+        if (width > this._fw) {
+          this._s.push(parts.slice(start, i - 1).join(' '));
+          start = i - 1;
+        }
+      }
+
+      this._s.push(parts.slice(start, i).join(' '));
+    }
+    // @endif
+
+    // @ifdef TEXT_NEWLINE
+    if (!this._s.length && this._t.includes('\n')) {
+      let width = 0;
+      this._t.split('\n').map(str => {
+        this._s.push(str);
+        width = Math.max(width, this.context.measureText(str).width);
+      });
+
+      this._w = width;
+    }
+    // @endif
+
+    if (!this._s.length) {
+      this._s.push(this.text);
+      this._w = this.context.measureText(this._t).width;
+    }
+
+    this.height = this._s.length * this._fs;
+  }
+
+  _dc(x, y) {
+    let alignX = x;
+    let textAlign = this.textAlign;
+
+    // @ifdef TEXT_RTL
+    textAlign = this.textAlign || (this.context.canvas.dir === 'rtl' ? 'right' : 'left');
+    // @endif
+
+    // @ifdef TEXT_ALIGN||TEXT_RTL
+    alignX = textAlign === 'right'
+      ? x + this.width
+      : textAlign === 'center'
+        ? x + this.width / 2 | 0
+        : x;
+    // @endif
+
+    this._s.map((str, index) => {
+      this.context.textBaseline = 'top';
+      this.context.textAlign = textAlign;
+      this.context.fillStyle = this.color;
+      this.context.font = this.font;
+      this.context.fillText(str, alignX, y + this._fs * index);
+    });
+  }
+}
+
+var Text$1 = Factory(Text);
+
+class Button extends Text$1.class {
+
+  /**
+   * An accessible button. Supports screen readers and keyboard navigation using the Tab key. Don't forget to call [initPointer](/api/pointer#initPointer) and [track](/api/pointer#track) to have pointer events enabled on the button.
+   *
+   * ```js
+   * import { initPointer, track, Button } from 'kontra';
+   * initPointer();
+   *
+   * button = Button({
+   *   x: 200,
+   *   y: 200,
+   *   text: 'Click me',
+   *   color: 'white',
+   *   font: '20px Arial',
+   *   onFocus() {
+   *     this.color = 'red';
+   *     canvas.style.cursor = 'pointer';
+   *   },
+   *   onBlur() {
+   *     this.color = 'white';
+   *     canvas.style.cursor = 'initial';
+   *   },
+   *   onDown() {
+   *     this.color = 'blue';
+   *   },
+   *   onUp() {
+   *     this.color = this.focused ? 'red' : 'white';
+   *     console.log('click');
+   *   }
+   * });
+   *
+   * track(button);
+   * button.render();
+   * ```js
+   *
+   * @class Button
+   * @extends Text
+   *
+   * @param {Object} properties - Properties of the button (in addition to all Text properties).
+   * @param {Function} [properties.onEnable] - Function called when the button is enabled.
+   * @param {Function} [properties.onDisable] - Function called when the button is disabled.
+   * @param {Function} [properties.onFocus] - Function called when the button is focused either by the pointer or keyboard.
+   * @param {Function} [properties.onBlur] - Function called when the button losses focus either by the pointer or keyboard.
+   * @param {Function} [properties.onUp] - Function called when the button is clicked either by the pointer or keyboard.
+   */
+  init(properties) {
+    super.init(properties);
+
+    // create an accessible DOM node for screen readers
+    // b = button
+    const button = this._b = document.createElement('button');
+    button.style = srOnlyStyle;
+    button.textContent = this.text;
+
+    // allow the DOM node to control the button
+    button.addEventListener('focus', () => this.focus());
+    button.addEventListener('blur', () => this.blur());
+    button.addEventListener('click', () => this.onUp());
+
+    document.body.appendChild(button);
+  }
+
+  /**
+   * Clean up the button.
+   * @memberof Button
+   * @function Destroy
+   */
+  destory() {
+    this._b.remove();
+  }
+
+  render() {
+    // update DOM node text if it has changed
+    if (this._d && this._t !== this._b.textContent) {
+      this._b.textContent = this._t;
+    }
+
+    super.render();
+  }
+
+  /**
+   * Enable the button.
+   * @memberof Button
+   * @function enable
+   */
+  enable() {
+
+    /**
+     * If the button is disabled.
+     * @memberof Button
+     * @property {Boolean} disabled
+     */
+    this.disabled = this._b.disabled = false;
+    this.onEnable();
+  }
+
+  /**
+   * Disable the button.
+   * @memberof Button
+   * @function disable
+   */
+  disable() {
+    this.disabled = this._b.disabled = true;
+    this.onDisable();
+  }
+
+  /**
+   * Focus the button.
+   * @memberof Button
+   * @function focus
+   */
+  focus() {
+
+    /**
+     * If the button is focused.
+     * @memberof Button
+     * @property {Boolean} focused
+     */
+    this.focused = true;
+    // prevent infinite loop
+    if (document.activeElement !== this._b) this._b.focus();
+
+    this.onFocus();
+  }
+
+  /**
+   * Blur the button.
+   * @memberof Button
+   * @function blur
+   */
+  blur() {
+    this.focused = false;
+    // prevent infinite loop
+    if (document.activeElement === this._b) this._b.blur();
+
+    this.onBlur();
+  }
+
+  onOver() {
+    this.focus();
+  }
+
+  onOut() {
+    this.blur();
+  }
+
+  onEnable() {}
+  onDisable() {}
+  onFocus() {}
+  onBlur() {}
+  onUp() {}
+}
+
+var Button$1 = Factory(Button);
+
+/**
+ * A collection of collision detection functions.
+ *
+ * @sectionName Collision
+ */
+
+/**
+ * Check if a two objects collide. Uses a simple [Axis-Aligned Bounding Box (AABB) collision check](https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection#Axis-Aligned_Bounding_Box). Takes into account the sprites [anchor](api/sprite#anchor).
+ *
+ * **NOTE:** Does not take into account object rotation. If you need collision detection between rotated objects you will need to implement your own `collides()` function. I suggest looking at the Separate Axis Theorem.
+ *
+ *
+ * ```js
+ * import { Sprite, collides } from 'kontra';
+ *
+ * let sprite = Sprite({
+ *   x: 100,
+ *   y: 200,
+ *   width: 20,
+ *   height: 40
+ * });
+ *
+ * let sprite2 = Sprite({
+ *   x: 150,
+ *   y: 200,
+ *   width: 20,
+ *   height: 20
+ * });
+ *
+ * collides(sprite, sprite2);  //=> false
+ *
+ * sprite2.x = 115;
+ *
+ * collides(sprite, sprite2);  //=> true
+ * ```
+ * @function collides
+ *
+ * @param {Object} object1 - Object reference.
+ * @param {Object} object2 - Object to check collision against.
+ *
+ * @returns {Boolean|null} `true` if the objects collide, `false` otherwise. Will return `null` if the either of the two objects are rotated.
+ */
+
+function collides(object1, object2) {
+  if (object1.rotation || object2.rotation) return null;
+
+  // take into account object1 anchors
+  let x = object1.x;
+  let y = object1.y;
+  if (object1.anchor) {
+    x -= object1.width * object1.anchor.x;
+    y -= object1.height * object1.anchor.y;
+  }
+
+  let objX = object2.x;
+  let objY = object2.y;
+  if (object2.anchor) {
+    objX -= object2.width * object2.anchor.x;
+    objY -= object2.height * object2.anchor.y;
+  }
+
+  return x < objX + object2.width &&
+         x + object1.width > objX &&
+         y < objY + object2.height &&
+         y + object1.height > objY;
+}
+
+/**
+ * Clear the canvas.
+ */
+function clear() {
+  let canvas = getCanvas();
+  getContext().clearRect(0, 0, canvas.width, canvas.height);
+}
+
+/**
+ * The game loop updates and renders the game every frame. The game loop is stopped by default and will not start until the loops `start()` function is called.
+ *
+ * The game loop uses a time-based animation with a fixed `dt` to [avoid frame rate issues](http://blog.sklambert.com/using-time-based-animation-implement/). Each update call is guaranteed to equal 1/60 of a second.
+ *
+ * This means that you can avoid having to do time based calculations in your update functions  and instead do fixed updates.
+ *
+ * ```js
+ * import { Sprite, GameLoop } from 'kontra';
+ *
+ * let sprite = Sprite({
+ *   x: 100,
+ *   y: 200,
+ *   width: 20,
+ *   height: 40,
+ *   color: 'red'
+ * });
+ *
+ * let loop = GameLoop({
+ *   update: function(dt) {
+ *     // no need to determine how many pixels you want to
+ *     // move every second and multiple by dt
+ *     // sprite.x += 180 * dt;
+ *
+ *     // instead just update by how many pixels you want
+ *     // to move every frame and the loop will ensure 60FPS
+ *     sprite.x += 3;
+ *   },
+ *   render: function() {
+ *     sprite.render();
+ *   }
+ * });
+ *
+ * loop.start();
+ * ```
+ * @class GameLoop
+ *
+ * @param {Object}   properties - Properties of the game loop.
+ * @param {(dt?: Number) => void} properties.update - Function called every frame to update the game. Is passed the fixed `dt` as a parameter.
+ * @param {Function} properties.render - Function called every frame to render the game.
+ * @param {Number}   [properties.fps=60] - Desired frame rate.
+ * @param {Boolean}  [properties.clearCanvas=true] - Clear the canvas every frame before the `render()` function is called.
+ */
+function GameLoop({fps = 60, clearCanvas = true, update, render} = {}) {
+  // check for required functions
+  // @ifdef DEBUG
+  if ( !(update && render) ) {
+    throw Error('You must provide update() and render() functions');
+  }
+  // @endif
+
+  // animation variables
+  let accumulator = 0;
+  let delta = 1E3 / fps;  // delta between performance.now timings (in ms)
+  let step = 1 / fps;
+  let clearFn = clearCanvas ? clear : noop;
+  let last, rAF, now, dt, loop;
+
+  /**
+   * Called every frame of the game loop.
+   */
+  function frame() {
+    rAF = requestAnimationFrame(frame);
+
+    now = performance.now();
+    dt = now - last;
+    last = now;
+
+    // prevent updating the game with a very large dt if the game were to lose focus
+    // and then regain focus later
+    if (dt > 1E3) {
+      return;
+    }
+
+    emit('tick');
+    accumulator += dt;
+
+    while (accumulator >= delta) {
+      loop.update(step);
+
+      accumulator -= delta;
+    }
+
+    clearFn();
+    loop.render();
+  }
+
+  // game loop object
+  loop = {
+    /**
+     * Called every frame to update the game. Put all of your games update logic here.
+     * @memberof GameLoop
+     * @function update
+     *
+     * @param {Number} [dt] - The fixed dt time of 1/60 of a frame.
+     */
+    update,
+
+    /**
+     * Called every frame to render the game. Put all of your games render logic here.
+     * @memberof GameLoop
+     * @function render
+     */
+    render,
+
+    /**
+     * If the game loop is currently stopped.
+     *
+     * ```js
+     * import { GameLoop } from 'kontra';
+     *
+     * let loop = GameLoop({
+     *   // ...
+     * });
+     * console.log(loop.isStopped);  //=> true
+     *
+     * loop.start();
+     * console.log(loop.isStopped);  //=> false
+     *
+     * loop.stop();
+     * console.log(loop.isStopped);  //=> true
+     * ```
+     * @memberof GameLoop
+     * @property {Boolean} isStopped
+     */
+    isStopped: true,
+
+    /**
+     * Start the game loop.
+     * @memberof GameLoop
+     * @function start
+     */
+    start() {
+      last = performance.now();
+      this.isStopped = false;
+      requestAnimationFrame(frame);
+    },
+
+    /**
+     * Stop the game loop.
+     * @memberof GameLoop
+     * @function stop
+     */
+    stop() {
+      this.isStopped = true;
+      cancelAnimationFrame(rAF);
+    },
+
+    // expose properties for testing
+    // @ifdef DEBUG
+    _frame: frame,
+    set _last(value) {
+      last = value;
+    }
+    // @endif
+  };
+
+  return loop;
+}
+
 /**
  * A minimalistic keyboard API. You can use it move the main sprite or respond to a key press.
  *
@@ -2045,7 +2400,7 @@ function extendObject(kontraObj, properties) {
  *
  * Pointer events can be added on a global level or on individual sprites or objects. Before an object can receive pointer events, you must tell the pointer which objects to track and the object must haven been rendered to the canvas using `object.render()`.
  *
- * After an object is tracked and rendered, you can assign it an `onDown()`, `onUp()`, or `onOver()` functions which will be called whenever a pointer down, up, or over event happens on the object.
+ * After an object is tracked and rendered, you can assign it an `onDown()`, `onUp()`, `onOver()`, or `onOut()` functions which will be called whenever a pointer down, up, over, or out event happens on the object.
  *
  * ```js
  * import { initPointer, track, Sprite } from 'kontra';
@@ -2063,6 +2418,9 @@ function extendObject(kontraObj, properties) {
  *   },
  *   onOver: function() {
  *     // handle on over events on the sprite
+ *   },
+ *   onOut: function() {
+ *     // handle on out events on the sprite
  *   }
  * });
  *
@@ -2104,6 +2462,7 @@ let lastFrameRenderOrder = [];
 let callbacks$2 = {};
 let trackedObjects = [];
 let pressedButtons = {};
+let overObject;
 
 /**
  * Below is a list of buttons that you can use.
@@ -2293,6 +2652,22 @@ function pointerHandler(evt, eventName) {
     let object = getCurrentObject();
     if (object && object[eventName]) {
       object[eventName](evt);
+
+      if (eventName === 'onOver') {
+
+        // blur previous hover object
+        if (overObject && object !== overObject && overObject.onOut) {
+          overObject.onOut(evt);
+        }
+        overObject = object;
+      }
+    }
+    // blur previous hover object
+    else if (eventName === 'onOver' && overObject) {
+      if (overObject.onOut) {
+        overObject.onOut(evt);
+      }
+      overObject = null;
     }
 
     if (callbacks$2[eventName]) {
@@ -3495,192 +3870,6 @@ function getStoreItem(key) {
   return value;
 }
 
-class Text extends GameObject$1.class {
-  /**
-   * An object for drawing text to the screen. Supports newline characters as well as automatic new lines when setting the `width` property.
-   *
-   * You can also display RTL languages by setting the attribute `dir="rtl"` on the main canvas element. Due to the limited support for individual text to have RTL settings, it must be set globally for the entire game.
-   *
-   * ```js
-   * import { Text } from 'kontra';
-   *
-   * let text = Text({
-   *   text: 'Hello World!',
-   *   font: '32px Arial',
-   *   color: 'black'
-   *   x: 100,
-   *   y: 100,
-   *   anchor: {x: 0.5, y: 0.5}
-   * });
-   * text.render();
-   * ```
-   * @class Text
-   * @extends GameObject
-   *
-   * @param {Object} properties - Properties of the text.
-   * @param {String} properties.text - The text to display.
-   * @param {String} properties.font - The [font](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/font) style.
-   * @param {String} properties.color - Fill color for the text.
-   * @param {Number} [properties.width] - Set a fixed width for the text. If set, the text will automatically be split into new lines that will fit the size when possible.
-   * @param {String} [properties.textAlign='left'] - The [textAlign](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/textAlign) for the context. If the `dir` attribute is set to `rtl` on the main canvas, the text will automatically be aligned to the right, but you can override that by setting this property.
-   */
-
-  init(properties) {
-
-    /**
-     * The color of the text.
-     * @memberof Text
-     * @property {String} color
-     */
-
-    /**
-     * The text alignment.
-     * @memberof Text
-     * @property {String} textAlign
-     */
-    this.textAlign = '';
-
-    super.init(properties);
-
-    // p = prerender
-    this._p();
-  }
-
-  /**
-   * The string of text.
-   * @memberof Text
-   * @property {String} text
-   */
-  get text() {
-    // t = text
-    return this._t;
-  }
-
-  set text(value) {
-    this._t = value;
-
-    // d = dirty
-    this._d = true;
-  }
-
-  /**
-   * The font style.
-   * @memberof Text
-   * @property {String} font
-   */
-  get font() {
-    // f = font
-    return this._f;
-  }
-
-  set font(value) {
-    this._f = value;
-
-    // fs = font size
-    this._fs = parseInt(value);
-    this._d = true;
-  }
-
-  get width() {
-    // w = width
-    return this._w;
-  }
-
-  set width(value) {
-    this._w = value;
-    this._d = true;
-
-    // @ifdef TEXT_AUTONEWLINE
-    // fw = fixed width
-    this._fw = value;
-    // @endif
-  }
-
-  render() {
-    if (this._d) {
-      this._p();
-    }
-    super.render();
-  }
-
-  /**
-   * Calculate the font width, height, and text strings before rendering.
-   */
-  _p() {
-    // s = strings
-    this._s = [];
-    this._d = false;
-    this.context.font = this.font;
-
-    // @ifdef TEXT_AUTONEWLINE
-    if (!this._s.length && this._fw) {
-      let parts = this._t.split(' ');
-      let start = 0;
-      let i = 2;
-
-      // split the string into lines that all fit within the fixed width
-      for (; i <= parts.length; i++) {
-        let str = parts.slice(start, i).join(' ');
-        let width = this.context.measureText(str).width;
-
-        if (width > this._fw) {
-          this._s.push(parts.slice(start, i - 1).join(' '));
-          start = i - 1;
-        }
-      }
-
-      this._s.push(parts.slice(start, i).join(' '));
-    }
-    // @endif
-
-    // @ifdef TEXT_NEWLINE
-    if (!this._s.length && this._t.includes('\n')) {
-      let width = 0;
-      this._t.split('\n').map(str => {
-        this._s.push(str);
-        width = Math.max(width, this.context.measureText(str).width);
-      });
-
-      this._w = width;
-    }
-    // @endif
-
-    if (!this._s.length) {
-      this._s.push(this.text);
-      this._w = this.context.measureText(this._t).width;
-    }
-
-    this.height = this._s.length * this._fs;
-  }
-
-  _dc(x, y) {
-    let alignX = x;
-    let textAlign = this.textAlign;
-
-    // @ifdef TEXT_RTL
-    textAlign = this.textAlign || (this.context.canvas.dir === 'rtl' ? 'right' : 'left');
-    // @endif
-
-    // @ifdef TEXT_ALIGN||TEXT_RTL
-    alignX = textAlign === 'right'
-      ? x + this.width
-      : textAlign === 'center'
-        ? x + this.width / 2 | 0
-        : x;
-    // @endif
-
-    this._s.map((str, index) => {
-      this.context.textBaseline = 'top';
-      this.context.textAlign = textAlign;
-      this.context.fillStyle = this.color;
-      this.context.font = this.font;
-      this.context.fillText(str, alignX, y + this._fs * index);
-    });
-  }
-}
-
-var Text$1 = Factory(Text);
-
 /**
  * A tile engine for managing and drawing tilesets.
  *
@@ -4298,6 +4487,8 @@ let kontra = {
   loadAudio,
   loadData,
   load,
+
+  Button: Button$1,
 
   collides,
 

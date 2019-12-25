@@ -6,7 +6,7 @@ import { on } from './events.js'
  *
  * Pointer events can be added on a global level or on individual sprites or objects. Before an object can receive pointer events, you must tell the pointer which objects to track and the object must haven been rendered to the canvas using `object.render()`.
  *
- * After an object is tracked and rendered, you can assign it an `onDown()`, `onUp()`, or `onOver()` functions which will be called whenever a pointer down, up, or over event happens on the object.
+ * After an object is tracked and rendered, you can assign it an `onDown()`, `onUp()`, `onOver()`, or `onOut()` functions which will be called whenever a pointer down, up, over, or out event happens on the object.
  *
  * ```js
  * import { initPointer, track, Sprite } from 'kontra';
@@ -24,6 +24,9 @@ import { on } from './events.js'
  *   },
  *   onOver: function() {
  *     // handle on over events on the sprite
+ *   },
+ *   onOut: function() {
+ *     // handle on out events on the sprite
  *   }
  * });
  *
@@ -65,6 +68,7 @@ let lastFrameRenderOrder = [];
 let callbacks = {};
 let trackedObjects = [];
 let pressedButtons = {};
+let overObject;
 
 /**
  * Below is a list of buttons that you can use.
@@ -254,6 +258,22 @@ function pointerHandler(evt, eventName) {
     let object = getCurrentObject();
     if (object && object[eventName]) {
       object[eventName](evt);
+
+      if (eventName === 'onOver') {
+
+        // blur previous hover object
+        if (overObject && object !== overObject && overObject.onOut) {
+          overObject.onOut(evt);
+        }
+        overObject = object;
+      }
+    }
+    // blur previous hover object
+    else if (eventName === 'onOver' && overObject) {
+      if (overObject.onOut) {
+        overObject.onOut(evt);
+      }
+      overObject = null;
     }
 
     if (callbacks[eventName]) {

@@ -38,8 +38,6 @@
   <script src="../kontra.js"></script>
   <script>
     let { canvas, context } = kontra.init();
-    kontra.initKeys();
-    kontra.initPointer();
 
     sprite = kontra.Sprite({
       x: 100,
@@ -49,45 +47,12 @@
       color: 'red'
     });
 
-    button = kontra.Button({
-      x: 200,
-      y: 200,
-      text: 'Click me',
-      color: 'white',
-      font: '20px Arial',
-      onFocus() {
-        this.color = 'red';
-        canvas.style.cursor = 'pointer';
-      },
-      onBlur() {
-        this.color = 'white';
-        canvas.style.cursor = 'initial';
-      },
-      onDown() {
-        this.color = 'blue';
-      },
-      onUp() {
-        this.color = this.focused ? 'red' : 'white';
-        console.log('click');
-      }
-    });
-
-    kontra.track(button);
-
     loop = kontra.GameLoop({
       update() {
-        // if (kontra.pointerOver(button)) {
-        //   button.focus();
-        //   canvas.style.cursor = 'pointer';
-        // }
-        // else {
-        //   button.blur();
-        //   canvas.style.cursor = 'initial';
-        // }
+        sprite.update();
       },
       render() {
         sprite.render();
-        button.render();
       }
     });
 

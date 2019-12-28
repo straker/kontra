@@ -4,5 +4,6 @@ coverage
 test/permutations/*.js
 test/permutations/*.spec.js
 test/typings/*.js
+test/playground.html
 
 !test/permutations/index.js

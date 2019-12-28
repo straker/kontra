@@ -53,6 +53,7 @@
               <li><a href="api/pointer" >Pointer</a></li>
               <li><a href="api/pool" >Pool</a></li>
               <li><a href="api/quadtree" >Quadtree</a></li>
+              <li><a href="api/scene" >Scene</a></li>
               <li><a href="api/sprite" >Sprite</a></li>
               <li><a href="api/spriteSheet" >SpriteSheet</a></li>
               <li><a href="api/store" >Store</a></li>
@@ -359,7 +360,7 @@
             </a>
           </h2>
 
-          <p>The game objects acceleration vector.</p>
+          <p><a href="api/vector">Vector</a>. The game objects acceleration vector.</p>
           
         </section>
         <section>
@@ -497,7 +498,7 @@ let gameObject = GameObject({
             </a>
           </h2>
 
-          <p>The x and y origin of the game object. {x:0, y:0} is the top left corner of the game object, {x:1, y:1} is the bottom right corner.</p>
+          <p>Object. The x and y origin of the game object. {x:0, y:0} is the top left corner of the game object, {x:1, y:1} is the bottom right corner.</p>
 <canvas id="game-canvas-0"></canvas>
 
 <div class="tablist">
@@ -645,7 +646,7 @@ gameObject.render();
             </a>
           </h2>
 
-          <p>The game objects children objects.</p>
+          <p>An Array of <a href="api/gameObjec">GameObject</a>s. The game objects children objects.</p>
           
         </section>
         <section>
@@ -656,7 +657,7 @@ gameObject.render();
             </a>
           </h2>
 
-          <p>The context the game object will draw to.</p>
+          <p>CanvasRenderingContext2D. The context the game object will draw to.</p>
           
         </section>
         <section>
@@ -667,7 +668,7 @@ gameObject.render();
             </a>
           </h2>
 
-          <p>X coordinate of the acceleration vector.</p>
+          <p>Number. X coordinate of the acceleration vector.</p>
           
         </section>
         <section>
@@ -678,7 +679,7 @@ gameObject.render();
             </a>
           </h2>
 
-          <p>Y coordinate of the acceleration vector.</p>
+          <p>Number. Y coordinate of the acceleration vector.</p>
           
         </section>
         <section>
@@ -775,7 +776,7 @@ gameObject.render();</code></pre></section>
             </a>
           </h2>
 
-          <p>X coordinate of the velocity vector.</p>
+          <p>Number. X coordinate of the velocity vector.</p>
           
         </section>
         <section>
@@ -786,7 +787,7 @@ gameObject.render();</code></pre></section>
             </a>
           </h2>
 
-          <p>Y coordinate of the velocity vector.</p>
+          <p>Number. Y coordinate of the velocity vector.</p>
           
         </section>
         <section>
@@ -797,7 +798,7 @@ gameObject.render();</code></pre></section>
             </a>
           </h2>
 
-          <p>The height of the game object.</p>
+          <p>Number. The height of the game object.</p>
           
         </section>
         <section>
@@ -842,7 +843,7 @@ gameObject.render();</code></pre></section>
             </a>
           </h2>
 
-          <p>The game objects local position vector, which is its position relative to a parent object. If the game object does not have a parent object, the local position will be the same as the <a href="api/gameObject#position">position vector</a>.</p>
+          <p><a href="api/vector">Vector</a>. The game objects local position vector, which is its position relative to a parent object. If the game object does not have a parent object, the local position will be the same as the <a href="api/gameObject#position">position vector</a>.</p>
           
         </section>
         <section>
@@ -853,7 +854,7 @@ gameObject.render();</code></pre></section>
             </a>
           </h2>
 
-          <p>The game objects local rotation, which is its rotation relative to a parent object. If the game object does not have a parent object, the local rotation will be the same as the <a href="api/gameObject#rotation">rotation</a>.</p>
+          <p>Number. The game objects local rotation, which is its rotation relative to a parent object. If the game object does not have a parent object, the local rotation will be the same as the <a href="api/gameObject#rotation">rotation</a>.</p>
           
         </section>
         <section>
@@ -864,7 +865,7 @@ gameObject.render();</code></pre></section>
             </a>
           </h2>
 
-          <p>The game objects parent object.</p>
+          <p><a href="api/gameObject">GameObject</a> or null. The game objects parent object.</p>
           
         </section>
         <section>
@@ -875,7 +876,7 @@ gameObject.render();</code></pre></section>
             </a>
           </h2>
 
-          <p>The game objects position vector. The game objects position is its position in the world, as opposed to the position in the <a href="api/gameObject#viewX">viewport</a> or <a href="api/gameObject#localPosition">local position</a>. Typically the position in the world, viewport, and local position are the same value. If the game object has been <a href="/api/tileEngine#addObject">added to a tileEngine</a>, the position vector represents where in the tile world the game object is while the viewport represents where to draw the game object in relation to the top-left corner of the canvas.</p>
+          <p><a href="api/vector">Vector</a>. The game objects position vector. The game objects position is its position in the world, as opposed to the position in the <a href="api/gameObject#viewX">viewport</a> or <a href="api/gameObject#localPosition">local position</a>. Typically the position in the world, viewport, and local position are the same value. If the game object has been <a href="/api/tileEngine#addObject">added to a tileEngine</a>, the position vector represents where in the tile world the game object is while the viewport represents where to draw the game object in relation to the top-left corner of the canvas.</p>
           
         </section>
         <section>
@@ -917,7 +918,7 @@ gameObject.render();</code></pre></section>
             </a>
           </h2>
 
-          <p>The rotation of the game object around the origin in radians. This rotation takes into account rotations from parent objects and represents the final rotation value.</p>
+          <p>Number. The rotation of the game object around the origin in radians. This rotation takes into account rotations from parent objects and represents the final rotation value.</p>
           
         </section>
         <section>
@@ -928,7 +929,7 @@ gameObject.render();</code></pre></section>
             </a>
           </h2>
 
-          <p>The X coordinate of the camera. Used to determine <a href="api/gameObject#viewX">viewX</a>.</p>
+          <p>Number. The X coordinate of the camera. Used to determine <a href="api/gameObject#viewX">viewX</a>.</p>
           
         </section>
         <section>
@@ -939,7 +940,7 @@ gameObject.render();</code></pre></section>
             </a>
           </h2>
 
-          <p>The Y coordinate of the camera. Used to determine <a href="api/gameObject#viewY">viewY</a>.</p>
+          <p>Number. The Y coordinate of the camera. Used to determine <a href="api/gameObject#viewY">viewY</a>.</p>
           
         </section>
         <section>
@@ -950,7 +951,7 @@ gameObject.render();</code></pre></section>
             </a>
           </h2>
 
-          <p>How may frames the game object should be alive. Primarily used by <a href="api/pool">Pool</a> to know when to recycle an object.</p>
+          <p>Number. How may frames the game object should be alive. Primarily used by <a href="api/pool">Pool</a> to know when to recycle an object.</p>
           
         </section>
         <section>
@@ -981,7 +982,7 @@ gameObject.render();</code></pre></section>
             </a>
           </h2>
 
-          <p>The game objects velocity vector.</p>
+          <p><a href="api/vector">Vector</a>. The game objects velocity vector.</p>
           
         </section>
         <section>
@@ -992,7 +993,7 @@ gameObject.render();</code></pre></section>
             </a>
           </h2>
 
-          <p>Readonly. X coordinate of where to draw the game object. Typically the same value as the <a href="api/gameObject#position">position vector</a> unless the game object has been <a href="api/tileEngine#addObject">added to a tileEngine</a>.</p>
+          <p>Number. Readonly. X coordinate of where to draw the game object. Typically the same value as the <a href="api/gameObject#position">position vector</a> unless the game object has been <a href="api/tileEngine#addObject">added to a tileEngine</a>.</p>
           
         </section>
         <section>
@@ -1003,7 +1004,7 @@ gameObject.render();</code></pre></section>
             </a>
           </h2>
 
-          <p>Readonly. Y coordinate of where to draw the game object. Typically the same value as the <a href="api/gameObject#position">position vector</a> unless the game object has been <a href="api/tileEngine#addObject">added to a tileEngine</a>.</p>
+          <p>Number. Readonly. Y coordinate of where to draw the game object. Typically the same value as the <a href="api/gameObject#position">position vector</a> unless the game object has been <a href="api/tileEngine#addObject">added to a tileEngine</a>.</p>
           
         </section>
         <section>
@@ -1014,7 +1015,7 @@ gameObject.render();</code></pre></section>
             </a>
           </h2>
 
-          <p>The width of the game object.</p>
+          <p>Number. The width of the game object.</p>
           
         </section>
         <section>
@@ -1025,7 +1026,7 @@ gameObject.render();</code></pre></section>
             </a>
           </h2>
 
-          <p>X coordinate of the position vector.</p>
+          <p>Number. X coordinate of the position vector.</p>
           
         </section>
         <section>
@@ -1036,7 +1037,7 @@ gameObject.render();</code></pre></section>
             </a>
           </h2>
 
-          <p>Y coordinate of the position vector.</p>
+          <p>Number. Y coordinate of the position vector.</p>
           
         </section>
 

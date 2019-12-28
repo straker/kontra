@@ -31,6 +31,7 @@ import {
 } from './pointer.js'
 import Pool from './pool.js'
 import Quadtree from './quadtree.js'
+import Scene from './scene.js'
 import Sprite from './sprite.js'
 import SpriteSheet from './spriteSheet.js'
 import { setStoreItem, getStoreItem } from './store.js'
@@ -88,6 +89,7 @@ let kontra = {
 
   Pool,
   Quadtree,
+  Scene,
   Sprite,
   SpriteSheet,
 

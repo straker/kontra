@@ -1,4 +1,4 @@
-// this file takes a long time to run as it tests each permutation of the sprite preprocess options. only run this test for prs.
+// this file takes a long time to run as it tests each permutation of the game object preprocess options. only run this test for prs.
 
 const fs = require('fs');
 const pp = require('preprocess');

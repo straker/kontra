@@ -51,8 +51,8 @@ class Button extends Text.class {
     super.init(properties);
 
     // create an accessible DOM node for screen readers
-    // b = button
-    const button = this._b = document.createElement('button');
+    // dn = dom node
+    const button = this._dn = document.createElement('button');
     button.style = srOnlyStyle;
     button.textContent = this.text;
 
@@ -67,23 +67,23 @@ class Button extends Text.class {
   /**
    * Clean up the button.
    * @memberof Button
-   * @function Destroy
+   * @function destroy
    */
-  destory() {
-    this._b.remove();
+  destroy() {
+    this._dn.remove();
   }
 
   render() {
     // update DOM node text if it has changed
-    if (this._d && this._t !== this._b.textContent) {
-      this._b.textContent = this._t;
+    if (this._d && this._t !== this._dn.textContent) {
+      this._dn.textContent = this._t;
     }
 
     super.render();
   }
 
   /**
-   * Enable the button.
+   * Enable the button. Calls [onEnable](/api/button#onEnable) if passed.
    * @memberof Button
    * @function enable
    */
@@ -94,22 +94,22 @@ class Button extends Text.class {
      * @memberof Button
      * @property {Boolean} disabled
      */
-    this.disabled = this._b.disabled = false;
+    this.disabled = this._dn.disabled = false;
     this.onEnable();
   }
 
   /**
-   * Disable the button.
+   * Disable the button. Calls [onDisable](/api/button#onDisable) if passed.
    * @memberof Button
    * @function disable
    */
   disable() {
-    this.disabled = this._b.disabled = true;
+    this.disabled = this._dn.disabled = true;
     this.onDisable();
   }
 
   /**
-   * Focus the button.
+   * Focus the button. Calls [onFOcus](/api/button#onFOcus) if passed.
    * @memberof Button
    * @function focus
    */
@@ -122,20 +122,20 @@ class Button extends Text.class {
      */
     this.focused = true;
     // prevent infinite loop
-    if (document.activeElement != this._b) this._b.focus();
+    if (document.activeElement != this._dn) this._dn.focus();
 
     this.onFocus();
   }
 
   /**
-   * Blur the button.
+   * Blur the button. Calls [onBlur](/api/button#onBlur) if passed.
    * @memberof Button
    * @function blur
    */
   blur() {
     this.focused = false;
     // prevent infinite loop
-    if (document.activeElement == this._b) this._b.blur();
+    if (document.activeElement == this._dn) this._dn.blur();
 
     this.onBlur();
   }
@@ -148,10 +148,34 @@ class Button extends Text.class {
     this.blur();
   }
 
+  /**
+   * Function called when then button is enabled. Override this function to have the button do something when enabled.
+   * @memberof Button
+   * @function onEnable
+   */
   onEnable() {}
+
+  /**
+   * Function called when then button is disabled. Override this function to have the button do something when disabled.
+   * @memberof Button
+   * @function onDisable
+   */
   onDisable() {}
+
+  /**
+   * Function called when then button is focused. Override this function to have the button do something when focused.
+   * @memberof Button
+   * @function onFocus
+   */
   onFocus() {}
+
+  /**
+   * Function called when then button is blurred. Override this function to have the button do something when blurred.
+   * @memberof Button
+   * @function onBlur
+   */
   onBlur() {}
+
   onUp() {}
 }
 

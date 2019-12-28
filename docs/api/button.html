@@ -53,6 +53,7 @@
               <li><a href="api/pointer" >Pointer</a></li>
               <li><a href="api/pool" >Pool</a></li>
               <li><a href="api/quadtree" >Quadtree</a></li>
+              <li><a href="api/scene" >Scene</a></li>
               <li><a href="api/sprite" >Sprite</a></li>
               <li><a href="api/spriteSheet" >SpriteSheet</a></li>
               <li><a href="api/store" >Store</a></li>
@@ -242,13 +243,13 @@ button.render();
               <h3 id="methods">Methods</h3>
               <ul aria-labelledby="methods">
                 <li>
-                  <a href="api/button#Destroy">
-                    <span>Button&#8203;.Destroy(&#8203;)</span>
+                  <a href="api/button#blur">
+                    <span>Button&#8203;.blur(&#8203;)</span>
                   </a>
                 </li>
                 <li>
-                  <a href="api/button#blur">
-                    <span>Button&#8203;.blur(&#8203;)</span>
+                  <a href="api/button#destroy">
+                    <span>Button&#8203;.destroy(&#8203;)</span>
                   </a>
                 </li>
                 <li>
@@ -266,23 +267,32 @@ button.render();
                     <span>Button&#8203;.focus(&#8203;)</span>
                   </a>
                 </li>
+                <li>
+                  <a href="api/button#onBlur">
+                    <span>Button&#8203;.onBlur(&#8203;)</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="api/button#onDisable">
+                    <span>Button&#8203;.onDisable(&#8203;)</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="api/button#onEnable">
+                    <span>Button&#8203;.onEnable(&#8203;)</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="api/button#onFocus">
+                    <span>Button&#8203;.onFocus(&#8203;)</span>
+                  </a>
+                </li>
               </ul>
             </li>
           </ul>
         </section>
 
 
-        <section>
-          <h2 id="Destroy">
-            <a href="api/button#Destroy" class="section-link">
-              <span>Button&#8203;.Destroy(&#8203;)</span>
-              <span aria-hidden="true">#</span>
-            </a>
-          </h2>
-
-          <p>Clean up the button.</p>
-          
-        </section>
         <section>
           <h2 id="blur">
             <a href="api/button#blur" class="section-link">
@@ -291,7 +301,18 @@ button.render();
             </a>
           </h2>
 
-          <p>Blur the button.</p>
+          <p>Blur the button. Calls <a href="/api/button#onBlur">onBlur</a> if passed.</p>
+          
+        </section>
+        <section>
+          <h2 id="destroy">
+            <a href="api/button#destroy" class="section-link">
+              <span>Button&#8203;.destroy(&#8203;)</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
+
+          <p>Clean up the button.</p>
           
         </section>
         <section>
@@ -302,7 +323,7 @@ button.render();
             </a>
           </h2>
 
-          <p>Disable the button.</p>
+          <p>Disable the button. Calls <a href="/api/button#onDisable">onDisable</a> if passed.</p>
           
         </section>
         <section>
@@ -313,7 +334,7 @@ button.render();
             </a>
           </h2>
 
-          <p>If the button is disabled.</p>
+          <p>Boolean. If the button is disabled.</p>
           
         </section>
         <section>
@@ -324,7 +345,7 @@ button.render();
             </a>
           </h2>
 
-          <p>Enable the button.</p>
+          <p>Enable the button. Calls <a href="/api/button#onEnable">onEnable</a> if passed.</p>
           
         </section>
         <section>
@@ -335,7 +356,7 @@ button.render();
             </a>
           </h2>
 
-          <p>Focus the button.</p>
+          <p>Focus the button. Calls <a href="/api/button#onFOcus">onFOcus</a> if passed.</p>
           
         </section>
         <section>
@@ -346,7 +367,51 @@ button.render();
             </a>
           </h2>
 
-          <p>If the button is focused.</p>
+          <p>Boolean. If the button is focused.</p>
+          
+        </section>
+        <section>
+          <h2 id="onBlur">
+            <a href="api/button#onBlur" class="section-link">
+              <span>Button&#8203;.onBlur(&#8203;)</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
+
+          <p>Function called when then button is blurred. Override this function to have the button do something when blurred.</p>
+          
+        </section>
+        <section>
+          <h2 id="onDisable">
+            <a href="api/button#onDisable" class="section-link">
+              <span>Button&#8203;.onDisable(&#8203;)</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
+
+          <p>Function called when then button is disabled. Override this function to have the button do something when disabled.</p>
+          
+        </section>
+        <section>
+          <h2 id="onEnable">
+            <a href="api/button#onEnable" class="section-link">
+              <span>Button&#8203;.onEnable(&#8203;)</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
+
+          <p>Function called when then button is enabled. Override this function to have the button do something when enabled.</p>
+          
+        </section>
+        <section>
+          <h2 id="onFocus">
+            <a href="api/button#onFocus" class="section-link">
+              <span>Button&#8203;.onFocus(&#8203;)</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
+
+          <p>Function called when then button is focused. Override this function to have the button do something when focused.</p>
           
         </section>
 

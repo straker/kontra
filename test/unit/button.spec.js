@@ -1,6 +1,6 @@
 import Button from '../../src/button.js';
 import { init, getCanvas, getContext } from '../../src/core.js'
-import { noop, srOnlyStyle } from '../../src/utils.js'
+import { srOnlyStyle } from '../../src/utils.js'
 
 if (!getCanvas()) {
   let canvas = document.createElement('canvas');
@@ -9,7 +9,7 @@ if (!getCanvas()) {
 }
 
 // --------------------------------------------------
-// text
+// button
 // --------------------------------------------------
 describe('button', () => {
 
@@ -21,7 +21,7 @@ describe('button', () => {
   });
 
   afterEach(() => {
-    button.destory();
+    button.destroy();
   });
 
   // --------------------------------------------------
@@ -29,37 +29,72 @@ describe('button', () => {
   // --------------------------------------------------
   describe('init', () => {
 
+    it('should setup basic properties', () => {
+      button = Button({
+        text: 'Hello',
+        font: '32px Arial',
+        width: 100,
+        color: 'black'
+      });
+
+      expect(button.width).to.equal(100);
+      expect(button.height).to.equal(32);
+      expect(button.font).to.equal('32px Arial');
+      expect(button.text).to.equal('Hello');
+      expect(button.color).to.equal('black');
+    });
+
     it('should create a DOM node and add it to the page', () => {
-      expect(button._b).to.exist;
-      expect(button._b instanceof HTMLButtonElement).to.be.true;
-      expect(button._b.textContent).to.equal('Hello');
-      expect(document.body.contains(button._b));
+      expect(button._dn).to.exist;
+      expect(button._dn instanceof HTMLButtonElement).to.be.true;
+      expect(button._dn.textContent).to.equal('Hello');
+      expect(document.body.contains(button._dn)).to.be.true;
     });
 
     it('should hide the DOM node', () => {
       srOnlyStyle.split(';').forEach(style => {
         let parts = style.split(':');
-        expect(button._b.style[ parts[0] ]).to.equal(parts[1]);
+        expect(button._dn.style[ parts[0] ]).to.equal(parts[1]);
       });
     });
 
     it('should setup focus event listeners on the DOM node', () => {
       sinon.spy(button, 'focus');
-      button._b.focus();
+      button._dn.focus();
+
       expect(button.focus.called).to.be.true;
     });
 
     it('should setup blur event listeners on the DOM node', () => {
       sinon.spy(button, 'blur');
-      button._b.focus();
-      button._b.blur();
+      button._dn.focus();
+      button._dn.blur();
+
       expect(button.blur.called).to.be.true;
     });
 
     it('should setup click event listeners on the DOM node', () => {
       sinon.spy(button, 'onUp');
-      button._b.click();
+      button._dn.click();
+
       expect(button.onUp.called).to.be.true;
+    });
+
+  });
+
+
+
+
+
+  // --------------------------------------------------
+  // destroy
+  // --------------------------------------------------
+  describe('destroy', () => {
+
+    it('should remove the DOM node', () => {
+      button.destroy();
+
+      expect(document.body.contains(button._dn)).to.be.false;
     });
 
   });
@@ -76,6 +111,7 @@ describe('button', () => {
     it('should update the DOM node text if the button text has changed', () => {
       button.text = 'World!';
       button.render();
+
       expect(button.text).to.equal('World!');
     });
 
@@ -92,26 +128,30 @@ describe('button', () => {
 
     it('should set the focused property', () => {
       button.focus();
+
       expect(button.focused).to.be.true;
     });
 
     it('should call onFocus', () => {
       sinon.spy(button, 'onFocus');
       button.focus();
+
       expect(button.onFocus.called).to.be.true;
     });
 
     it('should focus the DOM node', () => {
-      sinon.spy(button._b, 'focus');
+      sinon.spy(button._dn, 'focus');
       button.focus();
-      expect(button._b.focus.called).to.be.true;
+
+      expect(button._dn.focus.called).to.be.true;
     });
 
     it('should not focus the DOM node if it is already focused', () => {
-      button._b.focus();
-      sinon.spy(button._b, 'focus');
+      button._dn.focus();
+      sinon.spy(button._dn, 'focus');
       button.focus();
-      expect(button._b.focus.called).to.be.false;
+
+      expect(button._dn.focus.called).to.be.false;
     });
 
   });
@@ -131,27 +171,31 @@ describe('button', () => {
 
     it('should unset the focused property', () => {
       button.blur();
+
       expect(button.focused).to.be.false;
     });
 
     it('should call onBlur', () => {
       sinon.spy(button, 'onBlur');
       button.blur();
+
       expect(button.onBlur.called).to.be.true;
     });
 
     it('should blur the DOM node', () => {
-      button._b.focus();
-      sinon.spy(button._b, 'blur');
+      button._dn.focus();
+      sinon.spy(button._dn, 'blur');
       button.blur();
-      expect(button._b.blur.called).to.be.true;
+
+      expect(button._dn.blur.called).to.be.true;
     });
 
     it('should not blur the DOM node if it is already blurred', () => {
-      button._b.blur();
-      sinon.spy(button._b, 'blur');
+      button._dn.blur();
+      sinon.spy(button._dn, 'blur');
       button.blur();
-      expect(button._b.blur.called).to.be.false;
+
+      expect(button._dn.blur.called).to.be.false;
     });
 
   });
@@ -167,17 +211,20 @@ describe('button', () => {
 
     it('should unset the disabled property', () => {
       button.enable();
+
       expect(button.disabled).to.be.false;
     });
 
     it('should unset the DOM nodes disable property', () => {
       button.enable();
-      expect(button._b.disabled).to.be.false;
+
+      expect(button._dn.disabled).to.be.false;
     });
 
     it('should call onEnable', () => {
       sinon.spy(button, 'onEnable');
       button.enable();
+
       expect(button.onEnable.called).to.be.true;
     });
 
@@ -194,17 +241,20 @@ describe('button', () => {
 
     it('should set the disabled property', () => {
       button.disable();
+
       expect(button.disabled).to.be.true;
     });
 
     it('should set the DOM nodes disable property', () => {
       button.disable();
-      expect(button._b.disabled).to.be.true;
+
+      expect(button._dn.disabled).to.be.true;
     });
 
     it('should call onDisable', () => {
       sinon.spy(button, 'onDisable');
       button.disable();
+
       expect(button.onDisable.called).to.be.true;
     });
 
@@ -222,6 +272,7 @@ describe('button', () => {
     it('should call focus', () => {
       sinon.spy(button, 'focus');
       button.onOver();
+
       expect(button.focus.called).to.be.true;
     });
 
@@ -239,6 +290,7 @@ describe('button', () => {
     it('should call blur', () => {
       sinon.spy(button, 'blur');
       button.onOut();
+
       expect(button.blur.called).to.be.true;
     });
 

@@ -16,9 +16,17 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v1
 
-    - name: Install dependencies
+    - name: Setup node
       uses: actions/setup-node@v1
 
     - run: npm ci
     - run: npm run build
     - run: npm run dist
+
+    - name: Commit changed files
+      uses: stefanzweifel/git-auto-commit-action@v2.5.0
+      with:
+        commit_message: Commit built files
+        branch: ${{ github.head_ref }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

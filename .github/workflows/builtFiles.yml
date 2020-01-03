@@ -1,11 +1,11 @@
 name: BuiltFiles
 
-# Trigger the workflow on push or pull request
-on:
-  push:
-    paths:
-      - '**.js'
-      - '!test/**'
+on: push
+# on:
+#   push:
+#     paths:
+#       - '**.js'
+#       - '!test/**'
 
 jobs:
   build_docs:

@@ -12,8 +12,9 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
-    - name: Build development and distribution files
+    - name: Install dependencies and build docs, TypeScript declaration file, kontra.js, and kontra.min.js
       run: |
         npm ci
         npm run build
         npm run dist
+      working-directory: ./

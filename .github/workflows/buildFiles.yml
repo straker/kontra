@@ -13,47 +13,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v1
-    - name: Install dependencies and build docs, TypeScript declaration file, kontra.js, and kontra.min.js
+    - name: Checkout repository
+      uses: actions/checkout@v1
+
+    - name: Install dependencies
       uses: actions/setup-node@v1
-    - run: npm install
+
+    - run: npm ci
     - run: npm run build
     - run: npm run dist
-
-# jobs:
-#   build:
-#     name: Build
-#     runs-on: ubuntu-latest
-#     steps:
-#     - name: Install dependencies and build docs, TypeScript declaration file, kontra.js, and kontra.min.js
-#       run: |
-#         npm ci
-#         npm run build
-#         npm run dist
-#       working-directory: ./
-
-
-# name: Node.js CI
-
-# on: [push]
-
-# jobs:
-#   build:
-
-#     runs-on: ubuntu-latest
-
-#     strategy:
-#       matrix:
-#         node-version: [8.x, 10.x, 12.x]
-
-#     steps:
-#     - uses: actions/checkout@v1
-#     - name: Use Node.js ${{ matrix.node-version }}
-#       uses: actions/setup-node@v1
-#       with:
-#         node-version: ${{ matrix.node-version }}
-#     - run: npm install
-#     - run: npm run build --if-present
-#     - run: npm test
-#       env:
-#         CI: true

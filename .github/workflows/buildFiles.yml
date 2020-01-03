@@ -1,11 +1,10 @@
 name: BuildFiles
 
-on: push
-# on:
-#   push:
-#     paths:
-#       - '**.js'
-#       - '!test/**'
+on:
+  push:
+    paths:
+      - '**.js'
+      - '!test/**'
 
 jobs:
   build:
@@ -19,14 +18,24 @@ jobs:
     - name: Setup node
       uses: actions/setup-node@v1
 
-    - run: npm ci
-    - run: npm run build
-    - run: npm run dist
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Build
+      run: npm run build
+
+    - name: Dist
+      run: npm run dist
 
     - name: Commit changed files
-      uses: stefanzweifel/git-auto-commit-action@v2.5.0
+      uses: stefanzweifel/git-auto-commit-action@master
       with:
-        commit_message: Commit built files
+        commit_message: 📦 Build dist
         branch: ${{ github.head_ref }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}

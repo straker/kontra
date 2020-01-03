@@ -22,6 +22,14 @@ describe('kontra.defaults', () => {
     expect(kontra.load).to.exist;
   });
 
+  it('should add button api', () => {
+    expect(kontra.Button).to.exist;
+  });
+
+  it('should add collision api', () => {
+    expect(kontra.collides).to.exist;
+  });
+
   it('should add core api', () => {
     expect(kontra.init).to.exist;
     expect(kontra.getCanvas).to.exist;
@@ -38,7 +46,11 @@ describe('kontra.defaults', () => {
     expect(kontra.GameLoop).to.exist;
   });
 
-  it('should add keys api', () => {
+  it('should add gameObject api', () => {
+    expect(kontra.GameObject).to.exist;
+  });
+
+  it('should add keyboard api', () => {
     expect(kontra.keyMap).to.exist;
     expect(kontra.initKeys).to.exist;
     expect(kontra.bindKeys).to.exist;
@@ -71,6 +83,10 @@ describe('kontra.defaults', () => {
     expect(kontra.Quadtree).to.exist;
   });
 
+  it('should add scene api', () => {
+    expect(kontra.Scene).to.exist;
+  });
+
   it('should add sprite api', () => {
     expect(kontra.Sprite).to.exist;
   });
@@ -84,20 +100,16 @@ describe('kontra.defaults', () => {
     expect(kontra.setStoreItem).to.exist;
   });
 
+  it('should add text api', () => {
+    expect(kontra.Text).to.exist;
+  });
+
   it('should add tileEngine api', () => {
     expect(kontra.TileEngine).to.exist;
   });
 
   it('should add vector api', () => {
     expect(kontra.Vector).to.exist;
-  });
-
-  it('should add gameObject api', () => {
-    expect(kontra.GameObject).to.exist;
-  });
-
-  it('should add text api', () => {
-    expect(kontra.Text).to.exist;
   });
 
 });

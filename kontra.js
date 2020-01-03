@@ -1690,8 +1690,8 @@ class Button extends Text$1.class {
     super.init(properties);
 
     // create an accessible DOM node for screen readers
-    // b = button
-    const button = this._b = document.createElement('button');
+    // dn = dom node
+    const button = this._dn = document.createElement('button');
     button.style = srOnlyStyle;
     button.textContent = this.text;
 
@@ -1706,23 +1706,23 @@ class Button extends Text$1.class {
   /**
    * Clean up the button.
    * @memberof Button
-   * @function Destroy
+   * @function destroy
    */
-  destory() {
-    this._b.remove();
+  destroy() {
+    this._dn.remove();
   }
 
   render() {
     // update DOM node text if it has changed
-    if (this._d && this._t !== this._b.textContent) {
-      this._b.textContent = this._t;
+    if (this._d && this._t !== this._dn.textContent) {
+      this._dn.textContent = this._t;
     }
 
     super.render();
   }
 
   /**
-   * Enable the button.
+   * Enable the button. Calls [onEnable](/api/button#onEnable) if passed.
    * @memberof Button
    * @function enable
    */
@@ -1733,22 +1733,22 @@ class Button extends Text$1.class {
      * @memberof Button
      * @property {Boolean} disabled
      */
-    this.disabled = this._b.disabled = false;
+    this.disabled = this._dn.disabled = false;
     this.onEnable();
   }
 
   /**
-   * Disable the button.
+   * Disable the button. Calls [onDisable](/api/button#onDisable) if passed.
    * @memberof Button
    * @function disable
    */
   disable() {
-    this.disabled = this._b.disabled = true;
+    this.disabled = this._dn.disabled = true;
     this.onDisable();
   }
 
   /**
-   * Focus the button.
+   * Focus the button. Calls [onFOcus](/api/button#onFOcus) if passed.
    * @memberof Button
    * @function focus
    */
@@ -1761,20 +1761,20 @@ class Button extends Text$1.class {
      */
     this.focused = true;
     // prevent infinite loop
-    if (document.activeElement != this._b) this._b.focus();
+    if (document.activeElement != this._dn) this._dn.focus();
 
     this.onFocus();
   }
 
   /**
-   * Blur the button.
+   * Blur the button. Calls [onBlur](/api/button#onBlur) if passed.
    * @memberof Button
    * @function blur
    */
   blur() {
     this.focused = false;
     // prevent infinite loop
-    if (document.activeElement == this._b) this._b.blur();
+    if (document.activeElement == this._dn) this._dn.blur();
 
     this.onBlur();
   }
@@ -1787,10 +1787,34 @@ class Button extends Text$1.class {
     this.blur();
   }
 
+  /**
+   * Function called when then button is enabled. Override this function to have the button do something when enabled.
+   * @memberof Button
+   * @function onEnable
+   */
   onEnable() {}
+
+  /**
+   * Function called when then button is disabled. Override this function to have the button do something when disabled.
+   * @memberof Button
+   * @function onDisable
+   */
   onDisable() {}
+
+  /**
+   * Function called when then button is focused. Override this function to have the button do something when focused.
+   * @memberof Button
+   * @function onFocus
+   */
   onFocus() {}
+
+  /**
+   * Function called when then button is blurred. Override this function to have the button do something when blurred.
+   * @memberof Button
+   * @function onBlur
+   */
   onBlur() {}
+
   onUp() {}
 }
 
@@ -3357,6 +3381,192 @@ class Quadtree {
 
 var Quadtree$1 = Factory(Quadtree);
 
+class Scene {
+
+  /**
+   * A scene object for organizing a group of objects that will update and render together.
+   *
+   * ```js
+   * import { Scene, Sprite } from 'kontra';
+   *
+   * sprite = Sprite({
+   *   x: 100,
+   *   y: 200,
+   *   width: 20,
+   *   height: 40,
+   *   color: 'red'
+   * });
+   *
+   * scene = Scene({
+   *   id: 'game',
+   *   children: [sprite]
+   * });
+   *
+   * scene.render();
+   * ```js
+   *
+   * @class Scene
+   *
+   * @param {Object} properties - Properties of the scene.
+   * @param {String} properties.id - The id of the scene.
+   * @param {String} [properties.name=properties.id] - The name of the scene. Used by screen readers to identify each scene. Use this property to give the scene a human friendly name. Defaults to the id.
+   * @param {Object[]} [properties.children=[]] - The children of the scene.
+   * @param {...*} properties.props - Any additional properties you need added to the scene. For example, if you pass `Scene({counter: 0})` then the scene will also have a property of the same name and value. You can pass as many additional properties as you want.
+   */
+  constructor(properties) {
+    /**
+     * The id of the scene.
+     * @memberof Scene
+     * @property {String} id
+     */
+
+    /**
+     * The name of the scene. Used by screen readers to identify each scene. Use this property to give the scene a human friendly name.
+     * @memberof Scene
+     * @property {String} name
+     */
+    this.name = properties.id;
+
+    // add all properties to the scene, overriding any defaults
+    Object.assign(this, properties);
+
+    /**
+     * The scenes children objects.
+     * @memberof Scene
+     * @property {Object[]} children
+     */
+    this.children = [];
+
+    // create an accessible DOM node for screen readers
+    // dn = dom node
+    const section = this._dn = document.createElement('section');
+    section.id = this.id;
+    section.tabIndex = -1;
+    section.style = srOnlyStyle;
+    section.setAttribute('aria-label', this.name);
+
+    document.body.appendChild(section);
+
+    this.add(...(properties.children || []));
+  }
+
+  /**
+   * Show the scene and resume update and render. Calls [onShow](/api/scene#onShow) if passed.
+   * @memberof Scene
+   * @function show
+   */
+  show() {
+
+    /**
+     * If the scene is hidden.
+     * @memberof Scene
+     * @property {Boolean} hidden
+     */
+    this.hidden = this._dn.hidden = false;
+
+    // find first focusable child
+    let focusableChild = this.children.find(child => child.focus);
+    if (focusableChild) {
+      focusableChild.focus();
+    }
+    else {
+      this._dn.focus();
+    }
+
+    this.onShow();
+  }
+
+  /**
+   * Hide the scene. A hidden scene will not update or render. Calls [onHide](/api/scene#onHide) if passed.
+   * @memberof Scene
+   * @function hide
+   */
+  hide() {
+    this.hidden = this._dn.hidden = true;
+    this.onHide();
+  }
+
+  /**
+   * Add objects to the scene.
+   * @memberof Scene
+   * @function add
+   *
+   * @param {...Object[]} objects - Objects to add to the scene.
+   */
+  add(...objects) {
+    this.children = this.children.concat(objects);
+    objects.map(object => {
+      if (object._dn) {
+        this._dn.appendChild(object._dn);
+      }
+    });
+  }
+
+  /**
+   * Remove an object from the scene.
+   * @memberof Scene
+   * @function remove
+   *
+   * @param {Object} object - Object to remove.
+   */
+  remove(object) {
+    this.children = this.children.filter(child => child !== object);
+    if (object._dn) {
+      document.body.appendChild(object._dn);
+    }
+  }
+
+  /**
+   * Clean up the scene and call `destroy()` on all children.
+   * @memberof Scene
+   * @function destroy
+   */
+  destroy() {
+    this._dn.remove();
+    this.children.map(child => child.destroy && child.destroy());
+  }
+
+  /**
+   * Update the scene and call `update()` on all children. A hidden scene will not update.
+   * @memberof Scene
+   * @function update
+   *
+   * @param {Number} [dt] - Time since last update.
+   */
+  update(dt) {
+    if (!this.hidden) {
+      this.children.map(child => child.update && child.update(dt));
+    }
+  }
+
+  /**
+   * Render the scene and call `render()` on all children. A hidden scene will not render.
+   * @memberof Scene
+   * @function render
+   */
+  render() {
+    if (!this.hidden) {
+      this.children.map(child => child.render && child.render());
+    }
+  }
+
+  /**
+   * Function called when the scene is shown. Override this function to have the scene do something when shown.
+   * @memberof Scene
+   * @function onShow
+   */
+  onShow() {}
+
+  /**
+   * Function called when the scene is hidden. Override this function to have the scene do something when hidden.
+   * @memberof Scene
+   * @function onHide
+   */
+  onHide() {}
+}
+
+var Scene$1 = Factory(Scene);
+
 /**
  * A versatile way to update and draw your sprites. It can handle simple rectangles, images, and sprite sheet animations. It can be used for your main player object as well as tiny particles in a particle engine.
  * @class Sprite
@@ -4518,6 +4728,7 @@ let kontra = {
 
   Pool: Pool$1,
   Quadtree: Quadtree$1,
+  Scene: Scene$1,
   Sprite: Sprite$1,
   SpriteSheet: SpriteSheet$1,
 

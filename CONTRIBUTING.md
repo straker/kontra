@@ -28,7 +28,13 @@ To build the development code, run `npm run build`. To build the distribution ve
 
 ## Testing
 
-Please add unit and/or integration tests for all new changes. To run the tests, run `npm test`.
+Please add unit and/or integration tests for all new changes, as well as TypeScript tests found in [test/typings](test/typings). To run the tests, run `npm test`.
+
+The TypeScript tests just ensure that the TypesCript declaration file is correct and doesn't miss any obvious use cases with the various APIs.
+
+## Exports
+
+Please update the export files for all new changes (if need be). [kontra.defaults.js](src/kontra.defaults.js) imports all functionality and then adds it to the `kontra` object. [kontra.js](src/kontra.js) exports all functionality directly. You will also need to tests to their respected spec files that ensures the functionality is exported.
 
 ## Documentation and TypeScript Declaration File
 

@@ -53,6 +53,7 @@
               <li><a href="api/pointer" >Pointer</a></li>
               <li><a href="api/pool" >Pool</a></li>
               <li><a href="api/quadtree" >Quadtree</a></li>
+              <li><a href="api/scene" >Scene</a></li>
               <li><a href="api/sprite" aria-current="page">Sprite</a></li>
               <li><a href="api/spriteSheet" >SpriteSheet</a></li>
               <li><a href="api/store" >Store</a></li>
@@ -763,7 +764,7 @@ class CustomSprite extends Sprite.class {
             </a>
           </h2>
 
-          <p>An object of <a href="api/animation">Animations</a> from a <a href="api/spriteSheet">SpriteSheet</a> to animate the sprite. Each animation is named so that it can can be used by name for the sprites <a href="api/sprite#playAnimation">playAnimation()</a> function.</p>
+          <p>Object. An object of <a href="api/animation">Animations</a> from a <a href="api/spriteSheet">SpriteSheet</a> to animate the sprite. Each animation is named so that it can can be used by name for the sprites <a href="api/sprite#playAnimation">playAnimation()</a> function.</p>
 <div class="tablist">
   <ul role="tablist">
     <li role="presentation" data-tab="global">
@@ -854,7 +855,7 @@ sprite.playAnimation(&#39;idle&#39;);</code></pre></section>
             </a>
           </h2>
 
-          <p>The color of the game object if it was passed as an argument.</p>
+          <p>String. The color of the game object if it was passed as an argument.</p>
           
         </section>
         <section>
@@ -865,7 +866,7 @@ sprite.playAnimation(&#39;idle&#39;);</code></pre></section>
             </a>
           </h2>
 
-          <p>The currently playing Animation object if <code>animations</code> was passed as an argument.</p>
+          <p><a href="api/animation">Animation</a>. The currently playing Animation object if <code>animations</code> was passed as an argument.</p>
           
         </section>
         <section>
@@ -876,7 +877,7 @@ sprite.playAnimation(&#39;idle&#39;);</code></pre></section>
             </a>
           </h2>
 
-          <p>The height of the sprite. If the sprite is a <a href="api/sprite#rectangle-sprite">rectangle sprite</a>, it uses the passed in value. For an <a href="api/sprite#image-sprite">image sprite</a> it is the height of the image. And for an <a href="api/sprite#animation-sprite">animation sprite</a> it is the height of a single frame of the animation.</p>
+          <p>Number. The height of the sprite. If the sprite is a <a href="api/sprite#rectangle-sprite">rectangle sprite</a>, it uses the passed in value. For an <a href="api/sprite#image-sprite">image sprite</a> it is the height of the image. And for an <a href="api/sprite#animation-sprite">animation sprite</a> it is the height of a single frame of the animation.</p>
 <p>Setting the value to a negative number will result in the sprite being flipped across the horizontal axis while the height will remain a positive value.</p>
           
         </section>
@@ -888,7 +889,7 @@ sprite.playAnimation(&#39;idle&#39;);</code></pre></section>
             </a>
           </h2>
 
-          <p>The image the sprite will use when drawn if passed as an argument.</p>
+          <p>HTMLImageElement or HTMLCanvasElement. The image the sprite will use when drawn if passed as an argument.</p>
           
         </section>
         <section>
@@ -996,7 +997,7 @@ sprite.playAnimation(&#39;idle&#39;);</code></pre></section>
             </a>
           </h2>
 
-          <p>The width of the sprite. If the sprite is a <a href="api/sprite#rectangle-sprite">rectangle sprite</a>, it uses the passed in value. For an <a href="api/sprite#image-sprite">image sprite</a> it is the width of the image. And for an <a href="api/sprite#animation-sprite">animation sprite</a> it is the width of a single frame of the animation.</p>
+          <p>Number. The width of the sprite. If the sprite is a <a href="api/sprite#rectangle-sprite">rectangle sprite</a>, it uses the passed in value. For an <a href="api/sprite#image-sprite">image sprite</a> it is the width of the image. And for an <a href="api/sprite#animation-sprite">animation sprite</a> it is the width of a single frame of the animation.</p>
 <p>Setting the value to a negative number will result in the sprite being flipped across the vertical axis while the width will remain a positive value.</p>
           
         </section>

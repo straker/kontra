@@ -314,6 +314,9 @@ let tags = {
       description: marked(this.tag.description),
       type: type
     };
+
+    // add type to the front of the description
+    this.comment.description = type + '. ' + this.comment.description.substr(1);
     addSectionAndPage.call(this);
   },
   sectionName: function() {

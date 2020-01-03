@@ -58,31 +58,42 @@ describe('text with properties: ' + JSON.stringify(properties,null,4), () => {
         width: 100,
         color: 'black'
       });
+
       expect(text._s).to.exist;
       expect(text.width).to.equal(100);
       expect(text.height).to.equal(32);
       expect(text.font).to.equal('32px Arial');
       expect(text.text).to.equal('Hello');
+      expect(text.color).to.equal('black');
     });
 
     it('should set the text as dirty when setting font', () => {
       let text = Text({text: ''});
+
       expect(text._d).to.be.false;
+
       text.font = '32px Arial';
+
       expect(text._d).to.be.true;
     });
 
     it('should set the text as dirty when setting text', () => {
       let text = Text({text: ''});
+
       expect(text._d).to.be.false;
+
       text.text = 'Hello';
+
       expect(text._d).to.be.true;
     });
 
     it('should set the text as dirty when setting width', () => {
       let text = Text({text: ''});
+
       expect(text._d).to.be.false;
+
       text.width = 100;
+
       expect(text._d).to.be.true;
     });
 
@@ -105,6 +116,7 @@ describe('text with properties: ' + JSON.stringify(properties,null,4), () => {
       });
       text.context.font = text.font;
       let width = text.context.measureText(text.text).width;
+
       expect(text.width).to.equal(width);
     });
 
@@ -114,6 +126,7 @@ describe('text with properties: ' + JSON.stringify(properties,null,4), () => {
         font: '32px Arial',
         color: 'black'
       });
+
       expect(text.height).to.equal(32);
     });
 
@@ -124,6 +137,7 @@ describe('text with properties: ' + JSON.stringify(properties,null,4), () => {
           font: '32px Arial',
           color: 'black'
         });
+
         expect(text._s.length).to.equal(2);
         expect(text._s).to.deep.equal(['Hello', 'World']);
       });
@@ -136,6 +150,7 @@ describe('text with properties: ' + JSON.stringify(properties,null,4), () => {
         });
         text.context.font = text.font;
         let width = text.context.measureText('Hello There').width;
+
         expect(text.width).to.equal(width);
       });
 
@@ -146,6 +161,7 @@ describe('text with properties: ' + JSON.stringify(properties,null,4), () => {
           font: '32px Arial',
           color: 'black'
         });
+
         expect(text.height).to.be.above(32);
       });
     }
@@ -158,6 +174,7 @@ describe('text with properties: ' + JSON.stringify(properties,null,4), () => {
           color: 'black',
           width: 50
         });
+
         expect(text._s.length).to.equal(2);
         expect(text._s).to.deep.equal(['Hello', 'World']);
       });
@@ -169,6 +186,7 @@ describe('text with properties: ' + JSON.stringify(properties,null,4), () => {
           color: 'black',
           width: 50
         });
+
         expect(text.height).to.be.above(32);
       });
     }

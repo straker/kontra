@@ -340,7 +340,7 @@ describe('tileEngine', () => {
       expect(tileEngine.layerMap.test._d).to.equal(true);
     });
   });
-  
+
 
 
 

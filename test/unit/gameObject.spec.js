@@ -2,7 +2,7 @@ import GameObject from '../../src/gameObject.js'
 import { init, getCanvas, getContext } from '../../src/core.js'
 import { noop } from '../../src/utils.js'
 
-let testGameObject = new GameObject();
+let testGameObject = GameObject();
 
 // optional properties
 let hasGroup = testGameObject.hasOwnProperty('children');
@@ -42,7 +42,7 @@ describe('gameObject with properties: ' + JSON.stringify(properties,null,4), () 
   describe('init', () => {
 
     it('should set default properties on the gameObject when passed no arguments', () => {
-      let gameObject = new GameObject();
+      let gameObject = GameObject();
 
       // defaults
       expect(gameObject.context).to.equal(getContext());
@@ -63,7 +63,7 @@ describe('gameObject with properties: ' + JSON.stringify(properties,null,4), () 
     });
 
     it('should set basic properties of width, height, color, x, and y', () => {
-      let gameObject = new GameObject({
+      let gameObject = GameObject({
         x: 10,
         y: 20,
         color: 'red',
@@ -81,7 +81,7 @@ describe('gameObject with properties: ' + JSON.stringify(properties,null,4), () 
     it('should set properties of velocity, acceleration, and a different context', () => {
       let context = {foo: 'bar'};
 
-      let gameObject = new GameObject({
+      let gameObject = GameObject({
         dx: 2,
         dy: 1,
         ddx: 0.5,
@@ -97,7 +97,7 @@ describe('gameObject with properties: ' + JSON.stringify(properties,null,4), () 
     });
 
     it('should keep the position, velocity, and acceleration vectors in sync', () => {
-      let gameObject = new GameObject();
+      let gameObject = GameObject();
 
       gameObject.x = 10;
       gameObject.y = 20;
@@ -125,7 +125,7 @@ describe('gameObject with properties: ' + JSON.stringify(properties,null,4), () 
     });
 
     it('should set all additional properties on the gameObject', () => {
-      let gameObject = new GameObject({
+      let gameObject = GameObject({
         foo: 'bar',
         alive: true
       });
@@ -136,7 +136,7 @@ describe('gameObject with properties: ' + JSON.stringify(properties,null,4), () 
 
     if (hasTTL) {
       it('should have required properties for kontra.pool', () => {
-        let gameObject = new GameObject();
+        let gameObject = GameObject();
         expect(typeof gameObject.init).to.equal('function');
         expect(typeof gameObject.update).to.equal('function');
         expect(typeof gameObject.isAlive).to.equal('function');
@@ -156,7 +156,7 @@ describe('gameObject with properties: ' + JSON.stringify(properties,null,4), () 
 
     if (hasVelocity || hasAcceleration) {
       it('should move a rect gameObject by its velocity and acceleration', () => {
-        let gameObject = new GameObject({
+        let gameObject = GameObject({
           x: 10,
           y: 20,
           dx: 2,
@@ -182,7 +182,7 @@ describe('gameObject with properties: ' + JSON.stringify(properties,null,4), () 
 
     if(hasTTL) {
       it('should decrement ttl', () => {
-        let gameObject = new GameObject({
+        let gameObject = GameObject({
           ttl: 2
         });
 
@@ -205,7 +205,7 @@ describe('gameObject with properties: ' + JSON.stringify(properties,null,4), () 
 
     if (hasRotation) {
       it('should rotate the gameObject', () => {
-        let gameObject = new GameObject({
+        let gameObject = GameObject({
           x: 10,
           y: 20,
           rotation: Math.PI
@@ -223,7 +223,7 @@ describe('gameObject with properties: ' + JSON.stringify(properties,null,4), () 
 
     if (hasAnchor) {
       it('should take into account gameObject.anchor', () => {
-        let gameObject = new GameObject({
+        let gameObject = GameObject({
           x: 10,
           y: 20,
           width: 100,
@@ -252,7 +252,7 @@ describe('gameObject with properties: ' + JSON.stringify(properties,null,4), () 
 
     if (hasCamera) {
       it('should draw the gameObject at the viewX and viewY', () => {
-        let gameObject = new GameObject({
+        let gameObject = GameObject({
           x: 10,
           y: 20
         });
@@ -287,7 +287,7 @@ describe('gameObject with properties: ' + JSON.stringify(properties,null,4), () 
     describe('isAlive', () => {
 
       it('should return true when the gameObject is alive', () => {
-        let gameObject = new GameObject();
+        let gameObject = GameObject();
 
         expect(gameObject.isAlive()).to.be.true;
 
@@ -297,7 +297,7 @@ describe('gameObject with properties: ' + JSON.stringify(properties,null,4), () 
       });
 
       it('should return false when the gameObject is not alive', () => {
-        let gameObject = new GameObject({
+        let gameObject = GameObject({
           ttl: 0
         });
 
@@ -318,7 +318,7 @@ describe('gameObject with properties: ' + JSON.stringify(properties,null,4), () 
     describe('viewX/Y', () => {
 
       it('should return the position + camera', () => {
-        let gameObject = new GameObject({
+        let gameObject = GameObject({
           x: 10,
           y: 20
         });
@@ -334,7 +334,7 @@ describe('gameObject with properties: ' + JSON.stringify(properties,null,4), () 
       });
 
       it('should be readonly', () => {
-        let gameObject = new GameObject({
+        let gameObject = GameObject({
           x: 10,
           y: 20
         });
@@ -360,7 +360,7 @@ describe('gameObject with properties: ' + JSON.stringify(properties,null,4), () 
     describe('group', () => {
 
       it('should set default properties on the gameObject', () => {
-        let gameObject = new GameObject();
+        let gameObject = GameObject();
 
         expect(gameObject.localPosition.constructor.name).to.equal('Vector');
         expect(Array.isArray(gameObject.children)).to.be.true;
@@ -380,7 +380,7 @@ describe('gameObject with properties: ' + JSON.stringify(properties,null,4), () 
       describe('addChild', () => {
 
         it('should add the object as a child', () => {
-          let gameObject = new GameObject();
+          let gameObject = GameObject();
           let child = {
             foo: 'bar'
           };
@@ -390,7 +390,7 @@ describe('gameObject with properties: ' + JSON.stringify(properties,null,4), () 
         });
 
         it('should set the childs parent to the game object', () => {
-          let gameObject = new GameObject();
+          let gameObject = GameObject();
           let child = {
             foo: 'bar'
           };
@@ -400,11 +400,11 @@ describe('gameObject with properties: ' + JSON.stringify(properties,null,4), () 
         });
 
         it('should set the childs localPosition', () => {
-          let gameObject = new GameObject({
+          let gameObject = GameObject({
             x: 20,
             y: 20
           });
-          let child = new GameObject({
+          let child = GameObject({
             x: 30,
             y: 35
           });
@@ -419,12 +419,12 @@ describe('gameObject with properties: ' + JSON.stringify(properties,null,4), () 
 
         if (hasRotation) {
           it('should set the childs localRotation', () => {
-            let gameObject = new GameObject({
+            let gameObject = GameObject({
               x: 20,
               y: 20,
               rotation: 10
             });
-            let child = new GameObject({
+            let child = GameObject({
               x: 30,
               y: 35,
               rotation: 30
@@ -449,7 +449,7 @@ describe('gameObject with properties: ' + JSON.stringify(properties,null,4), () 
       describe('removeChild', () => {
 
         it('should remove the object as a child', () => {
-          let gameObject = new GameObject();
+          let gameObject = GameObject();
           let child = {
             foo: 'bar'
           };
@@ -460,7 +460,7 @@ describe('gameObject with properties: ' + JSON.stringify(properties,null,4), () 
         });
 
         it('should remove the childs parent', () => {
-          let gameObject = new GameObject();
+          let gameObject = GameObject();
           let child = {
             foo: 'bar'
           };
@@ -471,11 +471,11 @@ describe('gameObject with properties: ' + JSON.stringify(properties,null,4), () 
         });
 
         it('should set the childs localPosition to its position', () => {
-          let gameObject = new GameObject({
+          let gameObject = GameObject({
             x: 20,
             y: 20
           });
-          let child = new GameObject({
+          let child = GameObject({
             x: 30,
             y: 35
           });
@@ -491,12 +491,12 @@ describe('gameObject with properties: ' + JSON.stringify(properties,null,4), () 
 
         if (hasRotation) {
           it('should set the childs localRotation to its rotation', () => {
-            let gameObject = new GameObject({
+            let gameObject = GameObject({
               x: 20,
               y: 20,
               rotation: 10
             });
-            let child = new GameObject({
+            let child = GameObject({
               x: 30,
               y: 35,
               rotation: 30
@@ -529,10 +529,10 @@ describe('gameObject with properties: ' + JSON.stringify(properties,null,4), () 
           let gameObject, child;
 
           beforeEach(() => {
-            gameObject = new GameObject({
+            gameObject = GameObject({
               [prop]: 15
             });
-            child = new GameObject();
+            child = GameObject();
             gameObject.addChild(child);
           });
 
@@ -573,7 +573,7 @@ describe('gameObject with properties: ' + JSON.stringify(properties,null,4), () 
           });
 
           it('should update all child positions', () => {
-            let child2 = new GameObject();
+            let child2 = GameObject();
             gameObject.addChild(child2);
 
             if (prop === 'rotation') {
@@ -592,8 +592,8 @@ describe('gameObject with properties: ' + JSON.stringify(properties,null,4), () 
           });
 
           it('should update the entire child hierarchy', () => {
-            let child2 = new GameObject();
-            let child3 = new GameObject();
+            let child2 = GameObject();
+            let child3 = GameObject();
             child.addChild(child2);
             child2.addChild(child3);
 

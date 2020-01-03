@@ -23,6 +23,14 @@ describe('kontra', () => {
     expect(kontraExports.load).to.exist;
   });
 
+  it('should export button api', () => {
+    expect(kontraExports.Button).to.exist;
+  });
+
+  it('should export collision api', () => {
+    expect(kontraExports.collides).to.exist;
+  });
+
   it('should export core api', () => {
     expect(kontraExports.init).to.exist;
     expect(kontraExports.getCanvas).to.exist;
@@ -39,7 +47,11 @@ describe('kontra', () => {
     expect(kontraExports.GameLoop).to.exist;
   });
 
-  it('should export keys api', () => {
+  it('should export gameObject api', () => {
+    expect(kontraExports.GameObject).to.exist;
+  });
+
+  it('should export keyboard api', () => {
     expect(kontraExports.keyMap).to.exist;
     expect(kontraExports.initKeys).to.exist;
     expect(kontraExports.bindKeys).to.exist;
@@ -85,20 +97,16 @@ describe('kontra', () => {
     expect(kontraExports.setStoreItem).to.exist;
   });
 
+  it('should export text api', () => {
+    expect(kontraExports.Text).to.exist;
+  });
+
   it('should export tileEngine api', () => {
     expect(kontraExports.TileEngine).to.exist;
   });
 
   it('should export vector api', () => {
     expect(kontraExports.Vector).to.exist;
-  });
-
-  it('should export gameObject api', () => {
-    expect(kontraExports.GameObject).to.exist;
-  });
-
-  it('should export text api', () => {
-    expect(kontraExports.Text).to.exist;
   });
 
   it('should export kontra object', () => {

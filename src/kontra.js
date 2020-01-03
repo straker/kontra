@@ -12,6 +12,7 @@ export {
   load
 } from './assets.js'
 export { default as Button } from './button.js'
+export { collides } from './collision.js'
 export { init, getCanvas, getContext } from './core.js'
 export { on, off, emit } from './events.js'
 export { default as GameLoop } from './gameLoop.js'
@@ -30,6 +31,7 @@ export {
 } from './pointer.js'
 export { default as Pool } from './pool.js'
 export { default as Quadtree } from './quadtree.js'
+export { default as Scene } from './scene.js'
 export { default as Sprite } from './sprite.js'
 export { default as SpriteSheet } from './spriteSheet.js'
 export { setStoreItem, getStoreItem } from './store.js'

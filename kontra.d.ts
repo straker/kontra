@@ -103,13 +103,17 @@ declare namespace kontra {
   }
   var Text: TextConstructor
   interface Button extends Text {
-    Destroy(): void;
+    destroy(): void;
     enable(): void;
     disabled: boolean;
     disable(): void;
     focus(): void;
     focused: boolean;
     blur(): void;
+    onEnable(): void;
+    onDisable(): void;
+    onFocus(): void;
+    onBlur(): void;
   }
   interface ButtonConstructor {
     readonly class: ButtonConstructor;
@@ -181,6 +185,28 @@ declare namespace kontra {
     (properties?: {maxDepth?: number, maxObjects?: number, bounds?: {x: number, y: number, width: number, height: number}}): Quadtree;
   }
   var Quadtree: QuadtreeConstructor
+  interface Scene {
+    id: string;
+    name: string;
+    children: object[];
+    show(): void;
+    hidden: boolean;
+    hide(): void;
+    add(...objects: object[]): void;
+    remove(object: object): void;
+    destroy(): void;
+    update(dt?: number): void;
+    render(): void;
+    onShow(): void;
+    onHide(): void;
+  }
+  interface SceneConstructor {
+    readonly class: SceneConstructor;
+    readonly prototype: Scene;
+    new(properties: {id: string, name?: string, children?: object[], [props: string]: any}): Scene;
+    (properties: {id: string, name?: string, children?: object[], [props: string]: any}): Scene;
+  }
+  var Scene: SceneConstructor
   interface Sprite extends GameObject {
     color: string;
     width: number;

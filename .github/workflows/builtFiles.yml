@@ -1,0 +1,22 @@
+name: BuiltFiles
+
+# Trigger the workflow on push or pull request
+on:
+  push:
+    paths:
+      - '**.js'
+      - '!test/**'
+
+jobs:
+  build_docs:
+    name: Build Docs
+    runs-on: ubuntu-latest
+    steps:
+    - name: Print a greeting
+      env:
+        MY_VAR: Hi there! My name is
+        FIRST_NAME: Mona
+        MIDDLE_NAME: The
+        LAST_NAME: Octocat
+      run: |
+        echo $MY_VAR $FIRST_NAME $MIDDLE_NAME $LAST_NAME.

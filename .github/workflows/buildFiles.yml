@@ -1,0 +1,45 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - '**.js'
+      - '!test/**'
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v1
+
+    - name: Setup node
+      uses: actions/setup-node@v1
+      with:
+        version: 12
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Build
+      run: npm run build
+
+    - name: Dist
+      run: npm run dist
+
+    - name: Commit changed files
+      uses: stefanzweifel/git-auto-commit-action@master
+      with:
+        commit_message: 📦 Build automated files
+        branch: master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}

@@ -1,10 +1,6 @@
 name: BuildFiles
 
-on:
-  push:
-    paths:
-      - '**.js'
-      - '!test/**'
+on: push
 
 jobs:
   build:

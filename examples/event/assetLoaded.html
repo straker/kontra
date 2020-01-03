@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Asset Loaded Event</title>
+  <script src="../../kontra.js"></script>
+  <style>
+    canvas {
+      position: absolute;
+      top: 0;
+      border: 1px solid black;
+    }
+
+    .wrapper {
+      position: relative;
+      width: 545px;
+      height: 400px;
+      padding-bottom: 5px;
+    }
+
+    #progress {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      height: 320px;
+    }
+
+    #progress:before,
+    #progress:after {
+      content: '';
+      display: inline-block;
+      height: 100%;
+      vertical-align: middle;
+    }
+
+    .progress-wrapper {
+      display: inline-block;
+    }
+
+    #play {
+      visibility: hidden;
+      line-height: 24px;
+      margin-top: 5px;
+      padding: 0 10px;
+      border-radius: 5px;
+      outline: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <div id="progress">
+      <div class="progress-wrapper">
+        <div>Downloading: <span id="percent"></span></div>
+        <progress id="progress-bar" value="0"></progress>
+        <br><button id="play">Play</button>
+      </div>
+    </div>
+    <canvas id="game" width="600" height="400"></canvas>
+  </div>
+  <script id="code">
+    (function() {
+      var pBar = document.getElementById('progress-bar');
+      var percent = document.getElementById('percent')
+
+      // initialize the game and setup the canvas
+      let { canvas, context } = kontra.init();
+
+      let progress = { loaded: 0, total: 3 }
+
+      kontra.setImagePath('../imgs/');
+      kontra.setAudioPath('../audio/');
+
+      kontra.on('assetLoaded', (asset, url) => {
+        progress.loaded++;
+        pBar.value = progress.loaded / progress.total;
+        percent.innerHTML = Math.round(pBar.value * 100) + "%";
+        console.log('Asset loaded. Loaded ' + progress.loaded + ' of ' + progress.total);
+      });
+
+      kontra.load('character_walk_sheet.png', 'character.png', ['Digital_Forest.ogg', 'audio/Digital_Forest.mp3']).then(function() {
+
+        showPlayButton();
+        kontra.audioAssets.Digital_Forest.loop = true;
+        kontra.audioAssets.Digital_Forest.volume = 0.5;
+
+        // create the sprite sheet and its animation
+        window.spriteSheet = kontra.SpriteSheet({
+          image: kontra.imageAssets.character_walk_sheet,
+          frameWidth: 72,
+          frameHeight: 97,
+          animations: {
+            walk: {
+              frames: '0..10', // frames 0 through 10
+              frameRate: 30
+            }
+          }
+        });
+
+        // pass the animations to the sprite
+        window.sprite = kontra.Sprite({
+          width: 72 * 2,
+          height: 97 * 2,
+          anchor: {
+            x: 0.5,
+            y: 0.5,
+          },
+          x: 300,
+          y: 200,
+          animations: spriteSheet.animations
+        });
+
+        // set the animation to play
+        sprite.playAnimation('walk');
+
+        // create the game loop to update and render the sprite
+        window.loop = kontra.GameLoop({
+          update: function() {
+            sprite.update();
+          },
+          render: function() {
+            sprite.render();
+          }
+        });
+
+      });
+
+      function showPlayButton() {
+        var playButton = document.getElementById('play');
+        playButton.style.visibility = 'visible';
+        playButton.onclick = function() {
+          document.getElementById('progress').style.display = 'none';
+          document.getElementById('game').style.background = '#333331';
+          // start the loop
+          kontra.audioAssets.Digital_Forest.play();
+          loop.start();          
+        }
+      }
+    })();
+  </script>
+  <script src="../prism/codeOutput.js"></script>
+</body>
+</html>

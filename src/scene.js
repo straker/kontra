@@ -3,7 +3,7 @@ import { Factory, srOnlyStyle } from './utils.js'
 class Scene {
 
   /**
-   * A scene object for organizing a group of objects that will update and render together.
+   * A scene object for organizing a group of objects that will update and render together foobar.
    *
    * ```js
    * import { Scene, Sprite } from 'kontra';

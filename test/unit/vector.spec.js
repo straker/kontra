@@ -146,6 +146,28 @@ describe('vector with properties: ' + JSON.stringify(properties,null,4), () => {
 
 
   // --------------------------------------------------
+  // normalize
+  // --------------------------------------------------
+  if (hasNormalize) {
+    describe('normalize', () => {
+
+      it('should calculate the normalized vector', () => {
+        let vector1 = Vector(4, 3);
+
+        let normalize = vector1.normalize();
+
+        expect(normalize.x).to.eql(4/5);
+        expect(normalize.y).to.eql(3/5);
+      });
+
+    });
+  }
+
+
+
+
+
+  // --------------------------------------------------
   // dot
   // --------------------------------------------------
   if (hasDot) {

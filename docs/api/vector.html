@@ -48,6 +48,7 @@
               <li><a href="api/events" >Events</a></li>
               <li><a href="api/gameLoop" >GameLoop</a></li>
               <li><a href="api/gameobject" >GameObject</a></li>
+              <li><a href="api/helpers" >Helpers</a></li>
               <li><a href="api/keyboard" >Keyboard</a></li>
               <li><a href="api/plugin" >Plugin</a></li>
               <li><a href="api/pointer" >Pointer</a></li>
@@ -141,12 +142,47 @@ let vector = Vector(100, 200);</code></pre></section>
               <ul aria-labelledby="methods">
                 <li>
                   <a href="api/vector#add">
-                    <span>Vector&#8203;.add(&#8203;vector[, dt])</span>
+                    <span>Vector&#8203;.add(&#8203;vector)</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="api/vector#angle">
+                    <span>Vector&#8203;.angle(&#8203;vector)</span>
                   </a>
                 </li>
                 <li>
                   <a href="api/vector#clamp">
                     <span>Vector&#8203;.clamp(&#8203;xMin, yMin, xMax, yMax)</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="api/vector#distance">
+                    <span>Vector&#8203;.distance(&#8203;vector)</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="api/vector#dot">
+                    <span>Vector&#8203;.dot(&#8203;vector)</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="api/vector#lengthh">
+                    <span>Vector&#8203;.lengthh(&#8203;)</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="api/vector#normalize">
+                    <span>Vector&#8203;.normalize(&#8203;)</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="api/vector#scale">
+                    <span>Vector&#8203;.scale(&#8203;value)</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="api/vector#subtract">
+                    <span>Vector&#8203;.subtract(&#8203;vector)</span>
                   </a>
                 </li>
               </ul>
@@ -158,12 +194,12 @@ let vector = Vector(100, 200);</code></pre></section>
         <section>
           <h2 id="add">
             <a href="api/vector#add" class="section-link">
-              <span>Vector&#8203;.add(&#8203;vector[, dt])</span>
+              <span>Vector&#8203;.add(&#8203;vector)</span>
               <span aria-hidden="true">#</span>
             </a>
           </h2>
 
-          <p>Return a new Vector whose value is the addition of the current Vector and the passed in Vector. If <code>dt</code> is provided, the result is multiplied by the value.</p>
+          <p>Calculate the addition of the current vector with the passed in vector.</p>
           <h3 id="title-add"><span class="visually-hidden">add</span> Parameters</span></h3>
           <dl aria-labelledby="title-add">
             <dt>
@@ -172,16 +208,33 @@ let vector = Vector(100, 200);</code></pre></section>
             </dt>
             <dd><p><a href="api/vector">Vector</a> or {x: number, y: number}. Vector to add to the current Vector.</p>
           </dd>
-            <dt>
-              <code>dt</code>
-              <span class="optional">Optional</span>
-            </dt>
-            <dd><p>Number. Time since last update. Defaults to <code>1</code>.</p>
-          </dd>
           </dl>
           
           <h3><span class="visually-hidden">add</span> Return value</h3>
           <p><p>A new Vector instance.</p>
+          </p>
+        </section>
+        <section>
+          <h2 id="angle">
+            <a href="api/vector#angle" class="section-link">
+              <span>Vector&#8203;.angle(&#8203;vector)</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
+
+          <p>Calculate the angle (in radians) between the current vector and the passed in vector. Requires the Vector <a href="/api/vector#dot">dot</a> and (length)[/api/vector#length] functions.</p>
+          <h3 id="title-angle"><span class="visually-hidden">angle</span> Parameters</span></h3>
+          <dl aria-labelledby="title-angle">
+            <dt>
+              <code>vector</code>
+              
+            </dt>
+            <dd><p><a href="api/vector">Vector</a>. Vector to calculate the angle between.</p>
+          </dd>
+          </dl>
+          
+          <h3><span class="visually-hidden">angle</span> Return value</h3>
+          <p><p>the distance (in radians) between the two vectors.</p>
           </p>
         </section>
         <section>
@@ -274,6 +327,126 @@ console.log(vector);    //=&gt; {x: 0, y: 300}</code></pre></section>
           </dd>
           </dl>
           
+        </section>
+        <section>
+          <h2 id="distance">
+            <a href="api/vector#distance" class="section-link">
+              <span>Vector&#8203;.distance(&#8203;vector)</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
+
+          <p>Calculate the distance between the current vector and the passed in vector.</p>
+          <h3 id="title-distance"><span class="visually-hidden">distance</span> Parameters</span></h3>
+          <dl aria-labelledby="title-distance">
+            <dt>
+              <code>vector</code>
+              
+            </dt>
+            <dd><p><a href="api/vector">Vector</a> or {x: number, y: number}. Vector to calculate the distance between.</p>
+          </dd>
+          </dl>
+          
+          <h3><span class="visually-hidden">distance</span> Return value</h3>
+          <p><p>the distance between the two vectors.</p>
+          </p>
+        </section>
+        <section>
+          <h2 id="dot">
+            <a href="api/vector#dot" class="section-link">
+              <span>Vector&#8203;.dot(&#8203;vector)</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
+
+          <p>Calculate the dot product of the current vector with the passed in vector.</p>
+          <h3 id="title-dot"><span class="visually-hidden">dot</span> Parameters</span></h3>
+          <dl aria-labelledby="title-dot">
+            <dt>
+              <code>vector</code>
+              
+            </dt>
+            <dd><p><a href="api/vector">Vector</a> or {x: number, y: number}. Vector to dot product against.</p>
+          </dd>
+          </dl>
+          
+          <h3><span class="visually-hidden">dot</span> Return value</h3>
+          <p><p>The dot product of the vectors.</p>
+          </p>
+        </section>
+        <section>
+          <h2 id="lengthh">
+            <a href="api/vector#lengthh" class="section-link">
+              <span>Vector&#8203;.lengthh(&#8203;)</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
+
+          <p>Calculate the length (magnitude) of the Vector.</p>
+          
+          <h3><span class="visually-hidden">lengthh</span> Return value</h3>
+          <p><p>The length of the vector.</p>
+          </p>
+        </section>
+        <section>
+          <h2 id="normalize">
+            <a href="api/vector#normalize" class="section-link">
+              <span>Vector&#8203;.normalize(&#8203;)</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
+
+          <p>Calculate the normalized value of the current vector. Requires the Vector (length)[/api/vector#length] function.</p>
+          
+          <h3><span class="visually-hidden">normalize</span> Return value</h3>
+          <p><p>a new Vector instance.</p>
+          </p>
+        </section>
+        <section>
+          <h2 id="scale">
+            <a href="api/vector#scale" class="section-link">
+              <span>Vector&#8203;.scale(&#8203;value)</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
+
+          <p>Calculate the multiple of the current vector by a value.</p>
+          <h3 id="title-scale"><span class="visually-hidden">scale</span> Parameters</span></h3>
+          <dl aria-labelledby="title-scale">
+            <dt>
+              <code>value</code>
+              
+            </dt>
+            <dd><p>Number. Value to scale the current Vector.</p>
+          </dd>
+          </dl>
+          
+          <h3><span class="visually-hidden">scale</span> Return value</h3>
+          <p><p>a new Vector instance.</p>
+          </p>
+        </section>
+        <section>
+          <h2 id="subtract">
+            <a href="api/vector#subtract" class="section-link">
+              <span>Vector&#8203;.subtract(&#8203;vector)</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
+
+          <p>Calculate the subtraction of the current vector with the passed in vector.</p>
+          <h3 id="title-subtract"><span class="visually-hidden">subtract</span> Parameters</span></h3>
+          <dl aria-labelledby="title-subtract">
+            <dt>
+              <code>vector</code>
+              
+            </dt>
+            <dd><p><a href="api/vector">Vector</a> or {x: number, y: number}. Vector to subtract from the current Vector.</p>
+          </dd>
+          </dl>
+          
+          <h3><span class="visually-hidden">subtract</span> Return value</h3>
+          <p><p>A new Vector instance.</p>
+          </p>
         </section>
         <section>
           <h2 id="x">

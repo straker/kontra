@@ -55,12 +55,11 @@ describe('text with properties: ' + JSON.stringify(properties,null,4), () => {
       let text = Text({
         text: 'Hello',
         font: '32px Arial',
-        width: 100,
         color: 'black'
       });
 
       expect(text._s).to.exist;
-      expect(text.width).to.equal(100);
+      expect(text.width).to.be.above(70);
       expect(text.height).to.equal(32);
       expect(text.font).to.equal('32px Arial');
       expect(text.text).to.equal('Hello');

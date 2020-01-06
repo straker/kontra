@@ -1,9 +1,32 @@
 import Vector from '../../src/vector.js'
 
+let testVector = Vector();
+
+// optional properties
+let hasSubtract = typeof testVector.subtract !== 'undefined';
+let hasScale = typeof testVector.scale !== 'undefined';
+let hasNormalize = typeof testVector.normalize !== 'undefined';
+let hasDot = typeof testVector.dot !== 'undefined';
+let hasLength = typeof testVector.length !== 'undefined';
+let hasDistance = typeof testVector.distance !== 'undefined';
+let hasAngle = typeof testVector.angle !== 'undefined';
+let hasClamp = typeof testVector.clamp !== 'undefined';
+
+let properties = {
+  subtract: hasSubtract,
+  scale: hasScale,
+  normalize: hasNormalize,
+  dot: hasDot,
+  length: hasLength,
+  distance: hasDistance,
+  angle: hasAngle,
+  clamp: hasClamp
+};
+
 // --------------------------------------------------
 // vector
 // --------------------------------------------------
-describe('vector', () => {
+describe('vector with properties: ' + JSON.stringify(properties,null,4), () => {
 
   // --------------------------------------------------
   // init
@@ -32,36 +55,178 @@ describe('vector', () => {
       let vector1 = Vector(10, 20);
       let vector2 = Vector(5, 10);
 
-      let vector = vector1.add(vector2)
+      let vector = vector1.add(vector2);
 
       expect(vector.x).to.eql(15);
       expect(vector.y).to.eql(30);
     });
 
-    it('should incorporate dt if passed', () => {
+    it('should not modify either vectors', () => {
       let vector1 = Vector(10, 20);
       let vector2 = Vector(5, 10);
 
-      let vector = vector1.add(vector2, 2)
+      let vector = vector1.add(vector2);
 
-      expect(vector.x).to.eql(20);
-      expect(vector.y).to.eql(40);
-    });
-
-    it('should default vector to 0 with empty parameters', () => {
-      let vector1 = Vector(10, 20);
-
-      let vector = vector1.add({x: 10});
-
-      expect(vector.y).to.eql(20);
-
-      vector1 = Vector(10, 20);
-      vector = vector1.add({y: 10});
-
-      expect(vector.x).to.eql(10);
+      expect(vector1.x).to.eql(10);
+      expect(vector1.y).to.eql(20);
+      expect(vector2.x).to.eql(5);
+      expect(vector2.y).to.eql(10);
     });
 
   });
+
+
+
+
+
+  // --------------------------------------------------
+  // subtract
+  // --------------------------------------------------
+  if (hasSubtract) {
+    describe('subtract', () => {
+
+      it('should subtract one vector from another', () => {
+        let vector1 = Vector(10, 20);
+        let vector2 = Vector(5, 10);
+
+        let vector = vector1.subtract(vector2);
+
+        expect(vector.x).to.eql(5);
+        expect(vector.y).to.eql(10);
+      });
+
+      it('should not modify either vectors', () => {
+        let vector1 = Vector(10, 20);
+        let vector2 = Vector(5, 10);
+
+        let vector = vector1.subtract(vector2);
+
+        expect(vector1.x).to.eql(10);
+        expect(vector1.y).to.eql(20);
+        expect(vector2.x).to.eql(5);
+        expect(vector2.y).to.eql(10);
+      });
+
+    });
+  }
+
+
+
+
+
+  // --------------------------------------------------
+  // scale
+  // --------------------------------------------------
+  if (hasScale) {
+    describe('scale', () => {
+
+      it('should scale a vector by a scalar', () => {
+        let vector1 = Vector(5, 10);
+
+        let vector = vector1.scale(2);
+
+        expect(vector.x).to.eql(10);
+        expect(vector.y).to.eql(20);
+      });
+
+      it('should not modify the vector', () => {
+        let vector1 = Vector(5, 10);
+
+        let vector = vector1.scale(2);
+
+        expect(vector1.x).to.eql(5);
+        expect(vector1.y).to.eql(10);
+      });
+
+    });
+  }
+
+
+
+
+
+  // --------------------------------------------------
+  // dot
+  // --------------------------------------------------
+  if (hasDot) {
+    describe('dot', () => {
+
+      it('should calculate dot product of two vectors', () => {
+        let vector1 = Vector(10, 20);
+        let vector2 = Vector(5, 10);
+
+        let dot = vector1.dot(vector2);
+
+        expect(dot).to.eql(250);
+      });
+
+    });
+  }
+
+
+
+
+
+  // --------------------------------------------------
+  // length
+  // --------------------------------------------------
+  if (hasLength) {
+    describe('length', () => {
+
+      it('should calculate the length of the vector', () => {
+        let vector1 = Vector(4, 3);
+
+        let length = vector1.length();
+
+        expect(length).to.eql(5);
+      });
+
+    });
+  }
+
+
+
+
+
+  // --------------------------------------------------
+  // distance
+  // --------------------------------------------------
+  if (hasDistance) {
+    describe('distance', () => {
+
+      it('should calculate the distance between two vectors', () => {
+        let vector1 = Vector(10, 20);
+        let vector2 = Vector(6, 17);
+
+        let distance = vector1.distance(vector2);
+
+        expect(distance).to.eql(5);
+      });
+
+    });
+  }
+
+
+
+
+
+  // --------------------------------------------------
+  // angle
+  // --------------------------------------------------
+  if (hasAngle) {
+    describe('angle', () => {
+
+      it('should calculate the angle between two vectors', () => {
+        let vector1 = Vector(4, 3);
+        let vector2 = Vector(3, 5);
+
+        let angle = vector1.angle(vector2);
+
+        expect(angle.toFixed(2)).to.eql('0.39');
+      });
+
+    });
+  }
 
 
 
@@ -70,41 +235,43 @@ describe('vector', () => {
   // --------------------------------------------------
   // clamp
   // --------------------------------------------------
-  describe('clamp', () => {
-    let vector;
+  if (hasClamp) {
+    describe('clamp', () => {
+      let vector;
 
-    beforeEach(() => {
-      vector = Vector(10, 20);
-      vector.clamp(0, 10, 50, 75);
-    })
+      beforeEach(() => {
+        vector = Vector(10, 20);
+        vector.clamp(0, 10, 50, 75);
+      })
 
-    it('should clamp the vectors x value', () => {
-      vector.x = -10;
+      it('should clamp the vectors x value', () => {
+        vector.x = -10;
 
-      expect(vector.x).to.equal(0);
+        expect(vector.x).to.equal(0);
 
-      vector.x = 100;
+        vector.x = 100;
 
-      expect(vector.x).to.equal(50);
+        expect(vector.x).to.equal(50);
+      });
+
+      it('should clamp the vectors y value', () => {
+        vector.y = -10;
+
+        expect(vector.y).to.equal(10);
+
+        vector.y = 100;
+
+        expect(vector.y).to.equal(75);
+      });
+
+      it('should preserve clamp settings when adding vectors', () => {
+        let vec = vector.add(Vector(100, 100));
+
+        expect(vec.x).to.equal(50);
+        expect(vec.y).to.equal(75);
+      });
+
     });
-
-    it('should clamp the vectors y value', () => {
-      vector.y = -10;
-
-      expect(vector.y).to.equal(10);
-
-      vector.y = 100;
-
-      expect(vector.y).to.equal(75);
-    });
-
-    it('should preserve clamp settings when adding vectors', () => {
-      let vec = vector.add(Vector(100, 100));
-
-      expect(vec.x).to.equal(50);
-      expect(vec.y).to.equal(75);
-    });
-
-  });
+  }
 
 });

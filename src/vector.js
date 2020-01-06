@@ -87,7 +87,7 @@ class Vector {
   // @ifdef VECTOR_NORMALIZE
   // @ifdef VECTOR_LENGTH
   /**
-   * Calculate the normalized value of the current vector. Requires the Vector (length)[/api/vector#length] function.
+   * Calculate the normalized value of the current vector. Requires the Vector [length](/api/vector#length) function.
    * @memberof Vector
    * @function normalize
    *
@@ -151,7 +151,7 @@ class Vector {
   // @ifdef VECTOR_DOT
   // @ifdef VECTOR_LENGTH
   /**
-   * Calculate the angle (in radians) between the current vector and the passed in vector. Requires the Vector [dot](/api/vector#dot) and (length)[/api/vector#length] functions.
+   * Calculate the angle (in radians) between the current vector and the passed in vector. Requires the Vector [dot](/api/vector#dot) and [length](/api/vector#length) functions.
    * @memberof Vector
    * @function angle
    *

@@ -95,7 +95,7 @@ Vector options:
 | subtract      | `subract()` |
 | scale         | `scale()` |
 | length        | `length()` |
-| normalize     | `normalize()` (requires `length` options as well) |
+| normalize     | `normalize()` (requires `length` option as well) |
 | dot           | `dot()` |
 | distance      | `distance()` |
 | angle         | `angle()` (requires `dot` and `length` options as well) |

@@ -15,6 +15,10 @@ const options = {
     'GAMEOBJECT_ANCHOR',
     'GAMEOBJECT_CAMERA'
   ],
+  sprite: [
+    'SPRITE_IMAGE',
+    'SPRITE_ANIMATION'
+  ],
   text: [
     'TEXT_AUTONEWLINE',
     'TEXT_NEWLINE',
@@ -28,7 +32,8 @@ const options = {
     'VECTOR_DOT',
     'VECOTR_LENGTH',
     'VECTOR_DISTANCE',
-    'VECTOR_ANGLE'
+    'VECTOR_ANGLE',
+    'VECTOR_CLAMP'
   ]
 };
 

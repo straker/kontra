@@ -43,6 +43,12 @@ describe('kontra', () => {
     expect(kontraExports.emit).to.exist;
   });
 
+  it('should export helpers api', () => {
+    expect(kontraExports.degToRad).to.exist;
+    expect(kontraExports.radToDeg).to.exist;
+    expect(kontraExports.randInt).to.exist;
+  });
+
   it('should export gameLoop api', () => {
     expect(kontraExports.GameLoop).to.exist;
   });

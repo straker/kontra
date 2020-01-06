@@ -119,11 +119,10 @@ class Vector {
   // @endif
 
   // @ifdef VECOTR_LENGTH
-  // TODO: function name due to livingcss error tags:107 (overriding length property of an array causes an error)
   /**
    * Calculate the length (magnitude) of the Vector.
    * @memberof Vector
-   * @function lengthh
+   * @function length
    *
    * @returns {Number} The length of the vector.
    */

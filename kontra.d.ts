@@ -41,7 +41,7 @@ declare namespace kontra {
     scale(value: number): Vector;
     normalize(): Vector;
     dot(vector: Vector | {x: number, y: number}): number;
-    lengthh(): number;
+    length​​(): number;
     distance(vector: Vector | {x: number, y: number}): number;
     angle(vector: Vector): number;
     clamp(xMin: number, yMin: number, xMax: number, yMax: number): void;

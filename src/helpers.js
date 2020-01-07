@@ -9,7 +9,7 @@
  *
  * @param {Number} deg - Degrees to convert.
  *
- * @returns {Number} radians
+ * @returns {Number} The value in radians
  */
 export function degToRad(deg) {
   return deg * Math.PI / 180;
@@ -21,7 +21,7 @@ export function degToRad(deg) {
  *
  * @param {Number} rad - Radians to convert.
  *
- * @returns {Number} degrees
+ * @returns {Number} The value in degrees
  */
 export function radToDeg(rad) {
   return rad * 180 / Math.PI;
@@ -29,12 +29,13 @@ export function radToDeg(rad) {
 
 /**
  * Return a random integer between min (inclusive) and max (inclusive).
+ * @see https://stackoverflow.com/a/1527820/2124254
  * @function randInt
  *
  * @param {Number} min - Min integer.
  * @param {Number} max - Max integer.
  *
- * @returns {Number} random number between range.
+ * @returns {Number} Random integer between range
  */
 export function randInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;

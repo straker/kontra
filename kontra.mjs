@@ -797,7 +797,7 @@ class Vector {
    *
    * @param {Vector|{x: number, y: number}} vector - Vector to add to the current Vector.
    *
-   * @returns {Vector} A new Vector instance.
+   * @returns {Vector} A new Vector instance whose value is the addition of the two vectors.
    */
   add(vec) {
     return new Vector(
@@ -815,7 +815,7 @@ class Vector {
    *
    * @param {Vector|{x: number, y: number}} vector - Vector to subtract from the current Vector.
    *
-   * @returns {Vector} A new Vector instance.
+   * @returns {Vector} A new Vector instance whose value is the subtraction of the two vectors.
    */
    subtract(vec) {
     return new Vector(
@@ -834,7 +834,7 @@ class Vector {
    *
    * @param {Number} value - Value to scale the current Vector.
    *
-   * @returns {Vector} a new Vector instance.
+   * @returns {Vector} A new Vector instance whose value is multiplied by the scalar.
    */
   scale(value) {
     return new Vector(
@@ -851,7 +851,7 @@ class Vector {
    * @memberof Vector
    * @function normalize
    *
-   * @returns {Vector} a new Vector instance.
+   * @returns {Vector} A new Vector instance whose value is the normalized vector.
    */
   // @see https://github.com/jed/140bytes/wiki/Byte-saving-techniques#use-placeholder-arguments-instead-of-var
   normalize(length = this.length()) {
@@ -899,7 +899,7 @@ class Vector {
    *
    * @param {Vector|{x: number, y: number}} vector - Vector to calculate the distance between.
    *
-   * @returns {Number} the distance between the two vectors.
+   * @returns {Number} The distance between the two vectors.
    */
   distance(vec) {
     return Math.hypot(this.x - vec.x, this.y - vec.y);
@@ -916,7 +916,7 @@ class Vector {
    *
    * @param {Vector} vector - Vector to calculate the angle between.
    *
-   * @returns {Number} the distance (in radians) between the two vectors.
+   * @returns {Number} The angle (in radians) between the two vectors.
    */
   angle(vec) {
     return Math.acos(this.dot(vec) / (this.length() * vec.length()));
@@ -2659,7 +2659,7 @@ function GameLoop({fps = 60, clearCanvas = true, update, render} = {}) {
  *
  * @param {Number} deg - Degrees to convert.
  *
- * @returns {Number} radians
+ * @returns {Number} The value in radians
  */
 function degToRad(deg) {
   return deg * Math.PI / 180;
@@ -2671,7 +2671,7 @@ function degToRad(deg) {
  *
  * @param {Number} rad - Radians to convert.
  *
- * @returns {Number} degrees
+ * @returns {Number} The value in degrees
  */
 function radToDeg(rad) {
   return rad * 180 / Math.PI;
@@ -2679,12 +2679,13 @@ function radToDeg(rad) {
 
 /**
  * Return a random integer between min (inclusive) and max (inclusive).
+ * @see https://stackoverflow.com/a/1527820/2124254
  * @function randInt
  *
  * @param {Number} min - Min integer.
  * @param {Number} max - Max integer.
  *
- * @returns {Number} random number between range.
+ * @returns {Number} Random integer between range
  */
 function randInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;

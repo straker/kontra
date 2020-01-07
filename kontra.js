@@ -881,7 +881,7 @@ class Vector {
   }
   // @endif
 
-  // @ifdef VECOTR_LENGTH
+  // @ifdef VECTOR_LENGTH
   /**
    * Calculate the length (magnitude) of the Vector.
    * @memberof Vector

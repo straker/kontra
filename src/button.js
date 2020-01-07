@@ -1,13 +1,14 @@
 import Text from './text.js'
+import { track } from './pointer.js'
 import { Factory, srOnlyStyle } from './utils.js'
 
 class Button extends Text.class {
 
   /**
-   * An accessible button. Supports screen readers and keyboard navigation using the Tab key. Don't forget to call [initPointer](/api/pointer#initPointer) and [track](/api/pointer#track) to have pointer events enabled on the button.
+   * An accessible button. Supports screen readers and keyboard navigation using the Tab key. Don't forget to call [initPointer](/api/pointer#initPointer) to have pointer events enabled for the button.
    *
    * ```js
-   * import { initPointer, track, Button } from 'kontra';
+   * import { initPointer, Button } from 'kontra';
    * initPointer();
    *
    * button = Button({
@@ -33,7 +34,6 @@ class Button extends Text.class {
    *   }
    * });
    *
-   * track(button);
    * button.render();
    * ```js
    *
@@ -49,6 +49,7 @@ class Button extends Text.class {
    */
   init(properties) {
     super.init(properties);
+    track(this);
 
     // create an accessible DOM node for screen readers
     // dn = dom node

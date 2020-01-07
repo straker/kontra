@@ -7,3 +7,4 @@ test/typings/*.js
 test/playground.html
 
 !test/permutations/index.js
+!test/permutations/karma.conf.template.js

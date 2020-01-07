@@ -50,6 +50,12 @@ describe('kontra.defaults', () => {
     expect(kontra.GameObject).to.exist;
   });
 
+  it('should add helpers api', () => {
+    expect(kontra.degToRad).to.exist;
+    expect(kontra.radToDeg).to.exist;
+    expect(kontra.randInt).to.exist;
+  });
+
   it('should add keyboard api', () => {
     expect(kontra.keyMap).to.exist;
     expect(kontra.initKeys).to.exist;

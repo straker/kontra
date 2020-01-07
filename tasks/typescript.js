@@ -22,6 +22,11 @@ function addSection() {
         ? clas
         : description;
 
+  // TODO: temporary fix for `length` name (zero-width space added to end)
+  if (sectionName === 'length') {
+    sectionName = 'length​​';
+  }
+
   // don't add multiple section tags
   let section = this.comment.tags.find(tag => tag.tag === 'section');
   if (!section) {

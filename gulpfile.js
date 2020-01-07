@@ -22,8 +22,15 @@ const context = {
   TEXT_AUTONEWLINE: true,
   TEXT_NEWLINE: true,
   TEXT_RTL: true,
-  TEXT_ALIGN: true
-
+  TEXT_ALIGN: true,
+  VECTOR_SUBTRACT: true,
+  VECTOR_SCALE: true,
+  VECTOR_NORMALIZE: true,
+  VECTOR_DOT: true,
+  VECTOR_LENGTH: true,
+  VECTOR_DISTANCE: true,
+  VECTOR_ANGLE: true,
+  VECTOR_CLAMP: true
   // DEBUG and VISUAL_DEBUG are turned off
 };
 

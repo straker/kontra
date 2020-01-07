@@ -48,6 +48,7 @@
               <li><a href="api/events" >Events</a></li>
               <li><a href="api/gameLoop" >GameLoop</a></li>
               <li><a href="api/gameobject" >GameObject</a></li>
+              <li><a href="api/helpers" >Helpers</a></li>
               <li><a href="api/keyboard" >Keyboard</a></li>
               <li><a href="api/plugin" >Plugin</a></li>
               <li><a href="api/pointer" >Pointer</a></li>
@@ -74,7 +75,7 @@
         <h1>Button(&#8203;properties)
         </h1>
 
-        <p>An accessible button. Supports screen readers and keyboard navigation using the Tab key. Don&#39;t forget to call <a href="/api/pointer#initPointer">initPointer</a> and <a href="/api/pointer#track">track</a> to have pointer events enabled on the button.</p>
+        <p>An accessible button. Supports screen readers and keyboard navigation using the Tab key. Don&#39;t forget to call <a href="/api/pointer#initPointer">initPointer</a> to have pointer events enabled for the button.</p>
 <div class="tablist">
   <ul role="tablist">
     <li role="presentation" data-tab="global">
@@ -88,7 +89,7 @@
     </li>
     <li role="presentation"></li>
   </ul>
-  <section role="tabpanel" aria-labelledby=button-global-tab data-tabpanel="global"><pre><code class="language-js">let { initPointer, track, Button } = kontra;
+  <section role="tabpanel" aria-labelledby=button-global-tab data-tabpanel="global"><pre><code class="language-js">let { initPointer, Button } = kontra;
 initPointer();
 
 button = Button({
@@ -114,10 +115,9 @@ button = Button({
   }
 });
 
-track(button);
 button.render();
 ```js</code></pre></section>
-  <section role="tabpanel" aria-labelledby=button-es-tab data-tabpanel="es"><pre><code class="language-js">import { initPointer, track, Button } from 'path/to/kontra.mjs';
+  <section role="tabpanel" aria-labelledby=button-es-tab data-tabpanel="es"><pre><code class="language-js">import { initPointer, Button } from 'path/to/kontra.mjs';
 initPointer();
 
 button = Button({
@@ -143,10 +143,9 @@ button = Button({
   }
 });
 
-track(button);
 button.render();
 ```js</code></pre></section>
-  <section role="tabpanel" aria-labelledby=button-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { initPointer, track, Button } from &#39;kontra&#39;;
+  <section role="tabpanel" aria-labelledby=button-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { initPointer, Button } from &#39;kontra&#39;;
 initPointer();
 
 button = Button({
@@ -172,7 +171,6 @@ button = Button({
   }
 });
 
-track(button);
 button.render();
 ```js</code></pre></section>
 </div>

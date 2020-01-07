@@ -88,6 +88,18 @@ Text options:
 | textAlign     | `textAlign` |
 | rtl           | Support for RTL languages |
 
+Vector options:
+
+| Name          | Functionality Enabled |
+| ------------- | ------------- |
+| subtract      | `subract()` |
+| scale         | `scale()` |
+| length        | `length()` |
+| normalize     | `normalize()` (requires `length` option as well) |
+| dot           | `dot()` |
+| distance      | `distance()` |
+| angle         | `angle()` (requires `dot` and `length` options as well) |
+| clamp         | `clamp()` |
 
 @section Custom Builds
 @page custom-builds

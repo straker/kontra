@@ -36,7 +36,14 @@ declare namespace kontra {
   function loadData(url: string): Promise<any>;
   function load(...urls: string[]): Promise<any[]>;
   interface Vector {
-    add(vector: Vector | {x: number, y: number}, dt?: number): Vector;
+    add(vector: Vector | {x: number, y: number}): Vector;
+    subtract(vector: Vector | {x: number, y: number}): Vector;
+    scale(value: number): Vector;
+    normalize(): Vector;
+    dot(vector: Vector | {x: number, y: number}): number;
+    length​​(): number;
+    distance(vector: Vector | {x: number, y: number}): number;
+    angle(vector: Vector): number;
     clamp(xMin: number, yMin: number, xMax: number, yMax: number): void;
     x: number;
     y: number;
@@ -102,6 +109,14 @@ declare namespace kontra {
     (properties: {text: string, font?: string, color?: string, width?: number, textAlign?: string, x?: number, y?: number, dx?: number, dy?: number, ddx?: number, ddy?: number, height?: number, ttl?: number, rotation?: number, anchor?: {x: number, y: number}, context?: CanvasRenderingContext2D, update?: (dt?: number) => void, render?: Function, [props: string]: any}): Text;
   }
   var Text: TextConstructor
+  var pointer: {x: number, y: number, radius: number};
+  function initPointer(): void;
+  function track(...objects: object[]): void;
+  function untrack(...objects: object[]): void;
+  function pointerOver(object: object): boolean;
+  function onPointerDown(callback: (evt: MouseEvent | TouchEvent, object?: object) => void): void;
+  function onPointerUp(callback: (evt: MouseEvent | TouchEvent, object?: object) => void): void;
+  function pointerPressed(button: string): boolean;
   interface Button extends Text {
     destroy(): void;
     enable(): void;
@@ -137,6 +152,9 @@ declare namespace kontra {
     (properties: {update: (dt?: number) => void, render: Function, fps?: number, clearCanvas?: boolean}): GameLoop;
   }
   var GameLoop: GameLoopConstructor
+  function degToRad(deg: number): number;
+  function radToDeg(rad: number): number;
+  function randInt(min: number, max: number): number;
   var keyMap: {[key in (string | number)]: string};
   function initKeys(): void;
   function bindKeys(keys: string | string[], callback: (evt: KeyboardEvent) => void): void;
@@ -145,14 +163,6 @@ declare namespace kontra {
   function registerPlugin(kontraObj: object, pluginObj: object): void;
   function unregisterPlugin(kontraObj: object, pluginObj: object): void;
   function extendObject(kontraObj: object, properties: object): void;
-  var pointer: {x: number, y: number, radius: number};
-  function initPointer(): void;
-  function track(...objects: object[]): void;
-  function untrack(...objects: object[]): void;
-  function pointerOver(object: object): boolean;
-  function onPointerDown(callback: (evt: MouseEvent | TouchEvent, object?: object) => void): void;
-  function onPointerUp(callback: (evt: MouseEvent | TouchEvent, object?: object) => void): void;
-  function pointerPressed(button: string): boolean;
   interface Pool {
     objects: object[];
     size: number;

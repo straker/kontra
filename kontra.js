@@ -890,7 +890,7 @@ class Vector {
    * @returns {Number} The length of the vector.
    */
   length() {
-    return (this.x * this.x + this.y * this.y) ** 0.5;
+    return Math.hypot(this.x, this.y);
   }
   // @endif
 
@@ -904,9 +904,8 @@ class Vector {
    *
    * @returns {Number} the distance between the two vectors.
    */
-  // @see https://github.com/jed/140bytes/wiki/Byte-saving-techniques#use-placeholder-arguments-instead-of-var
-  distance(vec, x = this.x - vec.x, y = this.y - vec.y) {
-    return (x * x + y * y) ** 0.5;
+  distance(vec) {
+    return Math.hypot(this.x - vec.x, this.y - vec.y);
   }
   // @endif
 

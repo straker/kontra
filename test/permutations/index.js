@@ -30,7 +30,7 @@ const options = {
     'VECTOR_SCALE',
     'VECTOR_NORMALIZE',
     'VECTOR_DOT',
-    'VECOTR_LENGTH',
+    'VECTOR_LENGTH',
     'VECTOR_DISTANCE',
     'VECTOR_ANGLE',
     'VECTOR_CLAMP'

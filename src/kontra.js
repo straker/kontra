@@ -17,7 +17,14 @@ export { init, getCanvas, getContext } from './core.js'
 export { on, off, emit } from './events.js'
 export { default as GameLoop } from './gameLoop.js'
 export { default as GameObject } from './gameObject.js'
-export { degToRad, radToDeg, randInt } from './helpers.js'
+export {
+  degToRad,
+  radToDeg,
+  randInt,
+  lerp,
+  inverseLerp,
+  clamp
+} from './helpers.js'
 export { keyMap, initKeys, bindKeys, unbindKeys, keyPressed } from './keyboard.js'
 export { registerPlugin, unregisterPlugin, extendObject } from './plugin.js'
 export {

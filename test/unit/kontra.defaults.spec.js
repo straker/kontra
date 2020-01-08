@@ -54,6 +54,9 @@ describe('kontra.defaults', () => {
     expect(kontra.degToRad).to.exist;
     expect(kontra.radToDeg).to.exist;
     expect(kontra.randInt).to.exist;
+    expect(kontra.lerp).to.exist;
+    expect(kontra.inverseLerp).to.exist;
+    expect(kontra.clamp).to.exist;
   });
 
   it('should add keyboard api', () => {

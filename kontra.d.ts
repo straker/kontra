@@ -155,6 +155,9 @@ declare namespace kontra {
   function degToRad(deg: number): number;
   function radToDeg(rad: number): number;
   function randInt(min: number, max: number): number;
+  function lerp(start: number, end: number, percent: number): number;
+  function inverseLerp(start: number, end: number, value: number): number;
+  function clamp(min: number, max: number, value: number): number;
   var keyMap: {[key in (string | number)]: string};
   function initKeys(): void;
   function bindKeys(keys: string | string[], callback: (evt: KeyboardEvent) => void): void;

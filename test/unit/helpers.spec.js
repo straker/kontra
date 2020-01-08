@@ -9,6 +9,9 @@ describe('helpers', () => {
     expect(helpers.degToRad).to.be.an('function');
     expect(helpers.radToDeg).to.be.an('function');
     expect(helpers.randInt).to.be.an('function');
+    expect(helpers.lerp).to.be.an('function');
+    expect(helpers.inverseLerp).to.be.an('function');
+    expect(helpers.clamp).to.be.an('function');
   });
 
   it('should convert degrees to radians', () => {
@@ -22,6 +25,83 @@ describe('helpers', () => {
   it('should get random integer between range', () => {
     sinon.stub(Math, 'random').returns(0.25);
     expect(helpers.randInt(2, 10)).to.equal(4);
+  });
+
+
+
+
+
+  // --------------------------------------------------
+  // lerp
+  // --------------------------------------------------
+  describe('lerp', () => {
+
+    it('should calculate the linear interpolation', () => {
+      expect(helpers.lerp(10, 20, 0.5)).to.equal(15);
+    });
+
+    it('should handle negative numbers', () => {
+      expect(helpers.lerp(-10, 20, 0.5)).to.equal(5);
+    });
+
+    it('should handle percentages greater than 1', () => {
+      expect(helpers.lerp(10, 20, 2)).to.equal(30);
+    });
+
+    it('should handle negative percentages', () => {
+      expect(helpers.lerp(10, 20, -1)).to.equal(0);
+    });
+
+  });
+
+
+
+
+
+  // --------------------------------------------------
+  // inverseLerp
+  // --------------------------------------------------
+  describe('inverseLerp', () => {
+
+    it('should calculate the inverse linear interpolation', () => {
+      expect(helpers.inverseLerp(10, 20, 15)).to.equal(0.5);
+    });
+
+    it('should handle negative numbers', () => {
+      expect(helpers.inverseLerp(-10, 20, 5)).to.equal(0.5);
+    });
+
+    it('should handle percentages greater than 1', () => {
+      expect(helpers.inverseLerp(10, 20, 30)).to.equal(2);
+    });
+
+    it('should handle negative percentages', () => {
+      expect(helpers.inverseLerp(10, 20, 0)).to.equal(-1);
+    });
+
+  });
+
+
+
+
+
+  // --------------------------------------------------
+  // clamp
+  // --------------------------------------------------
+  describe('clamp', () => {
+
+    it('should clamp the value when below min', () => {
+      expect(helpers.clamp(10, 20, 5)).to.equal(10);
+    });
+
+    it('should clamp the value when above max', () => {
+      expect(helpers.clamp(10, 20, 30)).to.equal(20);
+    });
+
+    it('should retain the number when between min and max', () => {
+      expect(helpers.clamp(10, 20, 15)).to.equal(15);
+    });
+
   });
 
 });

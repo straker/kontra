@@ -75,6 +75,26 @@
         <h1>Helpers        </h1>
 
         <p>A group of helpful functions that are commonly used for game development. Includes things such as converting between radians and degrees and getting random integers.</p>
+<div class="tablist">
+  <ul role="tablist">
+    <li role="presentation" data-tab="global">
+      <button role="tab" id="helpers-global-tab">Global Object</button>
+    </li>
+    <li role="presentation" data-tab="es">
+      <button role="tab" id="helpers-es-tab">ES Module Import</button>
+    </li>
+    <li role="presentation" data-tab="bundle">
+      <button role="tab" id="helpers-bundle-tab">Module Bundler</button>
+    </li>
+    <li role="presentation"></li>
+  </ul>
+  <section role="tabpanel" aria-labelledby=helpers-global-tab data-tabpanel="global"><pre><code class="language-js">let { degToRad } = kontra;
+let radians = degToRad(180);  // =&gt; 3.14</code></pre></section>
+  <section role="tabpanel" aria-labelledby=helpers-es-tab data-tabpanel="es"><pre><code class="language-js">import { degToRad } from 'path/to/kontra.mjs';
+let radians = degToRad(180);  // =&gt; 3.14</code></pre></section>
+  <section role="tabpanel" aria-labelledby=helpers-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { degToRad } from &#39;kontra&#39;;
+let radians = degToRad(180);  // =&gt; 3.14</code></pre></section>
+</div>
         
 
         <section class="toc">
@@ -87,8 +107,23 @@
               <h3 id="methods">Methods</h3>
               <ul aria-labelledby="methods">
                 <li>
+                  <a href="api/helpers#clamp">
+                    <span>clamp(&#8203;min, max, value)</span>
+                  </a>
+                </li>
+                <li>
                   <a href="api/helpers#degToRad">
                     <span>degToRad(&#8203;deg)</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="api/helpers#inverseLerp">
+                    <span>inverseLerp(&#8203;start, end, value)</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="api/helpers#lerp">
+                    <span>lerp(&#8203;start, end, percent)</span>
                   </a>
                 </li>
                 <li>
@@ -107,6 +142,41 @@
         </section>
 
 
+        <section>
+          <h2 id="clamp">
+            <a href="api/helpers#clamp" class="section-link">
+              <span>clamp(&#8203;min, max, value)</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
+
+          <p>Clamp a number between two values, preventing it from going below or above the minimum and maximum values.</p>
+          <h3 id="title-clamp"><span class="visually-hidden">clamp</span> Parameters</span></h3>
+          <dl aria-labelledby="title-clamp">
+            <dt>
+              <code>min</code>
+              
+            </dt>
+            <dd><p>Number. Min value.</p>
+          </dd>
+            <dt>
+              <code>max</code>
+              
+            </dt>
+            <dd><p>Number. Max value.</p>
+          </dd>
+            <dt>
+              <code>value</code>
+              
+            </dt>
+            <dd><p>Number. Value to clamp.</p>
+          </dd>
+          </dl>
+          
+          <h3><span class="visually-hidden">clamp</span> Return value</h3>
+          <p><p>Value clamped between min and max.</p>
+          </p>
+        </section>
         <section>
           <h2 id="degToRad">
             <a href="api/helpers#degToRad" class="section-link">
@@ -127,7 +197,129 @@
           </dl>
           
           <h3><span class="visually-hidden">degToRad</span> Return value</h3>
-          <p><p>The value in radians</p>
+          <p><p>The value in radians.</p>
+          </p>
+        </section>
+        <section>
+          <h2 id="inverseLerp">
+            <a href="api/helpers#inverseLerp" class="section-link">
+              <span>inverseLerp(&#8203;start, end, value)</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
+
+          <p>Return the linear interpolation percent between two values. The function calculates the percent between two values of a given value.</p>
+<div class="tablist">
+  <ul role="tablist">
+    <li role="presentation" data-tab="global">
+      <button role="tab" id="inverselerp-global-tab">Global Object</button>
+    </li>
+    <li role="presentation" data-tab="es">
+      <button role="tab" id="inverselerp-es-tab">ES Module Import</button>
+    </li>
+    <li role="presentation" data-tab="bundle">
+      <button role="tab" id="inverselerp-bundle-tab">Module Bundler</button>
+    </li>
+    <li role="presentation"></li>
+  </ul>
+  <section role="tabpanel" aria-labelledby=inverselerp-global-tab data-tabpanel="global"><pre><code class="language-js">let { inverseLerp } = kontra;
+
+console.log( inverseLerp(10, 20, 15) );  // =&gt; 0.5
+console.log( inverseLerp(10, 20, 30) );  // =&gt; 2</code></pre></section>
+  <section role="tabpanel" aria-labelledby=inverselerp-es-tab data-tabpanel="es"><pre><code class="language-js">import { inverseLerp } from 'path/to/kontra.mjs';
+
+console.log( inverseLerp(10, 20, 15) );  // =&gt; 0.5
+console.log( inverseLerp(10, 20, 30) );  // =&gt; 2</code></pre></section>
+  <section role="tabpanel" aria-labelledby=inverselerp-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { inverseLerp } from &#39;kontra&#39;;
+
+console.log( inverseLerp(10, 20, 15) );  // =&gt; 0.5
+console.log( inverseLerp(10, 20, 30) );  // =&gt; 2</code></pre></section>
+</div>
+          <h3 id="title-inverseLerp"><span class="visually-hidden">inverseLerp</span> Parameters</span></h3>
+          <dl aria-labelledby="title-inverseLerp">
+            <dt>
+              <code>start</code>
+              
+            </dt>
+            <dd><p>Number. Start value.</p>
+          </dd>
+            <dt>
+              <code>end</code>
+              
+            </dt>
+            <dd><p>Number. End value.</p>
+          </dd>
+            <dt>
+              <code>value</code>
+              
+            </dt>
+            <dd><p>Number. Value between start and end.</p>
+          </dd>
+          </dl>
+          
+          <h3><span class="visually-hidden">inverseLerp</span> Return value</h3>
+          <p><p>Percent difference between the start and end values.</p>
+          </p>
+        </section>
+        <section>
+          <h2 id="lerp">
+            <a href="api/helpers#lerp" class="section-link">
+              <span>lerp(&#8203;start, end, percent)</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
+
+          <p>Linearly interpolate between two values. The function calculates the number between two values based on a percent. Great for smooth transitions.</p>
+<div class="tablist">
+  <ul role="tablist">
+    <li role="presentation" data-tab="global">
+      <button role="tab" id="lerp-global-tab">Global Object</button>
+    </li>
+    <li role="presentation" data-tab="es">
+      <button role="tab" id="lerp-es-tab">ES Module Import</button>
+    </li>
+    <li role="presentation" data-tab="bundle">
+      <button role="tab" id="lerp-bundle-tab">Module Bundler</button>
+    </li>
+    <li role="presentation"></li>
+  </ul>
+  <section role="tabpanel" aria-labelledby=lerp-global-tab data-tabpanel="global"><pre><code class="language-js">let { lerp } = kontra;
+
+console.log( lerp(10, 20, 0.5) );  // =&gt; 15
+console.log( lerp(10, 20, 2) );  // =&gt; 30</code></pre></section>
+  <section role="tabpanel" aria-labelledby=lerp-es-tab data-tabpanel="es"><pre><code class="language-js">import { lerp } from 'path/to/kontra.mjs';
+
+console.log( lerp(10, 20, 0.5) );  // =&gt; 15
+console.log( lerp(10, 20, 2) );  // =&gt; 30</code></pre></section>
+  <section role="tabpanel" aria-labelledby=lerp-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { lerp } from &#39;kontra&#39;;
+
+console.log( lerp(10, 20, 0.5) );  // =&gt; 15
+console.log( lerp(10, 20, 2) );  // =&gt; 30</code></pre></section>
+</div>
+          <h3 id="title-lerp"><span class="visually-hidden">lerp</span> Parameters</span></h3>
+          <dl aria-labelledby="title-lerp">
+            <dt>
+              <code>start</code>
+              
+            </dt>
+            <dd><p>Number. Start value.</p>
+          </dd>
+            <dt>
+              <code>end</code>
+              
+            </dt>
+            <dd><p>Number. End value.</p>
+          </dd>
+            <dt>
+              <code>percent</code>
+              
+            </dt>
+            <dd><p>Number. Percent to interpolate.</p>
+          </dd>
+          </dl>
+          
+          <h3><span class="visually-hidden">lerp</span> Return value</h3>
+          <p><p>Interpolated number between the start and end values</p>
           </p>
         </section>
         <section>
@@ -150,7 +342,7 @@
           </dl>
           
           <h3><span class="visually-hidden">radToDeg</span> Return value</h3>
-          <p><p>The value in degrees</p>
+          <p><p>The value in degrees.</p>
           </p>
         </section>
         <section>
@@ -161,7 +353,7 @@
             </a>
           </h2>
 
-          <p>Return a random integer between min (inclusive) and max (inclusive).</p>
+          <p>Return a random integer between a minimum (inclusive) and maximum (inclusive) integer.</p>
           <h3 id="title-randInt"><span class="visually-hidden">randInt</span> Parameters</span></h3>
           <dl aria-labelledby="title-randInt">
             <dt>
@@ -179,7 +371,7 @@
           </dl>
           
           <h3><span class="visually-hidden">randInt</span> Return value</h3>
-          <p><p>Random integer between range</p>
+          <p><p>Random integer between min and max values.</p>
           </p>
         </section>
 

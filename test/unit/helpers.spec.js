@@ -8,23 +8,71 @@ describe('helpers', () => {
   it('should export api', () => {
     expect(helpers.degToRad).to.be.an('function');
     expect(helpers.radToDeg).to.be.an('function');
+    expect(helpers.angleToTarget).to.be.an('function');
     expect(helpers.randInt).to.be.an('function');
     expect(helpers.lerp).to.be.an('function');
     expect(helpers.inverseLerp).to.be.an('function');
     expect(helpers.clamp).to.be.an('function');
   });
 
-  it('should convert degrees to radians', () => {
-    expect(helpers.degToRad(22.35).toFixed(2)).to.equal('0.39');
+  // --------------------------------------------------
+  // degToRad
+  // --------------------------------------------------
+  describe('degToRad', () => {
+
+    it('should convert degrees to radians', () => {
+      expect(helpers.degToRad(22.35).toFixed(2)).to.equal('0.39');
+    });
+
   });
 
-  it('should convert radians to degrees', () => {
-    expect(helpers.radToDeg(0.39).toFixed(2)).to.equal('22.35');
+
+
+
+
+  // --------------------------------------------------
+  // radToDeg
+  // --------------------------------------------------
+  describe('radToDeg', () => {
+
+    it('should convert radians to degrees', () => {
+      expect(helpers.radToDeg(0.39).toFixed(2)).to.equal('22.35');
+    });
+
   });
 
-  it('should get random integer between range', () => {
-    sinon.stub(Math, 'random').returns(0.25);
-    expect(helpers.randInt(2, 10)).to.equal(4);
+
+
+
+
+  // --------------------------------------------------
+  // angleToTarget
+  // --------------------------------------------------
+  describe('angleToTarget', () => {
+
+    it('should return the angle to the target', () => {
+      let source = {x: 300, y: 300};
+      let target = {x: 100, y: 100};
+      expect(helpers.angleToTarget(source, target).toFixed(2)).to.equal('-0.79');
+      expect(helpers.angleToTarget(target, source).toFixed(2)).to.equal('2.36');
+    });
+
+  });
+
+
+
+
+  // --------------------------------------------------
+  // randInt
+  // --------------------------------------------------
+  describe('randInt', () => {
+
+    it('should get random integer between range', () => {
+      sinon.stub(Math, 'random').returns(0.25);
+      expect(helpers.randInt(2, 10)).to.equal(4);
+      Math.random.restore();
+    });
+
   });
 
 

@@ -154,6 +154,7 @@ declare namespace kontra {
   var GameLoop: GameLoopConstructor
   function degToRad(deg: number): number;
   function radToDeg(rad: number): number;
+  function angleToTarget(source: {x: number, y: number}, target: {x: number, y: number}): number;
   function randInt(min: number, max: number): number;
   function lerp(start: number, end: number, percent: number): number;
   function inverseLerp(start: number, end: number, value: number): number;

@@ -33,6 +33,24 @@ export function radToDeg(rad) {
 }
 
 /**
+ * Return the angle (in radians) from one point to another point.
+ * @function angleToTarget
+ *
+ * @param {{x: Number, y: Number}} source - The source point.
+ * @param {{x: Number, y: Number}} target - The target point.
+ *
+ * @returns {Number} angle (in radians)from the source point to the target point.
+ */
+export function angleToTarget(source, target) {
+
+  // atan2 returns the counter-clockwise angle in respect to the x-axis, but
+  // the canvas rotation system is based on the y-axis (rotation of 0 = up).
+  // so we need to add a quarter rotation to return a counter-clockwise
+  // rotation in respect to the y-axis
+  return Math.atan2(target.y - source.y, target.x - source.x) + Math.PI / 2;
+}
+
+/**
  * Return a random integer between a minimum (inclusive) and maximum (inclusive) integer.
  * @see https://stackoverflow.com/a/1527820/2124254
  * @function randInt

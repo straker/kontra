@@ -791,7 +791,7 @@ class Vector {
   }
 
   /**
-   * Calculate the addition of the current vector with the passed in vector.
+   * Calculate the addition of the current vector with the given vector.
    * @memberof Vector
    * @function add
    *
@@ -809,7 +809,7 @@ class Vector {
 
   // @ifdef VECTOR_SUBTRACT
   /**
-   * Calculate the subtraction of the current vector with the passed in vector.
+   * Calculate the subtraction of the current vector with the given vector.
    * @memberof Vector
    * @function subtract
    *
@@ -865,7 +865,7 @@ class Vector {
 
   // @ifdef VECTOR_DOT
   /**
-   * Calculate the dot product of the current vector with the passed in vector.
+   * Calculate the dot product of the current vector with the given vector.
    * @memberof Vector
    * @function dot
    *
@@ -893,7 +893,7 @@ class Vector {
 
   // @ifdef VECTOR_DISTANCE
   /**
-   * Calculate the distance between the current vector and the passed in vector.
+   * Calculate the distance between the current vector and the given vector.
    * @memberof Vector
    * @function distance
    *
@@ -910,7 +910,7 @@ class Vector {
   // @ifdef VECTOR_DOT
   // @ifdef VECTOR_LENGTH
   /**
-   * Calculate the angle (in radians) between the current vector and the passed in vector. Requires the Vector [dot](/api/vector#dot) and [length](/api/vector#length) functions.
+   * Calculate the angle (in radians) between the current vector and the given vector. Requires the Vector [dot](/api/vector#dot) and [length](/api/vector#length) functions.
    * @memberof Vector
    * @function angle
    *
@@ -2680,6 +2680,24 @@ function degToRad(deg) {
  */
 function radToDeg(rad) {
   return rad * 180 / Math.PI;
+}
+
+/**
+ * Return the angle (in radians) from one point to another point.
+ * @function angleToTarget
+ *
+ * @param {{x: Number, y: Number}} source - The source point.
+ * @param {{x: Number, y: Number}} target - The target point.
+ *
+ * @returns {Number} angle (in radians)from the source point to the target point.
+ */
+function angleToTarget(source, target) {
+
+  // atan2 returns the counter-clockwise angle in respect to the x-axis, but
+  // the canvas rotation system is based on the y-axis (rotation of 0 = up).
+  // so we need to add a quarter rotation to return a counter-clockwise
+  // rotation in respect to the y-axis
+  return Math.atan2(target.y - source.y, target.x - source.x) + Math.PI / 2;
 }
 
 /**
@@ -4931,6 +4949,7 @@ let kontra = {
 
   degToRad,
   radToDeg,
+  angleToTarget,
   randInt,
   lerp,
   inverseLerp,
@@ -4969,5 +4988,5 @@ let kontra = {
   Vector: Vector$1
 };
 
-export { Animation$1 as Animation, imageAssets, audioAssets, dataAssets, setImagePath, setAudioPath, setDataPath, loadImage, loadAudio, loadData, load, Button$1 as Button, collides, init, getCanvas, getContext, on, off, emit, GameLoop, GameObject$1 as GameObject, degToRad, radToDeg, randInt, lerp, inverseLerp, clamp, keyMap, initKeys, bindKeys, unbindKeys, keyPressed, registerPlugin, unregisterPlugin, extendObject, initPointer, pointer, track, untrack, pointerOver, onPointerDown, onPointerUp, pointerPressed, Pool$1 as Pool, Quadtree$1 as Quadtree, Scene$1 as Scene, Sprite$1 as Sprite, SpriteSheet$1 as SpriteSheet, setStoreItem, getStoreItem, Text$1 as Text, TileEngine, Vector$1 as Vector };
+export { Animation$1 as Animation, imageAssets, audioAssets, dataAssets, setImagePath, setAudioPath, setDataPath, loadImage, loadAudio, loadData, load, Button$1 as Button, collides, init, getCanvas, getContext, on, off, emit, GameLoop, GameObject$1 as GameObject, degToRad, radToDeg, angleToTarget, randInt, lerp, inverseLerp, clamp, keyMap, initKeys, bindKeys, unbindKeys, keyPressed, registerPlugin, unregisterPlugin, extendObject, initPointer, pointer, track, untrack, pointerOver, onPointerDown, onPointerUp, pointerPressed, Pool$1 as Pool, Quadtree$1 as Quadtree, Scene$1 as Scene, Sprite$1 as Sprite, SpriteSheet$1 as SpriteSheet, setStoreItem, getStoreItem, Text$1 as Text, TileEngine, Vector$1 as Vector };
 export default kontra;

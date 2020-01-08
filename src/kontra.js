@@ -20,6 +20,7 @@ export { default as GameObject } from './gameObject.js'
 export {
   degToRad,
   radToDeg,
+  angleToTarget,
   randInt,
   lerp,
   inverseLerp,

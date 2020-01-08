@@ -53,6 +53,7 @@ describe('kontra.defaults', () => {
   it('should add helpers api', () => {
     expect(kontra.degToRad).to.exist;
     expect(kontra.radToDeg).to.exist;
+    expect(kontra.angleToTarget).to.exist;
     expect(kontra.randInt).to.exist;
     expect(kontra.lerp).to.exist;
     expect(kontra.inverseLerp).to.exist;

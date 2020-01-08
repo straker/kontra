@@ -46,6 +46,7 @@ describe('kontra', () => {
   it('should export helpers api', () => {
     expect(kontraExports.degToRad).to.exist;
     expect(kontraExports.radToDeg).to.exist;
+    expect(kontraExports.angleToTarget).to.exist;
     expect(kontraExports.randInt).to.exist;
     expect(kontraExports.lerp).to.exist;
     expect(kontraExports.inverseLerp).to.exist;

@@ -20,6 +20,7 @@ import GameObject from './gameObject.js'
 import {
   radToDeg,
   degToRad,
+  angleToTarget,
   randInt,
   lerp,
   inverseLerp,
@@ -78,6 +79,7 @@ let kontra = {
 
   degToRad,
   radToDeg,
+  angleToTarget,
   randInt,
   lerp,
   inverseLerp,

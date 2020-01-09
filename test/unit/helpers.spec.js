@@ -80,6 +80,28 @@ describe('helpers', () => {
 
 
   // --------------------------------------------------
+  // seedRand
+  // --------------------------------------------------
+  describe('seedRand', () => {
+
+    it('should seed a random number generator', () => {
+      let rand = helpers.seedRand('kontra');
+      expect(rand()).to.equal(0.33761959057301283);
+
+      for (let i = 0; i < 20; i++) {
+        rand();
+      }
+
+      expect(rand()).to.equal(0.5485938163474202);
+    });
+
+  });
+
+
+
+
+
+  // --------------------------------------------------
   // lerp
   // --------------------------------------------------
   describe('lerp', () => {

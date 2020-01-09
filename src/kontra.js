@@ -22,6 +22,7 @@ export {
   radToDeg,
   angleToTarget,
   randInt,
+  seedRand,
   lerp,
   inverseLerp,
   clamp

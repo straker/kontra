@@ -22,6 +22,7 @@ import {
   degToRad,
   angleToTarget,
   randInt,
+  seedRand,
   lerp,
   inverseLerp,
   clamp
@@ -81,6 +82,7 @@ let kontra = {
   radToDeg,
   angleToTarget,
   randInt,
+  seedRand,
   lerp,
   inverseLerp,
   clamp,

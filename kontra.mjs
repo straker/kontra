@@ -2715,6 +2715,43 @@ function randInt(min, max) {
 }
 
 /**
+ * Create a seeded random number generator.
+ * @see https://stackoverflow.com/a/47593316/2124254
+ * @see https://github.com/bryc/code/blob/master/jshash/PRNGs.md
+ *
+ * ```js
+ * let { seedRand } = kontra;
+ *
+ * let rand = seedRand('kontra');
+ * console.log(rand());  // => always 0.33761959057301283
+ * ```
+ * @function seedRand
+ *
+ * @param {String} str - String to seed the random number generator.
+ *
+ * @returns {() => Number} Seeded random number generator.
+ */
+ function seedRand(str) {
+  // based on the above references, this was the smallest code yet decent
+  // quality seed random function
+
+  // first create a suitable hash of the seed string using xfnv1a
+  // @see https://github.com/bryc/code/blob/master/jshash/PRNGs.md#addendum-a-seed-generating-functions
+  for(var i = 0, h = 2166136261 >>> 0; i < str.length; i++) {
+    h = Math.imul(h ^ str.charCodeAt(i), 16777619);
+  }
+  h += h << 13; h ^= h >>> 7;
+  h += h << 3;  h ^= h >>> 17;
+  let seed = (h += h << 5) >>> 0;
+
+  // then return the seed function and discard the first result
+  // @see https://github.com/bryc/code/blob/master/jshash/PRNGs.md#lcg-lehmer-rng
+  let rand = () => (2 ** 31 - 1 & (seed = Math.imul(48271, seed))) / 2 ** 31;
+  rand();
+  return rand;
+}
+
+/**
  * Linearly interpolate between two values. The function calculates the number between two values based on a percent. Great for smooth transitions.
  *
  * ```js
@@ -4951,6 +4988,7 @@ let kontra = {
   radToDeg,
   angleToTarget,
   randInt,
+  seedRand,
   lerp,
   inverseLerp,
   clamp,
@@ -4988,5 +5026,5 @@ let kontra = {
   Vector: Vector$1
 };
 
-export { Animation$1 as Animation, imageAssets, audioAssets, dataAssets, setImagePath, setAudioPath, setDataPath, loadImage, loadAudio, loadData, load, Button$1 as Button, collides, init, getCanvas, getContext, on, off, emit, GameLoop, GameObject$1 as GameObject, degToRad, radToDeg, angleToTarget, randInt, lerp, inverseLerp, clamp, keyMap, initKeys, bindKeys, unbindKeys, keyPressed, registerPlugin, unregisterPlugin, extendObject, initPointer, pointer, track, untrack, pointerOver, onPointerDown, onPointerUp, pointerPressed, Pool$1 as Pool, Quadtree$1 as Quadtree, Scene$1 as Scene, Sprite$1 as Sprite, SpriteSheet$1 as SpriteSheet, setStoreItem, getStoreItem, Text$1 as Text, TileEngine, Vector$1 as Vector };
+export { Animation$1 as Animation, imageAssets, audioAssets, dataAssets, setImagePath, setAudioPath, setDataPath, loadImage, loadAudio, loadData, load, Button$1 as Button, collides, init, getCanvas, getContext, on, off, emit, GameLoop, GameObject$1 as GameObject, degToRad, radToDeg, angleToTarget, randInt, seedRand, lerp, inverseLerp, clamp, keyMap, initKeys, bindKeys, unbindKeys, keyPressed, registerPlugin, unregisterPlugin, extendObject, initPointer, pointer, track, untrack, pointerOver, onPointerDown, onPointerUp, pointerPressed, Pool$1 as Pool, Quadtree$1 as Quadtree, Scene$1 as Scene, Sprite$1 as Sprite, SpriteSheet$1 as SpriteSheet, setStoreItem, getStoreItem, Text$1 as Text, TileEngine, Vector$1 as Vector };
 export default kontra;

@@ -152,31 +152,31 @@ image.onload = function() {
             <code>properties</code>
             
           </dt>
-          <dd><p>Object. Properties of the animation.</p>
+          <dd><p><em>Object</em>. Properties of the animation.</p>
         </dd>
           <dt>
             <code>properties.spriteSheet</code>
             
           </dt>
-          <dd><p><a href="api/spriteSheet">SpriteSheet</a>. Sprite sheet for the animation.</p>
+          <dd><p><em><a href="api/spriteSheet">SpriteSheet</a></em>. Sprite sheet for the animation.</p>
         </dd>
           <dt>
             <code>properties.frames</code>
             
           </dt>
-          <dd><p>An Array of Numbers. List of frames of the animation.</p>
+          <dd><p><em>An Array of Numbers</em>. List of frames of the animation.</p>
         </dd>
           <dt>
             <code>properties.frameRate</code>
             
           </dt>
-          <dd><p>Number. Number of frames to display in one second.</p>
+          <dd><p><em>Number</em>. Number of frames to display in one second.</p>
         </dd>
           <dt>
             <code>properties.loop</code>
             <span class="optional">Optional</span>
           </dt>
-          <dd><p>Boolean. If the animation should loop. Defaults to <code>true</code>.</p>
+          <dd><p><em>Boolean</em>. If the animation should loop. Defaults to <code>true</code>.</p>
         </dd>
         </dl>
         
@@ -267,7 +267,7 @@ image.onload = function() {
           <p>Clone an animation so it can be used more than once. By default animations passed to <a href="api/sprite">Sprite</a> will be cloned so no two sprites update the same animation. Otherwise two sprites who shared the same animation would make it update twice as fast.</p>
           
           <h3><span class="visually-hidden">clone</span> Return value</h3>
-          <p><p>A new Animation instance.</p>
+          <p><p><em><a href="api/animation">Animation</a></em>. A new Animation instance.</p>
           </p>
         </section>
         <section>
@@ -278,7 +278,7 @@ image.onload = function() {
             </a>
           </h2>
 
-          <p>Number. Number of frames to display per second. Adjusting this value will change the speed of the animation.</p>
+          <p><em>Number</em>. Number of frames to display per second. Adjusting this value will change the speed of the animation.</p>
           
         </section>
         <section>
@@ -289,7 +289,7 @@ image.onload = function() {
             </a>
           </h2>
 
-          <p>An Array of Numbers. Sequence of frames to use from the sprite sheet.</p>
+          <p><em>An Array of Numbers</em>. Sequence of frames to use from the sprite sheet.</p>
           
         </section>
         <section>
@@ -300,7 +300,7 @@ image.onload = function() {
             </a>
           </h2>
 
-          <p>Number. The height of an individual frame. Taken from the property of the same name in the <a href="api/animation#spriteSheet">spriteSheet</a>.</p>
+          <p><em>Number</em>. The height of an individual frame. Taken from the property of the same name in the <a href="api/animation#spriteSheet">spriteSheet</a>.</p>
           
         </section>
         <section>
@@ -311,7 +311,7 @@ image.onload = function() {
             </a>
           </h2>
 
-          <p>Boolean. If the animation should loop back to the beginning once completed.</p>
+          <p><em>Boolean</em>. If the animation should loop back to the beginning once completed.</p>
           
         </section>
         <section>
@@ -322,7 +322,7 @@ image.onload = function() {
             </a>
           </h2>
 
-          <p>Number. The space between each frame. Taken from the property of the same name in the <a href="api/animation#spriteSheet">spriteSheet</a>.</p>
+          <p><em>Number</em>. The space between each frame. Taken from the property of the same name in the <a href="api/animation#spriteSheet">spriteSheet</a>.</p>
           
         </section>
         <section>
@@ -340,37 +340,37 @@ image.onload = function() {
               <code>properties</code>
               
             </dt>
-            <dd><p>Object. Properties to draw the animation.</p>
+            <dd><p><em>Object</em>. Properties to draw the animation.</p>
           </dd>
             <dt>
               <code>properties.x</code>
               
             </dt>
-            <dd><p>Number. X position to draw the animation.</p>
+            <dd><p><em>Number</em>. X position to draw the animation.</p>
           </dd>
             <dt>
               <code>properties.y</code>
               
             </dt>
-            <dd><p>Number. Y position to draw the animation.</p>
+            <dd><p><em>Number</em>. Y position to draw the animation.</p>
           </dd>
             <dt>
               <code>properties.width</code>
               <span class="optional">Optional</span>
             </dt>
-            <dd><p>Number. width of the sprite. Defaults to <a href="api/animation#width">Animation.width</a>.</p>
+            <dd><p><em>Number</em>. width of the sprite. Defaults to <a href="api/animation#width">Animation.width</a>.</p>
           </dd>
             <dt>
               <code>properties.height</code>
               <span class="optional">Optional</span>
             </dt>
-            <dd><p>Number. height of the sprite. Defaults to <a href="api/animation#height">Animation.height</a>.</p>
+            <dd><p><em>Number</em>. height of the sprite. Defaults to <a href="api/animation#height">Animation.height</a>.</p>
           </dd>
             <dt>
               <code>properties.context</code>
               <span class="optional">Optional</span>
             </dt>
-            <dd><p>CanvasRenderingContext2D. The context the animation should draw to. Defaults to <a href="api/core#getContext">core.getContext()</a>.</p>
+            <dd><p><em>CanvasRenderingContext2D</em>. The context the animation should draw to. Defaults to <a href="api/core#getContext">core.getContext()</a>.</p>
           </dd>
           </dl>
           
@@ -394,7 +394,7 @@ image.onload = function() {
             </a>
           </h2>
 
-          <p><a href="api/spriteSheet">SpriteSheet</a>. The sprite sheet to use for the animation.</p>
+          <p><em><a href="api/spriteSheet">SpriteSheet</a></em>. The sprite sheet to use for the animation.</p>
           
         </section>
         <section>
@@ -412,7 +412,7 @@ image.onload = function() {
               <code>dt</code>
               <span class="optional">Optional</span>
             </dt>
-            <dd><p>Number. Time since last update. Defaults to <code>1/60</code>.</p>
+            <dd><p><em>Number</em>. Time since last update. Defaults to <code>1/60</code>.</p>
           </dd>
           </dl>
           
@@ -425,7 +425,7 @@ image.onload = function() {
             </a>
           </h2>
 
-          <p>Number. The width of an individual frame. Taken from the property of the same name in the <a href="api/animation#spriteSheet">spriteSheet</a>.</p>
+          <p><em>Number</em>. The width of an individual frame. Taken from the property of the same name in the <a href="api/animation#spriteSheet">spriteSheet</a>.</p>
           
         </section>
 

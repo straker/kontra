@@ -225,7 +225,7 @@ let tags = {
     }
 
     type = parseType(type);
-    description = `${type}. ${description}${entry.default ? ` Defaults to \`${entry.default}\`.` : ''}`;
+    description = `<em>${type}</em>. ${description}${entry.default ? ` Defaults to \`${entry.default}\`.` : ''}`;
 
     entry.name = name;
     entry.description = marked(description);
@@ -247,7 +247,7 @@ let tags = {
 
     this.block.returns = {
       name: '',
-      description: marked(description),
+      description: marked(`<em>${type}</em>. ${description}`),
       type: type
     };
   },
@@ -321,7 +321,7 @@ let tags = {
     };
 
     // add type to the front of the description
-    this.comment.description = type + '. ' + this.comment.description.substr(1);
+    this.comment.description = `<em>${type}</em>. ${this.comment.description.substr(1)}`;
     addSectionAndPage.call(this);
   },
   sectionName: function() {

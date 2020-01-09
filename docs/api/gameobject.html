@@ -83,97 +83,97 @@
             <code>properties</code>
             <span class="optional">Optional</span>
           </dt>
-          <dd><p>Object. Properties of the game object.</p>
+          <dd><p><em>Object</em>. Properties of the game object.</p>
         </dd>
           <dt>
             <code>properties.x</code>
             <span class="optional">Optional</span>
           </dt>
-          <dd><p>Number. X coordinate of the position vector.</p>
+          <dd><p><em>Number</em>. X coordinate of the position vector.</p>
         </dd>
           <dt>
             <code>properties.y</code>
             <span class="optional">Optional</span>
           </dt>
-          <dd><p>Number. Y coordinate of the position vector.</p>
+          <dd><p><em>Number</em>. Y coordinate of the position vector.</p>
         </dd>
           <dt>
             <code>properties.dx</code>
             <span class="optional">Optional</span>
           </dt>
-          <dd><p>Number. X coordinate of the velocity vector.</p>
+          <dd><p><em>Number</em>. X coordinate of the velocity vector.</p>
         </dd>
           <dt>
             <code>properties.dy</code>
             <span class="optional">Optional</span>
           </dt>
-          <dd><p>Number. Y coordinate of the velocity vector.</p>
+          <dd><p><em>Number</em>. Y coordinate of the velocity vector.</p>
         </dd>
           <dt>
             <code>properties.ddx</code>
             <span class="optional">Optional</span>
           </dt>
-          <dd><p>Number. X coordinate of the acceleration vector.</p>
+          <dd><p><em>Number</em>. X coordinate of the acceleration vector.</p>
         </dd>
           <dt>
             <code>properties.ddy</code>
             <span class="optional">Optional</span>
           </dt>
-          <dd><p>Number. Y coordinate of the acceleration vector.</p>
+          <dd><p><em>Number</em>. Y coordinate of the acceleration vector.</p>
         </dd>
           <dt>
             <code>properties.width</code>
             <span class="optional">Optional</span>
           </dt>
-          <dd><p>Number. Width of the game object.</p>
+          <dd><p><em>Number</em>. Width of the game object.</p>
         </dd>
           <dt>
             <code>properties.height</code>
             <span class="optional">Optional</span>
           </dt>
-          <dd><p>Number. Height of the game object.</p>
+          <dd><p><em>Number</em>. Height of the game object.</p>
         </dd>
           <dt>
             <code>properties.ttl</code>
             <span class="optional">Optional</span>
           </dt>
-          <dd><p>Number. How many frames the game object should be alive. Used by <a href="api/pool">Pool</a>. Defaults to <code>Infinity</code>.</p>
+          <dd><p><em>Number</em>. How many frames the game object should be alive. Used by <a href="api/pool">Pool</a>. Defaults to <code>Infinity</code>.</p>
         </dd>
           <dt>
             <code>properties.rotation</code>
             <span class="optional">Optional</span>
           </dt>
-          <dd><p>Number. game objects rotation around the origin in radians. Defaults to <code>0</code>.</p>
+          <dd><p><em>Number</em>. game objects rotation around the origin in radians. Defaults to <code>0</code>.</p>
         </dd>
           <dt>
             <code>properties.anchor</code>
             <span class="optional">Optional</span>
           </dt>
-          <dd><p>Object. The x and y origin of the game object. {x:0, y:0} is the top left corner of the game object, {x:1, y:1} is the bottom right corner. Defaults to <code>{x:0,y:0}</code>.</p>
+          <dd><p><em>Object</em>. The x and y origin of the game object. {x:0, y:0} is the top left corner of the game object, {x:1, y:1} is the bottom right corner. Defaults to <code>{x:0,y:0}</code>.</p>
         </dd>
           <dt>
             <code>properties.context</code>
             <span class="optional">Optional</span>
           </dt>
-          <dd><p>CanvasRenderingContext2D. The context the game object should draw to. Defaults to <a href="api/core#getContext">core.getContext()</a>.</p>
+          <dd><p><em>CanvasRenderingContext2D</em>. The context the game object should draw to. Defaults to <a href="api/core#getContext">core.getContext()</a>.</p>
         </dd>
           <dt>
             <code>properties.update</code>
             <span class="optional">Optional</span>
           </dt>
-          <dd><p>Function. Function called every frame to update the game object.</p>
+          <dd><p><em>Function</em>. Function called every frame to update the game object.</p>
         </dd>
           <dt>
             <code>properties.render</code>
             <span class="optional">Optional</span>
           </dt>
-          <dd><p>Function. Function called every frame to render the game object.</p>
+          <dd><p><em>Function</em>. Function called every frame to render the game object.</p>
         </dd>
           <dt>
             <code>...properties.props</code>
             
           </dt>
-          <dd><p>A list of any type. Any additional properties you need added to the game object. For example, if you pass <code>gameObject({type: &#39;player&#39;})</code> then the game object will also have a property of the same name and value. You can pass as many additional properties as you want.</p>
+          <dd><p><em>A list of any type</em>. Any additional properties you need added to the game object. For example, if you pass <code>gameObject({type: &#39;player&#39;})</code> then the game object will also have a property of the same name and value. You can pass as many additional properties as you want.</p>
         </dd>
         </dl>
         
@@ -182,6 +182,11 @@
           <h2 id="toc"><a href="#toc" class="section-link">Table of Contents<span aria-hidden="true">#</span></a></h2>
 
           <ul aria-labelledby="toc">
+            <li>
+              <ul>
+                <li><a href="api/gameobject#extending-a-gameobject">Extending A GameObject</a></li>
+              </ul>
+            </li>
 
             <li>
               <h3 id="properties">Properties</h3>
@@ -352,6 +357,155 @@
           </ul>
         </section>
 
+        <section>
+          <h2 id="extending-a-gameobject">
+            <a href="#extending-a-gameobject" class="section-link">
+              <span>Extending A GameObject</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
+
+          <p>A GameObject is just a base class and typically isn&#39;t used directly. Instead, it&#39;s main purpose is to be extended by other classes, such as <a href="/api/sprite">Sprite</a>.</p>
+<p>To extend the GameObject class, use the <code>.class</code> property of the constructor (since the GameObject is a factory function). You should also override the <code>_dc()</code> function in your class.</p>
+<p>The <code>_dc()</code> function determines how to draw the GameObject. It is called by the <code>render</code> function and is passed the final x and y position of the object after transforms and rotations have been applied.</p>
+<canvas id="game-canvas-0"></canvas>
+
+<div class="tablist">
+  <ul role="tablist">
+    <li role="presentation" data-tab="global">
+      <button role="tab" id="game-canvas-0-global-tab">Global Object</button>
+    </li>
+    <li role="presentation" data-tab="es">
+      <button role="tab" id="game-canvas-0-es-tab">ES Module Import</button>
+    </li>
+    <li role="presentation" data-tab="bundle">
+      <button role="tab" id="game-canvas-0-bundle-tab">Module Bundler</button>
+    </li>
+    <li role="presentation"></li>
+  </ul>
+  <section role="tabpanel" aria-labelledby=game-canvas-0-global-tab data-tabpanel="global">
+    <pre><code class="lang-js">let { GameObject } &#x3D; kontra
+
+class Triangle extends GameObject.class {
+  constructor(properties) {
+    super(properties);
+  }
+
+  _dc(x, y) {
+    this.context.fillStyle &#x3D; this.color;
+    this.context.beginPath();
+    this.context.moveTo(x, y);
+    this.context.lineTo(x + this.width, y);
+    this.context.lineTo(x + this.width / 2, y + this.height);
+    this.context.fill();
+  }
+}
+
+let triangle &#x3D; new Triangle({
+  x: 300,
+  y: 100,
+  width: 30,
+  height: 40,
+  anchor: {x: 0.5, y: 0.5},
+  color: &#x27;red&#x27;
+});
+triangle.render();</code></pre>
+  </section>
+  <section role="tabpanel" aria-labelledby=game-canvas-0-es-tab data-tabpanel="es">
+    <pre><code class="lang-js">import { GameObject } from &#x27;path/to/kontra.mjs&#x27;
+
+class Triangle extends GameObject.class {
+  constructor(properties) {
+    super(properties);
+  }
+
+  _dc(x, y) {
+    this.context.fillStyle &#x3D; this.color;
+    this.context.beginPath();
+    this.context.moveTo(x, y);
+    this.context.lineTo(x + this.width, y);
+    this.context.lineTo(x + this.width / 2, y + this.height);
+    this.context.fill();
+  }
+}
+
+let triangle &#x3D; new Triangle({
+  x: 300,
+  y: 100,
+  width: 30,
+  height: 40,
+  anchor: {x: 0.5, y: 0.5},
+  color: &#x27;red&#x27;
+});
+triangle.render();</code></pre>
+  </section>
+  <section role="tabpanel" aria-labelledby=game-canvas-0-bundle-tab data-tabpanel="bundle">
+    <pre><code class="lang-js">import { GameObject } from &#x27;kontra&#x27;;
+
+class Triangle extends GameObject.class {
+  constructor(properties) {
+    super(properties);
+  }
+
+  _dc(x, y) {
+    this.context.fillStyle &#x3D; this.color;
+    this.context.beginPath();
+    this.context.moveTo(x, y);
+    this.context.lineTo(x + this.width, y);
+    this.context.lineTo(x + this.width / 2, y + this.height);
+    this.context.fill();
+  }
+}
+
+let triangle &#x3D; new Triangle({
+  x: 300,
+  y: 100,
+  width: 30,
+  height: 40,
+  anchor: {x: 0.5, y: 0.5},
+  color: &#x27;red&#x27;
+});
+triangle.render();</code></pre>
+  </section>
+</div>
+
+<script>(function() {
+  kontra.init("game-canvas-0");
+  var canvas = document.querySelector("#game-canvas-0");
+  canvas.width = 600;
+  canvas.height = 200;
+  var context = canvas.getContext("2d");
+  // exclude-code:start
+let { GameObject } = kontra;
+// exclude-code:end
+class Triangle extends GameObject.class {
+  constructor(properties) {
+    super(properties);
+  }
+
+  _dc(x, y) {
+    this.context.fillStyle = this.color;
+    this.context.beginPath();
+    this.context.moveTo(x, y);
+    this.context.lineTo(x + this.width, y);
+    this.context.lineTo(x + this.width / 2, y + this.height);
+    this.context.fill();
+  }
+}
+
+let triangle = new Triangle({
+  x: 300,
+  y: 100,
+  width: 30,
+  height: 40,
+  anchor: {x: 0.5, y: 0.5},
+  color: 'red'
+});
+// exclude-code:start
+triangle.context = context;
+// exclude-code:end
+triangle.render();
+})();</script>        </section>
 
         <section>
           <h2 id="acceleration">
@@ -361,7 +515,7 @@
             </a>
           </h2>
 
-          <p><a href="api/vector">Vector</a>. The game objects acceleration vector.</p>
+          <p><em><a href="api/vector">Vector</a></em>. The game objects acceleration vector.</p>
           
         </section>
         <section>
@@ -379,7 +533,7 @@
               <code>child</code>
               
             </dt>
-            <dd><p><a href="api/gameObject">GameObject</a>. Object to add as a child.</p>
+            <dd><p><em><a href="api/gameObject">GameObject</a></em>. Object to add as a child.</p>
           </dd>
           </dl>
           
@@ -486,7 +640,7 @@ let gameObject = GameObject({
               <code>dt</code>
               <span class="optional">Optional</span>
             </dt>
-            <dd><p>Number. Time since last update.</p>
+            <dd><p><em>Number</em>. Time since last update.</p>
           </dd>
           </dl>
           
@@ -499,23 +653,23 @@ let gameObject = GameObject({
             </a>
           </h2>
 
-          <p>Object. The x and y origin of the game object. {x:0, y:0} is the top left corner of the game object, {x:1, y:1} is the bottom right corner.</p>
-<canvas id="game-canvas-0"></canvas>
+          <p><em>Object</em>. The x and y origin of the game object. {x:0, y:0} is the top left corner of the game object, {x:1, y:1} is the bottom right corner.</p>
+<canvas id="game-canvas-1"></canvas>
 
 <div class="tablist">
   <ul role="tablist">
     <li role="presentation" data-tab="global">
-      <button role="tab" id="game-canvas-0-global-tab">Global Object</button>
+      <button role="tab" id="game-canvas-1-global-tab">Global Object</button>
     </li>
     <li role="presentation" data-tab="es">
-      <button role="tab" id="game-canvas-0-es-tab">ES Module Import</button>
+      <button role="tab" id="game-canvas-1-es-tab">ES Module Import</button>
     </li>
     <li role="presentation" data-tab="bundle">
-      <button role="tab" id="game-canvas-0-bundle-tab">Module Bundler</button>
+      <button role="tab" id="game-canvas-1-bundle-tab">Module Bundler</button>
     </li>
     <li role="presentation"></li>
   </ul>
-  <section role="tabpanel" aria-labelledby=game-canvas-0-global-tab data-tabpanel="global">
+  <section role="tabpanel" aria-labelledby=game-canvas-1-global-tab data-tabpanel="global">
     <pre><code class="lang-js">let { GameObject } &#x3D; kontra
 
 let gameObject &#x3D; GameObject({
@@ -523,6 +677,7 @@ let gameObject &#x3D; GameObject({
   y: 100,
   width: 50,
   height: 50,
+  color: &#x27;red&#x27;,
   render: function() {
     this.draw();
 
@@ -531,6 +686,10 @@ let gameObject &#x3D; GameObject({
     this.context.beginPath();
     this.context.arc(this.x, this.y, 3, 0, 2*Math.PI);
     this.context.fill();
+  },
+  _dc(x, y) {
+    this.context.fillStyle &#x3D; this.color;
+    this.context.fillRect(x, y, this.height, this.width);
   }
 });
 gameObject.render();
@@ -543,7 +702,7 @@ gameObject.anchor &#x3D; {x: 1, y: 1};
 gameObject.x &#x3D; 450;
 gameObject.render();</code></pre>
   </section>
-  <section role="tabpanel" aria-labelledby=game-canvas-0-es-tab data-tabpanel="es">
+  <section role="tabpanel" aria-labelledby=game-canvas-1-es-tab data-tabpanel="es">
     <pre><code class="lang-js">import { GameObject } from &#x27;path/to/kontra.mjs&#x27;
 
 let gameObject &#x3D; GameObject({
@@ -551,6 +710,7 @@ let gameObject &#x3D; GameObject({
   y: 100,
   width: 50,
   height: 50,
+  color: &#x27;red&#x27;,
   render: function() {
     this.draw();
 
@@ -559,6 +719,10 @@ let gameObject &#x3D; GameObject({
     this.context.beginPath();
     this.context.arc(this.x, this.y, 3, 0, 2*Math.PI);
     this.context.fill();
+  },
+  _dc(x, y) {
+    this.context.fillStyle &#x3D; this.color;
+    this.context.fillRect(x, y, this.height, this.width);
   }
 });
 gameObject.render();
@@ -571,7 +735,7 @@ gameObject.anchor &#x3D; {x: 1, y: 1};
 gameObject.x &#x3D; 450;
 gameObject.render();</code></pre>
   </section>
-  <section role="tabpanel" aria-labelledby=game-canvas-0-bundle-tab data-tabpanel="bundle">
+  <section role="tabpanel" aria-labelledby=game-canvas-1-bundle-tab data-tabpanel="bundle">
     <pre><code class="lang-js">import { GameObject } from &#x27;kontra&#x27;;
 
 let gameObject &#x3D; GameObject({
@@ -579,6 +743,7 @@ let gameObject &#x3D; GameObject({
   y: 100,
   width: 50,
   height: 50,
+  color: &#x27;red&#x27;,
   render: function() {
     this.draw();
 
@@ -587,6 +752,10 @@ let gameObject &#x3D; GameObject({
     this.context.beginPath();
     this.context.arc(this.x, this.y, 3, 0, 2*Math.PI);
     this.context.fill();
+  },
+  _dc(x, y) {
+    this.context.fillStyle &#x3D; this.color;
+    this.context.fillRect(x, y, this.height, this.width);
   }
 });
 gameObject.render();
@@ -602,8 +771,8 @@ gameObject.render();</code></pre>
 </div>
 
 <script>(function() {
-  kontra.init("game-canvas-0");
-  var canvas = document.querySelector("#game-canvas-0");
+  kontra.init("game-canvas-1");
+  var canvas = document.querySelector("#game-canvas-1");
   canvas.width = 600;
   canvas.height = 200;
   var context = canvas.getContext("2d");
@@ -615,6 +784,7 @@ let gameObject = GameObject({
   y: 100,
   width: 50,
   height: 50,
+  color: 'red',
   // exclude-code:start
   context: context,
   // exclude-code:end
@@ -626,6 +796,10 @@ let gameObject = GameObject({
     this.context.beginPath();
     this.context.arc(this.x, this.y, 3, 0, 2*Math.PI);
     this.context.fill();
+  },
+  _dc(x, y) {
+    this.context.fillStyle = this.color;
+    this.context.fillRect(x, y, this.height, this.width);
   }
 });
 gameObject.render();
@@ -647,7 +821,7 @@ gameObject.render();
             </a>
           </h2>
 
-          <p>An Array of <a href="api/gameObjec">GameObject</a>s. The game objects children objects.</p>
+          <p><em>An Array of <a href="api/gameObjec">GameObject</a>s</em>. The game objects children objects.</p>
           
         </section>
         <section>
@@ -658,7 +832,7 @@ gameObject.render();
             </a>
           </h2>
 
-          <p>CanvasRenderingContext2D. The context the game object will draw to.</p>
+          <p><em>CanvasRenderingContext2D</em>. The context the game object will draw to.</p>
           
         </section>
         <section>
@@ -669,7 +843,7 @@ gameObject.render();
             </a>
           </h2>
 
-          <p>Number. X coordinate of the acceleration vector.</p>
+          <p><em>Number</em>. X coordinate of the acceleration vector.</p>
           
         </section>
         <section>
@@ -680,7 +854,7 @@ gameObject.render();
             </a>
           </h2>
 
-          <p>Number. Y coordinate of the acceleration vector.</p>
+          <p><em>Number</em>. Y coordinate of the acceleration vector.</p>
           
         </section>
         <section>
@@ -777,7 +951,7 @@ gameObject.render();</code></pre></section>
             </a>
           </h2>
 
-          <p>Number. X coordinate of the velocity vector.</p>
+          <p><em>Number</em>. X coordinate of the velocity vector.</p>
           
         </section>
         <section>
@@ -788,7 +962,7 @@ gameObject.render();</code></pre></section>
             </a>
           </h2>
 
-          <p>Number. Y coordinate of the velocity vector.</p>
+          <p><em>Number</em>. Y coordinate of the velocity vector.</p>
           
         </section>
         <section>
@@ -799,7 +973,7 @@ gameObject.render();</code></pre></section>
             </a>
           </h2>
 
-          <p>Number. The height of the game object.</p>
+          <p><em>Number</em>. The height of the game object.</p>
           
         </section>
         <section>
@@ -817,7 +991,7 @@ gameObject.render();</code></pre></section>
               <code>properties</code>
               
             </dt>
-            <dd><p>Object. Properties of the game object.</p>
+            <dd><p><em>Object</em>. Properties of the game object.</p>
           </dd>
           </dl>
           
@@ -833,7 +1007,7 @@ gameObject.render();</code></pre></section>
           <p>Check if the game object is alive. Primarily used by <a href="api/pool">Pool</a> to know when to recycle an object.</p>
           
           <h3><span class="visually-hidden">isAlive</span> Return value</h3>
-          <p><p><code>true</code> if the game objects <a href="api/gameObject#ttl">ttl</a> property is above <code>0</code>, <code>false</code> otherwise.</p>
+          <p><p><em>Boolean</em>. <code>true</code> if the game objects <a href="api/gameObject#ttl">ttl</a> property is above <code>0</code>, <code>false</code> otherwise.</p>
           </p>
         </section>
         <section>
@@ -844,7 +1018,7 @@ gameObject.render();</code></pre></section>
             </a>
           </h2>
 
-          <p><a href="api/vector">Vector</a>. The game objects local position vector, which is its position relative to a parent object. If the game object does not have a parent object, the local position will be the same as the <a href="api/gameObject#position">position vector</a>.</p>
+          <p><em><a href="api/vector">Vector</a></em>. The game objects local position vector, which is its position relative to a parent object. If the game object does not have a parent object, the local position will be the same as the <a href="api/gameObject#position">position vector</a>.</p>
           
         </section>
         <section>
@@ -855,7 +1029,7 @@ gameObject.render();</code></pre></section>
             </a>
           </h2>
 
-          <p>Number. The game objects local rotation, which is its rotation relative to a parent object. If the game object does not have a parent object, the local rotation will be the same as the <a href="api/gameObject#rotation">rotation</a>.</p>
+          <p><em>Number</em>. The game objects local rotation, which is its rotation relative to a parent object. If the game object does not have a parent object, the local rotation will be the same as the <a href="api/gameObject#rotation">rotation</a>.</p>
           
         </section>
         <section>
@@ -866,7 +1040,7 @@ gameObject.render();</code></pre></section>
             </a>
           </h2>
 
-          <p><a href="api/gameObject">GameObject</a> or null. The game objects parent object.</p>
+          <p><em><a href="api/gameObject">GameObject</a> or null</em>. The game objects parent object.</p>
           
         </section>
         <section>
@@ -877,7 +1051,7 @@ gameObject.render();</code></pre></section>
             </a>
           </h2>
 
-          <p><a href="api/vector">Vector</a>. The game objects position vector. The game objects position is its position in the world, as opposed to the position in the <a href="api/gameObject#viewX">viewport</a> or <a href="api/gameObject#localPosition">local position</a>. Typically the position in the world, viewport, and local position are the same value. If the game object has been <a href="/api/tileEngine#addObject">added to a tileEngine</a>, the position vector represents where in the tile world the game object is while the viewport represents where to draw the game object in relation to the top-left corner of the canvas.</p>
+          <p><em><a href="api/vector">Vector</a></em>. The game objects position vector. The game objects position is its position in the world, as opposed to the position in the <a href="api/gameObject#viewX">viewport</a> or <a href="api/gameObject#localPosition">local position</a>. Typically the position in the world, viewport, and local position are the same value. If the game object has been <a href="/api/tileEngine#addObject">added to a tileEngine</a>, the position vector represents where in the tile world the game object is while the viewport represents where to draw the game object in relation to the top-left corner of the canvas.</p>
           
         </section>
         <section>
@@ -895,7 +1069,7 @@ gameObject.render();</code></pre></section>
               <code>child</code>
               
             </dt>
-            <dd><p><a href="api/gameObject">GameObject</a>. Object to remove as a child.</p>
+            <dd><p><em><a href="api/gameObject">GameObject</a></em>. Object to remove as a child.</p>
           </dd>
           </dl>
           
@@ -919,7 +1093,7 @@ gameObject.render();</code></pre></section>
             </a>
           </h2>
 
-          <p>Number. The rotation of the game object around the origin in radians. This rotation takes into account rotations from parent objects and represents the final rotation value.</p>
+          <p><em>Number</em>. The rotation of the game object around the origin in radians. This rotation takes into account rotations from parent objects and represents the final rotation value.</p>
           
         </section>
         <section>
@@ -930,7 +1104,7 @@ gameObject.render();</code></pre></section>
             </a>
           </h2>
 
-          <p>Number. The X coordinate of the camera. Used to determine <a href="api/gameObject#viewX">viewX</a>.</p>
+          <p><em>Number</em>. The X coordinate of the camera. Used to determine <a href="api/gameObject#viewX">viewX</a>.</p>
           
         </section>
         <section>
@@ -941,7 +1115,7 @@ gameObject.render();</code></pre></section>
             </a>
           </h2>
 
-          <p>Number. The Y coordinate of the camera. Used to determine <a href="api/gameObject#viewY">viewY</a>.</p>
+          <p><em>Number</em>. The Y coordinate of the camera. Used to determine <a href="api/gameObject#viewY">viewY</a>.</p>
           
         </section>
         <section>
@@ -952,7 +1126,7 @@ gameObject.render();</code></pre></section>
             </a>
           </h2>
 
-          <p>Number. How may frames the game object should be alive. Primarily used by <a href="api/pool">Pool</a> to know when to recycle an object.</p>
+          <p><em>Number</em>. How may frames the game object should be alive. Primarily used by <a href="api/pool">Pool</a> to know when to recycle an object.</p>
           
         </section>
         <section>
@@ -970,7 +1144,7 @@ gameObject.render();</code></pre></section>
               <code>dt</code>
               <span class="optional">Optional</span>
             </dt>
-            <dd><p>Number. Time since last update.</p>
+            <dd><p><em>Number</em>. Time since last update.</p>
           </dd>
           </dl>
           
@@ -983,7 +1157,7 @@ gameObject.render();</code></pre></section>
             </a>
           </h2>
 
-          <p><a href="api/vector">Vector</a>. The game objects velocity vector.</p>
+          <p><em><a href="api/vector">Vector</a></em>. The game objects velocity vector.</p>
           
         </section>
         <section>
@@ -994,7 +1168,7 @@ gameObject.render();</code></pre></section>
             </a>
           </h2>
 
-          <p>Number. Readonly. X coordinate of where to draw the game object. Typically the same value as the <a href="api/gameObject#position">position vector</a> unless the game object has been <a href="api/tileEngine#addObject">added to a tileEngine</a>.</p>
+          <p><em>Number</em>. Readonly. X coordinate of where to draw the game object. Typically the same value as the <a href="api/gameObject#position">position vector</a> unless the game object has been <a href="api/tileEngine#addObject">added to a tileEngine</a>.</p>
           
         </section>
         <section>
@@ -1005,7 +1179,7 @@ gameObject.render();</code></pre></section>
             </a>
           </h2>
 
-          <p>Number. Readonly. Y coordinate of where to draw the game object. Typically the same value as the <a href="api/gameObject#position">position vector</a> unless the game object has been <a href="api/tileEngine#addObject">added to a tileEngine</a>.</p>
+          <p><em>Number</em>. Readonly. Y coordinate of where to draw the game object. Typically the same value as the <a href="api/gameObject#position">position vector</a> unless the game object has been <a href="api/tileEngine#addObject">added to a tileEngine</a>.</p>
           
         </section>
         <section>
@@ -1016,7 +1190,7 @@ gameObject.render();</code></pre></section>
             </a>
           </h2>
 
-          <p>Number. The width of the game object.</p>
+          <p><em>Number</em>. The width of the game object.</p>
           
         </section>
         <section>
@@ -1027,7 +1201,7 @@ gameObject.render();</code></pre></section>
             </a>
           </h2>
 
-          <p>Number. X coordinate of the position vector.</p>
+          <p><em>Number</em>. X coordinate of the position vector.</p>
           
         </section>
         <section>
@@ -1038,7 +1212,7 @@ gameObject.render();</code></pre></section>
             </a>
           </h2>
 
-          <p>Number. Y coordinate of the position vector.</p>
+          <p><em>Number</em>. Y coordinate of the position vector.</p>
           
         </section>
 

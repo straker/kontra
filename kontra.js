@@ -1021,6 +1021,10 @@ var Vector$1 = Factory(Vector);
  * @param {...*} properties.props - Any additional properties you need added to the game object. For example, if you pass `gameObject({type: 'player'})` then the game object will also have a property of the same name and value. You can pass as many additional properties as you want.
  */
 class GameObject {
+  /**
+   * @docs docs/api_docs/gameObject.js
+   */
+
   constructor(properties) {
     this.init(properties);
   }
@@ -1158,6 +1162,7 @@ class GameObject {
      *   y: 100,
      *   width: 50,
      *   height: 50,
+     *   color: 'red',
      *   // exclude-code:start
      *   context: context,
      *   // exclude-code:end
@@ -1169,6 +1174,10 @@ class GameObject {
      *     this.context.beginPath();
      *     this.context.arc(this.x, this.y, 3, 0, 2*Math.PI);
      *     this.context.fill();
+     *   },
+     *   _dc(x, y) {
+     *     this.context.fillStyle = this.color;
+     *     this.context.fillRect(x, y, this.height, this.width);
      *   }
      * });
      * gameObject.render();
@@ -1575,19 +1584,28 @@ class Text extends GameObject$1.class {
    *
    * You can also display RTL languages by setting the attribute `dir="rtl"` on the main canvas element. Due to the limited browser support for individual text to have RTL settings, it must be set globally for the entire game.
    *
-   * ```js
+   * @example
+   * // exclude-code:start
+   * let { Text } = kontra;
+   * // exclude-code:end
+   * // exclude-script:start
    * import { Text } from 'kontra';
+   * // exclude-script:end
    *
    * let text = Text({
-   *   text: 'Hello World!',
+   *   text: 'Hello World!\nI can even be multiline!',
    *   font: '32px Arial',
-   *   color: 'black'
-   *   x: 100,
+   *   color: 'white',
+   *   x: 300,
    *   y: 100,
-   *   anchor: {x: 0.5, y: 0.5}
+   *   anchor: {x: 0.5, y: 0.5},
+   *   textAlign: 'center'
    * });
+   * // exclude-code:start
+   * text.context = context;
+   * // exclude-code:end
+   *
    * text.render();
-   * ```
    * @class Text
    * @extends GameObject
    *
@@ -1632,7 +1650,7 @@ class Text extends GameObject$1.class {
   }
 
   /**
-   * The string of text.
+   * The string of text. Use newline characters to create multi-line strings.
    * @memberof Text
    * @property {String} text
    */
@@ -2269,7 +2287,7 @@ class Button extends Text$1.class {
    * });
    *
    * button.render();
-   * ```js
+   * ```
    *
    * @class Button
    * @extends Text
@@ -2656,6 +2674,7 @@ function GameLoop({fps = 60, clearCanvas = true, update, render} = {}) {
  *
  * ```js
  * import { degToRad } from 'kontra';
+ *
  * let radians = degToRad(180);  // => 3.14
  * ```
  * @sectionName Helpers
@@ -2687,12 +2706,36 @@ function radToDeg(rad) {
 
 /**
  * Return the angle (in radians) from one point to another point.
+ *
+ * ```js
+ * import { angleToTarget, Sprite } from 'kontra';
+ *
+ * let sprite = Sprite({
+ *   x: 10,
+ *   y: 10,
+ *   width: 20,
+ *   height: 40,
+ *   color: 'blue'
+ * });
+ *
+ * sprite.rotation = angleToTarget(sprite, {x: 100, y: 30});
+ *
+ * let sprite2 = Sprite({
+ *   x: 100,
+ *   y: 30,
+ *   width: 20,
+ *   height: 40,
+ *   color: 'red',
+ * });
+ *
+ * sprite2.rotation = angleToTarget(sprite2, sprite);
+ * ```
  * @function angleToTarget
  *
  * @param {{x: Number, y: Number}} source - The source point.
  * @param {{x: Number, y: Number}} target - The target point.
  *
- * @returns {Number} angle (in radians)from the source point to the target point.
+ * @returns {Number} Angle (in radians) from the source point to the target point.
  */
 function angleToTarget(source, target) {
 
@@ -2719,20 +2762,21 @@ function randInt(min, max) {
 
 /**
  * Create a seeded random number generator.
- * @see https://stackoverflow.com/a/47593316/2124254
- * @see https://github.com/bryc/code/blob/master/jshash/PRNGs.md
  *
  * ```js
- * let { seedRand } = kontra;
+ * import { seedRand } from 'kontra';
  *
  * let rand = seedRand('kontra');
  * console.log(rand());  // => always 0.33761959057301283
  * ```
+ * @see https://stackoverflow.com/a/47593316/2124254
+ * @see https://github.com/bryc/code/blob/master/jshash/PRNGs.md
+ *
  * @function seedRand
  *
  * @param {String} str - String to seed the random number generator.
  *
- * @returns {() => Number} Seeded random number generator.
+ * @returns {() => Number} Seeded random number generator function.
  */
  function seedRand(str) {
   // based on the above references, this was the smallest code yet decent
@@ -3683,7 +3727,7 @@ class Scene {
    * });
    *
    * scene.render();
-   * ```js
+   * ```
    *
    * @class Scene
    *

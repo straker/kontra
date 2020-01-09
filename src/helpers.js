@@ -3,6 +3,7 @@
  *
  * ```js
  * import { degToRad } from 'kontra';
+ *
  * let radians = degToRad(180);  // => 3.14
  * ```
  * @sectionName Helpers
@@ -34,12 +35,36 @@ export function radToDeg(rad) {
 
 /**
  * Return the angle (in radians) from one point to another point.
+ *
+ * ```js
+ * import { angleToTarget, Sprite } from 'kontra';
+ *
+ * let sprite = Sprite({
+ *   x: 10,
+ *   y: 10,
+ *   width: 20,
+ *   height: 40,
+ *   color: 'blue'
+ * });
+ *
+ * sprite.rotation = angleToTarget(sprite, {x: 100, y: 30});
+ *
+ * let sprite2 = Sprite({
+ *   x: 100,
+ *   y: 30,
+ *   width: 20,
+ *   height: 40,
+ *   color: 'red',
+ * });
+ *
+ * sprite2.rotation = angleToTarget(sprite2, sprite);
+ * ```
  * @function angleToTarget
  *
  * @param {{x: Number, y: Number}} source - The source point.
  * @param {{x: Number, y: Number}} target - The target point.
  *
- * @returns {Number} angle (in radians)from the source point to the target point.
+ * @returns {Number} Angle (in radians) from the source point to the target point.
  */
 export function angleToTarget(source, target) {
 
@@ -66,20 +91,21 @@ export function randInt(min, max) {
 
 /**
  * Create a seeded random number generator.
- * @see https://stackoverflow.com/a/47593316/2124254
- * @see https://github.com/bryc/code/blob/master/jshash/PRNGs.md
  *
  * ```js
- * let { seedRand } = kontra;
+ * import { seedRand } from 'kontra';
  *
  * let rand = seedRand('kontra');
  * console.log(rand());  // => always 0.33761959057301283
  * ```
+ * @see https://stackoverflow.com/a/47593316/2124254
+ * @see https://github.com/bryc/code/blob/master/jshash/PRNGs.md
+ *
  * @function seedRand
  *
  * @param {String} str - String to seed the random number generator.
  *
- * @returns {() => Number} Seeded random number generator.
+ * @returns {() => Number} Seeded random number generator function.
  */
  export function seedRand(str) {
   // based on the above references, this was the smallest code yet decent

@@ -30,6 +30,10 @@ import { Factory } from './utils.js'
  * @param {...*} properties.props - Any additional properties you need added to the game object. For example, if you pass `gameObject({type: 'player'})` then the game object will also have a property of the same name and value. You can pass as many additional properties as you want.
  */
 class GameObject {
+  /**
+   * @docs docs/api_docs/gameObject.js
+   */
+
   constructor(properties) {
     this.init(properties);
   }
@@ -167,6 +171,7 @@ class GameObject {
      *   y: 100,
      *   width: 50,
      *   height: 50,
+     *   color: 'red',
      *   // exclude-code:start
      *   context: context,
      *   // exclude-code:end
@@ -178,6 +183,10 @@ class GameObject {
      *     this.context.beginPath();
      *     this.context.arc(this.x, this.y, 3, 0, 2*Math.PI);
      *     this.context.fill();
+     *   },
+     *   _dc(x, y) {
+     *     this.context.fillStyle = this.color;
+     *     this.context.fillRect(x, y, this.height, this.width);
      *   }
      * });
      * gameObject.render();

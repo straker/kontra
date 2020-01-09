@@ -89,10 +89,13 @@
     <li role="presentation"></li>
   </ul>
   <section role="tabpanel" aria-labelledby=helpers-global-tab data-tabpanel="global"><pre><code class="language-js">let { degToRad } = kontra;
+
 let radians = degToRad(180);  // =&gt; 3.14</code></pre></section>
   <section role="tabpanel" aria-labelledby=helpers-es-tab data-tabpanel="es"><pre><code class="language-js">import { degToRad } from 'path/to/kontra.mjs';
+
 let radians = degToRad(180);  // =&gt; 3.14</code></pre></section>
   <section role="tabpanel" aria-labelledby=helpers-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { degToRad } from &#39;kontra&#39;;
+
 let radians = degToRad(180);  // =&gt; 3.14</code></pre></section>
 </div>
         
@@ -161,24 +164,101 @@ let radians = degToRad(180);  // =&gt; 3.14</code></pre></section>
           </h2>
 
           <p>Return the angle (in radians) from one point to another point.</p>
+<div class="tablist">
+  <ul role="tablist">
+    <li role="presentation" data-tab="global">
+      <button role="tab" id="angletotarget-global-tab">Global Object</button>
+    </li>
+    <li role="presentation" data-tab="es">
+      <button role="tab" id="angletotarget-es-tab">ES Module Import</button>
+    </li>
+    <li role="presentation" data-tab="bundle">
+      <button role="tab" id="angletotarget-bundle-tab">Module Bundler</button>
+    </li>
+    <li role="presentation"></li>
+  </ul>
+  <section role="tabpanel" aria-labelledby=angletotarget-global-tab data-tabpanel="global"><pre><code class="language-js">let { angleToTarget, Sprite } = kontra;
+
+let sprite = Sprite({
+  x: 10,
+  y: 10,
+  width: 20,
+  height: 40,
+  color: &#39;blue&#39;
+});
+
+sprite.rotation = angleToTarget(sprite, {x: 100, y: 30});
+
+let sprite2 = Sprite({
+  x: 100,
+  y: 30,
+  width: 20,
+  height: 40,
+  color: &#39;red&#39;,
+});
+
+sprite2.rotation = angleToTarget(sprite2, sprite);</code></pre></section>
+  <section role="tabpanel" aria-labelledby=angletotarget-es-tab data-tabpanel="es"><pre><code class="language-js">import { angleToTarget, Sprite } from 'path/to/kontra.mjs';
+
+let sprite = Sprite({
+  x: 10,
+  y: 10,
+  width: 20,
+  height: 40,
+  color: &#39;blue&#39;
+});
+
+sprite.rotation = angleToTarget(sprite, {x: 100, y: 30});
+
+let sprite2 = Sprite({
+  x: 100,
+  y: 30,
+  width: 20,
+  height: 40,
+  color: &#39;red&#39;,
+});
+
+sprite2.rotation = angleToTarget(sprite2, sprite);</code></pre></section>
+  <section role="tabpanel" aria-labelledby=angletotarget-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { angleToTarget, Sprite } from &#39;kontra&#39;;
+
+let sprite = Sprite({
+  x: 10,
+  y: 10,
+  width: 20,
+  height: 40,
+  color: &#39;blue&#39;
+});
+
+sprite.rotation = angleToTarget(sprite, {x: 100, y: 30});
+
+let sprite2 = Sprite({
+  x: 100,
+  y: 30,
+  width: 20,
+  height: 40,
+  color: &#39;red&#39;,
+});
+
+sprite2.rotation = angleToTarget(sprite2, sprite);</code></pre></section>
+</div>
           <h3 id="title-angleToTarget"><span class="visually-hidden">angleToTarget</span> Parameters</span></h3>
           <dl aria-labelledby="title-angleToTarget">
             <dt>
               <code>source</code>
               
             </dt>
-            <dd><p>Object. The source point.</p>
+            <dd><p><em>Object</em>. The source point.</p>
           </dd>
             <dt>
               <code>target</code>
               
             </dt>
-            <dd><p>Object. The target point.</p>
+            <dd><p><em>Object</em>. The target point.</p>
           </dd>
           </dl>
           
           <h3><span class="visually-hidden">angleToTarget</span> Return value</h3>
-          <p><p>angle (in radians)from the source point to the target point.</p>
+          <p><p><em>Number</em>. Angle (in radians) from the source point to the target point.</p>
           </p>
         </section>
         <section>
@@ -196,24 +276,24 @@ let radians = degToRad(180);  // =&gt; 3.14</code></pre></section>
               <code>min</code>
               
             </dt>
-            <dd><p>Number. Min value.</p>
+            <dd><p><em>Number</em>. Min value.</p>
           </dd>
             <dt>
               <code>max</code>
               
             </dt>
-            <dd><p>Number. Max value.</p>
+            <dd><p><em>Number</em>. Max value.</p>
           </dd>
             <dt>
               <code>value</code>
               
             </dt>
-            <dd><p>Number. Value to clamp.</p>
+            <dd><p><em>Number</em>. Value to clamp.</p>
           </dd>
           </dl>
           
           <h3><span class="visually-hidden">clamp</span> Return value</h3>
-          <p><p>Value clamped between min and max.</p>
+          <p><p><em>Number</em>. Value clamped between min and max.</p>
           </p>
         </section>
         <section>
@@ -231,12 +311,12 @@ let radians = degToRad(180);  // =&gt; 3.14</code></pre></section>
               <code>deg</code>
               
             </dt>
-            <dd><p>Number. Degrees to convert.</p>
+            <dd><p><em>Number</em>. Degrees to convert.</p>
           </dd>
           </dl>
           
           <h3><span class="visually-hidden">degToRad</span> Return value</h3>
-          <p><p>The value in radians.</p>
+          <p><p><em>Number</em>. The value in radians.</p>
           </p>
         </section>
         <section>
@@ -280,24 +360,24 @@ console.log( inverseLerp(10, 20, 30) );  // =&gt; 2</code></pre></section>
               <code>start</code>
               
             </dt>
-            <dd><p>Number. Start value.</p>
+            <dd><p><em>Number</em>. Start value.</p>
           </dd>
             <dt>
               <code>end</code>
               
             </dt>
-            <dd><p>Number. End value.</p>
+            <dd><p><em>Number</em>. End value.</p>
           </dd>
             <dt>
               <code>value</code>
               
             </dt>
-            <dd><p>Number. Value between start and end.</p>
+            <dd><p><em>Number</em>. Value between start and end.</p>
           </dd>
           </dl>
           
           <h3><span class="visually-hidden">inverseLerp</span> Return value</h3>
-          <p><p>Percent difference between the start and end values.</p>
+          <p><p><em>Number</em>. Percent difference between the start and end values.</p>
           </p>
         </section>
         <section>
@@ -341,24 +421,24 @@ console.log( lerp(10, 20, 2) );  // =&gt; 30</code></pre></section>
               <code>start</code>
               
             </dt>
-            <dd><p>Number. Start value.</p>
+            <dd><p><em>Number</em>. Start value.</p>
           </dd>
             <dt>
               <code>end</code>
               
             </dt>
-            <dd><p>Number. End value.</p>
+            <dd><p><em>Number</em>. End value.</p>
           </dd>
             <dt>
               <code>percent</code>
               
             </dt>
-            <dd><p>Number. Percent to interpolate.</p>
+            <dd><p><em>Number</em>. Percent to interpolate.</p>
           </dd>
           </dl>
           
           <h3><span class="visually-hidden">lerp</span> Return value</h3>
-          <p><p>Interpolated number between the start and end values</p>
+          <p><p><em>Number</em>. Interpolated number between the start and end values</p>
           </p>
         </section>
         <section>
@@ -376,12 +456,12 @@ console.log( lerp(10, 20, 2) );  // =&gt; 30</code></pre></section>
               <code>rad</code>
               
             </dt>
-            <dd><p>Number. Radians to convert.</p>
+            <dd><p><em>Number</em>. Radians to convert.</p>
           </dd>
           </dl>
           
           <h3><span class="visually-hidden">radToDeg</span> Return value</h3>
-          <p><p>The value in degrees.</p>
+          <p><p><em>Number</em>. The value in degrees.</p>
           </p>
         </section>
         <section>
@@ -399,18 +479,18 @@ console.log( lerp(10, 20, 2) );  // =&gt; 30</code></pre></section>
               <code>min</code>
               
             </dt>
-            <dd><p>Number. Min integer.</p>
+            <dd><p><em>Number</em>. Min integer.</p>
           </dd>
             <dt>
               <code>max</code>
               
             </dt>
-            <dd><p>Number. Max integer.</p>
+            <dd><p><em>Number</em>. Max integer.</p>
           </dd>
           </dl>
           
           <h3><span class="visually-hidden">randInt</span> Return value</h3>
-          <p><p>Random integer between min and max values.</p>
+          <p><p><em>Number</em>. Random integer between min and max values.</p>
           </p>
         </section>
         <section>
@@ -422,18 +502,44 @@ console.log( lerp(10, 20, 2) );  // =&gt; 30</code></pre></section>
           </h2>
 
           <p>Create a seeded random number generator.</p>
+<div class="tablist">
+  <ul role="tablist">
+    <li role="presentation" data-tab="global">
+      <button role="tab" id="seedrand-global-tab">Global Object</button>
+    </li>
+    <li role="presentation" data-tab="es">
+      <button role="tab" id="seedrand-es-tab">ES Module Import</button>
+    </li>
+    <li role="presentation" data-tab="bundle">
+      <button role="tab" id="seedrand-bundle-tab">Module Bundler</button>
+    </li>
+    <li role="presentation"></li>
+  </ul>
+  <section role="tabpanel" aria-labelledby=seedrand-global-tab data-tabpanel="global"><pre><code class="language-js">let { seedRand } = kontra;
+
+let rand = seedRand(&#39;kontra&#39;);
+console.log(rand());  // =&gt; always 0.33761959057301283</code></pre></section>
+  <section role="tabpanel" aria-labelledby=seedrand-es-tab data-tabpanel="es"><pre><code class="language-js">import { seedRand } from 'path/to/kontra.mjs';
+
+let rand = seedRand(&#39;kontra&#39;);
+console.log(rand());  // =&gt; always 0.33761959057301283</code></pre></section>
+  <section role="tabpanel" aria-labelledby=seedrand-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { seedRand } from &#39;kontra&#39;;
+
+let rand = seedRand(&#39;kontra&#39;);
+console.log(rand());  // =&gt; always 0.33761959057301283</code></pre></section>
+</div>
           <h3 id="title-seedRand"><span class="visually-hidden">seedRand</span> Parameters</span></h3>
           <dl aria-labelledby="title-seedRand">
             <dt>
               <code>str</code>
               
             </dt>
-            <dd><p>String. String to seed the random number generator.</p>
+            <dd><p><em>String</em>. String to seed the random number generator.</p>
           </dd>
           </dl>
           
           <h3><span class="visually-hidden">seedRand</span> Return value</h3>
-          <p><p>Seeded random number generator.</p>
+          <p><p><em>Function</em>. Seeded random number generator function.</p>
           </p>
         </section>
 

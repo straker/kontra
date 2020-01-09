@@ -84,25 +84,25 @@
             <code>properties</code>
             <span class="optional">Optional</span>
           </dt>
-          <dd><p>Object. Properties of the quadtree.</p>
+          <dd><p><em>Object</em>. Properties of the quadtree.</p>
         </dd>
           <dt>
             <code>properties.maxDepth</code>
             <span class="optional">Optional</span>
           </dt>
-          <dd><p>Number. Maximum node depth of the quadtree. Defaults to <code>3</code>.</p>
+          <dd><p><em>Number</em>. Maximum node depth of the quadtree. Defaults to <code>3</code>.</p>
         </dd>
           <dt>
             <code>properties.maxObjects</code>
             <span class="optional">Optional</span>
           </dt>
-          <dd><p>Number. Maximum number of objects a node can have before splitting. Defaults to <code>25</code>.</p>
+          <dd><p><em>Number</em>. Maximum number of objects a node can have before splitting. Defaults to <code>25</code>.</p>
         </dd>
           <dt>
             <code>properties.bounds</code>
             <span class="optional">Optional</span>
           </dt>
-          <dd><p>Object. The 2D space (x, y, width, height) the quadtree occupies. Defaults to the entire canvas width and height.</p>
+          <dd><p><em>Object</em>. The 2D space (x, y, width, height) the quadtree occupies. Defaults to the entire canvas width and height.</p>
         </dd>
         </dl>
         
@@ -348,7 +348,7 @@ let loop = GameLoop({
               <code>...objects</code>
               
             </dt>
-            <dd><p>A list of Objects. Objects to add to the quadtree.</p>
+            <dd><p><em>A list of Objects</em>. Objects to add to the quadtree.</p>
           </dd>
           </dl>
           
@@ -361,7 +361,7 @@ let loop = GameLoop({
             </a>
           </h2>
 
-          <p>Object. The 2D space (x, y, width, height) the quadtree occupies.</p>
+          <p><em>Object</em>. The 2D space (x, y, width, height) the quadtree occupies.</p>
           
         </section>
         <section>
@@ -450,12 +450,12 @@ quadtree.get(player);  //=&gt; [enemy1]</code></pre></section>
               <code>object</code>
               
             </dt>
-            <dd><p>Object. Object to use for finding other objects. The object must have the properties <code>x</code>, <code>y</code>, <code>width</code>, and <code>height</code> so that its position in the quadtree can be calculated.</p>
+            <dd><p><em>Object</em>. Object to use for finding other objects. The object must have the properties <code>x</code>, <code>y</code>, <code>width</code>, and <code>height</code> so that its position in the quadtree can be calculated.</p>
           </dd>
           </dl>
           
           <h3><span class="visually-hidden">get</span> Return value</h3>
-          <p><p>A list of objects in the same node as the object, not including the object itself.</p>
+          <p><p><em>An Array of Objects</em>. A list of objects in the same node as the object, not including the object itself.</p>
           </p>
         </section>
         <section>
@@ -466,7 +466,7 @@ quadtree.get(player);  //=&gt; [enemy1]</code></pre></section>
             </a>
           </h2>
 
-          <p>Number. Maximum node depth of the quadtree.</p>
+          <p><em>Number</em>. Maximum node depth of the quadtree.</p>
           
         </section>
         <section>
@@ -477,7 +477,7 @@ quadtree.get(player);  //=&gt; [enemy1]</code></pre></section>
             </a>
           </h2>
 
-          <p>Number. Maximum number of objects a node can have before splitting.</p>
+          <p><em>Number</em>. Maximum number of objects a node can have before splitting.</p>
           
         </section>
 

@@ -226,7 +226,7 @@ load(
             </a>
           </h2>
 
-          <p>Object. Object of all loaded audio assets by both file name and path. If the base <a href="api/assets#setAudioPath">audio path</a> was set before the audio was loaded, the file name and path will not include the base audio path.</p>
+          <p><em>Object</em>. Object of all loaded audio assets by both file name and path. If the base <a href="api/assets#setAudioPath">audio path</a> was set before the audio was loaded, the file name and path will not include the base audio path.</p>
 <div class="tablist">
   <ul role="tablist">
     <li role="presentation" data-tab="global">
@@ -293,7 +293,7 @@ load(&#39;sound.ogg&#39;).then(function() {
             </a>
           </h2>
 
-          <p>Object. Object of all loaded data assets by both file name and path. If the base <a href="api/assets#setDataPath">data path</a> was set before the data was loaded, the file name and path will not include the base data path.</p>
+          <p><em>Object</em>. Object of all loaded data assets by both file name and path. If the base <a href="api/assets#setDataPath">data path</a> was set before the data was loaded, the file name and path will not include the base data path.</p>
 <div class="tablist">
   <ul role="tablist">
     <li role="presentation" data-tab="global">
@@ -360,7 +360,7 @@ load(&#39;info.json&#39;).then(function() {
             </a>
           </h2>
 
-          <p>Object. Object of all loaded image assets by both file name and path. If the base <a href="api/assets#setImagePath">image path</a> was set before the image was loaded, the file name and path will not include the base image path.</p>
+          <p><em>Object</em>. Object of all loaded image assets by both file name and path. If the base <a href="api/assets#setImagePath">image path</a> was set before the image was loaded, the file name and path will not include the base image path.</p>
 <div class="tablist">
   <ul role="tablist">
     <li role="presentation" data-tab="global">
@@ -481,12 +481,12 @@ load(
               <code>...urls</code>
               
             </dt>
-            <dd><p>A list of Strings. Comma separated list of asset urls to load.</p>
+            <dd><p><em>A list of Strings</em>. Comma separated list of asset urls to load.</p>
           </dd>
           </dl>
           
           <h3><span class="visually-hidden">load</span> Return value</h3>
-          <p><p>A deferred promise. Resolves with all the loaded assets.</p>
+          <p><p><em>Promise<an Array of anys></em>. A deferred promise. Resolves with all the loaded assets.</p>
           </p>
         </section>
         <section>
@@ -549,12 +549,12 @@ loadAudio([
               <code>url</code>
               
             </dt>
-            <dd><p>String. The URL to the Audio file.</p>
+            <dd><p><em>String</em>. The URL to the Audio file.</p>
           </dd>
           </dl>
           
           <h3><span class="visually-hidden">loadAudio</span> Return value</h3>
-          <p><p>A deferred promise. Promise resolves with the Audio.</p>
+          <p><p><em>Promise<HTMLAudioElement></em>. A deferred promise. Promise resolves with the Audio.</p>
           </p>
         </section>
         <section>
@@ -602,12 +602,12 @@ loadData(&#39;assets/data/tile_engine_basic.json&#39;).then(function(data) {
               <code>url</code>
               
             </dt>
-            <dd><p>String. The URL to the Data file.</p>
+            <dd><p><em>String</em>. The URL to the Data file.</p>
           </dd>
           </dl>
           
           <h3><span class="visually-hidden">loadData</span> Return value</h3>
-          <p><p>A deferred promise. Promise resolves with the contents of the file. If the file is a JSON file, the contents will be parsed as JSON.</p>
+          <p><p><em>Promise</em>. A deferred promise. Promise resolves with the contents of the file. If the file is a JSON file, the contents will be parsed as JSON.</p>
           </p>
         </section>
         <section>
@@ -655,12 +655,12 @@ loadImage(&#39;car.png&#39;).then(function(image) {
               <code>url</code>
               
             </dt>
-            <dd><p>String. The URL to the Image file.</p>
+            <dd><p><em>String</em>. The URL to the Image file.</p>
           </dd>
           </dl>
           
           <h3><span class="visually-hidden">loadImage</span> Return value</h3>
-          <p><p>A deferred promise. Promise resolves with the Image.</p>
+          <p><p><em>Promise<HTMLImageElement></em>. A deferred promise. Promise resolves with the Image.</p>
           </p>
         </section>
         <section>
@@ -704,7 +704,7 @@ load(&#39;music.ogg&#39;);  // loads &#39;/audio/music.ogg&#39;</code></pre></se
               <code>path</code>
               
             </dt>
-            <dd><p>String. Base audio path.</p>
+            <dd><p><em>String</em>. Base audio path.</p>
           </dd>
           </dl>
           
@@ -750,7 +750,7 @@ load(&#39;file.json&#39;);  // loads &#39;/data/file.json&#39;</code></pre></sec
               <code>path</code>
               
             </dt>
-            <dd><p>String. Base data path.</p>
+            <dd><p><em>String</em>. Base data path.</p>
           </dd>
           </dl>
           
@@ -796,7 +796,7 @@ load(&#39;character.png&#39;);  // loads &#39;/imgs/character.png&#39;</code></p
               <code>path</code>
               
             </dt>
-            <dd><p>String. Base image path.</p>
+            <dd><p><em>String</em>. Base image path.</p>
           </dd>
           </dl>
           

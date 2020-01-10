@@ -31,7 +31,7 @@ class Vector {
   }
 
   /**
-   * Calculate the addition of the current vector with the passed in vector.
+   * Calculate the addition of the current vector with the given vector.
    * @memberof Vector
    * @function add
    *
@@ -49,7 +49,7 @@ class Vector {
 
   // @ifdef VECTOR_SUBTRACT
   /**
-   * Calculate the subtraction of the current vector with the passed in vector.
+   * Calculate the subtraction of the current vector with the given vector.
    * @memberof Vector
    * @function subtract
    *
@@ -105,7 +105,7 @@ class Vector {
 
   // @ifdef VECTOR_DOT
   /**
-   * Calculate the dot product of the current vector with the passed in vector.
+   * Calculate the dot product of the current vector with the given vector.
    * @memberof Vector
    * @function dot
    *
@@ -133,7 +133,7 @@ class Vector {
 
   // @ifdef VECTOR_DISTANCE
   /**
-   * Calculate the distance between the current vector and the passed in vector.
+   * Calculate the distance between the current vector and the given vector.
    * @memberof Vector
    * @function distance
    *
@@ -150,7 +150,7 @@ class Vector {
   // @ifdef VECTOR_DOT
   // @ifdef VECTOR_LENGTH
   /**
-   * Calculate the angle (in radians) between the current vector and the passed in vector. Requires the Vector [dot](/api/vector#dot) and [length](/api/vector#length) functions.
+   * Calculate the angle (in radians) between the current vector and the given vector. Requires the Vector [dot](/api/vector#dot) and [length](/api/vector#length) functions.
    * @memberof Vector
    * @function angle
    *

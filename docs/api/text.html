@@ -77,91 +77,129 @@
 
         <p>An object for drawing text to the screen. Supports newline characters as well as automatic new lines when setting the <code>width</code> property.</p>
 <p>You can also display RTL languages by setting the attribute <code>dir=&quot;rtl&quot;</code> on the main canvas element. Due to the limited browser support for individual text to have RTL settings, it must be set globally for the entire game.</p>
+<canvas id="game-canvas-6"></canvas>
+
 <div class="tablist">
   <ul role="tablist">
     <li role="presentation" data-tab="global">
-      <button role="tab" id="text-global-tab">Global Object</button>
+      <button role="tab" id="game-canvas-6-global-tab">Global Object</button>
     </li>
     <li role="presentation" data-tab="es">
-      <button role="tab" id="text-es-tab">ES Module Import</button>
+      <button role="tab" id="game-canvas-6-es-tab">ES Module Import</button>
     </li>
     <li role="presentation" data-tab="bundle">
-      <button role="tab" id="text-bundle-tab">Module Bundler</button>
+      <button role="tab" id="game-canvas-6-bundle-tab">Module Bundler</button>
     </li>
     <li role="presentation"></li>
   </ul>
-  <section role="tabpanel" aria-labelledby=text-global-tab data-tabpanel="global"><pre><code class="language-js">let { Text } = kontra;
+  <section role="tabpanel" aria-labelledby=game-canvas-6-global-tab data-tabpanel="global">
+    <pre><code class="lang-js">let { Text } &#x3D; kontra
 
-let text = Text({
-  text: &#39;Hello World!&#39;,
-  font: &#39;32px Arial&#39;,
-  color: &#39;black&#39;
-  x: 100,
+let text &#x3D; Text({
+  text: &#x27;Hello World!\nI can even be multiline!&#x27;,
+  font: &#x27;32px Arial&#x27;,
+  color: &#x27;white&#x27;,
+  x: 300,
   y: 100,
-  anchor: {x: 0.5, y: 0.5}
+  anchor: {x: 0.5, y: 0.5},
+  textAlign: &#x27;center&#x27;
 });
-text.render();</code></pre></section>
-  <section role="tabpanel" aria-labelledby=text-es-tab data-tabpanel="es"><pre><code class="language-js">import { Text } from 'path/to/kontra.mjs';
 
-let text = Text({
-  text: &#39;Hello World!&#39;,
-  font: &#39;32px Arial&#39;,
-  color: &#39;black&#39;
-  x: 100,
-  y: 100,
-  anchor: {x: 0.5, y: 0.5}
-});
-text.render();</code></pre></section>
-  <section role="tabpanel" aria-labelledby=text-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { Text } from &#39;kontra&#39;;
+text.render();</code></pre>
+  </section>
+  <section role="tabpanel" aria-labelledby=game-canvas-6-es-tab data-tabpanel="es">
+    <pre><code class="lang-js">import { Text } from &#x27;path/to/kontra.mjs&#x27;
 
-let text = Text({
-  text: &#39;Hello World!&#39;,
-  font: &#39;32px Arial&#39;,
-  color: &#39;black&#39;
-  x: 100,
+let text &#x3D; Text({
+  text: &#x27;Hello World!\nI can even be multiline!&#x27;,
+  font: &#x27;32px Arial&#x27;,
+  color: &#x27;white&#x27;,
+  x: 300,
   y: 100,
-  anchor: {x: 0.5, y: 0.5}
+  anchor: {x: 0.5, y: 0.5},
+  textAlign: &#x27;center&#x27;
 });
-text.render();</code></pre></section>
+
+text.render();</code></pre>
+  </section>
+  <section role="tabpanel" aria-labelledby=game-canvas-6-bundle-tab data-tabpanel="bundle">
+    <pre><code class="lang-js">import { Text } from &#x27;kontra&#x27;;
+
+let text &#x3D; Text({
+  text: &#x27;Hello World!\nI can even be multiline!&#x27;,
+  font: &#x27;32px Arial&#x27;,
+  color: &#x27;white&#x27;,
+  x: 300,
+  y: 100,
+  anchor: {x: 0.5, y: 0.5},
+  textAlign: &#x27;center&#x27;
+});
+
+text.render();</code></pre>
+  </section>
 </div>
-          <p><strong>Extends:</strong> <a href="api/gameObject">GameObject</a></p>
+
+<script>(function() {
+  kontra.init("game-canvas-6");
+  var canvas = document.querySelector("#game-canvas-6");
+  canvas.width = 600;
+  canvas.height = 200;
+  var context = canvas.getContext("2d");
+  // exclude-code:start
+let { Text } = kontra;
+// exclude-code:end
+let text = Text({
+  text: 'Hello World!\nI can even be multiline!',
+  font: '32px Arial',
+  color: 'white',
+  x: 300,
+  y: 100,
+  anchor: {x: 0.5, y: 0.5},
+  textAlign: 'center'
+});
+// exclude-code:start
+text.context = context;
+// exclude-code:end
+
+text.render();
+})();</script>          <p><strong>Extends:</strong> <a href="api/gameObject">GameObject</a></p>
         <h3 id="title-Text"><span class="visually-hidden">Text</span> Parameters</span></h3>
         <dl aria-labelledby="title-Text">
           <dt>
             <code>properties</code>
             
           </dt>
-          <dd><p>Object. Properties of the text.</p>
+          <dd><p><em>Object</em>. Properties of the text.</p>
         </dd>
           <dt>
             <code>properties.text</code>
             
           </dt>
-          <dd><p>String. The text to display.</p>
+          <dd><p><em>String</em>. The text to display.</p>
         </dd>
           <dt>
             <code>properties.font</code>
             <span class="optional">Optional</span>
           </dt>
-          <dd><p>String. The <a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/font">font</a> style. Defaults to the main context font.</p>
+          <dd><p><em>String</em>. The <a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/font">font</a> style. Defaults to the main context font.</p>
         </dd>
           <dt>
             <code>properties.color</code>
             <span class="optional">Optional</span>
           </dt>
-          <dd><p>String. Fill color for the text. Defaults to the main context fillStyle.</p>
+          <dd><p><em>String</em>. Fill color for the text. Defaults to the main context fillStyle.</p>
         </dd>
           <dt>
             <code>properties.width</code>
             <span class="optional">Optional</span>
           </dt>
-          <dd><p>Number. Set a fixed width for the text. If set, the text will automatically be split into new lines that will fit the size when possible.</p>
+          <dd><p><em>Number</em>. Set a fixed width for the text. If set, the text will automatically be split into new lines that will fit the size when possible.</p>
         </dd>
           <dt>
             <code>properties.textAlign</code>
             <span class="optional">Optional</span>
           </dt>
-          <dd><p>String. The <a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/textAlign">textAlign</a> for the context. If the <code>dir</code> attribute is set to <code>rtl</code> on the main canvas, the text will automatically be aligned to the right, but you can override that by setting this property. Defaults to <code>&#39;left&#39;</code>.</p>
+          <dd><p><em>String</em>. The <a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/textAlign">textAlign</a> for the context. If the <code>dir</code> attribute is set to <code>rtl</code> on the main canvas, the text will automatically be aligned to the right, but you can override that by setting this property. Defaults to <code>&#39;left&#39;</code>.</p>
         </dd>
         </dl>
         
@@ -209,7 +247,7 @@ text.render();</code></pre></section>
             </a>
           </h2>
 
-          <p>String. The color of the text.</p>
+          <p><em>String</em>. The color of the text.</p>
           
         </section>
         <section>
@@ -220,7 +258,7 @@ text.render();</code></pre></section>
             </a>
           </h2>
 
-          <p>String. The font style.</p>
+          <p><em>String</em>. The font style.</p>
           
         </section>
         <section>
@@ -231,7 +269,7 @@ text.render();</code></pre></section>
             </a>
           </h2>
 
-          <p>String. The string of text.</p>
+          <p><em>String</em>. The string of text. Use newline characters to create multi-line strings.</p>
           
         </section>
         <section>
@@ -242,7 +280,7 @@ text.render();</code></pre></section>
             </a>
           </h2>
 
-          <p>String. The text alignment.</p>
+          <p><em>String</em>. The text alignment.</p>
           
         </section>
 

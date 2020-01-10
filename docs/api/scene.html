@@ -104,8 +104,7 @@ scene = Scene({
   children: [sprite]
 });
 
-scene.render();
-```js</code></pre></section>
+scene.render();</code></pre></section>
   <section role="tabpanel" aria-labelledby=scene-es-tab data-tabpanel="es"><pre><code class="language-js">import { Scene, Sprite } from 'path/to/kontra.mjs';
 
 sprite = Sprite({
@@ -121,8 +120,7 @@ scene = Scene({
   children: [sprite]
 });
 
-scene.render();
-```js</code></pre></section>
+scene.render();</code></pre></section>
   <section role="tabpanel" aria-labelledby=scene-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { Scene, Sprite } from &#39;kontra&#39;;
 
 sprite = Sprite({
@@ -138,8 +136,7 @@ scene = Scene({
   children: [sprite]
 });
 
-scene.render();
-```js</code></pre></section>
+scene.render();</code></pre></section>
 </div>
         <h3 id="title-Scene"><span class="visually-hidden">Scene</span> Parameters</span></h3>
         <dl aria-labelledby="title-Scene">
@@ -147,31 +144,31 @@ scene.render();
             <code>properties</code>
             
           </dt>
-          <dd><p>Object. Properties of the scene.</p>
+          <dd><p><em>Object</em>. Properties of the scene.</p>
         </dd>
           <dt>
             <code>properties.id</code>
             
           </dt>
-          <dd><p>String. The id of the scene.</p>
+          <dd><p><em>String</em>. The id of the scene.</p>
         </dd>
           <dt>
             <code>properties.name</code>
             <span class="optional">Optional</span>
           </dt>
-          <dd><p>String. The name of the scene. Used by screen readers to identify each scene. Use this property to give the scene a human friendly name. Defaults to the id. Defaults to <code>properties.id</code>.</p>
+          <dd><p><em>String</em>. The name of the scene. Used by screen readers to identify each scene. Use this property to give the scene a human friendly name. Defaults to the id. Defaults to <code>properties.id</code>.</p>
         </dd>
           <dt>
             <code>properties.children</code>
             <span class="optional">Optional</span>
           </dt>
-          <dd><p>An Array of Objects. The children of the scene. Defaults to <code>[]</code>.</p>
+          <dd><p><em>An Array of Objects</em>. The children of the scene. Defaults to <code>[]</code>.</p>
         </dd>
           <dt>
             <code>...properties.props</code>
             
           </dt>
-          <dd><p>A list of any type. Any additional properties you need added to the scene. For example, if you pass <code>Scene({counter: 0})</code> then the scene will also have a property of the same name and value. You can pass as many additional properties as you want.</p>
+          <dd><p><em>A list of any type</em>. Any additional properties you need added to the scene. For example, if you pass <code>Scene({counter: 0})</code> then the scene will also have a property of the same name and value. You can pass as many additional properties as you want.</p>
         </dd>
         </dl>
         
@@ -276,7 +273,7 @@ scene.render();
               <code>...objects</code>
               
             </dt>
-            <dd><p>A list of Objects. Objects to add to the scene.</p>
+            <dd><p><em>A list of Objects</em>. Objects to add to the scene.</p>
           </dd>
           </dl>
           
@@ -289,7 +286,7 @@ scene.render();
             </a>
           </h2>
 
-          <p>An Array of Objects. The scenes children objects.</p>
+          <p><em>An Array of Objects</em>. The scenes children objects.</p>
           
         </section>
         <section>
@@ -311,7 +308,7 @@ scene.render();
             </a>
           </h2>
 
-          <p>Boolean. If the scene is hidden.</p>
+          <p><em>Boolean</em>. If the scene is hidden.</p>
           
         </section>
         <section>
@@ -333,7 +330,7 @@ scene.render();
             </a>
           </h2>
 
-          <p>String. The id of the scene.</p>
+          <p><em>String</em>. The id of the scene.</p>
           
         </section>
         <section>
@@ -344,7 +341,7 @@ scene.render();
             </a>
           </h2>
 
-          <p>String. The name of the scene. Used by screen readers to identify each scene. Use this property to give the scene a human friendly name.</p>
+          <p><em>String</em>. The name of the scene. Used by screen readers to identify each scene. Use this property to give the scene a human friendly name.</p>
           
         </section>
         <section>
@@ -384,7 +381,7 @@ scene.render();
               <code>object</code>
               
             </dt>
-            <dd><p>Object. Object to remove.</p>
+            <dd><p><em>Object</em>. Object to remove.</p>
           </dd>
           </dl>
           
@@ -426,7 +423,7 @@ scene.render();
               <code>dt</code>
               <span class="optional">Optional</span>
             </dt>
-            <dd><p>Number. Time since last update.</p>
+            <dd><p><em>Number</em>. Time since last update.</p>
           </dd>
           </dl>
           

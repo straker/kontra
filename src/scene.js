@@ -22,7 +22,7 @@ class Scene {
    * });
    *
    * scene.render();
-   * ```js
+   * ```
    *
    * @class Scene
    *

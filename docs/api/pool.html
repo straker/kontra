@@ -84,19 +84,19 @@
             <code>properties</code>
             
           </dt>
-          <dd><p>Object. Properties of the pool.</p>
+          <dd><p><em>Object</em>. Properties of the pool.</p>
         </dd>
           <dt>
             <code>properties.create</code>
             
           </dt>
-          <dd><p>Function. Function that returns a new object to be added to the pool when there are no more alive objects.</p>
+          <dd><p><em>Function</em>. Function that returns a new object to be added to the pool when there are no more alive objects.</p>
         </dd>
           <dt>
             <code>properties.maxSize</code>
             <span class="optional">Optional</span>
           </dt>
-          <dd><p>Number. The maximum number of objects allowed in the pool. The pool will never grow beyond this size. Defaults to <code>1024</code>.</p>
+          <dd><p><em>Number</em>. The maximum number of objects allowed in the pool. The pool will never grow beyond this size. Defaults to <code>1024</code>.</p>
         </dd>
         </dl>
         
@@ -325,12 +325,12 @@ let loop = GameLoop({
               <code>properties</code>
               <span class="optional">Optional</span>
             </dt>
-            <dd><p>Object. Properties to pass to the objects <code>init()</code> function.</p>
+            <dd><p><em>Object</em>. Properties to pass to the objects <code>init()</code> function.</p>
           </dd>
           </dl>
           
           <h3><span class="visually-hidden">get</span> Return value</h3>
-          <p><p>The newly initialized object.</p>
+          <p><p><em>Object</em>. The newly initialized object.</p>
           </p>
         </section>
         <section>
@@ -344,7 +344,7 @@ let loop = GameLoop({
           <p>Returns an array of all alive objects. Useful if you need to do special processing on all alive objects outside of the pool, such as to add all alive objects to a <a href="api/quadtree">Quadtree</a>.</p>
           
           <h3><span class="visually-hidden">getAliveObjects</span> Return value</h3>
-          <p><p>An Array of all alive objects.</p>
+          <p><p><em>An Array of Objects</em>. An Array of all alive objects.</p>
           </p>
         </section>
         <section>
@@ -355,7 +355,7 @@ let loop = GameLoop({
             </a>
           </h2>
 
-          <p>Number. The maximum number of objects allowed in the pool. The pool will never grow beyond this size.</p>
+          <p><em>Number</em>. The maximum number of objects allowed in the pool. The pool will never grow beyond this size.</p>
           
         </section>
         <section>
@@ -366,7 +366,7 @@ let loop = GameLoop({
             </a>
           </h2>
 
-          <p>An Array of Objects. All objects currently in the pool, both alive and not alive.</p>
+          <p><em>An Array of Objects</em>. All objects currently in the pool, both alive and not alive.</p>
           
         </section>
         <section>
@@ -388,7 +388,7 @@ let loop = GameLoop({
             </a>
           </h2>
 
-          <p>Number. The number of alive objects.</p>
+          <p><em>Number</em>. The number of alive objects.</p>
           
         </section>
         <section>
@@ -406,7 +406,7 @@ let loop = GameLoop({
               <code>dt</code>
               <span class="optional">Optional</span>
             </dt>
-            <dd><p>Number. Time since last update.</p>
+            <dd><p><em>Number</em>. Time since last update.</p>
           </dd>
           </dl>
           

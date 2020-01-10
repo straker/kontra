@@ -17,7 +17,16 @@ import { init, getCanvas, getContext } from './core.js'
 import { on, off, emit } from './events.js'
 import GameLoop from './gameLoop.js'
 import GameObject from './gameObject.js'
-import { radToDeg, degToRad, randInt } from './helpers.js'
+import {
+  radToDeg,
+  degToRad,
+  angleToTarget,
+  randInt,
+  seedRand,
+  lerp,
+  inverseLerp,
+  clamp
+} from './helpers.js'
 import { keyMap, initKeys, bindKeys, unbindKeys, keyPressed } from './keyboard.js'
 import { registerPlugin, unregisterPlugin, extendObject } from './plugin.js'
 import {
@@ -71,7 +80,12 @@ let kontra = {
 
   degToRad,
   radToDeg,
+  angleToTarget,
   randInt,
+  seedRand,
+  lerp,
+  inverseLerp,
+  clamp,
 
   keyMap,
   initKeys,

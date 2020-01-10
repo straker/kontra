@@ -35,7 +35,7 @@ class Button extends Text.class {
    * });
    *
    * button.render();
-   * ```js
+   * ```
    *
    * @class Button
    * @extends Text

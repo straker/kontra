@@ -8,19 +8,28 @@ class Text extends GameObject.class {
    *
    * You can also display RTL languages by setting the attribute `dir="rtl"` on the main canvas element. Due to the limited browser support for individual text to have RTL settings, it must be set globally for the entire game.
    *
-   * ```js
+   * @example
+   * // exclude-code:start
+   * let { Text } = kontra;
+   * // exclude-code:end
+   * // exclude-script:start
    * import { Text } from 'kontra';
+   * // exclude-script:end
    *
    * let text = Text({
-   *   text: 'Hello World!',
+   *   text: 'Hello World!\nI can even be multiline!',
    *   font: '32px Arial',
-   *   color: 'black'
-   *   x: 100,
+   *   color: 'white',
+   *   x: 300,
    *   y: 100,
-   *   anchor: {x: 0.5, y: 0.5}
+   *   anchor: {x: 0.5, y: 0.5},
+   *   textAlign: 'center'
    * });
+   * // exclude-code:start
+   * text.context = context;
+   * // exclude-code:end
+   *
    * text.render();
-   * ```
    * @class Text
    * @extends GameObject
    *
@@ -65,7 +74,7 @@ class Text extends GameObject.class {
   }
 
   /**
-   * The string of text.
+   * The string of text. Use newline characters to create multi-line strings.
    * @memberof Text
    * @property {String} text
    */

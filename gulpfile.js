@@ -4,7 +4,7 @@ const size = require('gulp-size');
 const terser = require('gulp-terser');
 const plumber = require('gulp-plumber');
 const preprocess = require('gulp-preprocess');
-const rollup = require('rollup-stream');
+const rollup = require('@rollup/stream');
 const source = require('vinyl-source-stream');
 require('./tasks/docs.js');
 require('./tasks/typescript.js');
@@ -37,8 +37,10 @@ const context = {
 function buildIife() {
   return rollup({
     input: './src/kontra.defaults.js',
-    format: 'iife',
-    name: 'kontra'
+    output: {
+      format: 'iife',
+      name: 'kontra'
+    }
   })
   .pipe(source('kontra.js'))
   .pipe(gulp.dest('.'));
@@ -47,7 +49,9 @@ function buildIife() {
 function buildModule() {
   return rollup({
       input: './src/kontra.js',
-      format: 'es'
+      output: {
+        format: 'es'
+      }
     })
     .pipe(source('kontra.mjs'))
     .pipe(gulp.dest('.'));

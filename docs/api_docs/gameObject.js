@@ -1,9 +1,9 @@
 /**
  * A GameObject is just a base class and typically isn't used directly. Instead, it's main purpose is to be extended by other classes, such as [Sprite](/api/sprite).
  *
- * To extend the GameObject class, use the `.class` property of the constructor (since the GameObject is a factory function). You should also override the `_dc()` function in your class.
+ * To extend the GameObject class, use the `.class` property of the constructor (since the GameObject is a factory function). You should also override the `draw()` function in your class.
  *
- * The `_dc()` function determines how to draw the GameObject. It is called by the `render` function and is passed the final x and y position of the object after transforms and rotations have been applied.
+ * The `draw()` function determines how to draw the GameObject. It is called by the `render` function after transforms and rotations have been applied. Do note that the canvas has been rotated and translated to the objects position (taking into account anchor), so {0,0} will be the top-left corner of the game object when drawing.
  *
  * @sectionName Extending A GameObject
  * @example
@@ -19,12 +19,12 @@
  *     super(properties);
  *   }
  *
- *   _dc(x, y) {
+ *   draw() {
  *     this.context.fillStyle = this.color;
  *     this.context.beginPath();
- *     this.context.moveTo(x, y);
- *     this.context.lineTo(x + this.width, y);
- *     this.context.lineTo(x + this.width / 2, y + this.height);
+ *     this.context.moveTo(0, 0);
+ *     this.context.lineTo(this.width, 0);
+ *     this.context.lineTo(this.width / 2, this.height);
  *     this.context.fill();
  *   }
  * }

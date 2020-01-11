@@ -366,8 +366,8 @@
           </h2>
 
           <p>A GameObject is just a base class and typically isn&#39;t used directly. Instead, it&#39;s main purpose is to be extended by other classes, such as <a href="/api/sprite">Sprite</a>.</p>
-<p>To extend the GameObject class, use the <code>.class</code> property of the constructor (since the GameObject is a factory function). You should also override the <code>_dc()</code> function in your class.</p>
-<p>The <code>_dc()</code> function determines how to draw the GameObject. It is called by the <code>render</code> function and is passed the final x and y position of the object after transforms and rotations have been applied.</p>
+<p>To extend the GameObject class, use the <code>.class</code> property of the constructor (since the GameObject is a factory function). You should also override the <code>draw()</code> function in your class.</p>
+<p>The <code>draw()</code> function determines how to draw the GameObject. It is called by the <code>render</code> function after transforms and rotations have been applied. Do note that the canvas has been rotated and translated to the objects position (taking into account anchor), so {0,0} will be the top-left corner of the game object when drawing.</p>
 <canvas id="game-canvas-0"></canvas>
 
 <div class="tablist">
@@ -391,12 +391,12 @@ class Triangle extends GameObject.class {
     super(properties);
   }
 
-  _dc(x, y) {
+  draw() {
     this.context.fillStyle &#x3D; this.color;
     this.context.beginPath();
-    this.context.moveTo(x, y);
-    this.context.lineTo(x + this.width, y);
-    this.context.lineTo(x + this.width / 2, y + this.height);
+    this.context.moveTo(0, 0);
+    this.context.lineTo(this.width, 0);
+    this.context.lineTo(this.width / 2, this.height);
     this.context.fill();
   }
 }
@@ -419,12 +419,12 @@ class Triangle extends GameObject.class {
     super(properties);
   }
 
-  _dc(x, y) {
+  draw() {
     this.context.fillStyle &#x3D; this.color;
     this.context.beginPath();
-    this.context.moveTo(x, y);
-    this.context.lineTo(x + this.width, y);
-    this.context.lineTo(x + this.width / 2, y + this.height);
+    this.context.moveTo(0, 0);
+    this.context.lineTo(this.width, 0);
+    this.context.lineTo(this.width / 2, this.height);
     this.context.fill();
   }
 }
@@ -447,12 +447,12 @@ class Triangle extends GameObject.class {
     super(properties);
   }
 
-  _dc(x, y) {
+  draw() {
     this.context.fillStyle &#x3D; this.color;
     this.context.beginPath();
-    this.context.moveTo(x, y);
-    this.context.lineTo(x + this.width, y);
-    this.context.lineTo(x + this.width / 2, y + this.height);
+    this.context.moveTo(0, 0);
+    this.context.lineTo(this.width, 0);
+    this.context.lineTo(this.width / 2, this.height);
     this.context.fill();
   }
 }
@@ -483,12 +483,12 @@ class Triangle extends GameObject.class {
     super(properties);
   }
 
-  _dc(x, y) {
+  draw() {
     this.context.fillStyle = this.color;
     this.context.beginPath();
-    this.context.moveTo(x, y);
-    this.context.lineTo(x + this.width, y);
-    this.context.lineTo(x + this.width / 2, y + this.height);
+    this.context.moveTo(0, 0);
+    this.context.lineTo(this.width, 0);
+    this.context.lineTo(this.width / 2, this.height);
     this.context.fill();
   }
 }
@@ -679,28 +679,30 @@ let gameObject &#x3D; GameObject({
   height: 50,
   color: &#x27;red&#x27;,
   render: function() {
-    this.draw();
-
-    // draw origin
-    this.context.fillStyle &#x3D; &#x27;yellow&#x27;;
-    this.context.beginPath();
-    this.context.arc(this.x, this.y, 3, 0, 2*Math.PI);
-    this.context.fill();
-  },
-  _dc(x, y) {
     this.context.fillStyle &#x3D; this.color;
-    this.context.fillRect(x, y, this.height, this.width);
+    this.context.fillRect(0, 0, this.height, this.width);
   }
 });
+
+function drawOrigin(gameObject) {
+  gameObject.context.fillStyle &#x3D; &#x27;yellow&#x27;;
+  gameObject.context.beginPath();
+  gameObject.context.arc(gameObject.x, gameObject.y, 3, 0, 2*Math.PI);
+  gameObject.context.fill();
+}
+
 gameObject.render();
+drawOrigin(gameObject);
 
 gameObject.anchor &#x3D; {x: 0.5, y: 0.5};
 gameObject.x &#x3D; 300;
 gameObject.render();
+drawOrigin(gameObject);
 
 gameObject.anchor &#x3D; {x: 1, y: 1};
 gameObject.x &#x3D; 450;
-gameObject.render();</code></pre>
+gameObject.render();
+drawOrigin(gameObject);</code></pre>
   </section>
   <section role="tabpanel" aria-labelledby=game-canvas-1-es-tab data-tabpanel="es">
     <pre><code class="lang-js">import { GameObject } from &#x27;path/to/kontra.mjs&#x27;
@@ -712,28 +714,30 @@ let gameObject &#x3D; GameObject({
   height: 50,
   color: &#x27;red&#x27;,
   render: function() {
-    this.draw();
-
-    // draw origin
-    this.context.fillStyle &#x3D; &#x27;yellow&#x27;;
-    this.context.beginPath();
-    this.context.arc(this.x, this.y, 3, 0, 2*Math.PI);
-    this.context.fill();
-  },
-  _dc(x, y) {
     this.context.fillStyle &#x3D; this.color;
-    this.context.fillRect(x, y, this.height, this.width);
+    this.context.fillRect(0, 0, this.height, this.width);
   }
 });
+
+function drawOrigin(gameObject) {
+  gameObject.context.fillStyle &#x3D; &#x27;yellow&#x27;;
+  gameObject.context.beginPath();
+  gameObject.context.arc(gameObject.x, gameObject.y, 3, 0, 2*Math.PI);
+  gameObject.context.fill();
+}
+
 gameObject.render();
+drawOrigin(gameObject);
 
 gameObject.anchor &#x3D; {x: 0.5, y: 0.5};
 gameObject.x &#x3D; 300;
 gameObject.render();
+drawOrigin(gameObject);
 
 gameObject.anchor &#x3D; {x: 1, y: 1};
 gameObject.x &#x3D; 450;
-gameObject.render();</code></pre>
+gameObject.render();
+drawOrigin(gameObject);</code></pre>
   </section>
   <section role="tabpanel" aria-labelledby=game-canvas-1-bundle-tab data-tabpanel="bundle">
     <pre><code class="lang-js">import { GameObject } from &#x27;kontra&#x27;;
@@ -745,28 +749,30 @@ let gameObject &#x3D; GameObject({
   height: 50,
   color: &#x27;red&#x27;,
   render: function() {
-    this.draw();
-
-    // draw origin
-    this.context.fillStyle &#x3D; &#x27;yellow&#x27;;
-    this.context.beginPath();
-    this.context.arc(this.x, this.y, 3, 0, 2*Math.PI);
-    this.context.fill();
-  },
-  _dc(x, y) {
     this.context.fillStyle &#x3D; this.color;
-    this.context.fillRect(x, y, this.height, this.width);
+    this.context.fillRect(0, 0, this.height, this.width);
   }
 });
+
+function drawOrigin(gameObject) {
+  gameObject.context.fillStyle &#x3D; &#x27;yellow&#x27;;
+  gameObject.context.beginPath();
+  gameObject.context.arc(gameObject.x, gameObject.y, 3, 0, 2*Math.PI);
+  gameObject.context.fill();
+}
+
 gameObject.render();
+drawOrigin(gameObject);
 
 gameObject.anchor &#x3D; {x: 0.5, y: 0.5};
 gameObject.x &#x3D; 300;
 gameObject.render();
+drawOrigin(gameObject);
 
 gameObject.anchor &#x3D; {x: 1, y: 1};
 gameObject.x &#x3D; 450;
-gameObject.render();</code></pre>
+gameObject.render();
+drawOrigin(gameObject);</code></pre>
   </section>
 </div>
 
@@ -789,28 +795,30 @@ let gameObject = GameObject({
   context: context,
   // exclude-code:end
   render: function() {
-    this.draw();
-
-    // draw origin
-    this.context.fillStyle = 'yellow';
-    this.context.beginPath();
-    this.context.arc(this.x, this.y, 3, 0, 2*Math.PI);
-    this.context.fill();
-  },
-  _dc(x, y) {
     this.context.fillStyle = this.color;
-    this.context.fillRect(x, y, this.height, this.width);
+    this.context.fillRect(0, 0, this.height, this.width);
   }
 });
+
+function drawOrigin(gameObject) {
+  gameObject.context.fillStyle = 'yellow';
+  gameObject.context.beginPath();
+  gameObject.context.arc(gameObject.x, gameObject.y, 3, 0, 2*Math.PI);
+  gameObject.context.fill();
+}
+
 gameObject.render();
+drawOrigin(gameObject);
 
 gameObject.anchor = {x: 0.5, y: 0.5};
 gameObject.x = 300;
 gameObject.render();
+drawOrigin(gameObject);
 
 gameObject.anchor = {x: 1, y: 1};
 gameObject.x = 450;
 gameObject.render();
+drawOrigin(gameObject);
 })();</script>          
         </section>
         <section>
@@ -895,7 +903,7 @@ let gameObject = GameObject({
    // outline the game object
    this.context.strokeStyle = &#39;yellow&#39;;
    this.context.lineWidth = 2;
-   this.context.strokeRect(this.x, this.y, this.width, this.height);
+   this.context.strokeRect(0, 0, this.width, this.height);
  }
 });
 
@@ -915,7 +923,7 @@ let gameObject = GameObject({
    // outline the game object
    this.context.strokeStyle = &#39;yellow&#39;;
    this.context.lineWidth = 2;
-   this.context.strokeRect(this.x, this.y, this.width, this.height);
+   this.context.strokeRect(0, 0, this.width, this.height);
  }
 });
 
@@ -935,7 +943,7 @@ let gameObject = GameObject({
    // outline the game object
    this.context.strokeStyle = &#39;yellow&#39;;
    this.context.lineWidth = 2;
-   this.context.strokeRect(this.x, this.y, this.width, this.height);
+   this.context.strokeRect(0, 0, this.width, this.height);
  }
 });
 

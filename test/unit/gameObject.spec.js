@@ -235,18 +235,19 @@ describe('gameObject with properties: ' + JSON.stringify(properties,null,4), () 
           color: true
         });
 
-        sinon.stub(gameObject, '_dc').callsFake(noop);
+        sinon.stub(gameObject.context, 'translate').callsFake(noop);
 
         gameObject.render();
 
-        expect(gameObject._dc.calledWith(-50, -25)).to.be.ok;
+        expect(gameObject.context.translate.secondCall.calledWith(-50, -25)).to.be.ok;
 
+        gameObject.context.translate.resetHistory();
         gameObject.anchor = {x: 1, y: 1};
         gameObject.render();
 
-        expect(gameObject._dc.calledWith(-100, -50)).to.be.ok;
+        expect(gameObject.context.translate.secondCall.calledWith(-100, -50)).to.be.ok;
 
-        gameObject._dc.restore();
+        gameObject.context.translate.restore();
       });
     }
 
@@ -261,14 +262,15 @@ describe('gameObject with properties: ' + JSON.stringify(properties,null,4), () 
 
         gameObject.render();
 
-        expect(gameObject.context.translate.calledWith(10, 20)).to.be.ok;
+        expect(gameObject.context.translate.firstCall.calledWith(10, 20)).to.be.ok;
 
+        gameObject.context.translate.resetHistory();
         gameObject.sx = 200;
         gameObject.sy = 200;
 
         gameObject.render();
 
-        expect(gameObject.context.translate.calledWith(-190, -180)).to.be.ok;
+        expect(gameObject.context.translate.firstCall.calledWith(-190, -180)).to.be.ok;
 
         gameObject.context.translate.restore();
       });

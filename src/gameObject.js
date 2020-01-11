@@ -176,28 +176,30 @@ class GameObject {
      *   context: context,
      *   // exclude-code:end
      *   render: function() {
-     *     this.draw();
-     *
-     *     // draw origin
-     *     this.context.fillStyle = 'yellow';
-     *     this.context.beginPath();
-     *     this.context.arc(this.x, this.y, 3, 0, 2*Math.PI);
-     *     this.context.fill();
-     *   },
-     *   _dc(x, y) {
      *     this.context.fillStyle = this.color;
-     *     this.context.fillRect(x, y, this.height, this.width);
+     *     this.context.fillRect(0, 0, this.height, this.width);
      *   }
      * });
+     *
+     * function drawOrigin(gameObject) {
+     *   gameObject.context.fillStyle = 'yellow';
+     *   gameObject.context.beginPath();
+     *   gameObject.context.arc(gameObject.x, gameObject.y, 3, 0, 2*Math.PI);
+     *   gameObject.context.fill();
+     * }
+     *
      * gameObject.render();
+     * drawOrigin(gameObject);
      *
      * gameObject.anchor = {x: 0.5, y: 0.5};
      * gameObject.x = 300;
      * gameObject.render();
+     * drawOrigin(gameObject);
      *
      * gameObject.anchor = {x: 1, y: 1};
      * gameObject.x = 450;
      * gameObject.render();
+     * drawOrigin(gameObject);
      */
     this.anchor = {x: 0, y: 0};
     // @endif
@@ -218,7 +220,11 @@ class GameObject {
     // @endif
 
     // add all properties to the game object, overriding any defaults
-    Object.assign(this, properties);
+    let { render, ...props } = properties;
+    Object.assign(this, props);
+
+    // rf = render function
+    this._rf = render || this.draw;
   }
 
   // define getter and setter shortcut functions to make it easier to work
@@ -499,40 +505,6 @@ class GameObject {
    * @function render
    */
   render() {
-    this.draw();
-  }
-
-  /**
-   * Draw the game object at its X and Y position, taking into account rotation and anchor.
-   *
-   * If you override the game objects `render()` function with your own render function, you can call this function to draw the game object normally.
-   *
-   * ```js
-   * let { GameObject } = kontra;
-   *
-   * let gameObject = GameObject({
-   *  x: 290,
-   *  y: 80,
-   *  width: 20,
-   *  height: 40,
-   *
-   *  render: function() {
-   *    // draw the game object normally (perform rotation and other transforms)
-   *    this.draw();
-   *
-   *    // outline the game object
-   *    this.context.strokeStyle = 'yellow';
-   *    this.context.lineWidth = 2;
-   *    this.context.strokeRect(this.x, this.y, this.width, this.height);
-   *  }
-   * });
-   *
-   * gameObject.render();
-   * ```
-   * @memberof GameObject
-   * @function draw
-   */
-  draw() {
     let x = 0;
     let y = 0;
     let viewX = this.x;
@@ -571,8 +543,11 @@ class GameObject {
     }
     // @endif
 
-    // dc = draw code
-    this._dc(x, y);
+    // @ifdef GAMEOBJECT_ANCHOR
+    this.context.translate(x, y);
+    // @endif
+
+    this._rf();
 
     // @ifdef GAMEOBJECT_GROUP
     // perform all transforms on the parent before rendering the children
@@ -582,7 +557,37 @@ class GameObject {
     this.context.restore();
   }
 
-  _dc() {}
+  /**
+   * Draw the game object at its X and Y position, taking into account rotation and anchor.
+   *
+   * If you override the game objects `render()` function with your own render function, you can call this function to draw the game object normally.
+   *
+   * ```js
+   * let { GameObject } = kontra;
+   *
+   * let gameObject = GameObject({
+   *  x: 290,
+   *  y: 80,
+   *  width: 20,
+   *  height: 40,
+   *
+   *  render: function() {
+   *    // draw the game object normally (perform rotation and other transforms)
+   *    this.draw();
+   *
+   *    // outline the game object
+   *    this.context.strokeStyle = 'yellow';
+   *    this.context.lineWidth = 2;
+   *    this.context.strokeRect(0, 0, this.width, this.height);
+   *  }
+   * });
+   *
+   * gameObject.render();
+   * ```
+   * @memberof GameObject
+   * @function draw
+   */
+  draw() {}
 }
 
 export default Factory(GameObject)

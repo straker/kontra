@@ -80,8 +80,7 @@ function emit(event, ...args) {
  * @sectionName Core
  */
 
-let canvasEl;
-let context;
+let canvasEl, context;
 
 /**
  * Return the canvas element.
@@ -755,11 +754,6 @@ function load(...urls) {
   );
 }
 
-// expose for testing
-
-
-// Override the getCanPlay function to provide a specific return type for tests
-
 /**
  * A simple 2d vector object.
  *
@@ -1164,28 +1158,30 @@ class GameObject {
      *   context: context,
      *   // exclude-code:end
      *   render: function() {
-     *     this.draw();
-     *
-     *     // draw origin
-     *     this.context.fillStyle = 'yellow';
-     *     this.context.beginPath();
-     *     this.context.arc(this.x, this.y, 3, 0, 2*Math.PI);
-     *     this.context.fill();
-     *   },
-     *   _dc(x, y) {
      *     this.context.fillStyle = this.color;
-     *     this.context.fillRect(x, y, this.height, this.width);
+     *     this.context.fillRect(0, 0, this.height, this.width);
      *   }
      * });
+     *
+     * function drawOrigin(gameObject) {
+     *   gameObject.context.fillStyle = 'yellow';
+     *   gameObject.context.beginPath();
+     *   gameObject.context.arc(gameObject.x, gameObject.y, 3, 0, 2*Math.PI);
+     *   gameObject.context.fill();
+     * }
+     *
      * gameObject.render();
+     * drawOrigin(gameObject);
      *
      * gameObject.anchor = {x: 0.5, y: 0.5};
      * gameObject.x = 300;
      * gameObject.render();
+     * drawOrigin(gameObject);
      *
      * gameObject.anchor = {x: 1, y: 1};
      * gameObject.x = 450;
      * gameObject.render();
+     * drawOrigin(gameObject);
      */
     this.anchor = {x: 0, y: 0};
     // @endif
@@ -1206,7 +1202,11 @@ class GameObject {
     // @endif
 
     // add all properties to the game object, overriding any defaults
-    Object.assign(this, properties);
+    let { render, ...props } = properties;
+    Object.assign(this, props);
+
+    // rf = render function
+    this._rf = render || this.draw;
   }
 
   // define getter and setter shortcut functions to make it easier to work
@@ -1487,40 +1487,6 @@ class GameObject {
    * @function render
    */
   render() {
-    this.draw();
-  }
-
-  /**
-   * Draw the game object at its X and Y position, taking into account rotation and anchor.
-   *
-   * If you override the game objects `render()` function with your own render function, you can call this function to draw the game object normally.
-   *
-   * ```js
-   * let { GameObject } = kontra;
-   *
-   * let gameObject = GameObject({
-   *  x: 290,
-   *  y: 80,
-   *  width: 20,
-   *  height: 40,
-   *
-   *  render: function() {
-   *    // draw the game object normally (perform rotation and other transforms)
-   *    this.draw();
-   *
-   *    // outline the game object
-   *    this.context.strokeStyle = 'yellow';
-   *    this.context.lineWidth = 2;
-   *    this.context.strokeRect(this.x, this.y, this.width, this.height);
-   *  }
-   * });
-   *
-   * gameObject.render();
-   * ```
-   * @memberof GameObject
-   * @function draw
-   */
-  draw() {
     let x = 0;
     let y = 0;
     let viewX = this.x;
@@ -1559,8 +1525,11 @@ class GameObject {
     }
     // @endif
 
-    // dc = draw code
-    this._dc(x, y);
+    // @ifdef GAMEOBJECT_ANCHOR
+    this.context.translate(x, y);
+    // @endif
+
+    this._rf();
 
     // @ifdef GAMEOBJECT_GROUP
     // perform all transforms on the parent before rendering the children
@@ -1570,7 +1539,37 @@ class GameObject {
     this.context.restore();
   }
 
-  _dc() {}
+  /**
+   * Draw the game object at its X and Y position, taking into account rotation and anchor.
+   *
+   * If you override the game objects `render()` function with your own render function, you can call this function to draw the game object normally.
+   *
+   * ```js
+   * let { GameObject } = kontra;
+   *
+   * let gameObject = GameObject({
+   *  x: 290,
+   *  y: 80,
+   *  width: 20,
+   *  height: 40,
+   *
+   *  render: function() {
+   *    // draw the game object normally (perform rotation and other transforms)
+   *    this.draw();
+   *
+   *    // outline the game object
+   *    this.context.strokeStyle = 'yellow';
+   *    this.context.lineWidth = 2;
+   *    this.context.strokeRect(0, 0, this.width, this.height);
+   *  }
+   * });
+   *
+   * gameObject.render();
+   * ```
+   * @memberof GameObject
+   * @function draw
+   */
+  draw() {}
 }
 
 var GameObject$1 = Factory(GameObject);
@@ -1748,8 +1747,8 @@ class Text extends GameObject$1.class {
     this.height = this._s.length * this._fs;
   }
 
-  _dc(x, y) {
-    let alignX = x;
+  draw() {
+    let alignX = 0;
     let textAlign = this.textAlign;
 
     // @ifdef TEXT_RTL
@@ -1758,10 +1757,10 @@ class Text extends GameObject$1.class {
 
     // @ifdef TEXT_ALIGN||TEXT_RTL
     alignX = textAlign === 'right'
-      ? x + this.width
+      ? this.width
       : textAlign === 'center'
-        ? x + this.width / 2 | 0
-        : x;
+        ? this.width / 2 | 0
+        : 0;
     // @endif
 
     this._s.map((str, index) => {
@@ -1769,7 +1768,7 @@ class Text extends GameObject$1.class {
       this.context.textAlign = textAlign;
       this.context.fillStyle = this.color;
       this.context.font = this.font;
-      this.context.fillText(str, alignX, y + this._fs * index);
+      this.context.fillText(str, alignX, this._fs * index);
     });
   }
 }
@@ -4079,12 +4078,12 @@ class Sprite extends GameObject$1.class {
   }
   // @endif
 
-  _dc(x, y) {
+  draw() {
     // @ifdef SPRITE_IMAGE||SPRITE_ANIMATION
     // flip sprite around the center so the x/y position does not change
     if (this._fx == -1 || this._fy == -1) {
-      let translateX = this.width / 2 + x;
-      let translateY = this.height / 2 + y;
+      let translateX = this.width / 2;
+      let translateY = this.height / 2;
 
       this.context.translate(translateX, translateY);
       this.context.scale(this._fx, this._fy);
@@ -4097,7 +4096,7 @@ class Sprite extends GameObject$1.class {
       this.context.drawImage(
         this.image,
         0, 0, this.image.width, this.image.height,
-        x, y, this.width, this.height
+        0, 0, this.width, this.height
       );
     }
     // @endif
@@ -4105,8 +4104,8 @@ class Sprite extends GameObject$1.class {
     // @ifdef SPRITE_ANIMATION
     if (this.currentAnimation) {
       this.currentAnimation.render({
-        x: x,
-        y: y,
+        x: 0,
+        y: 0,
         width: this.width,
         height: this.height,
         context: this.context
@@ -4116,7 +4115,7 @@ class Sprite extends GameObject$1.class {
 
     if (this.color) {
       this.context.fillStyle = this.color;
-      this.context.fillRect(x, y, this.width, this.height);
+      this.context.fillRect(0, 0, this.width, this.height);
     }
   }
 }
@@ -5070,5 +5069,5 @@ let kontra = {
   Vector: Vector$1
 };
 
-export { Animation$1 as Animation, imageAssets, audioAssets, dataAssets, setImagePath, setAudioPath, setDataPath, loadImage, loadAudio, loadData, load, Button$1 as Button, collides, init, getCanvas, getContext, on, off, emit, GameLoop, GameObject$1 as GameObject, degToRad, radToDeg, angleToTarget, randInt, seedRand, lerp, inverseLerp, clamp, keyMap, initKeys, bindKeys, unbindKeys, keyPressed, registerPlugin, unregisterPlugin, extendObject, initPointer, pointer, track, untrack, pointerOver, onPointerDown, onPointerUp, pointerPressed, Pool$1 as Pool, Quadtree$1 as Quadtree, Scene$1 as Scene, Sprite$1 as Sprite, SpriteSheet$1 as SpriteSheet, setStoreItem, getStoreItem, Text$1 as Text, TileEngine, Vector$1 as Vector };
 export default kontra;
+export { Animation$1 as Animation, imageAssets, audioAssets, dataAssets, setImagePath, setAudioPath, setDataPath, loadImage, loadAudio, loadData, load, Button$1 as Button, collides, init, getCanvas, getContext, on, off, emit, GameLoop, GameObject$1 as GameObject, degToRad, radToDeg, angleToTarget, randInt, seedRand, lerp, inverseLerp, clamp, keyMap, initKeys, bindKeys, unbindKeys, keyPressed, registerPlugin, unregisterPlugin, extendObject, initPointer, pointer, track, untrack, pointerOver, onPointerDown, onPointerUp, pointerPressed, Pool$1 as Pool, Quadtree$1 as Quadtree, Scene$1 as Scene, Sprite$1 as Sprite, SpriteSheet$1 as SpriteSheet, setStoreItem, getStoreItem, Text$1 as Text, TileEngine, Vector$1 as Vector };

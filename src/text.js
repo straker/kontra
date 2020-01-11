@@ -175,8 +175,8 @@ class Text extends GameObject.class {
     this.height = this._s.length * this._fs;
   }
 
-  _dc(x, y) {
-    let alignX = x;
+  draw() {
+    let alignX = 0;
     let textAlign = this.textAlign;
 
     // @ifdef TEXT_RTL
@@ -185,10 +185,10 @@ class Text extends GameObject.class {
 
     // @ifdef TEXT_ALIGN||TEXT_RTL
     alignX = textAlign === 'right'
-      ? x + this.width
+      ? this.width
       : textAlign === 'center'
-        ? x + this.width / 2 | 0
-        : x;
+        ? this.width / 2 | 0
+        : 0;
     // @endif
 
     this._s.map((str, index) => {
@@ -196,7 +196,7 @@ class Text extends GameObject.class {
       this.context.textAlign = textAlign;
       this.context.fillStyle = this.color;
       this.context.font = this.font;
-      this.context.fillText(str, alignX, y + this._fs * index);
+      this.context.fillText(str, alignX, this._fs * index);
     });
   }
 }

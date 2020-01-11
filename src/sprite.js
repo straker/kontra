@@ -192,12 +192,12 @@ class Sprite extends GameObject.class {
   }
   // @endif
 
-  _dc(x, y) {
+  draw() {
     // @ifdef SPRITE_IMAGE||SPRITE_ANIMATION
     // flip sprite around the center so the x/y position does not change
     if (this._fx == -1 || this._fy == -1) {
-      let translateX = this.width / 2 + x;
-      let translateY = this.height / 2 + y;
+      let translateX = this.width / 2;
+      let translateY = this.height / 2;
 
       this.context.translate(translateX, translateY);
       this.context.scale(this._fx, this._fy);
@@ -210,7 +210,7 @@ class Sprite extends GameObject.class {
       this.context.drawImage(
         this.image,
         0, 0, this.image.width, this.image.height,
-        x, y, this.width, this.height
+        0, 0, this.width, this.height
       );
     }
     // @endif
@@ -218,8 +218,8 @@ class Sprite extends GameObject.class {
     // @ifdef SPRITE_ANIMATION
     if (this.currentAnimation) {
       this.currentAnimation.render({
-        x: x,
-        y: y,
+        x: 0,
+        y: 0,
         width: this.width,
         height: this.height,
         context: this.context
@@ -229,7 +229,7 @@ class Sprite extends GameObject.class {
 
     if (this.color) {
       this.context.fillStyle = this.color;
-      this.context.fillRect(x, y, this.width, this.height);
+      this.context.fillRect(0, 0, this.width, this.height);
     }
   }
 }

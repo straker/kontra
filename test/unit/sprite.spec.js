@@ -430,21 +430,7 @@ describe('sprite with properties: ' + JSON.stringify(properties,null,4), () => {
 
           sprite.render();
 
-          expect(sprite.context.translate.secondCall.calledWith(sprite.width / 2, sprite.height / 2)).to.be.ok;
-
-          sprite.context.translate.resetHistory();
-          sprite.anchor = {x: 0.5, y: 0.5};
-
-          sprite.render();
-
-          expect(sprite.context.translate.secondCall.calledWith(0, 0)).to.be.ok;
-
-          sprite.context.translate.resetHistory();
-          sprite.anchor = {x: 1, y: 1};
-
-          sprite.render();
-
-          expect(sprite.context.translate.secondCall.calledWith(-sprite.width / 2, -sprite.height / 2)).to.be.ok;
+          expect(sprite.context.translate.thirdCall.calledWith(sprite.width / 2, sprite.height / 2)).to.be.ok;
 
           sprite.context.translate.restore();
         });

@@ -1315,7 +1315,7 @@ function extendObject(kontraObj, properties) {
  * ```js
  * import { Sprite } from 'kontra';
 
- * let sprite = Srite({
+ * let sprite = Sprite({
  *   x: 10,
  *   y: 10,
  *   radius: 10

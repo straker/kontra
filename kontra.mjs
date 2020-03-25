@@ -1542,12 +1542,31 @@ function pointerHandler(evt, eventName) {
   }
 }
 
+function pointerOnTick() {
+  lastFrameRenderOrder.length = 0;
+
+  thisFrameRenderOrder.map(object => {
+    lastFrameRenderOrder.push(object);
+  });
+
+  thisFrameRenderOrder.length = 0;
+}
+
 /**
  * Initialize pointer event listeners. This function must be called before using other pointer functions.
  * @function initPointer
  */
 function initPointer() {
   let canvas = getCanvas();
+
+  canvas.removeEventListener('mousedown', pointerDownHandler);
+  canvas.removeEventListener('touchstart', pointerDownHandler);
+  canvas.removeEventListener('mouseup', pointerUpHandler);
+  canvas.removeEventListener('touchend', pointerUpHandler);
+  canvas.removeEventListener('touchcancel', pointerUpHandler);
+  canvas.removeEventListener('blur', blurEventHandler$1);
+  canvas.removeEventListener('mousemove', mouseMoveHandler);
+  canvas.removeEventListener('touchmove', mouseMoveHandler);
 
   canvas.addEventListener('mousedown', pointerDownHandler);
   canvas.addEventListener('touchstart', pointerDownHandler);
@@ -1559,15 +1578,8 @@ function initPointer() {
   canvas.addEventListener('touchmove', mouseMoveHandler);
 
   // reset object render order on every new frame
-  on('tick', () => {
-    lastFrameRenderOrder.length = 0;
-
-    thisFrameRenderOrder.map(object => {
-      lastFrameRenderOrder.push(object);
-    });
-
-    thisFrameRenderOrder.length = 0;
-  });
+  off('tick', pointerOnTick);
+  on('tick', pointerOnTick);
 }
 
 /**

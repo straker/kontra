@@ -630,7 +630,6 @@ class Sprite {
     if (this.image) {
       this.context.drawImage(
         this.image,
-        0, 0, this.image.width, this.image.height,
         anchorWidth, anchorHeight, this.width, this.height
       );
     }

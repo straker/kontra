@@ -67,6 +67,7 @@ export default function GameLoop({fps = 60, clearCanvas = true, update, render} 
   let step = 1 / fps;
   let clearFn = clearCanvas ? clear : noop
   let last, rAF, now, dt, loop;
+  const performance = window.performance || Date
 
   /**
    * Called every frame of the game loop.

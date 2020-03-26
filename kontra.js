@@ -1505,6 +1505,9 @@ function pointerHandler(evt, eventName) {
       clientX = evt.changedTouches[i].clientX; // Save for later
       clientY = evt.changedTouches[i].clientY;
 
+      pointer.x = (clientX - rect.left) * ratio;
+      pointer.y = (clientY - rect.top) * ratio;
+
       // Trigger events
       let object = getCurrentObject({
         id,
@@ -1524,10 +1527,9 @@ function pointerHandler(evt, eventName) {
   } else {
     clientX = evt.clientX;
     clientY = evt.clientY;
+    pointer.x = (clientX - rect.left) * ratio;
+    pointer.y = (clientY - rect.top) * ratio;
   }
-
-  pointer.x = (clientX - rect.left) * ratio;
-  pointer.y = (clientY - rect.top) * ratio;
 
   evt.preventDefault();
 

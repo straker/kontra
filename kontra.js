@@ -2361,7 +2361,7 @@ var kontra = (function () {
     }
 
     /**
-     * Focus the button. Calls [onFOcus](/api/button#onFOcus) if passed.
+     * Focus the button. Calls [onFocus](/api/button#onFOcus) if passed.
      * @memberof Button
      * @function focus
      */

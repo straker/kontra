@@ -2358,7 +2358,7 @@ class Button extends Text$1.class {
   }
 
   /**
-   * Focus the button. Calls [onFOcus](/api/button#onFOcus) if passed.
+   * Focus the button. Calls [onFocus](/api/button#onFOcus) if passed.
    * @memberof Button
    * @function focus
    */
@@ -5070,4 +5070,4 @@ let kontra = {
 };
 
 export default kontra;
-export { Animation$1 as Animation, imageAssets, audioAssets, dataAssets, setImagePath, setAudioPath, setDataPath, loadImage, loadAudio, loadData, load, Button$1 as Button, collides, init, getCanvas, getContext, on, off, emit, GameLoop, GameObject$1 as GameObject, degToRad, radToDeg, angleToTarget, randInt, seedRand, lerp, inverseLerp, clamp, keyMap, initKeys, bindKeys, unbindKeys, keyPressed, registerPlugin, unregisterPlugin, extendObject, initPointer, pointer, track, untrack, pointerOver, onPointerDown, onPointerUp, pointerPressed, Pool$1 as Pool, Quadtree$1 as Quadtree, Scene$1 as Scene, Sprite$1 as Sprite, SpriteSheet$1 as SpriteSheet, setStoreItem, getStoreItem, Text$1 as Text, TileEngine, Vector$1 as Vector };
+export { Animation$1 as Animation, Button$1 as Button, GameLoop, GameObject$1 as GameObject, Pool$1 as Pool, Quadtree$1 as Quadtree, Scene$1 as Scene, Sprite$1 as Sprite, SpriteSheet$1 as SpriteSheet, Text$1 as Text, TileEngine, Vector$1 as Vector, angleToTarget, audioAssets, bindKeys, clamp, collides, dataAssets, degToRad, emit, extendObject, getCanvas, getContext, getStoreItem, imageAssets, init, initKeys, initPointer, inverseLerp, keyMap, keyPressed, lerp, load, loadAudio, loadData, loadImage, off, on, onPointerDown, onPointerUp, pointer, pointerOver, pointerPressed, radToDeg, randInt, registerPlugin, seedRand, setAudioPath, setDataPath, setImagePath, setStoreItem, track, unbindKeys, unregisterPlugin, untrack };

@@ -87,10 +87,11 @@ function parseFrames(consecutiveFrames) {
  * @param {Number} properties.frameWidth - The width of a single frame.
  * @param {Number} properties.frameHeight - The height of a single frame.
  * @param {Number} [properties.frameMargin=0] - The amount of whitespace between each frame.
+ * @param {Object} [properties.atlas] - Spritesheet atlas object.
  * @param {Object} [properties.animations] - Animations to create from the sprite sheet using [Animation](api/animation). Passed directly into the sprite sheets [createAnimations()](api/spriteSheet#createAnimations) function.
  */
 class SpriteSheet {
-  constructor({image, frameWidth, frameHeight, frameMargin, animations} = {}) {
+  constructor({image, frameWidth, frameHeight, frameMargin, atlas, animations} = {}) {
     // @ifdef DEBUG
     if (!image) {
       throw Error('You must provide an Image for the SpriteSheet');
@@ -110,6 +111,8 @@ class SpriteSheet {
      * @property {HTMLImageElement|HTMLCanvasElement} image
      */
     this.image = image;
+
+    this.atlas = atlas;
 
     /**
      * An object that defines properties of a single frame in the sprite sheet. It has properties of `width`, `height`, and `margin`.
@@ -209,7 +212,7 @@ class SpriteSheet {
 
       // add new frames to the end of the array
       [].concat(frames).map(frame => {
-        sequence = sequence.concat(parseFrames(frame));
+        sequence = sequence.concat(this.atlas ? frame : parseFrames(frame));
       });
 
       this.animations[name] = Animation({

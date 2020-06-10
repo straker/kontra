@@ -310,18 +310,32 @@ class Animation {
    */
   render({x, y, width = this.width, height = this.height, context = getContext()} = {}) {
 
-    // get the row and col of the frame
-    let row = this.frames[this._f] / this.spriteSheet._f | 0;
-    let col = this.frames[this._f] % this.spriteSheet._f | 0;
+    if (this.spriteSheet.atlas) {
+      let name = this.frames[this._f];
+      let frameData = this.spriteSheet.atlas.frames[name];
+      let { x: _x, y: _y, w, h } = frameData.frame;
 
-    context.drawImage(
-      this.spriteSheet.image,
-      col * this.width + (col * 2 + 1) * this.margin,
-      row * this.height + (row * 2 + 1) * this.margin,
-      this.width, this.height,
-      x, y,
-      width, height
-    );
+      context.drawImage(
+        this.spriteSheet.image,
+        _x, _y, w, h,
+        x, y, width, height
+      );
+    }
+    else {
+
+      // get the row and col of the frame
+      let row = this.frames[this._f] / this.spriteSheet._f | 0;
+      let col = this.frames[this._f] % this.spriteSheet._f | 0;
+
+      context.drawImage(
+        this.spriteSheet.image,
+        col * this.width + (col * 2 + 1) * this.margin,
+        row * this.height + (row * 2 + 1) * this.margin,
+        this.width, this.height,
+        x, y,
+        width, height
+      );
+    }
   }
 }
 
@@ -426,7 +440,7 @@ function getName(url) {
  */
 function getCanPlay(audio) {
   return {
-    wav: '',
+    wav: audio.canPlayType('audio/wav; codecs="1"'),
     mp3: audio.canPlayType('audio/mpeg;'),
     ogg: audio.canPlayType('audio/ogg; codecs="vorbis"'),
     aac: audio.canPlayType('audio/aac;')
@@ -638,7 +652,7 @@ function loadImage(url) {
  */
 function loadAudio(url) {
   return new Promise((resolve, reject) => {
-    let audioEl, canPlay, resolvedUrl, fullUrl;
+    let _url = url, audioEl, canPlay, resolvedUrl, fullUrl;
 
     audioEl = new Audio();
     canPlay = getCanPlay(audioEl);
@@ -653,7 +667,7 @@ function loadAudio(url) {
             , 0);  // 0 is the shortest falsy value
 
     if (!url) {
-      return reject(/* @ifdef DEBUG */ 'cannot play any of the audio formats provided' + /* @endif */ url);
+      return reject(/* @ifdef DEBUG */ 'cannot play any of the audio formats provided ' + /* @endif */ _url);
     }
 
     resolvedUrl = joinPath(audioPath, url);
@@ -1017,7 +1031,7 @@ class GameObject {
    */
 
   constructor(properties) {
-    this.init(properties);
+    return this.init(properties);
   }
 
   /**
@@ -1574,6 +1588,45 @@ class GameObject {
 
 var GameObject$1 = Factory(GameObject);
 
+let fontSizeRegex = /(\d+)(\w+)/;
+
+function parseFont(font) {
+  let match = font.match(fontSizeRegex);
+
+  // coerce string to number
+  // @see https://github.com/jed/140bytes/wiki/Byte-saving-techniques#coercion-to-test-for-types
+  let size = +match[1];
+  let unit = match[2];
+  let computed = size;
+
+  // compute font size
+  // switch(unit) {
+  //   // px defaults to the size
+
+  //   // em uses the size of the canvas when declared (but won't keep in sync with
+  //   // changes to the canvas font-size)
+  //   case 'em': {
+  //     let fontSize = window.getComputedStyle(getCanvas()).fontSize;
+  //     let parsedSize = parseFont(fontSize).size;
+  //     computed = size * parsedSize;
+  //   }
+
+  //   // rem uses the size of the HTML element when declared (but won't keep in
+  //   // sync with changes to the HTML element font-size)
+  //   case 'rem': {
+  //     let fontSize = window.getComputedStyle(document.documentElement).fontSize;
+  //     let parsedSize = parseFont(fontSize).size;
+  //     computed = size * parsedSize;
+  //   }
+  // }
+
+  return {
+    size,
+    unit,
+    computed
+  };
+}
+
 class Text extends GameObject$1.class {
   /**
    * An object for drawing text to the screen. Supports newline characters as well as automatic new lines when setting the `width` property.
@@ -1639,6 +1692,13 @@ class Text extends GameObject$1.class {
      * @property {String} color
      */
 
+    on('font', value => {
+      this.font = this.font.replace(fontSizeRegex, (match, size, unit) => {
+        return value + unit;
+      });
+      this._p();
+    });
+
     super.init(properties);
 
     // p = prerender
@@ -1671,7 +1731,7 @@ class Text extends GameObject$1.class {
     this._f = value;
 
     // fs = font size
-    this._fs = parseInt(value);
+    this._fs = parseFont(value).computed;
     this._d = true;
   }
 
@@ -3733,7 +3793,7 @@ class Scene {
    * @param {Object[]} [properties.children=[]] - The children of the scene.
    * @param {...*} properties.props - Any additional properties you need added to the scene. For example, if you pass `Scene({counter: 0})` then the scene will also have a property of the same name and value. You can pass as many additional properties as you want.
    */
-  constructor(properties) {
+  constructor(properties = {}) {
     /**
      * The id of the scene.
      * @memberof Scene
@@ -3860,13 +3920,26 @@ class Scene {
   }
 
   /**
-   * Render the scene and call `render()` on all children. A hidden scene will not render.
+   * Render the scene and call `render()` on all children. A hidden scene will not render nor will any children outside of the current game viewport.
    * @memberof Scene
    * @function render
    */
   render() {
     if (!this.hidden) {
-      this.children.map(child => child.render && child.render());
+      this.children.map(child => {
+        if (!child.render) return;
+
+        // only draw objects that are within the current viewport (speeds up performance considerably)
+        let canvas = getCanvas();
+        let x = (child.viewX !== undefined) ? child.viewX : child.x;
+        let y = (child.viewY !== undefined) ? child.viewY : child.y;
+
+        if (x === undefined ||  // render things such as TileMaps which don't have a position
+            (x + child.width > 0 && x < canvas.width &&
+             y + child.height > 0 && y < canvas.height)) {
+          child.render();
+        }
+      });
     }
   }
 
@@ -4208,10 +4281,11 @@ function parseFrames(consecutiveFrames) {
  * @param {Number} properties.frameWidth - The width of a single frame.
  * @param {Number} properties.frameHeight - The height of a single frame.
  * @param {Number} [properties.frameMargin=0] - The amount of whitespace between each frame.
+ * @param {Object} [properties.atlas] - Spritesheet atlas object.
  * @param {Object} [properties.animations] - Animations to create from the sprite sheet using [Animation](api/animation). Passed directly into the sprite sheets [createAnimations()](api/spriteSheet#createAnimations) function.
  */
 class SpriteSheet {
-  constructor({image, frameWidth, frameHeight, frameMargin, animations} = {}) {
+  constructor({image, frameWidth, frameHeight, frameMargin, atlas, animations} = {}) {
     // @ifdef DEBUG
     if (!image) {
       throw Error('You must provide an Image for the SpriteSheet');
@@ -4231,6 +4305,8 @@ class SpriteSheet {
      * @property {HTMLImageElement|HTMLCanvasElement} image
      */
     this.image = image;
+
+    this.atlas = atlas;
 
     /**
      * An object that defines properties of a single frame in the sprite sheet. It has properties of `width`, `height`, and `margin`.
@@ -4330,7 +4406,7 @@ class SpriteSheet {
 
       // add new frames to the end of the array
       [].concat(frames).map(frame => {
-        sequence = sequence.concat(parseFrames(frame));
+        sequence = sequence.concat(this.atlas ? frame : parseFrames(frame));
       });
 
       this.animations[name] = Animation$1({
@@ -4969,7 +5045,7 @@ function TileEngine(properties = {}) {
         layer._d = false;
         layerMap[layer.name] = layer;
 
-        if (layer.visible !== false) {
+        if (layer.data && layer.visible !== false) {
           tileEngine._r(layer, offscreenContext);
         }
       });
@@ -4997,6 +5073,340 @@ function TileEngine(properties = {}) {
   prerender();
   return tileEngine;
 }
+
+let alignment = {
+  start(rtl) {
+    return rtl ? 1 : 0;
+  },
+  center() {
+    return 0.5;
+  },
+  end(rtl) {
+    return rtl ? 0 : 1;
+  }
+};
+
+let handler = {
+  set(obj, prop, value) {
+
+    // don't set dirty flag for private properties
+    if (prop[0] != '_' && obj[prop] !== value) {
+      obj._d = true;
+    }
+
+    obj[prop] = value;
+    return true;
+  }
+};
+
+class UIManager extends GameObject$1.class {
+  init(properties = {}) {
+    let {flow = 'column', align = 'start', justify = 'start', gap = 0, numCols = 1, breakpoints = []} = properties;
+
+    this.flow = flow;
+    this.align = align;
+    this.justify = justify;
+    this.gap = gap;  // TODO: should probably be a scalar rather than fixed so as font-sizes / ui size changes this is scaled to the number
+    this.numCols = numCols;
+
+    this.breakpoints = breakpoints;
+
+    on('font', value => {
+      // fs = font size
+      this._fs = value;
+
+      // b = breakpoint
+      this.breakpoints.map(breakpoint => {
+        if (breakpoint.metric(value) && this._b !== breakpoint) {
+          this._b = breakpoint;
+          breakpoint.callback.call(this);
+        }
+      });
+
+      // give time for other text objects to change size first
+      setTimeout(() => {
+        this._d = true;
+      }, 0);
+    });
+
+    super.init(properties);
+
+    // use a proxy so setting any property on the UI Manager will set the dirty
+    // flag
+    return new Proxy(this, handler);
+  }
+
+  // keep width and height getters/settings so we can set _w and _h and not
+  // trigger infinite call loops
+  get width() {
+    // w = width
+    return this._w;
+  }
+
+  set width(value) {
+    this._w = value;
+    this._d = true;
+
+    // fw = fixed width
+    this._fw = value;
+  }
+
+  get height() {
+    // h = height
+    return this._h;
+  }
+
+  set height(value) {
+    this._h = value;
+    this._d = true;
+
+    // fh = fixed height
+    this._fh = value;
+  }
+
+  addChild(child) {
+    this._d = true;
+    super.addChild(child);
+  }
+
+  removeChild(child) {
+    this._d = true;
+    super.removeChild(child);
+  }
+
+  render() {
+    if (this._d) {
+      this._p();
+    }
+    super.render();
+  }
+
+  /**
+   * Calculate the width, height, and position of each child before rendering.
+   */
+  _p() {
+    this._d = false;
+
+    let canvas = getCanvas();
+
+    let numRows, rtl, columned, rowed, grided, children, gap, numCols;
+    let grid = [];
+    let colWidths = [];
+    let rowHeights = [];
+
+    let calculateSize = () => {
+      columned = this.flow === 'column';
+      rowed = this.flow === 'row';
+      grided = this.flow === 'grid';
+
+      children = this.children;
+      gap = this.gap;
+      numCols = columned
+        ? 1
+        : rowed
+          ? children.length
+          : this.numCols;
+      numRows = Math.ceil(children.length / numCols);
+
+      // direction property overrides canvas dir
+      rtl = (canvas.dir === 'rtl' && !this.direction) || this.direction === 'rtl';
+
+      for (let row = 0; row < numRows; row++) {
+        grid[row] = [];
+
+        for (let col = 0; col < numCols; col++) {
+          let child = children[row * numCols + col];
+          if (!child) {
+            grid[row][col] = {};
+            continue;
+          }
+
+          grid[row][col] = child;
+
+          // prerender child to get current width/height
+          if (child._p) {
+            child._p();
+          }
+
+          rowHeights[row] = Math.max(rowHeights[row] || 0, child.height);
+          colWidths[col] = Math.max(colWidths[col] || 0, child.width);
+        }
+      }
+
+      this._w = colWidths.reduce((acc, width) => acc += width, 0) + gap * (numCols - 1);
+      this._h = rowHeights.reduce((acc, height) => acc += height, 0) + gap * (numRows - 1);
+
+      // this.breakpoints.find(breakpoint => {
+      //   if (breakpoint.size >= this._fs)  {
+
+      //     calculateSize();
+      //   }
+      // });
+    };
+
+    calculateSize();
+
+    // reverse columns
+    if (rtl) {
+      grid = grid.map(row => row.reverse());
+      colWidths = colWidths.reverse();
+    }
+
+    let y = this.y;
+    grid.map((gridRow, row) => {
+      // let x = this.x;
+      let x = rtl && !this.parent
+        ? canvas.width - (this.x + this._w * (1 - this.anchor.x * 2))
+        : this.x;
+
+      gridRow.map((child, col) => {
+        if (!child) return;
+
+        let justify = alignment[child.justifySelf ? child.justifySelf : this.justify](rtl);
+        let align = alignment[child.alignSelf ? child.alignSelf : this.align]();
+
+        child.x = x + colWidths[col] * justify;
+        child.y = y + rowHeights[row] * align;
+        child.anchor = { x: justify, y: align };
+
+        x += colWidths[col] + gap;
+      });
+
+      y += rowHeights[row] + gap;
+    });
+
+    // i can simplify the entire logic if i treat the ui manager always as a grid
+    // and treat flow=row as numCols=children.length and flow=column as
+    // numCols=1
+
+    // calculate width and height so we can set the children
+    // let columned = this.flow === 'column';
+    // let rowed = this.flow === 'row';
+    // let grided = this.flow === 'grid';
+    // let width = 0;
+    // let height = 0;
+
+    // // a grid of one column is just a column
+    // if (grided && this.numCols === 1) {
+    //   grided = false;
+    //   columned = true;
+    // }
+
+    // this.children.map((child, index) => {
+    //    // prerender children first
+    //   if (child._p) {
+    //     child._p();
+    //   }
+
+    //   if (columned) {
+    //     width = Math.max(width, child.width);
+    //     height += child.height + (index > 0 ? this.gap : 0);
+    //   }
+    //   else if (rowed) {
+    //     width += child.width + (index > 0 ? this.gap : 0);
+    //     height = Math.max(height, child.height);
+    //   }
+    //   else {
+    //     width = Math.max(width, child.width);
+    //     height = Math.max(height, child.height);
+    //   }
+    // });
+
+    // // this._w = this._fw ? this._fw : width;
+    // // this._h = this._fh ? this._fh : height;
+
+    // let numCols = this.numCols;
+    // while (grided && this.maxWidth && numCols && width * numCols > this.maxWidth) {
+    //   numCols--;
+    // }
+
+    // let numRows = Math.ceil(this.children.length / numCols);
+
+    // this._w = grided ? width * numCols : width;
+    // this._h = grided ? height * numRows + this.gap * (numRows - 1) : height;
+
+    // let canvas = getCanvas();
+
+    // // direction property overrides canvas dir
+    // let rtl = (canvas.dir === 'rtl' && !this.direction) || this.direction === 'rtl';
+
+    // // calculate position, only take into account rtl if this is the topmost
+    // // ui manager
+    // let prevX = rtl && !this.parent
+    //   ? canvas.width - (this.x + width * (1 - this.anchor.x * 2))
+    //   : this.x;
+    // let prevY = this.y;
+
+    // let reversed = rtl && !columned;
+
+    // // if we reversed a grid we need to start backwards on each row
+    // let children = this.children;
+    // if (reversed && grided) {
+    //   children = [];
+    //   let col = numCols - 1;
+    //   let row = 0;
+    //   let newRow = false;
+    //   while (children.length < this.children.length + numCols) {
+    //     let child = this.children[row * numCols + col] || {
+    //       anchor: {}
+    //     };
+    //     children.push(child);
+
+    //     col = newRow ? numCols - 1 : col - 1;
+    //     row = newRow ? row + 1: row;
+    //     newRow = col % numCols === 0;
+    //   }
+
+    //   reversed = false;
+    // }
+
+    // let length = children.length - 1;
+    // let index = reversed ? length : 0;
+    // let start = index;
+    // for (; index >= 0 && index <= length; index += (reversed ? -1 : 1)) {
+    //   let child = children[index];
+    //   let justify = alignment[child.justifySelf ? child.justifySelf : this.justify](rtl);
+    //   let align = alignment[child.alignSelf ? child.alignSelf : this.align]();
+
+    //   child.x = prevX;
+    //   child.y = prevY;
+    //   child.anchor.x = child.anchor.y = 0;
+
+    //   if (columned) {
+    //     child.x += this._w * justify;
+    //     child.anchor.x = justify;
+
+    //     if (index !== start) {
+    //       child.y += this.gap;
+    //     }
+
+    //     prevY = child.y + child.height;
+    //   }
+    //   else if (rowed) {
+    //     child.y += this._h * align;
+    //     child.anchor.y = align;
+
+    //     if (index !== start) {
+    //       child.x += this.gap;
+    //     }
+
+    //     prevX = child.x + child.width;
+    //   }
+    //   else {
+    //     child.x += width * justify;
+    //     child.anchor.x = justify;
+    //     child.y += height * align;
+    //     child.anchor.y = align;
+    //     let nextCol = ((index + 1) % numCols);
+
+    //     prevX = this.x + width * nextCol + this.gap * nextCol;
+    //     prevY += nextCol === 0 ? height + this.gap : 0;
+    //   }
+    // }
+  }
+}
+
+var UIManager$1 = Factory(UIManager);
 
 let kontra = {
   Animation: Animation$1,
@@ -5066,8 +5476,9 @@ let kontra = {
 
   Text: Text$1,
   TileEngine,
+  UIManager: UIManager$1,
   Vector: Vector$1
 };
 
 export default kontra;
-export { Animation$1 as Animation, imageAssets, audioAssets, dataAssets, setImagePath, setAudioPath, setDataPath, loadImage, loadAudio, loadData, load, Button$1 as Button, collides, init, getCanvas, getContext, on, off, emit, GameLoop, GameObject$1 as GameObject, degToRad, radToDeg, angleToTarget, randInt, seedRand, lerp, inverseLerp, clamp, keyMap, initKeys, bindKeys, unbindKeys, keyPressed, registerPlugin, unregisterPlugin, extendObject, initPointer, pointer, track, untrack, pointerOver, onPointerDown, onPointerUp, pointerPressed, Pool$1 as Pool, Quadtree$1 as Quadtree, Scene$1 as Scene, Sprite$1 as Sprite, SpriteSheet$1 as SpriteSheet, setStoreItem, getStoreItem, Text$1 as Text, TileEngine, Vector$1 as Vector };
+export { Animation$1 as Animation, imageAssets, audioAssets, dataAssets, setImagePath, setAudioPath, setDataPath, loadImage, loadAudio, loadData, load, Button$1 as Button, collides, init, getCanvas, getContext, on, off, emit, GameLoop, GameObject$1 as GameObject, degToRad, radToDeg, angleToTarget, randInt, seedRand, lerp, inverseLerp, clamp, keyMap, initKeys, bindKeys, unbindKeys, keyPressed, registerPlugin, unregisterPlugin, extendObject, initPointer, pointer, track, untrack, pointerOver, onPointerDown, onPointerUp, pointerPressed, Pool$1 as Pool, Quadtree$1 as Quadtree, Scene$1 as Scene, Sprite$1 as Sprite, SpriteSheet$1 as SpriteSheet, setStoreItem, getStoreItem, Text$1 as Text, TileEngine, UIManager$1 as UIManager, Vector$1 as Vector };

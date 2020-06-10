@@ -99,7 +99,7 @@ function getName(url) {
  */
 function getCanPlay(audio) {
   return {
-    wav: '',
+    wav: audio.canPlayType('audio/wav; codecs="1"'),
     mp3: audio.canPlayType('audio/mpeg;'),
     ogg: audio.canPlayType('audio/ogg; codecs="vorbis"'),
     aac: audio.canPlayType('audio/aac;')
@@ -311,7 +311,7 @@ export function loadImage(url) {
  */
 export function loadAudio(url) {
   return new Promise((resolve, reject) => {
-    let audioEl, canPlay, resolvedUrl, fullUrl;
+    let _url = url, audioEl, canPlay, resolvedUrl, fullUrl;
 
     audioEl = new Audio();
     canPlay = getCanPlay(audioEl);
@@ -326,7 +326,7 @@ export function loadAudio(url) {
             , 0);  // 0 is the shortest falsy value
 
     if (!url) {
-      return reject(/* @ifdef DEBUG */ 'cannot play any of the audio formats provided' + /* @endif */ url);
+      return reject(/* @ifdef DEBUG */ 'cannot play any of the audio formats provided ' + /* @endif */ _url);
     }
 
     resolvedUrl = joinPath(audioPath, url);

@@ -35,7 +35,7 @@ class GameObject {
    */
 
   constructor(properties) {
-    this.init(properties);
+    return this.init(properties);
   }
 
   /**

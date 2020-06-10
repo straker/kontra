@@ -575,7 +575,7 @@ export default function TileEngine(properties = {}) {
         layer._d = false;
         layerMap[layer.name] = layer;
 
-        if (layer.visible !== false) {
+        if (layer.data && layer.visible !== false) {
           tileEngine._r(layer, offscreenContext);
         }
       });

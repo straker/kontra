@@ -47,6 +47,7 @@ import SpriteSheet from './spriteSheet.js'
 import { setStoreItem, getStoreItem } from './store.js'
 import Text from './text.js'
 import TileEngine from './tileEngine.js'
+import UIManager from './uiManager.js'
 import Vector from './vector.js'
 
 let kontra = {
@@ -117,6 +118,7 @@ let kontra = {
 
   Text,
   TileEngine,
+  UIManager,
   Vector
 };
 

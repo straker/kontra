@@ -16,9 +16,9 @@
     justify-content: center;
   }
   .container {
-    max-height: 672px;
+    max-height: 540px;
     height: 100%;
-    max-width: 480px;
+    max-width: 960px;
     width: 100%;
     text-align: center;
   }
@@ -29,33 +29,115 @@
       max-width: 100%;
       width: auto;
   }
+
+  button {
+    display: none;
+    font: 32px Arial;
+  }
+  canvas[dir="rtl"] ~ button#ltr {
+    display: block;
+  }
+  canvas:not([dir="rtl"]) ~ button#rtl {
+    display: block;
+  }
   </style>
 </head>
 <body>
   <div class="container">
-    <canvas id="game" width="480" height="672"></canvas>
+    <canvas id="game" width="540" height="960"></canvas>
+    <input type="range" value="50" oninput="kontra.emit('font', parseInt(this.value))">
+    <button id="rtl" onclick="game.dir = 'rtl'; kontra.emit('font', 32)">RTL</button>
+    <button id="ltr" onclick="game.dir = 'ltr'; kontra.emit('font', 32)">LTR</button>
   </div>
   <script src="../kontra.js"></script>
   <script>
     let { canvas, context } = kontra.init();
+    context.font = '20px Arial';
 
-    sprite = kontra.Sprite({
-      x: 100,
-      y: 100,
-      width: 20,
-      height: 40,
-      color: 'red'
+    let activeScene;
+
+    let menuScene = kontra.Scene({
+      name: 'Main menu'
+    });
+    let menuSceneManager = kontra.UIManager({
+      flow: 'grid',
+      numCols: 2,
+      justify: 'end',
+      gap: 15,
+      anchor: {x: 1, y: 1},
+      x: canvas.width,
+      y: canvas.height,
+      breakpoints: [{
+        metric(size) { return size <= 32 },
+        callback() {
+          this.numCols = 3;
+        }
+      },
+      {
+        metric(size) { return size > 32 && size <= 56 },
+        callback() {
+          this.numCols = 2;
+        }
+      },
+      {
+        metric(size) { return size > 56 && size <= 64 },
+        callback() {
+          this.numCols = 1;
+        }
+      }]
     });
 
-    loop = kontra.GameLoop({
-      update() {
-        sprite.update();
-      },
-      render() {
-        sprite.render();
+    let startBtn = kontra.Button({
+      text: 'Start',
+      color: 'white',
+      onUp() {
+
+      }
+    });
+    let optionBtn = kontra.Button({
+      text: 'Options',
+      color: 'white',
+      onUp() {
+
+      }
+    });
+    let exitBtn = kontra.Button({
+      text: 'Exit',
+      color: 'white',
+      onUp() {
+
       }
     });
 
+    menuSceneManager.addChild(startBtn);
+    menuSceneManager.addChild(optionBtn);
+    menuSceneManager.addChild(exitBtn);
+    menuScene.add(menuSceneManager);
+
+
+    // let optionsScene = kontra.Scene({
+    //   name: 'Options menu'
+    // });
+    // let optionsSceneManager = kontra.UIManager({
+    //   justify: 'center',
+    //   gap: 15,
+    //   anchor: {x: 0.5, y: 0.5},
+    //   x: canvas.width / 2,
+    //   y: canvas.height / 2
+    // });
+
+
+
+    activeScene = menuScene;
+
+    let loop = kontra.GameLoop({
+      update() {
+        // menuScene.update();
+      },
+      render() {
+        menuSceneManager.render();
+      }
+    });
     loop.start();
   </script>
 </body>

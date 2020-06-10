@@ -247,8 +247,8 @@ declare namespace kontra {
   interface SpriteSheetConstructor {
     readonly class: SpriteSheetConstructor;
     readonly prototype: SpriteSheet;
-    new(properties: {image: HTMLImageElement | HTMLCanvasElement, frameWidth: number, frameHeight: number, frameMargin?: number, animations?: object}): SpriteSheet;
-    (properties: {image: HTMLImageElement | HTMLCanvasElement, frameWidth: number, frameHeight: number, frameMargin?: number, animations?: object}): SpriteSheet;
+    new(properties: {image: HTMLImageElement | HTMLCanvasElement, frameWidth: number, frameHeight: number, frameMargin?: number, atlas?: object, animations?: object}): SpriteSheet;
+    (properties: {image: HTMLImageElement | HTMLCanvasElement, frameWidth: number, frameHeight: number, frameMargin?: number, atlas?: object, animations?: object}): SpriteSheet;
   }
   var SpriteSheet: SpriteSheetConstructor
   function setStoreItem(key: string, value: any): void;

@@ -152,7 +152,7 @@ class Text extends GameObject.class {
 
   get width() {
     // w = width
-    return this._w;
+    return super.width ? super.width : this._w;
   }
 
   set width(value) {

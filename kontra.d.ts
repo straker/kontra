@@ -63,6 +63,7 @@ declare namespace kontra {
     context: CanvasRenderingContext2D;
     localPosition: Vector;
     localRotation: number;
+    localScale: {x: number, y: number};
     parent: GameObject | null;
     children: GameObject[];
     velocity: Vector;
@@ -72,6 +73,7 @@ declare namespace kontra {
     anchor: {x: number, y: number};
     sx: number;
     sy: number;
+    scale: {x: number, y: number};
     x: number;
     y: number;
     dx: number;
@@ -81,8 +83,9 @@ declare namespace kontra {
     readonly viewX: number;
     readonly viewY: number;
     isAlive(): boolean;
-    addChild(child: GameObject): void;
+    addChild(child: GameObject, options: {absolute?: boolean}): void;
     removeChild(child: GameObject): void;
+    setScale(x: number, y?: number): void;
     update(dt?: number): void;
     advance(dt?: number): void;
     render(): void;

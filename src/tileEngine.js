@@ -5,7 +5,7 @@ import { getCanvas, getContext } from './core.js'
  *
  * <figure>
  *   <a href="assets/imgs/mapPack_tilesheet.png">
- *     <img src="assets/imgs/mapPack_tilesheet.png" alt="Tileset to create an overworld map in various seasons.">
+ *     <img src="assets/imgs/mapPack_tilesheet.png" width="1088" height="768" alt="Tileset to create an overworld map in various seasons.">
  *   </a>
  *   <figcaption>Tileset image courtesy of <a href="https://kenney.nl/assets">Kenney</a>.</figcaption>
  * </figure>

@@ -16,9 +16,9 @@
     justify-content: center;
   }
   .container {
-    max-height: 540px;
+    max-height: 960px;
     height: 100%;
-    max-width: 960px;
+    max-width: 540px;
     width: 100%;
     text-align: center;
   }
@@ -52,67 +52,102 @@
   <script src="../kontra.js"></script>
   <script>
     let { canvas, context } = kontra.init();
-    context.font = '20px Arial';
 
-    let activeScene;
+    kontra.load('blue_button02.png').then(() => {
 
-    let menuScene = kontra.Scene({
-      name: 'Main menu'
-    });
-    let menuSceneManager = kontra.UIManager({
-      flow: 'grid',
-      numCols: 2,
-      justify: 'end',
-      gap: 15,
-      anchor: {x: 1, y: 1},
-      x: canvas.width,
-      y: canvas.height,
-      breakpoints: [{
-        metric(size) { return size <= 32 },
-        callback() {
-          this.numCols = 3;
+      window.text = kontra.Text({
+        font: '28px Arial',
+        text: 'Options\nNew Game',
+        textAlign: 'center',
+        color: 'white',
+        anchor: { x: 0.5, y: 0.5 },
+        x: 100,
+        y: 100
+      });
+
+      window.sprite = kontra.Sprite({
+        x: canvas.width / 2,
+        y: canvas.height / 2,
+        anchor: { x: 0.5, y: 0.5 },
+        image: kontra.imageAssets['blue_button02'],
+        // children: [text]
+      });
+
+      sprite.addChild(text, { absolute: true });
+
+      let loop = kontra.GameLoop({
+        update() {
+
+        },
+        render() {
+          sprite.render();
+          // text.render();
         }
-      },
-      {
-        metric(size) { return size > 32 && size <= 56 },
-        callback() {
-          this.numCols = 2;
-        }
-      },
-      {
-        metric(size) { return size > 56 && size <= 64 },
-        callback() {
-          this.numCols = 1;
-        }
-      }]
+      });
+      loop.start();
     });
+    // let { canvas, context } = kontra.init();
+    // context.font = '20px Arial';
 
-    let startBtn = kontra.Button({
-      text: 'Start',
-      color: 'white',
-      onUp() {
+    // let activeScene;
 
-      }
-    });
-    let optionBtn = kontra.Button({
-      text: 'Options',
-      color: 'white',
-      onUp() {
+    // let menuScene = kontra.Scene({
+    //   name: 'Main menu'
+    // });
+    // let menuSceneManager = kontra.UIManager({
+    //   flow: 'grid',
+    //   numCols: 2,
+    //   justify: 'end',
+    //   gap: 15,
+    //   anchor: {x: 1, y: 1},
+    //   x: canvas.width,
+    //   y: canvas.height,
+    //   breakpoints: [{
+    //     metric(size) { return size <= 32 },
+    //     callback() {
+    //       this.numCols = 3;
+    //     }
+    //   },
+    //   {
+    //     metric(size) { return size > 32 && size <= 56 },
+    //     callback() {
+    //       this.numCols = 2;
+    //     }
+    //   },
+    //   {
+    //     metric(size) { return size > 56 && size <= 64 },
+    //     callback() {
+    //       this.numCols = 1;
+    //     }
+    //   }]
+    // });
 
-      }
-    });
-    let exitBtn = kontra.Button({
-      text: 'Exit',
-      color: 'white',
-      onUp() {
+    // let startBtn = kontra.Button({
+    //   text: 'Start',
+    //   color: 'white',
+    //   onUp() {
 
-      }
-    });
+    //   }
+    // });
+    // let optionBtn = kontra.Button({
+    //   text: 'Options',
+    //   color: 'white',
+    //   onUp() {
 
-    menuSceneManager.addChild(startBtn);
-    menuSceneManager.addChild(optionBtn);
-    menuSceneManager.addChild(exitBtn);
-    menuScene.add(menuSceneManager);
+    //   }
+    // });
+    // let exitBtn = kontra.Button({
+    //   text: 'Exit',
+    //   color: 'white',
+    //   onUp() {
+
+    //   }
+    // });
+
+    // menuSceneManager.addChild(startBtn);
+    // menuSceneManager.addChild(optionBtn);
+    // menuSceneManager.addChild(exitBtn);
+    // menuScene.add(menuSceneManager);
 
 
     // let optionsScene = kontra.Scene({
@@ -128,17 +163,17 @@
 
 
 
-    activeScene = menuScene;
+    // activeScene = menuScene;
 
-    let loop = kontra.GameLoop({
-      update() {
-        // menuScene.update();
-      },
-      render() {
-        menuSceneManager.render();
-      }
-    });
-    loop.start();
+    // let loop = kontra.GameLoop({
+    //   update() {
+    //     // menuScene.update();
+    //   },
+    //   render() {
+    //     menuSceneManager.render();
+    //   }
+    // });
+    // loop.start();
   </script>
 </body>
 </html>

@@ -1098,6 +1098,15 @@ class GameObject {
     this._rot = 0;
     // @endif
 
+    // @ifdef GAMEOBJECT_SCALE
+    /**
+     * The game objects local scale, which is its scale relative to a parent object. If the game object does not have a parent object, the local scale will be the same as the [scale](api/gameObject#scale).
+     * @memberof GameObject
+     * @property {{x: number, y: number}} localScale
+     */
+    this.localScale = {x: 1, y:1};
+    // @endif
+
     /**
      * The game objects parent object.
      * @memberof GameObject
@@ -1215,9 +1224,20 @@ class GameObject {
     this.sx = this.sy = 0;
     // @endif
 
+    // @ifdef GAMEOBJECT_SCALE
+    /**
+     * The x and y scale of the object. Setting this property will change the width or height of the object to match the new scale.
+     * @memberof GameObject
+     * @property {{x: number, y: number}} scale
+     */
+    this.scale = {x: 1, y: 1};
+    // @endif
+
     // add all properties to the game object, overriding any defaults
-    let { render, ...props } = properties;
+    let { render, children = [], ...props } = properties;
     Object.assign(this, props);
+
+    children.map(child => this.addChild(child));
 
     // rf = render function
     this._rf = render || this.draw;
@@ -1382,7 +1402,7 @@ class GameObject {
 
     this.localRotation = this.parent ? value - this.parent.rotation : value;
     this.children.map(child => {
-      if (child.localRotation) {
+      if (child.localRotation !== undefined) {
         child.rotation = value + child.localRotation;
       }
     });
@@ -1390,20 +1410,61 @@ class GameObject {
 
   /**
    * Add an object as a child to this object. The child objects position and rotation will be calculated based on this objects position and rotation.
+   *
+   * By default the childs x/y position is interpreted to be relative to the x/y position of the parent. This means that if the childs position is {x: 0, y: 0}, the position will be updated to equal to the parents x/y position when added.
+   *
+   * If instead the position should not be updated based on the parents x/y position, set the `absolute` option to `true`.
    * @memberof GameObject
    * @function addChild
    *
    * @param {GameObject} child - Object to add as a child.
+   * @param {Object} options - Options for adding the child.
+   * @param {Boolean} [options.absolute=false] - If set the true, the x/y position of the child is treated as an absolute position in the world rather than being relative to the x/y position of the parent.
+   *
+   * @example
+   * // exclude-code:start
+   * let { GameObject } = kontra;
+   * // exclude-code:end
+   * // exclude-script:start
+   * import { GameObject } from 'kontra';
+   * // exclude-script:end
+   *
+   * function createObject(x, y, color, size = 1) {
+   *   return GameObject({
+   *     x,
+   *     y,
+   *     width: 50 / size,
+   *     height: 50 / size,
+   *     anchor: {x: 0.5, y: 0.5},
+   *     color,
+   *     // exclude-code:start
+   *     context: context,
+   *     // exclude-code:end
+   *     render: function() {
+   *       this.context.fillStyle = this.color;
+   *       this.context.fillRect(0, 0, this.height, this.width);
+   *     }
+   *   });
+   * }
+   *
+   * let parent = createObject(300, 100, 'red');
+   * let relativeChild = createObject(25, 25, '#62a2f9', 2);
+   * let absoluteChild = createObject(25, 25, 'yellow', 2);
+   *
+   * parent.addChild(relativeChild);
+   * parent.addChild(absoluteChild, {absolute: true});
+   *
+   * parent.render();
    */
-  addChild(child) {
+  addChild(child, { absolute = false } = {}) {
     this.children.push(child);
     child.parent = this;
 
     // set the childs x/y/rotation to trigger localPosition/localRotation
     // calculations
-    child.x = child.x;
-    child.y = child.y;
-    child.rotation = child.rotation;
+    child.x = absolute ? child.x : this.x + child.x;
+    child.y = absolute ? child.y : this.y + child.y;
+    child.rotation = this.rotation - child.rotation;
   }
 
   /**
@@ -1425,6 +1486,56 @@ class GameObject {
       child.y = child.y;
       child.rotation = child.rotation;
     }
+  }
+  // @endif
+
+  // @ifdef GAMEOBJECT_SCALE
+  get width() {
+    return this._w * this.scale.x;
+  }
+
+  set width(value) {
+    this._w = value;
+  }
+
+  get height() {
+    return this._h * this.scale.y;
+  }
+
+  set height(value) {
+    this._h = value;
+  }
+
+  get localWidth() {
+    return this._w;
+  }
+
+  get localHeight() {
+    return this._h;
+  }
+
+  /**
+   * Set the x and y scale of the object. If only one value is passed, both are set to the same value.
+   * @memberof GameObject
+   * @function setScale
+   *
+   * @param {Number} x - X scale value.
+   * @param {Number} [y=x] - Y scale value. Defaults to the x parameter.
+   */
+  setScale(x, y = x) {
+    this.scale.x = x;
+    this.scale.y = y;
+
+    // @ifdef GAMEOBJECT_GROUP
+    this.localScale.x = this.parent ? (x - 1) - this.parent.scale.x : x;
+    this.localScale.y = this.parent ? (y - 1) - this.parent.scale.y : y;
+    this.children.map(child => {
+      if (child.localScale !== undefined) {
+        child.scale.x = (x - 1) + child.localScale.x;
+        child.scale.y = (y - 1) + child.localScale.y;
+      }
+    });
+    // @endif
   }
   // @endif
 
@@ -1511,6 +1622,15 @@ class GameObject {
     y = -this.height * this.anchor.y;
     // @endif
 
+    // @ifdef GAMEOBJECT_SCALE
+    // @ifdef GAMEOBJECT_GROUP
+    if (this.parent) {
+      x = -this.localWidth * this.anchor.x;
+      y = -this.localHeight * this.anchor.y;
+    }
+    // @endif
+    // @endif
+
     // @ifdef GAMEOBJECT_CAMERA
     viewX = this.viewX;
     viewY = this.viewY;
@@ -1543,7 +1663,23 @@ class GameObject {
     this.context.translate(x, y);
     // @endif
 
+    // @ifdef GAMEOBJECT_SCALE
+    let scaleX = this.scale.x;
+    let scaleY = this.scale.y;
+
+    // @ifdef GAMEOBJECT_GROUP
+    scaleX = this.localScale.x;
+    scaleY = this.localScale.y;
+    // @endif
+
+    this.context.scale(scaleX, scaleY);
+    // @endif
+
     this._rf();
+
+    // @ifdef GAMEOBJECT_ANCHOR
+    this.context.translate(-x, -y);
+    // @endif
 
     // @ifdef GAMEOBJECT_GROUP
     // perform all transforms on the parent before rendering the children
@@ -1737,7 +1873,7 @@ class Text extends GameObject$1.class {
 
   get width() {
     // w = width
-    return this._w;
+    return super.width ? super.width : this._w;
   }
 
   set width(value) {
@@ -4001,7 +4137,7 @@ class Sprite extends GameObject$1.class {
 
     // @ifdef SPRITE_IMAGE||SPRITE_ANIMATION
     // fx = flipX, fy = flipY
-    this._fx = this._fy = 1;
+    // this._fx = this._fy = 1;
     // @endif
 
     super.init(properties);
@@ -4013,10 +4149,10 @@ class Sprite extends GameObject$1.class {
      * @property {HTMLImageElement|HTMLCanvasElement} image
      */
 
-    let { width, height, image } = properties;
+    let { image } = properties;
     if (image) {
-      this.width = (width !== undefined) ? width : image.width;
-      this.height = (height !== undefined) ? height : image.height;
+      this.width = image.width;
+      this.height = image.height;
     }
     // @endif
   }
@@ -4128,48 +4264,47 @@ class Sprite extends GameObject$1.class {
   // @endif
 
   // @ifdef SPRITE_IMAGE||SPRITE_ANIMATION
-  get width() {
-    return this._w;
-  }
+  // get width() {
+  //   return super.width ? super.width : this._w;
+  // }
 
-  get height() {
-    return this._h;
-  }
+  // get height() {
+  //   return super.height ? super.height : this._h;
+  // }
 
-  set width(value) {
-    let sign = value < 0 ? -1 : 1;
+  // set width(value) {
+  //   let sign = value < 0 ? -1 : 1;
 
-    this._fx = sign;
-    this._w = value * sign;
-  }
+  //   this._fx = sign;
+  //   this._w = value * sign;
+  // }
 
-  set height(value) {
-    let sign = value < 0 ? -1 : 1;
+  // set height(value) {
+  //   let sign = value < 0 ? -1 : 1;
 
-    this._fy = sign;
-    this._h = value * sign;
-  }
+  //   this._fy = sign;
+  //   this._h = value * sign;
+  // }
   // @endif
 
   draw() {
     // @ifdef SPRITE_IMAGE||SPRITE_ANIMATION
-    // flip sprite around the center so the x/y position does not change
-    if (this._fx == -1 || this._fy == -1) {
-      let translateX = this.width / 2;
-      let translateY = this.height / 2;
+    // // flip sprite around the center so the x/y position does not change
+    // if (this._fx == -1 || this._fy == -1) {
+    //   let translateX = this.width / 2;
+    //   let translateY = this.height / 2;
 
-      this.context.translate(translateX, translateY);
-      this.context.scale(this._fx, this._fy);
-      this.context.translate(-translateX, -translateY);
-    }
+    //   this.context.translate(translateX, translateY);
+    //   this.context.scale(this._fx, this._fy);
+    //   this.context.translate(-translateX, -translateY);
+    // }
     // @endif
 
     // @ifdef SPRITE_IMAGE
     if (this.image) {
       this.context.drawImage(
         this.image,
-        0, 0, this.image.width, this.image.height,
-        0, 0, this.width, this.height
+        0, 0, this.image.width, this.image.height
       );
     }
     // @endif
@@ -4239,7 +4374,7 @@ function parseFrames(consecutiveFrames) {
  *
  * <figure>
  *   <a href="assets/imgs/character_walk_sheet.png">
- *     <img src="assets/imgs/character_walk_sheet.png" alt="11 frames of a walking pill-like alien wearing a space helmet.">
+ *     <img src="assets/imgs/character_walk_sheet.png" width="266" height="512" alt="11 frames of a walking pill-like alien wearing a space helmet.">
  *   </a>
  *   <figcaption>Sprite sheet image courtesy of <a href="https://kenney.nl/assets">Kenney</a>.</figcaption>
  * </figure>
@@ -4475,7 +4610,7 @@ function getStoreItem(key) {
  *
  * <figure>
  *   <a href="assets/imgs/mapPack_tilesheet.png">
- *     <img src="assets/imgs/mapPack_tilesheet.png" alt="Tileset to create an overworld map in various seasons.">
+ *     <img src="assets/imgs/mapPack_tilesheet.png" width="1088" height="768" alt="Tileset to create an overworld map in various seasons.">
  *   </a>
  *   <figcaption>Tileset image courtesy of <a href="https://kenney.nl/assets">Kenney</a>.</figcaption>
  * </figure>

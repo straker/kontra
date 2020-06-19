@@ -482,6 +482,7 @@ figure {
 figure img {
   background: #333333;
   max-width: 100%;
+  height: auto;
 }
 
 figcaption {

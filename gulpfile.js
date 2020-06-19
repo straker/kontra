@@ -43,7 +43,8 @@ function buildIife() {
     }
   })
   .pipe(source('kontra.js'))
-  .pipe(gulp.dest('.'));
+  .pipe(gulp.dest('.'))
+  .pipe(gulp.dest('./docs/assets/js'));
 }
 
 function buildModule() {

@@ -45,7 +45,7 @@ function parseFrames(consecutiveFrames) {
  *
  * <figure>
  *   <a href="assets/imgs/character_walk_sheet.png">
- *     <img src="assets/imgs/character_walk_sheet.png" alt="11 frames of a walking pill-like alien wearing a space helmet.">
+ *     <img src="assets/imgs/character_walk_sheet.png" width="266" height="512" alt="11 frames of a walking pill-like alien wearing a space helmet.">
  *   </a>
  *   <figcaption>Sprite sheet image courtesy of <a href="https://kenney.nl/assets">Kenney</a>.</figcaption>
  * </figure>

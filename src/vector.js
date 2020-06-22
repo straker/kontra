@@ -1,4 +1,5 @@
 import { Factory } from './utils.js'
+import { clamp } from './helpers.js'
 
 /**
  * A simple 2d vector object.
@@ -219,11 +220,11 @@ class Vector {
   }
 
   set x(value) {
-    this._x = (this._c ? Math.min( Math.max(this._a, value), this._d ) : value);
+    this._x = (this._c ? clamp(this._a, this._d, value) : value);
   }
 
   set y(value) {
-    this._y = (this._c ? Math.min( Math.max(this._b, value), this._e ) : value);
+    this._y = (this._c ? clamp(this._b, this._e, value) : value);
   }
   // @endif
 }

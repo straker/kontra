@@ -440,8 +440,18 @@ class GameObject {
     // calculations
     child.x = absolute ? child.x : this.x + child.x;
     child.y = absolute ? child.y : this.y + child.y;
-    child.rotation = this.rotation - child.rotation;
-    child.setScale(this.scale.x, this.scale.y);
+
+    // @ifdef GAMEOBJECT_ROTATION
+    if (child.rotation) {
+      child.rotation = absolute ? child.rotation : this.rotation + child.rotation;
+    }
+    // @endif
+
+    // @ifdef GAMEOBJECT_SCALE
+    if (child.setScale) {
+      child.setScale(this.scale.x, this.scale.y);
+    }
+    // @endif
   }
 
   /**

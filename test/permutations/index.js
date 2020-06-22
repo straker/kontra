@@ -13,7 +13,8 @@ const options = {
     'GAMEOBJECT_ROTATION',
     'GAMEOBJECT_TTL',
     'GAMEOBJECT_ANCHOR',
-    'GAMEOBJECT_CAMERA'
+    'GAMEOBJECT_CAMERA',
+    'GAMEOBJECT_SCALE'
   ],
   sprite: [
     'SPRITE_IMAGE',

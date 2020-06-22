@@ -26,10 +26,6 @@ describe('kontra.defaults', () => {
     expect(kontra.Button).to.exist;
   });
 
-  it('should add collision api', () => {
-    expect(kontra.collides).to.exist;
-  });
-
   it('should add core api', () => {
     expect(kontra.init).to.exist;
     expect(kontra.getCanvas).to.exist;
@@ -59,6 +55,9 @@ describe('kontra.defaults', () => {
     expect(kontra.lerp).to.exist;
     expect(kontra.inverseLerp).to.exist;
     expect(kontra.clamp).to.exist;
+    expect(kontra.getStoreItem).to.exist;
+    expect(kontra.setStoreItem).to.exist;
+    expect(kontra.collides).to.exist;
   });
 
   it('should add keyboard api', () => {
@@ -104,11 +103,6 @@ describe('kontra.defaults', () => {
 
   it('should add spriteSheet api', () => {
     expect(kontra.SpriteSheet).to.exist;
-  });
-
-  it('should add store api', () => {
-    expect(kontra.getStoreItem).to.exist;
-    expect(kontra.setStoreItem).to.exist;
   });
 
   it('should add text api', () => {

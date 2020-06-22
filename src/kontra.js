@@ -12,7 +12,6 @@ export {
   load
 } from './assets.js'
 export { default as Button } from './button.js'
-export { collides } from './collision.js'
 export { init, getCanvas, getContext } from './core.js'
 export { on, off, emit } from './events.js'
 export { default as GameLoop } from './gameLoop.js'
@@ -25,7 +24,10 @@ export {
   seedRand,
   lerp,
   inverseLerp,
-  clamp
+  clamp,
+  setStoreItem,
+  getStoreItem,
+  collides
 } from './helpers.js'
 export { keyMap, initKeys, bindKeys, unbindKeys, keyPressed } from './keyboard.js'
 export { registerPlugin, unregisterPlugin, extendObject } from './plugin.js'
@@ -44,7 +46,6 @@ export { default as Quadtree } from './quadtree.js'
 export { default as Scene } from './scene.js'
 export { default as Sprite } from './sprite.js'
 export { default as SpriteSheet } from './spriteSheet.js'
-export { setStoreItem, getStoreItem } from './store.js'
 export { default as Text } from './text.js'
 export { default as TileEngine } from './tileEngine.js'
 export { default as UIManager } from './uiManager.js'

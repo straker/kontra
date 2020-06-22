@@ -769,6 +769,309 @@ function load(...urls) {
 }
 
 /**
+ * A group of helpful functions that are commonly used for game development. Includes things such as converting between radians and degrees and getting random integers.
+ *
+ * ```js
+ * import { degToRad } from 'kontra';
+ *
+ * let radians = degToRad(180);  // => 3.14
+ * ```
+ * @sectionName Helpers
+ */
+
+/**
+ * Convert degrees to radians.
+ * @function degToRad
+ *
+ * @param {Number} deg - Degrees to convert.
+ *
+ * @returns {Number} The value in radians.
+ */
+function degToRad(deg) {
+  return deg * Math.PI / 180;
+}
+
+/**
+ * Convert radians to degrees.
+ * @function radToDeg
+ *
+ * @param {Number} rad - Radians to convert.
+ *
+ * @returns {Number} The value in degrees.
+ */
+function radToDeg(rad) {
+  return rad * 180 / Math.PI;
+}
+
+/**
+ * Return the angle (in radians) from one point to another point.
+ *
+ * ```js
+ * import { angleToTarget, Sprite } from 'kontra';
+ *
+ * let sprite = Sprite({
+ *   x: 10,
+ *   y: 10,
+ *   width: 20,
+ *   height: 40,
+ *   color: 'blue'
+ * });
+ *
+ * sprite.rotation = angleToTarget(sprite, {x: 100, y: 30});
+ *
+ * let sprite2 = Sprite({
+ *   x: 100,
+ *   y: 30,
+ *   width: 20,
+ *   height: 40,
+ *   color: 'red',
+ * });
+ *
+ * sprite2.rotation = angleToTarget(sprite2, sprite);
+ * ```
+ * @function angleToTarget
+ *
+ * @param {{x: Number, y: Number}} source - The source point.
+ * @param {{x: Number, y: Number}} target - The target point.
+ *
+ * @returns {Number} Angle (in radians) from the source point to the target point.
+ */
+function angleToTarget(source, target) {
+
+  // atan2 returns the counter-clockwise angle in respect to the x-axis, but
+  // the canvas rotation system is based on the y-axis (rotation of 0 = up).
+  // so we need to add a quarter rotation to return a counter-clockwise
+  // rotation in respect to the y-axis
+  return Math.atan2(target.y - source.y, target.x - source.x) + Math.PI / 2;
+}
+
+/**
+ * Return a random integer between a minimum (inclusive) and maximum (inclusive) integer.
+ * @see https://stackoverflow.com/a/1527820/2124254
+ * @function randInt
+ *
+ * @param {Number} min - Min integer.
+ * @param {Number} max - Max integer.
+ *
+ * @returns {Number} Random integer between min and max values.
+ */
+function randInt(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+/**
+ * Create a seeded random number generator.
+ *
+ * ```js
+ * import { seedRand } from 'kontra';
+ *
+ * let rand = seedRand('kontra');
+ * console.log(rand());  // => always 0.33761959057301283
+ * ```
+ * @see https://stackoverflow.com/a/47593316/2124254
+ * @see https://github.com/bryc/code/blob/master/jshash/PRNGs.md
+ *
+ * @function seedRand
+ *
+ * @param {String} str - String to seed the random number generator.
+ *
+ * @returns {() => Number} Seeded random number generator function.
+ */
+ function seedRand(str) {
+  // based on the above references, this was the smallest code yet decent
+  // quality seed random function
+
+  // first create a suitable hash of the seed string using xfnv1a
+  // @see https://github.com/bryc/code/blob/master/jshash/PRNGs.md#addendum-a-seed-generating-functions
+  for(var i = 0, h = 2166136261 >>> 0; i < str.length; i++) {
+    h = Math.imul(h ^ str.charCodeAt(i), 16777619);
+  }
+  h += h << 13; h ^= h >>> 7;
+  h += h << 3;  h ^= h >>> 17;
+  let seed = (h += h << 5) >>> 0;
+
+  // then return the seed function and discard the first result
+  // @see https://github.com/bryc/code/blob/master/jshash/PRNGs.md#lcg-lehmer-rng
+  let rand = () => (2 ** 31 - 1 & (seed = Math.imul(48271, seed))) / 2 ** 31;
+  rand();
+  return rand;
+}
+
+/**
+ * Linearly interpolate between two values. The function calculates the number between two values based on a percent. Great for smooth transitions.
+ *
+ * ```js
+ * import { lerp } from 'kontra';
+ *
+ * console.log( lerp(10, 20, 0.5) );  // => 15
+ * console.log( lerp(10, 20, 2) );  // => 30
+ * ```
+ * @function lerp
+ *
+ * @param {Number} start - Start value.
+ * @param {Number} end - End value.
+ * @param {Number} percent - Percent to interpolate.
+ *
+ * @returns {Number} Interpolated number between the start and end values
+ */
+function lerp(start, end, percent) {
+  return start * (1 - percent) + end * percent;
+}
+
+/**
+ * Return the linear interpolation percent between two values. The function calculates the percent between two values of a given value.
+ *
+ * ```js
+ * import { inverseLerp } from 'kontra';
+ *
+ * console.log( inverseLerp(10, 20, 15) );  // => 0.5
+ * console.log( inverseLerp(10, 20, 30) );  // => 2
+ * ```
+ * @function inverseLerp
+ *
+ * @param {Number} start - Start value.
+ * @param {Number} end - End value.
+ * @param {Number} value - Value between start and end.
+ *
+ * @returns {Number} Percent difference between the start and end values.
+ */
+function inverseLerp(start, end, value) {
+  return (value - start) / (end - start);
+}
+
+/**
+ * Clamp a number between two values, preventing it from going below or above the minimum and maximum values.
+ * @function clamp
+ *
+ * @param {Number} min - Min value.
+ * @param {Number} max - Max value.
+ * @param {Number} value - Value to clamp.
+ *
+ * @returns {Number} Value clamped between min and max.
+ */
+function clamp(min, max, value) {
+  return Math.min( Math.max(min, value), max );
+}
+
+/**
+ * Save an item to localStorage. A value of `undefined` will remove the item from localStorage.
+ * @function setStoreItem
+ *
+ * @param {String} key - The name of the key.
+ * @param {*} value - The value to store.
+ */
+function setStoreItem(key, value) {
+  if (value === undefined) {
+    localStorage.removeItem(key);
+  }
+  else {
+    localStorage.setItem(key, JSON.stringify(value));
+  }
+}
+
+/**
+ * Retrieve an item from localStorage and convert it back to its original type.
+ *
+ * Normally when you save a value to LocalStorage it converts it into a string. So if you were to save a number, it would be saved as `"12"` instead of `12`. This function enables the value to be returned as `12`.
+ * @function getStoreItem
+ *
+ * @param {String} key - Name of the key of the item to retrieve.
+ *
+ * @returns {*} The retrieved item.
+ */
+function getStoreItem(key) {
+  let value = localStorage.getItem(key);
+
+  try {
+    value = JSON.parse(value);
+  }
+  catch(e) {}
+
+  return value;
+}
+
+/**
+ * Check if a two objects collide. Uses a simple [Axis-Aligned Bounding Box (AABB) collision check](https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection#Axis-Aligned_Bounding_Box). Takes into account the sprites [anchor](api/gameObject#anchor) and [scale](api/gameObject#scale).
+ *
+ * **NOTE:** Does not take into account object rotation. If you need collision detection between rotated objects you will need to implement your own `collides()` function. I suggest looking at the Separate Axis Theorem.
+ *
+ *
+ * ```js
+ * import { Sprite, collides } from 'kontra';
+ *
+ * let sprite = Sprite({
+ *   x: 100,
+ *   y: 200,
+ *   width: 20,
+ *   height: 40
+ * });
+ *
+ * let sprite2 = Sprite({
+ *   x: 150,
+ *   y: 200,
+ *   width: 20,
+ *   height: 20
+ * });
+ *
+ * collides(sprite, sprite2);  //=> false
+ *
+ * sprite2.x = 115;
+ *
+ * collides(sprite, sprite2);  //=> true
+ * ```
+ * @function collides
+ *
+ * @param {Object} obj1 - Object reference.
+ * @param {Object} obj2 - Object to check collision against.
+ *
+ * @returns {Boolean|null} `true` if the objects collide, `false` otherwise. Will return `null` if the either of the two objects are rotated.
+ */
+function collides(obj1, obj2) {
+  if (obj1.rotation || obj2.rotation) return null;
+
+  // @ifdef GAMEOBJECT_SCALE
+  // @ifdef GAMEOBJECT_ANCHOR
+  // destructure results to obj1 and obj2 (use `var` on purpose so we can
+  // redeclare parameters without issues)
+  var [obj1, obj2] = [obj1, obj2].map(obj => {
+    let x = obj.x;
+    let y = obj.y;
+    let width = obj.width;
+    let height = obj.height;
+
+    // @ifdef GAMEOBJECT_SCALE
+    // adjust for object scale
+    if (obj.scale) {
+      width = obj.scaledWidth;
+      height = obj.scaledHeight;
+    }
+    // @endif
+
+    // @ifdef GAMEOBJECT_ANCHOR
+    // take into account object anchor
+    if (obj.anchor) {
+      x -= width * obj.anchor.x;
+      y -= height * obj.anchor.y;
+    }
+    // @endif
+
+    return {
+      x,
+      y,
+      width,
+      height
+    }
+  });
+  // @endif
+  // @endif
+
+  return obj1.x < obj2.x + obj2.width &&
+         obj1.x + obj1.width > obj2.x &&
+         obj1.y < obj2.y + obj2.height &&
+         obj1.y + obj1.height > obj2.y;
+}
+
+/**
  * A simple 2d vector object.
  *
  * ```js
@@ -987,11 +1290,11 @@ class Vector {
   }
 
   set x(value) {
-    this._x = (this._c ? Math.min( Math.max(this._a, value), this._d ) : value);
+    this._x = (this._c ? clamp(this._a, this._d, value) : value);
   }
 
   set y(value) {
-    this._y = (this._c ? Math.min( Math.max(this._b, value), this._e ) : value);
+    this._y = (this._c ? clamp(this._b, this._e, value) : value);
   }
   // @endif
 }
@@ -2565,73 +2868,6 @@ class Button extends Text$1.class {
 var Button$1 = Factory(Button);
 
 /**
- * A collection of collision detection functions.
- *
- * @sectionName Collision
- */
-
-/**
- * Check if a two objects collide. Uses a simple [Axis-Aligned Bounding Box (AABB) collision check](https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection#Axis-Aligned_Bounding_Box). Takes into account the sprites [anchor](api/sprite#anchor).
- *
- * **NOTE:** Does not take into account object rotation. If you need collision detection between rotated objects you will need to implement your own `collides()` function. I suggest looking at the Separate Axis Theorem.
- *
- *
- * ```js
- * import { Sprite, collides } from 'kontra';
- *
- * let sprite = Sprite({
- *   x: 100,
- *   y: 200,
- *   width: 20,
- *   height: 40
- * });
- *
- * let sprite2 = Sprite({
- *   x: 150,
- *   y: 200,
- *   width: 20,
- *   height: 20
- * });
- *
- * collides(sprite, sprite2);  //=> false
- *
- * sprite2.x = 115;
- *
- * collides(sprite, sprite2);  //=> true
- * ```
- * @function collides
- *
- * @param {Object} object1 - Object reference.
- * @param {Object} object2 - Object to check collision against.
- *
- * @returns {Boolean|null} `true` if the objects collide, `false` otherwise. Will return `null` if the either of the two objects are rotated.
- */
-
-function collides(object1, object2) {
-  if (object1.rotation || object2.rotation) return null;
-
-  // take into account object1 anchors
-  let x = object1.x;
-  let y = object1.y;
-  if (object1.anchor) {
-    x -= object1.width * object1.anchor.x;
-    y -= object1.height * object1.anchor.y;
-  }
-
-  let objX = object2.x;
-  let objY = object2.y;
-  if (object2.anchor) {
-    objX -= object2.width * object2.anchor.x;
-    objY -= object2.height * object2.anchor.y;
-  }
-
-  return x < objX + object2.width &&
-         x + object1.width > objX &&
-         y < objY + object2.height &&
-         y + object1.height > objY;
-}
-
-/**
  * Clear the canvas.
  */
 function clear() {
@@ -2797,191 +3033,6 @@ function GameLoop({fps = 60, clearCanvas = true, update, render} = {}) {
   };
 
   return loop;
-}
-
-/**
- * A group of helpful functions that are commonly used for game development. Includes things such as converting between radians and degrees and getting random integers.
- *
- * ```js
- * import { degToRad } from 'kontra';
- *
- * let radians = degToRad(180);  // => 3.14
- * ```
- * @sectionName Helpers
- */
-
-/**
- * Convert degrees to radians.
- * @function degToRad
- *
- * @param {Number} deg - Degrees to convert.
- *
- * @returns {Number} The value in radians.
- */
-function degToRad(deg) {
-  return deg * Math.PI / 180;
-}
-
-/**
- * Convert radians to degrees.
- * @function radToDeg
- *
- * @param {Number} rad - Radians to convert.
- *
- * @returns {Number} The value in degrees.
- */
-function radToDeg(rad) {
-  return rad * 180 / Math.PI;
-}
-
-/**
- * Return the angle (in radians) from one point to another point.
- *
- * ```js
- * import { angleToTarget, Sprite } from 'kontra';
- *
- * let sprite = Sprite({
- *   x: 10,
- *   y: 10,
- *   width: 20,
- *   height: 40,
- *   color: 'blue'
- * });
- *
- * sprite.rotation = angleToTarget(sprite, {x: 100, y: 30});
- *
- * let sprite2 = Sprite({
- *   x: 100,
- *   y: 30,
- *   width: 20,
- *   height: 40,
- *   color: 'red',
- * });
- *
- * sprite2.rotation = angleToTarget(sprite2, sprite);
- * ```
- * @function angleToTarget
- *
- * @param {{x: Number, y: Number}} source - The source point.
- * @param {{x: Number, y: Number}} target - The target point.
- *
- * @returns {Number} Angle (in radians) from the source point to the target point.
- */
-function angleToTarget(source, target) {
-
-  // atan2 returns the counter-clockwise angle in respect to the x-axis, but
-  // the canvas rotation system is based on the y-axis (rotation of 0 = up).
-  // so we need to add a quarter rotation to return a counter-clockwise
-  // rotation in respect to the y-axis
-  return Math.atan2(target.y - source.y, target.x - source.x) + Math.PI / 2;
-}
-
-/**
- * Return a random integer between a minimum (inclusive) and maximum (inclusive) integer.
- * @see https://stackoverflow.com/a/1527820/2124254
- * @function randInt
- *
- * @param {Number} min - Min integer.
- * @param {Number} max - Max integer.
- *
- * @returns {Number} Random integer between min and max values.
- */
-function randInt(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-/**
- * Create a seeded random number generator.
- *
- * ```js
- * import { seedRand } from 'kontra';
- *
- * let rand = seedRand('kontra');
- * console.log(rand());  // => always 0.33761959057301283
- * ```
- * @see https://stackoverflow.com/a/47593316/2124254
- * @see https://github.com/bryc/code/blob/master/jshash/PRNGs.md
- *
- * @function seedRand
- *
- * @param {String} str - String to seed the random number generator.
- *
- * @returns {() => Number} Seeded random number generator function.
- */
- function seedRand(str) {
-  // based on the above references, this was the smallest code yet decent
-  // quality seed random function
-
-  // first create a suitable hash of the seed string using xfnv1a
-  // @see https://github.com/bryc/code/blob/master/jshash/PRNGs.md#addendum-a-seed-generating-functions
-  for(var i = 0, h = 2166136261 >>> 0; i < str.length; i++) {
-    h = Math.imul(h ^ str.charCodeAt(i), 16777619);
-  }
-  h += h << 13; h ^= h >>> 7;
-  h += h << 3;  h ^= h >>> 17;
-  let seed = (h += h << 5) >>> 0;
-
-  // then return the seed function and discard the first result
-  // @see https://github.com/bryc/code/blob/master/jshash/PRNGs.md#lcg-lehmer-rng
-  let rand = () => (2 ** 31 - 1 & (seed = Math.imul(48271, seed))) / 2 ** 31;
-  rand();
-  return rand;
-}
-
-/**
- * Linearly interpolate between two values. The function calculates the number between two values based on a percent. Great for smooth transitions.
- *
- * ```js
- * import { lerp } from 'kontra';
- *
- * console.log( lerp(10, 20, 0.5) );  // => 15
- * console.log( lerp(10, 20, 2) );  // => 30
- * ```
- * @function lerp
- *
- * @param {Number} start - Start value.
- * @param {Number} end - End value.
- * @param {Number} percent - Percent to interpolate.
- *
- * @returns {Number} Interpolated number between the start and end values
- */
-function lerp(start, end, percent) {
-  return start * (1 - percent) + end * percent;
-}
-
-/**
- * Return the linear interpolation percent between two values. The function calculates the percent between two values of a given value.
- *
- * ```js
- * import { inverseLerp } from 'kontra';
- *
- * console.log( inverseLerp(10, 20, 15) );  // => 0.5
- * console.log( inverseLerp(10, 20, 30) );  // => 2
- * ```
- * @function inverseLerp
- *
- * @param {Number} start - Start value.
- * @param {Number} end - End value.
- * @param {Number} value - Value between start and end.
- *
- * @returns {Number} Percent difference between the start and end values.
- */
-function inverseLerp(start, end, value) {
-  return (value - start) / (end - start);
-}
-
-/**
- * Clamp a number between two values, preventing it from going below or above the minimum and maximum values.
- * @function clamp
- *
- * @param {Number} min - Min value.
- * @param {Number} max - Max value.
- * @param {Number} value - Value to clamp.
- *
- * @returns {Number} Value clamped between min and max.
- */
-function clamp(min, max, value) {
-  return Math.min( Math.max(min, value), max );
 }
 
 /**
@@ -4495,55 +4546,6 @@ class SpriteSheet {
 var SpriteSheet$1 = Factory(SpriteSheet);
 
 /**
- * A simple interface to LocalStorage based on [store.js](https://github.com/marcuswestin/store.js), whose sole purpose is to ensure that any keys you save to LocalStorage come out the same type as when they went in.
- *
- * Normally when you save something to LocalStorage, it converts it into a string. So if you were to save a number, it would be saved as `"12"` instead of `12`. This means when you retrieved the number, it would now be a string.
- *
- * ```js
- * import { setStoreItem, getStoreItem } from 'kontra';
- *
- * setStoreItem('highScore', 100);
- * getStoreItem('highScore');  //=> 100
- * ```
- * @sectionName Store
- */
-
-/**
- * Save an item to localStorage.
- * @function setStoreItem
- *
- * @param {String} key - The name of the key.
- * @param {*} value - The value to store.
- */
-function setStoreItem(key, value) {
-  if (value === undefined) {
-    localStorage.removeItem(key);
-  }
-  else {
-    localStorage.setItem(key, JSON.stringify(value));
-  }
-}
-
-/**
- * Retrieve an item from localStorage and convert it back to its original type.
- * @function getStoreItem
- *
- * @param {String} key - Name of the key of the item to retrieve.
- *
- * @returns {*} The retrieved item.
- */
-function getStoreItem(key) {
-  let value = localStorage.getItem(key);
-
-  try {
-    value = JSON.parse(value);
-  }
-  catch(e) {}
-
-  return value;
-}
-
-/**
  * A tile engine for managing and drawing tilesets.
  *
  * <figure>
@@ -5628,4 +5630,4 @@ let kontra = {
 };
 
 export default kontra;
-export { Animation$1 as Animation, imageAssets, audioAssets, dataAssets, setImagePath, setAudioPath, setDataPath, loadImage, loadAudio, loadData, load, Button$1 as Button, collides, init, getCanvas, getContext, on, off, emit, GameLoop, GameObject$1 as GameObject, degToRad, radToDeg, angleToTarget, randInt, seedRand, lerp, inverseLerp, clamp, keyMap, initKeys, bindKeys, unbindKeys, keyPressed, registerPlugin, unregisterPlugin, extendObject, initPointer, pointer, track, untrack, pointerOver, onPointerDown, onPointerUp, pointerPressed, Pool$1 as Pool, Quadtree$1 as Quadtree, Scene$1 as Scene, Sprite$1 as Sprite, SpriteSheet$1 as SpriteSheet, setStoreItem, getStoreItem, Text$1 as Text, TileEngine, UIManager$1 as UIManager, Vector$1 as Vector };
+export { Animation$1 as Animation, imageAssets, audioAssets, dataAssets, setImagePath, setAudioPath, setDataPath, loadImage, loadAudio, loadData, load, Button$1 as Button, init, getCanvas, getContext, on, off, emit, GameLoop, GameObject$1 as GameObject, degToRad, radToDeg, angleToTarget, randInt, seedRand, lerp, inverseLerp, clamp, setStoreItem, getStoreItem, collides, keyMap, initKeys, bindKeys, unbindKeys, keyPressed, registerPlugin, unregisterPlugin, extendObject, initPointer, pointer, track, untrack, pointerOver, onPointerDown, onPointerUp, pointerPressed, Pool$1 as Pool, Quadtree$1 as Quadtree, Scene$1 as Scene, Sprite$1 as Sprite, SpriteSheet$1 as SpriteSheet, Text$1 as Text, TileEngine, UIManager$1 as UIManager, Vector$1 as Vector };

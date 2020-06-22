@@ -201,10 +201,21 @@
       window.foo = kontra.Text({
         font: '28px Arial',
         text: 'foo bar baz thing one two',
+        width: 200,
         textAlign: 'center',
         color: 'white',
-        anchor: { x: 0.5, y: 0.5 }
+        anchor: { x: 0.5, y: 0.5 },
+        x: canvas.width/2,
+        y: canvas.height/2,
+        render() {
+          this.context.strokeStyle = 'white';
+          this.context.strokeRect(0, 0, this.width, this.height);
+          this.draw();
+        }
       });
+      kontra.on('scale', value => {
+        foo.setScale(value)
+      })
 
       menuSceneManager.addChild(startBtn);
       // menuSceneManager.addChild(foo);
@@ -222,8 +233,9 @@
           // menuScene.update();
         },
         render() {
-          menuSceneManager.render();
+          // menuSceneManager.render();
           // startBtn.render();
+          foo.render();
         }
       });
       loop.start();

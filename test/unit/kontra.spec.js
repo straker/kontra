@@ -27,10 +27,6 @@ describe('kontra', () => {
     expect(kontraExports.Button).to.exist;
   });
 
-  it('should export collision api', () => {
-    expect(kontraExports.collides).to.exist;
-  });
-
   it('should export core api', () => {
     expect(kontraExports.init).to.exist;
     expect(kontraExports.getCanvas).to.exist;
@@ -52,6 +48,9 @@ describe('kontra', () => {
     expect(kontraExports.lerp).to.exist;
     expect(kontraExports.inverseLerp).to.exist;
     expect(kontraExports.clamp).to.exist;
+    expect(kontraExports.getStoreItem).to.exist;
+    expect(kontraExports.setStoreItem).to.exist;
+    expect(kontraExports.collides).to.exist;
   });
 
   it('should export gameLoop api', () => {
@@ -101,11 +100,6 @@ describe('kontra', () => {
 
   it('should export spriteSheet api', () => {
     expect(kontraExports.SpriteSheet).to.exist;
-  });
-
-  it('should export store api', () => {
-    expect(kontraExports.getStoreItem).to.exist;
-    expect(kontraExports.setStoreItem).to.exist;
   });
 
   it('should export text api', () => {

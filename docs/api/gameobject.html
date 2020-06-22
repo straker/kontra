@@ -165,6 +165,12 @@
           <dd><p><em>Object</em>. The x and y origin of the game object. {x:0, y:0} is the top left corner of the game object, {x:1, y:1} is the bottom right corner. Defaults to <code>{x:0,y:0}</code>.</p>
         </dd>
           <dt>
+            <code>properties.children</code>
+            <span class="optional">Optional</span>
+          </dt>
+          <dd><p><em>An Array of <a href="api/gameObject">GameObject</a>s</em>. Children to add to the game object. Children added this way have their x/y position treated as relative to the parents x/y position.</p>
+        </dd>
+          <dt>
             <code>properties.context</code>
             <span class="optional">Optional</span>
           </dt>
@@ -247,21 +253,6 @@
                 <li>
                   <a href="api/gameobject#height">
                     <span>GameObject&#8203;.height</span>
-                  </a>
-                </li>
-                <li>
-                  <a href="api/gameobject#localPosition">
-                    <span>GameObject&#8203;.localPosition</span>
-                  </a>
-                </li>
-                <li>
-                  <a href="api/gameobject#localRotation">
-                    <span>GameObject&#8203;.localRotation</span>
-                  </a>
-                </li>
-                <li>
-                  <a href="api/gameobject#localScale">
-                    <span>GameObject&#8203;.localScale</span>
                   </a>
                 </li>
                 <li>
@@ -372,7 +363,7 @@
                 </li>
                 <li>
                   <a href="api/gameobject#setScale">
-                    <span>GameObject&#8203;.setScale(&#8203;x[y])</span>
+                    <span>GameObject&#8203;.setScale(&#8203;x[, y])</span>
                   </a>
                 </li>
                 <li>
@@ -1004,7 +995,7 @@ drawOrigin(gameObject);
             </a>
           </h2>
 
-          <p><em>An Array of <a href="api/gameObjec">GameObject</a>s</em>. The game objects children objects.</p>
+          <p><em>An Array of <a href="api/gameObject">GameObject</a>s</em>. The game objects children objects.</p>
           
         </section>
         <section>
@@ -1194,39 +1185,6 @@ gameObject.render();</code></pre></section>
           </p>
         </section>
         <section>
-          <h2 id="localPosition">
-            <a href="api/gameobject#localPosition" class="section-link">
-              <span>GameObject&#8203;.localPosition</span>
-              <span aria-hidden="true">#</span>
-            </a>
-          </h2>
-
-          <p><em><a href="api/vector">Vector</a></em>. The game objects local position vector, which is its position relative to a parent object. If the game object does not have a parent object, the local position will be the same as the <a href="api/gameObject#position">position vector</a>.</p>
-          
-        </section>
-        <section>
-          <h2 id="localRotation">
-            <a href="api/gameobject#localRotation" class="section-link">
-              <span>GameObject&#8203;.localRotation</span>
-              <span aria-hidden="true">#</span>
-            </a>
-          </h2>
-
-          <p><em>Number</em>. The game objects local rotation, which is its rotation relative to a parent object. If the game object does not have a parent object, the local rotation will be the same as the <a href="api/gameObject#rotation">rotation</a>.</p>
-          
-        </section>
-        <section>
-          <h2 id="localScale">
-            <a href="api/gameobject#localScale" class="section-link">
-              <span>GameObject&#8203;.localScale</span>
-              <span aria-hidden="true">#</span>
-            </a>
-          </h2>
-
-          <p><em>Object</em>. The game objects local scale, which is its scale relative to a parent object. If the game object does not have a parent object, the local scale will be the same as the <a href="api/gameObject#scale">scale</a>.</p>
-          
-        </section>
-        <section>
           <h2 id="parent">
             <a href="api/gameobject#parent" class="section-link">
               <span>GameObject&#8203;.parent</span>
@@ -1245,7 +1203,7 @@ gameObject.render();</code></pre></section>
             </a>
           </h2>
 
-          <p><em><a href="api/vector">Vector</a></em>. The game objects position vector. The game objects position is its position in the world, as opposed to the position in the <a href="api/gameObject#viewX">viewport</a> or <a href="api/gameObject#localPosition">local position</a>. Typically the position in the world, viewport, and local position are the same value. If the game object has been <a href="/api/tileEngine#addObject">added to a tileEngine</a>, the position vector represents where in the tile world the game object is while the viewport represents where to draw the game object in relation to the top-left corner of the canvas.</p>
+          <p><em><a href="api/vector">Vector</a></em>. The game objects position vector. The game objects position is its position in the world, as opposed to the position in the <a href="api/gameObject#viewX">viewport</a>. Typically the position in the world and viewport are the same value. If the game object has been <a href="/api/tileEngine#addObject">added to a tileEngine</a>, the position vector represents where in the tile world the game object is while the viewport represents where to draw the game object in relation to the top-left corner of the canvas.</p>
           
         </section>
         <section>
@@ -1298,13 +1256,13 @@ gameObject.render();</code></pre></section>
             </a>
           </h2>
 
-          <p><em>Object</em>. The x and y scale of the object. Setting this property will change the width or height of the object to match the new scale.</p>
+          <p><em>Object</em>. The x and y scale of the object. Typically you would not set these properties yourself but use <a href="/api/gameObject#setScale">setScale</a> instead. Setting these properties directly will not result in the scale property of children being updated.</p>
           
         </section>
         <section>
           <h2 id="setScale">
             <a href="api/gameobject#setScale" class="section-link">
-              <span>GameObject&#8203;.setScale(&#8203;x[y])</span>
+              <span>GameObject&#8203;.setScale(&#8203;x[, y])</span>
               <span aria-hidden="true">#</span>
             </a>
           </h2>
@@ -1322,7 +1280,7 @@ gameObject.render();</code></pre></section>
               <code>y</code>
               <span class="optional">Optional</span>
             </dt>
-            <dd><p><em>Number</em>. Y scale value. Defaults to the x parameter. Defaults to <code>x</code>.</p>
+            <dd><p><em>Number</em>. Y scale value. Defaults to <code>x</code>.</p>
           </dd>
           </dl>
           

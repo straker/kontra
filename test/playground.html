@@ -45,7 +45,7 @@
 <body>
   <div class="container">
     <canvas id="game" width="540" height="960"></canvas>
-    <input type="range" value="50" oninput="kontra.emit('font', parseInt(this.value))">
+    <input type="range" value="1" min="0.25" max="5" step="any" oninput="kontra.emit('scale', parseFloat(this.value))">
     <button id="rtl" onclick="game.dir = 'rtl'; kontra.emit('font', 32)">RTL</button>
     <button id="ltr" onclick="game.dir = 'ltr'; kontra.emit('font', 32)">LTR</button>
   </div>
@@ -53,74 +53,183 @@
   <script>
     let { canvas, context } = kontra.init();
 
-    kontra.load('blue_button02.png').then(() => {
+    // context.save();
+    // context.scale(2,2);
+    // context.fillStyle = 'yellow';
+    // context.fillRect(50,50,50,50);
+    // context.restore();
 
-      window.text = kontra.Text({
-        font: '28px Arial',
-        text: 'Options\nNew Game',
-        textAlign: 'center',
-        color: 'white',
-        anchor: { x: 0.5, y: 0.5 },
-        x: 100,
-        y: 100
-      });
+    // context.save();
+    // context.scale(1,1);
+    // context.fillStyle = 'red';
+    // context.fillRect(50,50,50,50);
+    // context.restore();
 
-      window.sprite = kontra.Sprite({
-        x: canvas.width / 2,
-        y: canvas.height / 2,
-        anchor: { x: 0.5, y: 0.5 },
-        image: kontra.imageAssets['blue_button02'],
-        // children: [text]
-      });
+    // kontra.load('blue_button02.png').then(() => {
 
-      sprite.addChild(text, { absolute: true });
+    //   window.text = kontra.Text({
+    //     font: '28px Arial',
+    //     text: 'Options\nNew Game',
+    //     textAlign: 'center',
+    //     color: 'white',
+    //     anchor: { x: 0.5, y: 0.5 },
+    //     // x: 100,
+    //     // y: 100
+    //   });
 
-      let loop = kontra.GameLoop({
-        update() {
+    //   window.sprite = kontra.Sprite({
+    //     x: canvas.width / 2,
+    //     y: canvas.height / 2,
+    //     anchor: { x: 0.5, y: 0.5 },
+    //     image: kontra.imageAssets['blue_button02'],
+    //     // children: [text]
+    //   });
 
-        },
-        render() {
-          sprite.render();
-          // text.render();
-        }
-      });
-      loop.start();
-    });
+    //   window.child = kontra.Sprite({
+    //     color: 'yellow',
+    //     width: 50,
+    //     height: 50,
+    //     anchor: { x: 0.5, y: 0.5 },
+    //   });
+
+    //   sprite.addChild(text);
+    //   // text.addChild(child);
+    //   // sprite.setScale(2);
+
+    //   kontra.on('scale', value => {
+    //     sprite.setScale(value);
+    //   });
+
+    //   let loop = kontra.GameLoop({
+    //     update() {
+
+    //     },
+    //     render() {
+    //       sprite.render();
+    //       // text.render();
+    //     }
+    //   });
+    //   loop.start();
+    //   // sprite.render();
+    // });
     // let { canvas, context } = kontra.init();
     // context.font = '20px Arial';
 
     // let activeScene;
 
-    // let menuScene = kontra.Scene({
-    //   name: 'Main menu'
-    // });
-    // let menuSceneManager = kontra.UIManager({
-    //   flow: 'grid',
-    //   numCols: 2,
-    //   justify: 'end',
-    //   gap: 15,
-    //   anchor: {x: 1, y: 1},
-    //   x: canvas.width,
-    //   y: canvas.height,
-    //   breakpoints: [{
-    //     metric(size) { return size <= 32 },
-    //     callback() {
-    //       this.numCols = 3;
-    //     }
-    //   },
-    //   {
-    //     metric(size) { return size > 32 && size <= 56 },
-    //     callback() {
-    //       this.numCols = 2;
-    //     }
-    //   },
-    //   {
-    //     metric(size) { return size > 56 && size <= 64 },
-    //     callback() {
-    //       this.numCols = 1;
-    //     }
-    //   }]
-    // });
+    let menuScene = kontra.Scene({
+      name: 'Main menu'
+    });
+    let menuSceneManager = kontra.UIManager({
+      flow: 'grid',
+      numCols: 2,
+      justify: 'start',
+      align: 'center',
+      gap: 15,
+      anchor: {x: 0.5, y: 0.5},
+      x: canvas.width/2,
+      y: canvas.height/2,
+      breakpoints: [{
+        metric() { return this.scale.x <= 0.85 },
+        callback() {
+          this.numCols = 3;
+        }
+      },
+      {
+        metric() { return this.scale.x > 0.85 && this.scale.x <= 1.35 },
+        callback() {
+          this.numCols = 2;
+        }
+      },
+      {
+        metric() { return this.scale.x > 1.35 },
+        callback() {
+          this.numCols = 1;
+        }
+      }]
+    });
+
+    kontra.load('blue_button02.png').then(() => {
+
+      window.startText = kontra.Text({
+        font: '28px Arial',
+        text: 'Start',
+        textAlign: 'center',
+        color: 'white',
+        anchor: { x: 0.5, y: 0.5 },
+      });
+
+      window.startBtn = kontra.Sprite({
+        anchor: { x: 0.5, y: 0.5 },
+        image: kontra.imageAssets['blue_button02'],
+        children: [startText],
+        name: 'startBtn'
+        // x: canvas.width/2,
+        // y: canvas.height/2
+      });
+
+      window.optionsText = kontra.Text({
+        font: '28px Arial',
+        text: 'Options',
+        textAlign: 'center',
+        color: 'white',
+        anchor: { x: 0.5, y: 0.5 }
+      });
+
+      window.optionsBtn = kontra.Sprite({
+        anchor: { x: 0.5, y: 0.5 },
+        image: kontra.imageAssets['blue_button02'],
+        children: [optionsText],
+        name: 'optionsBtn'
+      });
+
+      window.exitText = kontra.Text({
+        font: '28px Arial',
+        text: 'Exit',
+        textAlign: 'center',
+        color: 'white',
+        anchor: { x: 0.5, y: 0.5 }
+      });
+
+      window.exitBtn = kontra.Sprite({
+        anchor: { x: 0.5, y: 0.5 },
+        image: kontra.imageAssets['blue_button02'],
+        children: [exitText],
+        name: 'exitBtn'
+      });
+
+      window.foo = kontra.Text({
+        font: '28px Arial',
+        text: 'foo bar baz thing one two',
+        textAlign: 'center',
+        color: 'white',
+        anchor: { x: 0.5, y: 0.5 }
+      });
+
+      menuSceneManager.addChild(startBtn);
+      // menuSceneManager.addChild(foo);
+      menuSceneManager.addChild(optionsBtn);
+      menuSceneManager.addChild(exitBtn);
+      // menuScene.add(menuSceneManager);
+
+      kontra.on('scale', value => {
+        menuSceneManager.setScale(value);
+      });
+
+
+      let loop = kontra.GameLoop({
+        update() {
+          // menuScene.update();
+        },
+        render() {
+          menuSceneManager.render();
+          // startBtn.render();
+        }
+      });
+      loop.start();
+      // menuSceneManager.render();
+      // startBtn.render();
+    });
 
     // let startBtn = kontra.Button({
     //   text: 'Start',
@@ -144,11 +253,6 @@
     //   }
     // });
 
-    // menuSceneManager.addChild(startBtn);
-    // menuSceneManager.addChild(optionBtn);
-    // menuSceneManager.addChild(exitBtn);
-    // menuScene.add(menuSceneManager);
-
 
     // let optionsScene = kontra.Scene({
     //   name: 'Options menu'
@@ -165,15 +269,6 @@
 
     // activeScene = menuScene;
 
-    // let loop = kontra.GameLoop({
-    //   update() {
-    //     // menuScene.update();
-    //   },
-    //   render() {
-    //     menuSceneManager.render();
-    //   }
-    // });
-    // loop.start();
   </script>
 </body>
 </html>

@@ -107,12 +107,12 @@ class Text extends GameObject.class {
      * @property {String} color
      */
 
-    on('font', value => {
-      this.font = this.font.replace(fontSizeRegex, (match, size, unit) => {
-        return value + unit;
-      });
-      this._p();
-    });
+    // on('font', value => {
+    //   this.font = this.font.replace(fontSizeRegex, (match, size, unit) => {
+    //     return value + unit;
+    //   });
+    //   this._p();
+    // });
 
     super.init(properties);
 
@@ -163,6 +163,11 @@ class Text extends GameObject.class {
     // fw = fixed width
     this._fw = value;
     // @endif
+  }
+
+  setScale(x, y) {
+    super.setScale(x, y);
+    this._d = true;
   }
 
   render() {

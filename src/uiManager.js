@@ -35,28 +35,28 @@ class UIManager extends GameObject.class {
     this.flow = flow;
     this.align = align;
     this.justify = justify;
-    this.gap = gap;  // TODO: should probably be a scalar rather than fixed so as font-sizes / ui size changes this is scaled to the number
+    this.gap = gap;
     this.numCols = numCols;
 
     this.breakpoints = breakpoints;
 
-    on('font', value => {
-      // fs = font size
-      this._fs = value;
+    // on('font', value => {
+    //   // fs = font size
+    //   this._fs = value;
 
-      // b = breakpoint
-      this.breakpoints.map(breakpoint => {
-        if (breakpoint.metric(value) && this._b !== breakpoint) {
-          this._b = breakpoint;
-          breakpoint.callback.call(this);
-        }
-      });
+    //   // b = breakpoint
+    //   this.breakpoints.map(breakpoint => {
+    //     if (breakpoint.metric(value) && this._b !== breakpoint) {
+    //       this._b = breakpoint;
+    //       breakpoint.callback.call(this);
+    //     }
+    //   });
 
-      // give time for other text objects to change size first
-      setTimeout(() => {
-        this._d = true;
-      }, 0);
-    });
+    //   // give time for other text objects to change size first
+    //   setTimeout(() => {
+    //     this._d = true;
+    //   }, 0);
+    // });
 
     super.init(properties);
 
@@ -103,6 +103,11 @@ class UIManager extends GameObject.class {
     super.removeChild(child);
   }
 
+  setScale(x, y) {
+    super.setScale(x, y);
+    this._d = true;
+  }
+
   render() {
     if (this._d) {
       this._p();
@@ -115,6 +120,14 @@ class UIManager extends GameObject.class {
    */
   _p() {
     this._d = false;
+
+    // b = breakpoint
+    this.breakpoints.map(breakpoint => {
+      if (breakpoint.metric.call(this) && this._b !== breakpoint) {
+        this._b = breakpoint;
+        breakpoint.callback.call(this);
+      }
+    });
 
     let canvas = getCanvas();
 
@@ -129,7 +142,7 @@ class UIManager extends GameObject.class {
       grided = this.flow === 'grid';
 
       children = this.children;
-      gap = this.gap;
+      gap = this.gap * this.scale.x
       numCols = columned
         ? 1
         : rowed
@@ -146,7 +159,9 @@ class UIManager extends GameObject.class {
         for (let col = 0; col < numCols; col++) {
           let child = children[row * numCols + col];
           if (!child) {
-            grid[row][col] = {};
+            // add empty array item so we can reverse a row even when it
+            // contains less items than another row
+            grid[row][col] = false;
             continue;
           }
 
@@ -157,8 +172,16 @@ class UIManager extends GameObject.class {
             child._p();
           }
 
-          rowHeights[row] = Math.max(rowHeights[row] || 0, child.height);
-          colWidths[col] = Math.max(colWidths[col] || 0, child.width);
+          let width = child.width;
+          let height = child.height;
+
+          if ('scaledWidth' in child) {
+            height = child.scaledHeight;
+            width = child.scaledWidth;
+          }
+
+          rowHeights[row] = Math.max(rowHeights[row] || 0, height);
+          colWidths[col] = Math.max(colWidths[col] || 0, width);
         }
       }
 
@@ -182,27 +205,77 @@ class UIManager extends GameObject.class {
     }
 
     let y = this.y;
+    let topRightY = 0;
     grid.map((gridRow, row) => {
       // let x = this.x;
+      let topRightX = 0;
       let x = rtl && !this.parent
         ? canvas.width - (this.x + this._w * (1 - this.anchor.x * 2))
         : this.x;
 
       gridRow.map((child, col) => {
-        if (!child) return;
+        if (child) {
 
-        let justify = alignment[child.justifySelf ? child.justifySelf : this.justify](rtl);
-        let align = alignment[child.alignSelf ? child.alignSelf : this.align]();
+          let justify = alignment[child.justifySelf ? child.justifySelf : this.justify](rtl);
+          let align = alignment[child.alignSelf ? child.alignSelf : this.align]();
 
-        child.x = x + colWidths[col] * justify;
-        child.y = y + rowHeights[row] * align;
-        child.anchor = { x: justify, y: align };
-        let nextCol = ((index + 1) % numCols);
+          // colWidths[col] = canvas.width;
+          // this._w = canvas.width;
 
-        x += colWidths[col] + gap;
+          let pointX =
+            this.x - (this._w * this.anchor.x) +
+            colWidths[col] * justify;
+          let pointY =
+            this.y - (this._h * this.anchor.y) +
+            rowHeights[row] * align;
+
+          let x;
+          let y;
+          let width = child.width;
+          let height = child.height;
+
+          if ('scaledWidth' in child) {
+            height = child.scaledHeight;
+            width = child.scaledWidth;
+          }
+
+          if (justify === 0) {
+            x = pointX + width * child.anchor.x;
+          }
+          else if (justify === 0.5) {
+            let sign = child.anchor.x < 0.5 ? -1 : child.anchor.x === 0.5 ? 0 : 1;
+            x = pointX + sign * width * child.anchor.x;
+          }
+          else {
+            x = pointX - (width * (1 - child.anchor.x));
+          }
+
+          if (align === 0) {
+            y = pointY + height * child.anchor.y;
+          }
+          else if (align === 0.5) {
+            let sign = child.anchor.y < 0.5 ? -1 : child.anchor.y === 0.5 ? 0 : 1;
+            y = pointY + sign * height * child.anchor.y;
+          }
+          else {
+            y = pointY - (height * (1 - child.anchor.y));
+          }
+
+          child.x = topRightX + x;
+          child.y = topRightY + y;
+        }
+
+        // child.x = colWidths[col] * justify;
+        // child.y = rowHeights[row] * align;
+        // child.anchor = { x: justify, y: align };
+        // let nextCol = ((index + 1) % numCols);
+
+        // x += colWidths[col] + gap;
+        topRightX += colWidths[col] + gap;
       });
 
-      y += rowHeights[row] + gap;
+      topRightY += rowHeights[row] + gap;
+      // y += rowHeights[row] + gap;
     });
 
     // i can simplify the entire logic if i treat the ui manager always as a grid

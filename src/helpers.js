@@ -1,3 +1,5 @@
+import { getRect } from './utils.js'
+
 /**
  * A group of helpful functions that are commonly used for game development. Includes things such as converting between radians and degrees and getting random integers.
  *
@@ -259,40 +261,9 @@ export function getStoreItem(key) {
 export function collides(obj1, obj2) {
   if (obj1.rotation || obj2.rotation) return null;
 
-  // @ifdef GAMEOBJECT_SCALE
-  // @ifdef GAMEOBJECT_ANCHOR
-  // destructure results to obj1 and obj2 (use `var` on purpose so we can
-  // redeclare parameters without issues)
-  var [obj1, obj2] = [obj1, obj2].map(obj => {
-    let x = obj.x;
-    let y = obj.y;
-    let width = obj.width;
-    let height = obj.height;
-
-    // @ifdef GAMEOBJECT_SCALE
-    // adjust for object scale
-    if (obj.scale) {
-      width = obj.scaledWidth;
-      height = obj.scaledHeight;
-    }
-    // @endif
-
-    // @ifdef GAMEOBJECT_ANCHOR
-    // take into account object anchor
-    if (obj.anchor) {
-      x -= width * obj.anchor.x;
-      y -= height * obj.anchor.y;
-    }
-    // @endif
-
-    return {
-      x,
-      y,
-      width,
-      height
-    }
-  });
-  // @endif
+  // @ifdef GAMEOBJECT_SCALE||GAMEOBJECT_ANCHOR
+  // destructure results to obj1 and obj2
+  [obj1, obj2] = [obj1, obj2].map(obj => getRect(obj));
   // @endif
 
   return obj1.x < obj2.x + obj2.width &&

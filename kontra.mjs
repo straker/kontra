@@ -160,6 +160,37 @@ function Factory(classObj) {
 // style used for DOM nodes needed for screen readers
 const srOnlyStyle = 'position:absolute;left:-9999px';
 
+// get correct x, y, width, and height of object
+function getRect(obj) {
+  let x = obj.x;
+  let y = obj.y;
+  let width = obj.width;
+  let height = obj.height;
+
+  // @ifdef GAMEOBJECT_SCALE
+  // adjust for object scale
+  if (obj.scale) {
+    width = obj.scaledWidth;
+    height = obj.scaledHeight;
+  }
+  // @endif
+
+  // @ifdef GAMEOBJECT_ANCHOR
+  // take into account object anchor
+  if (obj.anchor) {
+    x -= width * obj.anchor.x;
+    y -= height * obj.anchor.y;
+  }
+  // @endif
+
+  return {
+    x,
+    y,
+    width,
+    height
+  };
+}
+
 /**
  * An object for drawing sprite sheet animations.
  *
@@ -1029,40 +1060,9 @@ function getStoreItem(key) {
 function collides(obj1, obj2) {
   if (obj1.rotation || obj2.rotation) return null;
 
-  // @ifdef GAMEOBJECT_SCALE
-  // @ifdef GAMEOBJECT_ANCHOR
-  // destructure results to obj1 and obj2 (use `var` on purpose so we can
-  // redeclare parameters without issues)
-  var [obj1, obj2] = [obj1, obj2].map(obj => {
-    let x = obj.x;
-    let y = obj.y;
-    let width = obj.width;
-    let height = obj.height;
-
-    // @ifdef GAMEOBJECT_SCALE
-    // adjust for object scale
-    if (obj.scale) {
-      width = obj.scaledWidth;
-      height = obj.scaledHeight;
-    }
-    // @endif
-
-    // @ifdef GAMEOBJECT_ANCHOR
-    // take into account object anchor
-    if (obj.anchor) {
-      x -= width * obj.anchor.x;
-      y -= height * obj.anchor.y;
-    }
-    // @endif
-
-    return {
-      x,
-      y,
-      width,
-      height
-    }
-  });
-  // @endif
+  // @ifdef GAMEOBJECT_SCALE||GAMEOBJECT_ANCHOR
+  // destructure results to obj1 and obj2
+  [obj1, obj2] = [obj1, obj2].map(obj => getRect(obj));
   // @endif
 
   return obj1.x < obj2.x + obj2.width &&
@@ -1739,8 +1739,18 @@ class GameObject {
     // calculations
     child.x = absolute ? child.x : this.x + child.x;
     child.y = absolute ? child.y : this.y + child.y;
-    child.rotation = this.rotation - child.rotation;
-    child.setScale(this.scale.x, this.scale.y);
+
+    // @ifdef GAMEOBJECT_ROTATION
+    if (child.rotation) {
+      child.rotation = absolute ? child.rotation : this.rotation + child.rotation;
+    }
+    // @endif
+
+    // @ifdef GAMEOBJECT_SCALE
+    if (child.setScale) {
+      child.setScale(this.scale.x, this.scale.y);
+    }
+    // @endif
   }
 
   /**
@@ -1960,6 +1970,240 @@ class GameObject {
 
 var GameObject$1 = Factory(GameObject);
 
+/**
+ * A versatile way to update and draw your sprites. It can handle simple rectangles, images, and sprite sheet animations. It can be used for your main player object as well as tiny particles in a particle engine.
+ * @class Sprite
+ * @extends GameObject
+ *
+ * @param {Object} [properties] - Properties of the sprite.
+ * @param {String} [properties.color] - Fill color for the game object if no image or animation is provided.
+ * @param {HTMLImageElement|HTMLCanvasElement} [properties.image] - Use an image to draw the sprite.
+ * @param {Object} [properties.animations] - An object of [Animations](api/animation) from a [Spritesheet](api/spriteSheet) to animate the sprite.
+ */
+class Sprite extends GameObject$1.class {
+  /**
+   * @docs docs/api_docs/sprite.js
+   */
+
+  init(properties = {}) {
+
+    /**
+     * The color of the game object if it was passed as an argument.
+     * @memberof Sprite
+     * @property {String} color
+     */
+
+    /**
+     * The width of the sprite. If the sprite is a [rectangle sprite](api/sprite#rectangle-sprite), it uses the passed in value. For an [image sprite](api/sprite#image-sprite) it is the width of the image. And for an [animation sprite](api/sprite#animation-sprite) it is the width of a single frame of the animation.
+     *
+     * Setting the value to a negative number will result in the sprite being flipped across the vertical axis while the width will remain a positive value.
+     * @memberof Sprite
+     * @property {Number} width
+     */
+
+    /**
+     * The height of the sprite. If the sprite is a [rectangle sprite](api/sprite#rectangle-sprite), it uses the passed in value. For an [image sprite](api/sprite#image-sprite) it is the height of the image. And for an [animation sprite](api/sprite#animation-sprite) it is the height of a single frame of the animation.
+     *
+     * Setting the value to a negative number will result in the sprite being flipped across the horizontal axis while the height will remain a positive value.
+     * @memberof Sprite
+     * @property {Number} height
+     */
+
+    // @ifdef SPRITE_IMAGE||SPRITE_ANIMATION
+    // fx = flipX, fy = flipY
+    // this._fx = this._fy = 1;
+    // @endif
+
+    super.init(properties);
+
+    // @ifdef SPRITE_IMAGE
+    /**
+     * The image the sprite will use when drawn if passed as an argument.
+     * @memberof Sprite
+     * @property {HTMLImageElement|HTMLCanvasElement} image
+     */
+
+    let { image } = properties;
+    if (image) {
+      this.width = image.width;
+      this.height = image.height;
+    }
+    // @endif
+  }
+
+  // @ifdef SPRITE_ANIMATION
+  /**
+   * An object of [Animations](api/animation) from a [SpriteSheet](api/spriteSheet) to animate the sprite. Each animation is named so that it can can be used by name for the sprites [playAnimation()](api/sprite#playAnimation) function.
+   *
+   * ```js
+   * import { Sprite, SpriteSheet } from 'kontra';
+   *
+   * let spriteSheet = SpriteSheet({
+   *   // ...
+   *   animations: {
+   *     idle: {
+   *       frames: 1,
+   *       loop: false,
+   *     },
+   *     walk: {
+   *       frames: [1,2,3]
+   *     }
+   *   }
+   * });
+   *
+   * let sprite = Sprite({
+   *   x: 100,
+   *   y: 200,
+   *   animations: spriteSheet.animations
+   * });
+   *
+   * sprite.playAnimation('idle');
+   * ```
+   * @memberof Sprite
+   * @property {Object} animations
+   */
+  get animations() {
+    return this._a;
+  }
+
+  set animations(value) {
+    let prop, firstAnimation;
+    // a = animations
+    this._a = {};
+
+    // clone each animation so no sprite shares an animation
+    for (prop in value) {
+      this._a[prop] = value[prop].clone();
+
+      // default the current animation to the first one in the list
+      firstAnimation = firstAnimation || this._a[prop];
+    }
+
+    /**
+     * The currently playing Animation object if `animations` was passed as an argument.
+     * @memberof Sprite
+     * @property {Animation} currentAnimation
+     */
+    this.currentAnimation = firstAnimation;
+    this.width = this.width || firstAnimation.width;
+    this.height = this.height || firstAnimation.height;
+  }
+
+  /**
+   * Set the currently playing animation of an animation sprite.
+   *
+   * ```js
+   * import { Sprite, SpriteSheet } from 'kontra';
+   *
+   * let spriteSheet = SpriteSheet({
+   *   // ...
+   *   animations: {
+   *     idle: {
+   *       frames: 1
+   *     },
+   *     walk: {
+   *       frames: [1,2,3]
+   *     }
+   *   }
+   * });
+   *
+   * let sprite = Sprite({
+   *   x: 100,
+   *   y: 200,
+   *   animations: spriteSheet.animations
+   * });
+   *
+   * sprite.playAnimation('idle');
+   * ```
+   * @memberof Sprite
+   * @function playAnimation
+   *
+   * @param {String} name - Name of the animation to play.
+   */
+  playAnimation(name) {
+    this.currentAnimation = this.animations[name];
+
+    if (!this.currentAnimation.loop) {
+      this.currentAnimation.reset();
+    }
+  }
+
+  advance(dt) {
+    super.advance(dt);
+
+    if (this.currentAnimation) {
+      this.currentAnimation.update(dt);
+    }
+  }
+  // @endif
+
+  // @ifdef SPRITE_IMAGE||SPRITE_ANIMATION
+  // get width() {
+  //   return super.width ? super.width : this._w;
+  // }
+
+  // get height() {
+  //   return super.height ? super.height : this._h;
+  // }
+
+  // set width(value) {
+  //   let sign = value < 0 ? -1 : 1;
+
+  //   this._fx = sign;
+  //   this._w = value * sign;
+  // }
+
+  // set height(value) {
+  //   let sign = value < 0 ? -1 : 1;
+
+  //   this._fy = sign;
+  //   this._h = value * sign;
+  // }
+  // @endif
+
+  draw() {
+    // @ifdef SPRITE_IMAGE||SPRITE_ANIMATION
+    // // flip sprite around the center so the x/y position does not change
+    // if (this._fx == -1 || this._fy == -1) {
+    //   let translateX = this.width / 2;
+    //   let translateY = this.height / 2;
+
+    //   this.context.translate(translateX, translateY);
+    //   this.context.scale(this._fx, this._fy);
+    //   this.context.translate(-translateX, -translateY);
+    // }
+    // @endif
+
+    // @ifdef SPRITE_IMAGE
+    if (this.image) {
+      this.context.drawImage(
+        this.image,
+        0, 0, this.image.width, this.image.height
+      );
+    }
+    // @endif
+
+    // @ifdef SPRITE_ANIMATION
+    if (this.currentAnimation) {
+      this.currentAnimation.render({
+        x: 0,
+        y: 0,
+        width: this.width,
+        height: this.height,
+        context: this.context
+      });
+    }
+    // @endif
+
+    if (this.color) {
+      this.context.fillStyle = this.color;
+      this.context.fillRect(0, 0, this.width, this.height);
+    }
+  }
+}
+
+var Sprite$1 = Factory(Sprite);
+
 let fontSizeRegex = /(\d+)(\w+)/;
 
 function parseFont(font) {
@@ -2109,7 +2353,7 @@ class Text extends GameObject$1.class {
 
   get width() {
     // w = width
-    return super.width ? super.width : this._w;
+    return this._w;
   }
 
   set width(value) {
@@ -2317,18 +2561,11 @@ let pointer = {
  *
  * @param {Object} object - Object to check collision against.
  */
-function circleRectCollision(object, _pntr) {
-  const pntr = _pntr || pointer;
+function circleRectCollision(object, pntr = pointer) {
+  let { x, y, width, height } = getRect(object);
 
-  let x = object.x;
-  let y = object.y;
-  if (object.anchor) {
-    x -= object.width * object.anchor.x;
-    y -= object.height * object.anchor.y;
-  }
-
-  let dx = pntr.x - Math.max(x, Math.min(pntr.x, x + object.width));
-  let dy = pntr.y - Math.max(y, Math.min(pntr.y, y + object.height));
+  let dx = pntr.x - Math.max(x, Math.min(pntr.x, x + width));
+  let dy = pntr.y - Math.max(y, Math.min(pntr.y, y + height));
   return (dx * dx + dy * dy) < (pntr.radius * pntr.radius);
 }
 
@@ -2337,8 +2574,7 @@ function circleRectCollision(object, _pntr) {
  *
  * @returns {Object} First object to collide with the pointer.
  */
-function getCurrentObject(_pntr) {
-  const pntr = _pntr || pointer;
+function getCurrentObject(pntr = pointer) {
 
   // if pointer events are required on the very first frame or without a game
   // loop, use the current frame order array
@@ -2687,7 +2923,7 @@ function pointerPressed(button) {
   return !!pressedButtons[button]
 }
 
-class Button extends Text$1.class {
+class Button extends Sprite$1.class {
 
   /**
    * An accessible button. Supports screen readers and keyboard navigation using the Tab key. Don't forget to call [initPointer](/api/pointer#initPointer) to have pointer events enabled for the button.
@@ -2733,8 +2969,12 @@ class Button extends Text$1.class {
    * @param {Function} [properties.onUp] - Function called when the button is clicked either by the pointer or keyboard.
    */
   init(properties) {
-    super.init(properties);
+    let { text, ...props } = properties;
+    super.init(props);
     track(this);
+
+    this.textNode = Text$1(text);
+    this.addChild(this.textNode);
 
     // create an accessible DOM node for screen readers
     // dn = dom node
@@ -2750,6 +2990,14 @@ class Button extends Text$1.class {
     document.body.appendChild(button);
   }
 
+  get text() {
+    return this.textNode.text;
+  }
+
+  set text(value) {
+    this.textNode.text = value;
+  }
+
   /**
    * Clean up the button.
    * @memberof Button
@@ -2761,8 +3009,8 @@ class Button extends Text$1.class {
 
   render() {
     // update DOM node text if it has changed
-    if (this._d && this._t !== this._dn.textContent) {
-      this._dn.textContent = this._t;
+    if (this.textNode._d && this.text !== this._dn.textContent) {
+      this._dn.textContent = this.text;
     }
 
     super.render();
@@ -2827,10 +3075,18 @@ class Button extends Text$1.class {
   }
 
   onOver() {
+
+    /**
+     * If the button is hovered.
+     * @memberof Button
+     * @property {Boolean} hovered
+     */
+    this.hovered = true;
     this.focus();
   }
 
   onOut() {
+    this.hovered = false;
     this.blur();
   }
 
@@ -3578,12 +3834,14 @@ function getIndices(object, bounds) {
   let verticalMidpoint = bounds.x + bounds.width / 2;
   let horizontalMidpoint = bounds.y + bounds.height / 2;
 
+  let { x, y, width, height } = getRect(object);
+
   // save off quadrant checks for reuse
-  let intersectsTopQuadrants = object.y < horizontalMidpoint && object.y + object.height >= bounds.y;
-  let intersectsBottomQuadrants = object.y + object.height >= horizontalMidpoint && object.y < bounds.y + bounds.height;
+  let intersectsTopQuadrants = y < horizontalMidpoint && y + height >= bounds.y;
+  let intersectsBottomQuadrants = y + height >= horizontalMidpoint && y < bounds.y + bounds.height;
 
   // object intersects with the left quadrants
-  if (object.x < verticalMidpoint && object.x + object.width >= bounds.x) {
+  if (x < verticalMidpoint && x + width >= bounds.x) {
     if (intersectsTopQuadrants) {  // top left
       indices.push(0);
     }
@@ -3594,7 +3852,7 @@ function getIndices(object, bounds) {
   }
 
   // object intersects with the right quadrants
-  if (object.x + object.width >= verticalMidpoint && object.x < bounds.x + bounds.width) {  // top right
+  if (x + width >= verticalMidpoint && x < bounds.x + bounds.width) {  // top right
     if (intersectsTopQuadrants) {
       indices.push(1);
     }
@@ -4086,240 +4344,6 @@ class Scene {
 var Scene$1 = Factory(Scene);
 
 /**
- * A versatile way to update and draw your sprites. It can handle simple rectangles, images, and sprite sheet animations. It can be used for your main player object as well as tiny particles in a particle engine.
- * @class Sprite
- * @extends GameObject
- *
- * @param {Object} [properties] - Properties of the sprite.
- * @param {String} [properties.color] - Fill color for the game object if no image or animation is provided.
- * @param {HTMLImageElement|HTMLCanvasElement} [properties.image] - Use an image to draw the sprite.
- * @param {Object} [properties.animations] - An object of [Animations](api/animation) from a [Spritesheet](api/spriteSheet) to animate the sprite.
- */
-class Sprite extends GameObject$1.class {
-  /**
-   * @docs docs/api_docs/sprite.js
-   */
-
-  init(properties = {}) {
-
-    /**
-     * The color of the game object if it was passed as an argument.
-     * @memberof Sprite
-     * @property {String} color
-     */
-
-    /**
-     * The width of the sprite. If the sprite is a [rectangle sprite](api/sprite#rectangle-sprite), it uses the passed in value. For an [image sprite](api/sprite#image-sprite) it is the width of the image. And for an [animation sprite](api/sprite#animation-sprite) it is the width of a single frame of the animation.
-     *
-     * Setting the value to a negative number will result in the sprite being flipped across the vertical axis while the width will remain a positive value.
-     * @memberof Sprite
-     * @property {Number} width
-     */
-
-    /**
-     * The height of the sprite. If the sprite is a [rectangle sprite](api/sprite#rectangle-sprite), it uses the passed in value. For an [image sprite](api/sprite#image-sprite) it is the height of the image. And for an [animation sprite](api/sprite#animation-sprite) it is the height of a single frame of the animation.
-     *
-     * Setting the value to a negative number will result in the sprite being flipped across the horizontal axis while the height will remain a positive value.
-     * @memberof Sprite
-     * @property {Number} height
-     */
-
-    // @ifdef SPRITE_IMAGE||SPRITE_ANIMATION
-    // fx = flipX, fy = flipY
-    // this._fx = this._fy = 1;
-    // @endif
-
-    super.init(properties);
-
-    // @ifdef SPRITE_IMAGE
-    /**
-     * The image the sprite will use when drawn if passed as an argument.
-     * @memberof Sprite
-     * @property {HTMLImageElement|HTMLCanvasElement} image
-     */
-
-    let { image } = properties;
-    if (image) {
-      this.width = image.width;
-      this.height = image.height;
-    }
-    // @endif
-  }
-
-  // @ifdef SPRITE_ANIMATION
-  /**
-   * An object of [Animations](api/animation) from a [SpriteSheet](api/spriteSheet) to animate the sprite. Each animation is named so that it can can be used by name for the sprites [playAnimation()](api/sprite#playAnimation) function.
-   *
-   * ```js
-   * import { Sprite, SpriteSheet } from 'kontra';
-   *
-   * let spriteSheet = SpriteSheet({
-   *   // ...
-   *   animations: {
-   *     idle: {
-   *       frames: 1,
-   *       loop: false,
-   *     },
-   *     walk: {
-   *       frames: [1,2,3]
-   *     }
-   *   }
-   * });
-   *
-   * let sprite = Sprite({
-   *   x: 100,
-   *   y: 200,
-   *   animations: spriteSheet.animations
-   * });
-   *
-   * sprite.playAnimation('idle');
-   * ```
-   * @memberof Sprite
-   * @property {Object} animations
-   */
-  get animations() {
-    return this._a;
-  }
-
-  set animations(value) {
-    let prop, firstAnimation;
-    // a = animations
-    this._a = {};
-
-    // clone each animation so no sprite shares an animation
-    for (prop in value) {
-      this._a[prop] = value[prop].clone();
-
-      // default the current animation to the first one in the list
-      firstAnimation = firstAnimation || this._a[prop];
-    }
-
-    /**
-     * The currently playing Animation object if `animations` was passed as an argument.
-     * @memberof Sprite
-     * @property {Animation} currentAnimation
-     */
-    this.currentAnimation = firstAnimation;
-    this.width = this.width || firstAnimation.width;
-    this.height = this.height || firstAnimation.height;
-  }
-
-  /**
-   * Set the currently playing animation of an animation sprite.
-   *
-   * ```js
-   * import { Sprite, SpriteSheet } from 'kontra';
-   *
-   * let spriteSheet = SpriteSheet({
-   *   // ...
-   *   animations: {
-   *     idle: {
-   *       frames: 1
-   *     },
-   *     walk: {
-   *       frames: [1,2,3]
-   *     }
-   *   }
-   * });
-   *
-   * let sprite = Sprite({
-   *   x: 100,
-   *   y: 200,
-   *   animations: spriteSheet.animations
-   * });
-   *
-   * sprite.playAnimation('idle');
-   * ```
-   * @memberof Sprite
-   * @function playAnimation
-   *
-   * @param {String} name - Name of the animation to play.
-   */
-  playAnimation(name) {
-    this.currentAnimation = this.animations[name];
-
-    if (!this.currentAnimation.loop) {
-      this.currentAnimation.reset();
-    }
-  }
-
-  advance(dt) {
-    super.advance(dt);
-
-    if (this.currentAnimation) {
-      this.currentAnimation.update(dt);
-    }
-  }
-  // @endif
-
-  // @ifdef SPRITE_IMAGE||SPRITE_ANIMATION
-  // get width() {
-  //   return super.width ? super.width : this._w;
-  // }
-
-  // get height() {
-  //   return super.height ? super.height : this._h;
-  // }
-
-  // set width(value) {
-  //   let sign = value < 0 ? -1 : 1;
-
-  //   this._fx = sign;
-  //   this._w = value * sign;
-  // }
-
-  // set height(value) {
-  //   let sign = value < 0 ? -1 : 1;
-
-  //   this._fy = sign;
-  //   this._h = value * sign;
-  // }
-  // @endif
-
-  draw() {
-    // @ifdef SPRITE_IMAGE||SPRITE_ANIMATION
-    // // flip sprite around the center so the x/y position does not change
-    // if (this._fx == -1 || this._fy == -1) {
-    //   let translateX = this.width / 2;
-    //   let translateY = this.height / 2;
-
-    //   this.context.translate(translateX, translateY);
-    //   this.context.scale(this._fx, this._fy);
-    //   this.context.translate(-translateX, -translateY);
-    // }
-    // @endif
-
-    // @ifdef SPRITE_IMAGE
-    if (this.image) {
-      this.context.drawImage(
-        this.image,
-        0, 0, this.image.width, this.image.height
-      );
-    }
-    // @endif
-
-    // @ifdef SPRITE_ANIMATION
-    if (this.currentAnimation) {
-      this.currentAnimation.render({
-        x: 0,
-        y: 0,
-        width: this.width,
-        height: this.height,
-        context: this.context
-      });
-    }
-    // @endif
-
-    if (this.color) {
-      this.context.fillStyle = this.color;
-      this.context.fillRect(0, 0, this.width, this.height);
-    }
-  }
-}
-
-var Sprite$1 = Factory(Sprite);
-
-/**
  * Parse a string of consecutive frames.
  *
  * @param {Number|String} frames - Start and end frame.
@@ -4797,17 +4821,12 @@ function TileEngine(properties = {}) {
      * @returns {boolean} `true` if the object collides with a tile, `false` otherwise.
      */
     layerCollidesWith(name, object) {
-      let x = object.x;
-      let y = object.y;
-      if (object.anchor) {
-        x -= object.width * object.anchor.x;
-        y -= object.height * object.anchor.y;
-      }
+      let { x, y, width, height } = getRect(object);
 
       let row = getRow(y);
       let col = getCol(x);
-      let endRow = getRow(y + object.height);
-      let endCol = getCol(x + object.width);
+      let endRow = getRow(y + height);
+      let endCol = getCol(x + width);
 
       let layer = layerMap[name];
 
@@ -5183,26 +5202,7 @@ class UIManager extends GameObject$1.class {
     this.justify = justify;
     this.gap = gap;
     this.numCols = numCols;
-
     this.breakpoints = breakpoints;
-
-    // on('font', value => {
-    //   // fs = font size
-    //   this._fs = value;
-
-    //   // b = breakpoint
-    //   this.breakpoints.map(breakpoint => {
-    //     if (breakpoint.metric(value) && this._b !== breakpoint) {
-    //       this._b = breakpoint;
-    //       breakpoint.callback.call(this);
-    //     }
-    //   });
-
-    //   // give time for other text objects to change size first
-    //   setTimeout(() => {
-    //     this._d = true;
-    //   }, 0);
-    // });
 
     super.init(properties);
 
@@ -5277,72 +5277,60 @@ class UIManager extends GameObject$1.class {
 
     let canvas = getCanvas();
 
-    let numRows, rtl, columned, rowed, grided, children, gap, numCols;
     let grid = [];
     let colWidths = [];
     let rowHeights = [];
 
-    let calculateSize = () => {
-      columned = this.flow === 'column';
-      rowed = this.flow === 'row';
-      grided = this.flow === 'grid';
+    let columned = this.flow === 'column';
+    let rowed = this.flow === 'row';
+    let grided = this.flow === 'grid';
 
-      children = this.children;
-      gap = this.gap * this.scale.x;
-      numCols = columned
-        ? 1
-        : rowed
-          ? children.length
-          : this.numCols;
-      numRows = Math.ceil(children.length / numCols);
+    let children = this.children;
+    let gap = this.gap * this.scale.x;
+    let numCols = columned
+      ? 1
+      : rowed
+        ? children.length
+        : this.numCols;
+    let numRows = Math.ceil(children.length / numCols);
 
-      // direction property overrides canvas dir
-      rtl = (canvas.dir === 'rtl' && !this.direction) || this.direction === 'rtl';
+    // direction property overrides canvas dir
+    let rtl = (canvas.dir === 'rtl' && !this.direction) || this.direction === 'rtl';
 
-      for (let row = 0; row < numRows; row++) {
-        grid[row] = [];
+    for (let row = 0; row < numRows; row++) {
+      grid[row] = [];
 
-        for (let col = 0; col < numCols; col++) {
-          let child = children[row * numCols + col];
-          if (!child) {
-            // add empty array item so we can reverse a row even when it
-            // contains less items than another row
-            grid[row][col] = false;
-            continue;
-          }
-
-          grid[row][col] = child;
-
-          // prerender child to get current width/height
-          if (child._p) {
-            child._p();
-          }
-
-          let width = child.width;
-          let height = child.height;
-
-          if ('scaledWidth' in child) {
-            height = child.scaledHeight;
-            width = child.scaledWidth;
-          }
-
-          rowHeights[row] = Math.max(rowHeights[row] || 0, height);
-          colWidths[col] = Math.max(colWidths[col] || 0, width);
+      for (let col = 0; col < numCols; col++) {
+        let child = children[row * numCols + col];
+        if (!child) {
+          // add empty array item so we can reverse a row even when it
+          // contains less items than another row
+          grid[row][col] = false;
+          continue;
         }
+
+        grid[row][col] = child;
+
+        // prerender child to get current width/height
+        if (child._p) {
+          child._p();
+        }
+
+        let width = child.width;
+        let height = child.height;
+
+        if ('scaledWidth' in child) {
+          height = child.scaledHeight;
+          width = child.scaledWidth;
+        }
+
+        rowHeights[row] = Math.max(rowHeights[row] || 0, height);
+        colWidths[col] = Math.max(colWidths[col] || 0, width);
       }
+    }
 
-      this._w = colWidths.reduce((acc, width) => acc += width, 0) + gap * (numCols - 1);
-      this._h = rowHeights.reduce((acc, height) => acc += height, 0) + gap * (numRows - 1);
-
-      // this.breakpoints.find(breakpoint => {
-      //   if (breakpoint.size >= this._fs)  {
-
-      //     calculateSize();
-      //   }
-      // });
-    };
-
-    calculateSize();
+    this._w = colWidths.reduce((acc, width) => acc += width, 0) + gap * (numCols - 1);
+    this._h = rowHeights.reduce((acc, height) => acc += height, 0) + gap * (numRows - 1);
 
     // reverse columns
     if (rtl) {
@@ -5350,23 +5338,19 @@ class UIManager extends GameObject$1.class {
       colWidths = colWidths.reverse();
     }
 
-    let y = this.y;
+    // let y = this.y;
     let topRightY = 0;
     grid.map((gridRow, row) => {
-      // let x = this.x;
       let topRightX = 0;
-      let x = rtl && !this.parent
-        ? canvas.width - (this.x + this._w * (1 - this.anchor.x * 2))
-        : this.x;
+      // let x = rtl && !this.parent
+      //   ? canvas.width - (this.x + this._w * (1 - this.anchor.x * 2))
+      //   : this.x;
 
       gridRow.map((child, col) => {
         if (child) {
 
           let justify = alignment[child.justifySelf ? child.justifySelf : this.justify](rtl);
           let align = alignment[child.alignSelf ? child.alignSelf : this.align]();
-
-          // colWidths[col] = canvas.width;
-          // this._w = canvas.width;
 
           let pointX =
             this.x - (this._w * this.anchor.x) +
@@ -5411,147 +5395,11 @@ class UIManager extends GameObject$1.class {
           child.y = topRightY + y;
         }
 
-        // child.x = colWidths[col] * justify;
-        // child.y = rowHeights[row] * align;
-        // child.anchor = { x: justify, y: align };
-        // let nextCol = ((index + 1) % numCols);
-
-        // x += colWidths[col] + gap;
         topRightX += colWidths[col] + gap;
       });
 
       topRightY += rowHeights[row] + gap;
-      // y += rowHeights[row] + gap;
     });
-
-    // i can simplify the entire logic if i treat the ui manager always as a grid
-    // and treat flow=row as numCols=children.length and flow=column as
-    // numCols=1
-
-    // calculate width and height so we can set the children
-    // let columned = this.flow === 'column';
-    // let rowed = this.flow === 'row';
-    // let grided = this.flow === 'grid';
-    // let width = 0;
-    // let height = 0;
-
-    // // a grid of one column is just a column
-    // if (grided && this.numCols === 1) {
-    //   grided = false;
-    //   columned = true;
-    // }
-
-    // this.children.map((child, index) => {
-    //    // prerender children first
-    //   if (child._p) {
-    //     child._p();
-    //   }
-
-    //   if (columned) {
-    //     width = Math.max(width, child.width);
-    //     height += child.height + (index > 0 ? this.gap : 0);
-    //   }
-    //   else if (rowed) {
-    //     width += child.width + (index > 0 ? this.gap : 0);
-    //     height = Math.max(height, child.height);
-    //   }
-    //   else {
-    //     width = Math.max(width, child.width);
-    //     height = Math.max(height, child.height);
-    //   }
-    // });
-
-    // // this._w = this._fw ? this._fw : width;
-    // // this._h = this._fh ? this._fh : height;
-
-    // let numCols = this.numCols;
-    // while (grided && this.maxWidth && numCols && width * numCols > this.maxWidth) {
-    //   numCols--;
-    // }
-
-    // let numRows = Math.ceil(this.children.length / numCols);
-
-    // this._w = grided ? width * numCols : width;
-    // this._h = grided ? height * numRows + this.gap * (numRows - 1) : height;
-
-    // let canvas = getCanvas();
-
-    // // direction property overrides canvas dir
-    // let rtl = (canvas.dir === 'rtl' && !this.direction) || this.direction === 'rtl';
-
-    // // calculate position, only take into account rtl if this is the topmost
-    // // ui manager
-    // let prevX = rtl && !this.parent
-    //   ? canvas.width - (this.x + width * (1 - this.anchor.x * 2))
-    //   : this.x;
-    // let prevY = this.y;
-
-    // let reversed = rtl && !columned;
-
-    // // if we reversed a grid we need to start backwards on each row
-    // let children = this.children;
-    // if (reversed && grided) {
-    //   children = [];
-    //   let col = numCols - 1;
-    //   let row = 0;
-    //   let newRow = false;
-    //   while (children.length < this.children.length + numCols) {
-    //     let child = this.children[row * numCols + col] || {
-    //       anchor: {}
-    //     };
-    //     children.push(child);
-
-    //     col = newRow ? numCols - 1 : col - 1;
-    //     row = newRow ? row + 1: row;
-    //     newRow = col % numCols === 0;
-    //   }
-
-    //   reversed = false;
-    // }
-
-    // let length = children.length - 1;
-    // let index = reversed ? length : 0;
-    // let start = index;
-    // for (; index >= 0 && index <= length; index += (reversed ? -1 : 1)) {
-    //   let child = children[index];
-    //   let justify = alignment[child.justifySelf ? child.justifySelf : this.justify](rtl);
-    //   let align = alignment[child.alignSelf ? child.alignSelf : this.align]();
-
-    //   child.x = prevX;
-    //   child.y = prevY;
-    //   child.anchor.x = child.anchor.y = 0;
-
-    //   if (columned) {
-    //     child.x += this._w * justify;
-    //     child.anchor.x = justify;
-
-    //     if (index !== start) {
-    //       child.y += this.gap;
-    //     }
-
-    //     prevY = child.y + child.height;
-    //   }
-    //   else if (rowed) {
-    //     child.y += this._h * align;
-    //     child.anchor.y = align;
-
-    //     if (index !== start) {
-    //       child.x += this.gap;
-    //     }
-
-    //     prevX = child.x + child.width;
-    //   }
-    //   else {
-    //     child.x += width * justify;
-    //     child.anchor.x = justify;
-    //     child.y += height * align;
-    //     child.anchor.y = align;
-    //     let nextCol = ((index + 1) % numCols);
-
-    //     prevX = this.x + width * nextCol + this.gap * nextCol;
-    //     prevY += nextCol === 0 ? height + this.gap : 0;
-    //   }
-    // }
   }
 }
 

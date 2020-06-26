@@ -1,5 +1,5 @@
 import { getCanvas } from './core.js'
-import { Factory } from './utils.js'
+import { Factory, getRect } from './utils.js'
 
 /**
  * Determine which subnodes the object intersects with
@@ -15,12 +15,14 @@ function getIndices(object, bounds) {
   let verticalMidpoint = bounds.x + bounds.width / 2;
   let horizontalMidpoint = bounds.y + bounds.height / 2;
 
+  let { x, y, width, height } = getRect(object);
+
   // save off quadrant checks for reuse
-  let intersectsTopQuadrants = object.y < horizontalMidpoint && object.y + object.height >= bounds.y;
-  let intersectsBottomQuadrants = object.y + object.height >= horizontalMidpoint && object.y < bounds.y + bounds.height;
+  let intersectsTopQuadrants = y < horizontalMidpoint && y + height >= bounds.y;
+  let intersectsBottomQuadrants = y + height >= horizontalMidpoint && y < bounds.y + bounds.height;
 
   // object intersects with the left quadrants
-  if (object.x < verticalMidpoint && object.x + object.width >= bounds.x) {
+  if (x < verticalMidpoint && x + width >= bounds.x) {
     if (intersectsTopQuadrants) {  // top left
       indices.push(0);
     }
@@ -31,7 +33,7 @@ function getIndices(object, bounds) {
   }
 
   // object intersects with the right quadrants
-  if (object.x + object.width >= verticalMidpoint && object.x < bounds.x + bounds.width) {  // top right
+  if (x + width >= verticalMidpoint && x < bounds.x + bounds.width) {  // top right
     if (intersectsTopQuadrants) {
       indices.push(1);
     }

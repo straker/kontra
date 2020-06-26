@@ -1,4 +1,5 @@
 import { getCanvas, getContext } from './core.js'
+import { getRect } from './utils.js'
 
 /**
  * A tile engine for managing and drawing tilesets.
@@ -252,17 +253,12 @@ export default function TileEngine(properties = {}) {
      * @returns {boolean} `true` if the object collides with a tile, `false` otherwise.
      */
     layerCollidesWith(name, object) {
-      let x = object.x;
-      let y = object.y;
-      if (object.anchor) {
-        x -= object.width * object.anchor.x;
-        y -= object.height * object.anchor.y;
-      }
+      let { x, y, width, height } = getRect(object);
 
       let row = getRow(y);
       let col = getCol(x);
-      let endRow = getRow(y + object.height);
-      let endCol = getCol(x + object.width);
+      let endRow = getRow(y + height);
+      let endCol = getCol(x + width);
 
       let layer = layerMap[name];
 

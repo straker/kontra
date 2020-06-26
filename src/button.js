@@ -1,8 +1,9 @@
+import Sprite from './sprite.js'
 import Text from './text.js'
 import { track } from './pointer.js'
 import { Factory, srOnlyStyle } from './utils.js'
 
-class Button extends Text.class {
+class Button extends Sprite.class {
 
   /**
    * An accessible button. Supports screen readers and keyboard navigation using the Tab key. Don't forget to call [initPointer](/api/pointer#initPointer) to have pointer events enabled for the button.
@@ -48,8 +49,12 @@ class Button extends Text.class {
    * @param {Function} [properties.onUp] - Function called when the button is clicked either by the pointer or keyboard.
    */
   init(properties) {
-    super.init(properties);
+    let { text, ...props } = properties;
+    super.init(props);
     track(this);
+
+    this.textNode = Text(text);
+    this.addChild(this.textNode);
 
     // create an accessible DOM node for screen readers
     // dn = dom node
@@ -65,6 +70,14 @@ class Button extends Text.class {
     document.body.appendChild(button);
   }
 
+  get text() {
+    return this.textNode.text;
+  }
+
+  set text(value) {
+    this.textNode.text = value;
+  }
+
   /**
    * Clean up the button.
    * @memberof Button
@@ -76,8 +89,8 @@ class Button extends Text.class {
 
   render() {
     // update DOM node text if it has changed
-    if (this._d && this._t !== this._dn.textContent) {
-      this._dn.textContent = this._t;
+    if (this.textNode._d && this.text !== this._dn.textContent) {
+      this._dn.textContent = this.text;
     }
 
     super.render();
@@ -142,10 +155,18 @@ class Button extends Text.class {
   }
 
   onOver() {
+
+    /**
+     * If the button is hovered.
+     * @memberof Button
+     * @property {Boolean} hovered
+     */
+    this.hovered = true;
     this.focus();
   }
 
   onOut() {
+    this.hovered = false;
     this.blur();
   }
 

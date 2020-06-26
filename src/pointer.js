@@ -1,5 +1,6 @@
 import { getCanvas } from './core.js'
 import { on } from './events.js'
+import { getRect } from './utils.js'
 
 /**
  * A simple pointer API. You can use it move the main sprite or respond to a pointer event. Works with both mouse and touch events.
@@ -106,18 +107,11 @@ export let pointer = {
  *
  * @param {Object} object - Object to check collision against.
  */
-function circleRectCollision(object, _pntr) {
-  const pntr = _pntr || pointer;
+function circleRectCollision(object, pntr = pointer) {
+  let { x, y, width, height } = getRect(object);
 
-  let x = object.x;
-  let y = object.y;
-  if (object.anchor) {
-    x -= object.width * object.anchor.x;
-    y -= object.height * object.anchor.y;
-  }
-
-  let dx = pntr.x - Math.max(x, Math.min(pntr.x, x + object.width));
-  let dy = pntr.y - Math.max(y, Math.min(pntr.y, y + object.height));
+  let dx = pntr.x - Math.max(x, Math.min(pntr.x, x + width));
+  let dy = pntr.y - Math.max(y, Math.min(pntr.y, y + height));
   return (dx * dx + dy * dy) < (pntr.radius * pntr.radius);
 }
 
@@ -126,8 +120,7 @@ function circleRectCollision(object, _pntr) {
  *
  * @returns {Object} First object to collide with the pointer.
  */
-function getCurrentObject(_pntr) {
-  const pntr = _pntr || pointer;
+function getCurrentObject(pntr = pointer) {
 
   // if pointer events are required on the very first frame or without a game
   // loop, use the current frame order array

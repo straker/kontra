@@ -107,6 +107,22 @@ declare namespace kontra {
     (properties?: {x?: number, y?: number, dx?: number, dy?: number, ddx?: number, ddy?: number, width?: number, height?: number, ttl?: number, rotation?: number, anchor?: {x: number, y: number}, children?: GameObject[], context?: CanvasRenderingContext2D, update?: (dt?: number) => void, render?: Function, [props: string]: any}): GameObject;
   }
   var GameObject: GameObjectConstructor
+  interface Sprite extends GameObject {
+    color: string;
+    width: number;
+    height: number;
+    image: HTMLImageElement | HTMLCanvasElement;
+    animations: object;
+    currentAnimation: Animation;
+    playAnimation(name: string): void;
+  }
+  interface SpriteConstructor {
+    readonly class: SpriteConstructor;
+    readonly prototype: Sprite;
+    new(properties?: {color?: string, image?: HTMLImageElement | HTMLCanvasElement, animations?: object, x?: number, y?: number, dx?: number, dy?: number, ddx?: number, ddy?: number, width?: number, height?: number, ttl?: number, rotation?: number, anchor?: {x: number, y: number}, children?: GameObject[], context?: CanvasRenderingContext2D, update?: (dt?: number) => void, render?: Function, [props: string]: any}): Sprite;
+    (properties?: {color?: string, image?: HTMLImageElement | HTMLCanvasElement, animations?: object, x?: number, y?: number, dx?: number, dy?: number, ddx?: number, ddy?: number, width?: number, height?: number, ttl?: number, rotation?: number, anchor?: {x: number, y: number}, children?: GameObject[], context?: CanvasRenderingContext2D, update?: (dt?: number) => void, render?: Function, [props: string]: any}): Sprite;
+  }
+  var Sprite: SpriteConstructor
   interface Text extends GameObject {
     textAlign: string;
     font: string;
@@ -136,6 +152,7 @@ declare namespace kontra {
     focus(): void;
     focused: boolean;
     blur(): void;
+    hovered: boolean;
     onEnable(): void;
     onDisable(): void;
     onFocus(): void;
@@ -224,22 +241,6 @@ declare namespace kontra {
     (properties: {id: string, name?: string, children?: object[], [props: string]: any}): Scene;
   }
   var Scene: SceneConstructor
-  interface Sprite extends GameObject {
-    color: string;
-    width: number;
-    height: number;
-    image: HTMLImageElement | HTMLCanvasElement;
-    animations: object;
-    currentAnimation: Animation;
-    playAnimation(name: string): void;
-  }
-  interface SpriteConstructor {
-    readonly class: SpriteConstructor;
-    readonly prototype: Sprite;
-    new(properties?: {color?: string, image?: HTMLImageElement | HTMLCanvasElement, animations?: object, x?: number, y?: number, dx?: number, dy?: number, ddx?: number, ddy?: number, width?: number, height?: number, ttl?: number, rotation?: number, anchor?: {x: number, y: number}, children?: GameObject[], context?: CanvasRenderingContext2D, update?: (dt?: number) => void, render?: Function, [props: string]: any}): Sprite;
-    (properties?: {color?: string, image?: HTMLImageElement | HTMLCanvasElement, animations?: object, x?: number, y?: number, dx?: number, dy?: number, ddx?: number, ddy?: number, width?: number, height?: number, ttl?: number, rotation?: number, anchor?: {x: number, y: number}, children?: GameObject[], context?: CanvasRenderingContext2D, update?: (dt?: number) => void, render?: Function, [props: string]: any}): Sprite;
-  }
-  var Sprite: SpriteConstructor
   interface SpriteSheet {
     animations: object;
     image: HTMLImageElement | HTMLCanvasElement;

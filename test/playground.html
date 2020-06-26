@@ -30,7 +30,7 @@
       width: auto;
   }
 
-  button {
+  button[onclick] {
     display: none;
     font: 32px Arial;
   }
@@ -149,54 +149,135 @@
       }]
     });
 
+    kontra.initPointer();
+
     kontra.load('blue_button02.png').then(() => {
 
-      window.startText = kontra.Text({
-        font: '28px Arial',
-        text: 'Start',
-        textAlign: 'center',
-        color: 'white',
-        anchor: { x: 0.5, y: 0.5 },
-      });
+      // const textProps = {
+      //   font: '28px Arial',
+      //   text: 'Start',
+      //   textAlign: 'center',
+      //   color: 'white',
+      //   anchor: { x: 0.5, y: 0.5 }
+      // };
 
-      window.startBtn = kontra.Sprite({
-        anchor: { x: 0.5, y: 0.5 },
-        image: kontra.imageAssets['blue_button02'],
-        children: [startText],
-        name: 'startBtn'
-        // x: canvas.width/2,
-        // y: canvas.height/2
-      });
+      // window.startText = kontra.Text({
+      //   font: '28px Arial',
+      //   text: 'Start',
+      //   textAlign: 'center',
+      //   color: 'white',
+      //   anchor: { x: 0.5, y: 0.5 },
+      // });
 
-      window.optionsText = kontra.Text({
-        font: '28px Arial',
-        text: 'Options',
-        textAlign: 'center',
-        color: 'white',
-        anchor: { x: 0.5, y: 0.5 }
-      });
+      let buttons = [];
+      function createButton(text, props) {
+        let button = kontra.Button({
+          anchor: { x: 0.5, y: 0.5 },
+          image: kontra.imageAssets['blue_button02'],
+          text: {
+            font: '28px Arial',
+            text: text,
+            textAlign: 'center',
+            color: 'white',
+            anchor: { x: 0.5, y: 0.5 }
+          },
+          render() {
+            this.draw();
 
-      window.optionsBtn = kontra.Sprite({
-        anchor: { x: 0.5, y: 0.5 },
-        image: kontra.imageAssets['blue_button02'],
-        children: [optionsText],
-        name: 'optionsBtn'
-      });
+            if (this.focused) {
+              this.context.lineWidth = 2;
+              this.context.strokeStyle = 'red';
+              this.context.strokeRect(0, 0, this.width, this.height);
+            }
+          },
+          ...props
+        });
 
-      window.exitText = kontra.Text({
-        font: '28px Arial',
-        text: 'Exit',
-        textAlign: 'center',
-        color: 'white',
-        anchor: { x: 0.5, y: 0.5 }
-      });
+        buttons.push(button);
+        return button;
+      }
 
-      window.exitBtn = kontra.Sprite({
-        anchor: { x: 0.5, y: 0.5 },
-        image: kontra.imageAssets['blue_button02'],
-        children: [exitText],
-        name: 'exitBtn'
-      });
+      // class myButton extends kontra.Button.class {
+      //   init(properties) {
+      //     let { text, ...props } = properties;
+      //     props = Object.assign({}, {
+
+      //     }, props);
+      //     super.init(props);
+      //   }
+
+      //   onFocus() {
+      //     canvas.style.cursor = 'pointer';
+      //   }
+
+      //   onBlur() {
+      //     canvas.style.cursor = 'initial';
+      //   }
+
+      //   draw() {
+      //     super.draw();
+
+
+      //   }
+      // }
+
+      window.startBtn = createButton('Start');
+      window.optionsBtn = createButton('Options');
+      window.exitBtn = createButton('Exit');
+
+      // window.startBtn = kontra.Button({
+      //   anchor: { x: 0.5, y: 0.5 },
+      //   image: kontra.imageAssets['blue_button02'],
+      //   text: {
+      //     ...textProps,
+      //     text: 'Start'
+      //   },
+      //   onFocus() {
+      //     canvas.style.cursor = 'pointer';
+      //   },
+      //   onBlur() {
+      //     canvas.style.cursor = 'initial';
+      //   },
+      //   render() {
+      //     this.draw();
+
+      //     if (this.focused) {
+      //       this.context.lineWidth = 2;
+      //       this.context.strokeStyle = 'red';
+      //       this.context.strokeRect(0, 0, this.width, this.height);
+      //     }
+      //   }
+      // });
+
+      // window.optionsText = kontra.Text({
+      //   font: '28px Arial',
+      //   text: 'Options',
+      //   textAlign: 'center',
+      //   color: 'white',
+      //   anchor: { x: 0.5, y: 0.5 }
+      // });
+
+      // window.optionsBtn = kontra.Sprite({
+      //   anchor: { x: 0.5, y: 0.5 },
+      //   image: kontra.imageAssets['blue_button02'],
+      //   children: [optionsText],
+      //   name: 'optionsBtn'
+      // });
+
+      // window.exitText = kontra.Text({
+      //   font: '28px Arial',
+      //   text: 'Exit',
+      //   textAlign: 'center',
+      //   color: 'white',
+      //   anchor: { x: 0.5, y: 0.5 }
+      // });
+
+      // window.exitBtn = kontra.Sprite({
+      //   anchor: { x: 0.5, y: 0.5 },
+      //   image: kontra.imageAssets['blue_button02'],
+      //   children: [exitText],
+      //   name: 'exitBtn'
+      // });
 
       window.foo = kontra.Text({
         font: '28px Arial',
@@ -228,14 +309,24 @@
       });
 
 
+      let buttonHovered;
       let loop = kontra.GameLoop({
         update() {
           // menuScene.update();
+
         },
         render() {
-          // menuSceneManager.render();
+          menuSceneManager.render();
+
+          if (buttons.some(button => button.hovered)) {
+            canvas.style.cursor = 'pointer';
+          }
+          else {
+            canvas.style.cursor = 'initial';
+          }
+
           // startBtn.render();
-          foo.render();
+          // foo.render();
         }
       });
       loop.start();

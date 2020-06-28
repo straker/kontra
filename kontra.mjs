@@ -5392,7 +5392,7 @@ function TileEngine(properties = {}) {
     context.save();
     context.globalAlpha = layer.opacity;
 
-    layer.data.map((tile, index) => {
+    (layer.data || []).map((tile, index) => {
 
       // skip empty tiles (0)
       if (!tile) return;

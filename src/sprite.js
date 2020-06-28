@@ -42,7 +42,7 @@ class Sprite extends GameObject.class {
 
     // @ifdef SPRITE_IMAGE||SPRITE_ANIMATION
     // fx = flipX, fy = flipY
-    this._fx = this._fy = 1;
+    // this._fx = this._fy = 1;
     // @endif
 
     super.init(properties);
@@ -54,10 +54,10 @@ class Sprite extends GameObject.class {
      * @property {HTMLImageElement|HTMLCanvasElement} image
      */
 
-    let { width, height, image } = properties;
+    let { image } = properties;
     if (image) {
-      this.width = (width !== undefined) ? width : image.width;
-      this.height = (height !== undefined) ? height : image.height;
+      this.width = image.width;
+      this.height = image.height;
     }
     // @endif
   }
@@ -169,48 +169,47 @@ class Sprite extends GameObject.class {
   // @endif
 
   // @ifdef SPRITE_IMAGE||SPRITE_ANIMATION
-  get width() {
-    return this._w;
-  }
+  // get width() {
+  //   return super.width ? super.width : this._w;
+  // }
 
-  get height() {
-    return this._h;
-  }
+  // get height() {
+  //   return super.height ? super.height : this._h;
+  // }
 
-  set width(value) {
-    let sign = value < 0 ? -1 : 1;
+  // set width(value) {
+  //   let sign = value < 0 ? -1 : 1;
 
-    this._fx = sign;
-    this._w = value * sign;
-  }
+  //   this._fx = sign;
+  //   this._w = value * sign;
+  // }
 
-  set height(value) {
-    let sign = value < 0 ? -1 : 1;
+  // set height(value) {
+  //   let sign = value < 0 ? -1 : 1;
 
-    this._fy = sign;
-    this._h = value * sign;
-  }
+  //   this._fy = sign;
+  //   this._h = value * sign;
+  // }
   // @endif
 
   draw() {
     // @ifdef SPRITE_IMAGE||SPRITE_ANIMATION
-    // flip sprite around the center so the x/y position does not change
-    if (this._fx == -1 || this._fy == -1) {
-      let translateX = this.width / 2;
-      let translateY = this.height / 2;
+    // // flip sprite around the center so the x/y position does not change
+    // if (this._fx == -1 || this._fy == -1) {
+    //   let translateX = this.width / 2;
+    //   let translateY = this.height / 2;
 
-      this.context.translate(translateX, translateY);
-      this.context.scale(this._fx, this._fy);
-      this.context.translate(-translateX, -translateY);
-    }
+    //   this.context.translate(translateX, translateY);
+    //   this.context.scale(this._fx, this._fy);
+    //   this.context.translate(-translateX, -translateY);
+    // }
     // @endif
 
     // @ifdef SPRITE_IMAGE
     if (this.image) {
       this.context.drawImage(
         this.image,
-        0, 0, this.image.width, this.image.height,
-        0, 0, this.width, this.height
+        0, 0, this.image.width, this.image.height
       );
     }
     // @endif

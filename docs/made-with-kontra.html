@@ -7,7 +7,7 @@
 
   <script>
   // adjust path based on location (github pages required kontra url)
-  if (window.location.host.indexOf('localhost') !== -1) {
+  if (['localhost', '127.0.0.1'].includes(window.location.hostname)) {
     let base = document.querySelector('base');
     base.setAttribute('href', '/');
   }
@@ -43,7 +43,6 @@
               <li><a href="api/animation" >Animation</a></li>
               <li><a href="api/assets" >Assets</a></li>
               <li><a href="api/button" >Button</a></li>
-              <li><a href="api/collision" >Collision</a></li>
               <li><a href="api/core" >Core</a></li>
               <li><a href="api/events" >Events</a></li>
               <li><a href="api/gameLoop" >GameLoop</a></li>
@@ -57,7 +56,6 @@
               <li><a href="api/scene" >Scene</a></li>
               <li><a href="api/sprite" >Sprite</a></li>
               <li><a href="api/spriteSheet" >SpriteSheet</a></li>
-              <li><a href="api/store" >Store</a></li>
               <li><a href="api/text" >Text</a></li>
               <li><a href="api/tileEngine" >TileEngine</a></li>
               <li><a href="api/vector" >Vector</a></li>
@@ -67,6 +65,19 @@
       </nav>
       <div class="scroll-indicator" aria-hidden="true"><span>^</span></div>
     </header>
+
+    <script>
+      // restore scroll position on page load (do it here so there is no flash
+      // of unscrolled content)
+      let nav = document.querySelector('.main-nav');
+      if (sessionStorage.getItem('kontra-nav-scroll')) {
+        nav.scrollTop = parseInt(sessionStorage.getItem('kontra-nav-scroll'));
+
+        if (nav.offsetHeight + nav.scrollTop < nav.scrollHeight) {
+          nav.classList.add('showScroll');
+        }
+      }
+    </script>
 
     <main id="main">
       <div>

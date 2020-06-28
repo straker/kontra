@@ -1,11 +1,12 @@
 import { getCanvas, getContext } from './core.js'
+import { getRect } from './utils.js'
 
 /**
  * A tile engine for managing and drawing tilesets.
  *
  * <figure>
  *   <a href="assets/imgs/mapPack_tilesheet.png">
- *     <img src="assets/imgs/mapPack_tilesheet.png" alt="Tileset to create an overworld map in various seasons.">
+ *     <img src="assets/imgs/mapPack_tilesheet.png" width="1088" height="768" alt="Tileset to create an overworld map in various seasons.">
  *   </a>
  *   <figcaption>Tileset image courtesy of <a href="https://kenney.nl/assets">Kenney</a>.</figcaption>
  * </figure>
@@ -252,17 +253,12 @@ export default function TileEngine(properties = {}) {
      * @returns {boolean} `true` if the object collides with a tile, `false` otherwise.
      */
     layerCollidesWith(name, object) {
-      let x = object.x;
-      let y = object.y;
-      if (object.anchor) {
-        x -= object.width * object.anchor.x;
-        y -= object.height * object.anchor.y;
-      }
+      let { x, y, width, height } = getRect(object);
 
       let row = getRow(y);
       let col = getCol(x);
-      let endRow = getRow(y + object.height);
-      let endCol = getCol(x + object.width);
+      let endRow = getRow(y + height);
+      let endCol = getCol(x + width);
 
       let layer = layerMap[name];
 
@@ -575,7 +571,7 @@ export default function TileEngine(properties = {}) {
         layer._d = false;
         layerMap[layer.name] = layer;
 
-        if (layer.visible !== false) {
+        if (layer.data && layer.visible !== false) {
           tileEngine._r(layer, offscreenContext);
         }
       });

@@ -1,4 +1,5 @@
 import { Factory, srOnlyStyle } from './utils.js'
+import { getCanvas } from './core.js'
 
 class Scene {
 
@@ -32,7 +33,7 @@ class Scene {
    * @param {Object[]} [properties.children=[]] - The children of the scene.
    * @param {...*} properties.props - Any additional properties you need added to the scene. For example, if you pass `Scene({counter: 0})` then the scene will also have a property of the same name and value. You can pass as many additional properties as you want.
    */
-  constructor(properties) {
+  constructor(properties = {}) {
     /**
      * The id of the scene.
      * @memberof Scene
@@ -159,13 +160,26 @@ class Scene {
   }
 
   /**
-   * Render the scene and call `render()` on all children. A hidden scene will not render.
+   * Render the scene and call `render()` on all children. A hidden scene will not render nor will any children outside of the current game viewport.
    * @memberof Scene
    * @function render
    */
   render() {
     if (!this.hidden) {
-      this.children.map(child => child.render && child.render());
+      this.children.map(child => {
+        if (!child.render) return;
+
+        // only draw objects that are within the current viewport (speeds up performance considerably)
+        let canvas = getCanvas();
+        let x = (child.viewX !== undefined) ? child.viewX : child.x;
+        let y = (child.viewY !== undefined) ? child.viewY : child.y;
+
+        if (x === undefined ||  // render things such as TileMaps which don't have a position
+            (x + child.width > 0 && x < canvas.width &&
+             y + child.height > 0 && y < canvas.height)) {
+          child.render();
+        }
+      });
     }
   }
 

@@ -1,6 +1,46 @@
 import GameObject from './gameObject.js'
-import { getContext } from './core.js'
+import { on } from './events.js'
+import { getCanvas, getContext } from './core.js'
 import { Factory } from './utils.js'
+
+let fontSizeRegex = /(\d+)(\w+)/;
+
+function parseFont(font) {
+  let match = font.match(fontSizeRegex);
+
+  // coerce string to number
+  // @see https://github.com/jed/140bytes/wiki/Byte-saving-techniques#coercion-to-test-for-types
+  let size = +match[1];
+  let unit = match[2];
+  let computed = size;
+
+  // compute font size
+  // switch(unit) {
+  //   // px defaults to the size
+
+  //   // em uses the size of the canvas when declared (but won't keep in sync with
+  //   // changes to the canvas font-size)
+  //   case 'em': {
+  //     let fontSize = window.getComputedStyle(getCanvas()).fontSize;
+  //     let parsedSize = parseFont(fontSize).size;
+  //     computed = size * parsedSize;
+  //   }
+
+  //   // rem uses the size of the HTML element when declared (but won't keep in
+  //   // sync with changes to the HTML element font-size)
+  //   case 'rem': {
+  //     let fontSize = window.getComputedStyle(document.documentElement).fontSize;
+  //     let parsedSize = parseFont(fontSize).size;
+  //     computed = size * parsedSize;
+  //   }
+  // }
+
+  return {
+    size,
+    unit,
+    computed
+  };
+}
 
 class Text extends GameObject.class {
   /**
@@ -67,6 +107,13 @@ class Text extends GameObject.class {
      * @property {String} color
      */
 
+    // on('font', value => {
+    //   this.font = this.font.replace(fontSizeRegex, (match, size, unit) => {
+    //     return value + unit;
+    //   });
+    //   this._p();
+    // });
+
     super.init(properties);
 
     // p = prerender
@@ -99,7 +146,7 @@ class Text extends GameObject.class {
     this._f = value;
 
     // fs = font size
-    this._fs = parseInt(value);
+    this._fs = parseFont(value).computed;
     this._d = true;
   }
 
@@ -116,6 +163,11 @@ class Text extends GameObject.class {
     // fw = fixed width
     this._fw = value;
     // @endif
+  }
+
+  setScale(x, y) {
+    super.setScale(x, y);
+    this._d = true;
   }
 
   render() {

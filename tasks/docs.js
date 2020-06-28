@@ -131,9 +131,9 @@ function buildImports(section) {
 function resolveKontraType(string, isArray) {
   return string.replace(kontraTypesRegex, function(match, p1) {
     let url = p1;
-    if (isArray) {
-      url = url.substring(0, url.length - 1);
-    }
+    // if (isArray) {
+    //   url = url;
+    // }
     url = url[0].toLowerCase() + url.slice(1);
 
     return `<a href="api/${url}">${p1}</a>`;
@@ -216,7 +216,7 @@ let tags = {
     if (entry.optional) {
       paramValue += '['
     }
-    if (this.block.paramList.length > 1) {
+    if (this.block.paramList.length >= 1) {
       paramValue += ', ';
     }
     paramValue += name;

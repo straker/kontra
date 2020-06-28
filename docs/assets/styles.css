@@ -282,6 +282,10 @@ nav {
   background: #fdfdfd;
 }
 
+.toc li + li {
+  margin-top: 0.5rem;
+}
+
 .toc li a {
   line-height: 1rem;
   display: block;
@@ -482,6 +486,7 @@ figure {
 figure img {
   background: #333333;
   max-width: 100%;
+  height: auto;
 }
 
 figcaption {

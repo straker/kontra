@@ -7,7 +7,7 @@
 
   <script>
   // adjust path based on location (github pages required kontra url)
-  if (window.location.host.indexOf('localhost') !== -1) {
+  if (['localhost', '127.0.0.1'].includes(window.location.hostname)) {
     let base = document.querySelector('base');
     base.setAttribute('href', '/');
   }
@@ -43,7 +43,6 @@
               <li><a href="api/animation" >Animation</a></li>
               <li><a href="api/assets" >Assets</a></li>
               <li><a href="api/button" >Button</a></li>
-              <li><a href="api/collision" >Collision</a></li>
               <li><a href="api/core" >Core</a></li>
               <li><a href="api/events" >Events</a></li>
               <li><a href="api/gameLoop" >GameLoop</a></li>
@@ -57,7 +56,6 @@
               <li><a href="api/scene" >Scene</a></li>
               <li><a href="api/sprite" >Sprite</a></li>
               <li><a href="api/spriteSheet" >SpriteSheet</a></li>
-              <li><a href="api/store" >Store</a></li>
               <li><a href="api/text" >Text</a></li>
               <li><a href="api/tileEngine" >TileEngine</a></li>
               <li><a href="api/vector" >Vector</a></li>
@@ -67,6 +65,19 @@
       </nav>
       <div class="scroll-indicator" aria-hidden="true"><span>^</span></div>
     </header>
+
+    <script>
+      // restore scroll position on page load (do it here so there is no flash
+      // of unscrolled content)
+      let nav = document.querySelector('.main-nav');
+      if (sessionStorage.getItem('kontra-nav-scroll')) {
+        nav.scrollTop = parseInt(sessionStorage.getItem('kontra-nav-scroll'));
+
+        if (nav.offsetHeight + nav.scrollTop < nav.scrollHeight) {
+          nav.classList.add('showScroll');
+        }
+      }
+    </script>
 
     <main id="main">
       <div>
@@ -120,8 +131,18 @@ let radians = degToRad(180);  // =&gt; 3.14</code></pre></section>
                   </a>
                 </li>
                 <li>
+                  <a href="api/helpers#collides">
+                    <span>collides(&#8203;obj1, obj2)</span>
+                  </a>
+                </li>
+                <li>
                   <a href="api/helpers#degToRad">
                     <span>degToRad(&#8203;deg)</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="api/helpers#getStoreItem">
+                    <span>getStoreItem(&#8203;key)</span>
                   </a>
                 </li>
                 <li>
@@ -147,6 +168,11 @@ let radians = degToRad(180);  // =&gt; 3.14</code></pre></section>
                 <li>
                   <a href="api/helpers#seedRand">
                     <span>seedRand(&#8203;str)</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="api/helpers#setStoreItem">
+                    <span>setStoreItem(&#8203;key, value)</span>
                   </a>
                 </li>
               </ul>
@@ -297,6 +323,113 @@ sprite2.rotation = angleToTarget(sprite2, sprite);</code></pre></section>
           </p>
         </section>
         <section>
+          <h2 id="collides">
+            <a href="api/helpers#collides" class="section-link">
+              <span>collides(&#8203;obj1, obj2)</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
+
+          <p>Check if a two objects collide. Uses a simple <a href="https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection#Axis-Aligned_Bounding_Box">Axis-Aligned Bounding Box (AABB) collision check</a>. Takes into account the sprites <a href="api/gameObject#anchor">anchor</a> and <a href="api/gameObject#scale">scale</a>.</p>
+<p><strong>NOTE:</strong> Does not take into account object rotation. If you need collision detection between rotated objects you will need to implement your own <code>collides()</code> function. I suggest looking at the Separate Axis Theorem.</p>
+<div class="tablist">
+  <ul role="tablist">
+    <li role="presentation" data-tab="global">
+      <button role="tab" id="collides-global-tab">Global Object</button>
+    </li>
+    <li role="presentation" data-tab="es">
+      <button role="tab" id="collides-es-tab">ES Module Import</button>
+    </li>
+    <li role="presentation" data-tab="bundle">
+      <button role="tab" id="collides-bundle-tab">Module Bundler</button>
+    </li>
+    <li role="presentation"></li>
+  </ul>
+  <section role="tabpanel" aria-labelledby=collides-global-tab data-tabpanel="global"><pre><code class="language-js">let { Sprite, collides } = kontra;
+
+let sprite = Sprite({
+  x: 100,
+  y: 200,
+  width: 20,
+  height: 40
+});
+
+let sprite2 = Sprite({
+  x: 150,
+  y: 200,
+  width: 20,
+  height: 20
+});
+
+collides(sprite, sprite2);  //=&gt; false
+
+sprite2.x = 115;
+
+collides(sprite, sprite2);  //=&gt; true</code></pre></section>
+  <section role="tabpanel" aria-labelledby=collides-es-tab data-tabpanel="es"><pre><code class="language-js">import { Sprite, collides } from 'path/to/kontra.mjs';
+
+let sprite = Sprite({
+  x: 100,
+  y: 200,
+  width: 20,
+  height: 40
+});
+
+let sprite2 = Sprite({
+  x: 150,
+  y: 200,
+  width: 20,
+  height: 20
+});
+
+collides(sprite, sprite2);  //=&gt; false
+
+sprite2.x = 115;
+
+collides(sprite, sprite2);  //=&gt; true</code></pre></section>
+  <section role="tabpanel" aria-labelledby=collides-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { Sprite, collides } from &#39;kontra&#39;;
+
+let sprite = Sprite({
+  x: 100,
+  y: 200,
+  width: 20,
+  height: 40
+});
+
+let sprite2 = Sprite({
+  x: 150,
+  y: 200,
+  width: 20,
+  height: 20
+});
+
+collides(sprite, sprite2);  //=&gt; false
+
+sprite2.x = 115;
+
+collides(sprite, sprite2);  //=&gt; true</code></pre></section>
+</div>
+          <h3 id="title-collides"><span class="visually-hidden">collides</span> Parameters</span></h3>
+          <dl aria-labelledby="title-collides">
+            <dt>
+              <code>obj1</code>
+              
+            </dt>
+            <dd><p><em>Object</em>. Object reference.</p>
+          </dd>
+            <dt>
+              <code>obj2</code>
+              
+            </dt>
+            <dd><p><em>Object</em>. Object to check collision against.</p>
+          </dd>
+          </dl>
+          
+          <h3><span class="visually-hidden">collides</span> Return value</h3>
+          <p><p><em>Boolean or null</em>. <code>true</code> if the objects collide, <code>false</code> otherwise. Will return <code>null</code> if the either of the two objects are rotated.</p>
+          </p>
+        </section>
+        <section>
           <h2 id="degToRad">
             <a href="api/helpers#degToRad" class="section-link">
               <span>degToRad(&#8203;deg)</span>
@@ -317,6 +450,30 @@ sprite2.rotation = angleToTarget(sprite2, sprite);</code></pre></section>
           
           <h3><span class="visually-hidden">degToRad</span> Return value</h3>
           <p><p><em>Number</em>. The value in radians.</p>
+          </p>
+        </section>
+        <section>
+          <h2 id="getStoreItem">
+            <a href="api/helpers#getStoreItem" class="section-link">
+              <span>getStoreItem(&#8203;key)</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
+
+          <p>Retrieve an item from localStorage and convert it back to its original type.</p>
+<p>Normally when you save a value to LocalStorage it converts it into a string. So if you were to save a number, it would be saved as <code>&quot;12&quot;</code> instead of <code>12</code>. This function enables the value to be returned as <code>12</code>.</p>
+          <h3 id="title-getStoreItem"><span class="visually-hidden">getStoreItem</span> Parameters</span></h3>
+          <dl aria-labelledby="title-getStoreItem">
+            <dt>
+              <code>key</code>
+              
+            </dt>
+            <dd><p><em>String</em>. Name of the key of the item to retrieve.</p>
+          </dd>
+          </dl>
+          
+          <h3><span class="visually-hidden">getStoreItem</span> Return value</h3>
+          <p><p><em>Any type</em>. The retrieved item.</p>
           </p>
         </section>
         <section>
@@ -541,6 +698,32 @@ console.log(rand());  // =&gt; always 0.33761959057301283</code></pre></section>
           <h3><span class="visually-hidden">seedRand</span> Return value</h3>
           <p><p><em>Function</em>. Seeded random number generator function.</p>
           </p>
+        </section>
+        <section>
+          <h2 id="setStoreItem">
+            <a href="api/helpers#setStoreItem" class="section-link">
+              <span>setStoreItem(&#8203;key, value)</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
+
+          <p>Save an item to localStorage. A value of <code>undefined</code> will remove the item from localStorage.</p>
+          <h3 id="title-setStoreItem"><span class="visually-hidden">setStoreItem</span> Parameters</span></h3>
+          <dl aria-labelledby="title-setStoreItem">
+            <dt>
+              <code>key</code>
+              
+            </dt>
+            <dd><p><em>String</em>. The name of the key.</p>
+          </dd>
+            <dt>
+              <code>value</code>
+              
+            </dt>
+            <dd><p><em>Any type</em>. The value to store.</p>
+          </dd>
+          </dl>
+          
         </section>
 
       </div>

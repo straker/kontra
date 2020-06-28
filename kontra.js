@@ -163,6 +163,37 @@ var kontra = (function () {
   // style used for DOM nodes needed for screen readers
   const srOnlyStyle = 'position:absolute;left:-9999px';
 
+  // get correct x, y, width, and height of object
+  function getRect(obj) {
+    let x = obj.x;
+    let y = obj.y;
+    let width = obj.width;
+    let height = obj.height;
+
+    // @ifdef GAMEOBJECT_SCALE
+    // adjust for object scale
+    if (obj.scale) {
+      width = obj.scaledWidth;
+      height = obj.scaledHeight;
+    }
+    // @endif
+
+    // @ifdef GAMEOBJECT_ANCHOR
+    // take into account object anchor
+    if (obj.anchor) {
+      x -= width * obj.anchor.x;
+      y -= height * obj.anchor.y;
+    }
+    // @endif
+
+    return {
+      x,
+      y,
+      width,
+      height
+    };
+  }
+
   /**
    * An object for drawing sprite sheet animations.
    *
@@ -313,18 +344,32 @@ var kontra = (function () {
      */
     render({x, y, width = this.width, height = this.height, context = getContext()} = {}) {
 
-      // get the row and col of the frame
-      let row = this.frames[this._f] / this.spriteSheet._f | 0;
-      let col = this.frames[this._f] % this.spriteSheet._f | 0;
+      if (this.spriteSheet.atlas) {
+        let name = this.frames[this._f];
+        let frameData = this.spriteSheet.atlas.frames[name];
+        let { x: _x, y: _y, w, h } = frameData.frame;
 
-      context.drawImage(
-        this.spriteSheet.image,
-        col * this.width + (col * 2 + 1) * this.margin,
-        row * this.height + (row * 2 + 1) * this.margin,
-        this.width, this.height,
-        x, y,
-        width, height
-      );
+        context.drawImage(
+          this.spriteSheet.image,
+          _x, _y, w, h,
+          x, y, width, height
+        );
+      }
+      else {
+
+        // get the row and col of the frame
+        let row = this.frames[this._f] / this.spriteSheet._f | 0;
+        let col = this.frames[this._f] % this.spriteSheet._f | 0;
+
+        context.drawImage(
+          this.spriteSheet.image,
+          col * this.width + (col * 2 + 1) * this.margin,
+          row * this.height + (row * 2 + 1) * this.margin,
+          this.width, this.height,
+          x, y,
+          width, height
+        );
+      }
     }
   }
 
@@ -429,7 +474,7 @@ var kontra = (function () {
    */
   function getCanPlay(audio) {
     return {
-      wav: '',
+      wav: audio.canPlayType('audio/wav; codecs="1"'),
       mp3: audio.canPlayType('audio/mpeg;'),
       ogg: audio.canPlayType('audio/ogg; codecs="vorbis"'),
       aac: audio.canPlayType('audio/aac;')
@@ -641,7 +686,7 @@ var kontra = (function () {
    */
   function loadAudio(url) {
     return new Promise((resolve, reject) => {
-      let audioEl, canPlay, resolvedUrl, fullUrl;
+      let _url = url, audioEl, canPlay, resolvedUrl, fullUrl;
 
       audioEl = new Audio();
       canPlay = getCanPlay(audioEl);
@@ -656,7 +701,7 @@ var kontra = (function () {
               , 0);  // 0 is the shortest falsy value
 
       if (!url) {
-        return reject(/* @ifdef DEBUG */ 'cannot play any of the audio formats provided' + /* @endif */ url);
+        return reject(/* @ifdef DEBUG */ 'cannot play any of the audio formats provided ' + /* @endif */ _url);
       }
 
       resolvedUrl = joinPath(audioPath, url);
@@ -755,6 +800,278 @@ var kontra = (function () {
             : loadData(asset);
       })
     );
+  }
+
+  /**
+   * A group of helpful functions that are commonly used for game development. Includes things such as converting between radians and degrees and getting random integers.
+   *
+   * ```js
+   * import { degToRad } from 'kontra';
+   *
+   * let radians = degToRad(180);  // => 3.14
+   * ```
+   * @sectionName Helpers
+   */
+
+  /**
+   * Convert degrees to radians.
+   * @function degToRad
+   *
+   * @param {Number} deg - Degrees to convert.
+   *
+   * @returns {Number} The value in radians.
+   */
+  function degToRad(deg) {
+    return deg * Math.PI / 180;
+  }
+
+  /**
+   * Convert radians to degrees.
+   * @function radToDeg
+   *
+   * @param {Number} rad - Radians to convert.
+   *
+   * @returns {Number} The value in degrees.
+   */
+  function radToDeg(rad) {
+    return rad * 180 / Math.PI;
+  }
+
+  /**
+   * Return the angle (in radians) from one point to another point.
+   *
+   * ```js
+   * import { angleToTarget, Sprite } from 'kontra';
+   *
+   * let sprite = Sprite({
+   *   x: 10,
+   *   y: 10,
+   *   width: 20,
+   *   height: 40,
+   *   color: 'blue'
+   * });
+   *
+   * sprite.rotation = angleToTarget(sprite, {x: 100, y: 30});
+   *
+   * let sprite2 = Sprite({
+   *   x: 100,
+   *   y: 30,
+   *   width: 20,
+   *   height: 40,
+   *   color: 'red',
+   * });
+   *
+   * sprite2.rotation = angleToTarget(sprite2, sprite);
+   * ```
+   * @function angleToTarget
+   *
+   * @param {{x: Number, y: Number}} source - The source point.
+   * @param {{x: Number, y: Number}} target - The target point.
+   *
+   * @returns {Number} Angle (in radians) from the source point to the target point.
+   */
+  function angleToTarget(source, target) {
+
+    // atan2 returns the counter-clockwise angle in respect to the x-axis, but
+    // the canvas rotation system is based on the y-axis (rotation of 0 = up).
+    // so we need to add a quarter rotation to return a counter-clockwise
+    // rotation in respect to the y-axis
+    return Math.atan2(target.y - source.y, target.x - source.x) + Math.PI / 2;
+  }
+
+  /**
+   * Return a random integer between a minimum (inclusive) and maximum (inclusive) integer.
+   * @see https://stackoverflow.com/a/1527820/2124254
+   * @function randInt
+   *
+   * @param {Number} min - Min integer.
+   * @param {Number} max - Max integer.
+   *
+   * @returns {Number} Random integer between min and max values.
+   */
+  function randInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
+  /**
+   * Create a seeded random number generator.
+   *
+   * ```js
+   * import { seedRand } from 'kontra';
+   *
+   * let rand = seedRand('kontra');
+   * console.log(rand());  // => always 0.33761959057301283
+   * ```
+   * @see https://stackoverflow.com/a/47593316/2124254
+   * @see https://github.com/bryc/code/blob/master/jshash/PRNGs.md
+   *
+   * @function seedRand
+   *
+   * @param {String} str - String to seed the random number generator.
+   *
+   * @returns {() => Number} Seeded random number generator function.
+   */
+   function seedRand(str) {
+    // based on the above references, this was the smallest code yet decent
+    // quality seed random function
+
+    // first create a suitable hash of the seed string using xfnv1a
+    // @see https://github.com/bryc/code/blob/master/jshash/PRNGs.md#addendum-a-seed-generating-functions
+    for(var i = 0, h = 2166136261 >>> 0; i < str.length; i++) {
+      h = Math.imul(h ^ str.charCodeAt(i), 16777619);
+    }
+    h += h << 13; h ^= h >>> 7;
+    h += h << 3;  h ^= h >>> 17;
+    let seed = (h += h << 5) >>> 0;
+
+    // then return the seed function and discard the first result
+    // @see https://github.com/bryc/code/blob/master/jshash/PRNGs.md#lcg-lehmer-rng
+    let rand = () => (2 ** 31 - 1 & (seed = Math.imul(48271, seed))) / 2 ** 31;
+    rand();
+    return rand;
+  }
+
+  /**
+   * Linearly interpolate between two values. The function calculates the number between two values based on a percent. Great for smooth transitions.
+   *
+   * ```js
+   * import { lerp } from 'kontra';
+   *
+   * console.log( lerp(10, 20, 0.5) );  // => 15
+   * console.log( lerp(10, 20, 2) );  // => 30
+   * ```
+   * @function lerp
+   *
+   * @param {Number} start - Start value.
+   * @param {Number} end - End value.
+   * @param {Number} percent - Percent to interpolate.
+   *
+   * @returns {Number} Interpolated number between the start and end values
+   */
+  function lerp(start, end, percent) {
+    return start * (1 - percent) + end * percent;
+  }
+
+  /**
+   * Return the linear interpolation percent between two values. The function calculates the percent between two values of a given value.
+   *
+   * ```js
+   * import { inverseLerp } from 'kontra';
+   *
+   * console.log( inverseLerp(10, 20, 15) );  // => 0.5
+   * console.log( inverseLerp(10, 20, 30) );  // => 2
+   * ```
+   * @function inverseLerp
+   *
+   * @param {Number} start - Start value.
+   * @param {Number} end - End value.
+   * @param {Number} value - Value between start and end.
+   *
+   * @returns {Number} Percent difference between the start and end values.
+   */
+  function inverseLerp(start, end, value) {
+    return (value - start) / (end - start);
+  }
+
+  /**
+   * Clamp a number between two values, preventing it from going below or above the minimum and maximum values.
+   * @function clamp
+   *
+   * @param {Number} min - Min value.
+   * @param {Number} max - Max value.
+   * @param {Number} value - Value to clamp.
+   *
+   * @returns {Number} Value clamped between min and max.
+   */
+  function clamp(min, max, value) {
+    return Math.min( Math.max(min, value), max );
+  }
+
+  /**
+   * Save an item to localStorage. A value of `undefined` will remove the item from localStorage.
+   * @function setStoreItem
+   *
+   * @param {String} key - The name of the key.
+   * @param {*} value - The value to store.
+   */
+  function setStoreItem(key, value) {
+    if (value === undefined) {
+      localStorage.removeItem(key);
+    }
+    else {
+      localStorage.setItem(key, JSON.stringify(value));
+    }
+  }
+
+  /**
+   * Retrieve an item from localStorage and convert it back to its original type.
+   *
+   * Normally when you save a value to LocalStorage it converts it into a string. So if you were to save a number, it would be saved as `"12"` instead of `12`. This function enables the value to be returned as `12`.
+   * @function getStoreItem
+   *
+   * @param {String} key - Name of the key of the item to retrieve.
+   *
+   * @returns {*} The retrieved item.
+   */
+  function getStoreItem(key) {
+    let value = localStorage.getItem(key);
+
+    try {
+      value = JSON.parse(value);
+    }
+    catch(e) {}
+
+    return value;
+  }
+
+  /**
+   * Check if a two objects collide. Uses a simple [Axis-Aligned Bounding Box (AABB) collision check](https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection#Axis-Aligned_Bounding_Box). Takes into account the sprites [anchor](api/gameObject#anchor) and [scale](api/gameObject#scale).
+   *
+   * **NOTE:** Does not take into account object rotation. If you need collision detection between rotated objects you will need to implement your own `collides()` function. I suggest looking at the Separate Axis Theorem.
+   *
+   *
+   * ```js
+   * import { Sprite, collides } from 'kontra';
+   *
+   * let sprite = Sprite({
+   *   x: 100,
+   *   y: 200,
+   *   width: 20,
+   *   height: 40
+   * });
+   *
+   * let sprite2 = Sprite({
+   *   x: 150,
+   *   y: 200,
+   *   width: 20,
+   *   height: 20
+   * });
+   *
+   * collides(sprite, sprite2);  //=> false
+   *
+   * sprite2.x = 115;
+   *
+   * collides(sprite, sprite2);  //=> true
+   * ```
+   * @function collides
+   *
+   * @param {Object} obj1 - Object reference.
+   * @param {Object} obj2 - Object to check collision against.
+   *
+   * @returns {Boolean|null} `true` if the objects collide, `false` otherwise. Will return `null` if the either of the two objects are rotated.
+   */
+  function collides(obj1, obj2) {
+    if (obj1.rotation || obj2.rotation) return null;
+
+    // @ifdef GAMEOBJECT_SCALE||GAMEOBJECT_ANCHOR
+    // destructure results to obj1 and obj2
+    [obj1, obj2] = [obj1, obj2].map(obj => getRect(obj));
+    // @endif
+
+    return obj1.x < obj2.x + obj2.width &&
+           obj1.x + obj1.width > obj2.x &&
+           obj1.y < obj2.y + obj2.height &&
+           obj1.y + obj1.height > obj2.y;
   }
 
   /**
@@ -976,11 +1293,11 @@ var kontra = (function () {
     }
 
     set x(value) {
-      this._x = (this._c ? Math.min( Math.max(this._a, value), this._d ) : value);
+      this._x = (this._c ? clamp(this._a, this._d, value) : value);
     }
 
     set y(value) {
-      this._y = (this._c ? Math.min( Math.max(this._b, value), this._e ) : value);
+      this._y = (this._c ? clamp(this._b, this._e, value) : value);
     }
     // @endif
   }
@@ -1007,6 +1324,8 @@ var kontra = (function () {
    * @param {Number} [properties.ttl=Infinity] - How many frames the game object should be alive. Used by [Pool](api/pool).
    * @param {Number} [properties.rotation=0] - game objects rotation around the origin in radians.
    * @param {{x: number, y: number}} [properties.anchor={x:0,y:0}] - The x and y origin of the game object. {x:0, y:0} is the top left corner of the game object, {x:1, y:1} is the bottom right corner.
+   * @param {GameObject[]} [properties.children] - Children to add to the game object. Children added this way have their x/y position treated as relative to the parents x/y position.
+   * @param {{x: number, y: number}} [properties.scale={x:1,y:1}] - The x and y scale of the game object. Calls [setScale](api/gameObject#setScale) with the passed in values.
    *
    * @param {CanvasRenderingContext2D} [properties.context] - The context the game object should draw to. Defaults to [core.getContext()](api/core#getContext).
    *
@@ -1020,7 +1339,7 @@ var kontra = (function () {
      */
 
     constructor(properties) {
-      this.init(properties);
+      return this.init(properties);
     }
 
     /**
@@ -1037,7 +1356,7 @@ var kontra = (function () {
       // --------------------------------------------------
 
       /**
-       * The game objects position vector. The game objects position is its position in the world, as opposed to the position in the [viewport](api/gameObject#viewX) or [local position](api/gameObject#localPosition). Typically the position in the world, viewport, and local position are the same value. If the game object has been [added to a tileEngine](/api/tileEngine#addObject), the position vector represents where in the tile world the game object is while the viewport represents where to draw the game object in relation to the top-left corner of the canvas.
+       * The game objects position vector. The game objects position is its position in the world, as opposed to the position in the [viewport](api/gameObject#viewX). Typically the position in the world and viewport are the same value. If the game object has been [added to a tileEngine](/api/tileEngine#addObject), the position vector represents where in the tile world the game object is while the viewport represents where to draw the game object in relation to the top-left corner of the canvas.
        * @memberof GameObject
        * @property {Vector} position
        */
@@ -1069,25 +1388,6 @@ var kontra = (function () {
 
       // @ifdef GAMEOBJECT_GROUP
       /**
-       * The game objects local position vector, which is its position relative to a parent object. If the game object does not have a parent object, the local position will be the same as the [position vector](api/gameObject#position).
-       * @memberof GameObject
-       * @property {Vector} localPosition
-       */
-      this.localPosition = Vector$1();
-
-      // @ifdef GAMEOBJECT_ROTATION
-      /**
-       * The game objects local rotation, which is its rotation relative to a parent object. If the game object does not have a parent object, the local rotation will be the same as the [rotation](api/gameObject#rotation).
-       * @memberof GameObject
-       * @property {Number} localRotation
-       */
-      this.localRotation = 0;
-
-      // rot = rotation
-      this._rot = 0;
-      // @endif
-
-      /**
        * The game objects parent object.
        * @memberof GameObject
        * @property {GameObject|null} parent
@@ -1099,6 +1399,11 @@ var kontra = (function () {
        * @property {GameObject[]} children
        */
       this.children = [];
+
+      // @ifdef GAMEOBJECT_ROTATION
+      // rot = rotation
+      this._rot = 0;
+      // @endif
       // @endif
 
       // @ifdef GAMEOBJECT_VELOCITY
@@ -1204,9 +1509,26 @@ var kontra = (function () {
       this.sx = this.sy = 0;
       // @endif
 
+      // @ifdef GAMEOBJECT_SCALE
+      /**
+       * The x and y scale of the object. Typically you would not set these properties yourself but use [setScale](/api/gameObject#setScale) instead. Setting these properties directly will not result in the scale property of children being updated.
+       * @memberof GameObject
+       * @property {{x: number, y: number}} scale
+       */
+      this.scale = {x: 1, y: 1};
+      // @endif
+
       // add all properties to the game object, overriding any defaults
-      let { render, ...props } = properties;
+      let { render, children = [], scale = this.scale, ...props } = properties;
       Object.assign(this, props);
+
+      // @ifdef GAMEOBJECT_GROUP
+      children.map(child => this.addChild(child));
+      // @endif
+
+      // @ifdef GAMEOBJECT_SCALE
+      this.setScale(scale.x, scale.y);
+      // @endif
 
       // rf = render function
       this._rf = render || this.draw;
@@ -1234,29 +1556,25 @@ var kontra = (function () {
     }
 
     set x(value) {
-      this.position.x = value;
-
       // @ifdef GAMEOBJECT_GROUP
-      this.localPosition.x = this.parent ? value - this.parent.x : value;
+      let diff = value - this.position.x;
       this.children.map(child => {
-        if (child.localPosition) {
-          child.x = value + child.localPosition.x;
-        }
+        child.x += diff;
       });
       // @endif
+
+      this.position.x = value;
     }
 
     set y(value) {
-      this.position.y = value;
-
       // @ifdef GAMEOBJECT_GROUP
-      this.localPosition.y = this.parent ? value - this.parent.y : value;
+      let diff = value - this.position.y;
       this.children.map(child => {
-        if (child.localPosition) {
-          child.y = value + child.localPosition.y;
-        }
+        child.y += diff;
       });
       // @endif
+
+      this.position.y = value;
     }
 
     // @ifdef GAMEOBJECT_VELOCITY
@@ -1360,39 +1678,89 @@ var kontra = (function () {
     // @endif
 
     // @ifdef GAMEOBJECT_GROUP
+    // @ifdef GAMEOBJECT_ROTATION
     get rotation() {
       return this._rot;
     }
 
-    // override rotation to take into account parent rotations and to set
-    // localRotation
     set rotation(value) {
-      this._rot = value;
-
-      this.localRotation = this.parent ? value - this.parent.rotation : value;
+      let diff = value - this._rot;
       this.children.map(child => {
-        if (child.localRotation) {
-          child.rotation = value + child.localRotation;
-        }
+        child.rotation += diff;
       });
+
+      this._rot = value;
     }
+    // @endif
 
     /**
      * Add an object as a child to this object. The child objects position and rotation will be calculated based on this objects position and rotation.
+     *
+     * By default the childs x/y position is interpreted to be relative to the x/y position of the parent. This means that if the childs position is {x: 0, y: 0}, the position will be updated to equal to the parents x/y position when added.
+     *
+     * If instead the position should not be updated based on the parents x/y position, set the `absolute` option to `true`.
      * @memberof GameObject
      * @function addChild
      *
      * @param {GameObject} child - Object to add as a child.
+     * @param {Object} options - Options for adding the child.
+     * @param {Boolean} [options.absolute=false] - If set the true, the x/y position of the child is treated as an absolute position in the world rather than being relative to the x/y position of the parent.
+     *
+     * @example
+     * // exclude-code:start
+     * let { GameObject } = kontra;
+     * // exclude-code:end
+     * // exclude-script:start
+     * import { GameObject } from 'kontra';
+     * // exclude-script:end
+     *
+     * function createObject(x, y, color, size = 1) {
+     *   return GameObject({
+     *     x,
+     *     y,
+     *     width: 50 / size,
+     *     height: 50 / size,
+     *     anchor: {x: 0.5, y: 0.5},
+     *     color,
+     *     // exclude-code:start
+     *     context: context,
+     *     // exclude-code:end
+     *     render: function() {
+     *       this.context.fillStyle = this.color;
+     *       this.context.fillRect(0, 0, this.height, this.width);
+     *     }
+     *   });
+     * }
+     *
+     * let parent = createObject(300, 100, 'red');
+     * let relativeChild = createObject(25, 25, '#62a2f9', 2);
+     * let absoluteChild = createObject(25, 25, 'yellow', 2);
+     *
+     * parent.addChild(relativeChild);
+     * parent.addChild(absoluteChild, {absolute: true});
+     *
+     * parent.render();
      */
-    addChild(child) {
+    addChild(child, { absolute = false } = {}) {
       this.children.push(child);
       child.parent = this;
 
       // set the childs x/y/rotation to trigger localPosition/localRotation
       // calculations
-      child.x = child.x;
-      child.y = child.y;
-      child.rotation = child.rotation;
+      child.x = absolute ? child.x : this.x + child.x;
+      child.y = absolute ? child.y : this.y + child.y;
+
+      // @ifdef GAMEOBJECT_ROTATION
+      if (child.rotation) {
+        child.rotation = absolute ? child.rotation : this.rotation + child.rotation;
+      }
+      // @endif
+
+      // @ifdef GAMEOBJECT_SCALE
+      if (child.setScale) {
+        child.setScale(this.scale.x, this.scale.y);
+      }
+      // @endif
     }
 
     /**
@@ -1407,13 +1775,38 @@ var kontra = (function () {
       if (index !== -1) {
         this.children.splice(index, 1);
         child.parent = null;
-
-        // set the childs x/y/rotation to trigger localPosition/localRotation
-        // calculations
-        child.x = child.x;
-        child.y = child.y;
-        child.rotation = child.rotation;
       }
+    }
+    // @endif
+
+    // @ifdef GAMEOBJECT_SCALE
+    get scaledWidth() {
+      return this.width * this.scale.x;
+    }
+
+    get scaledHeight() {
+      return this.height * this.scale.y;
+    }
+
+    /**
+     * Set the x and y scale of the object. If only one value is passed, both are set to the same value.
+     * @memberof GameObject
+     * @function setScale
+     *
+     * @param {Number} x - X scale value.
+     * @param {Number} [y=x] - Y scale value.
+     */
+    setScale(x, y = x) {
+      // @ifdef GAMEOBJECT_GROUP
+      let diffX = x - this.scale.x;
+      let diffY = y - this.scale.y;
+      this.children.map(child => {
+        child.setScale(child.scale.x + diffX, child.scale.y + diffY);
+      });
+      // @endif
+
+      this.scale.x = x;
+      this.scale.y = y;
     }
     // @endif
 
@@ -1490,56 +1883,66 @@ var kontra = (function () {
      * @function render
      */
     render() {
-      let x = 0;
-      let y = 0;
+      this.context.save();
+
       let viewX = this.x;
       let viewY = this.y;
-
-      // @ifdef GAMEOBJECT_ANCHOR
-      x = -this.width * this.anchor.x;
-      y = -this.height * this.anchor.y;
-      // @endif
 
       // @ifdef GAMEOBJECT_CAMERA
       viewX = this.viewX;
       viewY = this.viewY;
       // @endif
 
-      // @ifdef GAMEOBJECT_GROUP
-      if (this.parent) {
-        viewX = this.localPosition.x;
-        viewY = this.localPosition.y;
+      // it's faster to only translate if one of the values is non-zero
+      // rather than always translating
+      // @see https://jsperf.com/translate-or-if-statement/
+      if (viewX || viewY) {
+        this.context.translate(viewX, viewY);
       }
-      // @endif
-
-      this.context.save();
-      this.context.translate(viewX, viewY);
 
       // @ifdef GAMEOBJECT_ROTATION
-      // rotate around the anchor
+      // rotate around the anchor. it's faster to only rotate when set
+      // rather than always rotating
+      // @see https://jsperf.com/rotate-or-if-statement/
       if (this.rotation) {
-        let rotation = this.rotation;
-
-        // @ifdef GAMEOBJECT_GROUP
-        rotation = this.localRotation;
-        // @endif
-
-        this.context.rotate(rotation);
+        this.context.rotate(this.rotation);
       }
       // @endif
 
       // @ifdef GAMEOBJECT_ANCHOR
-      this.context.translate(x, y);
+      let width = this.width;
+      let height = this.height;
+
+      // @ifdef GAMEOBJECT_SCALE
+      width = this.scaledWidth;
+      height = this.scaledHeight;
+      // @endif
+
+      let x = -width * this.anchor.x;
+      let y = -height * this.anchor.y;
+      if (x || y) {
+        this.context.translate(x, y);
+      }
+      // @endif
+
+      // @ifdef GAMEOBJECT_SCALE
+      // it's faster to only scale if one of the values is non-zero
+      // rather than always scaling
+      // @see https://jsperf.com/scale-or-if-statement/
+      let scaleX = this.scale.x;
+      let scaleY = this.scale.y;
+      if (scaleX || scaleY) {
+        this.context.scale(scaleX, scaleY);
+      }
       // @endif
 
       this._rf();
+      this.context.restore();
 
       // @ifdef GAMEOBJECT_GROUP
       // perform all transforms on the parent before rendering the children
       this.children.map(child => child.render && child.render());
       // @endif
-
-      this.context.restore();
     }
 
     /**
@@ -1576,6 +1979,279 @@ var kontra = (function () {
   }
 
   var GameObject$1 = Factory(GameObject);
+
+  /**
+   * A versatile way to update and draw your sprites. It can handle simple rectangles, images, and sprite sheet animations. It can be used for your main player object as well as tiny particles in a particle engine.
+   * @class Sprite
+   * @extends GameObject
+   *
+   * @param {Object} [properties] - Properties of the sprite.
+   * @param {String} [properties.color] - Fill color for the game object if no image or animation is provided.
+   * @param {HTMLImageElement|HTMLCanvasElement} [properties.image] - Use an image to draw the sprite.
+   * @param {Object} [properties.animations] - An object of [Animations](api/animation) from a [Spritesheet](api/spriteSheet) to animate the sprite.
+   */
+  class Sprite extends GameObject$1.class {
+    /**
+     * @docs docs/api_docs/sprite.js
+     */
+
+    init(properties = {}) {
+
+      /**
+       * The color of the game object if it was passed as an argument.
+       * @memberof Sprite
+       * @property {String} color
+       */
+
+      /**
+       * The width of the sprite. If the sprite is a [rectangle sprite](api/sprite#rectangle-sprite), it uses the passed in value. For an [image sprite](api/sprite#image-sprite) it is the width of the image. And for an [animation sprite](api/sprite#animation-sprite) it is the width of a single frame of the animation.
+       *
+       * Setting the value to a negative number will result in the sprite being flipped across the vertical axis while the width will remain a positive value.
+       * @memberof Sprite
+       * @property {Number} width
+       */
+
+      /**
+       * The height of the sprite. If the sprite is a [rectangle sprite](api/sprite#rectangle-sprite), it uses the passed in value. For an [image sprite](api/sprite#image-sprite) it is the height of the image. And for an [animation sprite](api/sprite#animation-sprite) it is the height of a single frame of the animation.
+       *
+       * Setting the value to a negative number will result in the sprite being flipped across the horizontal axis while the height will remain a positive value.
+       * @memberof Sprite
+       * @property {Number} height
+       */
+
+      // @ifdef SPRITE_IMAGE||SPRITE_ANIMATION
+      // fx = flipX, fy = flipY
+      // this._fx = this._fy = 1;
+      // @endif
+
+      super.init(properties);
+
+      // @ifdef SPRITE_IMAGE
+      /**
+       * The image the sprite will use when drawn if passed as an argument.
+       * @memberof Sprite
+       * @property {HTMLImageElement|HTMLCanvasElement} image
+       */
+
+      let { image } = properties;
+      if (image) {
+        this.width = image.width;
+        this.height = image.height;
+      }
+      // @endif
+    }
+
+    // @ifdef SPRITE_ANIMATION
+    /**
+     * An object of [Animations](api/animation) from a [SpriteSheet](api/spriteSheet) to animate the sprite. Each animation is named so that it can can be used by name for the sprites [playAnimation()](api/sprite#playAnimation) function.
+     *
+     * ```js
+     * import { Sprite, SpriteSheet } from 'kontra';
+     *
+     * let spriteSheet = SpriteSheet({
+     *   // ...
+     *   animations: {
+     *     idle: {
+     *       frames: 1,
+     *       loop: false,
+     *     },
+     *     walk: {
+     *       frames: [1,2,3]
+     *     }
+     *   }
+     * });
+     *
+     * let sprite = Sprite({
+     *   x: 100,
+     *   y: 200,
+     *   animations: spriteSheet.animations
+     * });
+     *
+     * sprite.playAnimation('idle');
+     * ```
+     * @memberof Sprite
+     * @property {Object} animations
+     */
+    get animations() {
+      return this._a;
+    }
+
+    set animations(value) {
+      let prop, firstAnimation;
+      // a = animations
+      this._a = {};
+
+      // clone each animation so no sprite shares an animation
+      for (prop in value) {
+        this._a[prop] = value[prop].clone();
+
+        // default the current animation to the first one in the list
+        firstAnimation = firstAnimation || this._a[prop];
+      }
+
+      /**
+       * The currently playing Animation object if `animations` was passed as an argument.
+       * @memberof Sprite
+       * @property {Animation} currentAnimation
+       */
+      this.currentAnimation = firstAnimation;
+      this.width = this.width || firstAnimation.width;
+      this.height = this.height || firstAnimation.height;
+    }
+
+    /**
+     * Set the currently playing animation of an animation sprite.
+     *
+     * ```js
+     * import { Sprite, SpriteSheet } from 'kontra';
+     *
+     * let spriteSheet = SpriteSheet({
+     *   // ...
+     *   animations: {
+     *     idle: {
+     *       frames: 1
+     *     },
+     *     walk: {
+     *       frames: [1,2,3]
+     *     }
+     *   }
+     * });
+     *
+     * let sprite = Sprite({
+     *   x: 100,
+     *   y: 200,
+     *   animations: spriteSheet.animations
+     * });
+     *
+     * sprite.playAnimation('idle');
+     * ```
+     * @memberof Sprite
+     * @function playAnimation
+     *
+     * @param {String} name - Name of the animation to play.
+     */
+    playAnimation(name) {
+      this.currentAnimation = this.animations[name];
+
+      if (!this.currentAnimation.loop) {
+        this.currentAnimation.reset();
+      }
+    }
+
+    advance(dt) {
+      super.advance(dt);
+
+      if (this.currentAnimation) {
+        this.currentAnimation.update(dt);
+      }
+    }
+    // @endif
+
+    // @ifdef SPRITE_IMAGE||SPRITE_ANIMATION
+    // get width() {
+    //   return super.width ? super.width : this._w;
+    // }
+
+    // get height() {
+    //   return super.height ? super.height : this._h;
+    // }
+
+    // set width(value) {
+    //   let sign = value < 0 ? -1 : 1;
+
+    //   this._fx = sign;
+    //   this._w = value * sign;
+    // }
+
+    // set height(value) {
+    //   let sign = value < 0 ? -1 : 1;
+
+    //   this._fy = sign;
+    //   this._h = value * sign;
+    // }
+    // @endif
+
+    draw() {
+      // @ifdef SPRITE_IMAGE||SPRITE_ANIMATION
+      // // flip sprite around the center so the x/y position does not change
+      // if (this._fx == -1 || this._fy == -1) {
+      //   let translateX = this.width / 2;
+      //   let translateY = this.height / 2;
+
+      //   this.context.translate(translateX, translateY);
+      //   this.context.scale(this._fx, this._fy);
+      //   this.context.translate(-translateX, -translateY);
+      // }
+      // @endif
+
+      // @ifdef SPRITE_IMAGE
+      if (this.image) {
+        this.context.drawImage(
+          this.image,
+          0, 0, this.image.width, this.image.height
+        );
+      }
+      // @endif
+
+      // @ifdef SPRITE_ANIMATION
+      if (this.currentAnimation) {
+        this.currentAnimation.render({
+          x: 0,
+          y: 0,
+          width: this.width,
+          height: this.height,
+          context: this.context
+        });
+      }
+      // @endif
+
+      if (this.color) {
+        this.context.fillStyle = this.color;
+        this.context.fillRect(0, 0, this.width, this.height);
+      }
+    }
+  }
+
+  var Sprite$1 = Factory(Sprite);
+
+  let fontSizeRegex = /(\d+)(\w+)/;
+
+  function parseFont(font) {
+    let match = font.match(fontSizeRegex);
+
+    // coerce string to number
+    // @see https://github.com/jed/140bytes/wiki/Byte-saving-techniques#coercion-to-test-for-types
+    let size = +match[1];
+    let unit = match[2];
+    let computed = size;
+
+    // compute font size
+    // switch(unit) {
+    //   // px defaults to the size
+
+    //   // em uses the size of the canvas when declared (but won't keep in sync with
+    //   // changes to the canvas font-size)
+    //   case 'em': {
+    //     let fontSize = window.getComputedStyle(getCanvas()).fontSize;
+    //     let parsedSize = parseFont(fontSize).size;
+    //     computed = size * parsedSize;
+    //   }
+
+    //   // rem uses the size of the HTML element when declared (but won't keep in
+    //   // sync with changes to the HTML element font-size)
+    //   case 'rem': {
+    //     let fontSize = window.getComputedStyle(document.documentElement).fontSize;
+    //     let parsedSize = parseFont(fontSize).size;
+    //     computed = size * parsedSize;
+    //   }
+    // }
+
+    return {
+      size,
+      unit,
+      computed
+    };
+  }
 
   class Text extends GameObject$1.class {
     /**
@@ -1642,6 +2318,13 @@ var kontra = (function () {
        * @property {String} color
        */
 
+      // on('font', value => {
+      //   this.font = this.font.replace(fontSizeRegex, (match, size, unit) => {
+      //     return value + unit;
+      //   });
+      //   this._p();
+      // });
+
       super.init(properties);
 
       // p = prerender
@@ -1674,7 +2357,7 @@ var kontra = (function () {
       this._f = value;
 
       // fs = font size
-      this._fs = parseInt(value);
+      this._fs = parseFont(value).computed;
       this._d = true;
     }
 
@@ -1691,6 +2374,11 @@ var kontra = (function () {
       // fw = fixed width
       this._fw = value;
       // @endif
+    }
+
+    setScale(x, y) {
+      super.setScale(x, y);
+      this._d = true;
     }
 
     render() {
@@ -1883,18 +2571,11 @@ var kontra = (function () {
    *
    * @param {Object} object - Object to check collision against.
    */
-  function circleRectCollision(object, _pntr) {
-    const pntr = _pntr || pointer;
+  function circleRectCollision(object, pntr = pointer) {
+    let { x, y, width, height } = getRect(object);
 
-    let x = object.x;
-    let y = object.y;
-    if (object.anchor) {
-      x -= object.width * object.anchor.x;
-      y -= object.height * object.anchor.y;
-    }
-
-    let dx = pntr.x - Math.max(x, Math.min(pntr.x, x + object.width));
-    let dy = pntr.y - Math.max(y, Math.min(pntr.y, y + object.height));
+    let dx = pntr.x - Math.max(x, Math.min(pntr.x, x + width));
+    let dy = pntr.y - Math.max(y, Math.min(pntr.y, y + height));
     return (dx * dx + dy * dy) < (pntr.radius * pntr.radius);
   }
 
@@ -1903,8 +2584,7 @@ var kontra = (function () {
    *
    * @returns {Object} First object to collide with the pointer.
    */
-  function getCurrentObject(_pntr) {
-    const pntr = _pntr || pointer;
+  function getCurrentObject(pntr = pointer) {
 
     // if pointer events are required on the very first frame or without a game
     // loop, use the current frame order array
@@ -2253,7 +2933,7 @@ var kontra = (function () {
     return !!pressedButtons[button]
   }
 
-  class Button extends Text$1.class {
+  class Button extends Sprite$1.class {
 
     /**
      * An accessible button. Supports screen readers and keyboard navigation using the Tab key. Don't forget to call [initPointer](/api/pointer#initPointer) to have pointer events enabled for the button.
@@ -2299,8 +2979,12 @@ var kontra = (function () {
      * @param {Function} [properties.onUp] - Function called when the button is clicked either by the pointer or keyboard.
      */
     init(properties) {
-      super.init(properties);
+      let { text, ...props } = properties;
+      super.init(props);
       track(this);
+
+      this.textNode = Text$1(text);
+      this.addChild(this.textNode);
 
       // create an accessible DOM node for screen readers
       // dn = dom node
@@ -2316,6 +3000,14 @@ var kontra = (function () {
       document.body.appendChild(button);
     }
 
+    get text() {
+      return this.textNode.text;
+    }
+
+    set text(value) {
+      this.textNode.text = value;
+    }
+
     /**
      * Clean up the button.
      * @memberof Button
@@ -2327,8 +3019,8 @@ var kontra = (function () {
 
     render() {
       // update DOM node text if it has changed
-      if (this._d && this._t !== this._dn.textContent) {
-        this._dn.textContent = this._t;
+      if (this.textNode._d && this.text !== this._dn.textContent) {
+        this._dn.textContent = this.text;
       }
 
       super.render();
@@ -2393,10 +3085,18 @@ var kontra = (function () {
     }
 
     onOver() {
+
+      /**
+       * If the button is hovered.
+       * @memberof Button
+       * @property {Boolean} hovered
+       */
+      this.hovered = true;
       this.focus();
     }
 
     onOut() {
+      this.hovered = false;
       this.blur();
     }
 
@@ -2432,73 +3132,6 @@ var kontra = (function () {
   }
 
   var Button$1 = Factory(Button);
-
-  /**
-   * A collection of collision detection functions.
-   *
-   * @sectionName Collision
-   */
-
-  /**
-   * Check if a two objects collide. Uses a simple [Axis-Aligned Bounding Box (AABB) collision check](https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection#Axis-Aligned_Bounding_Box). Takes into account the sprites [anchor](api/sprite#anchor).
-   *
-   * **NOTE:** Does not take into account object rotation. If you need collision detection between rotated objects you will need to implement your own `collides()` function. I suggest looking at the Separate Axis Theorem.
-   *
-   *
-   * ```js
-   * import { Sprite, collides } from 'kontra';
-   *
-   * let sprite = Sprite({
-   *   x: 100,
-   *   y: 200,
-   *   width: 20,
-   *   height: 40
-   * });
-   *
-   * let sprite2 = Sprite({
-   *   x: 150,
-   *   y: 200,
-   *   width: 20,
-   *   height: 20
-   * });
-   *
-   * collides(sprite, sprite2);  //=> false
-   *
-   * sprite2.x = 115;
-   *
-   * collides(sprite, sprite2);  //=> true
-   * ```
-   * @function collides
-   *
-   * @param {Object} object1 - Object reference.
-   * @param {Object} object2 - Object to check collision against.
-   *
-   * @returns {Boolean|null} `true` if the objects collide, `false` otherwise. Will return `null` if the either of the two objects are rotated.
-   */
-
-  function collides(object1, object2) {
-    if (object1.rotation || object2.rotation) return null;
-
-    // take into account object1 anchors
-    let x = object1.x;
-    let y = object1.y;
-    if (object1.anchor) {
-      x -= object1.width * object1.anchor.x;
-      y -= object1.height * object1.anchor.y;
-    }
-
-    let objX = object2.x;
-    let objY = object2.y;
-    if (object2.anchor) {
-      objX -= object2.width * object2.anchor.x;
-      objY -= object2.height * object2.anchor.y;
-    }
-
-    return x < objX + object2.width &&
-           x + object1.width > objX &&
-           y < objY + object2.height &&
-           y + object1.height > objY;
-  }
 
   /**
    * Clear the canvas.
@@ -2668,190 +3301,302 @@ var kontra = (function () {
     return loop;
   }
 
-  /**
-   * A group of helpful functions that are commonly used for game development. Includes things such as converting between radians and degrees and getting random integers.
-   *
-   * ```js
-   * import { degToRad } from 'kontra';
-   *
-   * let radians = degToRad(180);  // => 3.14
-   * ```
-   * @sectionName Helpers
-   */
-
-  /**
-   * Convert degrees to radians.
-   * @function degToRad
-   *
-   * @param {Number} deg - Degrees to convert.
-   *
-   * @returns {Number} The value in radians.
-   */
-  function degToRad(deg) {
-    return deg * Math.PI / 180;
-  }
-
-  /**
-   * Convert radians to degrees.
-   * @function radToDeg
-   *
-   * @param {Number} rad - Radians to convert.
-   *
-   * @returns {Number} The value in degrees.
-   */
-  function radToDeg(rad) {
-    return rad * 180 / Math.PI;
-  }
-
-  /**
-   * Return the angle (in radians) from one point to another point.
-   *
-   * ```js
-   * import { angleToTarget, Sprite } from 'kontra';
-   *
-   * let sprite = Sprite({
-   *   x: 10,
-   *   y: 10,
-   *   width: 20,
-   *   height: 40,
-   *   color: 'blue'
-   * });
-   *
-   * sprite.rotation = angleToTarget(sprite, {x: 100, y: 30});
-   *
-   * let sprite2 = Sprite({
-   *   x: 100,
-   *   y: 30,
-   *   width: 20,
-   *   height: 40,
-   *   color: 'red',
-   * });
-   *
-   * sprite2.rotation = angleToTarget(sprite2, sprite);
-   * ```
-   * @function angleToTarget
-   *
-   * @param {{x: Number, y: Number}} source - The source point.
-   * @param {{x: Number, y: Number}} target - The target point.
-   *
-   * @returns {Number} Angle (in radians) from the source point to the target point.
-   */
-  function angleToTarget(source, target) {
-
-    // atan2 returns the counter-clockwise angle in respect to the x-axis, but
-    // the canvas rotation system is based on the y-axis (rotation of 0 = up).
-    // so we need to add a quarter rotation to return a counter-clockwise
-    // rotation in respect to the y-axis
-    return Math.atan2(target.y - source.y, target.x - source.x) + Math.PI / 2;
-  }
-
-  /**
-   * Return a random integer between a minimum (inclusive) and maximum (inclusive) integer.
-   * @see https://stackoverflow.com/a/1527820/2124254
-   * @function randInt
-   *
-   * @param {Number} min - Min integer.
-   * @param {Number} max - Max integer.
-   *
-   * @returns {Number} Random integer between min and max values.
-   */
-  function randInt(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  }
-
-  /**
-   * Create a seeded random number generator.
-   *
-   * ```js
-   * import { seedRand } from 'kontra';
-   *
-   * let rand = seedRand('kontra');
-   * console.log(rand());  // => always 0.33761959057301283
-   * ```
-   * @see https://stackoverflow.com/a/47593316/2124254
-   * @see https://github.com/bryc/code/blob/master/jshash/PRNGs.md
-   *
-   * @function seedRand
-   *
-   * @param {String} str - String to seed the random number generator.
-   *
-   * @returns {() => Number} Seeded random number generator function.
-   */
-   function seedRand(str) {
-    // based on the above references, this was the smallest code yet decent
-    // quality seed random function
-
-    // first create a suitable hash of the seed string using xfnv1a
-    // @see https://github.com/bryc/code/blob/master/jshash/PRNGs.md#addendum-a-seed-generating-functions
-    for(var i = 0, h = 2166136261 >>> 0; i < str.length; i++) {
-      h = Math.imul(h ^ str.charCodeAt(i), 16777619);
+  let alignment = {
+    start(rtl) {
+      return rtl ? 1 : 0;
+    },
+    center() {
+      return 0.5;
+    },
+    end(rtl) {
+      return rtl ? 0 : 1;
     }
-    h += h << 13; h ^= h >>> 7;
-    h += h << 3;  h ^= h >>> 17;
-    let seed = (h += h << 5) >>> 0;
+  };
 
-    // then return the seed function and discard the first result
-    // @see https://github.com/bryc/code/blob/master/jshash/PRNGs.md#lcg-lehmer-rng
-    let rand = () => (2 ** 31 - 1 & (seed = Math.imul(48271, seed))) / 2 ** 31;
-    rand();
-    return rand;
+  let handler = {
+    set(obj, prop, value) {
+
+      // don't set dirty flag for private properties
+      if (prop[0] != '_' && obj[prop] !== value) {
+        obj._d = true;
+      }
+
+      obj[prop] = value;
+      return true;
+    }
+  };
+
+  class GridManager extends GameObject$1.class {
+    init(properties = {}) {
+
+      /**
+       *
+       */
+      this.flow = 'column';
+
+      /**
+       *
+       */
+
+      /**
+       *
+       */
+      this.align = this.justify = 'start';
+
+      /**
+       *
+       */
+
+       /**
+        *
+        */
+      this.gapX = this.gapY = 0;
+
+      /**
+       *
+       */
+      this.numCols = 1;
+
+      /**
+       *
+       */
+      this.breakpoints = [];
+
+      /**
+       * this.dir
+       */
+
+      super.init(properties);
+
+      // use a proxy so setting any property on the UI Manager will set the dirty
+      // flag
+      return new Proxy(this, handler);
+    }
+
+    // keep width and height getters/settings so we can set _w and _h and not
+    // trigger infinite call loops
+    get width() {
+      // w = width
+      return this._w;
+    }
+
+    set width(value) {
+      this._w = value;
+      this._d = true;
+    }
+
+    get height() {
+      // h = height
+      return this._h;
+    }
+
+    set height(value) {
+      this._h = value;
+      this._d = true;
+    }
+
+    addChild(child) {
+      this._d = true;
+      super.addChild(child);
+    }
+
+    removeChild(child) {
+      this._d = true;
+      super.removeChild(child);
+    }
+
+    setScale(x, y) {
+      super.setScale(x, y);
+      this._d = true;
+    }
+
+    render() {
+      if (this._d) {
+        this._p();
+        this._cp();
+      }
+      super.render();
+    }
+
+    /**
+     * Build the grid and calculate its width and height
+     */
+    _p() {
+      this._d = false;
+
+      // b = breakpoint
+      this.breakpoints.map(breakpoint => {
+        if (breakpoint.metric.call(this) && this._b !== breakpoint) {
+          this._b = breakpoint;
+          breakpoint.callback.call(this);
+        }
+      });
+
+      // g = grid, cw = colWidths, rh = rowHeights
+      let grid = this._g = [];
+      let colWidths = this._cw = [];
+      let rowHeights = this._rh = [];
+
+      // let widths = [];
+      // let heights = [];
+
+      let children = this.children;
+
+      // nc = numCols
+      let numCols = this._nc = this.flow === 'column'
+        ? 1
+        : this.flow === 'row'
+          ? children.length
+          : this.numCols;
+
+      let row = 0;
+      let col = 0;
+      for (let i = 0, child; child = children[i]; i++) {
+        grid[row] = grid[row] || [];
+        grid[row][col] = child;
+
+        // prerender child to get current width/height
+        if (child._p) {
+          child._p();
+        }
+
+        // let { width, height } = getRect(child);
+        rowHeights[row] = Math.max(rowHeights[row] || 0, child.height);
+        // heights[row] = Math.max(heights[row] || 0, child.height);
+
+        let colSpan = child.colSpan || 1;
+        if (colSpan > 1 && col + colSpan <= numCols) {
+          while(++col < colSpan) {
+
+            grid[row][col] = child;
+          }
+        }
+        // colSpan elements do not contribute to the colWidth
+        else {
+          colWidths[col] = Math.max(colWidths[col] || 0, child.width);
+          // widths[col] = Math.max(widths[col] || 0, child.width);
+        }
+
+        if (++col >= numCols) {
+          col = 0;
+          row++;
+        }
+      }
+
+      // fill remaining row
+      while (col > 0 && col < numCols) {
+        // add empty array item so we can reverse a row even when it
+        // contains less items than another row
+        grid[row][col++] = false;
+      }
+      let numRows = grid.length;
+
+      // let gapX = this.gapX * this.scale.x;
+      // let gapY = this.gapY * this.scale.y;
+
+      this._w = colWidths.reduce((acc, width) => acc += width, 0) + this.gapX * (numCols - 1);
+      this._h = rowHeights.reduce((acc, height) => acc += height, 0) + this.gapY * (numRows - 1);
+
+      // this._w = widths.reduce((acc, width) => acc += width, 0) + this.gapX * (numCols - 1);
+      // this._h = heights.reduce((acc, height) => acc += height, 0) + this.gapY * (numRows - 1);
+
+      // reverse columns. direction property overrides canvas dir
+      let dir = getCanvas().dir;
+      let rtl = (dir === 'rtl' && !this.dir) || this.dir === 'rtl';
+      this._rtl = rtl;
+      if (rtl) {
+        this._g = grid.map(row => row.reverse());
+        this._cw = colWidths.reverse();
+      }
+    }
+
+    /**
+     * Calculate the position of each child
+     */
+    _cp() {
+      let topLeftY = 0;
+      let rendered = [];
+
+      let colWidths = this._cw;
+      let rowHeights = this._rh;
+      let gapX = this.gapX;
+      let gapY = this.gapY;
+
+      if (this.scale) {
+        colWidths = colWidths.map(width => width * this.scale.x);
+        rowHeights = rowHeights.map(height => height * this.scale.y);
+        gapX *= this.scale.x;
+        gapY *= this.scale.y;
+      }
+
+      this._g.map((gridRow, row) => {
+        let topLeftX = 0;
+        // let x = rtl && !this.parent
+        //   ? canvas.width - (this.x + this._w * (1 - this.anchor.x * 2))
+        //   : this.x;
+
+        gridRow.map((child, col) => {
+          // don't render the same child multiple times if it uses colSpan
+          if (child && !rendered.includes(child)) {
+            rendered.push(child);
+
+            let justify = alignment[child.justifySelf || this.justify](this._rtl);
+            let align = alignment[child.alignSelf || this.align]();
+
+            let rowHeight = this._rh[row];
+
+            let colSpan = child.colSpan || 1;
+            let colWidth = colWidths[col];
+            if (colSpan > 1 && col + colSpan <= this._nc) {
+              for (let i = 1; i < colSpan; i++) {
+                colWidth += colWidths[col + i] + gapX;
+              }
+            }
+
+            let { x, y } = getRect(this);
+
+            let pointX = x + colWidth * justify;
+            let pointY = y + rowHeights[row] * align;
+
+            let ptX;
+            let ptY;
+            let { width, height } = getRect(child);
+
+            if (justify === 0) {
+              ptX = pointX + width * child.anchor.x;
+            }
+            else if (justify === 0.5) {
+              let sign = child.anchor.x < 0.5 ? -1 : child.anchor.x === 0.5 ? 0 : 1;
+              ptX = pointX + sign * width * child.anchor.x;
+            }
+            else {
+              ptX = pointX - (width * (1 - child.anchor.x));
+            }
+
+            if (align === 0) {
+              ptY = pointY + height * child.anchor.y;
+            }
+            else if (align === 0.5) {
+              let sign = child.anchor.y < 0.5 ? -1 : child.anchor.y === 0.5 ? 0 : 1;
+              ptY = pointY + sign * height * child.anchor.y;
+            }
+            else {
+              ptY = pointY - (height * (1 - child.anchor.y));
+            }
+
+            child.x = topLeftX + ptX;
+            child.y = topLeftY + ptY;
+          }
+
+          topLeftX += colWidths[col] + gapX;
+        });
+
+        topLeftY += rowHeights[row] + gapY;
+      });
+    }
   }
 
-  /**
-   * Linearly interpolate between two values. The function calculates the number between two values based on a percent. Great for smooth transitions.
-   *
-   * ```js
-   * import { lerp } from 'kontra';
-   *
-   * console.log( lerp(10, 20, 0.5) );  // => 15
-   * console.log( lerp(10, 20, 2) );  // => 30
-   * ```
-   * @function lerp
-   *
-   * @param {Number} start - Start value.
-   * @param {Number} end - End value.
-   * @param {Number} percent - Percent to interpolate.
-   *
-   * @returns {Number} Interpolated number between the start and end values
-   */
-  function lerp(start, end, percent) {
-    return start * (1 - percent) + end * percent;
-  }
-
-  /**
-   * Return the linear interpolation percent between two values. The function calculates the percent between two values of a given value.
-   *
-   * ```js
-   * import { inverseLerp } from 'kontra';
-   *
-   * console.log( inverseLerp(10, 20, 15) );  // => 0.5
-   * console.log( inverseLerp(10, 20, 30) );  // => 2
-   * ```
-   * @function inverseLerp
-   *
-   * @param {Number} start - Start value.
-   * @param {Number} end - End value.
-   * @param {Number} value - Value between start and end.
-   *
-   * @returns {Number} Percent difference between the start and end values.
-   */
-  function inverseLerp(start, end, value) {
-    return (value - start) / (end - start);
-  }
-
-  /**
-   * Clamp a number between two values, preventing it from going below or above the minimum and maximum values.
-   * @function clamp
-   *
-   * @param {Number} min - Min value.
-   * @param {Number} max - Max value.
-   * @param {Number} value - Value to clamp.
-   *
-   * @returns {Number} Value clamped between min and max.
-   */
-  function clamp(min, max, value) {
-    return Math.min( Math.max(min, value), max );
-  }
+  var GridManager$1 = Factory(GridManager);
 
   /**
    * A minimalistic keyboard API. You can use it move the main sprite or respond to a key press.
@@ -3396,12 +4141,14 @@ var kontra = (function () {
     let verticalMidpoint = bounds.x + bounds.width / 2;
     let horizontalMidpoint = bounds.y + bounds.height / 2;
 
+    let { x, y, width, height } = getRect(object);
+
     // save off quadrant checks for reuse
-    let intersectsTopQuadrants = object.y < horizontalMidpoint && object.y + object.height >= bounds.y;
-    let intersectsBottomQuadrants = object.y + object.height >= horizontalMidpoint && object.y < bounds.y + bounds.height;
+    let intersectsTopQuadrants = y < horizontalMidpoint && y + height >= bounds.y;
+    let intersectsBottomQuadrants = y + height >= horizontalMidpoint && y < bounds.y + bounds.height;
 
     // object intersects with the left quadrants
-    if (object.x < verticalMidpoint && object.x + object.width >= bounds.x) {
+    if (x < verticalMidpoint && x + width >= bounds.x) {
       if (intersectsTopQuadrants) {  // top left
         indices.push(0);
       }
@@ -3412,7 +4159,7 @@ var kontra = (function () {
     }
 
     // object intersects with the right quadrants
-    if (object.x + object.width >= verticalMidpoint && object.x < bounds.x + bounds.width) {  // top right
+    if (x + width >= verticalMidpoint && x < bounds.x + bounds.width) {  // top right
       if (intersectsTopQuadrants) {
         indices.push(1);
       }
@@ -3736,7 +4483,7 @@ var kontra = (function () {
      * @param {Object[]} [properties.children=[]] - The children of the scene.
      * @param {...*} properties.props - Any additional properties you need added to the scene. For example, if you pass `Scene({counter: 0})` then the scene will also have a property of the same name and value. You can pass as many additional properties as you want.
      */
-    constructor(properties) {
+    constructor(properties = {}) {
       /**
        * The id of the scene.
        * @memberof Scene
@@ -3863,13 +4610,26 @@ var kontra = (function () {
     }
 
     /**
-     * Render the scene and call `render()` on all children. A hidden scene will not render.
+     * Render the scene and call `render()` on all children. A hidden scene will not render nor will any children outside of the current game viewport.
      * @memberof Scene
      * @function render
      */
     render() {
       if (!this.hidden) {
-        this.children.map(child => child.render && child.render());
+        this.children.map(child => {
+          if (!child.render) return;
+
+          // only draw objects that are within the current viewport (speeds up performance considerably)
+          let canvas = getCanvas();
+          let x = (child.viewX !== undefined) ? child.viewX : child.x;
+          let y = (child.viewY !== undefined) ? child.viewY : child.y;
+
+          if (x === undefined ||  // render things such as TileMaps which don't have a position
+              (x + child.width > 0 && x < canvas.width &&
+               y + child.height > 0 && y < canvas.height)) {
+            child.render();
+          }
+        });
       }
     }
 
@@ -3889,241 +4649,6 @@ var kontra = (function () {
   }
 
   var Scene$1 = Factory(Scene);
-
-  /**
-   * A versatile way to update and draw your sprites. It can handle simple rectangles, images, and sprite sheet animations. It can be used for your main player object as well as tiny particles in a particle engine.
-   * @class Sprite
-   * @extends GameObject
-   *
-   * @param {Object} [properties] - Properties of the sprite.
-   * @param {String} [properties.color] - Fill color for the game object if no image or animation is provided.
-   * @param {HTMLImageElement|HTMLCanvasElement} [properties.image] - Use an image to draw the sprite.
-   * @param {Object} [properties.animations] - An object of [Animations](api/animation) from a [Spritesheet](api/spriteSheet) to animate the sprite.
-   */
-  class Sprite extends GameObject$1.class {
-    /**
-     * @docs docs/api_docs/sprite.js
-     */
-
-    init(properties = {}) {
-
-      /**
-       * The color of the game object if it was passed as an argument.
-       * @memberof Sprite
-       * @property {String} color
-       */
-
-      /**
-       * The width of the sprite. If the sprite is a [rectangle sprite](api/sprite#rectangle-sprite), it uses the passed in value. For an [image sprite](api/sprite#image-sprite) it is the width of the image. And for an [animation sprite](api/sprite#animation-sprite) it is the width of a single frame of the animation.
-       *
-       * Setting the value to a negative number will result in the sprite being flipped across the vertical axis while the width will remain a positive value.
-       * @memberof Sprite
-       * @property {Number} width
-       */
-
-      /**
-       * The height of the sprite. If the sprite is a [rectangle sprite](api/sprite#rectangle-sprite), it uses the passed in value. For an [image sprite](api/sprite#image-sprite) it is the height of the image. And for an [animation sprite](api/sprite#animation-sprite) it is the height of a single frame of the animation.
-       *
-       * Setting the value to a negative number will result in the sprite being flipped across the horizontal axis while the height will remain a positive value.
-       * @memberof Sprite
-       * @property {Number} height
-       */
-
-      // @ifdef SPRITE_IMAGE||SPRITE_ANIMATION
-      // fx = flipX, fy = flipY
-      this._fx = this._fy = 1;
-      // @endif
-
-      super.init(properties);
-
-      // @ifdef SPRITE_IMAGE
-      /**
-       * The image the sprite will use when drawn if passed as an argument.
-       * @memberof Sprite
-       * @property {HTMLImageElement|HTMLCanvasElement} image
-       */
-
-      let { width, height, image } = properties;
-      if (image) {
-        this.width = (width !== undefined) ? width : image.width;
-        this.height = (height !== undefined) ? height : image.height;
-      }
-      // @endif
-    }
-
-    // @ifdef SPRITE_ANIMATION
-    /**
-     * An object of [Animations](api/animation) from a [SpriteSheet](api/spriteSheet) to animate the sprite. Each animation is named so that it can can be used by name for the sprites [playAnimation()](api/sprite#playAnimation) function.
-     *
-     * ```js
-     * import { Sprite, SpriteSheet } from 'kontra';
-     *
-     * let spriteSheet = SpriteSheet({
-     *   // ...
-     *   animations: {
-     *     idle: {
-     *       frames: 1,
-     *       loop: false,
-     *     },
-     *     walk: {
-     *       frames: [1,2,3]
-     *     }
-     *   }
-     * });
-     *
-     * let sprite = Sprite({
-     *   x: 100,
-     *   y: 200,
-     *   animations: spriteSheet.animations
-     * });
-     *
-     * sprite.playAnimation('idle');
-     * ```
-     * @memberof Sprite
-     * @property {Object} animations
-     */
-    get animations() {
-      return this._a;
-    }
-
-    set animations(value) {
-      let prop, firstAnimation;
-      // a = animations
-      this._a = {};
-
-      // clone each animation so no sprite shares an animation
-      for (prop in value) {
-        this._a[prop] = value[prop].clone();
-
-        // default the current animation to the first one in the list
-        firstAnimation = firstAnimation || this._a[prop];
-      }
-
-      /**
-       * The currently playing Animation object if `animations` was passed as an argument.
-       * @memberof Sprite
-       * @property {Animation} currentAnimation
-       */
-      this.currentAnimation = firstAnimation;
-      this.width = this.width || firstAnimation.width;
-      this.height = this.height || firstAnimation.height;
-    }
-
-    /**
-     * Set the currently playing animation of an animation sprite.
-     *
-     * ```js
-     * import { Sprite, SpriteSheet } from 'kontra';
-     *
-     * let spriteSheet = SpriteSheet({
-     *   // ...
-     *   animations: {
-     *     idle: {
-     *       frames: 1
-     *     },
-     *     walk: {
-     *       frames: [1,2,3]
-     *     }
-     *   }
-     * });
-     *
-     * let sprite = Sprite({
-     *   x: 100,
-     *   y: 200,
-     *   animations: spriteSheet.animations
-     * });
-     *
-     * sprite.playAnimation('idle');
-     * ```
-     * @memberof Sprite
-     * @function playAnimation
-     *
-     * @param {String} name - Name of the animation to play.
-     */
-    playAnimation(name) {
-      this.currentAnimation = this.animations[name];
-
-      if (!this.currentAnimation.loop) {
-        this.currentAnimation.reset();
-      }
-    }
-
-    advance(dt) {
-      super.advance(dt);
-
-      if (this.currentAnimation) {
-        this.currentAnimation.update(dt);
-      }
-    }
-    // @endif
-
-    // @ifdef SPRITE_IMAGE||SPRITE_ANIMATION
-    get width() {
-      return this._w;
-    }
-
-    get height() {
-      return this._h;
-    }
-
-    set width(value) {
-      let sign = value < 0 ? -1 : 1;
-
-      this._fx = sign;
-      this._w = value * sign;
-    }
-
-    set height(value) {
-      let sign = value < 0 ? -1 : 1;
-
-      this._fy = sign;
-      this._h = value * sign;
-    }
-    // @endif
-
-    draw() {
-      // @ifdef SPRITE_IMAGE||SPRITE_ANIMATION
-      // flip sprite around the center so the x/y position does not change
-      if (this._fx == -1 || this._fy == -1) {
-        let translateX = this.width / 2;
-        let translateY = this.height / 2;
-
-        this.context.translate(translateX, translateY);
-        this.context.scale(this._fx, this._fy);
-        this.context.translate(-translateX, -translateY);
-      }
-      // @endif
-
-      // @ifdef SPRITE_IMAGE
-      if (this.image) {
-        this.context.drawImage(
-          this.image,
-          0, 0, this.image.width, this.image.height,
-          0, 0, this.width, this.height
-        );
-      }
-      // @endif
-
-      // @ifdef SPRITE_ANIMATION
-      if (this.currentAnimation) {
-        this.currentAnimation.render({
-          x: 0,
-          y: 0,
-          width: this.width,
-          height: this.height,
-          context: this.context
-        });
-      }
-      // @endif
-
-      if (this.color) {
-        this.context.fillStyle = this.color;
-        this.context.fillRect(0, 0, this.width, this.height);
-      }
-    }
-  }
-
-  var Sprite$1 = Factory(Sprite);
 
   /**
    * Parse a string of consecutive frames.
@@ -4169,7 +4694,7 @@ var kontra = (function () {
    *
    * <figure>
    *   <a href="assets/imgs/character_walk_sheet.png">
-   *     <img src="assets/imgs/character_walk_sheet.png" alt="11 frames of a walking pill-like alien wearing a space helmet.">
+   *     <img src="assets/imgs/character_walk_sheet.png" width="266" height="512" alt="11 frames of a walking pill-like alien wearing a space helmet.">
    *   </a>
    *   <figcaption>Sprite sheet image courtesy of <a href="https://kenney.nl/assets">Kenney</a>.</figcaption>
    * </figure>
@@ -4211,10 +4736,11 @@ var kontra = (function () {
    * @param {Number} properties.frameWidth - The width of a single frame.
    * @param {Number} properties.frameHeight - The height of a single frame.
    * @param {Number} [properties.frameMargin=0] - The amount of whitespace between each frame.
+   * @param {Object} [properties.atlas] - Spritesheet atlas object.
    * @param {Object} [properties.animations] - Animations to create from the sprite sheet using [Animation](api/animation). Passed directly into the sprite sheets [createAnimations()](api/spriteSheet#createAnimations) function.
    */
   class SpriteSheet {
-    constructor({image, frameWidth, frameHeight, frameMargin, animations} = {}) {
+    constructor({image, frameWidth, frameHeight, frameMargin, atlas, animations} = {}) {
       // @ifdef DEBUG
       if (!image) {
         throw Error('You must provide an Image for the SpriteSheet');
@@ -4234,6 +4760,8 @@ var kontra = (function () {
        * @property {HTMLImageElement|HTMLCanvasElement} image
        */
       this.image = image;
+
+      this.atlas = atlas;
 
       /**
        * An object that defines properties of a single frame in the sprite sheet. It has properties of `width`, `height`, and `margin`.
@@ -4333,7 +4861,7 @@ var kontra = (function () {
 
         // add new frames to the end of the array
         [].concat(frames).map(frame => {
-          sequence = sequence.concat(parseFrames(frame));
+          sequence = sequence.concat(this.atlas ? frame : parseFrames(frame));
         });
 
         this.animations[name] = Animation$1({
@@ -4349,60 +4877,11 @@ var kontra = (function () {
   var SpriteSheet$1 = Factory(SpriteSheet);
 
   /**
-   * A simple interface to LocalStorage based on [store.js](https://github.com/marcuswestin/store.js), whose sole purpose is to ensure that any keys you save to LocalStorage come out the same type as when they went in.
-   *
-   * Normally when you save something to LocalStorage, it converts it into a string. So if you were to save a number, it would be saved as `"12"` instead of `12`. This means when you retrieved the number, it would now be a string.
-   *
-   * ```js
-   * import { setStoreItem, getStoreItem } from 'kontra';
-   *
-   * setStoreItem('highScore', 100);
-   * getStoreItem('highScore');  //=> 100
-   * ```
-   * @sectionName Store
-   */
-
-  /**
-   * Save an item to localStorage.
-   * @function setStoreItem
-   *
-   * @param {String} key - The name of the key.
-   * @param {*} value - The value to store.
-   */
-  function setStoreItem(key, value) {
-    if (value === undefined) {
-      localStorage.removeItem(key);
-    }
-    else {
-      localStorage.setItem(key, JSON.stringify(value));
-    }
-  }
-
-  /**
-   * Retrieve an item from localStorage and convert it back to its original type.
-   * @function getStoreItem
-   *
-   * @param {String} key - Name of the key of the item to retrieve.
-   *
-   * @returns {*} The retrieved item.
-   */
-  function getStoreItem(key) {
-    let value = localStorage.getItem(key);
-
-    try {
-      value = JSON.parse(value);
-    }
-    catch(e) {}
-
-    return value;
-  }
-
-  /**
    * A tile engine for managing and drawing tilesets.
    *
    * <figure>
    *   <a href="assets/imgs/mapPack_tilesheet.png">
-   *     <img src="assets/imgs/mapPack_tilesheet.png" alt="Tileset to create an overworld map in various seasons.">
+   *     <img src="assets/imgs/mapPack_tilesheet.png" width="1088" height="768" alt="Tileset to create an overworld map in various seasons.">
    *   </a>
    *   <figcaption>Tileset image courtesy of <a href="https://kenney.nl/assets">Kenney</a>.</figcaption>
    * </figure>
@@ -4649,17 +5128,12 @@ var kontra = (function () {
        * @returns {boolean} `true` if the object collides with a tile, `false` otherwise.
        */
       layerCollidesWith(name, object) {
-        let x = object.x;
-        let y = object.y;
-        if (object.anchor) {
-          x -= object.width * object.anchor.x;
-          y -= object.height * object.anchor.y;
-        }
+        let { x, y, width, height } = getRect(object);
 
         let row = getRow(y);
         let col = getCol(x);
-        let endRow = getRow(y + object.height);
-        let endCol = getCol(x + object.width);
+        let endRow = getRow(y + height);
+        let endCol = getCol(x + width);
 
         let layer = layerMap[name];
 
@@ -4972,7 +5446,7 @@ var kontra = (function () {
           layer._d = false;
           layerMap[layer.name] = layer;
 
-          if (layer.visible !== false) {
+          if (layer.data && layer.visible !== false) {
             tileEngine._r(layer, offscreenContext);
           }
         });
@@ -5017,8 +5491,6 @@ var kontra = (function () {
 
     Button: Button$1,
 
-    collides,
-
     init,
     getCanvas,
     getContext,
@@ -5029,6 +5501,7 @@ var kontra = (function () {
 
     GameLoop,
     GameObject: GameObject$1,
+    GridManager: GridManager$1,
 
     degToRad,
     radToDeg,
@@ -5038,6 +5511,9 @@ var kontra = (function () {
     lerp,
     inverseLerp,
     clamp,
+    setStoreItem,
+    getStoreItem,
+    collides,
 
     keyMap,
     initKeys,
@@ -5063,9 +5539,6 @@ var kontra = (function () {
     Scene: Scene$1,
     Sprite: Sprite$1,
     SpriteSheet: SpriteSheet$1,
-
-    setStoreItem,
-    getStoreItem,
 
     Text: Text$1,
     TileEngine,

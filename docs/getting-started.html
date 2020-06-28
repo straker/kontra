@@ -7,7 +7,7 @@
 
   <script>
   // adjust path based on location (github pages required kontra url)
-  if (window.location.host.indexOf('localhost') !== -1) {
+  if (['localhost', '127.0.0.1'].includes(window.location.hostname)) {
     let base = document.querySelector('base');
     base.setAttribute('href', '/');
   }
@@ -43,7 +43,6 @@
               <li><a href="api/animation" >Animation</a></li>
               <li><a href="api/assets" >Assets</a></li>
               <li><a href="api/button" >Button</a></li>
-              <li><a href="api/collision" >Collision</a></li>
               <li><a href="api/core" >Core</a></li>
               <li><a href="api/events" >Events</a></li>
               <li><a href="api/gameLoop" >GameLoop</a></li>
@@ -57,7 +56,6 @@
               <li><a href="api/scene" >Scene</a></li>
               <li><a href="api/sprite" >Sprite</a></li>
               <li><a href="api/spriteSheet" >SpriteSheet</a></li>
-              <li><a href="api/store" >Store</a></li>
               <li><a href="api/text" >Text</a></li>
               <li><a href="api/tileEngine" >TileEngine</a></li>
               <li><a href="api/vector" >Vector</a></li>
@@ -67,6 +65,19 @@
       </nav>
       <div class="scroll-indicator" aria-hidden="true"><span>^</span></div>
     </header>
+
+    <script>
+      // restore scroll position on page load (do it here so there is no flash
+      // of unscrolled content)
+      let nav = document.querySelector('.main-nav');
+      if (sessionStorage.getItem('kontra-nav-scroll')) {
+        nav.scrollTop = parseInt(sessionStorage.getItem('kontra-nav-scroll'));
+
+        if (nav.offsetHeight + nav.scrollTop < nav.scrollHeight) {
+          nav.classList.add('showScroll');
+        }
+      }
+    </script>
 
     <main id="main">
       <div>
@@ -122,22 +133,22 @@ let { canvas, context } = init();</code></pre></section>
 </div>
 <h2 id="create">Create</h2>
 <p>After the game is initialize, you can create a simple <a href="api/sprite.html">Sprite</a> and <a href="api/gameLoop.html">Game Loop</a> in just a few lines of code</p>
-<canvas id="game-canvas-12"></canvas>
+<canvas id="game-canvas-13"></canvas>
 
 <div class="tablist">
   <ul role="tablist">
     <li role="presentation" data-tab="global">
-      <button role="tab" id="game-canvas-12-global-tab">Global Object</button>
+      <button role="tab" id="game-canvas-13-global-tab">Global Object</button>
     </li>
     <li role="presentation" data-tab="es">
-      <button role="tab" id="game-canvas-12-es-tab">ES Module Import</button>
+      <button role="tab" id="game-canvas-13-es-tab">ES Module Import</button>
     </li>
     <li role="presentation" data-tab="bundle">
-      <button role="tab" id="game-canvas-12-bundle-tab">Module Bundler</button>
+      <button role="tab" id="game-canvas-13-bundle-tab">Module Bundler</button>
     </li>
     <li role="presentation"></li>
   </ul>
-  <section role="tabpanel" aria-labelledby=game-canvas-12-global-tab data-tabpanel="global">
+  <section role="tabpanel" aria-labelledby=game-canvas-13-global-tab data-tabpanel="global">
     <pre><code class="lang-js">let { init, Sprite, GameLoop } &#x3D; kontra
 
 let { canvas } &#x3D; init();
@@ -168,7 +179,7 @@ let loop &#x3D; GameLoop({  // create the main game loop
 
 loop.start();    // start the game</code></pre>
   </section>
-  <section role="tabpanel" aria-labelledby=game-canvas-12-es-tab data-tabpanel="es">
+  <section role="tabpanel" aria-labelledby=game-canvas-13-es-tab data-tabpanel="es">
     <pre><code class="lang-js">import { init, Sprite, GameLoop } from &#x27;path/to/kontra.mjs&#x27;
 
 let { canvas } &#x3D; init();
@@ -199,7 +210,7 @@ let loop &#x3D; GameLoop({  // create the main game loop
 
 loop.start();    // start the game</code></pre>
   </section>
-  <section role="tabpanel" aria-labelledby=game-canvas-12-bundle-tab data-tabpanel="bundle">
+  <section role="tabpanel" aria-labelledby=game-canvas-13-bundle-tab data-tabpanel="bundle">
     <pre><code class="lang-js">import { init, Sprite, GameLoop } from &#x27;kontra&#x27;;
 
 let { canvas } &#x3D; init();
@@ -233,8 +244,8 @@ loop.start();    // start the game</code></pre>
 </div>
 
 <script>(function() {
-  kontra.init("game-canvas-12");
-  var canvas = document.querySelector("#game-canvas-12");
+  kontra.init("game-canvas-13");
+  var canvas = document.querySelector("#game-canvas-13");
   canvas.width = 600;
   canvas.height = 200;
   var context = canvas.getContext("2d");

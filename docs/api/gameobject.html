@@ -7,7 +7,7 @@
 
   <script>
   // adjust path based on location (github pages required kontra url)
-  if (window.location.host.indexOf('localhost') !== -1) {
+  if (['localhost', '127.0.0.1'].includes(window.location.hostname)) {
     let base = document.querySelector('base');
     base.setAttribute('href', '/');
   }
@@ -43,7 +43,6 @@
               <li><a href="api/animation" >Animation</a></li>
               <li><a href="api/assets" >Assets</a></li>
               <li><a href="api/button" >Button</a></li>
-              <li><a href="api/collision" >Collision</a></li>
               <li><a href="api/core" >Core</a></li>
               <li><a href="api/events" >Events</a></li>
               <li><a href="api/gameLoop" >GameLoop</a></li>
@@ -57,7 +56,6 @@
               <li><a href="api/scene" >Scene</a></li>
               <li><a href="api/sprite" >Sprite</a></li>
               <li><a href="api/spriteSheet" >SpriteSheet</a></li>
-              <li><a href="api/store" >Store</a></li>
               <li><a href="api/text" >Text</a></li>
               <li><a href="api/tileEngine" >TileEngine</a></li>
               <li><a href="api/vector" >Vector</a></li>
@@ -67,6 +65,19 @@
       </nav>
       <div class="scroll-indicator" aria-hidden="true"><span>^</span></div>
     </header>
+
+    <script>
+      // restore scroll position on page load (do it here so there is no flash
+      // of unscrolled content)
+      let nav = document.querySelector('.main-nav');
+      if (sessionStorage.getItem('kontra-nav-scroll')) {
+        nav.scrollTop = parseInt(sessionStorage.getItem('kontra-nav-scroll'));
+
+        if (nav.offsetHeight + nav.scrollTop < nav.scrollHeight) {
+          nav.classList.add('showScroll');
+        }
+      }
+    </script>
 
     <main id="main">
       <div>
@@ -150,6 +161,18 @@
             <span class="optional">Optional</span>
           </dt>
           <dd><p><em>Object</em>. The x and y origin of the game object. {x:0, y:0} is the top left corner of the game object, {x:1, y:1} is the bottom right corner. Defaults to <code>{x:0,y:0}</code>.</p>
+        </dd>
+          <dt>
+            <code>properties.children</code>
+            <span class="optional">Optional</span>
+          </dt>
+          <dd><p><em>An Array of <a href="api/gameObject">GameObject</a>s</em>. Children to add to the game object. Children added this way have their x/y position treated as relative to the parents x/y position.</p>
+        </dd>
+          <dt>
+            <code>properties.scale</code>
+            <span class="optional">Optional</span>
+          </dt>
+          <dd><p><em>Object</em>. The x and y scale of the game object. Calls <a href="api/gameObject#setScale">setScale</a> with the passed in values. Defaults to <code>{x:1,y:1}</code>.</p>
         </dd>
           <dt>
             <code>properties.context</code>
@@ -237,16 +260,6 @@
                   </a>
                 </li>
                 <li>
-                  <a href="api/gameobject#localPosition">
-                    <span>GameObject&#8203;.localPosition</span>
-                  </a>
-                </li>
-                <li>
-                  <a href="api/gameobject#localRotation">
-                    <span>GameObject&#8203;.localRotation</span>
-                  </a>
-                </li>
-                <li>
                   <a href="api/gameobject#parent">
                     <span>GameObject&#8203;.parent</span>
                   </a>
@@ -259,6 +272,11 @@
                 <li>
                   <a href="api/gameobject#rotation">
                     <span>GameObject&#8203;.rotation</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="api/gameobject#scale">
+                    <span>GameObject&#8203;.scale</span>
                   </a>
                 </li>
                 <li>
@@ -314,7 +332,7 @@
               <ul aria-labelledby="methods">
                 <li>
                   <a href="api/gameobject#addChild">
-                    <span>GameObject&#8203;.addChild(&#8203;child)</span>
+                    <span>GameObject&#8203;.addChild(&#8203;child, options)</span>
                   </a>
                 </li>
                 <li>
@@ -345,6 +363,11 @@
                 <li>
                   <a href="api/gameobject#render">
                     <span>GameObject&#8203;.render(&#8203;)</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="api/gameobject#setScale">
+                    <span>GameObject&#8203;.setScale(&#8203;x[, y])</span>
                   </a>
                 </li>
                 <li>
@@ -521,19 +544,166 @@ triangle.render();
         <section>
           <h2 id="addChild">
             <a href="api/gameobject#addChild" class="section-link">
-              <span>GameObject&#8203;.addChild(&#8203;child)</span>
+              <span>GameObject&#8203;.addChild(&#8203;child, options)</span>
               <span aria-hidden="true">#</span>
             </a>
           </h2>
 
           <p>Add an object as a child to this object. The child objects position and rotation will be calculated based on this objects position and rotation.</p>
-          <h3 id="title-addChild"><span class="visually-hidden">addChild</span> Parameters</span></h3>
+<p>By default the childs x/y position is interpreted to be relative to the x/y position of the parent. This means that if the childs position is {x: 0, y: 0}, the position will be updated to equal to the parents x/y position when added.</p>
+<p>If instead the position should not be updated based on the parents x/y position, set the <code>absolute</code> option to <code>true</code>.</p>
+<canvas id="game-canvas-2"></canvas>
+
+<div class="tablist">
+  <ul role="tablist">
+    <li role="presentation" data-tab="global">
+      <button role="tab" id="game-canvas-2-global-tab">Global Object</button>
+    </li>
+    <li role="presentation" data-tab="es">
+      <button role="tab" id="game-canvas-2-es-tab">ES Module Import</button>
+    </li>
+    <li role="presentation" data-tab="bundle">
+      <button role="tab" id="game-canvas-2-bundle-tab">Module Bundler</button>
+    </li>
+    <li role="presentation"></li>
+  </ul>
+  <section role="tabpanel" aria-labelledby=game-canvas-2-global-tab data-tabpanel="global">
+    <pre><code class="lang-js">let { GameObject } &#x3D; kontra
+
+function createObject(x, y, color, size &#x3D; 1) {
+  return GameObject({
+    x,
+    y,
+    width: 50 / size,
+    height: 50 / size,
+    anchor: {x: 0.5, y: 0.5},
+    color,
+    render: function() {
+      this.context.fillStyle &#x3D; this.color;
+      this.context.fillRect(0, 0, this.height, this.width);
+    }
+  });
+}
+
+let parent &#x3D; createObject(300, 100, &#x27;red&#x27;);
+let relativeChild &#x3D; createObject(25, 25, &#x27;#62a2f9&#x27;, 2);
+let absoluteChild &#x3D; createObject(25, 25, &#x27;yellow&#x27;, 2);
+
+parent.addChild(relativeChild);
+parent.addChild(absoluteChild, {absolute: true});
+
+parent.render();</code></pre>
+  </section>
+  <section role="tabpanel" aria-labelledby=game-canvas-2-es-tab data-tabpanel="es">
+    <pre><code class="lang-js">import { GameObject } from &#x27;path/to/kontra.mjs&#x27;
+
+function createObject(x, y, color, size &#x3D; 1) {
+  return GameObject({
+    x,
+    y,
+    width: 50 / size,
+    height: 50 / size,
+    anchor: {x: 0.5, y: 0.5},
+    color,
+    render: function() {
+      this.context.fillStyle &#x3D; this.color;
+      this.context.fillRect(0, 0, this.height, this.width);
+    }
+  });
+}
+
+let parent &#x3D; createObject(300, 100, &#x27;red&#x27;);
+let relativeChild &#x3D; createObject(25, 25, &#x27;#62a2f9&#x27;, 2);
+let absoluteChild &#x3D; createObject(25, 25, &#x27;yellow&#x27;, 2);
+
+parent.addChild(relativeChild);
+parent.addChild(absoluteChild, {absolute: true});
+
+parent.render();</code></pre>
+  </section>
+  <section role="tabpanel" aria-labelledby=game-canvas-2-bundle-tab data-tabpanel="bundle">
+    <pre><code class="lang-js">import { GameObject } from &#x27;kontra&#x27;;
+
+function createObject(x, y, color, size &#x3D; 1) {
+  return GameObject({
+    x,
+    y,
+    width: 50 / size,
+    height: 50 / size,
+    anchor: {x: 0.5, y: 0.5},
+    color,
+    render: function() {
+      this.context.fillStyle &#x3D; this.color;
+      this.context.fillRect(0, 0, this.height, this.width);
+    }
+  });
+}
+
+let parent &#x3D; createObject(300, 100, &#x27;red&#x27;);
+let relativeChild &#x3D; createObject(25, 25, &#x27;#62a2f9&#x27;, 2);
+let absoluteChild &#x3D; createObject(25, 25, &#x27;yellow&#x27;, 2);
+
+parent.addChild(relativeChild);
+parent.addChild(absoluteChild, {absolute: true});
+
+parent.render();</code></pre>
+  </section>
+</div>
+
+<script>(function() {
+  kontra.init("game-canvas-2");
+  var canvas = document.querySelector("#game-canvas-2");
+  canvas.width = 600;
+  canvas.height = 200;
+  var context = canvas.getContext("2d");
+  // exclude-code:start
+let { GameObject } = kontra;
+// exclude-code:end
+function createObject(x, y, color, size = 1) {
+  return GameObject({
+    x,
+    y,
+    width: 50 / size,
+    height: 50 / size,
+    anchor: {x: 0.5, y: 0.5},
+    color,
+    // exclude-code:start
+    context: context,
+    // exclude-code:end
+    render: function() {
+      this.context.fillStyle = this.color;
+      this.context.fillRect(0, 0, this.height, this.width);
+    }
+  });
+}
+
+let parent = createObject(300, 100, 'red');
+let relativeChild = createObject(25, 25, '#62a2f9', 2);
+let absoluteChild = createObject(25, 25, 'yellow', 2);
+
+parent.addChild(relativeChild);
+parent.addChild(absoluteChild, {absolute: true});
+
+parent.render();
+})();</script>          <h3 id="title-addChild"><span class="visually-hidden">addChild</span> Parameters</span></h3>
           <dl aria-labelledby="title-addChild">
             <dt>
               <code>child</code>
               
             </dt>
             <dd><p><em><a href="api/gameObject">GameObject</a></em>. Object to add as a child.</p>
+          </dd>
+            <dt>
+              <code>options</code>
+              
+            </dt>
+            <dd><p><em>Object</em>. Options for adding the child.</p>
+          </dd>
+            <dt>
+              <code>options.absolute</code>
+              <span class="optional">Optional</span>
+            </dt>
+            <dd><p><em>Boolean</em>. If set the true, the x/y position of the child is treated as an absolute position in the world rather than being relative to the x/y position of the parent. Defaults to <code>false</code>.</p>
           </dd>
           </dl>
           
@@ -829,7 +999,7 @@ drawOrigin(gameObject);
             </a>
           </h2>
 
-          <p><em>An Array of <a href="api/gameObjec">GameObject</a>s</em>. The game objects children objects.</p>
+          <p><em>An Array of <a href="api/gameObject">GameObject</a>s</em>. The game objects children objects.</p>
           
         </section>
         <section>
@@ -1019,28 +1189,6 @@ gameObject.render();</code></pre></section>
           </p>
         </section>
         <section>
-          <h2 id="localPosition">
-            <a href="api/gameobject#localPosition" class="section-link">
-              <span>GameObject&#8203;.localPosition</span>
-              <span aria-hidden="true">#</span>
-            </a>
-          </h2>
-
-          <p><em><a href="api/vector">Vector</a></em>. The game objects local position vector, which is its position relative to a parent object. If the game object does not have a parent object, the local position will be the same as the <a href="api/gameObject#position">position vector</a>.</p>
-          
-        </section>
-        <section>
-          <h2 id="localRotation">
-            <a href="api/gameobject#localRotation" class="section-link">
-              <span>GameObject&#8203;.localRotation</span>
-              <span aria-hidden="true">#</span>
-            </a>
-          </h2>
-
-          <p><em>Number</em>. The game objects local rotation, which is its rotation relative to a parent object. If the game object does not have a parent object, the local rotation will be the same as the <a href="api/gameObject#rotation">rotation</a>.</p>
-          
-        </section>
-        <section>
           <h2 id="parent">
             <a href="api/gameobject#parent" class="section-link">
               <span>GameObject&#8203;.parent</span>
@@ -1059,7 +1207,7 @@ gameObject.render();</code></pre></section>
             </a>
           </h2>
 
-          <p><em><a href="api/vector">Vector</a></em>. The game objects position vector. The game objects position is its position in the world, as opposed to the position in the <a href="api/gameObject#viewX">viewport</a> or <a href="api/gameObject#localPosition">local position</a>. Typically the position in the world, viewport, and local position are the same value. If the game object has been <a href="/api/tileEngine#addObject">added to a tileEngine</a>, the position vector represents where in the tile world the game object is while the viewport represents where to draw the game object in relation to the top-left corner of the canvas.</p>
+          <p><em><a href="api/vector">Vector</a></em>. The game objects position vector. The game objects position is its position in the world, as opposed to the position in the <a href="api/gameObject#viewX">viewport</a>. Typically the position in the world and viewport are the same value. If the game object has been <a href="/api/tileEngine#addObject">added to a tileEngine</a>, the position vector represents where in the tile world the game object is while the viewport represents where to draw the game object in relation to the top-left corner of the canvas.</p>
           
         </section>
         <section>
@@ -1102,6 +1250,43 @@ gameObject.render();</code></pre></section>
           </h2>
 
           <p><em>Number</em>. The rotation of the game object around the origin in radians. This rotation takes into account rotations from parent objects and represents the final rotation value.</p>
+          
+        </section>
+        <section>
+          <h2 id="scale">
+            <a href="api/gameobject#scale" class="section-link">
+              <span>GameObject&#8203;.scale</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
+
+          <p><em>Object</em>. The x and y scale of the object. Typically you would not set these properties yourself but use <a href="/api/gameObject#setScale">setScale</a> instead. Setting these properties directly will not result in the scale property of children being updated.</p>
+          
+        </section>
+        <section>
+          <h2 id="setScale">
+            <a href="api/gameobject#setScale" class="section-link">
+              <span>GameObject&#8203;.setScale(&#8203;x[, y])</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
+
+          <p>Set the x and y scale of the object. If only one value is passed, both are set to the same value.</p>
+          <h3 id="title-setScale"><span class="visually-hidden">setScale</span> Parameters</span></h3>
+          <dl aria-labelledby="title-setScale">
+            <dt>
+              <code>x</code>
+              
+            </dt>
+            <dd><p><em>Number</em>. X scale value.</p>
+          </dd>
+            <dt>
+              <code>y</code>
+              <span class="optional">Optional</span>
+            </dt>
+            <dd><p><em>Number</em>. Y scale value. Defaults to <code>x</code>.</p>
+          </dd>
+          </dl>
           
         </section>
         <section>

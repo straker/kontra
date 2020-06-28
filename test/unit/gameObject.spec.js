@@ -12,6 +12,7 @@ let hasRotation = typeof testGameObject.rotation !== 'undefined';
 let hasTTL = testGameObject.hasOwnProperty('ttl');
 let hasAnchor = testGameObject.hasOwnProperty('anchor');
 let hasCamera = testGameObject.hasOwnProperty('sx');
+let hasScale = testGameObject.hasOwnProperty('scale');
 
 let properties = {
   group: hasGroup,
@@ -20,7 +21,8 @@ let properties = {
   rotation: hasRotation,
   ttl: hasTTL,
   anchor: hasAnchor,
-  camera: hasCamera
+  camera: hasCamera,
+  scale: hasScale
 };
 
 // --------------------------------------------------
@@ -361,21 +363,6 @@ describe('gameObject with properties: ' + JSON.stringify(properties,null,4), () 
   if (hasGroup) {
     describe('group', () => {
 
-      it('should set default properties on the gameObject', () => {
-        let gameObject = GameObject();
-
-        expect(gameObject.localPosition.constructor.name).to.equal('Vector');
-        expect(Array.isArray(gameObject.children)).to.be.true;
-
-        if (hasRotation) {
-          expect(gameObject.localRotation).to.equal(0);
-        }
-      });
-
-
-
-
-
       // --------------------------------------------------
       // addChild
       // --------------------------------------------------
@@ -401,26 +388,57 @@ describe('gameObject with properties: ' + JSON.stringify(properties,null,4), () 
           expect(child.parent).to.equal(gameObject);
         });
 
-        it('should set the childs localPosition', () => {
+        it('should set the childs relative position', () => {
           let gameObject = GameObject({
-            x: 20,
-            y: 20
-          });
-          let child = GameObject({
             x: 30,
             y: 35
+          });
+          let child = GameObject({
+            x: 0,
+            y: 0
           });
 
           gameObject.addChild(child);
 
           expect(child.x).to.equal(30);
           expect(child.y).to.equal(35);
-          expect(child.localPosition.x).to.equal(10);
-          expect(child.localPosition.y).to.equal(15);
+        });
+
+        it('should set the childs absolute position', () => {
+          let gameObject = GameObject({
+            x: 30,
+            y: 35
+          });
+          let child = GameObject({
+            x: 0,
+            y: 0
+          });
+
+          gameObject.addChild(child, { absolute: true });
+
+          expect(child.x).to.equal(0);
+          expect(child.y).to.equal(0);
         });
 
         if (hasRotation) {
-          it('should set the childs localRotation', () => {
+          it('should set the childs relative rotation', () => {
+            let gameObject = GameObject({
+              x: 20,
+              y: 20,
+              rotation: 30
+            });
+            let child = GameObject({
+              x: 30,
+              y: 35,
+              rotation: 10
+            });
+
+            gameObject.addChild(child);
+
+            expect(child.rotation).to.equal(40);
+          });
+
+          it('should set the childs absolute rotation', () => {
             let gameObject = GameObject({
               x: 20,
               y: 20,
@@ -429,13 +447,12 @@ describe('gameObject with properties: ' + JSON.stringify(properties,null,4), () 
             let child = GameObject({
               x: 30,
               y: 35,
-              rotation: 30
+              rotation: 20
             });
 
-            gameObject.addChild(child);
+            gameObject.addChild(child, { absolute: true });
 
-            expect(child.rotation).to.equal(30)
-            expect(child.localRotation).to.equal(20);
+            expect(child.rotation).to.equal(20);
           });
         }
 
@@ -471,47 +488,6 @@ describe('gameObject with properties: ' + JSON.stringify(properties,null,4), () 
 
           expect(child.parent).to.equal(null);
         });
-
-        it('should set the childs localPosition to its position', () => {
-          let gameObject = GameObject({
-            x: 20,
-            y: 20
-          });
-          let child = GameObject({
-            x: 30,
-            y: 35
-          });
-
-          gameObject.addChild(child);
-          gameObject.removeChild(child);
-
-          expect(child.x).to.equal(30);
-          expect(child.y).to.equal(35);
-          expect(child.localPosition.x).to.equal(30);
-          expect(child.localPosition.y).to.equal(35);
-        });
-
-        if (hasRotation) {
-          it('should set the childs localRotation to its rotation', () => {
-            let gameObject = GameObject({
-              x: 20,
-              y: 20,
-              rotation: 10
-            });
-            let child = GameObject({
-              x: 30,
-              y: 35,
-              rotation: 30
-            });
-
-            gameObject.addChild(child);
-            gameObject.removeChild(child);
-
-            expect(child.rotation).to.equal(30)
-            expect(child.localRotation).to.equal(30);
-          });
-        }
-
       });
 
 
@@ -544,34 +520,10 @@ describe('gameObject with properties: ' + JSON.stringify(properties,null,4), () 
             expect(child[prop]).to.equal(20);
           });
 
-          it(`should set the local ${prop} relative to the parent`, () => {
-            child[prop] = 20;
-
-            if (prop === 'rotation') {
-              expect(child.localRotation).to.equal(5);
-            }
-            else {
-              expect(child.localPosition[prop]).to.equal(5);
-            }
-          });
-
           it(`should not change the parent ${prop}`, () => {
             child[prop] = 20;
 
             expect(gameObject[prop]).to.equal(15);
-          });
-
-          it(`should update the local ${prop} each time`, () => {
-            child[prop] = 20;
-            child[prop] = 40;
-            child[prop] = 60;
-
-            if (prop === 'rotation') {
-              expect(child.localRotation).to.equal(45);
-            }
-            else {
-              expect(child.localPosition[prop]).to.equal(45);
-            }
           });
 
           it('should update all child positions', () => {
@@ -579,18 +531,18 @@ describe('gameObject with properties: ' + JSON.stringify(properties,null,4), () 
             gameObject.addChild(child2);
 
             if (prop === 'rotation') {
-              child.localRotation = 10;
-              child2.localRotation = 5;
+              child.rotation = 10;
+              child2.rotation = 5;
             }
             else {
-              child.localPosition[prop] = 10;
-              child2.localPosition[prop] = 5;
+              child[prop] = 10;
+              child2[prop] = 5;
             }
 
             gameObject[prop] = 20;
 
-            expect(child[prop]).to.equal(30);
-            expect(child2[prop]).to.equal(25);
+            expect(child[prop]).to.equal(15);
+            expect(child2[prop]).to.equal(10);
           });
 
           it('should update the entire child hierarchy', () => {
@@ -600,21 +552,21 @@ describe('gameObject with properties: ' + JSON.stringify(properties,null,4), () 
             child2.addChild(child3);
 
             if (prop === 'rotation') {
-              child.localRotation = 10;
-              child2.localRotation = 5;
-              child3.localRotation = 15;
+              child.rotation = 10;
+              child2.rotation = 5;
+              child3.rotation = 15;
             }
             else {
-              child.localPosition[prop] = 10;
-              child2.localPosition[prop] = 5;
-              child3.localPosition[prop] = 15;
+              child[prop] = 10;
+              child2[prop] = 5;
+              child3[prop] = 15;
             }
 
             gameObject[prop] = 20;
 
-            expect(child[prop]).to.equal(30);
-            expect(child2[prop]).to.equal(35);
-            expect(child3[prop]).to.equal(50);
+            expect(child[prop]).to.equal(15);
+            expect(child2[prop]).to.equal(10);
+            expect(child3[prop]).to.equal(20);
           });
 
         });

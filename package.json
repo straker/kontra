@@ -5,6 +5,12 @@
   "main": "kontra.js",
   "module": "kontra.mjs",
   "sideEffects": false,
+  "files": [
+    "kontra.js",
+    "kontra.mjs",
+    "kontra.min.js",
+    "kontra.min.mjs"
+  ],
   "scripts": {
     "test": "karma start --single-run && echo \"\nTesting kontra.d.ts with command: tsc test/typings/*.ts\" && tsc test/typings/*.ts",
     "test:watch": "karma start",

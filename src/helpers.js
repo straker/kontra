@@ -1,3 +1,5 @@
+import { getRect } from './utils.js'
+
 /**
  * A group of helpful functions that are commonly used for game development. Includes things such as converting between radians and degrees and getting random integers.
  *
@@ -181,4 +183,91 @@ export function inverseLerp(start, end, value) {
  */
 export function clamp(min, max, value) {
   return Math.min( Math.max(min, value), max );
+}
+
+/**
+ * Save an item to localStorage. A value of `undefined` will remove the item from localStorage.
+ * @function setStoreItem
+ *
+ * @param {String} key - The name of the key.
+ * @param {*} value - The value to store.
+ */
+export function setStoreItem(key, value) {
+  if (value === undefined) {
+    localStorage.removeItem(key);
+  }
+  else {
+    localStorage.setItem(key, JSON.stringify(value));
+  }
+}
+
+/**
+ * Retrieve an item from localStorage and convert it back to its original type.
+ *
+ * Normally when you save a value to LocalStorage it converts it into a string. So if you were to save a number, it would be saved as `"12"` instead of `12`. This function enables the value to be returned as `12`.
+ * @function getStoreItem
+ *
+ * @param {String} key - Name of the key of the item to retrieve.
+ *
+ * @returns {*} The retrieved item.
+ */
+export function getStoreItem(key) {
+  let value = localStorage.getItem(key);
+
+  try {
+    value = JSON.parse(value);
+  }
+  catch(e) {}
+
+  return value;
+}
+
+/**
+ * Check if a two objects collide. Uses a simple [Axis-Aligned Bounding Box (AABB) collision check](https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection#Axis-Aligned_Bounding_Box). Takes into account the sprites [anchor](api/gameObject#anchor) and [scale](api/gameObject#scale).
+ *
+ * **NOTE:** Does not take into account object rotation. If you need collision detection between rotated objects you will need to implement your own `collides()` function. I suggest looking at the Separate Axis Theorem.
+ *
+ *
+ * ```js
+ * import { Sprite, collides } from 'kontra';
+ *
+ * let sprite = Sprite({
+ *   x: 100,
+ *   y: 200,
+ *   width: 20,
+ *   height: 40
+ * });
+ *
+ * let sprite2 = Sprite({
+ *   x: 150,
+ *   y: 200,
+ *   width: 20,
+ *   height: 20
+ * });
+ *
+ * collides(sprite, sprite2);  //=> false
+ *
+ * sprite2.x = 115;
+ *
+ * collides(sprite, sprite2);  //=> true
+ * ```
+ * @function collides
+ *
+ * @param {Object} obj1 - Object reference.
+ * @param {Object} obj2 - Object to check collision against.
+ *
+ * @returns {Boolean|null} `true` if the objects collide, `false` otherwise. Will return `null` if the either of the two objects are rotated.
+ */
+export function collides(obj1, obj2) {
+  if (obj1.rotation || obj2.rotation) return null;
+
+  // @ifdef GAMEOBJECT_SCALE||GAMEOBJECT_ANCHOR
+  // destructure results to obj1 and obj2
+  [obj1, obj2] = [obj1, obj2].map(obj => getRect(obj));
+  // @endif
+
+  return obj1.x < obj2.x + obj2.width &&
+         obj1.x + obj1.width > obj2.x &&
+         obj1.y < obj2.y + obj2.height &&
+         obj1.y + obj1.height > obj2.y;
 }

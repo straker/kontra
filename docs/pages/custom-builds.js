@@ -70,14 +70,15 @@ GameObject options:
 | ttl           | `ttl`, `isAlive` |
 | anchor        | `anchor` |
 | camera        | `sx`, `sy`, `viewX`, `viewY` |
-| group         | `children`, `parent`, `localPosition`, `localRotation` |
+| group         | `children`, `parent` |
+| scale         | `scale`, `scaledWidth`, `scaledHeight`, `setScale()` |
 
 Sprite options:
 
 | Name          | Functionality Enabled |
 | ------------- | ------------- |
-| image         | `image`, flip image using negative width |
-| animation     | `animations`, `playAnimation`, flip image using negative width |
+| image         | `image` |
+| animation     | `animations`, `playAnimation` |
 
 Text options:
 

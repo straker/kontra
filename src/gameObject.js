@@ -22,6 +22,8 @@ import { Factory } from './utils.js'
  * @param {Number} [properties.ttl=Infinity] - How many frames the game object should be alive. Used by [Pool](api/pool).
  * @param {Number} [properties.rotation=0] - game objects rotation around the origin in radians.
  * @param {{x: number, y: number}} [properties.anchor={x:0,y:0}] - The x and y origin of the game object. {x:0, y:0} is the top left corner of the game object, {x:1, y:1} is the bottom right corner.
+ * @param {GameObject[]} [properties.children] - Children to add to the game object. Children added this way have their x/y position treated as relative to the parents x/y position.
+ * @param {{x: number, y: number}} [properties.scale={x:1,y:1}] - The x and y scale of the game object. Calls [setScale](api/gameObject#setScale) with the passed in values.
  *
  * @param {CanvasRenderingContext2D} [properties.context] - The context the game object should draw to. Defaults to [core.getContext()](api/core#getContext).
  *
@@ -35,7 +37,7 @@ class GameObject {
    */
 
   constructor(properties) {
-    this.init(properties);
+    return this.init(properties);
   }
 
   /**
@@ -52,7 +54,7 @@ class GameObject {
     // --------------------------------------------------
 
     /**
-     * The game objects position vector. The game objects position is its position in the world, as opposed to the position in the [viewport](api/gameObject#viewX) or [local position](api/gameObject#localPosition). Typically the position in the world, viewport, and local position are the same value. If the game object has been [added to a tileEngine](/api/tileEngine#addObject), the position vector represents where in the tile world the game object is while the viewport represents where to draw the game object in relation to the top-left corner of the canvas.
+     * The game objects position vector. The game objects position is its position in the world, as opposed to the position in the [viewport](api/gameObject#viewX). Typically the position in the world and viewport are the same value. If the game object has been [added to a tileEngine](/api/tileEngine#addObject), the position vector represents where in the tile world the game object is while the viewport represents where to draw the game object in relation to the top-left corner of the canvas.
      * @memberof GameObject
      * @property {Vector} position
      */
@@ -84,25 +86,6 @@ class GameObject {
 
     // @ifdef GAMEOBJECT_GROUP
     /**
-     * The game objects local position vector, which is its position relative to a parent object. If the game object does not have a parent object, the local position will be the same as the [position vector](api/gameObject#position).
-     * @memberof GameObject
-     * @property {Vector} localPosition
-     */
-    this.localPosition = Vector();
-
-    // @ifdef GAMEOBJECT_ROTATION
-    /**
-     * The game objects local rotation, which is its rotation relative to a parent object. If the game object does not have a parent object, the local rotation will be the same as the [rotation](api/gameObject#rotation).
-     * @memberof GameObject
-     * @property {Number} localRotation
-     */
-    this.localRotation = 0;
-
-    // rot = rotation
-    this._rot = 0;
-    // @endif
-
-    /**
      * The game objects parent object.
      * @memberof GameObject
      * @property {GameObject|null} parent
@@ -114,6 +97,11 @@ class GameObject {
      * @property {GameObject[]} children
      */
     this.children = [];
+
+    // @ifdef GAMEOBJECT_ROTATION
+    // rot = rotation
+    this._rot = 0;
+    // @endif
     // @endif
 
     // @ifdef GAMEOBJECT_VELOCITY
@@ -219,9 +207,26 @@ class GameObject {
     this.sx = this.sy = 0;
     // @endif
 
+    // @ifdef GAMEOBJECT_SCALE
+    /**
+     * The x and y scale of the object. Typically you would not set these properties yourself but use [setScale](/api/gameObject#setScale) instead. Setting these properties directly will not result in the scale property of children being updated.
+     * @memberof GameObject
+     * @property {{x: number, y: number}} scale
+     */
+    this.scale = {x: 1, y: 1};
+    // @endif
+
     // add all properties to the game object, overriding any defaults
-    let { render, ...props } = properties;
+    let { render, children = [], scale = this.scale, ...props } = properties;
     Object.assign(this, props);
+
+    // @ifdef GAMEOBJECT_GROUP
+    children.map(child => this.addChild(child));
+    // @endif
+
+    // @ifdef GAMEOBJECT_SCALE
+    this.setScale(scale.x, scale.y);
+    // @endif
 
     // rf = render function
     this._rf = render || this.draw;
@@ -249,29 +254,25 @@ class GameObject {
   }
 
   set x(value) {
-    this.position.x = value;
-
     // @ifdef GAMEOBJECT_GROUP
-    this.localPosition.x = this.parent ? value - this.parent.x : value;
+    let diff = value - this.position.x;
     this.children.map(child => {
-      if (child.localPosition) {
-        child.x = value + child.localPosition.x
-      }
+      child.x += diff;
     });
     // @endif
+
+    this.position.x = value;
   }
 
   set y(value) {
-    this.position.y = value;
-
     // @ifdef GAMEOBJECT_GROUP
-    this.localPosition.y = this.parent ? value - this.parent.y : value;
+    let diff = value - this.position.y;
     this.children.map(child => {
-      if (child.localPosition) {
-        child.y = value + child.localPosition.y
-      }
+      child.y += diff;
     });
     // @endif
+
+    this.position.y = value;
   }
 
   // @ifdef GAMEOBJECT_VELOCITY
@@ -375,39 +376,89 @@ class GameObject {
   // @endif
 
   // @ifdef GAMEOBJECT_GROUP
+  // @ifdef GAMEOBJECT_ROTATION
   get rotation() {
     return this._rot;
   }
 
-  // override rotation to take into account parent rotations and to set
-  // localRotation
   set rotation(value) {
-    this._rot = value;
-
-    this.localRotation = this.parent ? value - this.parent.rotation : value;
+    let diff = value - this._rot;
     this.children.map(child => {
-      if (child.localRotation) {
-        child.rotation = value + child.localRotation
-      }
+      child.rotation += diff;
     });
+
+    this._rot = value;
   }
+  // @endif
 
   /**
    * Add an object as a child to this object. The child objects position and rotation will be calculated based on this objects position and rotation.
+   *
+   * By default the childs x/y position is interpreted to be relative to the x/y position of the parent. This means that if the childs position is {x: 0, y: 0}, the position will be updated to equal to the parents x/y position when added.
+   *
+   * If instead the position should not be updated based on the parents x/y position, set the `absolute` option to `true`.
    * @memberof GameObject
    * @function addChild
    *
    * @param {GameObject} child - Object to add as a child.
+   * @param {Object} options - Options for adding the child.
+   * @param {Boolean} [options.absolute=false] - If set the true, the x/y position of the child is treated as an absolute position in the world rather than being relative to the x/y position of the parent.
+   *
+   * @example
+   * // exclude-code:start
+   * let { GameObject } = kontra;
+   * // exclude-code:end
+   * // exclude-script:start
+   * import { GameObject } from 'kontra';
+   * // exclude-script:end
+   *
+   * function createObject(x, y, color, size = 1) {
+   *   return GameObject({
+   *     x,
+   *     y,
+   *     width: 50 / size,
+   *     height: 50 / size,
+   *     anchor: {x: 0.5, y: 0.5},
+   *     color,
+   *     // exclude-code:start
+   *     context: context,
+   *     // exclude-code:end
+   *     render: function() {
+   *       this.context.fillStyle = this.color;
+   *       this.context.fillRect(0, 0, this.height, this.width);
+   *     }
+   *   });
+   * }
+   *
+   * let parent = createObject(300, 100, 'red');
+   * let relativeChild = createObject(25, 25, '#62a2f9', 2);
+   * let absoluteChild = createObject(25, 25, 'yellow', 2);
+   *
+   * parent.addChild(relativeChild);
+   * parent.addChild(absoluteChild, {absolute: true});
+   *
+   * parent.render();
    */
-  addChild(child) {
+  addChild(child, { absolute = false } = {}) {
     this.children.push(child);
     child.parent = this;
 
     // set the childs x/y/rotation to trigger localPosition/localRotation
     // calculations
-    child.x = child.x;
-    child.y = child.y;
-    child.rotation = child.rotation;
+    child.x = absolute ? child.x : this.x + child.x;
+    child.y = absolute ? child.y : this.y + child.y;
+
+    // @ifdef GAMEOBJECT_ROTATION
+    if (child.rotation) {
+      child.rotation = absolute ? child.rotation : this.rotation + child.rotation;
+    }
+    // @endif
+
+    // @ifdef GAMEOBJECT_SCALE
+    if (child.setScale) {
+      child.setScale(this.scale.x, this.scale.y);
+    }
+    // @endif
   }
 
   /**
@@ -422,13 +473,38 @@ class GameObject {
     if (index !== -1) {
       this.children.splice(index, 1);
       child.parent = null;
-
-      // set the childs x/y/rotation to trigger localPosition/localRotation
-      // calculations
-      child.x = child.x;
-      child.y = child.y;
-      child.rotation = child.rotation;
     }
+  }
+  // @endif
+
+  // @ifdef GAMEOBJECT_SCALE
+  get scaledWidth() {
+    return this.width * this.scale.x;
+  }
+
+  get scaledHeight() {
+    return this.height * this.scale.y;
+  }
+
+  /**
+   * Set the x and y scale of the object. If only one value is passed, both are set to the same value.
+   * @memberof GameObject
+   * @function setScale
+   *
+   * @param {Number} x - X scale value.
+   * @param {Number} [y=x] - Y scale value.
+   */
+  setScale(x, y = x) {
+    // @ifdef GAMEOBJECT_GROUP
+    let diffX = x - this.scale.x;
+    let diffY = y - this.scale.y;
+    this.children.map(child => {
+      child.setScale(child.scale.x + diffX, child.scale.y + diffY);
+    });
+    // @endif
+
+    this.scale.x = x;
+    this.scale.y = y;
   }
   // @endif
 
@@ -505,56 +581,66 @@ class GameObject {
    * @function render
    */
   render() {
-    let x = 0;
-    let y = 0;
+    this.context.save();
+
     let viewX = this.x;
     let viewY = this.y;
-
-    // @ifdef GAMEOBJECT_ANCHOR
-    x = -this.width * this.anchor.x;
-    y = -this.height * this.anchor.y;
-    // @endif
 
     // @ifdef GAMEOBJECT_CAMERA
     viewX = this.viewX;
     viewY = this.viewY;
     // @endif
 
-    // @ifdef GAMEOBJECT_GROUP
-    if (this.parent) {
-      viewX = this.localPosition.x;
-      viewY = this.localPosition.y;
+    // it's faster to only translate if one of the values is non-zero
+    // rather than always translating
+    // @see https://jsperf.com/translate-or-if-statement/
+    if (viewX || viewY) {
+      this.context.translate(viewX, viewY);
     }
-    // @endif
-
-    this.context.save();
-    this.context.translate(viewX, viewY);
 
     // @ifdef GAMEOBJECT_ROTATION
-    // rotate around the anchor
+    // rotate around the anchor. it's faster to only rotate when set
+    // rather than always rotating
+    // @see https://jsperf.com/rotate-or-if-statement/
     if (this.rotation) {
-      let rotation = this.rotation;
-
-      // @ifdef GAMEOBJECT_GROUP
-      rotation = this.localRotation;
-      // @endif
-
-      this.context.rotate(rotation);
+      this.context.rotate(this.rotation);
     }
     // @endif
 
     // @ifdef GAMEOBJECT_ANCHOR
-    this.context.translate(x, y);
+    let width = this.width;
+    let height = this.height;
+
+    // @ifdef GAMEOBJECT_SCALE
+    width = this.scaledWidth;
+    height = this.scaledHeight;
+    // @endif
+
+    let x = -width * this.anchor.x;
+    let y = -height * this.anchor.y;
+    if (x || y) {
+      this.context.translate(x, y);
+    }
+    // @endif
+
+    // @ifdef GAMEOBJECT_SCALE
+    // it's faster to only scale if one of the values is non-zero
+    // rather than always scaling
+    // @see https://jsperf.com/scale-or-if-statement/
+    let scaleX = this.scale.x;
+    let scaleY = this.scale.y;
+    if (scaleX || scaleY) {
+      this.context.scale(scaleX, scaleY);
+    }
     // @endif
 
     this._rf();
+    this.context.restore();
 
     // @ifdef GAMEOBJECT_GROUP
     // perform all transforms on the parent before rendering the children
     this.children.map(child => child.render && child.render());
     // @endif
-
-    this.context.restore();
   }
 
   /**

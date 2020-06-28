@@ -17,6 +17,7 @@ const context = {
   GAMEOBJECT_TTL: true,
   GAMEOBJECT_ANCHOR: true,
   GAMEOBJECT_CAMERA: true,
+  GAMEOBJECT_SCALE: true,
   SPRITE_IMAGE: true,
   SPRITE_ANIMATION: true,
   TEXT_AUTONEWLINE: true,
@@ -43,7 +44,8 @@ function buildIife() {
     }
   })
   .pipe(source('kontra.js'))
-  .pipe(gulp.dest('.'));
+  .pipe(gulp.dest('.'))
+  .pipe(gulp.dest('./docs/assets/js'));
 }
 
 function buildModule() {

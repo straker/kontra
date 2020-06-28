@@ -16,6 +16,7 @@ export { init, getCanvas, getContext } from './core.js'
 export { on, off, emit } from './events.js'
 export { default as GameLoop } from './gameLoop.js'
 export { default as GameObject } from './gameObject.js'
+export { default as GridManager } from './gridManager.js'
 export {
   degToRad,
   radToDeg,
@@ -48,6 +49,5 @@ export { default as Sprite } from './sprite.js'
 export { default as SpriteSheet } from './spriteSheet.js'
 export { default as Text } from './text.js'
 export { default as TileEngine } from './tileEngine.js'
-export { default as UIManager } from './uiManager.js'
 export { default as Vector } from './vector.js'
 export { default } from './kontra.defaults.js'

@@ -16,6 +16,7 @@ import { init, getCanvas, getContext } from './core.js'
 import { on, off, emit } from './events.js'
 import GameLoop from './gameLoop.js'
 import GameObject from './gameObject.js'
+import GridManager from './gridManager.js'
 import {
   radToDeg,
   degToRad,
@@ -48,7 +49,6 @@ import Sprite from './sprite.js'
 import SpriteSheet from './spriteSheet.js'
 import Text from './text.js'
 import TileEngine from './tileEngine.js'
-import UIManager from './uiManager.js'
 import Vector from './vector.js'
 
 let kontra = {
@@ -67,8 +67,6 @@ let kontra = {
 
   Button,
 
-  collides,
-
   init,
   getCanvas,
   getContext,
@@ -79,6 +77,7 @@ let kontra = {
 
   GameLoop,
   GameObject,
+  GridManager,
 
   degToRad,
   radToDeg,
@@ -88,6 +87,9 @@ let kontra = {
   lerp,
   inverseLerp,
   clamp,
+  setStoreItem,
+  getStoreItem,
+  collides,
 
   keyMap,
   initKeys,
@@ -114,12 +116,8 @@ let kontra = {
   Sprite,
   SpriteSheet,
 
-  setStoreItem,
-  getStoreItem,
-
   Text,
   TileEngine,
-  UIManager,
   Vector
 };
 

@@ -103,8 +103,8 @@ declare namespace kontra {
   interface GameObjectConstructor {
     readonly class: GameObjectConstructor;
     readonly prototype: GameObject;
-    new(properties?: {x?: number, y?: number, dx?: number, dy?: number, ddx?: number, ddy?: number, width?: number, height?: number, ttl?: number, rotation?: number, anchor?: {x: number, y: number}, children?: GameObject[], context?: CanvasRenderingContext2D, update?: (dt?: number) => void, render?: Function, [props: string]: any}): GameObject;
-    (properties?: {x?: number, y?: number, dx?: number, dy?: number, ddx?: number, ddy?: number, width?: number, height?: number, ttl?: number, rotation?: number, anchor?: {x: number, y: number}, children?: GameObject[], context?: CanvasRenderingContext2D, update?: (dt?: number) => void, render?: Function, [props: string]: any}): GameObject;
+    new(properties?: {x?: number, y?: number, dx?: number, dy?: number, ddx?: number, ddy?: number, width?: number, height?: number, ttl?: number, rotation?: number, anchor?: {x: number, y: number}, children?: GameObject[], scale?: {x: number, y: number}, context?: CanvasRenderingContext2D, update?: (dt?: number) => void, render?: Function, [props: string]: any}): GameObject;
+    (properties?: {x?: number, y?: number, dx?: number, dy?: number, ddx?: number, ddy?: number, width?: number, height?: number, ttl?: number, rotation?: number, anchor?: {x: number, y: number}, children?: GameObject[], scale?: {x: number, y: number}, context?: CanvasRenderingContext2D, update?: (dt?: number) => void, render?: Function, [props: string]: any}): GameObject;
   }
   var GameObject: GameObjectConstructor
   interface Sprite extends GameObject {
@@ -119,8 +119,8 @@ declare namespace kontra {
   interface SpriteConstructor {
     readonly class: SpriteConstructor;
     readonly prototype: Sprite;
-    new(properties?: {color?: string, image?: HTMLImageElement | HTMLCanvasElement, animations?: object, x?: number, y?: number, dx?: number, dy?: number, ddx?: number, ddy?: number, width?: number, height?: number, ttl?: number, rotation?: number, anchor?: {x: number, y: number}, children?: GameObject[], context?: CanvasRenderingContext2D, update?: (dt?: number) => void, render?: Function, [props: string]: any}): Sprite;
-    (properties?: {color?: string, image?: HTMLImageElement | HTMLCanvasElement, animations?: object, x?: number, y?: number, dx?: number, dy?: number, ddx?: number, ddy?: number, width?: number, height?: number, ttl?: number, rotation?: number, anchor?: {x: number, y: number}, children?: GameObject[], context?: CanvasRenderingContext2D, update?: (dt?: number) => void, render?: Function, [props: string]: any}): Sprite;
+    new(properties?: {color?: string, image?: HTMLImageElement | HTMLCanvasElement, animations?: object, x?: number, y?: number, dx?: number, dy?: number, ddx?: number, ddy?: number, width?: number, height?: number, ttl?: number, rotation?: number, anchor?: {x: number, y: number}, children?: GameObject[], scale?: {x: number, y: number}, context?: CanvasRenderingContext2D, update?: (dt?: number) => void, render?: Function, [props: string]: any}): Sprite;
+    (properties?: {color?: string, image?: HTMLImageElement | HTMLCanvasElement, animations?: object, x?: number, y?: number, dx?: number, dy?: number, ddx?: number, ddy?: number, width?: number, height?: number, ttl?: number, rotation?: number, anchor?: {x: number, y: number}, children?: GameObject[], scale?: {x: number, y: number}, context?: CanvasRenderingContext2D, update?: (dt?: number) => void, render?: Function, [props: string]: any}): Sprite;
   }
   var Sprite: SpriteConstructor
   interface Text extends GameObject {
@@ -132,8 +132,8 @@ declare namespace kontra {
   interface TextConstructor {
     readonly class: TextConstructor;
     readonly prototype: Text;
-    new(properties: {text: string, font?: string, color?: string, width?: number, textAlign?: string, x?: number, y?: number, dx?: number, dy?: number, ddx?: number, ddy?: number, height?: number, ttl?: number, rotation?: number, anchor?: {x: number, y: number}, children?: GameObject[], context?: CanvasRenderingContext2D, update?: (dt?: number) => void, render?: Function, [props: string]: any}): Text;
-    (properties: {text: string, font?: string, color?: string, width?: number, textAlign?: string, x?: number, y?: number, dx?: number, dy?: number, ddx?: number, ddy?: number, height?: number, ttl?: number, rotation?: number, anchor?: {x: number, y: number}, children?: GameObject[], context?: CanvasRenderingContext2D, update?: (dt?: number) => void, render?: Function, [props: string]: any}): Text;
+    new(properties: {text: string, font?: string, color?: string, width?: number, textAlign?: string, x?: number, y?: number, dx?: number, dy?: number, ddx?: number, ddy?: number, height?: number, ttl?: number, rotation?: number, anchor?: {x: number, y: number}, children?: GameObject[], scale?: {x: number, y: number}, context?: CanvasRenderingContext2D, update?: (dt?: number) => void, render?: Function, [props: string]: any}): Text;
+    (properties: {text: string, font?: string, color?: string, width?: number, textAlign?: string, x?: number, y?: number, dx?: number, dy?: number, ddx?: number, ddy?: number, height?: number, ttl?: number, rotation?: number, anchor?: {x: number, y: number}, children?: GameObject[], scale?: {x: number, y: number}, context?: CanvasRenderingContext2D, update?: (dt?: number) => void, render?: Function, [props: string]: any}): Text;
   }
   var Text: TextConstructor
   var pointer: {x: number, y: number, radius: number};
@@ -161,8 +161,8 @@ declare namespace kontra {
   interface ButtonConstructor {
     readonly class: ButtonConstructor;
     readonly prototype: Button;
-    new(properties: {onEnable?: Function, onDisable?: Function, onFocus?: Function, onBlur?: Function, onUp?: Function, text: string, font?: string, color?: string, width?: number, textAlign?: string, x?: number, y?: number, dx?: number, dy?: number, ddx?: number, ddy?: number, height?: number, ttl?: number, rotation?: number, anchor?: {x: number, y: number}, children?: GameObject[], context?: CanvasRenderingContext2D, update?: (dt?: number) => void, render?: Function, [props: string]: any}): Button;
-    (properties: {onEnable?: Function, onDisable?: Function, onFocus?: Function, onBlur?: Function, onUp?: Function, text: string, font?: string, color?: string, width?: number, textAlign?: string, x?: number, y?: number, dx?: number, dy?: number, ddx?: number, ddy?: number, height?: number, ttl?: number, rotation?: number, anchor?: {x: number, y: number}, children?: GameObject[], context?: CanvasRenderingContext2D, update?: (dt?: number) => void, render?: Function, [props: string]: any}): Button;
+    new(properties: {onEnable?: Function, onDisable?: Function, onFocus?: Function, onBlur?: Function, onUp?: Function, text: string, font?: string, color?: string, width?: number, textAlign?: string, x?: number, y?: number, dx?: number, dy?: number, ddx?: number, ddy?: number, height?: number, ttl?: number, rotation?: number, anchor?: {x: number, y: number}, children?: GameObject[], scale?: {x: number, y: number}, context?: CanvasRenderingContext2D, update?: (dt?: number) => void, render?: Function, [props: string]: any}): Button;
+    (properties: {onEnable?: Function, onDisable?: Function, onFocus?: Function, onBlur?: Function, onUp?: Function, text: string, font?: string, color?: string, width?: number, textAlign?: string, x?: number, y?: number, dx?: number, dy?: number, ddx?: number, ddy?: number, height?: number, ttl?: number, rotation?: number, anchor?: {x: number, y: number}, children?: GameObject[], scale?: {x: number, y: number}, context?: CanvasRenderingContext2D, update?: (dt?: number) => void, render?: Function, [props: string]: any}): Button;
   }
   var Button: ButtonConstructor
   interface GameLoop {

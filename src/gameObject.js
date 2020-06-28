@@ -23,6 +23,7 @@ import { Factory } from './utils.js'
  * @param {Number} [properties.rotation=0] - game objects rotation around the origin in radians.
  * @param {{x: number, y: number}} [properties.anchor={x:0,y:0}] - The x and y origin of the game object. {x:0, y:0} is the top left corner of the game object, {x:1, y:1} is the bottom right corner.
  * @param {GameObject[]} [properties.children] - Children to add to the game object. Children added this way have their x/y position treated as relative to the parents x/y position.
+ * @param {{x: number, y: number}} [properties.scale={x:1,y:1}] - The x and y scale of the game object. Calls [setScale](api/gameObject#setScale) with the passed in values.
  *
  * @param {CanvasRenderingContext2D} [properties.context] - The context the game object should draw to. Defaults to [core.getContext()](api/core#getContext).
  *
@@ -216,10 +217,16 @@ class GameObject {
     // @endif
 
     // add all properties to the game object, overriding any defaults
-    let { render, children = [], ...props } = properties;
+    let { render, children = [], scale = this.scale, ...props } = properties;
     Object.assign(this, props);
 
+    // @ifdef GAMEOBJECT_GROUP
     children.map(child => this.addChild(child));
+    // @endif
+
+    // @ifdef GAMEOBJECT_SCALE
+    this.setScale(scale.x, scale.y);
+    // @endif
 
     // rf = render function
     this._rf = render || this.draw;

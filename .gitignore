@@ -1,6 +1,12 @@
 node_modules
 .DS_Store
 coverage
+docs/api
+docs/**/*.html
+docs/assets/js/kontra.js
+kontra.js
+kontra.mjs
+kontra.min.*
 test/permutations/*.js
 test/permutations/*.spec.js
 test/typings/*.js

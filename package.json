@@ -9,7 +9,8 @@
     "kontra.js",
     "kontra.mjs",
     "kontra.min.js",
-    "kontra.min.mjs"
+    "kontra.min.mjs",
+    "kontra.d.ts"
   ],
   "scripts": {
     "test": "karma start --single-run && echo \"\nTesting kontra.d.ts with command: tsc test/typings/*.ts\" && tsc test/typings/*.ts",

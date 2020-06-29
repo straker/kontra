@@ -5,5 +5,15 @@ dist: trusty
 sudo: required
 addons:
   chrome: stable
-script: npm test && npm run test:permutations
+script: npm run build && npm test && npm run test:permutations
 after_script: "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
+
+# Deploy github pages
+deploy:
+  provider: pages
+  skip_cleanup: true
+  github_token: $GITHUB_TOKEN
+  keep_history: true
+  local_dir: docs
+  # on:
+  #   branch: master

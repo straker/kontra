@@ -16,7 +16,9 @@ describe('button', () => {
   let button;
   beforeEach(() => {
    button = Button({
-      text: 'Hello'
+      text: {
+        text: 'Hello'
+      }
     });
   });
 
@@ -31,17 +33,20 @@ describe('button', () => {
 
     it('should setup basic properties', () => {
       button = Button({
-        text: 'Hello',
-        font: '32px Arial',
-        width: 100,
-        color: 'black'
+        text: {
+          text: 'Hello',
+          font: '32px Arial',
+          width: 100,
+          color: 'black'
+        }
       });
 
-      expect(button.width).to.equal(100);
-      expect(button.height).to.equal(32);
-      expect(button.font).to.equal('32px Arial');
-      expect(button.text).to.equal('Hello');
-      expect(button.color).to.equal('black');
+      expect(button.textNode).to.exist;
+      expect(button.textNode.width).to.equal(100);
+      expect(button.textNode.height).to.equal(32);
+      expect(button.textNode.font).to.equal('32px Arial');
+      expect(button.textNode.text).to.equal('Hello');
+      expect(button.textNode.color).to.equal('black');
     });
 
     it('should create a DOM node and add it to the page', () => {

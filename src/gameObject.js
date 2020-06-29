@@ -360,6 +360,34 @@ class GameObject {
   set viewY(value) {
     return;
   }
+
+  // ifdef GAMEOBJECT_GROUP
+  get sx() {
+    return this._sx;
+  }
+
+  get sy() {
+    return this._sy;
+  }
+
+  set sx(value) {
+    let diff = value - this._sx;
+    this.children.map(child => {
+      child.sx += diff;
+    });
+
+    this._sx = value;
+  }
+
+  set sy(value) {
+    let diff = value - this._sy;
+    this.children.map(child => {
+      child.sy += diff;
+    });
+
+    this._sy = value;
+  }
+  // @endif
   // @endif
 
   // @ifdef GAMEOBJECT_TTL
@@ -401,7 +429,7 @@ class GameObject {
    * @function addChild
    *
    * @param {GameObject} child - Object to add as a child.
-   * @param {Object} options - Options for adding the child.
+   * @param {Object} [options] - Options for adding the child.
    * @param {Boolean} [options.absolute=false] - If set the true, the x/y position of the child is treated as an absolute position in the world rather than being relative to the x/y position of the parent.
    *
    * @example

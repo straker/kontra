@@ -25,6 +25,7 @@ jobs:
       - npm run test:permutations
   - name: "Deploy gh-pages"
     if: type = push
+    script: npm run build:docs
     deploy:
       provider: pages
       skip_cleanup: true

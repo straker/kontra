@@ -360,6 +360,34 @@ class GameObject {
   set viewY(value) {
     return;
   }
+
+  // @ifdef GAMEOBJECT_GROUP
+  get sx() {
+    return this._sx;
+  }
+
+  get sy() {
+    return this._sy;
+  }
+
+  set sx(value) {
+    let diff = value - this._sx;
+    this.children.map(child => {
+      child.sx += diff;
+    });
+
+    this._sx = value;
+  }
+
+  set sy(value) {
+    let diff = value - this._sy;
+    this.children.map(child => {
+      child.sy += diff;
+    });
+
+    this._sy = value;
+  }
+  // @endif
   // @endif
 
   // @ifdef GAMEOBJECT_TTL
@@ -401,7 +429,7 @@ class GameObject {
    * @function addChild
    *
    * @param {GameObject} child - Object to add as a child.
-   * @param {Object} options - Options for adding the child.
+   * @param {Object} [options] - Options for adding the child.
    * @param {Boolean} [options.absolute=false] - If set the true, the x/y position of the child is treated as an absolute position in the world rather than being relative to the x/y position of the parent.
    *
    * @example
@@ -449,7 +477,7 @@ class GameObject {
     child.y = absolute ? child.y : this.y + child.y;
 
     // @ifdef GAMEOBJECT_ROTATION
-    if (child.rotation) {
+    if ('rotation' in child) {
       child.rotation = absolute ? child.rotation : this.rotation + child.rotation;
     }
     // @endif
@@ -457,6 +485,13 @@ class GameObject {
     // @ifdef GAMEOBJECT_SCALE
     if (child.setScale) {
       child.setScale(this.scale.x, this.scale.y);
+    }
+    // @endif
+
+    // @ifdef GAMEOBJECT_CAMERA
+    if ('sx' in child) {
+      child.sx = absolute ? child.sx : this.sx + child.sx;
+      child.sy = absolute ? child.sy : this.sy + child.sy;
     }
     // @endif
   }

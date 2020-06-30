@@ -361,7 +361,7 @@ class GameObject {
     return;
   }
 
-  // ifdef GAMEOBJECT_GROUP
+  // @ifdef GAMEOBJECT_GROUP
   get sx() {
     return this._sx;
   }
@@ -477,7 +477,7 @@ class GameObject {
     child.y = absolute ? child.y : this.y + child.y;
 
     // @ifdef GAMEOBJECT_ROTATION
-    if (child.rotation) {
+    if ('rotation' in child) {
       child.rotation = absolute ? child.rotation : this.rotation + child.rotation;
     }
     // @endif
@@ -485,6 +485,13 @@ class GameObject {
     // @ifdef GAMEOBJECT_SCALE
     if (child.setScale) {
       child.setScale(this.scale.x, this.scale.y);
+    }
+    // @endif
+
+    // @ifdef GAMEOBJECT_CAMERA
+    if ('sx' in child) {
+      child.sx = absolute ? child.sx : this.sx + child.sx;
+      child.sy = absolute ? child.sy : this.sy + child.sy;
     }
     // @endif
   }

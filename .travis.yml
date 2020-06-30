@@ -5,15 +5,31 @@ dist: trusty
 sudo: required
 addons:
   chrome: stable
-script: npm run build && npm test && npm run test:permutations
-after_script: "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
 
-# Deploy github pages
-deploy:
-  provider: pages
-  skip_cleanup: true
-  github_token: $GITHUB_TOKEN
-  keep_history: true
-  local_dir: docs
-  # on:
-  #   branch: main
+jobs:
+  include:
+  - name: "Unit Tests"
+    if: type = pull_request
+    script:
+      - npm test
+    after_success: "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
+  - name: "Typescript Tests"
+    if: type = pull_request
+    script:
+      - npm run build
+      - npm run test:typescript
+  - name: "Permutation Tests"
+    if: type = pull_request
+    script:
+      - npm run build
+      - npm run test:permutations
+  - name: "Deploy gh-pages"
+    if: type = push
+    deploy:
+      provider: pages
+      skip_cleanup: true
+      github_token: $GITHUB_TOKEN
+      keep_history: true
+      local_dir: docs
+      on:
+        branch: v7 #Test this branch

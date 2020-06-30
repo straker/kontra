@@ -18,6 +18,7 @@
     "test:permutations": "node test/permutations",
     "test:typescript": "tsc test/typings/*.ts",
     "build": "gulp build",
+    "build:docs": "gulp build:docs",
     "dist": "gulp dist"
   },
   "repository": {

@@ -21,13 +21,13 @@ jobs:
   # - name: "Permutation Tests"
   #   if: type = pull_request
   #   script: npm run test:permutations
-
-# Deploy github pages
-deploy:
-  provider: pages
-  skip_cleanup: true
-  github_token: $GITHUB_TOKEN
-  keep_history: true
-  local_dir: docs
-  on:
-    branch: v7 #Test this branch
+  - name: "Deploy gh-pages"
+    if: type = pull_request
+    deploy:
+      provider: pages
+      skip_cleanup: true
+      github_token: $GITHUB_TOKEN
+      keep_history: true
+      local_dir: docs
+      on:
+        branch: v7 #Test this branch

@@ -18,11 +18,13 @@ jobs:
     script:
       - npm run build
       - npm run test:typescript
-  # - name: "Permutation Tests"
-  #   if: type = pull_request
-  #   script: npm run test:permutations
-  - name: "Deploy gh-pages"
+  - name: "Permutation Tests"
     if: type = pull_request
+    script:
+      - npm run build
+      - npm run test:permutations
+  - name: "Deploy gh-pages"
+    if: type = push
     deploy:
       provider: pages
       skip_cleanup: true

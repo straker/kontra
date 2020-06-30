@@ -10,11 +10,14 @@ jobs:
   include:
   - name: "Unit Tests"
     if: type = pull_request
-    script: npm test
+    script:
+      - npm test
     after_success: "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
   - name: "Typescript Tests"
     if: type = pull_request
-    script: tsc test/typings/*.ts
+    script:
+      - npm run build
+      - npm run test:typescript
   # - name: "Permutation Tests"
   #   if: type = pull_request
   #   script: npm run test:permutations

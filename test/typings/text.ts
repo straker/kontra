@@ -12,6 +12,7 @@ let font: string = text.font;
 let textAlign: string = text.textAlign;
 let width: number = text.width;
 let height: number = text.height;
+let lineHeight: number = text.lineHeight;
 
 // inheritance
 text.x += 20;
@@ -27,5 +28,6 @@ kontra.Text({
   color: 'black',
   font: '32px Arial',
   textAlign: 'right',
-  width: 200
+  width: 200,
+  lineHeight: 3
 });

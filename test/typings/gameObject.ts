@@ -8,12 +8,11 @@ let acceleration: kontra.Vector = gameObject.acceleration;
 let width: number = gameObject.width;
 let height: number = gameObject.height;
 let context: CanvasRenderingContext2D = gameObject.context;
-let localPosition: kontra.Vector = gameObject.localPosition;
-let localRotation: number = gameObject.localRotation;
 let children: kontra.GameObject[] = gameObject.children;
 let rotation: number = gameObject.rotation;
 let ttl: number = gameObject.ttl;
 let anchor: {x: number, y: number} = gameObject.anchor;
+let scale: {x: number, y: number} = gameObject.scale;
 let sx: number = gameObject.sx;
 let sy: number = gameObject.sy;
 let x: number = gameObject.x;
@@ -24,6 +23,8 @@ let ddx: number = gameObject.ddx;
 let ddy: number = gameObject.ddy;
 let viewX: number = gameObject.viewX;
 let viewY: number = gameObject.viewY;
+let scaledWidth: number = gameObject.scaledWidth;
+let scaledHeight: number = gameObject.scaledHeight;
 
 let alive: boolean = gameObject.isAlive();
 gameObject.addChild(kontra.GameObject());
@@ -34,6 +35,8 @@ gameObject.advance();
 gameObject.advance(1/60);
 gameObject.render();
 gameObject.draw();
+gameObject.setScale(1);
+gameObject.setScale(1, 2);
 
 // options
 kontra.GameObject({
@@ -48,6 +51,7 @@ kontra.GameObject({
   ttl: 10,
   rotation: 10,
   anchor: {x: 2, y: 2},
+  sclae: {x: 2, y: 2},
   context: document.createElement('canvas').getContext('2d'),
   update() {},
   render() {}

@@ -19,12 +19,18 @@ jobs:
       - npm run build
       - npm run test:typescript
 
-  # run permutations in parallel
+  # run permutations in parallel (starting with the longer running ones
+  # so they have more time to complete while the shorter ones finish)
   - name: "Permutation Tests: gameObject"
     if: type = pull_request
     script:
       - npm run build
       - npm run test:permutations gameObject
+  - name: "Permutation Tests: vector"
+    if: type = pull_request
+    script:
+      - npm run build
+      - npm run test:permutations vector
   - name: "Permutation Tests: sprite"
     if: type = pull_request
     script:
@@ -35,11 +41,6 @@ jobs:
     script:
       - npm run build
       - npm run test:permutations text
-  - name: "Permutation Tests: vector"
-    if: type = pull_request
-    script:
-      - npm run build
-      - npm run test:permutations vector
 
   - name: "Deploy gh-pages"
     if: type = push

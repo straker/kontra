@@ -212,6 +212,12 @@ text.render();
           </dt>
           <dd><p><em>String</em>. The <a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/textAlign">textAlign</a> for the context. If the <code>dir</code> attribute is set to <code>rtl</code> on the main canvas, the text will automatically be aligned to the right, but you can override that by setting this property. Defaults to <code>&#39;left&#39;</code>.</p>
         </dd>
+          <dt>
+            <code>properties.lineHeight</code>
+            <span class="optional">Optional</span>
+          </dt>
+          <dd><p><em>Number</em>. The distance between two lines of text. Defaults to <code>1</code>.</p>
+        </dd>
         </dl>
         
 
@@ -231,6 +237,11 @@ text.render();
                 <li>
                   <a href="api/text#font">
                     <span>Text&#8203;.font</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="api/text#lineHeight">
+                    <span>Text&#8203;.lineHeight</span>
                   </a>
                 </li>
                 <li>
@@ -270,6 +281,17 @@ text.render();
           </h2>
 
           <p><em>String</em>. The font style.</p>
+          
+        </section>
+        <section>
+          <h2 id="lineHeight">
+            <a href="api/text#lineHeight" class="section-link">
+              <span>Text&#8203;.lineHeight</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
+
+          <p><em>Number</em>. The distance between two lines of text. The value is multiplied by the texts font size.</p>
           
         </section>
         <section>

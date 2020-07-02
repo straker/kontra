@@ -124,12 +124,19 @@ export default {
         // enable only velocity and rotation functionality
         velocity: true,
         rotation: true
-      }
+      },
+      vector: {
+        // enable vector length functionality
+        length: true
+      },
+      // turn on debugging
+      debug: true
     })
   ]
 }</code></pre>
 <h3 id="available-options">Available options</h3>
-<p>GameObject options:</p>
+<p>Options are passed by nesting the option with the parent source. For example, to enable the <code>image</code> functionality of a sprite, you would pass <code>sprite: { image: true }</code>.</p>
+<h4 id="gameobject-options"><code>gameObject</code> options:</h4>
 <table>
 <thead>
 <tr>
@@ -170,7 +177,7 @@ export default {
 <td><code>scale</code>, <code>scaledWidth</code>, <code>scaledHeight</code>, <code>setScale()</code></td>
 </tr>
 </tbody></table>
-<p>Sprite options:</p>
+<h4 id="sprite-options"><code>sprite</code> options:</h4>
 <table>
 <thead>
 <tr>
@@ -187,7 +194,7 @@ export default {
 <td><code>animations</code>, <code>playAnimation</code></td>
 </tr>
 </tbody></table>
-<p>Text options:</p>
+<h4 id="text-options"><code>text</code> options:</h4>
 <table>
 <thead>
 <tr>
@@ -212,7 +219,7 @@ export default {
 <td>Support for RTL languages</td>
 </tr>
 </tbody></table>
-<p>Vector options:</p>
+<h4 id="vector-options"><code>vector</code> options:</h4>
 <table>
 <thead>
 <tr>
@@ -234,7 +241,7 @@ export default {
 </tr>
 <tr>
 <td>normalize</td>
-<td><code>normalize()</code> (requires <code>length</code> option as well)</td>
+<td><code>normalize()</code> (also enables <code>length</code>)</td>
 </tr>
 <tr>
 <td>dot</td>
@@ -246,11 +253,25 @@ export default {
 </tr>
 <tr>
 <td>angle</td>
-<td><code>angle()</code> (requires <code>dot</code> and <code>length</code> options as well)</td>
+<td><code>angle()</code> (also enables <code>length</code> and <code>dot</code>)</td>
 </tr>
 <tr>
 <td>clamp</td>
 <td><code>clamp()</code></td>
+</tr>
+</tbody></table>
+<h4 id="general-options">General Options:</h4>
+<p>General options do not have a parent source and are passed as siblings to the other source options. For example, to enable debugging you would just pass <code>debug: true</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Functionality Enabled</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>debug</td>
+<td>Turn on debugging information</td>
 </tr>
 </tbody></table>
         

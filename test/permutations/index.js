@@ -5,7 +5,7 @@ const pp = require('preprocess');
 const path = require('path');
 const execSync = require('child_process').execSync;
 
-const options = {
+let options = {
   gameObject: [
     'GAMEOBJECT_GROUP',
     'GAMEOBJECT_VELOCITY',
@@ -38,10 +38,30 @@ const options = {
   ]
 };
 
+// run permutations in parallel by passing in which permutation suite to run
+const optionName = process.argv.slice(2)[0];
+if (optionName && options[optionName]) {
+  options = {
+    [optionName]: options[optionName]
+  }
+}
+
 Object.keys(options).forEach(option => {
+  // get the setup code
+  let setup = fs.readFileSync(path.join(__dirname, '../setup.js'), 'utf-8');
+  setup = setup.replace('../src/core.js', '../../src/core.js');
+
   // copy test suite and change path
   let test = fs.readFileSync(path.join(__dirname, `../unit/${option}.spec.js`), 'utf-8');
   test = test.replace(`../../src/${option}.js`, `./${option}.js`);
+
+  // since loading the setup code causes the core file to be loaded
+  // twice (and destroying context references) we'll need to inject
+  // the setup code into each test suite manually
+  let matches = test.match(/(import.*?from.*?[\n\r])/g);
+  let lastImport = matches[matches.length - 1];
+  test = test.replace(lastImport, `${lastImport}${setup}`);
+
   fs.writeFileSync(path.join(__dirname, `${option}.spec.js`), test, 'utf-8');
 
   // copy file and correct paths

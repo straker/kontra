@@ -39,7 +39,7 @@ import { getRect } from './utils.js'
  * @docs docs/api_docs/tileEngine.js
  */
 
-export default function TileEngine(properties = {}) {
+export default function TileEngine(properties) {
   let {
     width,
     height,
@@ -127,7 +127,6 @@ export default function TileEngine(properties = {}) {
     mapheight: mapheight,
     _sx: 0,
     _sy: 0,
-
 
     // d = dirty
     _d: false,
@@ -357,6 +356,7 @@ export default function TileEngine(properties = {}) {
       let col = position.col || getCol(position.x);
 
       if (layerMap[name]) {
+        this._d = true;
         layerMap[name]._d = true;
         layerMap[name].data[col + row * tileEngine.width] = tile;
       }
@@ -398,6 +398,7 @@ export default function TileEngine(properties = {}) {
     */
     setLayer(name, data) {
       if (layerMap[name]) {
+        this._d = true;
         layerMap[name]._d = true;
         layerMap[name].data = data;
       }

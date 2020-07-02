@@ -1,17 +1,18 @@
 import GameObject from '../../src/gameObject.js'
-import { init, getCanvas, getContext } from '../../src/core.js'
+import { getContext } from '../../src/core.js'
 import { noop } from '../../src/utils.js'
 
 let testGameObject = GameObject();
 
-// optional properties
+// optional properties used to test that each permutation of
+// options works correctly
 let hasGroup = testGameObject.hasOwnProperty('children');
 let hasVelocity = testGameObject.hasOwnProperty('velocity');
 let hasAcceleration = testGameObject.hasOwnProperty('acceleration');
 let hasRotation = typeof testGameObject.rotation !== 'undefined';
 let hasTTL = testGameObject.hasOwnProperty('ttl');
 let hasAnchor = testGameObject.hasOwnProperty('anchor');
-let hasCamera = testGameObject.hasOwnProperty('sx');
+let hasCamera = typeof testGameObject.sx !== 'undefined';
 let hasScale = testGameObject.hasOwnProperty('scale');
 
 let properties = {
@@ -30,14 +31,6 @@ let properties = {
 // --------------------------------------------------
 describe('gameObject with properties: ' + JSON.stringify(properties,null,4), () => {
 
-  before(() => {
-    if (!getCanvas()) {
-      let canvas = document.createElement('canvas');
-      canvas.width = canvas.height = 600;
-      init(canvas);
-    }
-  });
-
   // --------------------------------------------------
   // init
   // --------------------------------------------------
@@ -53,14 +46,36 @@ describe('gameObject with properties: ' + JSON.stringify(properties,null,4), () 
       expect(gameObject.position.constructor.name).to.equal('Vector');
 
       // options
+      if (hasGroup) {
+        expect(gameObject.children).to.eql([]);
+      }
+
       if (hasVelocity) {
         expect(gameObject.velocity.constructor.name).to.equal('Vector');
       }
       if (hasAcceleration) {
         expect(gameObject.acceleration.constructor.name).to.equal('Vector');
       }
+
+      if (hasRotation) {
+        expect(gameObject.rotation).to.equal(0);
+      }
+
       if (hasTTL) {
         expect(gameObject.ttl).to.equal(Infinity);
+      }
+
+      if (hasAnchor) {
+        expect(gameObject.anchor).to.eql({x: 0, y: 0});
+      }
+
+      if (hasCamera) {
+        expect(gameObject.sx).to.equal(0);
+        expect(gameObject.sy).to.equal(0);
+      }
+
+      if (hasScale) {
+        expect(gameObject.scale).to.eql({x: 1, y: 1});
       }
     });
 
@@ -145,6 +160,34 @@ describe('gameObject with properties: ' + JSON.stringify(properties,null,4), () 
       });
     }
 
+    if (hasGroup) {
+      it('should call addChild for passed in children', () => {
+        let spy = sinon.spy(GameObject.prototype, 'addChild');
+
+        let gameObject = GameObject({
+          children: [GameObject(), GameObject()]
+        });
+
+        expect(spy.calledTwice).to.be.true;
+
+        GameObject.prototype.addChild.restore();
+      });
+    }
+
+    if (hasScale) {
+      it('should call setScale with the passed in scale', () => {
+        let spy = sinon.spy(GameObject.prototype, 'setScale');
+
+        let gameObject = GameObject({
+          scale: {x: 2, y: 2}
+        });
+
+        expect(spy.calledWith(2, 2)).to.be.true;
+
+        GameObject.prototype.setScale.restore();
+      });
+    }
+
   });
 
 
@@ -182,7 +225,7 @@ describe('gameObject with properties: ' + JSON.stringify(properties,null,4), () 
       });
     }
 
-    if(hasTTL) {
+    if (hasTTL) {
       it('should decrement ttl', () => {
         let gameObject = GameObject({
           ttl: 2
@@ -205,6 +248,46 @@ describe('gameObject with properties: ' + JSON.stringify(properties,null,4), () 
   // --------------------------------------------------
   describe('render', () => {
 
+    if (hasCamera) {
+      it('should draw the gameObject at the viewX and viewY', () => {
+        let gameObject = GameObject({
+          x: 10,
+          y: 20
+        });
+
+        sinon.stub(gameObject.context, 'translate').callsFake(noop);
+
+        gameObject.render();
+
+        expect(gameObject.context.translate.firstCall.calledWith(10, 20)).to.be.true;
+
+        gameObject.context.translate.resetHistory();
+        gameObject.sx = 200;
+        gameObject.sy = 200;
+
+        gameObject.render();
+
+        expect(gameObject.context.translate.firstCall.calledWith(-190, -180)).to.be.true;
+
+        gameObject.context.translate.restore();
+      });
+
+      it('should not translate if sx and sy are 0', () => {
+        let gameObject = GameObject({
+          x: 0,
+          y: 0
+        });
+
+        sinon.stub(gameObject.context, 'translate').callsFake(noop);
+
+        gameObject.render();
+
+        expect(gameObject.context.translate.called).to.be.false;
+
+        gameObject.context.translate.restore();
+      });
+    }
+
     if (hasRotation) {
       it('should rotate the gameObject', () => {
         let gameObject = GameObject({
@@ -217,7 +300,21 @@ describe('gameObject with properties: ' + JSON.stringify(properties,null,4), () 
 
         gameObject.render();
 
-        expect(gameObject.context.rotate.calledWith(Math.PI)).to.be.ok;
+        expect(gameObject.context.rotate.calledWith(Math.PI)).to.be.true;
+
+        gameObject.context.rotate.restore();
+      });
+
+      it('should not rotate if sx and sy are 0', () => {
+        let gameObject = GameObject({
+          rotation: 0
+        });
+
+        sinon.stub(gameObject.context, 'rotate').callsFake(noop);
+
+        gameObject.render();
+
+        expect(gameObject.context.rotate.called).to.be.false;
 
         gameObject.context.rotate.restore();
       });
@@ -241,40 +338,124 @@ describe('gameObject with properties: ' + JSON.stringify(properties,null,4), () 
 
         gameObject.render();
 
-        expect(gameObject.context.translate.secondCall.calledWith(-50, -25)).to.be.ok;
+        expect(gameObject.context.translate.secondCall.calledWith(-50, -25)).to.be.true;
 
         gameObject.context.translate.resetHistory();
         gameObject.anchor = {x: 1, y: 1};
         gameObject.render();
 
-        expect(gameObject.context.translate.secondCall.calledWith(-100, -50)).to.be.ok;
+        expect(gameObject.context.translate.secondCall.calledWith(-100, -50)).to.be.true;
 
         gameObject.context.translate.restore();
       });
-    }
 
-    if (hasCamera) {
-      it('should draw the gameObject at the viewX and viewY', () => {
+      it('should not translate if anchor.x and anchor.y are 0', () => {
         let gameObject = GameObject({
-          x: 10,
-          y: 20
+          x: 0,
+          y: 0,
+          anchor: {x: 0, y: 0}
         });
 
         sinon.stub(gameObject.context, 'translate').callsFake(noop);
 
         gameObject.render();
 
-        expect(gameObject.context.translate.firstCall.calledWith(10, 20)).to.be.ok;
+        expect(gameObject.context.translate.called).to.be.false;
 
-        gameObject.context.translate.resetHistory();
-        gameObject.sx = 200;
-        gameObject.sy = 200;
+        gameObject.context.translate.restore();
+      });
+    }
+
+    if (hasAnchor && hasScale) {
+      it('should take into account the scaled with and height and anchor', () => {
+        let gameObject = GameObject({
+          x: 10,
+          y: 20,
+          width: 100,
+          height: 50,
+          anchor: {
+            x: 0.5,
+            y: 0.5
+          },
+          scale: {x: 2, y: 2},
+          color: true
+        });
+
+        sinon.stub(gameObject.context, 'translate').callsFake(noop);
 
         gameObject.render();
 
-        expect(gameObject.context.translate.firstCall.calledWith(-190, -180)).to.be.ok;
+        expect(gameObject.context.translate.secondCall.calledWith(-100, -50)).to.be.true;
+
+        gameObject.context.translate.resetHistory();
+        gameObject.scale = {x: 1, y: 1};
+        gameObject.render();
+
+        expect(gameObject.context.translate.secondCall.calledWith(-50, -25)).to.be.true;
 
         gameObject.context.translate.restore();
+      });
+    }
+
+    if (hasScale) {
+      it('should scale the canvas', () => {
+        let gameObject = GameObject({
+          x: 10,
+          y: 20,
+          width: 100,
+          height: 50,
+          scale: {x: 2, y: 2},
+          color: true
+        });
+
+        sinon.stub(gameObject.context, 'scale').callsFake(noop);
+
+        gameObject.render();
+
+        expect(gameObject.context.scale.calledWith(2, 2)).to.be.true;
+
+        gameObject.context.scale.resetHistory();
+        gameObject.scale = {x: 1, y: 1};
+        gameObject.render();
+
+        expect(gameObject.context.scale.calledWith(1, 1)).to.be.true;
+
+        gameObject.context.scale.restore();
+      });
+
+      it('should not scale if scale.x and scale.y are 0', () => {
+        let gameObject = GameObject({
+          scale: {x: 0, y: 0}
+        });
+
+        sinon.stub(gameObject.context, 'scale').callsFake(noop);
+
+        gameObject.render();
+
+        expect(gameObject.context.scale.called).to.be.false;
+
+        gameObject.context.scale.restore();
+      });
+    }
+
+    if (hasGroup) {
+      it('should call render on each child', () => {
+        let child = {
+          render: sinon.stub()
+        };
+
+        let gameObject = GameObject({
+          x: 10,
+          y: 20,
+          width: 100,
+          height: 50,
+          children: [child],
+          color: true
+        });
+
+        gameObject.render();
+
+        expect(child.render.called).to.be.true;
       });
     }
 
@@ -456,6 +637,68 @@ describe('gameObject with properties: ' + JSON.stringify(properties,null,4), () 
           });
         }
 
+        if (hasScale) {
+          it('should set the childs scale', () => {
+            let gameObject = GameObject({
+              x: 20,
+              y: 20,
+              scale: {x: 2, y: 2}
+            });
+            let child = GameObject({
+              x: 30,
+              y: 35,
+              scale: {x: 1, y: 1}
+            });
+
+            gameObject.addChild(child);
+
+            expect(child.scale.x).to.equal(2);
+            expect(child.scale.y).to.equal(2);
+          });
+        }
+
+        if (hasCamera) {
+          it('should set the childs relative sx and sy', () => {
+            let gameObject = GameObject({
+              x: 20,
+              y: 20,
+              sx: 30,
+              sy: 40,
+            });
+            let child = GameObject({
+              x: 30,
+              y: 35,
+              sx: 10,
+              sy: 10
+            });
+
+            gameObject.addChild(child);
+
+            expect(child.sx).to.equal(40);
+            expect(child.sy).to.equal(50);
+          });
+
+          it('should set the childs absolute sx and sy', () => {
+            let gameObject = GameObject({
+              x: 20,
+              y: 20,
+              sx: 30,
+              sy: 40,
+            });
+            let child = GameObject({
+              x: 30,
+              y: 35,
+              sx: 10,
+              sy: 10
+            });
+
+            gameObject.addChild(child, { absolute: true });
+
+            expect(child.sx).to.equal(10);
+            expect(child.sy).to.equal(10);
+          });
+        }
+
       });
 
 
@@ -488,6 +731,19 @@ describe('gameObject with properties: ' + JSON.stringify(properties,null,4), () 
 
           expect(child.parent).to.equal(null);
         });
+
+        it('should not error if child was not added', () => {
+          let gameObject = GameObject();
+          let child = {
+            foo: 'bar'
+          };
+
+          function fn() {
+            gameObject.removeChild(child);
+          }
+
+          expect(fn).to.not.throw();
+        });
       });
 
 
@@ -495,15 +751,18 @@ describe('gameObject with properties: ' + JSON.stringify(properties,null,4), () 
 
 
       // --------------------------------------------------
-      // rotation/x/y
+      // x/y/rotation/sx/sy
       // --------------------------------------------------
       let props = ['x', 'y'];
       if (hasRotation) {
         props.push('rotation');
       }
+      if (hasCamera) {
+        props.push('sx', 'sy');
+      }
 
       props.forEach(prop => {
-        describe(`position.${prop}`, () => {
+        describe(`gameObject.${prop}`, () => {
           let gameObject, child;
 
           beforeEach(() => {
@@ -526,18 +785,12 @@ describe('gameObject with properties: ' + JSON.stringify(properties,null,4), () 
             expect(gameObject[prop]).to.equal(15);
           });
 
-          it('should update all child positions', () => {
+          it('should update all children', () => {
             let child2 = GameObject();
             gameObject.addChild(child2);
 
-            if (prop === 'rotation') {
-              child.rotation = 10;
-              child2.rotation = 5;
-            }
-            else {
-              child[prop] = 10;
-              child2[prop] = 5;
-            }
+            child[prop] = 10;
+            child2[prop] = 5;
 
             gameObject[prop] = 20;
 
@@ -551,16 +804,9 @@ describe('gameObject with properties: ' + JSON.stringify(properties,null,4), () 
             child.addChild(child2);
             child2.addChild(child3);
 
-            if (prop === 'rotation') {
-              child.rotation = 10;
-              child2.rotation = 5;
-              child3.rotation = 15;
-            }
-            else {
-              child[prop] = 10;
-              child2[prop] = 5;
-              child3[prop] = 15;
-            }
+            child[prop] = 10;
+            child2[prop] = 5;
+            child3[prop] = 15;
 
             gameObject[prop] = 20;
 
@@ -572,6 +818,81 @@ describe('gameObject with properties: ' + JSON.stringify(properties,null,4), () 
         });
       });
 
+    });
+  }
+
+
+
+
+
+  if (hasScale) {
+    // --------------------------------------------------
+    // setScale
+    // --------------------------------------------------
+    describe('setScale', () => {
+
+      it('should set the x and y scale', () => {
+        let gameObject = GameObject();
+        gameObject.setScale(2, 2);
+
+        expect(gameObject.scale.x).to.equal(2);
+        expect(gameObject.scale.y).to.equal(2);
+      });
+
+      it('should default y to the x argument', () => {
+        let gameObject = GameObject();
+        gameObject.setScale(2);
+
+        expect(gameObject.scale.x).to.equal(2);
+      });
+
+      if (hasGroup) {
+        it('should update all children', () => {
+            let gameObject = GameObject({
+              scale: {x: 15, y: 15}
+            });
+            let child = GameObject();
+            gameObject.addChild(child);
+
+            let child2 = GameObject();
+            gameObject.addChild(child2);
+
+            child.scale = {x: 10, y: 10};
+            child2.scale = {x: 5, y: 5};
+
+            gameObject.setScale(20, 20);
+
+            expect(child.scale).to.eql({x: 15, y: 15});
+            expect(child2.scale).to.eql({x: 10, y: 10});
+        });
+      }
+    });
+
+
+
+
+
+    // --------------------------------------------------
+    // scaledWidth/scaledHeight
+    // --------------------------------------------------
+    describe('scaledWidth/scaledHeight', () => {
+      it('should return the scaled width', () => {
+        let gameObject = GameObject({
+          width: 20,
+          scale: {x: 2, y: 2}
+        });
+
+        expect(gameObject.scaledWidth).to.equal(40);
+      });
+
+      it('should return the scaled height', () => {
+        let gameObject = GameObject({
+          height: 20,
+          scale: {x: 2, y: 2}
+        });
+
+        expect(gameObject.scaledHeight).to.equal(40);
+      });
     });
   }
 

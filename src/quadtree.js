@@ -18,11 +18,11 @@ function getIndices(object, bounds) {
   let { x, y, width, height } = getRect(object);
 
   // save off quadrant checks for reuse
-  let intersectsTopQuadrants = y < horizontalMidpoint && y + height >= bounds.y;
-  let intersectsBottomQuadrants = y + height >= horizontalMidpoint && y < bounds.y + bounds.height;
+  let intersectsTopQuadrants = object.y < horizontalMidpoint;
+  let intersectsBottomQuadrants = object.y + object.height >= horizontalMidpoint;
 
   // object intersects with the left quadrants
-  if (x < verticalMidpoint && x + width >= bounds.x) {
+  if (object.x < verticalMidpoint) {
     if (intersectsTopQuadrants) {  // top left
       indices.push(0);
     }
@@ -33,8 +33,8 @@ function getIndices(object, bounds) {
   }
 
   // object intersects with the right quadrants
-  if (x + width >= verticalMidpoint && x < bounds.x + bounds.width) {  // top right
-    if (intersectsTopQuadrants) {
+  if (object.x + object.width >= verticalMidpoint) {
+    if (intersectsTopQuadrants) {  // top right
       indices.push(1);
     }
 
@@ -164,11 +164,9 @@ class Quadtree {
 
     // traverse the tree until we get to a leaf node
     while (this._s.length && this._b) {
-      indices = getIndices(object, this.bounds);
-
-      for (i = 0; i < indices.length; i++) {
-        this._s[ indices[i] ].get(object).forEach(obj => objects.add(obj));
-      }
+      getIndices(object, this.bounds).map(index => {
+        this._s[index].get(object).map(obj => objects.add(obj));
+      });
 
       return Array.from(objects);
     }
@@ -214,24 +212,18 @@ class Quadtree {
    *
    * @param {...Object[]} objects - Objects to add to the quadtree.
    */
-  add() {
-    let i, j, object, obj, indices, index;
-
-    for (j = 0; j < arguments.length; j++) {
-      object = arguments[j];
-
+  add(...objects) {
+    objects.map(object => {
       // add a group of objects separately
       if (Array.isArray(object)) {
         this.add.apply(this, object);
-
-        continue;
+        return;
       }
 
       // current node has subnodes, so we need to add this object into a subnode
       if (this._b) {
         this._a(object);
-
-        continue;
+        return;
       }
 
       // this node is a leaf node so add the object to it
@@ -242,13 +234,10 @@ class Quadtree {
         this._sp();
 
         // move all objects to their corresponding subnodes
-        for (i = 0; (obj = this._o[i]); i++) {
-          this._a(obj);
-        }
-
+        this._o.map(obj => this._a(obj));
         this._o.length = 0;
       }
-    }
+    });
   }
 
   /**
@@ -256,14 +245,11 @@ class Quadtree {
    *
    * @param {Object} object - Object to add into a subnode
    */
-  // @see https://github.com/jed/140bytes/wiki/Byte-saving-techniques#use-placeholder-arguments-instead-of-var
-  _a(object, indices, i) {
-    indices = getIndices(object, this.bounds);
-
+  _a(object) {
     // add the object to all subnodes it intersects
-    for (i = 0; i < indices.length; i++) {
-      this._s[ indices[i] ].add(object);
-    }
+    getIndices(object, this.bounds).map(index => {
+      this._s[index].add(object);
+    });
   }
 
   /**

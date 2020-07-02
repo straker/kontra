@@ -1,19 +1,11 @@
 import Animation from '../../src/animation.js'
-import { init, getCanvas, getContext } from '../../src/core.js'
+import { getContext } from '../../src/core.js'
 
 // --------------------------------------------------
 // animation
 // --------------------------------------------------
 describe('animation', () => {
   let animation;
-
-  before(() => {
-    if (!getCanvas()) {
-      let canvas = document.createElement('canvas');
-      canvas.width = canvas.height = 600;
-      init(canvas);
-    }
-  });
 
   beforeEach(() => {
     animation = Animation({
@@ -24,7 +16,8 @@ describe('animation', () => {
         _f: 2,
         frame: {
           width: 5,
-          height: 5
+          height: 5,
+          margin: 0
         }
       }
     });
@@ -42,6 +35,7 @@ describe('animation', () => {
       expect(animation.width).to.equal(5);
       expect(animation.height).to.equal(5);
       expect(animation.loop).to.equal(true);
+      expect(animation.margin).to.equal(0);
     });
 
   });
@@ -160,11 +154,11 @@ describe('animation', () => {
         context: context
       });
 
-      expect(context.drawImage.called).to.be.ok;
+      expect(context.drawImage.called).to.be.true;
       expect(context.drawImage.calledWith(
         animation.spriteSheet.image,
         5, 0, 5, 5, 10, 10, 5, 5
-      )).to.be.ok;
+      )).to.be.true;
     });
 
     it('should use the default context', () => {
@@ -176,7 +170,7 @@ describe('animation', () => {
         y: 10
       });
 
-      expect(context.drawImage.called).to.be.ok;
+      expect(context.drawImage.called).to.be.true;
 
       context.drawImage.restore();
     });
@@ -192,11 +186,11 @@ describe('animation', () => {
         context: context
       });
 
-      expect(context.drawImage.called).to.be.ok;
+      expect(context.drawImage.called).to.be.true;
       expect(context.drawImage.calledWith(
         animation.spriteSheet.image,
         5, 5, 5, 5, 10, 10, 5, 5
-      )).to.be.ok;
+      )).to.be.true;
     });
 
   });

@@ -79,6 +79,7 @@ class Text extends GameObject.class {
    * @param {String} [properties.color] - Fill color for the text. Defaults to the main context fillStyle.
    * @param {Number} [properties.width] - Set a fixed width for the text. If set, the text will automatically be split into new lines that will fit the size when possible.
    * @param {String} [properties.textAlign='left'] - The [textAlign](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/textAlign) for the context. If the `dir` attribute is set to `rtl` on the main canvas, the text will automatically be aligned to the right, but you can override that by setting this property.
+   * @param {Number} [properties.lineHeight=1] - The distance between two lines of text.
    */
 
   init(properties) {
@@ -94,6 +95,13 @@ class Text extends GameObject.class {
      */
     this.textAlign = '';
 
+    /**
+     * The distance between two lines of text. The value is multiplied by the texts font size.
+     * @memberof Text
+     * @property {Number} lineHeight
+     */
+    this.lineHeight = 1;
+
    /**
     * The font style.
     * @memberof Text
@@ -106,13 +114,6 @@ class Text extends GameObject.class {
      * @memberof Text
      * @property {String} color
      */
-
-    // on('font', value => {
-    //   this.font = this.font.replace(fontSizeRegex, (match, size, unit) => {
-    //     return value + unit;
-    //   });
-    //   this._p();
-    // });
 
     super.init(properties);
 
@@ -163,11 +164,6 @@ class Text extends GameObject.class {
     // fw = fixed width
     this._fw = value;
     // @endif
-  }
-
-  setScale(x, y) {
-    super.setScale(x, y);
-    this._d = true;
   }
 
   render() {
@@ -248,7 +244,7 @@ class Text extends GameObject.class {
       this.context.textAlign = textAlign;
       this.context.fillStyle = this.color;
       this.context.font = this.font;
-      this.context.fillText(str, alignX, this._fs * index);
+      this.context.fillText(str, alignX, this._fs * this.lineHeight * index);
     });
   }
 }

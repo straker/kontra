@@ -97,11 +97,6 @@ class GameObject {
      * @property {GameObject[]} children
      */
     this.children = [];
-
-    // @ifdef GAMEOBJECT_ROTATION
-    // rot = rotation
-    this._rot = 0;
-    // @endif
     // @endif
 
     // @ifdef GAMEOBJECT_VELOCITY
@@ -471,8 +466,6 @@ class GameObject {
     this.children.push(child);
     child.parent = this;
 
-    // set the childs x/y/rotation to trigger localPosition/localRotation
-    // calculations
     child.x = absolute ? child.x : this.x + child.x;
     child.y = absolute ? child.y : this.y + child.y;
 
@@ -534,6 +527,7 @@ class GameObject {
     let diffX = x - this.scale.x;
     let diffY = y - this.scale.y;
     this.children.map(child => {
+      if (!child.scale) return;
       child.setScale(child.scale.x + diffX, child.scale.y + diffY);
     });
     // @endif

@@ -1,5 +1,5 @@
 import * as pointer from '../../src/pointer.js'
-import { init, getCanvas } from '../../src/core.js'
+import { getCanvas } from '../../src/core.js'
 import { emit } from '../../src/events.js'
 import { noop } from '../../src/utils.js'
 
@@ -37,25 +37,17 @@ describe('pointer', () => {
     canvas.dispatchEvent(evt);
   }
 
-  before(() => {
-    if (!getCanvas()) {
-      canvas = document.createElement('canvas');
-      init(canvas);
-    }
-    else {
-      canvas = getCanvas();
-    }
-
+  // reset pressed buttons before each test
+  beforeEach(() => {
     // reset canvas offsets
+    canvas = getCanvas();
     canvas.width = canvas.height = 600;
     canvas.style.position = 'absolute';
     canvas.style.top = 0;
     canvas.style.left = 0;
-  });
 
-  // reset pressed buttons before each test
-  beforeEach(() => {
-    document.body.appendChild(canvas);
+    pointer.initPointer();
+
     simulateEvent('blur');
 
     object = {
@@ -68,8 +60,6 @@ describe('pointer', () => {
   });
 
   afterEach(() => {
-    // make sure there's no canvas in the DOM for core tests
-    canvas.remove();
     pointer.untrack(object);
   });
 
@@ -111,9 +101,9 @@ describe('pointer', () => {
   describe('pressed', () => {
 
     it('should return false when a button is not pressed', () => {
-      expect(pointer.pointerPressed('left')).to.be.not.ok;
-      expect(pointer.pointerPressed('middle')).to.be.not.ok;
-      expect(pointer.pointerPressed('right')).to.be.not.ok;
+      expect(pointer.pointerPressed('left')).to.be.false;
+      expect(pointer.pointerPressed('middle')).to.be.false;
+      expect(pointer.pointerPressed('right')).to.be.false;
     });
 
     it('should return true for a button', () => {
@@ -126,7 +116,7 @@ describe('pointer', () => {
       simulateEvent('mousedown', {button: 2});
       simulateEvent('mouseup', {button: 2});
 
-      expect(pointer.pointerPressed('right')).to.be.not.ok;
+      expect(pointer.pointerPressed('right')).to.be.false;
     });
 
     it('should return true for touchstart', () => {
@@ -142,7 +132,7 @@ describe('pointer', () => {
         changedTouches: [{clientX: 100, clientY: 50}]
       });
 
-      expect(pointer.pointerPressed('left')).to.be.not.ok;
+      expect(pointer.pointerPressed('left')).to.be.false;
     });
 
   });
@@ -181,7 +171,7 @@ describe('pointer', () => {
       pointer.track(obj);
       obj.render();
 
-      expect(render.called).to.be.ok;
+      expect(render.called).to.be.true;
     });
 
     it('should do nothing if the object is already tracked', () => {
@@ -217,7 +207,7 @@ describe('pointer', () => {
       pointer.untrack(obj);
 
       expect(obj.render).to.equal(noop);
-      expect(obj._r).to.not.be.ok;
+      expect(obj._r).to.not.be.true;
     });
 
     it('should take multiple objects', () => {
@@ -227,9 +217,9 @@ describe('pointer', () => {
       pointer.untrack(obj, obj2);
 
       expect(obj.render).to.equal(noop);
-      expect(obj._r).to.not.be.ok;
+      expect(obj._r).to.not.be.true;
       expect(obj2.render).to.equal(noop);
-      expect(obj2._r).to.not.be.ok;
+      expect(obj2._r).to.not.be.true;
     });
 
     it('should do nothing if the object was never tracked', () => {
@@ -330,7 +320,7 @@ describe('pointer', () => {
         object.collidesWithPointer = sinon.spy();
         pointer.pointerOver(object);
 
-        expect(object.collidesWithPointer.called).to.be.ok;
+        expect(object.collidesWithPointer.called).to.be.true;
       });
 
     });
@@ -356,7 +346,7 @@ describe('pointer', () => {
         object.onOver = sinon.spy();
         simulateEvent('mousemove', {clientX: 105, clientY: 55});
 
-        expect(object.onOver.called).to.be.ok;
+        expect(object.onOver.called).to.be.true;
       });
 
       it('should call the objects onOut function if it is no longer the target', () => {
@@ -364,7 +354,7 @@ describe('pointer', () => {
         simulateEvent('mousemove', {clientX: 105, clientY: 55});
         simulateEvent('mousemove', {clientX: 150, clientY: 55});
 
-        expect(object.onOut.called).to.be.ok;
+        expect(object.onOut.called).to.be.true;
       });
 
       it('should call the objects onOut function if another object is the target', () => {
@@ -384,8 +374,8 @@ describe('pointer', () => {
         simulateEvent('mousemove', {clientX: 105, clientY: 55});
         simulateEvent('mousemove', {clientX: 155, clientY: 55});
 
-        expect(pointer.pointerOver(obj)).to.be.ok;
-        expect(object.onOut.called).to.be.ok;
+        expect(pointer.pointerOver(obj)).to.be.true;
+        expect(object.onOut.called).to.be.true;
       });
 
       it('should take into account object anchor', () => {
@@ -396,11 +386,11 @@ describe('pointer', () => {
         object.onOver = sinon.spy();
         simulateEvent('mousemove', {clientX: 110, clientY: 55});
 
-        expect(object.onOver.called).to.not.be.ok;
+        expect(object.onOver.called).to.not.be.true;
 
         simulateEvent('mousemove', {clientX: 95, clientY: 55});
 
-        expect(object.onOver.called).to.be.ok;
+        expect(object.onOver.called).to.be.true;
       });
 
     });
@@ -427,14 +417,14 @@ describe('pointer', () => {
         pointer.onPointerDown(onDown);
         simulateEvent('mousedown', {clientX: 100, clientY: 50});
 
-        expect(onDown.called).to.be.ok;
+        expect(onDown.called).to.be.true;
       });
 
       it('should call the objects onDown function if it is the target', () => {
         object.onDown = sinon.spy();
         simulateEvent('mousedown', {clientX: 105, clientY: 55});
 
-        expect(object.onDown.called).to.be.ok;
+        expect(object.onDown.called).to.be.true;
       });
 
       it('should take into account object anchor', () => {
@@ -445,11 +435,11 @@ describe('pointer', () => {
         object.onDown = sinon.spy();
         simulateEvent('mousedown', {clientX: 110, clientY: 55});
 
-        expect(object.onDown.called).to.not.be.ok;
+        expect(object.onDown.called).to.not.be.true;
 
         simulateEvent('mousedown', {clientX: 95, clientY: 55});
 
-        expect(object.onDown.called).to.be.ok;
+        expect(object.onDown.called).to.be.true;
       });
 
     });
@@ -477,14 +467,14 @@ describe('pointer', () => {
         pointer.onPointerDown(onDown);
         simulateEvent('touchstart', {touches: [], changedTouches: [{clientX: 100, clientY: 50}]});
 
-        expect(onDown.called).to.be.ok;
+        expect(onDown.called).to.be.true;
       });
 
       it('should call the objects onDown function if it is the target', () => {
         object.onDown = sinon.spy();
         simulateEvent('touchstart', {touches: [], changedTouches: [{clientX: 105, clientY: 55}]});
 
-        expect(object.onDown.called).to.be.ok;
+        expect(object.onDown.called).to.be.true;
       });
 
       it('should take into account object anchor', () => {
@@ -495,11 +485,11 @@ describe('pointer', () => {
         object.onDown = sinon.spy();
         simulateEvent('touchstart', {touches: [], changedTouches: [{clientX: 110, clientY: 55}]});
 
-        expect(object.onDown.called).to.not.be.ok;
+        expect(object.onDown.called).to.not.be.true;
 
         simulateEvent('touchstart', {touches: [], changedTouches: [{clientX: 95, clientY: 55}]});
 
-        expect(object.onDown.called).to.be.ok;
+        expect(object.onDown.called).to.be.true;
       });
 
     });
@@ -526,14 +516,14 @@ describe('pointer', () => {
         pointer.onPointerUp(onUp);
         simulateEvent('mouseup', {clientX: 100, clientY: 50});
 
-        expect(onUp.called).to.be.ok;
+        expect(onUp.called).to.be.true;
       });
 
       it('should call the objects onUp function if it is the target', () => {
         object.onUp = sinon.spy();
         simulateEvent('mouseup', {clientX: 105, clientY: 55});
 
-        expect(object.onUp.called).to.be.ok;
+        expect(object.onUp.called).to.be.true;
       });
 
       it('should take into account object anchor', () => {
@@ -544,11 +534,11 @@ describe('pointer', () => {
         object.onUp = sinon.spy();
         simulateEvent('mouseup', {clientX: 110, clientY: 55});
 
-        expect(object.onUp.called).to.not.be.ok;
+        expect(object.onUp.called).to.not.be.true;
 
         simulateEvent('mouseup', {clientX: 95, clientY: 55});
 
-        expect(object.onUp.called).to.be.ok;
+        expect(object.onUp.called).to.be.true;
       });
 
     });
@@ -575,14 +565,14 @@ describe('pointer', () => {
         pointer.onPointerUp(onUp);
         simulateEvent('touchend', {touches: [], changedTouches: [{clientX: 100, clientY: 50}]});
 
-        expect(onUp.called).to.be.ok;
+        expect(onUp.called).to.be.true;
       });
 
       it('should call the objects onUp function if it is the target', () => {
         object.onUp = sinon.spy();
         simulateEvent('touchend', {touches: [], changedTouches: [{clientX: 105, clientY: 55}]});
 
-        expect(object.onUp.called).to.be.ok;
+        expect(object.onUp.called).to.be.true;
       });
 
       it('should take into account object anchor', () => {
@@ -593,11 +583,11 @@ describe('pointer', () => {
         object.onUp = sinon.spy();
         simulateEvent('touchend', {touches: [], changedTouches: [{clientX: 110, clientY: 55}]});
 
-        expect(object.onUp.called).to.not.be.ok;
+        expect(object.onUp.called).to.not.be.true;
 
         simulateEvent('touchend', {touches: [], changedTouches: [{clientX: 95, clientY: 55}]});
 
-        expect(object.onUp.called).to.be.ok;
+        expect(object.onUp.called).to.be.true;
       });
 
       it('should update pointer.touches', () => {

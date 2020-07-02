@@ -1,32 +1,25 @@
 import Sprite from '../../src/sprite.js'
-import { init, getCanvas, getContext } from '../../src/core.js'
 import { noop } from '../../src/utils.js'
 
-let testSprite = Sprite();
-
 // optional properties
-let hasImage = testSprite.hasOwnProperty('image');
+let img = new Image();
+img.width = 10;
+img.height = 20;
+
+let testSprite = Sprite({ image: img });
+
+let hasImage = testSprite.width === 10 && testSprite.height === 20;
 let hasAnimation = !!testSprite.playAnimation;
-let hasAnchor = testSprite.hasOwnProperty('anchor');
 
 let properties = {
   image: hasImage,
-  animation: hasAnimation,
-  anchor: hasAnchor
+  animation: hasAnimation
 };
 
 // --------------------------------------------------
 // sprite
 // --------------------------------------------------
 describe('sprite with properties: ' + JSON.stringify(properties,null,4), () => {
-
-  before(() => {
-    if (!getCanvas()) {
-      let canvas = document.createElement('canvas');
-      canvas.width = canvas.height = 600;
-      init(canvas);
-    }
-  });
 
   // --------------------------------------------------
   // init
@@ -149,7 +142,7 @@ describe('sprite with properties: ' + JSON.stringify(properties,null,4), () => {
 
         sprite.update();
 
-        expect(sprite.currentAnimation.update.called).to.be.ok;
+        expect(sprite.currentAnimation.update.called).to.be.true;
 
         sprite.currentAnimation.update.restore();
       });
@@ -176,7 +169,7 @@ describe('sprite with properties: ' + JSON.stringify(properties,null,4), () => {
 
       sprite.render();
 
-      expect(sprite.context.fillRect.called).to.be.ok;
+      expect(sprite.context.fillRect.called).to.be.true;
 
       sprite.context.fillRect.restore();
     });
@@ -197,7 +190,7 @@ describe('sprite with properties: ' + JSON.stringify(properties,null,4), () => {
 
         sprite.render();
 
-        expect(sprite.context.drawImage.called).to.be.ok;
+        expect(sprite.context.drawImage.called).to.be.true;
 
         sprite.context.drawImage.restore();
       });
@@ -228,7 +221,7 @@ describe('sprite with properties: ' + JSON.stringify(properties,null,4), () => {
 
         sprite.render();
 
-        expect(sprite.currentAnimation.render.called).to.be.ok;
+        expect(sprite.currentAnimation.render.called).to.be.true;
 
         sprite.currentAnimation.render.restore();
       });

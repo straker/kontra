@@ -26,24 +26,15 @@ class Sprite extends GameObject.class {
 
     /**
      * The width of the sprite. If the sprite is a [rectangle sprite](api/sprite#rectangle-sprite), it uses the passed in value. For an [image sprite](api/sprite#image-sprite) it is the width of the image. And for an [animation sprite](api/sprite#animation-sprite) it is the width of a single frame of the animation.
-     *
-     * Setting the value to a negative number will result in the sprite being flipped across the vertical axis while the width will remain a positive value.
      * @memberof Sprite
      * @property {Number} width
      */
 
     /**
      * The height of the sprite. If the sprite is a [rectangle sprite](api/sprite#rectangle-sprite), it uses the passed in value. For an [image sprite](api/sprite#image-sprite) it is the height of the image. And for an [animation sprite](api/sprite#animation-sprite) it is the height of a single frame of the animation.
-     *
-     * Setting the value to a negative number will result in the sprite being flipped across the horizontal axis while the height will remain a positive value.
      * @memberof Sprite
      * @property {Number} height
      */
-
-    // @ifdef SPRITE_IMAGE||SPRITE_ANIMATION
-    // fx = flipX, fy = flipY
-    // this._fx = this._fy = 1;
-    // @endif
 
     super.init(properties);
 
@@ -54,10 +45,10 @@ class Sprite extends GameObject.class {
      * @property {HTMLImageElement|HTMLCanvasElement} image
      */
 
-    let { image } = properties;
+    let { width, height, image } = properties;
     if (image) {
-      this.width = image.width;
-      this.height = image.height;
+      this.width = (width !== undefined) ? width : image.width;
+      this.height = (height !== undefined) ? height : image.height;
     }
     // @endif
   }
@@ -168,43 +159,7 @@ class Sprite extends GameObject.class {
   }
   // @endif
 
-  // @ifdef SPRITE_IMAGE||SPRITE_ANIMATION
-  // get width() {
-  //   return super.width ? super.width : this._w;
-  // }
-
-  // get height() {
-  //   return super.height ? super.height : this._h;
-  // }
-
-  // set width(value) {
-  //   let sign = value < 0 ? -1 : 1;
-
-  //   this._fx = sign;
-  //   this._w = value * sign;
-  // }
-
-  // set height(value) {
-  //   let sign = value < 0 ? -1 : 1;
-
-  //   this._fy = sign;
-  //   this._h = value * sign;
-  // }
-  // @endif
-
   draw() {
-    // @ifdef SPRITE_IMAGE||SPRITE_ANIMATION
-    // // flip sprite around the center so the x/y position does not change
-    // if (this._fx == -1 || this._fy == -1) {
-    //   let translateX = this.width / 2;
-    //   let translateY = this.height / 2;
-
-    //   this.context.translate(translateX, translateY);
-    //   this.context.scale(this._fx, this._fy);
-    //   this.context.translate(-translateX, -translateY);
-    // }
-    // @endif
-
     // @ifdef SPRITE_IMAGE
     if (this.image) {
       this.context.drawImage(

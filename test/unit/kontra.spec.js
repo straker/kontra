@@ -61,6 +61,10 @@ describe('kontra', () => {
     expect(kontraExports.GameObject).to.exist;
   });
 
+  it('should export gridManager api', () => {
+    expect(kontraExports.GridManager).to.exist;
+  });
+
   it('should export keyboard api', () => {
     expect(kontraExports.keyMap).to.exist;
     expect(kontraExports.initKeys).to.exist;

@@ -1,12 +1,5 @@
 import Button from '../../src/button.js';
-import { init, getCanvas, getContext } from '../../src/core.js'
 import { srOnlyStyle } from '../../src/utils.js'
-
-if (!getCanvas()) {
-  let canvas = document.createElement('canvas');
-  canvas.width = canvas.height = 600;
-  init(canvas);
-}
 
 // --------------------------------------------------
 // button

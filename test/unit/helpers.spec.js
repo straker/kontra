@@ -214,7 +214,7 @@ describe('helpers', () => {
     it('should remove a key from local storage using the set function when passed undefined', () => {
       helpers.setStoreItem('number', undefined);
 
-      expect(helpers.getStoreItem('number')).to.not.be.ok;
+      expect(helpers.getStoreItem('number')).to.not.be.true;
     });
 
   });

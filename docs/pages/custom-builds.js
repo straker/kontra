@@ -52,7 +52,13 @@ __Note:__ All options default to `false` when using rollup-plugin-kontra, so onl
 *         // enable only velocity and rotation functionality
 *         velocity: true,
 *         rotation: true
-*       }
+*       },
+*       vector: {
+*         // enable vector length functionality
+*         length: true
+*       },
+*       // turn on debugging
+*       debug: true
 *     })
 *   ]
 * }
@@ -60,7 +66,9 @@ __Note:__ All options default to `false` when using rollup-plugin-kontra, so onl
 
 ### Available options
 
-GameObject options:
+Options are passed by nesting the option with the parent source. For example, to enable the `image` functionality of a sprite, you would pass `sprite: { image: true }`.
+
+#### `gameObject` options:
 
 | Name          | Functionality Enabled |
 | ------------- | ------------- |
@@ -73,14 +81,14 @@ GameObject options:
 | group         | `children`, `parent` |
 | scale         | `scale`, `scaledWidth`, `scaledHeight`, `setScale()` |
 
-Sprite options:
+#### `sprite` options:
 
 | Name          | Functionality Enabled |
 | ------------- | ------------- |
 | image         | `image` |
 | animation     | `animations`, `playAnimation` |
 
-Text options:
+#### `text` options:
 
 | Name          | Functionality Enabled |
 | ------------- | ------------- |
@@ -89,18 +97,26 @@ Text options:
 | textAlign     | `textAlign` |
 | rtl           | Support for RTL languages |
 
-Vector options:
+#### `vector` options:
 
 | Name          | Functionality Enabled |
 | ------------- | ------------- |
 | subtract      | `subract()` |
 | scale         | `scale()` |
 | length        | `length()` |
-| normalize     | `normalize()` (requires `length` option as well) |
+| normalize     | `normalize()` (also enables `length`) |
 | dot           | `dot()` |
 | distance      | `distance()` |
-| angle         | `angle()` (requires `dot` and `length` options as well) |
+| angle         | `angle()` (also enables `length` and `dot`) |
 | clamp         | `clamp()` |
+
+#### General Options:
+
+General options do not have a parent source and are passed as siblings to the other source options. For example, to enable debugging you would just pass `debug: true`.
+
+| Name          | Functionality Enabled |
+| ------------- | ------------- |
+| debug         | Turn on debugging information |
 
 @section Custom Builds
 @page custom-builds

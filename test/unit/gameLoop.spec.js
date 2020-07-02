@@ -1,5 +1,5 @@
 import GameLoop from '../../src/gameLoop.js'
-import { init, getCanvas, getContext } from '../../src/core.js'
+import { getContext } from '../../src/core.js'
 import { on } from '../../src/events.js'
 import { noop } from '../../src/utils.js'
 
@@ -8,14 +8,6 @@ import { noop } from '../../src/utils.js'
 // --------------------------------------------------
 describe('gameLoop', () => {
   let loop;
-
-  before(() => {
-    if (!getCanvas()) {
-      let canvas = document.createElement('canvas');
-      canvas.width = canvas.height = 600;
-      init(canvas);
-    }
-  });
 
   afterEach(() => {
     loop && loop.stop();
@@ -55,7 +47,7 @@ describe('gameLoop', () => {
 
       loop.stop();
 
-      expect(window.cancelAnimationFrame.called).to.be.ok;
+      expect(window.cancelAnimationFrame.called).to.be.true;
 
       window.cancelAnimationFrame.restore();
     });
@@ -81,7 +73,7 @@ describe('gameLoop', () => {
       loop.start();
 
       setTimeout(() => {
-        expect(loop.update.called).to.be.ok;
+        expect(loop.update.called).to.be.true;
         expect(loop.update.getCall(0).args[0]).to.equal(1/60);
         done();
       }, 250);
@@ -97,7 +89,7 @@ describe('gameLoop', () => {
       loop.start();
 
       setTimeout(() => {
-        expect(loop.render.called).to.be.ok;
+        expect(loop.render.called).to.be.true;
         done();
       }, 250);
     });
@@ -132,6 +124,22 @@ describe('gameLoop', () => {
       expect(count).to.equal(2);
     });
 
+    it('should change the frame rate if passed fps', function() {
+      let count = 0;
+
+      loop = GameLoop({
+        update: function(time) { count++; },
+        render: noop,
+        clearCanvas: false,
+        fps: 30
+      });
+
+      loop._last = performance.now() - (1E3/60) * 2.5;
+      loop._frame();
+
+      expect(count).to.equal(1);
+    });
+
     it('should call clearCanvas by default', () => {
       loop = GameLoop({
         update: noop,
@@ -145,6 +153,24 @@ describe('gameLoop', () => {
       loop._frame();
 
       expect(context.clearRect.called).to.be.true;
+
+      context.clearRect.restore();
+    });
+
+    it('should not clear the canvas if clearCanvas is false', function() {
+      loop = GameLoop({
+        update: noop,
+        render: noop,
+        clearCanvas: false
+      });
+      let context = getContext();
+
+      sinon.stub(context, 'clearRect').callsFake(noop);
+
+      loop._last = performance.now() - (1E3/60);
+      loop._frame();
+
+      expect(context.clearRect.called).to.be.false;
 
       context.clearRect.restore();
     });

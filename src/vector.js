@@ -86,7 +86,6 @@ class Vector {
   // @endif
 
   // @ifdef VECTOR_NORMALIZE
-  // @ifdef VECTOR_LENGTH
   /**
    * Calculate the normalized value of the current vector. Requires the Vector [length](/api/vector#length) function.
    * @memberof Vector
@@ -102,9 +101,8 @@ class Vector {
     );
   }
   // @endif
-  // @endif
 
-  // @ifdef VECTOR_DOT
+  // @ifdef VECTOR_DOT||VECTOR_ANGLE
   /**
    * Calculate the dot product of the current vector with the given vector.
    * @memberof Vector
@@ -119,7 +117,7 @@ class Vector {
   }
   // @endif
 
-  // @ifdef VECTOR_LENGTH
+  // @ifdef VECTOR_LENGTH||VECTOR_NORMALIZE||VECTOR_ANGLE
   /**
    * Calculate the length (magnitude) of the Vector.
    * @memberof Vector
@@ -148,8 +146,6 @@ class Vector {
   // @endif
 
   // @ifdef VECTOR_ANGLE
-  // @ifdef VECTOR_DOT
-  // @ifdef VECTOR_LENGTH
   /**
    * Calculate the angle (in radians) between the current vector and the given vector. Requires the Vector [dot](/api/vector#dot) and [length](/api/vector#length) functions.
    * @memberof Vector
@@ -162,8 +158,6 @@ class Vector {
   angle(vec) {
     return Math.acos(this.dot(vec) / (this.length() * vec.length()));
   }
-  // @endif
-  // @endif
   // @endif
 
   // @ifdef VECTOR_CLAMP

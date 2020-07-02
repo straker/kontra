@@ -23,11 +23,13 @@ describe('spriteSheet', () => {
       let spriteSheet = SpriteSheet({
         image: new Image(100, 200),
         frameWidth: 10,
-        frameHeight: 10
+        frameHeight: 10,
+        frameMargin: 10
       });
 
       expect(spriteSheet.frame.width).to.equal(10);
       expect(spriteSheet.frame.height).to.equal(10);
+      expect(spriteSheet.frame.margin).to.equal(10);
       expect(spriteSheet._f).to.equal(10);
     });
 
@@ -41,7 +43,7 @@ describe('spriteSheet', () => {
         animations: {}
       });
 
-      expect(SpriteSheet.prototype.createAnimations.called).to.be.ok;
+      expect(SpriteSheet.prototype.createAnimations.called).to.be.true;
 
       SpriteSheet.prototype.createAnimations.restore();
     });

@@ -273,9 +273,13 @@ function pointerHandler(evt, eventName) {
  * Initialize pointer event listeners. This function must be called before using other pointer functions.
  * @function initPointer
  */
+let tickAdded = false;
 export function initPointer() {
   let canvas = getCanvas();
 
+  // if this function is called multiple times, the same event
+  // won't be added multiple times
+  // @see https://stackoverflow.com/questions/28056716/check-if-an-element-has-event-listener-on-it-no-jquery/41137585#41137585
   canvas.addEventListener('mousedown', pointerDownHandler);
   canvas.addEventListener('touchstart', pointerDownHandler);
   canvas.addEventListener('mouseup', pointerUpHandler);
@@ -285,16 +289,22 @@ export function initPointer() {
   canvas.addEventListener('mousemove', mouseMoveHandler);
   canvas.addEventListener('touchmove', mouseMoveHandler);
 
-  // reset object render order on every new frame
-  on('tick', () => {
-    lastFrameRenderOrder.length = 0;
+  // however, the tick event should only be registered once
+  // otherwise it completely destroys pointer events
+  if (!tickAdded) {
+    tickAdded = true;
 
-    thisFrameRenderOrder.map(object => {
-      lastFrameRenderOrder.push(object);
+    // reset object render order on every new frame
+    on('tick', () => {
+      lastFrameRenderOrder.length = 0;
+
+      thisFrameRenderOrder.map(object => {
+        lastFrameRenderOrder.push(object);
+      });
+
+      thisFrameRenderOrder.length = 0;
     });
-
-    thisFrameRenderOrder.length = 0;
-  });
+  }
 }
 
 /**

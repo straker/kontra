@@ -1,12 +1,5 @@
 import Text from '../../src/text.js';
-import { init, getCanvas, getContext } from '../../src/core.js'
 import { noop } from '../../src/utils.js'
-
-if (!getCanvas()) {
-  let canvas = document.createElement('canvas');
-  canvas.width = canvas.height = 600;
-  init(canvas);
-}
 
 let testText = Text({
   text: 'Hello\nWorld',
@@ -255,6 +248,74 @@ describe('text with properties: ' + JSON.stringify(properties,null,4), () => {
         text.render(0, 0);
 
         expect(text.context.fillText.calledWith(text.text, 1000, 0)).to.be.true;
+        text.context.fillText.restore();
+      });
+    }
+
+    if (hasAutoNewline) {
+      it('should render each line of the text', () => {
+        let text = Text({
+          text: 'Hello World',
+          font: '32px Arial',
+          color: 'black',
+          width: 50
+        });
+
+        sinon.spy(text.context, 'fillText');
+        text.render(0, 0);
+
+        expect(text.context.fillText.calledTwice).to.be.true;
+        expect(text.context.fillText.firstCall.calledWith('Hello', 0, 0)).to.be.true;
+        expect(text.context.fillText.secondCall.calledWith('World', 0, 32)).to.be.true;
+        text.context.fillText.restore();
+      });
+
+      it('should account for lineHeight', () => {
+        let text = Text({
+          text: 'Hello World',
+          font: '32px Arial',
+          color: 'black',
+          width: 50,
+          lineHeight: 2
+        });
+
+        sinon.spy(text.context, 'fillText');
+        text.render(0, 0);
+
+        expect(text.context.fillText.secondCall.calledWith('World', 0, 64)).to.be.true;
+        text.context.fillText.restore();
+      });
+    }
+
+    if (hasNewline) {
+      it('should render each line of the text', () => {
+        let text = Text({
+          text: 'Hello\nWorld',
+          font: '32px Arial',
+          color: 'black',
+        });
+
+        sinon.spy(text.context, 'fillText');
+        text.render(0, 0);
+
+        expect(text.context.fillText.calledTwice).to.be.true;
+        expect(text.context.fillText.firstCall.calledWith('Hello', 0, 0)).to.be.true;
+        expect(text.context.fillText.secondCall.calledWith('World', 0, 32)).to.be.true;
+        text.context.fillText.restore();
+      });
+
+      it('should account for lineHeight', () => {
+        let text = Text({
+          text: 'Hello\nWorld',
+          font: '32px Arial',
+          color: 'black',
+          lineHeight: 2
+        });
+
+        sinon.spy(text.context, 'fillText');
+        text.render(0, 0);
+
+        expect(text.context.fillText.secondCall.calledWith('World', 0, 64)).to.be.true;
         text.context.fillText.restore();
       });
     }

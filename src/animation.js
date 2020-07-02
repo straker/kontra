@@ -151,32 +151,18 @@ class Animation {
    */
   render({x, y, width = this.width, height = this.height, context = getContext()} = {}) {
 
-    if (this.spriteSheet.atlas) {
-      let name = this.frames[this._f];
-      let frameData = this.spriteSheet.atlas.frames[name];
-      let { x: _x, y: _y, w, h } = frameData.frame;
+    // get the row and col of the frame
+    let row = this.frames[this._f] / this.spriteSheet._f | 0;
+    let col = this.frames[this._f] % this.spriteSheet._f | 0;
 
-      context.drawImage(
-        this.spriteSheet.image,
-        _x, _y, w, h,
-        x, y, width, height
-      );
-    }
-    else {
-
-      // get the row and col of the frame
-      let row = this.frames[this._f] / this.spriteSheet._f | 0;
-      let col = this.frames[this._f] % this.spriteSheet._f | 0;
-
-      context.drawImage(
-        this.spriteSheet.image,
-        col * this.width + (col * 2 + 1) * this.margin,
-        row * this.height + (row * 2 + 1) * this.margin,
-        this.width, this.height,
-        x, y,
-        width, height
-      );
-    }
+    context.drawImage(
+      this.spriteSheet.image,
+      col * this.width + (col * 2 + 1) * this.margin,
+      row * this.height + (row * 2 + 1) * this.margin,
+      this.width, this.height,
+      x, y,
+      width, height
+    );
   }
 }
 

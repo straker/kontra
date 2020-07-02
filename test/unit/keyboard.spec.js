@@ -76,9 +76,9 @@ describe('keyboard', () => {
   describe('pressed', () => {
 
     it('should return false when a key is not pressed', () => {
-      expect(keyboard.keyPressed('a')).to.be.not.ok;
-      expect(keyboard.keyPressed('f1')).to.be.not.ok;
-      expect(keyboard.keyPressed('numpad0')).to.be.not.ok;
+      expect(keyboard.keyPressed('a')).to.be.false;
+      expect(keyboard.keyPressed('f1')).to.be.false;
+      expect(keyboard.keyPressed('numpad0')).to.be.false;
     });
 
     it('should return true for a single key', () => {
@@ -87,24 +87,11 @@ describe('keyboard', () => {
       expect(keyboard.keyPressed('a')).to.be.true;
     });
 
-    it('should return true for a single key (edge)', () => {
-      simulateEvent('keydown', {which: 65});
-
-      expect(keyboard.keyPressed('a')).to.be.true;
-    });
-
     it('should return false if the key is no longer pressed', () => {
       simulateEvent('keydown', {code: 'KeyA'});
       simulateEvent('keyup', {code: 'KeyA'});
 
-      expect(keyboard.keyPressed('a')).to.be.not.ok;
-    });
-
-    it('should return false if the key is no longer pressed (edge)', () => {
-      simulateEvent('keydown', {which: 65});
-      simulateEvent('keyup', {which: 65});
-
-      expect(keyboard.keyPressed('a')).to.be.not.ok;
+      expect(keyboard.keyPressed('a')).to.be.false;
     });
 
   });
@@ -128,32 +115,12 @@ describe('keyboard', () => {
       throw new Error('should not get here');
     });
 
-    it('should call the callback when a single key combination is pressed (edge)', (done) => {
-      keyboard.bindKeys('a', evt => {
-        done();
-      });
-
-      simulateEvent('keydown', {which: 65});
-
-      throw new Error('should not get here');
-    });
-
     it('should accept an array of key combinations to bind', (done) => {
       keyboard.bindKeys(['a', 'b'], evt => {
         done();
       });
 
       simulateEvent('keydown', {code: 'KeyB'});
-
-      throw new Error('should not get here');
-    });
-
-    it('should accept an array of key combinations to bind (edge)', (done) => {
-      keyboard.bindKeys(['a', 'b'], evt => {
-        done();
-      });
-
-      simulateEvent('keydown', {which: 66});
 
       throw new Error('should not get here');
     });

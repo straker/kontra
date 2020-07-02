@@ -1,5 +1,6 @@
 import { getCanvas, getContext } from './core.js'
 import { getRect } from './utils.js'
+import { clamp } from './helpers.js';
 
 /**
  * A tile engine for managing and drawing tilesets.
@@ -153,12 +154,12 @@ export default function TileEngine(properties) {
     // Firefox and Safari won't draw it.
     // @see http://stackoverflow.com/questions/19338032/canvas-indexsizeerror-index-or-size-is-negative-or-greater-than-the-allowed-a
     set sx(value) {
-      this._sx = Math.min( Math.max(0, value), mapwidth - getCanvas().width );
+      this._sx = clamp(0, mapwidth - getCanvas().width, value);
       objects.forEach(obj => obj.sx = this._sx);
     },
 
     set sy(value) {
-      this._sy = Math.min( Math.max(0, value), mapheight - getCanvas().height );
+      this._sy = clamp(0, mapheight - getCanvas().height, value);
       objects.forEach(obj => obj.sy = this._sy);
     },
 

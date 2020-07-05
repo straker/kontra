@@ -20,10 +20,11 @@ import { Factory } from './utils.js'
  * @param {Number} [properties.height] - Height of the game object.
  *
  * @param {Number} [properties.ttl=Infinity] - How many frames the game object should be alive. Used by [Pool](api/pool).
- * @param {Number} [properties.rotation=0] - game objects rotation around the origin in radians.
+ * @param {Number} [properties.rotation=0] - The rotation around the origin in radians.
  * @param {{x: number, y: number}} [properties.anchor={x:0,y:0}] - The x and y origin of the game object. {x:0, y:0} is the top left corner of the game object, {x:1, y:1} is the bottom right corner.
  * @param {GameObject[]} [properties.children] - Children to add to the game object. Children added this way have their x/y position treated as relative to the parents x/y position.
  * @param {{x: number, y: number}} [properties.scale={x:1,y:1}] - The x and y scale of the game object. Calls [setScale](api/gameObject#setScale) with the passed in values.
+ * @param {Number} [properties.opacity=1] - The opacity of the game object.
  *
  * @param {CanvasRenderingContext2D} [properties.context] - The context the game object should draw to. Defaults to [core.getContext()](api/core#getContext).
  *
@@ -61,13 +62,15 @@ class GameObject {
     this.position = Vector();
 
     /**
-     * The width of the game object.
+     * The width of the game object. Does not take into account the
+     * objects scale.
      * @memberof GameObject
      * @property {Number} width
      */
 
     /**
-     * The height of the game object.
+     * The height of the game object. Does not take into account the
+     * objects scale.
      * @memberof GameObject
      * @property {Number} height
      */
@@ -211,6 +214,16 @@ class GameObject {
     this.scale = {x: 1, y: 1};
     // @endif
 
+    // @ifdef GAMEOBJECT_OPACITY
+    /**
+     * The opacity of the object. Does not take into account opacity
+     * from any parent objects.
+     * @memberof GameObject
+     * @property {Number} opacity
+     */
+    this.opacity = 1;
+    // @endif
+
     // add all properties to the game object, overriding any defaults
     let { render, children = [], scale = this.scale, ...props } = properties;
     Object.assign(this, props);
@@ -348,13 +361,8 @@ class GameObject {
   }
 
   // readonly
-  set viewX(value) {
-    return;
-  }
-
-  set viewY(value) {
-    return;
-  }
+  set viewX(value) {}
+  set viewY(value) {}
 
   // @ifdef GAMEOBJECT_GROUP
   get sx() {
@@ -401,6 +409,7 @@ class GameObject {
   // @ifdef GAMEOBJECT_GROUP
   // @ifdef GAMEOBJECT_ROTATION
   get rotation() {
+    // rot = rotation
     return this._rot;
   }
 
@@ -411,6 +420,38 @@ class GameObject {
     });
 
     this._rot = value;
+  }
+  // @endif
+
+  // @ifdef GAMEOBJECT_OPACITY
+  /**
+   * Readonly. The final opacity of the game object taking into account
+   * all parent opacities.
+   */
+  get finalOpacity() {
+    // fop = final opacity
+    return this._fop;
+  }
+
+  // readonly
+  set finalOpacity(value) {}
+
+  get opacity() {
+    // op = opacity
+    return this._op;
+  }
+
+  set opacity(value) {
+    // final opacity value is calculated by multiplying all opacities
+    // in the parent chain.
+    this._fop = this.parent && this.parent._fop ? value * this.parent._fop : value;
+
+    // trigger a final opacity calculation of all children
+    this.children.map(child => {
+      child.opacity = child.opacity;
+    });
+
+    this._op = value;
   }
   // @endif
 
@@ -470,9 +511,7 @@ class GameObject {
     child.y = absolute ? child.y : this.y + child.y;
 
     // @ifdef GAMEOBJECT_ROTATION
-    if ('rotation' in child) {
-      child.rotation = absolute ? child.rotation : this.rotation + child.rotation;
-    }
+    child.rotation = this.rotation + child.rotation;
     // @endif
 
     // @ifdef GAMEOBJECT_SCALE
@@ -486,6 +525,10 @@ class GameObject {
       child.sx = absolute ? child.sx : this.sx + child.sx;
       child.sy = absolute ? child.sy : this.sy + child.sy;
     }
+    // @endif
+
+    // @ifdef GAMEOBJECT_OPACITY
+    child._fop = this.opacity * child.opacity;
     // @endif
   }
 
@@ -506,13 +549,25 @@ class GameObject {
   // @endif
 
   // @ifdef GAMEOBJECT_SCALE
+  /**
+   * Readonly. The true width of the game object after taking into
+   * account the objects scale.
+   */
   get scaledWidth() {
     return this.width * this.scale.x;
   }
 
+  /**
+   * Readonly. The true height of the game object after taking into
+   * account the objects scale.
+   */
   get scaledHeight() {
     return this.height * this.scale.y;
   }
+
+  // readonly
+  set scaledWidth(value) {}
+  set scaledHeight(value) {}
 
   /**
    * Set the x and y scale of the object. If only one value is passed, both are set to the same value.
@@ -546,7 +601,7 @@ class GameObject {
    */
   update(dt) {
     // @ifdef GAMEOBJECT_VELOCITY||GAMEOBJECT_ACCELERATION||GAMEOBJECT_TTL
-    this.advance(dt)
+    this.advance(dt);
     // @endif
   }
 
@@ -655,12 +710,24 @@ class GameObject {
     // @ifdef GAMEOBJECT_SCALE
     // it's faster to only scale if one of the values is non-zero
     // rather than always scaling
-    // @see https://jsperf.com/scale-or-if-statement/
+    // @see https://jsperf.com/scale-or-if-statement/4
     let scaleX = this.scale.x;
     let scaleY = this.scale.y;
     if (scaleX || scaleY) {
       this.context.scale(scaleX, scaleY);
     }
+    // @endif
+
+    // @ifdef GAMEOBJECT_OPACITY
+    // it's not really any faster to not set the global alpha
+    // @see https://jsperf.com/global-alpha-or-if-statement/1
+    let opacity = this.opacity;
+
+    // @ifdef GAMEOBJECT_GROUP
+    opacity = this._fop ? this._fop : opacity;
+    // @endif
+
+    this.context.globalAlpha = opacity;
     // @endif
 
     this._rf();

@@ -1,39 +1,39 @@
+import GameObject from './gameObject.js'
 import { Factory, srOnlyStyle } from './utils.js'
 import { getCanvas } from './core.js'
 
-class Scene {
+/**
+ * A scene object for organizing a group of objects that will update and render together.
+ *
+ * ```js
+ * import { Scene, Sprite } from 'kontra';
+ *
+ * sprite = Sprite({
+ *   x: 100,
+ *   y: 200,
+ *   width: 20,
+ *   height: 40,
+ *   color: 'red'
+ * });
+ *
+ * scene = Scene({
+ *   id: 'game',
+ *   children: [sprite]
+ * });
+ *
+ * scene.render();
+ * ```
+ *
+ * @class Scene
+ * @extends GameObject
+ *
+ * @param {Object} properties - Properties of the scene.
+ * @param {String} properties.id - The id of the scene.
+ * @param {String} [properties.name=properties.id] - The name of the scene. Used by screen readers to identify each scene. Use this property to give the scene a human friendly name. Defaults to the id.
+ */
+class Scene extends GameObject.class {
 
-  /**
-   * A scene object for organizing a group of objects that will update and render together.
-   *
-   * ```js
-   * import { Scene, Sprite } from 'kontra';
-   *
-   * sprite = Sprite({
-   *   x: 100,
-   *   y: 200,
-   *   width: 20,
-   *   height: 40,
-   *   color: 'red'
-   * });
-   *
-   * scene = Scene({
-   *   id: 'game',
-   *   children: [sprite]
-   * });
-   *
-   * scene.render();
-   * ```
-   *
-   * @class Scene
-   *
-   * @param {Object} properties - Properties of the scene.
-   * @param {String} properties.id - The id of the scene.
-   * @param {String} [properties.name=properties.id] - The name of the scene. Used by screen readers to identify each scene. Use this property to give the scene a human friendly name. Defaults to the id.
-   * @param {Object[]} [properties.children=[]] - The children of the scene.
-   * @param {...*} properties.props - Any additional properties you need added to the scene. For example, if you pass `Scene({counter: 0})` then the scene will also have a property of the same name and value. You can pass as many additional properties as you want.
-   */
-  constructor(properties = {}) {
+  init(properties) {
     /**
      * The id of the scene.
      * @memberof Scene
@@ -47,27 +47,20 @@ class Scene {
      */
     this.name = properties.id;
 
-    // add all properties to the scene, overriding any defaults
-    Object.assign(this, properties);
-
-    /**
-     * The scenes children objects.
-     * @memberof Scene
-     * @property {Object[]} children
-     */
-    this.children = [];
-
     // create an accessible DOM node for screen readers
     // dn = dom node
     const section = this._dn = document.createElement('section');
-    section.id = this.id;
     section.tabIndex = -1;
     section.style = srOnlyStyle;
-    section.setAttribute('aria-label', this.name);
 
     document.body.appendChild(section);
 
-    this.add(...(properties.children || []));
+    // create the node before adding children so they can be added
+    // to it
+    super.init(properties);
+
+    section.id = this.id;
+    section.setAttribute('aria-label', this.name);
   }
 
   /**
@@ -106,31 +99,15 @@ class Scene {
     this.onHide();
   }
 
-  /**
-   * Add objects to the scene.
-   * @memberof Scene
-   * @function add
-   *
-   * @param {...Object[]} objects - Objects to add to the scene.
-   */
-  add(...objects) {
-    this.children = this.children.concat(objects);
-    objects.map(object => {
-      if (object._dn) {
-        this._dn.appendChild(object._dn);
-      }
-    });
+  addChild(object, options) {
+    super.addChild(object, options);
+    if (object._dn) {
+      this._dn.appendChild(object._dn);
+    }
   }
 
-  /**
-   * Remove an object from the scene.
-   * @memberof Scene
-   * @function remove
-   *
-   * @param {Object} object - Object to remove.
-   */
-  remove(object) {
-    this.children = this.children.filter(child => child !== object);
+  removeChild(object) {
+    super.removeChild(object);
     if (object._dn) {
       document.body.appendChild(object._dn);
     }
@@ -155,7 +132,7 @@ class Scene {
    */
   update(dt) {
     if (!this.hidden) {
-      this.children.map(child => child.update && child.update(dt));
+      super.update(dt);
     }
   }
 
@@ -166,20 +143,7 @@ class Scene {
    */
   render() {
     if (!this.hidden) {
-      this.children.map(child => {
-        if (!child.render) return;
-
-        // only draw objects that are within the current viewport (speeds up performance considerably)
-        let canvas = getCanvas();
-        let x = (child.viewX !== undefined) ? child.viewX : child.x;
-        let y = (child.viewY !== undefined) ? child.viewY : child.y;
-
-        if (x === undefined ||  // render things such as TileMaps which don't have a position
-            (x + child.width > 0 && x < canvas.width &&
-             y + child.height > 0 && y < canvas.height)) {
-          child.render();
-        }
-      });
+      super.render();
     }
   }
 

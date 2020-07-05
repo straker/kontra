@@ -14,7 +14,8 @@ let options = {
     'GAMEOBJECT_TTL',
     'GAMEOBJECT_ANCHOR',
     'GAMEOBJECT_CAMERA',
-    'GAMEOBJECT_SCALE'
+    'GAMEOBJECT_SCALE',
+    'GAMEOBJECT_OPACITY'
   ],
   sprite: [
     'SPRITE_IMAGE',

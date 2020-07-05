@@ -42,45 +42,45 @@ function parseFont(font) {
   };
 }
 
+/**
+ * An object for drawing text to the screen. Supports newline characters as well as automatic new lines when setting the `width` property.
+ *
+ * You can also display RTL languages by setting the attribute `dir="rtl"` on the main canvas element. Due to the limited browser support for individual text to have RTL settings, it must be set globally for the entire game.
+ *
+ * @example
+ * // exclude-code:start
+ * let { Text } = kontra;
+ * // exclude-code:end
+ * // exclude-script:start
+ * import { Text } from 'kontra';
+ * // exclude-script:end
+ *
+ * let text = Text({
+ *   text: 'Hello World!\nI can even be multiline!',
+ *   font: '32px Arial',
+ *   color: 'white',
+ *   x: 300,
+ *   y: 100,
+ *   anchor: {x: 0.5, y: 0.5},
+ *   textAlign: 'center'
+ * });
+ * // exclude-code:start
+ * text.context = context;
+ * // exclude-code:end
+ *
+ * text.render();
+ * @class Text
+ * @extends GameObject
+ *
+ * @param {Object} properties - Properties of the text.
+ * @param {String} properties.text - The text to display.
+ * @param {String} [properties.font] - The [font](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/font) style. Defaults to the main context font.
+ * @param {String} [properties.color] - Fill color for the text. Defaults to the main context fillStyle.
+ * @param {Number} [properties.width] - Set a fixed width for the text. If set, the text will automatically be split into new lines that will fit the size when possible.
+ * @param {String} [properties.textAlign='left'] - The [textAlign](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/textAlign) for the context. If the `dir` attribute is set to `rtl` on the main canvas, the text will automatically be aligned to the right, but you can override that by setting this property.
+ * @param {Number} [properties.lineHeight=1] - The distance between two lines of text.
+ */
 class Text extends GameObject.class {
-  /**
-   * An object for drawing text to the screen. Supports newline characters as well as automatic new lines when setting the `width` property.
-   *
-   * You can also display RTL languages by setting the attribute `dir="rtl"` on the main canvas element. Due to the limited browser support for individual text to have RTL settings, it must be set globally for the entire game.
-   *
-   * @example
-   * // exclude-code:start
-   * let { Text } = kontra;
-   * // exclude-code:end
-   * // exclude-script:start
-   * import { Text } from 'kontra';
-   * // exclude-script:end
-   *
-   * let text = Text({
-   *   text: 'Hello World!\nI can even be multiline!',
-   *   font: '32px Arial',
-   *   color: 'white',
-   *   x: 300,
-   *   y: 100,
-   *   anchor: {x: 0.5, y: 0.5},
-   *   textAlign: 'center'
-   * });
-   * // exclude-code:start
-   * text.context = context;
-   * // exclude-code:end
-   *
-   * text.render();
-   * @class Text
-   * @extends GameObject
-   *
-   * @param {Object} properties - Properties of the text.
-   * @param {String} properties.text - The text to display.
-   * @param {String} [properties.font] - The [font](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/font) style. Defaults to the main context font.
-   * @param {String} [properties.color] - Fill color for the text. Defaults to the main context fillStyle.
-   * @param {Number} [properties.width] - Set a fixed width for the text. If set, the text will automatically be split into new lines that will fit the size when possible.
-   * @param {String} [properties.textAlign='left'] - The [textAlign](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/textAlign) for the context. If the `dir` attribute is set to `rtl` on the main canvas, the text will automatically be aligned to the right, but you can override that by setting this property.
-   * @param {Number} [properties.lineHeight=1] - The distance between two lines of text.
-   */
 
   init(properties) {
 

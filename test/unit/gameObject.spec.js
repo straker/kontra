@@ -14,6 +14,7 @@ let hasTTL = testGameObject.hasOwnProperty('ttl');
 let hasAnchor = testGameObject.hasOwnProperty('anchor');
 let hasCamera = typeof testGameObject.sx !== 'undefined';
 let hasScale = testGameObject.hasOwnProperty('scale');
+let hasOpacity = typeof testGameObject.opacity !== 'undefined';
 
 let properties = {
   group: hasGroup,
@@ -23,7 +24,8 @@ let properties = {
   ttl: hasTTL,
   anchor: hasAnchor,
   camera: hasCamera,
-  scale: hasScale
+  scale: hasScale,
+  opacity: hasOpacity
 };
 
 // --------------------------------------------------
@@ -76,6 +78,10 @@ describe('gameObject with properties: ' + JSON.stringify(properties,null,4), () 
 
       if (hasScale) {
         expect(gameObject.scale).to.eql({x: 1, y: 1});
+      }
+
+      if (hasOpacity) {
+        expect(gameObject.opacity).to.equal(1);
       }
     });
 
@@ -459,6 +465,24 @@ describe('gameObject with properties: ' + JSON.stringify(properties,null,4), () 
       });
     }
 
+    if (hasOpacity) {
+      it('should set the globalAlpha', () => {
+        let gameObject = GameObject({
+          x: 0,
+          y: 0,
+          opacity: 1
+        });
+
+        var spy = sinon.spy(gameObject.context, 'globalAlpha', ['set']);
+
+        gameObject.render();
+
+        expect(spy.set.called).to.be.true;
+
+        spy.restore();
+      });
+    }
+
   });
 
 
@@ -602,7 +626,7 @@ describe('gameObject with properties: ' + JSON.stringify(properties,null,4), () 
         });
 
         if (hasRotation) {
-          it('should set the childs relative rotation', () => {
+          it('should set the childs rotation', () => {
             let gameObject = GameObject({
               x: 20,
               y: 20,
@@ -617,23 +641,6 @@ describe('gameObject with properties: ' + JSON.stringify(properties,null,4), () 
             gameObject.addChild(child);
 
             expect(child.rotation).to.equal(40);
-          });
-
-          it('should set the childs absolute rotation', () => {
-            let gameObject = GameObject({
-              x: 20,
-              y: 20,
-              rotation: 10
-            });
-            let child = GameObject({
-              x: 30,
-              y: 35,
-              rotation: 20
-            });
-
-            gameObject.addChild(child, { absolute: true });
-
-            expect(child.rotation).to.equal(20);
           });
         }
 
@@ -696,6 +703,42 @@ describe('gameObject with properties: ' + JSON.stringify(properties,null,4), () 
 
             expect(child.sx).to.equal(10);
             expect(child.sy).to.equal(10);
+          });
+        }
+
+        if (hasOpacity) {
+          it('should set the childs final opacity', () => {
+            let gameObject = GameObject({
+              x: 20,
+              y: 20,
+              opacity: 0.5
+            });
+            let child = GameObject({
+              x: 30,
+              y: 35,
+              opacity: 1
+            });
+
+            gameObject.addChild(child);
+
+            expect(child.finalOpacity).to.equal(0.5);
+          });
+
+          it('should not change the childs opacity', () => {
+            let gameObject = GameObject({
+              x: 20,
+              y: 20,
+              opacity: 0.5
+            });
+            let child = GameObject({
+              x: 30,
+              y: 35,
+              opacity: 1
+            });
+
+            gameObject.addChild(child);
+
+            expect(child.opacity).to.equal(1);
           });
         }
 
@@ -817,6 +860,78 @@ describe('gameObject with properties: ' + JSON.stringify(properties,null,4), () 
 
         });
       });
+
+      if (hasOpacity) {
+        describe(`gameObject.finalOpacity`, () => {
+          let gameObject, child;
+
+          beforeEach(() => {
+            gameObject = GameObject({
+              opacity: 1
+            });
+            child = GameObject();
+            gameObject.addChild(child);
+          });
+
+          it(`should set the finalOpacity`, () => {
+            child.opacity = 0.5;
+
+            expect(child.finalOpacity).to.equal(0.5);
+          });
+
+          it(`should not change the parent opacity`, () => {
+            child.opacity = 0.5;
+
+            expect(gameObject.opacity).to.equal(1);
+          });
+
+          it('should update all children', () => {
+            let child2 = GameObject();
+            gameObject.addChild(child2);
+
+            child.opacity = 0.5;
+            child2.opacity = 0.25;
+
+            gameObject.opacity = 0.75;
+
+            expect(child.finalOpacity).to.equal(0.375);
+            expect(child2.finalOpacity).to.equal(0.1875);
+          });
+
+          it('should update the entire child hierarchy', () => {
+            let child2 = GameObject();
+            let child3 = GameObject();
+            child.addChild(child2);
+            child2.addChild(child3);
+
+            child.opacity = 0.5;
+            child2.opacity = 0.5;
+            child3.opacity = 0.5;
+
+            gameObject.opacity = 0.75;
+
+            expect(child.finalOpacity).to.equal(0.375);
+            expect(child2.finalOpacity).to.equal(0.1875);
+            expect(child3.finalOpacity).to.equal(0.09375);
+          });
+
+          it('should update the final opacity of a sprite in the middle of the hierarchy', () => {
+            let child2 = GameObject();
+            let child3 = GameObject();
+            child.addChild(child2);
+            child2.addChild(child3);
+
+            child.opacity = 0.5;
+            child2.opacity = 0.5;
+            child3.opacity = 0.5;
+
+            child2.opacity = 0.75;
+
+            expect(child2.finalOpacity).to.equal(0.375);
+          });
+
+        });
+      }
 
     });
   }

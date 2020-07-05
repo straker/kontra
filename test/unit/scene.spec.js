@@ -25,7 +25,6 @@ describe('scene', () => {
     it('should setup basic properties', () => {
       expect(scene.id).to.equal('myId');
       expect(scene.name).to.equal('myId');
-      expect(scene.children.length).to.equal(0);
     });
 
     it('should set all additional properties on the scene', () => {
@@ -152,33 +151,15 @@ describe('scene', () => {
 
 
   // --------------------------------------------------
-  // add
+  // addChild
   // --------------------------------------------------
-  describe('add', () => {
-
-    it('should add a single object', () => {
-      let child = {};
-      scene.add(child);
-
-      expect(scene.children.length).to.equal(1);
-      expect(scene.children[0]).to.equal(child);
-    });
-
-    it('should add multiple objects', () => {
-      let child1 = {};
-      let child2 = {};
-      scene.add(child1, child2);
-
-      expect(scene.children.length).to.equal(2);
-      expect(scene.children[0]).to.equal(child1);
-      expect(scene.children[1]).to.equal(child2);
-    });
+  describe('addChild', () => {
 
     it('should add any children with DOM nodes to the scenes DOM node', () => {
       let child = {
         _dn: document.createElement('div')
       };
-      scene.add(child);
+      scene.addChild(child);
 
       expect(scene._dn.contains(child._dn)).to.be.true;
     });
@@ -190,24 +171,16 @@ describe('scene', () => {
 
 
   // --------------------------------------------------
-  // remove
+  // removeChild
   // --------------------------------------------------
   describe('remove', () => {
-
-    it('should remove the child', () => {
-      let child = {};
-      scene.add(child);
-      scene.remove(child);
-
-      expect(scene.children.length).to.equal(0);
-    });
 
     it('should remove the DOM node from the scenes DOM node', () => {
       let child = {
         _dn: document.createElement('div')
       };
-      scene.add(child);
-      scene.remove(child);
+      scene.addChild(child);
+      scene.removeChild(child);
 
       expect(scene._dn.contains(child._dn)).to.be.false;
     });
@@ -233,7 +206,7 @@ describe('scene', () => {
       let child = {
         destroy: sinon.spy()
       };
-      scene.add(child);
+      scene.addChild(child);
       scene.destroy();
 
       expect(child.destroy.called).to.be.true;
@@ -250,11 +223,12 @@ describe('scene', () => {
   // --------------------------------------------------
   describe('update', () => {
 
-    it('should call update on all children', () => {
+    it('should call update on all children if scene is not hidden', () => {
       let child = {
         update: sinon.spy()
       };
-      scene.add(child);
+      console.log('hidden:', scene.hidden);
+      scene.addChild(child);
       scene.update();
 
       expect(child.update.called).to.be.true;
@@ -264,7 +238,7 @@ describe('scene', () => {
       let child = {
         update: sinon.spy()
       };
-      scene.add(child);
+      scene.addChild(child);
       scene.hide();
       scene.update();
 
@@ -286,7 +260,7 @@ describe('scene', () => {
       let child = {
         render: sinon.spy()
       };
-      scene.add(child);
+      scene.addChild(child);
       scene.render();
 
       expect(child.render.called).to.be.true;
@@ -296,7 +270,7 @@ describe('scene', () => {
       let child = {
         render: sinon.spy()
       };
-      scene.add(child);
+      scene.addChild(child);
       scene.hide();
       scene.render();
 

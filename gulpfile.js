@@ -18,6 +18,7 @@ const context = {
   GAMEOBJECT_ANCHOR: true,
   GAMEOBJECT_CAMERA: true,
   GAMEOBJECT_SCALE: true,
+  GAMEOBJECT_OPACITY: true,
   SPRITE_IMAGE: true,
   SPRITE_ANIMATION: true,
   TEXT_AUTONEWLINE: true,

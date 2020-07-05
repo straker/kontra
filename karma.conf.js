@@ -20,18 +20,18 @@ module.exports = function(config) {
       {pattern: 'test/unit/*.spec.js', type: 'module' },
       {pattern: 'test/integration/*.spec.js', type: 'module' },
     ],
-    preprocessors: {
-      'src/*.js': ["karma-coverage-istanbul-instrumenter"]
-    },
+    // preprocessors: {
+    //   'src/*.js': ["karma-coverage-istanbul-instrumenter"]
+    // },
     browsers: ['ChromeHeadless'],
     proxies: {
       '/imgs': '/base/test/imgs',
       '/audio': '/base/test/audio',
       '/data': '/base/test/data'
     },
-    coverageIstanbulInstrumenter: {
-      esModules: true
-    },
+    // coverageIstanbulInstrumenter: {
+    //   esModules: true
+    // },
     reporters: ['mocha', 'coverage-istanbul'],
     coverageIstanbulReporter: {
       reports: ['html', 'lcovonly', 'text-summary'],

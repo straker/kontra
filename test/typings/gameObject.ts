@@ -25,6 +25,7 @@ let viewX: number = gameObject.viewX;
 let viewY: number = gameObject.viewY;
 let scaledWidth: number = gameObject.scaledWidth;
 let scaledHeight: number = gameObject.scaledHeight;
+let opacity: number = gameObject.opacity;
 
 let alive: boolean = gameObject.isAlive();
 gameObject.addChild(kontra.GameObject());
@@ -51,7 +52,8 @@ kontra.GameObject({
   ttl: 10,
   rotation: 10,
   anchor: {x: 2, y: 2},
-  sclae: {x: 2, y: 2},
+  scale: {x: 2, y: 2},
+  opacity: 0.5,
   context: document.createElement('canvas').getContext('2d'),
   update() {},
   render() {}

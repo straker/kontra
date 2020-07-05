@@ -79,7 +79,7 @@ Options are passed by nesting the option with the parent source. For example, to
 | anchor        | `anchor` |
 | camera        | `sx`, `sy`, `viewX`, `viewY` |
 | group         | `children`, `parent` |
-| scale         | `scale`, `scaledWidth`, `scaledHeight`, `setScale()` |
+| scale         | `scale`, `scaledWidth`, `scaledHeight`, `setScale()` | opacity       | `opacity`
 
 #### `sprite` options:
 

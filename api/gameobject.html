@@ -154,7 +154,7 @@
             <code>properties.rotation</code>
             <span class="optional">Optional</span>
           </dt>
-          <dd><p><em>Number</em>. game objects rotation around the origin in radians. Defaults to <code>0</code>.</p>
+          <dd><p><em>Number</em>. The rotation around the origin in radians. Defaults to <code>0</code>.</p>
         </dd>
           <dt>
             <code>properties.anchor</code>
@@ -173,6 +173,12 @@
             <span class="optional">Optional</span>
           </dt>
           <dd><p><em>Object</em>. The x and y scale of the game object. Calls <a href="api/gameObject#setScale">setScale</a> with the passed in values. Defaults to <code>{x:1,y:1}</code>.</p>
+        </dd>
+          <dt>
+            <code>properties.opacity</code>
+            <span class="optional">Optional</span>
+          </dt>
+          <dd><p><em>Number</em>. The opacity of the game object. Defaults to <code>1</code>.</p>
         </dd>
           <dt>
             <code>properties.context</code>
@@ -257,6 +263,11 @@
                 <li>
                   <a href="api/gameobject#height">
                     <span>GameObject&#8203;.height</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="api/gameobject#opacity">
+                    <span>GameObject&#8203;.opacity</span>
                   </a>
                 </li>
                 <li>
@@ -1151,7 +1162,8 @@ gameObject.render();</code></pre></section>
             </a>
           </h2>
 
-          <p><em>Number</em>. The height of the game object.</p>
+          <p><em>Number</em>. The height of the game object. Does not take into account the
+objects scale.</p>
           
         </section>
         <section>
@@ -1187,6 +1199,18 @@ gameObject.render();</code></pre></section>
           <h3><span class="visually-hidden">isAlive</span> Return value</h3>
           <p><p><em>Boolean</em>. <code>true</code> if the game objects <a href="api/gameObject#ttl">ttl</a> property is above <code>0</code>, <code>false</code> otherwise.</p>
           </p>
+        </section>
+        <section>
+          <h2 id="opacity">
+            <a href="api/gameobject#opacity" class="section-link">
+              <span>GameObject&#8203;.opacity</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
+
+          <p><em>Number</em>. The opacity of the object. Does not take into account opacity
+from any parent objects.</p>
+          
         </section>
         <section>
           <h2 id="parent">
@@ -1383,7 +1407,8 @@ gameObject.render();</code></pre></section>
             </a>
           </h2>
 
-          <p><em>Number</em>. The width of the game object.</p>
+          <p><em>Number</em>. The width of the game object. Does not take into account the
+objects scale.</p>
           
         </section>
         <section>

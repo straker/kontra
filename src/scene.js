@@ -1,6 +1,6 @@
-import GameObject from './gameObject.js'
-import { Factory, srOnlyStyle } from './utils.js'
-import { getCanvas } from './core.js'
+import GameObject from './gameObject.js';
+import { srOnlyStyle } from './utils.js';
+import { getCanvas } from './core.js';
 
 /**
  * A scene object for organizing a group of objects that will update and render together.
@@ -162,4 +162,8 @@ class Scene extends GameObject.class {
   onHide() {}
 }
 
-export default Factory(Scene);
+export default function factory() {
+  return new Scene(...arguments);
+}
+factory.prototype = Scene.prototype;
+factory.class = Scene;

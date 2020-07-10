@@ -1,6 +1,6 @@
-import { getCanvas } from './core.js'
-import { on } from './events.js'
-import { getRect } from './utils.js'
+import { getCanvas } from './core.js';
+import { on } from './events.js';
+import { getRect } from './utils.js';
 
 /**
  * A simple pointer API. You can use it move the main sprite or respond to a pointer event. Works with both mouse and touch events.

@@ -1,6 +1,5 @@
-import { getContext } from './core.js'
-import Vector from './vector.js'
-import { Factory } from './utils.js'
+import { getContext } from './core.js';
+import Vector from './vector.js';
 
 /**
  * The base class of most renderable classes. Handles things such as position, rotation, anchor, and the update and render life cycle.
@@ -772,4 +771,8 @@ class GameObject {
   draw() {}
 }
 
-export default Factory(GameObject)
+export default function factory() {
+  return new GameObject(...arguments);
+}
+factory.prototype = GameObject.prototype;
+factory.class = GameObject;

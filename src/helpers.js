@@ -1,4 +1,4 @@
-import { getRect } from './utils.js'
+import { getRect } from './utils.js';
 
 /**
  * A group of helpful functions that are commonly used for game development. Includes things such as converting between radians and degrees and getting random integers.

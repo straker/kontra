@@ -1,5 +1,5 @@
-import { getCanvas } from './core.js'
-import { Factory, getRect } from './utils.js'
+import { getCanvas } from './core.js';
+import { getRect } from './utils.js';
 
 /**
  * Determine which subnodes the object intersects with
@@ -309,4 +309,8 @@ class Quadtree {
    /* @endif */
 }
 
-export default Factory(Quadtree)
+export default function factory() {
+  return new Quadtree(...arguments);
+}
+factory.prototype = Quadtree.prototype;
+factory.class = Quadtree;

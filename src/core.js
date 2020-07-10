@@ -1,4 +1,4 @@
-import { emit } from './events.js'
+import { emit } from './events.js';
 
 /**
  * Functions for initializing the Kontra library and getting the canvas and context

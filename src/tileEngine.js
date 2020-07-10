@@ -1,5 +1,5 @@
-import { getCanvas, getContext } from './core.js'
-import { getRect } from './utils.js'
+import { getCanvas, getContext } from './core.js';
+import { getRect } from './utils.js';
 import { clamp } from './helpers.js';
 
 /**

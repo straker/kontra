@@ -1,5 +1,4 @@
 import GameObject from './gameObject.js';
-import { Factory } from './utils.js';
 
 /**
  * A versatile way to update and draw your sprites. It can handle simple rectangles, images, and sprite sheet animations. It can be used for your main player object as well as tiny particles in a particle engine.
@@ -188,4 +187,8 @@ class Sprite extends GameObject.class {
   }
 }
 
-export default Factory(Sprite)
+export default function factory() {
+  return new Sprite(...arguments);
+}
+factory.prototype = Sprite.prototype;
+factory.class = Sprite;

@@ -1,7 +1,7 @@
-import { getCanvas } from './core.js'
-import GameObject from './gameObject.js'
-import { Factory, getRect } from './utils.js'
-import { on } from './events.js'
+import { getCanvas } from './core.js';
+import GameObject from './gameObject.js';
+import { getRect } from './utils.js';
+import { on } from './events.js';
 
 let alignment = {
   start(rtl) {
@@ -298,4 +298,8 @@ class GridManager extends GameObject.class {
   }
 }
 
-export default Factory(GridManager)
+export default function factory() {
+  return new GridManager(...arguments);
+}
+factory.prototype = GridManager.prototype;
+factory.class = GridManager;

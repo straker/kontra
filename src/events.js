@@ -46,10 +46,7 @@ export function on(event, callback) {
  * @param {Function} callback - The function that was passed during registration.
  */
 export function off(event, callback) {
-  let index;
-
-  if (!callbacks[event] || (index = callbacks[event].indexOf(callback)) < 0) return;
-  callbacks[event].splice(index, 1);
+  callbacks[event] = (callbacks[event] || []).filter(fn => fn != callback);
 }
 
 /**
@@ -60,6 +57,5 @@ export function off(event, callback) {
  * @param {...*} args - Comma separated list of arguments passed to all callbacks.
  */
 export function emit(event, ...args) {
-  if (!callbacks[event]) return;
-  callbacks[event].map(fn => fn(...args));
+  (callbacks[event] || []).map(fn => fn(...args));
 }

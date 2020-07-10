@@ -1,4 +1,4 @@
-import Animation from './animation.js'
+import Animation from './animation.js';
 import {
   imageAssets,
   audioAssets,
@@ -10,13 +10,13 @@ import {
   loadAudio,
   loadData,
   load
-} from './assets.js'
-import Button from './button.js'
-import { init, getCanvas, getContext } from './core.js'
-import { on, off, emit } from './events.js'
-import GameLoop from './gameLoop.js'
-import GameObject from './gameObject.js'
-import GridManager from './gridManager.js'
+} from './assets.js';
+import Button from './button.js';
+import { init, getCanvas, getContext } from './core.js';
+import { on, off, emit } from './events.js';
+import GameLoop from './gameLoop.js';
+import GameObject from './gameObject.js';
+import GridManager from './gridManager.js';
 import {
   radToDeg,
   degToRad,
@@ -29,9 +29,9 @@ import {
   setStoreItem,
   getStoreItem,
   collides
-} from './helpers.js'
-import { keyMap, initKeys, bindKeys, unbindKeys, keyPressed } from './keyboard.js'
-import { registerPlugin, unregisterPlugin, extendObject } from './plugin.js'
+} from './helpers.js';
+import { keyMap, initKeys, bindKeys, unbindKeys, keyPressed } from './keyboard.js';
+import { registerPlugin, unregisterPlugin, extendObject } from './plugin.js';
 import {
   initPointer,
   pointer,
@@ -41,15 +41,15 @@ import {
   onPointerDown,
   onPointerUp,
   pointerPressed
-} from './pointer.js'
-import Pool from './pool.js'
-import Quadtree from './quadtree.js'
-import Scene from './scene.js'
-import Sprite from './sprite.js'
-import SpriteSheet from './spriteSheet.js'
-import Text from './text.js'
-import TileEngine from './tileEngine.js'
-import Vector from './vector.js'
+} from './pointer.js';
+import Pool from './pool.js';
+import Quadtree from './quadtree.js';
+import Scene from './scene.js';
+import Sprite from './sprite.js';
+import SpriteSheet from './spriteSheet.js';
+import Text from './text.js';
+import TileEngine from './tileEngine.js';
+import Vector from './vector.js';
 
 let kontra = {
   Animation,

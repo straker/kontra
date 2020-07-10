@@ -1,7 +1,6 @@
-import GameObject from './gameObject.js'
-import { on } from './events.js'
-import { getCanvas, getContext } from './core.js'
-import { Factory } from './utils.js'
+import GameObject from './gameObject.js';
+import { on } from './events.js';
+import { getCanvas, getContext } from './core.js';
 
 let fontSizeRegex = /(\d+)(\w+)/;
 
@@ -249,4 +248,8 @@ class Text extends GameObject.class {
   }
 }
 
-export default Factory(Text)
+export default function factory() {
+  return new Text(...arguments);
+}
+factory.prototype = Text.prototype;
+factory.class = Text;

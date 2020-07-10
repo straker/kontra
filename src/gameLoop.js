@@ -1,6 +1,6 @@
-import { noop } from './utils.js'
-import { emit } from './events.js'
-import { getContext, getCanvas } from './core.js'
+import { noop } from './utils.js';
+import { emit } from './events.js';
+import { getContext, getCanvas } from './core.js';
 
 /**
  * Clear the canvas.

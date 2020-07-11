@@ -1,6 +1,7 @@
 import { getContext } from './core.js';
 import Updatable from './updatable.js';
 
+// @ifdef GAMEOBJECT_GROUP
 let groupValues = ['x', 'y', 'sx', 'sy', 'scaleX', 'scaleY', 'rotation'];
 
 let handler = {
@@ -10,6 +11,7 @@ let handler = {
     return Reflect.set(obj, prop, value);
   }
 };
+// @endif
 
 /**
  * The base class of most renderable classes. Handles things such as position, rotation, anchor, and the update and render life cycle.
@@ -502,6 +504,9 @@ class GameObject extends Updatable {
   /**
    * Readonly. The final opacity of the game object taking into account
    * all parent opacities.
+   * @memberof GameObject
+   * @property {Number} finalOpacity
+   * @readonly
    */
   get finalOpacity() {
     // fop = final opacity
@@ -541,6 +546,9 @@ class GameObject extends Updatable {
   /**
    * Readonly. The true width of the game object after taking into
    * account the objects scale.
+   * @memberof GameObject
+   * @property {Number} scaledWith
+   * @readonly
    */
   get scaledWidth() {
     return this.width * this.scaleX;
@@ -549,6 +557,9 @@ class GameObject extends Updatable {
   /**
    * Readonly. The true height of the game object after taking into
    * account the objects scale.
+   * @memberof GameObject
+   * @property {Number} scaledHeight
+   * @readonly
    */
   get scaledHeight() {
     return this.height * this.scaleY;

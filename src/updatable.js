@@ -10,9 +10,6 @@ import Vector from './vector.js';
  * ttl
  */
 class Updatable {
-  constructor(properties) {
-    return this.init(properties);
-  }
 
   init(properties = {}) {
 

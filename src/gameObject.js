@@ -3,15 +3,15 @@ import Updatable from './updatable.js';
 
 // @ifdef GAMEOBJECT_GROUP
 let groupValues = ['x', 'y', 'sx', 'sy', 'scaleX', 'scaleY', 'rotation'];
+// @endif
 
 let handler = {
   set(obj, prop, value) {
     // pc = propChanged
-    obj._pc(prop, value);
+    obj._pc && obj._pc(prop, value);
     return Reflect.set(obj, prop, value);
   }
 };
-// @endif
 
 /**
  * The base class of most renderable classes. Handles things such as position, rotation, anchor, and the update and render life cycle.
@@ -52,6 +52,13 @@ class GameObject extends Updatable {
    * @docs docs/api_docs/gameObject.js
    */
 
+  constructor(properties) {
+    super();
+    let proxy = new Proxy(this, handler);
+    proxy.init(properties);
+    return proxy;
+  }
+
   /**
    * Use this function to reinitialize a game object. It takes the same properties object as the constructor. Useful it you want to repurpose a game object.
    * @memberof GameObject
@@ -90,6 +97,21 @@ class GameObject extends Updatable {
     // --------------------------------------------------
     // optionals
     // --------------------------------------------------
+
+    // @ifdef GAMEOBJECT_GROUP
+    /**
+     * The game objects parent object.
+     * @memberof GameObject
+     * @property {GameObject|null} parent
+     */
+
+    /**
+     * The game objects children objects.
+     * @memberof GameObject
+     * @property {GameObject[]} children
+     */
+    this.children = [];
+    // @endif
 
     // @ifdef GAMEOBJECT_ANCHOR
     /**
@@ -158,21 +180,6 @@ class GameObject extends Updatable {
     this.sx = this.sy = 0;
     // @endif
 
-    // @ifdef GAMEOBJECT_GROUP
-    /**
-     * The game objects parent object.
-     * @memberof GameObject
-     * @property {GameObject|null} parent
-     */
-
-    /**
-     * The game objects children objects.
-     * @memberof GameObject
-     * @property {GameObject[]} children
-     */
-    this.children = [];
-    // @endif
-
     // @ifdef GAMEOBJECT_OPACITY
     /**
      * The opacity of the object. Does not take into account opacity
@@ -216,10 +223,6 @@ class GameObject extends Updatable {
 
     // rf = render function
     this._rf = render || this.draw;
-
-    // @ifdef GAMEOBJECT_GROUP
-    return new Proxy(this, handler);
-    // @endif
   }
 
   /**
@@ -560,7 +563,6 @@ class GameObject extends Updatable {
     this.scaleY = y;
   }
   // @endif
-
 }
 
 export default function factory() {

@@ -3,6 +3,7 @@ import { on } from './events.js';
 import { getCanvas, getContext } from './core.js';
 
 let fontSizeRegex = /(\d+)(\w+)/;
+let dirtyValues = ['text', 'font', 'width'];
 
 function parseFont(font) {
   let match = font.match(fontSizeRegex);
@@ -88,6 +89,13 @@ class Text extends GameObject.class {
     // --------------------------------------------------
 
     /**
+     * The string of text. Use newline characters to create multi-line strings.
+     * @memberof Text
+     * @property {String} text
+     */
+    this.text = '';
+
+    /**
      * The text alignment.
      * @memberof Text
      * @property {String} textAlign
@@ -120,51 +128,6 @@ class Text extends GameObject.class {
     this._p();
   }
 
-  /**
-   * The string of text. Use newline characters to create multi-line strings.
-   * @memberof Text
-   * @property {String} text
-   */
-  get text() {
-    // t = text
-    return this._t;
-  }
-
-  set text(value) {
-    this._t = value;
-
-    // d = dirty
-    this._d = true;
-  }
-
-  get font() {
-    // f = font
-    return this._f;
-  }
-
-  set font(value) {
-    this._f = value;
-
-    // fs = font size
-    this._fs = parseFont(value).computed;
-    this._d = true;
-  }
-
-  get width() {
-    // w = width
-    return this._w;
-  }
-
-  set width(value) {
-    this._w = value;
-    this._d = true;
-
-    // @ifdef TEXT_AUTONEWLINE
-    // fw = fixed width
-    this._fw = value;
-    // @endif
-  }
-
   render() {
     if (this._d) {
       this._p();
@@ -179,18 +142,20 @@ class Text extends GameObject.class {
     // s = strings
     this._s = [];
     this._d = false;
-    this.context.font = this.font;
+    let context = this.context;
+
+    context.font = this.font;
 
     // @ifdef TEXT_AUTONEWLINE
     if (!this._s.length && this._fw) {
-      let parts = this._t.split(' ');
+      let parts = this.text.split(' ');
       let start = 0;
       let i = 2;
 
       // split the string into lines that all fit within the fixed width
       for (; i <= parts.length; i++) {
         let str = parts.slice(start, i).join(' ');
-        let width = this.context.measureText(str).width;
+        let width = context.measureText(str).width;
 
         if (width > this._fw) {
           this._s.push(parts.slice(start, i - 1).join(' '));
@@ -203,31 +168,54 @@ class Text extends GameObject.class {
     // @endif
 
     // @ifdef TEXT_NEWLINE
-    if (!this._s.length && this._t.includes('\n')) {
+    if (!this._s.length && this.text.includes('\n')) {
       let width = 0;
-      this._t.split('\n').map(str => {
+      this.text.split('\n').map(str => {
         this._s.push(str);
-        width = Math.max(width, this.context.measureText(str).width);
+        width = Math.max(width, context.measureText(str).width);
       });
 
-      this._w = width;
+      this.width = width;
     }
     // @endif
 
     if (!this._s.length) {
       this._s.push(this.text);
-      this._w = this.context.measureText(this._t).width;
+      this.width = context.measureText(this.text).width;
     }
 
     this.height = this._s.length * this._fs;
   }
 
+  /**
+   * Prop changed
+   */
+  _pc(prop, value) {
+    super._pc(prop, value);
+
+    if (dirtyValues.includes(prop)) {
+      this._d = true;
+
+      // @ifdef TEXT_AUTONEWLINE
+      if (prop == 'width') {
+        // fw = fixed width
+        this._fw = value;
+      }
+      // @endif
+
+      if (prop == 'font') {
+        this._fs = parseFont(value).computed;
+      }
+    }
+  }
+
   draw() {
     let alignX = 0;
     let textAlign = this.textAlign;
+    let context = this.context;
 
     // @ifdef TEXT_RTL
-    textAlign = this.textAlign || (this.context.canvas.dir === 'rtl' ? 'right' : 'left');
+    textAlign = this.textAlign || (context.canvas.dir === 'rtl' ? 'right' : 'left');
     // @endif
 
     // @ifdef TEXT_ALIGN||TEXT_RTL
@@ -239,11 +227,11 @@ class Text extends GameObject.class {
     // @endif
 
     this._s.map((str, index) => {
-      this.context.textBaseline = 'top';
-      this.context.textAlign = textAlign;
-      this.context.fillStyle = this.color;
-      this.context.font = this.font;
-      this.context.fillText(str, alignX, this._fs * this.lineHeight * index);
+      context.textBaseline = 'top';
+      context.textAlign = textAlign;
+      context.fillStyle = this.color;
+      context.font = this.font;
+      context.fillText(str, alignX, this._fs * this.lineHeight * index);
     });
   }
 }

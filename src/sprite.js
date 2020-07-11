@@ -35,8 +35,6 @@ class Sprite extends GameObject.class {
      * @property {Number} height
      */
 
-    super.init(properties);
-
     // @ifdef SPRITE_IMAGE
     /**
      * The image the sprite will use when drawn if passed as an argument.
@@ -44,12 +42,14 @@ class Sprite extends GameObject.class {
      * @property {HTMLImageElement|HTMLCanvasElement} image
      */
 
-    let { width, height, image } = properties;
+    let { image } = properties;
     if (image) {
-      this.width = (width !== undefined) ? width : image.width;
-      this.height = (height !== undefined) ? height : image.height;
+      this.width = image.width;
+      this.height = image.height;
     }
     // @endif
+
+    return super.init(properties);
   }
 
   // @ifdef SPRITE_ANIMATION

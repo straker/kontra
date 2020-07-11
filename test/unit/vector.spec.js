@@ -57,8 +57,8 @@ describe('vector with properties: ' + JSON.stringify(properties,null,4), () => {
 
       let vector = vector1.add(vector2);
 
-      expect(vector.x).to.eql(15);
-      expect(vector.y).to.eql(30);
+      expect(vector.x).to.deep.equal(15);
+      expect(vector.y).to.deep.equal(30);
     });
 
     it('should not modify either vectors', () => {
@@ -67,10 +67,10 @@ describe('vector with properties: ' + JSON.stringify(properties,null,4), () => {
 
       let vector = vector1.add(vector2);
 
-      expect(vector1.x).to.eql(10);
-      expect(vector1.y).to.eql(20);
-      expect(vector2.x).to.eql(5);
-      expect(vector2.y).to.eql(10);
+      expect(vector1.x).to.deep.equal(10);
+      expect(vector1.y).to.deep.equal(20);
+      expect(vector2.x).to.deep.equal(5);
+      expect(vector2.y).to.deep.equal(10);
     });
 
   });
@@ -91,8 +91,8 @@ describe('vector with properties: ' + JSON.stringify(properties,null,4), () => {
 
         let vector = vector1.subtract(vector2);
 
-        expect(vector.x).to.eql(5);
-        expect(vector.y).to.eql(10);
+        expect(vector.x).to.deep.equal(5);
+        expect(vector.y).to.deep.equal(10);
       });
 
       it('should not modify either vectors', () => {
@@ -101,10 +101,10 @@ describe('vector with properties: ' + JSON.stringify(properties,null,4), () => {
 
         let vector = vector1.subtract(vector2);
 
-        expect(vector1.x).to.eql(10);
-        expect(vector1.y).to.eql(20);
-        expect(vector2.x).to.eql(5);
-        expect(vector2.y).to.eql(10);
+        expect(vector1.x).to.deep.equal(10);
+        expect(vector1.y).to.deep.equal(20);
+        expect(vector2.x).to.deep.equal(5);
+        expect(vector2.y).to.deep.equal(10);
       });
 
     });
@@ -125,8 +125,8 @@ describe('vector with properties: ' + JSON.stringify(properties,null,4), () => {
 
         let vector = vector1.scale(2);
 
-        expect(vector.x).to.eql(10);
-        expect(vector.y).to.eql(20);
+        expect(vector.x).to.deep.equal(10);
+        expect(vector.y).to.deep.equal(20);
       });
 
       it('should not modify the vector', () => {
@@ -134,8 +134,8 @@ describe('vector with properties: ' + JSON.stringify(properties,null,4), () => {
 
         let vector = vector1.scale(2);
 
-        expect(vector1.x).to.eql(5);
-        expect(vector1.y).to.eql(10);
+        expect(vector1.x).to.deep.equal(5);
+        expect(vector1.y).to.deep.equal(10);
       });
 
     });
@@ -156,8 +156,8 @@ describe('vector with properties: ' + JSON.stringify(properties,null,4), () => {
 
         let normalize = vector1.normalize();
 
-        expect(normalize.x).to.eql(4/5);
-        expect(normalize.y).to.eql(3/5);
+        expect(normalize.x).to.deep.equal(4/5);
+        expect(normalize.y).to.deep.equal(3/5);
       });
 
     });
@@ -179,7 +179,7 @@ describe('vector with properties: ' + JSON.stringify(properties,null,4), () => {
 
         let dot = vector1.dot(vector2);
 
-        expect(dot).to.eql(250);
+        expect(dot).to.deep.equal(250);
       });
 
     });
@@ -200,7 +200,7 @@ describe('vector with properties: ' + JSON.stringify(properties,null,4), () => {
 
         let length = vector1.length();
 
-        expect(length).to.eql(5);
+        expect(length).to.deep.equal(5);
       });
 
     });
@@ -222,7 +222,7 @@ describe('vector with properties: ' + JSON.stringify(properties,null,4), () => {
 
         let distance = vector1.distance(vector2);
 
-        expect(distance).to.eql(5);
+        expect(distance).to.deep.equal(5);
       });
 
     });
@@ -244,7 +244,7 @@ describe('vector with properties: ' + JSON.stringify(properties,null,4), () => {
 
         let angle = vector1.angle(vector2);
 
-        expect(angle.toFixed(2)).to.eql('0.39');
+        expect(angle.toFixed(2)).to.deep.equal('0.39');
       });
 
     });

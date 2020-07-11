@@ -77,7 +77,7 @@ describe('sprite with properties: ' + JSON.stringify(properties,null,4), () => {
           animations: animations
         });
 
-        expect(sprite.animations).to.eql(animations);
+        expect(sprite.animations).to.deep.equal(animations);
         expect(sprite.currentAnimation).to.equal(animations.walk);
         expect(sprite.width).to.equal(10);
         expect(sprite.height).to.equal(20);

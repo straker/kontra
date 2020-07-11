@@ -29,7 +29,7 @@ export function getRect(obj) {
 
   // @ifdef GAMEOBJECT_SCALE
   // adjust for object scale
-  if (obj.scale) {
+  if (obj.scaleX) {
     width = obj.scaledWidth;
     height = obj.scaledHeight;
   }

@@ -193,8 +193,8 @@ class GridManager extends GameObject.class {
     }
     let numRows = grid.length;
 
-    // let gapX = this.gapX * this.scale.x;
-    // let gapY = this.gapY * this.scale.y;
+    // let gapX = this.gapX * this.scaleX;
+    // let gapY = this.gapY * this.scaleY;
 
     this._w = colWidths.reduce((acc, width) => acc += width, 0) + this.gapX * (numCols - 1);
     this._h = rowHeights.reduce((acc, height) => acc += height, 0) + this.gapY * (numRows - 1);
@@ -225,10 +225,10 @@ class GridManager extends GameObject.class {
     let gapY = this.gapY;
 
     if (this.scale) {
-      colWidths = colWidths.map(width => width * this.scale.x);
-      rowHeights = rowHeights.map(height => height * this.scale.y);
-      gapX *= this.scale.x;
-      gapY *= this.scale.y;
+      colWidths = colWidths.map(width => width * this.scaleX);
+      rowHeights = rowHeights.map(height => height * this.scaleY);
+      gapX *= this.scaleX;
+      gapY *= this.scaleY;
     }
 
     this._g.map((gridRow, row) => {

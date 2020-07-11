@@ -1,11 +1,21 @@
 import { getContext } from './core.js';
-import Vector from './vector.js';
+import Updatable from './updatable.js';
+
+let groupValues = ['x', 'y', 'sx', 'sy', 'scaleX', 'scaleY', 'rotation'];
+
+let handler = {
+  set(obj, prop, value) {
+    // pc = propChanged
+    obj._pc(prop, value);
+    return Reflect.set(obj, prop, value);
+  }
+};
 
 /**
  * The base class of most renderable classes. Handles things such as position, rotation, anchor, and the update and render life cycle.
  *
- * Typically you don't create a GameObject directly, but rather extend it for new classes. Because of this, trying to draw using a GameOjbect directly will prove difficult.
- * @class GameObject
+ * Typically you don't create a GameObject directly, but rather extend it for new classes.
+* @class GameObject
  *
  * @param {Object} [properties] - Properties of the game object.
  * @param {Number} [properties.x] - X coordinate of the position vector.
@@ -14,31 +24,29 @@ import Vector from './vector.js';
  * @param {Number} [properties.dy] - Y coordinate of the velocity vector.
  * @param {Number} [properties.ddx] - X coordinate of the acceleration vector.
  * @param {Number} [properties.ddy] - Y coordinate of the acceleration vector.
+ * @param {Number} [properties.ttl=Infinity] - How many frames the game object should be alive. Used by [Pool](api/pool).
+ * @param {(dt?: number) => void} [properties.update] - Function called every frame to update the game object.
+ * @param {...*} properties.props - Any additional properties you need added to the game object. For example, if you pass `gameObject({type: 'player'})` then the game object will also have a property of the same name and value. You can pass as many additional properties as you want.
  *
  * @param {Number} [properties.width] - Width of the game object.
  * @param {Number} [properties.height] - Height of the game object.
- *
- * @param {Number} [properties.ttl=Infinity] - How many frames the game object should be alive. Used by [Pool](api/pool).
- * @param {Number} [properties.rotation=0] - The rotation around the origin in radians.
- * @param {{x: number, y: number}} [properties.anchor={x:0,y:0}] - The x and y origin of the game object. {x:0, y:0} is the top left corner of the game object, {x:1, y:1} is the bottom right corner.
- * @param {GameObject[]} [properties.children] - Children to add to the game object. Children added this way have their x/y position treated as relative to the parents x/y position.
- * @param {{x: number, y: number}} [properties.scale={x:1,y:1}] - The x and y scale of the game object. Calls [setScale](api/gameObject#setScale) with the passed in values.
- * @param {Number} [properties.opacity=1] - The opacity of the game object.
- *
  * @param {CanvasRenderingContext2D} [properties.context] - The context the game object should draw to. Defaults to [core.getContext()](api/core#getContext).
  *
- * @param {(dt?: number) => void} [properties.update] - Function called every frame to update the game object.
+ * @param {{x: number, y: number}} [properties.anchor={x:0,y:0}] - The x and y origin of the game object. {x:0, y:0} is the top left corner of the game object, {x:1, y:1} is the bottom right corner.
+ * @param {Number} [properties.sx=1] - The x camera position.
+ * @param {Number} [properties.sy=1] - The y camera position.
+ * @param {GameObject[]} [properties.children] - Children to add to the game object. Children added this way have their x/y position treated as relative to the parents x/y position.
+ * @param {Number} [properties.opacity=1] - The opacity of the game object.
+ * @param {Number} [properties.rotation=0] - The rotation around the origin in radians.
+ * @param {Number} [properties.scaleX=1] - The x scale of the game object.
+ * @param {Number} [properties.scaleY=1] - The y scale of the game object.
+ *
  * @param {Function} [properties.render] - Function called every frame to render the game object.
- * @param {...*} properties.props - Any additional properties you need added to the game object. For example, if you pass `gameObject({type: 'player'})` then the game object will also have a property of the same name and value. You can pass as many additional properties as you want.
  */
-class GameObject {
+class GameObject extends Updatable {
   /**
    * @docs docs/api_docs/gameObject.js
    */
-
-  constructor(properties) {
-    return this.init(properties);
-  }
 
   /**
    * Use this function to reinitialize a game object. It takes the same properties object as the constructor. Useful it you want to repurpose a game object.
@@ -52,13 +60,6 @@ class GameObject {
     // --------------------------------------------------
     // defaults
     // --------------------------------------------------
-
-    /**
-     * The game objects position vector. The game objects position is its position in the world, as opposed to the position in the [viewport](api/gameObject#viewX). Typically the position in the world and viewport are the same value. If the game object has been [added to a tileEngine](/api/tileEngine#addObject), the position vector represents where in the tile world the game object is while the viewport represents where to draw the game object in relation to the top-left corner of the canvas.
-     * @memberof GameObject
-     * @property {Vector} position
-     */
-    this.position = Vector();
 
     /**
      * The width of the game object. Does not take into account the
@@ -85,57 +86,6 @@ class GameObject {
     // --------------------------------------------------
     // optionals
     // --------------------------------------------------
-
-    // @ifdef GAMEOBJECT_GROUP
-    /**
-     * The game objects parent object.
-     * @memberof GameObject
-     * @property {GameObject|null} parent
-     */
-
-    /**
-     * The game objects children objects.
-     * @memberof GameObject
-     * @property {GameObject[]} children
-     */
-    this.children = [];
-    // @endif
-
-    // @ifdef GAMEOBJECT_VELOCITY
-    /**
-     * The game objects velocity vector.
-     * @memberof GameObject
-     * @property {Vector} velocity
-     */
-    this.velocity = Vector();
-    // @endif
-
-    // @ifdef GAMEOBJECT_ACCELERATION
-    /**
-     * The game objects acceleration vector.
-     * @memberof GameObject
-     * @property {Vector} acceleration
-     */
-    this.acceleration = Vector();
-    // @endif
-
-    // @ifdef GAMEOBJECT_ROTATION
-    /**
-     * The rotation of the game object around the origin in radians. This rotation takes into account rotations from parent objects and represents the final rotation value.
-     * @memberof GameObject
-     * @property {Number} rotation
-     */
-    this.rotation = 0;
-    // @endif
-
-    // @ifdef GAMEOBJECT_TTL
-    /**
-     * How may frames the game object should be alive. Primarily used by [Pool](api/pool) to know when to recycle an object.
-     * @memberof GameObject
-     * @property {Number} ttl
-     */
-    this.ttl = Infinity;
-    // @endif
 
     // @ifdef GAMEOBJECT_ANCHOR
     /**
@@ -204,13 +154,19 @@ class GameObject {
     this.sx = this.sy = 0;
     // @endif
 
-    // @ifdef GAMEOBJECT_SCALE
+    // @ifdef GAMEOBJECT_GROUP
     /**
-     * The x and y scale of the object. Typically you would not set these properties yourself but use [setScale](/api/gameObject#setScale) instead. Setting these properties directly will not result in the scale property of children being updated.
+     * The game objects parent object.
      * @memberof GameObject
-     * @property {{x: number, y: number}} scale
+     * @property {GameObject|null} parent
      */
-    this.scale = {x: 1, y: 1};
+
+    /**
+     * The game objects children objects.
+     * @memberof GameObject
+     * @property {GameObject[]} children
+     */
+    this.children = [];
     // @endif
 
     // @ifdef GAMEOBJECT_OPACITY
@@ -223,120 +179,152 @@ class GameObject {
     this.opacity = 1;
     // @endif
 
-    // add all properties to the game object, overriding any defaults
-    let { render, children = [], scale = this.scale, ...props } = properties;
-    Object.assign(this, props);
+    // @ifdef GAMEOBJECT_ROTATION
+    /**
+     * The rotation of the game object around the origin in radians. This rotation takes into account rotations from parent objects and represents the final rotation value.
+     * @memberof GameObject
+     * @property {Number} rotation
+     */
+    this.rotation = 0;
+    // @endif
+
+    // @ifdef GAMEOBJECT_SCALE
+    /**
+     * The x scale of the object.
+     * @memberof GameObject
+     * @property {Number} scaleX
+     */
+
+    /**
+     * The y scale of the object.
+     * @memberof GameObject
+     * @property {Number} scaleY
+     */
+    this.scaleX = this.scaleY = 1;
+    // @endif
+
+    let { render, children = [], ...props } = properties;
+    super.init(props);
 
     // @ifdef GAMEOBJECT_GROUP
     children.map(child => this.addChild(child));
     // @endif
 
-    // @ifdef GAMEOBJECT_SCALE
-    this.setScale(scale.x, scale.y);
-    // @endif
-
     // rf = render function
     this._rf = render || this.draw;
-  }
 
-  // define getter and setter shortcut functions to make it easier to work
-  // with the position, velocity, and acceleration vectors.
-
-  /**
-   * X coordinate of the position vector.
-   * @memberof GameObject
-   * @property {Number} x
-   */
-  get x() {
-    return this.position.x;
-  }
-
-  /**
-   * Y coordinate of the position vector.
-   * @memberof GameObject
-   * @property {Number} y
-   */
-  get y() {
-    return this.position.y;
-  }
-
-  set x(value) {
     // @ifdef GAMEOBJECT_GROUP
-    let diff = value - this.position.x;
-    this.children.map(child => {
-      child.x += diff;
-    });
+    return new Proxy(this, handler);
+    // @endif
+  }
+
+  /**
+   * Render the game object. Calls the game objects [draw()](api/gameObject#draw) function.
+   * @memberof GameObject
+   * @function render
+   */
+  render() {
+    let context = this.context;
+    context.save();
+
+    // want to be able to use ?? and optional chaining but
+    // they are not supported in terser yet
+    // @see https://github.com/terser/terser/issues/567
+    // let viewX = this.viewX ?? this.x;
+    // let viewY = this.viewY ?? this.y;
+    let viewX = this.x;
+    let viewY = this.y;
+
+    // @ifdef GAMEOBJECT_CAMERA
+    viewX = this.viewX;
+    viewY = this.viewY;
     // @endif
 
-    this.position.x = value;
-  }
+    // it's faster to only translate if one of the values is non-zero
+    // rather than always translating
+    // @see https://jsperf.com/translate-or-if-statement/
+    if (viewX || viewY) {
+      context.translate(viewX, viewY);
+    }
 
-  set y(value) {
-    // @ifdef GAMEOBJECT_GROUP
-    let diff = value - this.position.y;
-    this.children.map(child => {
-      child.y += diff;
-    });
+    // @ifdef GAMEOBJECT_ROTATION
+    // rotate around the anchor. it's faster to only rotate when set
+    // rather than always rotating
+    // @see https://jsperf.com/rotate-or-if-statement/
+    if (this.rotation) {
+      context.rotate(this.rotation);
+    }
     // @endif
 
-    this.position.y = value;
-  }
+    // @ifdef GAMEOBJECT_SCALE
+    // it's faster to only scale if one of the values is non-zero
+    // rather than always scaling
+    // @see https://jsperf.com/scale-or-if-statement/4
+    if (this.scaleX != 1 || this.scaleY != 1) {
+      context.scale(this.scaleX, this.scaleY);
+    }
+    // @endif
 
-  // @ifdef GAMEOBJECT_VELOCITY
-  /**
-   * X coordinate of the velocity vector.
-   * @memberof GameObject
-   * @property {Number} dx
-   */
-  get dx() {
-    return this.velocity.x;
-  }
+    // @ifdef GAMEOBJECT_ANCHOR
+    let { x, y } = this.anchor;
+    let anchorX = -this.width * x;
+    let anchorY = -this.height * y;
 
-  /**
-   * Y coordinate of the velocity vector.
-   * @memberof GameObject
-   * @property {Number} dy
-   */
-  get dy() {
-    return this.velocity.y;
-  }
+    if (anchorX || anchorY) {
+      context.translate(anchorX, anchorY);
+    }
+    // @endif
 
-  set dx(value) {
-    this.velocity.x = value;
-  }
+    // @ifdef GAMEOBJECT_OPACITY
+    // it's not really any faster to gate the global alpha
+    // @see https://jsperf.com/global-alpha-or-if-statement/1
+    this.context.globalAlpha = this.finalOpacity;
+    // @endif
 
-  set dy(value) {
-    this.velocity.y = value;
-  }
-  // @endif
+    this._rf();
+    context.restore();
 
-  // @ifdef GAMEOBJECT_ACCELERATION
-  /**
-   * X coordinate of the acceleration vector.
-   * @memberof GameObject
-   * @property {Number} ddx
-   */
-  get ddx() {
-    return this.acceleration.x;
+    // @ifdef GAMEOBJECT_GROUP
+    // perform all transforms on the parent before rendering the children
+    this.children.map(child => child.render && child.render());
+    // @endif
   }
 
   /**
-   * Y coordinate of the acceleration vector.
+   * Draw the game object at its X and Y position, taking into account rotation and anchor.
+   *
+   * If you override the game objects `render()` function with your own render function, you can call this function to draw the game object normally.
+   *
+   * ```js
+   * let { GameObject } = kontra;
+   *
+   * let gameObject = GameObject({
+   *  x: 290,
+   *  y: 80,
+   *  width: 20,
+   *  height: 40,
+   *
+   *  render: function() {
+   *    // draw the game object normally (perform rotation and other transforms)
+   *    this.draw();
+   *
+   *    // outline the game object
+   *    this.context.strokeStyle = 'yellow';
+   *    this.context.lineWidth = 2;
+   *    this.context.strokeRect(0, 0, this.width, this.height);
+   *  }
+   * });
+   *
+   * gameObject.render();
+   * ```
    * @memberof GameObject
-   * @property {Number} ddy
+   * @function draw
    */
-  get ddy() {
-    return this.acceleration.y;
-  }
+  draw() {}
 
-  set ddx(value) {
-    this.acceleration.x = value;
-  }
-
-  set ddy(value) {
-    this.acceleration.y = value;
-  }
-  // @endif
+  // --------------------------------------------------
+  // camera
+  // --------------------------------------------------
 
   // @ifdef GAMEOBJECT_CAMERA
   /**
@@ -358,102 +346,23 @@ class GameObject {
   get viewY() {
     return this.y - this.sy;
   }
+  // @endif
 
-  // readonly
-  set viewX(value) {}
-  set viewY(value) {}
+  // @ifdef DEBUG
+  set viewX(value) {
+    throw new SyntaxError('viewX is readonly');
+  }
+
+  set viewY(value) {
+    throw new SyntaxError('viewY is readonly');
+  }
+  // @endif
+
+  // --------------------------------------------------
+  // group
+  // --------------------------------------------------
 
   // @ifdef GAMEOBJECT_GROUP
-  get sx() {
-    return this._sx;
-  }
-
-  get sy() {
-    return this._sy;
-  }
-
-  set sx(value) {
-    let diff = value - this._sx;
-    this.children.map(child => {
-      child.sx += diff;
-    });
-
-    this._sx = value;
-  }
-
-  set sy(value) {
-    let diff = value - this._sy;
-    this.children.map(child => {
-      child.sy += diff;
-    });
-
-    this._sy = value;
-  }
-  // @endif
-  // @endif
-
-  // @ifdef GAMEOBJECT_TTL
-  /**
-   * Check if the game object is alive. Primarily used by [Pool](api/pool) to know when to recycle an object.
-   * @memberof GameObject
-   * @function isAlive
-   *
-   * @returns {Boolean} `true` if the game objects [ttl](api/gameObject#ttl) property is above `0`, `false` otherwise.
-   */
-  isAlive() {
-    return this.ttl > 0;
-  }
-  // @endif
-
-  // @ifdef GAMEOBJECT_GROUP
-  // @ifdef GAMEOBJECT_ROTATION
-  get rotation() {
-    // rot = rotation
-    return this._rot;
-  }
-
-  set rotation(value) {
-    let diff = value - this._rot;
-    this.children.map(child => {
-      child.rotation += diff;
-    });
-
-    this._rot = value;
-  }
-  // @endif
-
-  // @ifdef GAMEOBJECT_OPACITY
-  /**
-   * Readonly. The final opacity of the game object taking into account
-   * all parent opacities.
-   */
-  get finalOpacity() {
-    // fop = final opacity
-    return this._fop;
-  }
-
-  // readonly
-  set finalOpacity(value) {}
-
-  get opacity() {
-    // op = opacity
-    return this._op;
-  }
-
-  set opacity(value) {
-    // final opacity value is calculated by multiplying all opacities
-    // in the parent chain.
-    this._fop = this.parent && this.parent._fop ? value * this.parent._fop : value;
-
-    // trigger a final opacity calculation of all children
-    this.children.map(child => {
-      child.opacity = child.opacity;
-    });
-
-    this._op = value;
-  }
-  // @endif
-
   /**
    * Add an object as a child to this object. The child objects position and rotation will be calculated based on this objects position and rotation.
    *
@@ -509,25 +418,22 @@ class GameObject {
     child.x = absolute ? child.x : this.x + child.x;
     child.y = absolute ? child.y : this.y + child.y;
 
+    // @ifdef GAMEOBJECT_CAMERA
+    child.sx = absolute ? child.sx : this.sx + child.sx;
+    child.sy = absolute ? child.sy : this.sy + child.sy;
+    // @endif
+
+    // @ifdef GAMEOBJECT_OPACITY
+    child._fop = this.opacity * child.opacity;
+    // @endif
+
     // @ifdef GAMEOBJECT_ROTATION
     child.rotation = this.rotation + child.rotation;
     // @endif
 
     // @ifdef GAMEOBJECT_SCALE
-    if (child.setScale) {
-      child.setScale(this.scale.x, this.scale.y);
-    }
-    // @endif
-
-    // @ifdef GAMEOBJECT_CAMERA
-    if ('sx' in child) {
-      child.sx = absolute ? child.sx : this.sx + child.sx;
-      child.sy = absolute ? child.sy : this.sy + child.sy;
-    }
-    // @endif
-
-    // @ifdef GAMEOBJECT_OPACITY
-    child._fop = this.opacity * child.opacity;
+    child.scaleX = this.scaleX;
+    child.scaleY = this.scaleY;
     // @endif
   }
 
@@ -545,7 +451,55 @@ class GameObject {
       child.parent = null;
     }
   }
+
+  /**
+   * Sync property changes from the parent to the child
+   */
+  _pc(prop, value) {
+    if (groupValues.includes(prop)) {
+      this.children.map(child => {
+        child[prop] += value - this[prop];
+      });
+    }
+  }
   // @endif
+
+  // --------------------------------------------------
+  // opacity
+  // --------------------------------------------------
+
+  // @ifdef GAMEOBJECT_OPACITY
+  /**
+   * Readonly. The final opacity of the game object taking into account
+   * all parent opacities.
+   */
+  get finalOpacity() {
+    // fop = final opacity
+    return this._fop;
+  }
+
+  get opacity() {
+    // op = opacity
+    return this._op;
+  }
+
+  set opacity(value) {
+    // final opacity value is calculated by multiplying all opacities
+    // in the parent chain.
+    this._fop = this.parent && this.parent._fop ? value * this.parent._fop : value;
+
+    // trigger a final opacity calculation of all children
+    this.children.map(child => {
+      child.opacity = child.opacity;
+    });
+
+    this._op = value;
+  }
+  // @endif
+
+  // --------------------------------------------------
+  // scale
+  // --------------------------------------------------
 
   // @ifdef GAMEOBJECT_SCALE
   /**
@@ -553,7 +507,7 @@ class GameObject {
    * account the objects scale.
    */
   get scaledWidth() {
-    return this.width * this.scale.x;
+    return this.width * this.scaleX;
   }
 
   /**
@@ -561,12 +515,18 @@ class GameObject {
    * account the objects scale.
    */
   get scaledHeight() {
-    return this.height * this.scale.y;
+    return this.height * this.scaleY;
   }
 
-  // readonly
-  set scaledWidth(value) {}
-  set scaledHeight(value) {}
+  // @ifdef DEBUG
+  set scaledWidth(value) {
+    throw new SyntaxError('scaledWidth is readonly');
+  }
+
+  set scaledHeight(value) {
+    throw new SyntaxError('scaledHeight is readonly');
+  }
+  // @endif
 
   /**
    * Set the x and y scale of the object. If only one value is passed, both are set to the same value.
@@ -577,198 +537,10 @@ class GameObject {
    * @param {Number} [y=x] - Y scale value.
    */
   setScale(x, y = x) {
-    // @ifdef GAMEOBJECT_GROUP
-    let diffX = x - this.scale.x;
-    let diffY = y - this.scale.y;
-    this.children.map(child => {
-      if (!child.scale) return;
-      child.setScale(child.scale.x + diffX, child.scale.y + diffY);
-    });
-    // @endif
-
-    this.scale.x = x;
-    this.scale.y = y;
+    this.scaleX = x;
+    this.scaleY = y;
   }
   // @endif
-
-  /**
-   * Update the game objects position based on its velocity and acceleration. Calls the game objects [advance()](api/gameObject#advance) function.
-   * @memberof GameObject
-   * @function update
-   *
-   * @param {Number} [dt] - Time since last update.
-   */
-  update(dt) {
-    // @ifdef GAMEOBJECT_VELOCITY||GAMEOBJECT_ACCELERATION||GAMEOBJECT_TTL
-    this.advance(dt);
-    // @endif
-  }
-
-  // @ifdef GAMEOBJECT_VELOCITY||GAMEOBJECT_ACCELERATION||GAMEOBJECT_TTL
-  /**
-   * Move the game object by its acceleration and velocity. If the game object is an [animation game object](api/gameObject#animation-game object), it also advances the animation every frame.
-   *
-   * If you override the game objects [update()](api/gameObject#update) function with your own update function, you can call this function to move the game object normally.
-   *
-   * ```js
-   * import { GameObject } from 'kontra';
-   *
-   * let gameObject = GameObject({
-   *   x: 100,
-   *   y: 200,
-   *   width: 20,
-   *   height: 40,
-   *   dx: 5,
-   *   dy: 2,
-   *   update: function() {
-   *     // move the game object normally
-   *     this.advance();
-   *
-   *     // change the velocity at the edges of the canvas
-   *     if (this.x < 0 ||
-   *         this.x + this.width > this.context.canvas.width) {
-   *       this.dx = -this.dx;
-   *     }
-   *     if (this.y < 0 ||
-   *         this.y + this.height > this.context.canvas.height) {
-   *       this.dy = -this.dy;
-   *     }
-   *   }
-   * });
-   * ```
-   * @memberof GameObject
-   * @function advance
-   *
-   * @param {Number} [dt] - Time since last update.
-   *
-   */
-  advance(dt) {
-    // @ifdef GAMEOBJECT_VELOCITY
-
-    // @ifdef GAMEOBJECT_ACCELERATION
-    this.velocity = this.velocity.add(this.acceleration, dt);
-    // @endif
-
-    this.position = this.position.add(this.velocity, dt);
-    // @endif
-
-    // @ifdef GAMEOBJECT_TTL
-    this.ttl--;
-    // @endif
-  }
-  // @endif
-
-  /**
-   * Render the game object. Calls the game objects [draw()](api/gameObject#draw) function.
-   * @memberof GameObject
-   * @function render
-   */
-  render() {
-    this.context.save();
-
-    let viewX = this.x;
-    let viewY = this.y;
-
-    // @ifdef GAMEOBJECT_CAMERA
-    viewX = this.viewX;
-    viewY = this.viewY;
-    // @endif
-
-    // it's faster to only translate if one of the values is non-zero
-    // rather than always translating
-    // @see https://jsperf.com/translate-or-if-statement/
-    if (viewX || viewY) {
-      this.context.translate(viewX, viewY);
-    }
-
-    // @ifdef GAMEOBJECT_ROTATION
-    // rotate around the anchor. it's faster to only rotate when set
-    // rather than always rotating
-    // @see https://jsperf.com/rotate-or-if-statement/
-    if (this.rotation) {
-      this.context.rotate(this.rotation);
-    }
-    // @endif
-
-    // @ifdef GAMEOBJECT_ANCHOR
-    let width = this.width;
-    let height = this.height;
-
-    // @ifdef GAMEOBJECT_SCALE
-    width = this.scaledWidth;
-    height = this.scaledHeight;
-    // @endif
-
-    let x = -width * this.anchor.x;
-    let y = -height * this.anchor.y;
-    if (x || y) {
-      this.context.translate(x, y);
-    }
-    // @endif
-
-    // @ifdef GAMEOBJECT_SCALE
-    // it's faster to only scale if one of the values is non-zero
-    // rather than always scaling
-    // @see https://jsperf.com/scale-or-if-statement/4
-    let scaleX = this.scale.x;
-    let scaleY = this.scale.y;
-    if (scaleX || scaleY) {
-      this.context.scale(scaleX, scaleY);
-    }
-    // @endif
-
-    // @ifdef GAMEOBJECT_OPACITY
-    // it's not really any faster to not set the global alpha
-    // @see https://jsperf.com/global-alpha-or-if-statement/1
-    let opacity = this.opacity;
-
-    // @ifdef GAMEOBJECT_GROUP
-    opacity = this._fop ? this._fop : opacity;
-    // @endif
-
-    this.context.globalAlpha = opacity;
-    // @endif
-
-    this._rf();
-    this.context.restore();
-
-    // @ifdef GAMEOBJECT_GROUP
-    // perform all transforms on the parent before rendering the children
-    this.children.map(child => child.render && child.render());
-    // @endif
-  }
-
-  /**
-   * Draw the game object at its X and Y position, taking into account rotation and anchor.
-   *
-   * If you override the game objects `render()` function with your own render function, you can call this function to draw the game object normally.
-   *
-   * ```js
-   * let { GameObject } = kontra;
-   *
-   * let gameObject = GameObject({
-   *  x: 290,
-   *  y: 80,
-   *  width: 20,
-   *  height: 40,
-   *
-   *  render: function() {
-   *    // draw the game object normally (perform rotation and other transforms)
-   *    this.draw();
-   *
-   *    // outline the game object
-   *    this.context.strokeStyle = 'yellow';
-   *    this.context.lineWidth = 2;
-   *    this.context.strokeRect(0, 0, this.width, this.height);
-   *  }
-   * });
-   *
-   * gameObject.render();
-   * ```
-   * @memberof GameObject
-   * @function draw
-   */
-  draw() {}
 }
 
 export default function factory() {

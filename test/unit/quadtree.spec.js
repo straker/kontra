@@ -36,7 +36,7 @@ describe('quadtree', () => {
         bounds: { x: 5, y: 10, width: 5, height: 10 }
       });
 
-      expect(quadtree.bounds).to.eql({ x: 5, y: 10, width: 5, height: 10 });
+      expect(quadtree.bounds).to.deep.equal({ x: 5, y: 10, width: 5, height: 10 });
     });
 
   });
@@ -104,10 +104,10 @@ describe('quadtree', () => {
         quadtree.add({id: i});
       }
 
-      expect(quadtree._s[0].bounds).to.eql({x: 0, y: 0, width: 50, height: 50});
-      expect(quadtree._s[1].bounds).to.eql({x: 50, y: 0, width: 50, height: 50});
-      expect(quadtree._s[2].bounds).to.eql({x: 0, y: 50, width: 50, height: 50});
-      expect(quadtree._s[3].bounds).to.eql({x: 50, y: 50, width: 50, height: 50});
+      expect(quadtree._s[0].bounds).to.deep.equal({x: 0, y: 0, width: 50, height: 50});
+      expect(quadtree._s[1].bounds).to.deep.equal({x: 50, y: 0, width: 50, height: 50});
+      expect(quadtree._s[2].bounds).to.deep.equal({x: 0, y: 50, width: 50, height: 50});
+      expect(quadtree._s[3].bounds).to.deep.equal({x: 50, y: 50, width: 50, height: 50});
     });
 
     it('should add split objects to their correct subnodes', () => {

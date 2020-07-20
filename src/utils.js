@@ -3,37 +3,15 @@
  */
 export const noop = () => {};
 
-/**
- * Factory function that wraps all kontra classes.
- * @param {Object} classObj - Class to wrap in a factory function
- */
-export function Factory(classObj) {
-  function factory() {
-    return new classObj(...arguments);
-  }
-  factory.prototype = classObj.prototype;
-  factory.class = classObj;
-
-  return factory;
-}
-
 // style used for DOM nodes needed for screen readers
 export const srOnlyStyle = 'position:absolute;left:-9999px';
 
-// get correct x, y, width, and height of object
-export function getRect(obj) {
-  let x = obj.x;
-  let y = obj.y;
-  let width = obj.width;
-  let height = obj.height;
-
-  // @ifdef GAMEOBJECT_SCALE
-  // adjust for object scale
-  if (obj.scaleX) {
-    width = obj.scaledWidth;
-    height = obj.scaledHeight;
-  }
-  // @endif
+// get world x, y, width, and height of object
+export function getWorldRect(obj) {
+  let x = obj.world.x;
+  let y = obj.world.y;
+  let width = obj.world.width;
+  let height = obj.world.height;
 
   // @ifdef GAMEOBJECT_ANCHOR
   // take into account object anchor
@@ -49,4 +27,10 @@ export function getRect(obj) {
     width,
     height
   };
+}
+
+// multiply two matrices together
+// @see https://codegolf.stackexchange.com/a/100287
+export function matrixMultiply(a,b) {
+  return a.map(c=>b[0].map((_,i)=>b.reduce((s,d,j)=>s+d[i]*c[j],0)));
 }

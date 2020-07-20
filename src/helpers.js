@@ -1,4 +1,4 @@
-import { getRect } from './utils.js';
+import { getWorldRect } from './utils.js';
 
 /**
  * A group of helpful functions that are commonly used for game development. Includes things such as converting between radians and degrees and getting random integers.
@@ -263,7 +263,7 @@ export function collides(obj1, obj2) {
 
   // @ifdef GAMEOBJECT_SCALE||GAMEOBJECT_ANCHOR
   // destructure results to obj1 and obj2
-  [obj1, obj2] = [obj1, obj2].map(obj => getRect(obj));
+  [obj1, obj2] = [obj1, obj2].map(obj => getWorldRect(obj));
   // @endif
 
   return obj1.x < obj2.x + obj2.width &&

@@ -1,15 +1,13 @@
 import { getContext } from './core.js';
 import Updatable from './updatable.js';
-
-// @ifdef GAMEOBJECT_GROUP
-let groupValues = ['x', 'y', 'sx', 'sy', 'scaleX', 'scaleY', 'rotation'];
-// @endif
+import { matrixMultiply } from './utils.js';
 
 let handler = {
   set(obj, prop, value) {
     // pc = propChanged
+    let r = Reflect.set(obj, prop, value);
     obj._pc && obj._pc(prop, value);
-    return Reflect.set(obj, prop, value);
+    return r;
   }
 };
 
@@ -54,8 +52,9 @@ class GameObject extends Updatable {
 
   constructor(properties) {
     super();
+    this.init(properties);
+    this._uw();
     let proxy = new Proxy(this, handler);
-    proxy.init(properties);
     return proxy;
   }
 
@@ -214,7 +213,15 @@ class GameObject extends Updatable {
     this.scaleX = this.scaleY = 1;
     // @endif
 
-    let { render, children = [], ...props } = properties;
+    let {
+      render,
+
+      // @ifdef GAMEOBJECT_GROUP
+      children = [],
+      // @endif
+
+      ...props
+    } = properties;
     super.init(props);
 
     // @ifdef GAMEOBJECT_GROUP
@@ -234,6 +241,15 @@ class GameObject extends Updatable {
     let context = this.context;
     context.save();
 
+    // @ifdef GAMEOBJECT_SCALE
+    // it's faster to only scale if one of the values is non-zero
+    // rather than always scaling
+    // @see https://jsperf.com/scale-or-if-statement/4
+    if (this.scaleX != 1 || this.scaleY != 1) {
+      context.scale(this.scaleX, this.scaleY);
+    }
+    // @endif
+
     // want to be able to use ?? and optional chaining but
     // they are not supported in terser yet
     // @see https://github.com/terser/terser/issues/567
@@ -249,7 +265,7 @@ class GameObject extends Updatable {
 
     // it's faster to only translate if one of the values is non-zero
     // rather than always translating
-    // @see https://jsperf.com/translate-or-if-statement/
+    // @see https://jsperf.com/translate-or-if-statement/2
     if (viewX || viewY) {
       context.translate(viewX, viewY);
     }
@@ -257,18 +273,9 @@ class GameObject extends Updatable {
     // @ifdef GAMEOBJECT_ROTATION
     // rotate around the anchor. it's faster to only rotate when set
     // rather than always rotating
-    // @see https://jsperf.com/rotate-or-if-statement/
+    // @see https://jsperf.com/rotate-or-if-statement/2
     if (this.rotation) {
       context.rotate(this.rotation);
-    }
-    // @endif
-
-    // @ifdef GAMEOBJECT_SCALE
-    // it's faster to only scale if one of the values is non-zero
-    // rather than always scaling
-    // @see https://jsperf.com/scale-or-if-statement/4
-    if (this.scaleX != 1 || this.scaleY != 1) {
-      context.scale(this.scaleX, this.scaleY);
     }
     // @endif
 
@@ -289,12 +296,19 @@ class GameObject extends Updatable {
     // @endif
 
     this._rf();
-    context.restore();
+
+    // @ifdef GAMEOBJECT_ANCHOR
+    if (anchorX || anchorY) {
+      context.translate(-anchorX, -anchorY);
+    }
+    // @endif
 
     // @ifdef GAMEOBJECT_GROUP
     // perform all transforms on the parent before rendering the children
     this.children.map(child => child.render && child.render());
     // @endif
+
+    context.restore();
   }
 
   /**
@@ -329,6 +343,126 @@ class GameObject extends Updatable {
    */
   draw() {}
 
+  /**
+   * Sync property changes from the parent to the child
+   */
+  _pc(prop, value) {
+    this._uw();
+
+    // @ifdef GAMEOBJECT_GROUP
+    this.children.map(child => child._uw());
+    // @endif
+  }
+
+  /**
+   * Update world properties
+   */
+  _uw() {
+    // @ifdef GAMEOBJECT_GROUP||GAMEOBJECT_OPACITY||GAMEOBJECT_ROTATION||GAMEOBJECT_SCALE
+    let parent = this.parent || {
+      _wx: 0,
+      _wy: 0,
+
+      // @ifdef GAMEOBJECT_OPACITY
+      _wo: 1,
+      // @endif
+
+      // @ifdef GAMEOBJECT_ROTATION
+      _wr: 0,
+      // @endif
+
+      // @ifdef GAMEOBJECT_SCALE
+      _wsx: 1,
+      _wsy: 1
+      // @endif
+    };
+    // @endif
+
+    // use affine transformation matrices to calculate final x and y
+    // position
+    let pointMatrix = [
+      [this.x],
+      [this.y],
+      [1]
+    ];
+
+    // ww = world width, wh = world height
+    this._ww = this.width;
+    this._wh = this.height;
+
+    // order of multiplication = scale * rotation * translation
+    // @see https://gamedev.stackexchange.com/a/16721/33867
+
+    // @ifdef GAMEOBJECT_SCALE
+    // wsx = world scale x, wsy = world scale y
+    this._wsx = parent._wsx * this.scaleX;
+    this._wsy = parent._wsy * this.scaleY;
+    this._ww = this.width * this._wsx;
+    this._wh = this.height * this._wsy;
+
+    let scaleMatrix = [
+      [this._wsx, 0, 0],
+      [0, this._wsy, 0],
+      [0, 0, 1]
+    ];
+    pointMatrix = matrixMultiply(scaleMatrix, pointMatrix);
+    // @endif
+
+    // @ifdef GAMEOBJECT_ROTATION
+    // wr = world rotation
+    this._wr = parent._wr + this.rotation;
+
+    let cos = Math.cos(parent._wr);
+    let sin = Math.sin(parent._wr);
+    let rotationMatrix = [
+      [cos, -sin, 0],
+      [sin, cos, 0],
+      [0, 0, 1]
+    ];
+    pointMatrix = matrixMultiply(rotationMatrix, pointMatrix);
+    // @endif
+
+    // @ifdef GAMEOBJECT_OPACITY
+    // wo = world opacity
+    this._wo = parent._wo * this.opacity;
+    // @endif
+
+    // @ifdef GAMEOBJECT_GROUP
+    let translationMatrix = [
+      [1, 0, parent._wx],
+      [0, 1, parent._wy],
+      [0, 0, 1]
+    ];
+    pointMatrix = matrixMultiply(translationMatrix, pointMatrix);
+    // @endif
+
+    // wx = world x, wy = world y
+    this._wx = pointMatrix[0][0];
+    this._wy = pointMatrix[1][0];
+  }
+
+  get world() {
+    return {
+      x: this._wx,
+      y: this._wy,
+      width: this._ww,
+      height: this._wh,
+
+      // @ifdef GAMEOBJECT_OPACITY
+      opacity: this._wo,
+      // @endif
+
+      // @ifdef GAMEOBJECT_ROTATION
+      rotation: this._wr,
+      // @endif
+
+      // @ifdef GAMEOBJECT_SCALE
+      scaleX: this._wsx,
+      scaleY: this._wsy
+      // @endif
+    }
+  }
+
   // --------------------------------------------------
   // camera
   // --------------------------------------------------
@@ -352,16 +486,6 @@ class GameObject extends Updatable {
    */
   get viewY() {
     return this.y - this.sy;
-  }
-  // @endif
-
-  // @ifdef DEBUG
-  set viewX(value) {
-    throw new SyntaxError('viewX is readonly');
-  }
-
-  set viewY(value) {
-    throw new SyntaxError('viewY is readonly');
   }
   // @endif
 
@@ -421,27 +545,6 @@ class GameObject extends Updatable {
   addChild(child, { absolute = false } = {}) {
     this.children.push(child);
     child.parent = this;
-
-    child.x = absolute ? child.x : this.x + child.x;
-    child.y = absolute ? child.y : this.y + child.y;
-
-    // @ifdef GAMEOBJECT_CAMERA
-    child.sx = absolute ? child.sx : this.sx + child.sx;
-    child.sy = absolute ? child.sy : this.sy + child.sy;
-    // @endif
-
-    // @ifdef GAMEOBJECT_OPACITY
-    child._fop = this.opacity * child.opacity;
-    // @endif
-
-    // @ifdef GAMEOBJECT_ROTATION
-    child.rotation = this.rotation + child.rotation;
-    // @endif
-
-    // @ifdef GAMEOBJECT_SCALE
-    child.scaleX = this.scaleX;
-    child.scaleY = this.scaleY;
-    // @endif
   }
 
   /**
@@ -458,59 +561,6 @@ class GameObject extends Updatable {
       child.parent = null;
     }
   }
-
-  /**
-   * Sync property changes from the parent to the child
-   */
-  _pc(prop, value) {
-    if (groupValues.includes(prop)) {
-      this.children.map(child => {
-        child[prop] += value - this[prop];
-      });
-    }
-  }
-  // @endif
-
-  // --------------------------------------------------
-  // opacity
-  // --------------------------------------------------
-
-  // @ifdef GAMEOBJECT_OPACITY
-  /**
-   * Readonly. The final opacity of the game object taking into account
-   * all parent opacities.
-   * @memberof GameObject
-   * @property {Number} finalOpacity
-   * @readonly
-   */
-  get finalOpacity() {
-    // fop = final opacity
-    return this._fop;
-  }
-
-  // @ifdef DEBUG
-  set finalOpacity(value) {
-    throw new SyntaxError('finalOpacity is readonly');
-  }
-  // @endif
-
-  get opacity() {
-    // op = opacity
-    return this._op;
-  }
-
-  set opacity(value) {
-    // final opacity value is calculated by multiplying all opacities
-    // in the parent chain.
-    this._fop = this.parent && this.parent._fop ? value * this.parent._fop : value;
-
-    // trigger a final opacity calculation of all children
-    this.children.map(child => {
-      child.opacity = child.opacity;
-    });
-
-    this._op = value;
-  }
   // @endif
 
   // --------------------------------------------------
@@ -518,38 +568,6 @@ class GameObject extends Updatable {
   // --------------------------------------------------
 
   // @ifdef GAMEOBJECT_SCALE
-  /**
-   * Readonly. The true width of the game object after taking into
-   * account the objects scale.
-   * @memberof GameObject
-   * @property {Number} scaledWith
-   * @readonly
-   */
-  get scaledWidth() {
-    return this.width * this.scaleX;
-  }
-
-  /**
-   * Readonly. The true height of the game object after taking into
-   * account the objects scale.
-   * @memberof GameObject
-   * @property {Number} scaledHeight
-   * @readonly
-   */
-  get scaledHeight() {
-    return this.height * this.scaleY;
-  }
-
-  // @ifdef DEBUG
-  set scaledWidth(value) {
-    throw new SyntaxError('scaledWidth is readonly');
-  }
-
-  set scaledHeight(value) {
-    throw new SyntaxError('scaledHeight is readonly');
-  }
-  // @endif
-
   /**
    * Set the x and y scale of the object. If only one value is passed, both are set to the same value.
    * @memberof GameObject

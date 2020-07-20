@@ -1,6 +1,6 @@
 import { getCanvas } from './core.js';
 import { on } from './events.js';
-import { getRect } from './utils.js';
+import { getWorldRect } from './utils.js';
 
 /**
  * A simple pointer API. You can use it move the main sprite or respond to a pointer event. Works with both mouse and touch events.
@@ -108,7 +108,7 @@ export let pointer = {
  * @param {Object} object - Object to check collision against.
  */
 function circleRectCollision(object, pntr = pointer) {
-  let { x, y, width, height } = getRect(object);
+  let { x, y, width, height } = getWorldRect(object);
 
   let dx = pntr.x - Math.max(x, Math.min(pntr.x, x + width));
   let dy = pntr.y - Math.max(y, Math.min(pntr.y, y + height));

@@ -1,5 +1,5 @@
 import { getCanvas, getContext } from './core.js';
-import { getRect } from './utils.js';
+import { getWorldRect } from './utils.js';
 import { clamp } from './helpers.js';
 
 /**
@@ -253,7 +253,7 @@ export default function TileEngine(properties) {
      * @returns {boolean} `true` if the object collides with a tile, `false` otherwise.
      */
     layerCollidesWith(name, object) {
-      let { x, y, width, height } = getRect(object);
+      let { x, y, width, height } = getWorldRect(object);
 
       let row = getRow(y);
       let col = getCol(x);

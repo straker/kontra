@@ -1,6 +1,6 @@
 import { getCanvas } from './core.js';
 import GameObject from './gameObject.js';
-import { getRect } from './utils.js';
+import { getWorldRect } from './utils.js';
 import { on } from './events.js';
 
 let alignment = {
@@ -162,7 +162,7 @@ class GridManager extends GameObject.class {
         child._p();
       }
 
-      // let { width, height } = getRect(child);
+      // let { width, height } = getWorldRect(child);
       rowHeights[row] = Math.max(rowHeights[row] || 0, child.height);
       // heights[row] = Math.max(heights[row] || 0, child.height);
 
@@ -255,14 +255,14 @@ class GridManager extends GameObject.class {
             }
           }
 
-          let { x, y } = getRect(this);
+          let { x, y } = getWorldRect(this);
 
           let pointX = x + colWidth * justify;
           let pointY = y + rowHeights[row] * align;
 
           let ptX;
           let ptY;
-          let { width, height } = getRect(child);
+          let { width, height } = getWorldRect(child);
 
           if (justify === 0) {
             ptX = pointX + width * child.anchor.x;

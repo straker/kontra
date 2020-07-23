@@ -15,19 +15,6 @@ let alignment = {
   }
 };
 
-let handler = {
-  set(obj, prop, value) {
-
-    // don't set dirty flag for private properties
-    if (prop[0] != '_' && obj[prop] !== value) {
-      obj._d = true;
-    }
-
-    obj[prop] = value;
-    return true;
-  }
-}
-
 class GridManager extends GameObject.class {
   init(properties = {}) {
 
@@ -69,10 +56,6 @@ class GridManager extends GameObject.class {
      */
 
     super.init(properties);
-
-    // use a proxy so setting any property on the UI Manager will set the dirty
-    // flag
-    return new Proxy(this, handler);
   }
 
   // keep width and height getters/settings so we can set _w and _h and not
@@ -84,7 +67,6 @@ class GridManager extends GameObject.class {
 
   set width(value) {
     this._w = value;
-    this._d = true;
   }
 
   get height() {
@@ -94,7 +76,6 @@ class GridManager extends GameObject.class {
 
   set height(value) {
     this._h = value;
-    this._d = true;
   }
 
   addChild(child) {
@@ -107,17 +88,24 @@ class GridManager extends GameObject.class {
     super.removeChild(child);
   }
 
-  setScale(x, y) {
-    super.setScale(x, y);
-    this._d = true;
-  }
-
   render() {
     if (this._d) {
       this._p();
       this._cp();
     }
     super.render();
+  }
+
+  /**
+   * Properties changed handler
+   */
+  _pc(prop, value) {
+    super._pc();
+
+    // don't set dirty flag for private properties
+    if (prop[0] != '_' && this[prop] !== value) {
+      this._d = true;
+    }
   }
 
   /**

@@ -137,16 +137,16 @@
       children: [
         title,
         gameSpeed,
-        gameSpeedOption,
-        infiniteStamina,
-        infiniteStaminaOption,
-        airDashes,
-        airDashesOption,
-        invincibility,
-        invincibilityOption
+        // gameSpeedOption,
+        // infiniteStamina,
+        // infiniteStaminaOption,
+        // airDashes,
+        // airDashesOption,
+        // invincibility,
+        // invincibilityOption
       ],
       breakpoints: [{
-        metric() { return this.scale.x < 0.85 },
+        metric() { return this.scaleX < 0.85 },
         callback() {
           this.numCols = 1;
           this.gapY = 20;
@@ -154,7 +154,7 @@
         }
       },
       {
-        metric() { return this.scale.x >= 0.85 },
+        metric() { return this.scaleX >= 0.85 },
         callback() {
           this.numCols = 2;
           this.gapY = 8;

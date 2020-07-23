@@ -1,7 +1,7 @@
 import Sprite from './sprite.js';
 import Text from './text.js';
 import { track } from './pointer.js';
-import { srOnlyStyle } from './utils.js';
+import { srOnlyStyle, noop } from './utils.js';
 
 class Button extends Sprite.class {
 
@@ -49,12 +49,25 @@ class Button extends Sprite.class {
    * @param {Function} [properties.onUp] - Function called when the button is clicked either by the pointer or keyboard.
    */
   init(properties) {
-    let { text, ...props } = properties;
+    let { text, onDown, onUp, ...props } = properties;
     super.init(props);
     track(this);
 
+    this._od = onDown || noop;
+    this._ou = onUp || noop;
+
     this.textNode = Text(text);
+    this.textNode._p();
     this.addChild(this.textNode);
+
+    // set width and height of button to text unless user set them
+    if (properties.width == undefined) {
+      this.width = this.textNode.width;
+    }
+    if (properties.height == undefined) {
+      this.height = this.textNode.height;
+    }
+    this._uw();
 
     // create an accessible DOM node for screen readers
     // dn = dom node
@@ -65,7 +78,8 @@ class Button extends Sprite.class {
     // allow the DOM node to control the button
     button.addEventListener('focus', () => this.focus());
     button.addEventListener('blur', () => this.blur());
-    button.addEventListener('click', () => this.onUp());
+    button.addEventListener('keydown', (evt) => this._kd(evt));
+    button.addEventListener('keyup', () => this.onUp());
 
     document.body.appendChild(button);
   }
@@ -155,19 +169,19 @@ class Button extends Sprite.class {
   }
 
   onOver() {
+    if (!this.disabled) {
 
-    /**
-     * If the button is hovered.
-     * @memberof Button
-     * @property {Boolean} hovered
-     */
-    this.hovered = true;
-    this.focus();
+      /**
+       * If the button is hovered.
+       * @memberof Button
+       * @property {Boolean} hovered
+       */
+      this.hovered = true;
+    }
   }
 
   onOut() {
     this.hovered = false;
-    this.blur();
   }
 
   /**
@@ -198,7 +212,33 @@ class Button extends Sprite.class {
    */
   onBlur() {}
 
-  onUp() {}
+  onDown() {
+    if (!this.disabled) {
+
+      /**
+       * If the button is pressed.
+       * @memberof Button
+       * @property {Boolean} pressed
+       */
+      this.pressed = true;
+      this._od();
+    }
+  }
+
+  onUp() {
+    if (!this.disabled) {
+      this.pressed = false;
+      this._ou();
+    }
+  }
+
+  // kd = keydown
+  _kd(evt) {
+    // activate button on enter or space
+    if (evt.code == 'Enter' || evt.code == 'Space') {
+      this.onDown();
+    }
+  }
 }
 
 export default function factory() {

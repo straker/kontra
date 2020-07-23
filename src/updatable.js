@@ -11,6 +11,10 @@ import Vector from './vector.js';
  */
 class Updatable {
 
+  constructor(properties) {
+    return this.init(properties);
+  }
+
   init(properties = {}) {
 
     // --------------------------------------------------
@@ -61,34 +65,6 @@ class Updatable {
 
     // add all properties to the object, overriding any defaults
     Object.assign(this, properties);
-  }
-
-  /**
-   * X coordinate of the position vector.
-   * @memberof GameObject
-   * @property {Number} x
-   * @page GameObject
-   */
-  get x() {
-    return this.position.x;
-  }
-
-  /**
-   * Y coordinate of the position vector.
-   * @memberof GameObject
-   * @property {Number} y
-   * @page GameObject
-   */
-  get y() {
-    return this.position.y;
-  }
-
-  set x(value) {
-    this.position.x = value;
-  }
-
-  set y(value) {
-    this.position.y = value;
   }
 
   /**
@@ -152,6 +128,7 @@ class Updatable {
 
     // @ifdef GAMEOBJECT_VELOCITY
     this.position = this.position.add(this.velocity);
+    this._pc();
     // @endif
 
     // @ifdef GAMEOBJECT_TTL

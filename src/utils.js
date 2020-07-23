@@ -28,9 +28,3 @@ export function getWorldRect(obj) {
     height
   };
 }
-
-// multiply two matrices together
-// @see https://codegolf.stackexchange.com/a/100287
-export function matrixMultiply(a,b) {
-  return a.map(c=>b[0].map((_,i)=>b.reduce((s,d,j)=>s+d[i]*c[j],0)));
-}

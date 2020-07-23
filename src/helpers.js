@@ -78,6 +78,18 @@ export function angleToTarget(source, target) {
 }
 
 /**
+ *
+ */
+export function rotateAroundPoint(point, rad) {
+  let sin = Math.sin(rad);
+  let cos = Math.cos(rad);
+  let x = point.x * cos - point.y * sin;
+  let y = point.x * sin + point.y * cos;
+
+  return {x, y};
+}
+
+/**
  * Return a random integer between a minimum (inclusive) and maximum (inclusive) integer.
  * @see https://stackoverflow.com/a/1527820/2124254
  * @function randInt

@@ -128,6 +128,51 @@ class Text extends GameObject.class {
     this._p();
   }
 
+  // keep width and height getters/settings so we can set _w and _h and not
+  // trigger infinite call loops
+  get width() {
+    // w = width
+    return this._w;
+  }
+
+  set width(value) {
+    // d = dirty
+    this._d = true;
+    this._w = value;
+
+    // fw = fixed width
+    this._fw = value;
+  }
+
+  get text() {
+    return this._t;
+  }
+
+  set text(value) {
+    this._d = true;
+    this._t = value;
+  }
+
+  get font() {
+    return this._f;
+  }
+
+  set font(value) {
+    this._d = true;
+    this._f = value;
+    this._fs = parseFont(value).computed;
+  }
+
+  get lineHeight() {
+    // lh = line height
+    return this._lh;
+  }
+
+  set lineHeight(value) {
+    this._d = true;
+    this._lh = value;
+  }
+
   render() {
     if (this._d) {
       this._p();
@@ -175,38 +220,17 @@ class Text extends GameObject.class {
         width = Math.max(width, context.measureText(str).width);
       });
 
-      this.width = width;
+      this._w = width;
     }
     // @endif
 
     if (!this._s.length) {
       this._s.push(this.text);
-      this.width = context.measureText(this.text).width;
+      this._w = context.measureText(this.text).width;
     }
 
-    this.height = this._s.length * this._fs;
-  }
-
-  /**
-   * Prop changed
-   */
-  _pc(prop, value) {
-    super._pc(prop, value);
-
-    if (dirtyValues.includes(prop)) {
-      this._d = true;
-
-      // @ifdef TEXT_AUTONEWLINE
-      if (prop == 'width') {
-        // fw = fixed width
-        this._fw = value;
-      }
-      // @endif
-
-      if (prop == 'font') {
-        this._fs = parseFont(value).computed;
-      }
-    }
+    this.height = this._fs + ((this._s.length - 1) * this._fs * this.lineHeight);
+    this._uw();
   }
 
   draw() {

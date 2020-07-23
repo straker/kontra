@@ -1,15 +1,6 @@
 import { getContext } from './core.js';
 import Updatable from './updatable.js';
-import { matrixMultiply } from './utils.js';
-
-let handler = {
-  set(obj, prop, value) {
-    // pc = propChanged
-    let r = Reflect.set(obj, prop, value);
-    obj._pc && obj._pc(prop, value);
-    return r;
-  }
-};
+import { rotateAroundPoint } from './helpers.js';
 
 /**
  * The base class of most renderable classes. Handles things such as position, rotation, anchor, and the update and render life cycle.
@@ -49,14 +40,6 @@ class GameObject extends Updatable {
   /**
    * @docs docs/api_docs/gameObject.js
    */
-
-  constructor(properties) {
-    super();
-    this.init(properties);
-    this._uw();
-    let proxy = new Proxy(this, handler);
-    return proxy;
-  }
 
   /**
    * Use this function to reinitialize a game object. It takes the same properties object as the constructor. Useful it you want to repurpose a game object.
@@ -224,6 +207,10 @@ class GameObject extends Updatable {
     } = properties;
     super.init(props);
 
+    // di = done init
+    this._di = true;
+    this._uw();
+
     // @ifdef GAMEOBJECT_GROUP
     children.map(child => this.addChild(child));
     // @endif
@@ -242,7 +229,7 @@ class GameObject extends Updatable {
     context.save();
 
     // @ifdef GAMEOBJECT_SCALE
-    // it's faster to only scale if one of the values is non-zero
+    // it's faster to only scale if one of the values is not 1
     // rather than always scaling
     // @see https://jsperf.com/scale-or-if-statement/4
     if (this.scaleX != 1 || this.scaleY != 1) {
@@ -350,14 +337,49 @@ class GameObject extends Updatable {
     this._uw();
 
     // @ifdef GAMEOBJECT_GROUP
-    this.children.map(child => child._uw());
+    // since this can be called before children are set
+    // we need to guard it
+    (this.children || []).map(child => child._pc());
     // @endif
+  }
+
+  /**
+   * X coordinate of the position vector.
+   * @memberof GameObject
+   * @property {Number} x
+   * @page GameObject
+   */
+  get x() {
+    return this.position.x;
+  }
+
+  /**
+   * Y coordinate of the position vector.
+   * @memberof GameObject
+   * @property {Number} y
+   * @page GameObject
+   */
+  get y() {
+    return this.position.y;
+  }
+
+  set x(value) {
+    this.position.x = value;
+    this._pc();
+  }
+
+  set y(value) {
+    this.position.y = value;
+    this._pc();
   }
 
   /**
    * Update world properties
    */
   _uw() {
+    // don't update world properties until after the init has finished
+    if (!this._di) return;
+
     // @ifdef GAMEOBJECT_GROUP||GAMEOBJECT_OPACITY||GAMEOBJECT_ROTATION||GAMEOBJECT_SCALE
     let parent = this.parent || {
       _wx: 0,
@@ -378,17 +400,18 @@ class GameObject extends Updatable {
     };
     // @endif
 
-    // use affine transformation matrices to calculate final x and y
-    // position
-    let pointMatrix = [
-      [this.x],
-      [this.y],
-      [1]
-    ];
+    // wx = world x, wy = world y
+    this._wx = this.x;
+    this._wy = this.y;
 
     // ww = world width, wh = world height
     this._ww = this.width;
     this._wh = this.height;
+
+    // @ifdef GAMEOBJECT_OPACITY
+    // wo = world opacity
+    this._wo = parent._wo * this.opacity;
+    // @endif
 
     // order of multiplication = scale * rotation * translation
     // @see https://gamedev.stackexchange.com/a/16721/33867
@@ -397,48 +420,26 @@ class GameObject extends Updatable {
     // wsx = world scale x, wsy = world scale y
     this._wsx = parent._wsx * this.scaleX;
     this._wsy = parent._wsy * this.scaleY;
+
+    this._wx *= this._wsx;
+    this._wy *= this._wsy;
     this._ww = this.width * this._wsx;
     this._wh = this.height * this._wsy;
-
-    let scaleMatrix = [
-      [this._wsx, 0, 0],
-      [0, this._wsy, 0],
-      [0, 0, 1]
-    ];
-    pointMatrix = matrixMultiply(scaleMatrix, pointMatrix);
     // @endif
 
     // @ifdef GAMEOBJECT_ROTATION
     // wr = world rotation
     this._wr = parent._wr + this.rotation;
 
-    let cos = Math.cos(parent._wr);
-    let sin = Math.sin(parent._wr);
-    let rotationMatrix = [
-      [cos, -sin, 0],
-      [sin, cos, 0],
-      [0, 0, 1]
-    ];
-    pointMatrix = matrixMultiply(rotationMatrix, pointMatrix);
-    // @endif
-
-    // @ifdef GAMEOBJECT_OPACITY
-    // wo = world opacity
-    this._wo = parent._wo * this.opacity;
+    let {x, y} = rotateAroundPoint({x: this._wx, y: this._wy}, parent._wr);
+    this._wx = x;
+    this._wy = y;
     // @endif
 
     // @ifdef GAMEOBJECT_GROUP
-    let translationMatrix = [
-      [1, 0, parent._wx],
-      [0, 1, parent._wy],
-      [0, 0, 1]
-    ];
-    pointMatrix = matrixMultiply(translationMatrix, pointMatrix);
+    this._wx += parent._wx;
+    this._wy += parent._wy;
     // @endif
-
-    // wx = world x, wy = world y
-    this._wx = pointMatrix[0][0];
-    this._wy = pointMatrix[1][0];
   }
 
   get world() {
@@ -545,6 +546,7 @@ class GameObject extends Updatable {
   addChild(child, { absolute = false } = {}) {
     this.children.push(child);
     child.parent = this;
+    child._pc();
   }
 
   /**
@@ -559,7 +561,38 @@ class GameObject extends Updatable {
     if (index !== -1) {
       this.children.splice(index, 1);
       child.parent = null;
+      child._pc();
     }
+  }
+  // @endif
+
+  // --------------------------------------------------
+  // opacity
+  // --------------------------------------------------
+
+  // @ifdef GAMEOBJECT_OPACITY
+  get opacity() {
+    return this._opa;
+  }
+
+  set opacity(value) {
+    this._opa = value;
+    this._pc();
+  }
+  // @endif
+
+  // --------------------------------------------------
+  // rotation
+  // --------------------------------------------------
+
+  // @ifdef GAMEOBJECT_ROTATION
+  get rotation() {
+    return this._rot;
+  }
+
+  set rotation(value) {
+    this._rot = value;
+    this._pc();
   }
   // @endif
 
@@ -579,6 +612,24 @@ class GameObject extends Updatable {
   setScale(x, y = x) {
     this.scaleX = x;
     this.scaleY = y;
+  }
+
+  get scaleX() {
+    return this._scx;
+  }
+
+  set scaleX(value) {
+    this._scx = value;
+    this._pc();
+  }
+
+  get scaleY() {
+    return this._scy;
+  }
+
+  set scaleY(value) {
+    this._scy = value;
+    this._pc();
   }
   // @endif
 }

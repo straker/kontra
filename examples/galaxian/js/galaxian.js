@@ -126,7 +126,7 @@ kontra.load(
     render: function() {
       this.draw();
 
-      this.context.drawImage(this.image, this.x, this.y - canvas.height);
+      this.context.drawImage(this.image, 0, -canvas.height);
     }
   });
 

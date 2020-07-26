@@ -149,13 +149,13 @@ class GameObject extends Updatable {
 
     // @ifdef GAMEOBJECT_CAMERA
     /**
-     * The X coordinate of the camera. Used to determine [viewX](api/gameObject#viewX).
+     * The X coordinate of the camera.
      * @memberof GameObject
      * @property {Number} sx
      */
 
     /**
-     * The Y coordinate of the camera. Used to determine [viewY](api/gameObject#viewY).
+     * The Y coordinate of the camera.
      * @memberof GameObject
      * @property {Number} sy
      */
@@ -174,7 +174,7 @@ class GameObject extends Updatable {
 
     // @ifdef GAMEOBJECT_ROTATION
     /**
-     * The rotation of the game object around the origin in radians. This rotation takes into account rotations from parent objects and represents the final rotation value.
+     * The rotation of the game object around the origin in radians.
      * @memberof GameObject
      * @property {Number} rotation
      */
@@ -223,12 +223,45 @@ class GameObject extends Updatable {
    * Render the game object. Calls the game objects [draw()](api/gameObject#draw) function.
    * @memberof GameObject
    * @function render
+   *
+   * @param {Function} [filterObjects] - Function to filter which children to render.
    */
-  render() {
+  render(filterObjects) {
     let context = this.context;
     context.save();
 
+    // 1) translate to position
+    //
+    // it's faster to only translate if one of the values is non-zero
+    // rather than always translating
+    // @see https://jsperf.com/translate-or-if-statement/2
+    if (this.x || this.y) {
+      context.translate(this.x, this.y);
+    }
+
+    // @ifdef GAMEOBJECT_ROTATION
+    // 2) rotate around the anchor
+    //
+    // it's faster to only rotate when set rather than always rotating
+    // @see https://jsperf.com/rotate-or-if-statement/2
+    if (this.rotation) {
+      context.rotate(this.rotation);
+    }
+    // @endif
+
+    // @ifdef GAMEOBJECT_CAMERA
+    // 3) translate to the camera position after rotation so camera
+    // values are in the direction of the rotation rather than always
+    // along the x/y axis
+    if (this.sx || this.sy) {
+      context.translate(-this.sx, -this.sy);
+    }
+    // @endif
+
     // @ifdef GAMEOBJECT_SCALE
+    // 4) scale after translation to position so object can be
+    // scaled in place (rather than scaling position as well).
+    //
     // it's faster to only scale if one of the values is not 1
     // rather than always scaling
     // @see https://jsperf.com/scale-or-if-statement/4
@@ -237,36 +270,9 @@ class GameObject extends Updatable {
     }
     // @endif
 
-    // want to be able to use ?? and optional chaining but
-    // they are not supported in terser yet
-    // @see https://github.com/terser/terser/issues/567
-    // let viewX = this.viewX ?? this.x;
-    // let viewY = this.viewY ?? this.y;
-    let viewX = this.x;
-    let viewY = this.y;
-
-    // @ifdef GAMEOBJECT_CAMERA
-    viewX = this.viewX;
-    viewY = this.viewY;
-    // @endif
-
-    // it's faster to only translate if one of the values is non-zero
-    // rather than always translating
-    // @see https://jsperf.com/translate-or-if-statement/2
-    if (viewX || viewY) {
-      context.translate(viewX, viewY);
-    }
-
-    // @ifdef GAMEOBJECT_ROTATION
-    // rotate around the anchor. it's faster to only rotate when set
-    // rather than always rotating
-    // @see https://jsperf.com/rotate-or-if-statement/2
-    if (this.rotation) {
-      context.rotate(this.rotation);
-    }
-    // @endif
-
     // @ifdef GAMEOBJECT_ANCHOR
+    // 5) translate to the anchor so (0,0) is the top left corner
+    // for the render function
     let { x, y } = this.anchor;
     let anchorX = -this.width * x;
     let anchorY = -this.height * y;
@@ -279,12 +285,14 @@ class GameObject extends Updatable {
     // @ifdef GAMEOBJECT_OPACITY
     // it's not really any faster to gate the global alpha
     // @see https://jsperf.com/global-alpha-or-if-statement/1
-    this.context.globalAlpha = this.finalOpacity;
+    this.context.globalAlpha = this.opacity;
     // @endif
 
     this._rf();
 
     // @ifdef GAMEOBJECT_ANCHOR
+    // 7) translate back to the anchor so children use the correct
+    // x/y value from the anchor
     if (anchorX || anchorY) {
       context.translate(-anchorX, -anchorY);
     }
@@ -292,7 +300,11 @@ class GameObject extends Updatable {
 
     // @ifdef GAMEOBJECT_GROUP
     // perform all transforms on the parent before rendering the children
-    this.children.map(child => child.render && child.render());
+    let children = this.children;
+    if (filterObjects) {
+      children = children.filter(filterObjects);
+    }
+    children.map(child => child.render && child.render());
     // @endif
 
     context.restore();
@@ -413,27 +425,24 @@ class GameObject extends Updatable {
     this._wo = parent._wo * this.opacity;
     // @endif
 
-    // order of multiplication = scale * rotation * translation
-    // @see https://gamedev.stackexchange.com/a/16721/33867
+    // @ifdef GAMEOBJECT_ROTATION
+    // wr = world rotation
+    this._wr = parent._wr + this.rotation;
+
+    let {x, y} = rotateAroundPoint({x: this.x, y: this.y}, parent._wr);
+    this._wx = x;
+    this._wy = y;
+    // @endif
 
     // @ifdef GAMEOBJECT_SCALE
     // wsx = world scale x, wsy = world scale y
     this._wsx = parent._wsx * this.scaleX;
     this._wsy = parent._wsy * this.scaleY;
 
-    this._wx *= this._wsx;
-    this._wy *= this._wsy;
+    this._wx = this.x * parent._wsx;
+    this._wy = this.y * parent._wsy;
     this._ww = this.width * this._wsx;
     this._wh = this.height * this._wsy;
-    // @endif
-
-    // @ifdef GAMEOBJECT_ROTATION
-    // wr = world rotation
-    this._wr = parent._wr + this.rotation;
-
-    let {x, y} = rotateAroundPoint({x: this._wx, y: this._wy}, parent._wr);
-    this._wx = x;
-    this._wy = y;
     // @endif
 
     // @ifdef GAMEOBJECT_GROUP
@@ -463,32 +472,6 @@ class GameObject extends Updatable {
       // @endif
     }
   }
-
-  // --------------------------------------------------
-  // camera
-  // --------------------------------------------------
-
-  // @ifdef GAMEOBJECT_CAMERA
-  /**
-   * Readonly. X coordinate of where to draw the game object. Typically the same value as the [position vector](api/gameObject#position) unless the game object has been [added to a tileEngine](api/tileEngine#addObject).
-   * @memberof GameObject
-   * @property {Number} viewX
-   * @readonly
-   */
-  get viewX() {
-    return this.x - this.sx;
-  }
-
-  /**
-   * Readonly. Y coordinate of where to draw the game object. Typically the same value as the [position vector](api/gameObject#position) unless the game object has been [added to a tileEngine](api/tileEngine#addObject).
-   * @memberof GameObject
-   * @property {Number} viewY
-   * @readonly
-   */
-  get viewY() {
-    return this.y - this.sy;
-  }
-  // @endif
 
   // --------------------------------------------------
   // group

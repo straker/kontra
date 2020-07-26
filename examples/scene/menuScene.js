@@ -37,6 +37,6 @@ let menuScene = kontra.Scene({
   }
 });
 
-menuScene.add(startButton);
+menuScene.addChild(startButton);
 
 export default menuScene;

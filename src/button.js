@@ -61,6 +61,8 @@ class Button extends Sprite.class {
     this.addChild(this.textNode);
 
     // set width and height of button to text unless user set them
+
+    // how to sync text width/height to button width/height?
     if (properties.width == undefined) {
       this.width = this.textNode.width;
     }

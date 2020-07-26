@@ -6,6 +6,7 @@
 </head>
 <body>
   <canvas id="game" width="600" height="400" style="background: #333331"></canvas>
+  <button onclick="button.disabled ? button.enable() : button.disable();">Disable/Enable Button</button>
   <script id="code">
     // initialize the game and setup the canvas
     let { canvas, context } = kontra.init();
@@ -45,7 +46,7 @@
         }
         // disabled button
         else if (this.disabled) {
-          this.textNode.color = '#aaa';
+          this.textNode.color = '#999';
         }
         else  {
           this.textNode.color = 'white';

@@ -1,6 +1,7 @@
 import GameObject from './gameObject.js';
 import { srOnlyStyle } from './utils.js';
 import { getCanvas } from './core.js';
+import { collides } from './helpers.js';
 
 /**
  * A scene object for organizing a group of objects that will update and render together.
@@ -47,17 +48,41 @@ class Scene extends GameObject.class {
      */
     this.name = properties.id;
 
+    /**
+     * Camera culling function which prevents objects outside the camera screen from rendering. An object which returns true will render while an object which returns false will not.
+     * @memberof Scene
+     * @property {Function} cullObjects
+     */
+    this.cullObjects = collides;
+
     // create an accessible DOM node for screen readers
     // dn = dom node
     const section = this._dn = document.createElement('section');
     section.tabIndex = -1;
     section.style = srOnlyStyle;
-
     document.body.appendChild(section);
 
-    // create the node before adding children so they can be added
-    // to it
     super.init(properties);
+
+    let canvas = getCanvas();
+    this.camera = GameObject({
+      x: canvas.width / 2,
+      y: canvas.height / 2,
+      width: canvas.width,
+      height: canvas.height,
+      anchor: { x: 0.5, y: 0.5 }
+    });
+
+    // can call super here only by using lexical scope
+    this.camera._pc = () => {
+      super._pc.call(this.camera);
+
+      // only set the cameras position based on scale
+      // but not the width/height
+      let canvas = this.context.canvas;
+      this.camera._wx = this.camera.x * this.scaleX;
+      this.camera._wy = this.camera.y * this.scaleY;
+    }
 
     section.id = this.id;
     section.setAttribute('aria-label', this.name);
@@ -137,13 +162,42 @@ class Scene extends GameObject.class {
   }
 
   /**
-   * Render the scene and call `render()` on all children. A hidden scene will not render nor will any children outside of the current game viewport.
+   * Focus the camera to the object or x/y position. As the scene is scaled the focal point will keep to the position.
+   * @param {Object} object - Object with x/y properties or a GameObject.
+   */
+  lookAt(object) {
+    object = object.world || object;
+    let x = object.x;
+    let y = object.y;
+
+    if (object.scaleX) {
+      x /= object.scaleX;
+      y /= object.scaleY;
+    }
+
+    this.camera.x = x;
+    this.camera.y = y;
+    this._pc();
+  }
+
+  _pc() {
+    super._pc();
+    this.camera && this.camera._pc();
+  }
+
+  /**
+   * Render the scene and call `render()` on all children. A hidden scene will not render nor will any children outside of the current camera.
    * @memberof Scene
    * @function render
    */
   render() {
+    let { x, y, width, height } = this.camera;
+
+    this.sx = x * this.scaleX - width / 2;
+    this.sy = y * this.scaleY - height / 2;
+
     if (!this.hidden) {
-      super.render();
+      super.render(child => this.cullObjects(child, this.camera));
     }
   }
 

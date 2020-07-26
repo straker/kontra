@@ -8,10 +8,12 @@ export const srOnlyStyle = 'position:absolute;left:-9999px';
 
 // get world x, y, width, and height of object
 export function getWorldRect(obj) {
-  let x = obj.world.x;
-  let y = obj.world.y;
-  let width = obj.world.width;
-  let height = obj.world.height;
+  let world = obj.world || obj;
+
+  let x = world.x;
+  let y = world.y;
+  let width = world.width;
+  let height = world.height;
 
   // @ifdef GAMEOBJECT_ANCHOR
   // take into account object anchor

@@ -91,7 +91,6 @@ class GridManager extends GameObject.class {
   render() {
     if (this._d) {
       this._p();
-      this._cp();
     }
     super.render();
   }
@@ -99,13 +98,9 @@ class GridManager extends GameObject.class {
   /**
    * Properties changed handler
    */
-  _pc(prop, value) {
+  _pc() {
     super._pc();
-
-    // don't set dirty flag for private properties
-    if (prop[0] != '_' && this[prop] !== value) {
-      this._d = true;
-    }
+    this._d = true;
   }
 
   /**
@@ -143,7 +138,6 @@ class GridManager extends GameObject.class {
     let col = 0;
     for (let i = 0, child; child = children[i]; i++) {
       grid[row] = grid[row] || [];
-      grid[row][col] = child;
 
       // prerender child to get current width/height
       if (child._p) {
@@ -154,20 +148,24 @@ class GridManager extends GameObject.class {
       rowHeights[row] = Math.max(rowHeights[row] || 0, child.height);
       // heights[row] = Math.max(heights[row] || 0, child.height);
 
-      let colSpan = child.colSpan || 1;
-      if (colSpan > 1 && col + colSpan <= numCols) {
-        while(++col < colSpan) {
+      let spans = child.colSpan || 1;
+      let colSpan = spans;
+      do {
+        colWidths[col] = Math.max(colWidths[col] || 0, child.width / colSpan);
+        grid[row][col] = child;
+      } while (colSpan + col++ <= numCols && --spans);
 
-          grid[row][col] = child;
-        }
-      }
-      // colSpan elements do not contribute to the colWidth
-      else {
-        colWidths[col] = Math.max(colWidths[col] || 0, child.width);
+      // if (colSpan > 1 && col + colSpan <= numCols) {
+      //   while(++col < colSpan) {
+      //     grid[row][col] = child;
+      //   }
+      // }
+      // else {
+      //   colWidths[col] = Math.max(colWidths[col] || 0, child.width);
+      // }
         // widths[col] = Math.max(widths[col] || 0, child.width);
-      }
 
-      if (++col >= numCols) {
+      if (col >= numCols) {
         col = 0;
         row++;
       }
@@ -198,29 +196,22 @@ class GridManager extends GameObject.class {
       this._g = grid.map(row => row.reverse());
       this._cw = colWidths.reverse();
     }
-  }
 
-  /**
-   * Calculate the position of each child
-   */
-  _cp() {
-    let topLeftY = 0;
+    let topLeftY = -this.anchor.y * this.height;
     let rendered = [];
 
-    let colWidths = this._cw;
-    let rowHeights = this._rh;
-    let gapX = this.gapX;
-    let gapY = this.gapY;
+    // let colWidths = this._cw;
+    // let rowHeights = this._rh;
+    // let gapX = this.gapX;
+    // let gapY = this.gapY;
 
-    if (this.scale) {
-      colWidths = colWidths.map(width => width * this.scaleX);
-      rowHeights = rowHeights.map(height => height * this.scaleY);
-      gapX *= this.scaleX;
-      gapY *= this.scaleY;
-    }
+    // colWidths = colWidths.map(width => width * this.scaleX);
+    // rowHeights = rowHeights.map(height => height * this.scaleY);
+    // gapX *= this.scaleX;
+    // gapY *= this.scaleY;
 
     this._g.map((gridRow, row) => {
-      let topLeftX = 0;
+      let topLeftX = -this.anchor.x * this.width;
       // let x = rtl && !this.parent
       //   ? canvas.width - (this.x + this._w * (1 - this.anchor.x * 2))
       //   : this.x;
@@ -233,24 +224,20 @@ class GridManager extends GameObject.class {
           let justify = alignment[child.justifySelf || this.justify](this._rtl);
           let align = alignment[child.alignSelf || this.align]();
 
-          let rowHeight = this._rh[row];
-
           let colSpan = child.colSpan || 1;
           let colWidth = colWidths[col];
           if (colSpan > 1 && col + colSpan <= this._nc) {
             for (let i = 1; i < colSpan; i++) {
-              colWidth += colWidths[col + i] + gapX;
+              colWidth += colWidths[col + i] + this.gapX;
             }
           }
 
-          let { x, y } = getWorldRect(this);
-
-          let pointX = x + colWidth * justify;
-          let pointY = y + rowHeights[row] * align;
+          let pointX = colWidth * justify;
+          let pointY = rowHeights[row] * align;
 
           let ptX;
           let ptY;
-          let { width, height } = getWorldRect(child);
+          let { width, height } = child;
 
           if (justify === 0) {
             ptX = pointX + width * child.anchor.x;
@@ -278,10 +265,10 @@ class GridManager extends GameObject.class {
           child.y = topLeftY + ptY;
         }
 
-        topLeftX += colWidths[col] + gapX;
+        topLeftX += colWidths[col] + this.gapX;
       });
 
-      topLeftY += rowHeights[row] + gapY;
+      topLeftY += rowHeights[row] + this.gapY;
     });
   }
 }

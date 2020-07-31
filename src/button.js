@@ -50,6 +50,9 @@ class Button extends Sprite.class {
    */
   init(properties) {
     let { text, onDown, onUp, ...props } = properties;
+
+    this.padX = this.padY = 0;
+
     super.init(props);
     track(this);
 
@@ -84,6 +87,7 @@ class Button extends Sprite.class {
     button.addEventListener('keyup', () => this.onUp());
 
     document.body.appendChild(button);
+    this._p();
   }
 
   get text() {
@@ -91,6 +95,8 @@ class Button extends Sprite.class {
   }
 
   set text(value) {
+    // d = dirty
+    this._d = true;
     this.textNode.text = value;
   }
 
@@ -103,10 +109,23 @@ class Button extends Sprite.class {
     this._dn.remove();
   }
 
-  render() {
+  _p() {
     // update DOM node text if it has changed
-    if (this.textNode._d && this.text !== this._dn.textContent) {
+    if (this.text !== this._dn.textContent) {
       this._dn.textContent = this.text;
+    }
+
+    // update width and height (need to prerender the button
+    // first)
+    this.textNode._p();
+    this.width = this.textNode.width + this.padX * 2;
+    this.height = this.textNode.height + this.padY * 2;
+    this._uw();
+  }
+
+  render() {
+    if (this._d) {
+      this._p();
     }
 
     super.render();
@@ -144,17 +163,19 @@ class Button extends Sprite.class {
    * @function focus
    */
   focus() {
+    if (!this.disabled) {
 
-    /**
-     * If the button is focused.
-     * @memberof Button
-     * @property {Boolean} focused
-     */
-    this.focused = true;
-    // prevent infinite loop
-    if (document.activeElement != this._dn) this._dn.focus();
+      /**
+       * If the button is focused.
+       * @memberof Button
+       * @property {Boolean} focused
+       */
+      this.focused = true;
+      // prevent infinite loop
+      if (document.activeElement != this._dn) this._dn.focus();
 
-    this.onFocus();
+      this.onFocus();
+    }
   }
 
   /**

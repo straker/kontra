@@ -91,10 +91,6 @@
       let leftBtn = createButton({
         text: '<',
         color: color || 'white'
-      },
-      {
-        width: 10,
-        height: 18,
       });
       let value = createText({
         text,
@@ -103,11 +99,6 @@
       let rightBtn = createButton({
         text: '>',
         color: color || 'grey',
-      },
-      {
-        // TODO: figure out better way to calculate text button width/height
-        width: 10,
-        height: 18
       });
 
       leftBtn.disable();  // TODO: let this be an option
@@ -137,13 +128,13 @@
       children: [
         title,
         gameSpeed,
-        // gameSpeedOption,
-        // infiniteStamina,
-        // infiniteStaminaOption,
-        // airDashes,
-        // airDashesOption,
-        // invincibility,
-        // invincibilityOption
+        gameSpeedOption,
+        infiniteStamina,
+        infiniteStaminaOption,
+        airDashes,
+        airDashesOption,
+        invincibility,
+        invincibilityOption
       ],
       breakpoints: [{
         metric() { return this.scaleX < 0.85 },
@@ -188,7 +179,7 @@
       }
     });
     loop.start();
-    assistManager.render();
+    // assistManager.render();
     </script>
 </body>
 </html>

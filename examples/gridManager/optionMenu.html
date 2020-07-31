@@ -140,7 +140,7 @@
         metric() { return this.scaleX < 0.85 },
         callback() {
           this.numCols = 1;
-          this.gapY = 20;
+          this.gapY = [25, 10];
           this.children.forEach(child => child.justifySelf = 'center');
         }
       },

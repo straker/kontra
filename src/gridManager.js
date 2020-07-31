@@ -181,9 +181,21 @@ class GridManager extends GameObject.class {
 
     // let gapX = this.gapX * this.scaleX;
     // let gapY = this.gapY * this.scaleY;
+    let gapX = [].concat(this.gapX);
+    let gapY = [].concat(this.gapY);
 
-    this._w = colWidths.reduce((acc, width) => acc += width, 0) + this.gapX * (numCols - 1);
-    this._h = rowHeights.reduce((acc, height) => acc += height, 0) + this.gapY * (numRows - 1);
+    // this._w = colWidths.reduce((acc, width) => acc += width, 0) + this.gapX * (numCols - 1);
+    // this._h = rowHeights.reduce((acc, height) => acc += height, 0) + this.gapY * (numRows - 1);
+
+    this._w = colWidths.reduce((acc, width) => acc += width, 0);
+    for (let i = 0; i < numCols - 1; i++) {
+      this._w += gapX[i % gapX.length];
+    }
+
+    this._h = rowHeights.reduce((acc, height) => acc += height, 0);
+    for (let i = 0; i < numRows - 1; i++) {
+      this._h += gapY[i % gapY.length];
+    }
 
     // this._w = widths.reduce((acc, width) => acc += width, 0) + this.gapX * (numCols - 1);
     // this._h = heights.reduce((acc, height) => acc += height, 0) + this.gapY * (numRows - 1);
@@ -228,7 +240,7 @@ class GridManager extends GameObject.class {
           let colWidth = colWidths[col];
           if (colSpan > 1 && col + colSpan <= this._nc) {
             for (let i = 1; i < colSpan; i++) {
-              colWidth += colWidths[col + i] + this.gapX;
+              colWidth += colWidths[col + i] + gapX[(col + i) % gapX.length];
             }
           }
 
@@ -265,10 +277,10 @@ class GridManager extends GameObject.class {
           child.y = topLeftY + ptY;
         }
 
-        topLeftX += colWidths[col] + this.gapX;
+        topLeftX += colWidths[col] + gapX[col % gapX.length];
       });
 
-      topLeftY += rowHeights[row] + this.gapY;
+      topLeftY += rowHeights[row] + gapY[row % gapY.length];
     });
   }
 }

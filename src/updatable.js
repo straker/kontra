@@ -22,7 +22,7 @@ class Updatable {
     // --------------------------------------------------
 
     /**
-     * The game objects position vector. Does not take into account position from any parent objects.
+     * The game objects position vector. Represents the local position of the object as opposed to the [world](/api/gameObject#world) position.
      * @memberof GameObject
      * @property {Vector} position
      * @page GameObject
@@ -55,7 +55,7 @@ class Updatable {
 
     // @ifdef GAMEOBJECT_TTL
     /**
-     * How may frames the game object should be alive. Primarily used by [Pool](api/pool) to know when to recycle an object.
+     * How may frames the game object should be alive.
      * @memberof GameObject
      * @property {Number} ttl
      * @page GameObject
@@ -82,7 +82,7 @@ class Updatable {
   }
 
   /**
-   * Move the game object by its acceleration and velocity. If the game object is an [animation game object](api/gameObject#animation-game object), it also advances the animation every frame.
+   * Move the game object by its acceleration and velocity. If you pass `dt` it will multiply the vector and acceleration by that number. This means the `dx`, `dy`, `ddx` and `ddy` should be the how far you want the object to move in 1 second rather than in 1 frame.
    *
    * If you override the game objects [update()](api/gameObject#update) function with your own update function, you can call this function to move the game object normally.
    *
@@ -122,12 +122,28 @@ class Updatable {
   advance(dt) {
     // @ifdef GAMEOBJECT_VELOCITY
     // @ifdef GAMEOBJECT_ACCELERATION
-    this.velocity = this.velocity.add(this.acceleration);
+    let acceleration = this.acceleration;
+
+    // @ifdef VECTOR_SCALE
+    if (dt) {
+      acceleration = acceleration.scale(dt);
+    }
+    // @endif
+
+    this.velocity = this.velocity.add(acceleration);
     // @endif
     // @endif
 
     // @ifdef GAMEOBJECT_VELOCITY
-    this.position = this.position.add(this.velocity);
+    let velocity = this.velocity;
+
+    // @ifdef VECTOR_SCALE
+    if (dt) {
+      velocity = velocity.scale(dt);
+    }
+    // @endif
+
+    this.position = this.position.add(velocity);
     this._pc();
     // @endif
 
@@ -210,7 +226,7 @@ class Updatable {
 
   // @ifdef GAMEOBJECT_TTL
   /**
-   * Check if the game object is alive. Used by [Pool](api/pool) to know when to recycle an object.
+   * Check if the game object is alive.
    * @memberof GameObject
    * @function isAlive
    * @page GameObject

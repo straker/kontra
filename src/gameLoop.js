@@ -52,7 +52,7 @@ function clear(context) {
  * @param {Function} properties.render - Function called every frame to render the game.
  * @param {Number}   [properties.fps=60] - Desired frame rate.
  * @param {Boolean}  [properties.clearCanvas=true] - Clear the canvas every frame before the `render()` function is called.
- * @param {CanvasRenderingContext2D} [properties.context] - The context that should be cleared each frame if `clearContext=true`. Defaults to [core.getContext()](api/core#getContext).
+ * @param {CanvasRenderingContext2D} [properties.context] - The context that should be cleared each frame if `clearContext` is not set to `false`. Defaults to [core.getContext()](api/core#getContext).
  */
 export default function GameLoop({
   fps = 60,

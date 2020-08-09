@@ -1,7 +1,22 @@
 import GameObject from './gameObject.js';
-import { srOnlyStyle } from './utils.js';
+import { srOnlyStyle, addToDom } from './utils.js';
 import { getCanvas } from './core.js';
 import { collides } from './helpers.js';
+
+function getAllNodes(object) {
+  let nodes = [];
+
+  if (object._dn) {
+    nodes.push(object._dn);
+  }
+  else if (object.children) {
+    object.children.map(child => {
+      nodes = nodes.concat(getAllNodes(child));
+    });
+  }
+
+  return nodes;
+}
 
 /**
  * A scene object for organizing a group of objects that will update and render together.
@@ -30,41 +45,69 @@ import { collides } from './helpers.js';
  *
  * @param {Object} properties - Properties of the scene.
  * @param {String} properties.id - The id of the scene.
- * @param {String} [properties.name=properties.id] - The name of the scene. Used by screen readers to identify each scene. Use this property to give the scene a human friendly name. Defaults to the id.
+ * @param {String} [properties.name=properties.id] - The name of the scene. Used by screen readers to identify each scene. Use this property to give the scene a human friendly name.
+ * @param {Boolean} [properties.cullObjects=true] - If the scene should not render objects outside the camera bounds.
+ * @param {Function} [properties.cullFunction] - The function used to filter objects to render. Defaults to [helpers.collides](/api/helpers#collides).
  */
 class Scene extends GameObject.class {
 
-  init(properties) {
+  init({
     /**
      * The id of the scene.
      * @memberof Scene
      * @property {String} id
      */
+    id,
 
     /**
      * The name of the scene. Used by screen readers to identify each scene. Use this property to give the scene a human friendly name.
      * @memberof Scene
      * @property {String} name
      */
-    this.name = properties.id;
+     name = id,
 
     /**
-     * Camera culling function which prevents objects outside the camera screen from rendering. An object which returns true will render while an object which returns false will not.
+     * If the camera should cull objects outside the camera bounds. Not rendering objects which can't be seen greatly improves the performance.
      * @memberof Scene
-     * @property {Function} cullObjects
+     * @property {Boolean} cullObjects
      */
-    this.cullObjects = collides;
+    cullObjects = true,
 
-    // create an accessible DOM node for screen readers
+     /**
+     * Camera culling function which prevents objects outside the camera screen from rendering. Is passed as the `filterFunction` to the [render](/api/gameObject#render) function.
+     * @memberof Scene
+     * @property {Function} cullFunction
+     */
+    cullFunction = collides,
+
+    ...props
+  }) {
+    // create an accessible DOM node for screen readers (do this first
+    // so we can move DOM nodes in addChild)
     // dn = dom node
     const section = this._dn = document.createElement('section');
     section.tabIndex = -1;
     section.style = srOnlyStyle;
-    document.body.appendChild(section);
+    section.id = id;
+    section.setAttribute('aria-label', name);
 
-    super.init(properties);
+    super.init({
+      id,
+      name,
+      cullObjects,
+      cullFunction,
+      ...props
+    });
+
+    addToDom(section, this.context.canvas);
 
     let canvas = getCanvas();
+
+    /**
+     * The camera object of the scene. The camera is used as the focal point for the scene. The scene will not render objects that are outside the bounds of the camera.
+     *
+     * Additionally, the camera can be used to [lookAt](/api/scene#lookAt) an object which will center the camera to that object. This allows you to zoom the scene in and out while the camera remains centered on the object.
+     */
     this.camera = GameObject({
       x: canvas.width / 2,
       y: canvas.height / 2,
@@ -83,9 +126,6 @@ class Scene extends GameObject.class {
       this.camera._wx = this.camera.x * this.scaleX;
       this.camera._wy = this.camera.y * this.scaleY;
     }
-
-    section.id = this.id;
-    section.setAttribute('aria-label', this.name);
   }
 
   /**
@@ -126,16 +166,21 @@ class Scene extends GameObject.class {
 
   addChild(object, options) {
     super.addChild(object, options);
-    if (object._dn) {
-      this._dn.appendChild(object._dn);
-    }
+
+    // move all children to be in the scenes DOM node so we can
+    // hide and show the DOM node and thus hide and show all the
+    // children
+    getAllNodes(object).map(node => {
+      this._dn.appendChild(node);
+    });
   }
 
   removeChild(object) {
     super.removeChild(object);
-    if (object._dn) {
-      document.body.appendChild(object._dn);
-    }
+
+    getAllNodes(object).map(node => {
+      addToDom(node, this.context.canvas);
+    });
   }
 
   /**
@@ -163,6 +208,9 @@ class Scene extends GameObject.class {
 
   /**
    * Focus the camera to the object or x/y position. As the scene is scaled the focal point will keep to the position.
+   * @memberof Scene
+   * @function lookAt
+   *
    * @param {Object} object - Object with x/y properties or a GameObject.
    */
   lookAt(object) {
@@ -197,7 +245,7 @@ class Scene extends GameObject.class {
     this.sy = y * this.scaleY - height / 2;
 
     if (!this.hidden) {
-      super.render(child => this.cullObjects(child, this.camera));
+      super.render(child => this.cullObjects ? this.cullFunction(child, this.camera) : true);
     }
   }
 

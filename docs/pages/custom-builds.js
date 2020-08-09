@@ -77,7 +77,7 @@ Options are passed by nesting the option with the parent source. For example, to
 | `rotation`      | `rotation` |
 | `ttl`           | `ttl`, `isAlive` |
 | `anchor`        | `anchor` |
-| `camera`        | `sx`, `sy`, `viewX`, `viewY` |
+| `camera`        | `sx`, `sy` |
 | `group`         | `children`, `parent`, `addChild`, `removeChild` |
 | `scale`         | `scale`, `setScale()` |
 | `opacity`       | `opacity` |

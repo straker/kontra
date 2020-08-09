@@ -51,7 +51,7 @@ let restartButton = kontra.Button({
 });
 
 // let the grid manager handle auto placing the controls
-let grid = kontra.GridManager({
+let grid = kontra.Grid({
   x: canvas.width / 2,
   y: canvas.height / 2,
 

@@ -36,7 +36,7 @@ export function radToDeg(rad) {
 }
 
 /**
- * Return the angle (in radians) from one point to another point.
+ * Return the angle in radians from one point to another point.
  *
  * ```js
  * import { angleToTarget, Sprite } from 'kontra';

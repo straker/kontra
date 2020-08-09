@@ -39,7 +39,7 @@
     window.activeScene = menuScene;
 
     // game loop
-    let loop = kontra.GameLoop({
+    window.loop = kontra.GameLoop({
       fps: 8,
       update() {
         activeScene.update();

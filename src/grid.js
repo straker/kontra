@@ -76,18 +76,18 @@ class Grid extends GameObject.class {
     justify = 'start',
 
     /**
-     * The horizontal gap between each column in the grid. An array of numbers means the grid will set the gap between columns using the order of the array.
+     * The horizontal gap between each column in the grid.
      *
-     * For example, if the gap is set to be `[10, 5]`, then every odd column gap with use 10 and every even column gap will use 5.
+     * An array of numbers means the grid will set the gap between columns using the order of the array. For example, if the gap is set to be `[10, 5]`, then every odd column gap with use 10 and every even column gap will use 5.
      * @memberof Grid
      * @property {Number|Number[]} colGap
      */
     colGap = 0,
 
      /**
-     * The vertical gap between each row in the grid. An array of numbers means the grid will set the gap between rows using the order of the array.
+     * The vertical gap between each row in the grid.
      *
-     * For example, if the gap is set to be `[10, 5]`, then every odd row gap with use 10 and every even row gap will use 5.
+     * An array of numbers means the grid will set the gap between rows using the order of the array. For example, if the gap is set to be `[10, 5]`, then every odd row gap with use 10 and every even row gap will use 5.
      * @memberof Grid
      * @property {Number|Number[]} rowGap
      */

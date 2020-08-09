@@ -55,14 +55,14 @@ class GameObject extends Updatable {
     // --------------------------------------------------
 
     /**
-     * The width of the game object. Does not take into account the objects scale.
+     * The width of the game object. Represents the local width of the object as opposed to the [world](/api/gameObject#world) width.
      * @memberof GameObject
      * @property {Number} width
      */
     width = 0,
 
     /**
-     * The height of the game object. Does not take into account the objects scale.
+     * The height of the game object. Represents the local height of the object as opposed to the [world](/api/gameObject#world) height.
      * @memberof GameObject
      * @property {Number} height
      */
@@ -166,7 +166,7 @@ class GameObject extends Updatable {
 
     // @ifdef GAMEOBJECT_OPACITY
     /**
-     * The opacity of the object. Does not take into account opacity from any parent objects.
+     * The opacity of the object. Represents the local opacity of the object as opposed to the [world](/api/gameObject#world) opacity.
      * @memberof GameObject
      * @property {Number} opacity
      */
@@ -175,7 +175,7 @@ class GameObject extends Updatable {
 
     // @ifdef GAMEOBJECT_ROTATION
     /**
-     * The rotation of the game object around the anchor in radians. Does not take into account rotation from any parent objects.
+     * The rotation of the game object around the anchor in radians. . Represents the local rotation of the object as opposed to the [world](/api/gameObject#world) rotation.
      * @memberof GameObject
      * @property {Number} rotation
      */
@@ -184,14 +184,14 @@ class GameObject extends Updatable {
 
     // @ifdef GAMEOBJECT_SCALE
     /**
-     * The x scale of the object. Does not take into account scale from any parent objects.
+     * The x scale of the object. Represents the local x scale of the object as opposed to the [world](/api/gameObject#world) x scale.
      * @memberof GameObject
      * @property {Number} scaleX
      */
     scaleX = 1,
 
     /**
-     * The y scale of the object. Does not take into account scale from any parent objects.
+     * The y scale of the object. Represents the local y scale of the object as opposed to the [world](/api/gameObject#world) y scale.
      * @memberof GameObject
      * @property {Number} scaleY
      */
@@ -324,7 +324,9 @@ class GameObject extends Updatable {
   }
 
   /**
-   * Draw the game object at its X and Y position, taking into account rotation and anchor.
+   * Draw the game object at its X and Y position, taking into account rotation, scale, and anchor.
+   *
+   * Do note that the canvas has been rotated and translated to the objects position (taking into account anchor), so {0,0} will be the top-left corner of the game object when drawing.
    *
    * If you override the game objects `render()` function with your own render function, you can call this function to draw the game object normally.
    *

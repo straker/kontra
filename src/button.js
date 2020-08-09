@@ -4,7 +4,7 @@ import { track } from './pointer.js';
 import { srOnlyStyle, noop, addToDom } from './utils.js';
 
 /**
- * An accessible button. Supports screen readers and keyboard navigation using the <kbd>Tab</kbd> key. Be sure to call [initPointer](/api/pointer#initPointer) to have pointer events enabled for the button. The button is automatically [tracked](/api/pointer#track) by the pointer and accepts all pointer functions.
+ * An accessible button. Supports screen readers and keyboard navigation using the <kbd>Tab</kbd> key. The button is automatically [tracked](/api/pointer#track) by the pointer and accepts all pointer functions, but you will still need to call [initPointer](/api/pointer#initPointer) to have pointer events enabled.
  * @class Button
  * @extends Sprite
  *
@@ -14,7 +14,7 @@ import { srOnlyStyle, noop, addToDom } from './utils.js';
  * @param {Number} [properties.padY=0] - The vertical padding.
  * @param {Function} [properties.onEnable] - Function called when the button is enabled.
  * @param {Function} [properties.onDisable] - Function called when the button is disabled.
- * @param {Function} [properties.onFocus] - Function called when the button is focused either by the pointer or keyboard.
+ * @param {Function} [properties.onFocus] - Function called when the button is focused by the keyboard.
  * @param {Function} [properties.onBlur] - Function called when the button losses focus either by the pointer or keyboard.
  */
 class Button extends Sprite.class {
@@ -163,7 +163,7 @@ class Button extends Sprite.class {
   }
 
   /**
-   * Disable the button. A disabled button will not render nor respond to button or pointer events. Calls [onDisable](/api/button#onDisable) if passed.
+   * Disable the button. A disabled button will not longer render nor respond to pointer and keyboard events. Calls [onDisable](/api/button#onDisable) if passed.
    * @memberof Button
    * @function disable
    */

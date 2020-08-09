@@ -91,7 +91,10 @@ let buttonMap = {
  * ```
  *
  * @function getPointer
- * @returns {{x: Number, y: Number, radius: Number}} pointer
+ *
+ * @param {CanvasRenderingContext2D} [canvas] - The canvas which maintains the pointer. Defaults to [core.getCanvas()](api/core#getCanvas).
+ *
+ * @returns {{x: Number, y: Number, radius: Number, touches: Object}} pointer with properties `x`, `y`, and `radius`. If using touch events, also has a `touches` object with keys of the touch identifier and the x/y position of the touch as the value.
  */
 export function getPointer(canvas = getCanvas()) {
   return pointers.get(canvas);
@@ -258,9 +261,13 @@ function pointerHandler(evt, eventName) {
 
 /**
  * Initialize pointer event listeners. This function must be called before using other pointer functions.
+ *
+ * If you need to use multiple canvas, you'll have to initialize the pointer for each one individually as each canvas maintains its own pointer object.
  * @function initPointer
  *
  * @param {CanvasRenderingContext2D} [canvas] - The canvas that event listeners will be attached to. Defaults to [core.getCanvas()](api/core#getCanvas).
+ *
+ * @returns {{x: Number, y: Number, radius: Number, touches: Object}} The pointer object for the canvas.
  */
 export function initPointer(canvas = getCanvas()) {
   let pointer = pointers.get(canvas);
@@ -269,6 +276,7 @@ export function initPointer(canvas = getCanvas()) {
       x: 0,
       y: 0,
       radius: 5, // arbitrary size
+      touches: {},
 
       // cf = current frame, lf = last frame, o = objects,
       // oo = over object
@@ -308,6 +316,8 @@ export function initPointer(canvas = getCanvas()) {
       pointer._cf.length = 0;
     });
   }
+
+  return pointer;
 }
 
 /**
@@ -329,6 +339,9 @@ export function track(...objects) {
   objects.map(object => {
     let canvas = object.context ? object.context.canvas : getCanvas();
     let pointer = pointers.get(canvas);
+
+    // can't track object if pointer events haven't been initialized
+    if (!pointer) return;
 
     // override the objects render function to keep track of render
     // order
@@ -362,6 +375,9 @@ export function untrack(...objects) {
   objects.map(object => {
     let canvas = object.context ? object.context.canvas : getCanvas();
     let pointer = pointers.get(canvas);
+
+    // can't track object if pointer events haven't been initialized
+    if (!pointer) return;
 
     // restore original render function to no longer track render order
     object.render = object._r;

@@ -3,7 +3,9 @@
  *
  * To extend the GameObject class, use the `.class` property of the constructor (since the GameObject is a factory function). You should also override the `draw()` function in your class.
  *
- * The `draw()` function determines how to draw the GameObject. It is called by the `render` function after transforms and rotations have been applied. Do note that the canvas has been rotated and translated to the objects position (taking into account anchor), so {0,0} will be the top-left corner of the game object when drawing.
+ * The `draw()` function determines how to draw the GameObject. It is called by the `render` function after transforms and rotations have been applied.
+ *
+ * Do note that the canvas has been rotated and translated to the objects position (taking into account anchor), so {0,0} will be the top-left corner of the game object when drawing.
  *
  * @sectionName Extending A GameObject
  * @example

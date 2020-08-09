@@ -10,11 +10,11 @@
   <canvas id="game" width="600" height="400" style="margin:auto;background:rgb(50,50,50)"></canvas>
   <script id="code">
     // initialize the game and setup the canvas
-    let { canvas, context, pointer } = kontra.init();
+    let { canvas, context } = kontra.init();
     canvas.width = window.innerWidth;
     canvas.height = window.innerWidth;
 
-    kontra.initPointer();
+    let pointer = kontra.initPointer();
 
     // create a sprites
     const size = canvas.width / 6;
@@ -75,8 +75,8 @@
         context.fillText("Drag Your Fingers All Over", canvas.width / 2, fontSize * 2);
 
         context.fillStyle = "aqua";
-        for (let i = 0; i < kontra.pointer.touches.length; i++) {
-          const touch = kontra.pointer.touches[i];
+        for (let i = 0; i < pointer.touches.length; i++) {
+          const touch = pointer.touches[i];
           context.fillText(
             touch.identifier,
             touch.clientX,

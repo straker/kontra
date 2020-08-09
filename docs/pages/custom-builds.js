@@ -36,7 +36,7 @@ $ rollup game.js --format iife --file game.bundle.js
 
 Kontra supports even more granular control over the output. If you're looking to remove unused parts of the Sprite class, such as `rotation` or `anchor`, you can use [rollup-plugin-kontra](https://github.com/straker/rollup-plugin-kontra) to remove entire parts of the Sprite codebase. Just pass the functionality you want enabled and rollup-plugin-kontra will remove the rest.
 
-__Note:__ All options default to `false` when using rollup-plugin-kontra, so only pass the options you wish to enable. Passing no options will result in a Sprite with just `position`, `width,` and `height`.
+__Note:__ All options default to `false` when using rollup-plugin-kontra, so only pass the options you wish to enable. Passing no options will result in a Sprite with just `position`, `width,` `height`, and `color`.
 
 * ```js
 * // exclude-tablist
@@ -64,51 +64,52 @@ __Note:__ All options default to `false` when using rollup-plugin-kontra, so onl
 * }
 * ```
 
-### Available options
+### Available Options
 
 Options are passed by nesting the option with the parent source. For example, to enable the `image` functionality of a sprite, you would pass `sprite: { image: true }`.
 
-#### `gameObject` options:
+#### `gameObject` Options:
+
+| Name            | Functionality Enabled |
+| --------------- | ------------- |
+| `velocity`      | `velocity`, `dx`, `dy` |
+| `acceleration`  | `acceleration`, `ddx`, `ddy` |
+| `rotation`      | `rotation` |
+| `ttl`           | `ttl`, `isAlive` |
+| `anchor`        | `anchor` |
+| `camera`        | `sx`, `sy`, `viewX`, `viewY` |
+| `group`         | `children`, `parent`, `addChild`, `removeChild` |
+| `scale`         | `scale`, `setScale()` |
+| `opacity`       | `opacity` |
+
+#### `sprite` Options:
 
 | Name          | Functionality Enabled |
 | ------------- | ------------- |
-| velocity      | `velocity`, `dx`, `dy` |
-| acceleration  | `acceleration`, `ddx`, `ddy` |
-| rotation      | `rotation` |
-| ttl           | `ttl`, `isAlive` |
-| anchor        | `anchor` |
-| camera        | `sx`, `sy`, `viewX`, `viewY` |
-| group         | `children`, `parent` |
-| scale         | `scale`, `scaledWidth`, `scaledHeight`, `setScale()` | opacity       | `opacity`
+| `image`       | `image` |
+| `animation`   | `animations`, `playAnimation` |
 
-#### `sprite` options:
+#### `text` Options:
 
 | Name          | Functionality Enabled |
 | ------------- | ------------- |
-| image         | `image` |
-| animation     | `animations`, `playAnimation` |
+| `autoNewline` | Setting a fixed with that automatically adds new lines to the text |
+| `newline`     | Support for new line characters (`\n`) in the text |
+| `textAlign`   | `textAlign` |
+| `rtl`         | Support for RTL languages |
 
-#### `text` options:
-
-| Name          | Functionality Enabled |
-| ------------- | ------------- |
-| autoNewline   | Setting a fixed with that automatically adds new lines to the text |
-| newline       | Support for new line characters (`\n`) in the text |
-| textAlign     | `textAlign` |
-| rtl           | Support for RTL languages |
-
-#### `vector` options:
+#### `vector` Options:
 
 | Name          | Functionality Enabled |
 | ------------- | ------------- |
-| subtract      | `subract()` |
-| scale         | `scale()` |
-| length        | `length()` |
-| normalize     | `normalize()` (also enables `length`) |
-| dot           | `dot()` |
-| distance      | `distance()` |
-| angle         | `angle()` (also enables `length` and `dot`) |
-| clamp         | `clamp()` |
+| `subtract`    | `subract()` |
+| `scale`       | `scale()` |
+| `length`      | `length()` |
+| `normalize`   | `normalize()` (also enables `length`) |
+| `dot`         | `dot()` |
+| `distance`    | `distance()` |
+| `angle`       | `angle()` (also enables `length` and `dot`) |
+| `clamp`       | `clamp()` |
 
 #### General Options:
 
@@ -116,7 +117,7 @@ General options do not have a parent source and are passed as siblings to the ot
 
 | Name          | Functionality Enabled |
 | ------------- | ------------- |
-| debug         | Turn on debugging information |
+| `debug`       | Turn on debugging information |
 
 @section Custom Builds
 @page custom-builds

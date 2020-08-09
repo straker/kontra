@@ -4,8 +4,8 @@ Kontra is written for modern ES6 capable browsers. If you need to run it in an E
 
 ## Download
 
-- Global object [production](https://raw.githubusercontent.com/straker/kontra/master/kontra.min.js) and [development](https://raw.githubusercontent.com/straker/kontra/master/kontra.js) versions
-- ES module [production](https://raw.githubusercontent.com/straker/kontra/master/kontra.min.mjs) and [development](https://raw.githubusercontent.com/straker/kontra/master/kontra.mjs) versions
+- Global object [production](https://unpkg.com/kontra@latest/kontra.min.js) and [development](https://unpkg.com/kontra@latest/kontra.js) versions
+- ES module [production](https://unpkg.com/kontra@latest/kontra.min.mjs) and [development](https://unpkg.com/kontra@latest/kontra.mjs) versions
 - `$ npm install kontra`
 
 ## Load

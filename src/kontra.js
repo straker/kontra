@@ -16,7 +16,7 @@ export { init, getCanvas, getContext } from './core.js';
 export { on, off, emit } from './events.js';
 export { default as GameLoop } from './gameLoop.js';
 export { default as GameObject } from './gameObject.js';
-export { default as GridManager } from './gridManager.js';
+export { default as Grid } from './grid.js';
 export {
   degToRad,
   radToDeg,
@@ -34,7 +34,7 @@ export { keyMap, initKeys, bindKeys, unbindKeys, keyPressed } from './keyboard.j
 export { registerPlugin, unregisterPlugin, extendObject } from './plugin.js';
 export {
   initPointer,
-  pointer,
+  getPointer,
   track,
   untrack,
   pointerOver,

@@ -23,11 +23,11 @@ import { rotateAroundPoint } from './helpers.js';
  * @param {Number} [properties.ttl=Infinity] - How many frames the game object should be alive. Used by [Pool](api/pool).
  *
  * @param {{x: number, y: number}} [properties.anchor={x:0,y:0}] - The x and y origin of the game object. {x:0, y:0} is the top left corner of the game object, {x:1, y:1} is the bottom right corner.
- * @param {Number} [properties.sx=1] - The x camera position.
- * @param {Number} [properties.sy=1] - The y camera position.
- * @param {GameObject[]} [properties.children] - Children to add to the game object. Children added this way have their x/y position treated as relative to the parents x/y position.
+ * @param {Number} [properties.sx=0] - The x camera position.
+ * @param {Number} [properties.sy=0] - The y camera position.
+ * @param {GameObject[]} [properties.children] - Children to add to the game object.
  * @param {Number} [properties.opacity=1] - The opacity of the game object.
- * @param {Number} [properties.rotation=0] - The rotation around the origin in radians.
+ * @param {Number} [properties.rotation=0] - The rotation around the anchor in radians.
  * @param {Number} [properties.scaleX=1] - The x scale of the game object.
  * @param {Number} [properties.scaleY=1] - The y scale of the game object.
  *
@@ -48,33 +48,34 @@ class GameObject extends Updatable {
    *
    * @param {Object} properties - Properties of the game object.
    */
-  init(properties = {}) {
+  init({
 
     // --------------------------------------------------
     // defaults
     // --------------------------------------------------
 
     /**
-     * The width of the game object. Does not take into account the
-     * objects scale.
+     * The width of the game object. Does not take into account the objects scale.
      * @memberof GameObject
      * @property {Number} width
      */
+    width = 0,
 
     /**
-     * The height of the game object. Does not take into account the
-     * objects scale.
+     * The height of the game object. Does not take into account the objects scale.
      * @memberof GameObject
      * @property {Number} height
      */
-    this.width = this.height = 0;
+    height = 0,
 
     /**
      * The context the game object will draw to.
      * @memberof GameObject
      * @property {CanvasRenderingContext2D} context
      */
-    this.context = getContext();
+    context = getContext(),
+
+    render = this.draw,
 
     // --------------------------------------------------
     // optionals
@@ -92,7 +93,7 @@ class GameObject extends Updatable {
      * @memberof GameObject
      * @property {GameObject[]} children
      */
-    this.children = [];
+    children = [],
     // @endif
 
     // @ifdef GAMEOBJECT_ANCHOR
@@ -144,7 +145,7 @@ class GameObject extends Updatable {
      * gameObject.render();
      * drawOrigin(gameObject);
      */
-    this.anchor = {x: 0, y: 0};
+    anchor = {x: 0, y: 0},
     // @endif
 
     // @ifdef GAMEOBJECT_CAMERA
@@ -153,59 +154,72 @@ class GameObject extends Updatable {
      * @memberof GameObject
      * @property {Number} sx
      */
+    sx = 0,
 
     /**
      * The Y coordinate of the camera.
      * @memberof GameObject
      * @property {Number} sy
      */
-    this.sx = this.sy = 0;
+    sy = 0,
     // @endif
 
     // @ifdef GAMEOBJECT_OPACITY
     /**
-     * The opacity of the object. Does not take into account opacity
-     * from any parent objects.
+     * The opacity of the object. Does not take into account opacity from any parent objects.
      * @memberof GameObject
      * @property {Number} opacity
      */
-    this.opacity = 1;
+    opacity = 1,
     // @endif
 
     // @ifdef GAMEOBJECT_ROTATION
     /**
-     * The rotation of the game object around the origin in radians.
+     * The rotation of the game object around the anchor in radians. Does not take into account rotation from any parent objects.
      * @memberof GameObject
      * @property {Number} rotation
      */
-    this.rotation = 0;
+    rotation = 0,
     // @endif
 
     // @ifdef GAMEOBJECT_SCALE
     /**
-     * The x scale of the object.
+     * The x scale of the object. Does not take into account scale from any parent objects.
      * @memberof GameObject
      * @property {Number} scaleX
      */
+    scaleX = 1,
 
     /**
-     * The y scale of the object.
+     * The y scale of the object. Does not take into account scale from any parent objects.
      * @memberof GameObject
      * @property {Number} scaleY
      */
-    this.scaleX = this.scaleY = 1;
+    scaleY = 1,
     // @endif
 
-    let {
-      render,
+    ...props
+  } = {}) {
+    this.children = [];
 
-      // @ifdef GAMEOBJECT_GROUP
-      children = [],
-      // @endif
-
+    // by setting defaults to the parameters and passing them into
+    // the init, we can ensure that a parent class can set overriding
+    // defaults and the GameObject won't undo it (if we set
+    // `this.width` then no parent could provide a default value for
+    // width)
+    super.init({
+      width,
+      height,
+      context,
+      anchor,
+      sx,
+      sy,
+      opacity,
+      rotation,
+      scaleX,
+      scaleY,
       ...props
-    } = properties;
-    super.init(props);
+    });
 
     // di = done init
     this._di = true;
@@ -216,7 +230,7 @@ class GameObject extends Updatable {
     // @endif
 
     // rf = render function
-    this._rf = render || this.draw;
+    this._rf = render;
   }
 
   /**
@@ -224,7 +238,7 @@ class GameObject extends Updatable {
    * @memberof GameObject
    * @function render
    *
-   * @param {Function} [filterObjects] - Function to filter which children to render.
+   * @param {Function} [filterObjects] - [Array.prototype.filter()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter) function which is used to filter which children to render.
    */
   render(filterObjects) {
     let context = this.context;
@@ -273,9 +287,8 @@ class GameObject extends Updatable {
     // @ifdef GAMEOBJECT_ANCHOR
     // 5) translate to the anchor so (0,0) is the top left corner
     // for the render function
-    let { x, y } = this.anchor;
-    let anchorX = -this.width * x;
-    let anchorY = -this.height * y;
+    let anchorX = -this.width * this.anchor.x;
+    let anchorY = -this.height * this.anchor.y;
 
     if (anchorX || anchorY) {
       context.translate(anchorX, anchorY);
@@ -359,7 +372,6 @@ class GameObject extends Updatable {
    * X coordinate of the position vector.
    * @memberof GameObject
    * @property {Number} x
-   * @page GameObject
    */
   get x() {
     return this.position.x;
@@ -369,7 +381,6 @@ class GameObject extends Updatable {
    * Y coordinate of the position vector.
    * @memberof GameObject
    * @property {Number} y
-   * @page GameObject
    */
   get y() {
     return this.position.y;
@@ -377,6 +388,8 @@ class GameObject extends Updatable {
 
   set x(value) {
     this.position.x = value;
+
+    // pc = property changed
     this._pc();
   }
 
@@ -451,6 +464,11 @@ class GameObject extends Updatable {
     // @endif
   }
 
+  /**
+   * The world position, width, height, opacity, rotation, and scale. The world property is the true position, width, height, etc. of the object, taking into account all parents.
+   * @memberof GameObject
+   * @property {{x: number, y: number, width: number, height: number, opacity: number, rotation: number, scaleX, number, scaleY: number}} world
+   */
   get world() {
     return {
       x: this._wx,
@@ -479,17 +497,11 @@ class GameObject extends Updatable {
 
   // @ifdef GAMEOBJECT_GROUP
   /**
-   * Add an object as a child to this object. The child objects position and rotation will be calculated based on this objects position and rotation.
-   *
-   * By default the childs x/y position is interpreted to be relative to the x/y position of the parent. This means that if the childs position is {x: 0, y: 0}, the position will be updated to equal to the parents x/y position when added.
-   *
-   * If instead the position should not be updated based on the parents x/y position, set the `absolute` option to `true`.
+   * Add an object as a child to this object. The childs [world](/api/gameObject#world) property will be updated to take into account this object and all of its parents.
    * @memberof GameObject
    * @function addChild
    *
    * @param {GameObject} child - Object to add as a child.
-   * @param {Object} [options] - Options for adding the child.
-   * @param {Boolean} [options.absolute=false] - If set the true, the x/y position of the child is treated as an absolute position in the world rather than being relative to the x/y position of the parent.
    *
    * @example
    * // exclude-code:start
@@ -518,11 +530,9 @@ class GameObject extends Updatable {
    * }
    *
    * let parent = createObject(300, 100, 'red');
-   * let relativeChild = createObject(25, 25, '#62a2f9', 2);
-   * let absoluteChild = createObject(25, 25, 'yellow', 2);
+   * let child = createObject(25, 25, 'yellow', 2);
    *
-   * parent.addChild(relativeChild);
-   * parent.addChild(absoluteChild, {absolute: true});
+   * parent.addChild(child);
    *
    * parent.render();
    */
@@ -533,7 +543,7 @@ class GameObject extends Updatable {
   }
 
   /**
-   * Remove an object as a child of this object. The removed objects position and rotation will no longer be calculated based off this objects position and rotation.
+   * Remove an object as a child of this object. The removed objects [world](/api/gameObject#world) property will be updated to not take into account this object and all of its parents.
    * @memberof GameObject
    * @function removeChild
    *

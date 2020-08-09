@@ -1,95 +1,105 @@
 import Sprite from './sprite.js';
 import Text from './text.js';
 import { track } from './pointer.js';
-import { srOnlyStyle, noop } from './utils.js';
+import { srOnlyStyle, noop, addToDom } from './utils.js';
 
+/**
+ * An accessible button. Supports screen readers and keyboard navigation using the <kbd>Tab</kbd> key. Be sure to call [initPointer](/api/pointer#initPointer) to have pointer events enabled for the button. The button is automatically [tracked](/api/pointer#track) by the pointer and accepts all pointer functions.
+ * @class Button
+ * @extends Sprite
+ *
+ * @param {Object} [properties] - Properties of the button (in addition to all Sprite properties).
+ * @param {Object} [properties.text] - Properties of [Text](/api/text) which are used to create the [textNode](/api/button#textNode).
+ * @param {Number} [properties.padX=0] - The horizontal padding.
+ * @param {Number} [properties.padY=0] - The vertical padding.
+ * @param {Function} [properties.onEnable] - Function called when the button is enabled.
+ * @param {Function} [properties.onDisable] - Function called when the button is disabled.
+ * @param {Function} [properties.onFocus] - Function called when the button is focused either by the pointer or keyboard.
+ * @param {Function} [properties.onBlur] - Function called when the button losses focus either by the pointer or keyboard.
+ */
 class Button extends Sprite.class {
-
   /**
-   * An accessible button. Supports screen readers and keyboard navigation using the Tab key. Don't forget to call [initPointer](/api/pointer#initPointer) to have pointer events enabled for the button.
-   *
-   * ```js
-   * import { initPointer, Button } from 'kontra';
-   * initPointer();
-   *
-   * button = Button({
-   *   x: 200,
-   *   y: 200,
-   *   text: 'Click me',
-   *   color: 'white',
-   *   font: '20px Arial',
-   *   onFocus() {
-   *     this.color = 'red';
-   *     canvas.style.cursor = 'pointer';
-   *   },
-   *   onBlur() {
-   *     this.color = 'white';
-   *     canvas.style.cursor = 'initial';
-   *   },
-   *   onDown() {
-   *     this.color = 'blue';
-   *   },
-   *   onUp() {
-   *     this.color = this.focused ? 'red' : 'white';
-   *     console.log('click');
-   *   }
-   * });
-   *
-   * button.render();
-   * ```
-   *
-   * @class Button
-   * @extends Text
-   *
-   * @param {Object} properties - Properties of the button (in addition to all Text properties).
-   * @param {Function} [properties.onEnable] - Function called when the button is enabled.
-   * @param {Function} [properties.onDisable] - Function called when the button is disabled.
-   * @param {Function} [properties.onFocus] - Function called when the button is focused either by the pointer or keyboard.
-   * @param {Function} [properties.onBlur] - Function called when the button losses focus either by the pointer or keyboard.
-   * @param {Function} [properties.onUp] - Function called when the button is clicked either by the pointer or keyboard.
+   * @docs docs/api_docs/button.js
    */
-  init(properties) {
-    let { text, onDown, onUp, ...props } = properties;
 
-    this.padX = this.padY = 0;
+  init({
+    /**
+     * The horizontal padding. This will be added to the width to give the final width of the button.
+     * @memberof Button
+     * @property {Number} padX
+     */
+    padX = 0,
 
-    super.init(props);
-    track(this);
+    /**
+     * The vertical padding. This will be added to the height to give the final height of the button.
+     * @memberof Button
+     * @property {Number} padY
+     */
+    padY = 0,
 
-    this._od = onDown || noop;
-    this._ou = onUp || noop;
+    text,
+    onDown,
+    onUp,
+    ...props
+  } = {}) {
+    super.init({
+      padX,
+      padY,
+      ...props
+    });
 
-    this.textNode = Text(text);
-    this.textNode._p();
-    this.addChild(this.textNode);
+    /**
+     * Each Button creates a Text object and adds it as a child. The `text` of the Text object is used as the accessible name of the HTMLButtonElement.
+     * @memberof Button
+     * @property {Text} textNode
+     */
+    this.textNode = Text({
+      ...text,
 
-    // set width and height of button to text unless user set them
+      // ensure the text uses the same context as the button
+      context: this.context
+    });
 
-    // how to sync text width/height to button width/height?
-    if (properties.width == undefined) {
+    // if the user didn't set a width/height or use an image
+    // default to the textNode dimensions
+    if (!this.width) {
       this.width = this.textNode.width;
-    }
-    if (properties.height == undefined) {
       this.height = this.textNode.height;
     }
-    this._uw();
+
+    track(this);
+    this.addChild(this.textNode);
+
+    // od = on down
+    this._od = onDown || noop;
+
+    // ou = on up
+    this._ou = onUp || noop;
 
     // create an accessible DOM node for screen readers
     // dn = dom node
     const button = this._dn = document.createElement('button');
     button.style = srOnlyStyle;
+    button.setAttribute('data-kontra', '');
     button.textContent = this.text;
 
-    // allow the DOM node to control the button
+    // sync events between the button element and the class
     button.addEventListener('focus', () => this.focus());
     button.addEventListener('blur', () => this.blur());
     button.addEventListener('keydown', (evt) => this._kd(evt));
-    button.addEventListener('keyup', () => this.onUp());
+    button.addEventListener('keyup', (evt) => this._ku(evt));
 
-    document.body.appendChild(button);
+    addToDom(button, this.context.canvas);
+
+    this._uw();
     this._p();
   }
 
+  /**
+   * The text property of the Text object.
+   * @memberof Button
+   * @property {String} text
+   */
   get text() {
     return this.textNode.text;
   }
@@ -101,12 +111,13 @@ class Button extends Sprite.class {
   }
 
   /**
-   * Clean up the button.
+   * Clean up the button by removing the HTMLButtonElement from the DOM.
    * @memberof Button
    * @function destroy
    */
   destroy() {
     this._dn.remove();
+    this.children.map(child => child.destroy && child.destroy());
   }
 
   _p() {
@@ -118,8 +129,12 @@ class Button extends Sprite.class {
     // update width and height (need to prerender the button
     // first)
     this.textNode._p();
-    this.width = this.textNode.width + this.padX * 2;
-    this.height = this.textNode.height + this.padY * 2;
+
+    let width = this.textNode.width + this.padX * 2;
+    let height = this.textNode.height + this.padY * 2;
+
+    this.width = Math.max(width, this.width);
+    this.height = Math.max(height, this.height);
     this._uw();
   }
 
@@ -148,7 +163,7 @@ class Button extends Sprite.class {
   }
 
   /**
-   * Disable the button. Calls [onDisable](/api/button#onDisable) if passed.
+   * Disable the button. A disabled button will not render nor respond to button or pointer events. Calls [onDisable](/api/button#onDisable) if passed.
    * @memberof Button
    * @function disable
    */
@@ -158,7 +173,7 @@ class Button extends Sprite.class {
   }
 
   /**
-   * Focus the button. Calls [onFocus](/api/button#onFOcus) if passed.
+   * Focus the button. Calls [onFocus](/api/button#onFocus) if passed.
    * @memberof Button
    * @function focus
    */
@@ -260,6 +275,14 @@ class Button extends Sprite.class {
     // activate button on enter or space
     if (evt.code == 'Enter' || evt.code == 'Space') {
       this.onDown();
+    }
+  }
+
+  // kd = keydown
+  _ku(evt) {
+    // activate button on enter or space
+    if (evt.code == 'Enter' || evt.code == 'Space') {
+      this.onUp();
     }
   }
 }

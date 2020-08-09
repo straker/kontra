@@ -1,13 +1,13 @@
 import { noop } from './utils.js';
 import { emit } from './events.js';
-import { getContext, getCanvas } from './core.js';
+import { getContext } from './core.js';
 
 /**
  * Clear the canvas.
  */
-function clear() {
-  let canvas = getCanvas();
-  getContext().clearRect(0, 0, canvas.width, canvas.height);
+function clear(context) {
+  let canvas = context.canvas;
+  context.clearRect(0, 0, canvas.width, canvas.height);
 }
 
 /**
@@ -15,7 +15,7 @@ function clear() {
  *
  * The game loop uses a time-based animation with a fixed `dt` to [avoid frame rate issues](http://blog.sklambert.com/using-time-based-animation-implement/). Each update call is guaranteed to equal 1/60 of a second.
  *
- * This means that you can avoid having to do time based calculations in your update functions  and instead do fixed updates.
+ * This means that you can avoid having to do time based calculations in your update functions and instead do fixed updates.
  *
  * ```js
  * import { Sprite, GameLoop } from 'kontra';
@@ -47,17 +47,24 @@ function clear() {
  * ```
  * @class GameLoop
  *
- * @param {Object}   properties - Properties of the game loop.
- * @param {(dt?: Number) => void} properties.update - Function called every frame to update the game. Is passed the fixed `dt` as a parameter.
+ * @param {Object} properties - Properties of the game loop.
+ * @param {(dt?: Number) => void} [properties.update] - Function called every frame to update the game. Is passed the fixed `dt` as a parameter.
  * @param {Function} properties.render - Function called every frame to render the game.
  * @param {Number}   [properties.fps=60] - Desired frame rate.
  * @param {Boolean}  [properties.clearCanvas=true] - Clear the canvas every frame before the `render()` function is called.
+ * @param {CanvasRenderingContext2D} [properties.context] - The context that should be cleared each frame if `clearContext=true`. Defaults to [core.getContext()](api/core#getContext).
  */
-export default function GameLoop({fps = 60, clearCanvas = true, update, render} = {}) {
+export default function GameLoop({
+  fps = 60,
+  clearCanvas = true,
+  update = noop,
+  render,
+  context = getContext()
+} = {}) {
   // check for required functions
   // @ifdef DEBUG
-  if ( !(update && render) ) {
-    throw Error('You must provide update() and render() functions');
+  if (!render) {
+    throw Error('You must provide a render() function');
   }
   // @endif
 
@@ -93,7 +100,7 @@ export default function GameLoop({fps = 60, clearCanvas = true, update, render} 
       accumulator -= delta;
     }
 
-    clearFn();
+    clearFn(context);
     loop.render();
   }
 

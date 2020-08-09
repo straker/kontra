@@ -63,13 +63,9 @@ import { getWorldRect } from './utils.js';
 // the finalized order of all objects, otherwise an object could ask
 // if it's being hovered when it's rendered first even if other objects
 // would block it later in the render order
-let thisFrameRenderOrder = [];
-let lastFrameRenderOrder = [];
-
+let pointers = new WeakMap();
 let callbacks = {};
-let trackedObjects = [];
 let pressedButtons = {};
-let overObject;
 
 /**
  * Below is a list of buttons that you can use.
@@ -84,22 +80,22 @@ let buttonMap = {
 };
 
 /**
- * Object containing the `radius` and current `x` and `y` position of the pointer relative to the top-left corner of the canvas.
+ * Get the pointer object which contains the `radius` and current `x` and `y` position of the pointer relative to the top-left corner of the canvas.
  *
  * ```js
- * import { initPointer, pointer } from 'kontra';
+ * import { initPointer, getPointer } from 'kontra';
  *
  * initPointer();
  *
- * console.log(pointer);  //=> { x: 100, y: 200, radius: 5 };
+ * console.log(getPointer());  //=> { x: 100, y: 200, radius: 5 };
  * ```
- * @property {{x: Number, y: Number, radius: Number}} pointer
+ *
+ * @function getPointer
+ * @returns {{x: Number, y: Number, radius: Number}} pointer
  */
-export let pointer = {
-  x: 0,
-  y: 0,
-  radius: 5  // arbitrary size
-};
+export function getPointer(canvas = getCanvas()) {
+  return pointers.get(canvas);
+}
 
 /**
  * Detection collision between a rectangle and a circlevt.
@@ -107,36 +103,34 @@ export let pointer = {
  *
  * @param {Object} object - Object to check collision against.
  */
-function circleRectCollision(object, pntr = pointer) {
+function circleRectCollision(object, pointer) {
   let { x, y, width, height } = getWorldRect(object);
 
-  let dx = pntr.x - Math.max(x, Math.min(pntr.x, x + width));
-  let dy = pntr.y - Math.max(y, Math.min(pntr.y, y + height));
-  return (dx * dx + dy * dy) < (pntr.radius * pntr.radius);
+  let dx = pointer.x - Math.max(x, Math.min(pointer.x, x + width));
+  let dy = pointer.y - Math.max(y, Math.min(pointer.y, y + height));
+  return (dx * dx + dy * dy) < (pointer.radius * pointer.radius);
 }
 
 /**
  * Get the first on top object that the pointer collides with.
  *
+ * @param {Object} pointer - The pointer object
+ *
  * @returns {Object} First object to collide with the pointer.
  */
-function getCurrentObject(pntr = pointer) {
+function getCurrentObject(pointer) {
 
-  // if pointer events are required on the very first frame or without a game
-  // loop, use the current frame order array
-  let frameOrder = (lastFrameRenderOrder.length ? lastFrameRenderOrder : thisFrameRenderOrder);
-  let length = frameOrder.length - 1;
-  let object, collides;
+  // if pointer events are required on the very first frame or
+  // without a game loop, use the current frame
+  let renderedObjects = pointer._lf.length ?
+    pointer._lf :
+    pointer._cf;
 
-  for (let i = length; i >= 0; i--) {
-    object = frameOrder[i];
-
-    if (object.collidesWithPointer) {
-      collides = object.collidesWithPointer(pntr);
-    }
-    else {
-      collides = circleRectCollision(object, pntr);
-    }
+  for (let i = renderedObjects.length - 1; i >= 0; i--) {
+    let object = renderedObjects[i];
+    let collides = object.collidesWithPointer ?
+      collides = object.collidesWithPointer(pointer) :
+      circleRectCollision(object, pointer);
 
     if (collides) {
       return object;
@@ -179,10 +173,13 @@ function mouseMoveHandler(evt) {
 
 /**
  * Reset pressed buttons.
+ *
+ * @param {MouseEvent|TouchEvent} evt
  */
-function blurEventHandler() {
+function blurEventHandler(evt) {
+  let pointer = pointers.get(evt.target);
+  pointer._oo = null;
   pressedButtons = {};
-  overObject = null;
 }
 
 /**
@@ -192,15 +189,16 @@ function blurEventHandler() {
  * @param {string} eventName - Which event was called.
  */
 function pointerHandler(evt, eventName) {
-  let canvas = getCanvas();
+  evt.preventDefault();
 
-  if (!canvas) return;
+  let canvas = evt.target;
+  let pointer = pointers.get(canvas);
 
-  let clientX, clientY;
   let ratio = canvas.height / canvas.offsetHeight;
   let rect = canvas.getBoundingClientRect();
 
   let isTouchEvent = ['touchstart', 'touchmove', 'touchend'].indexOf(evt.type) !== -1;
+
   if (isTouchEvent) {
     // Update pointer.touches
     pointer.touches = {};
@@ -219,17 +217,13 @@ function pointerHandler(evt, eventName) {
         pointer.touches[id].changed = true;
       }
 
-      clientX = evt.changedTouches[i].clientX; // Save for later
-      clientY = evt.changedTouches[i].clientY;
+      let clientX = evt.changedTouches[i].clientX;
+      let clientY = evt.changedTouches[i].clientY;
+      pointer.x = (clientX - rect.left) * ratio;
+      pointer.y = (clientY - rect.top) * ratio;
 
       // Trigger events
-      let object = getCurrentObject({
-        id,
-        x: (clientX - rect.left) * ratio,
-        y: (clientY - rect.top) * ratio,
-        radius: pointer.radius // only for collision
-      });
-
+      let object = getCurrentObject(pointer);
       if (object && object[eventName]) {
         object[eventName](evt);
       }
@@ -239,17 +233,10 @@ function pointerHandler(evt, eventName) {
       }
     }
   } else {
-    clientX = evt.clientX;
-    clientY = evt.clientY;
-  }
+    pointer.x = (evt.clientX - rect.left) * ratio;
+    pointer.y = (evt.clientY - rect.top) * ratio;
 
-  pointer.x = (clientX - rect.left) * ratio;
-  pointer.y = (clientY - rect.top) * ratio;
-
-  evt.preventDefault();
-
-  if (!isTouchEvent) { // Prevent double touch event
-    let object = getCurrentObject();
+    let object = getCurrentObject(pointer);
     if (object && object[eventName]) {
       object[eventName](evt);
     }
@@ -260,11 +247,11 @@ function pointerHandler(evt, eventName) {
 
     // handle onOut events
     if (eventName == 'onOver') {
-      if (object != overObject && overObject && overObject.onOut) {
-        overObject.onOut(evt);
+      if (object != pointer._oo && pointer._oo && pointer._oo.onOut) {
+        pointer._oo.onOut(evt);
       }
 
-      overObject = object;
+      pointer._oo = object;
     }
   }
 }
@@ -272,10 +259,26 @@ function pointerHandler(evt, eventName) {
 /**
  * Initialize pointer event listeners. This function must be called before using other pointer functions.
  * @function initPointer
+ *
+ * @param {CanvasRenderingContext2D} [canvas] - The canvas that event listeners will be attached to. Defaults to [core.getCanvas()](api/core#getCanvas).
  */
-let tickAdded = false;
-export function initPointer() {
-  let canvas = getCanvas();
+export function initPointer(canvas = getCanvas()) {
+  let pointer = pointers.get(canvas);
+  if (!pointer) {
+    pointer = {
+      x: 0,
+      y: 0,
+      radius: 5, // arbitrary size
+
+      // cf = current frame, lf = last frame, o = objects,
+      // oo = over object
+      _cf: [],
+      _lf: [],
+      _o: [],
+      _oo: null
+    };
+    pointers.set(canvas, pointer);
+  }
 
   // if this function is called multiple times, the same event
   // won't be added multiple times
@@ -291,18 +294,18 @@ export function initPointer() {
 
   // however, the tick event should only be registered once
   // otherwise it completely destroys pointer events
-  if (!tickAdded) {
-    tickAdded = true;
+  if (!pointer._t) {
+    pointer._t = true;
 
     // reset object render order on every new frame
     on('tick', () => {
-      lastFrameRenderOrder.length = 0;
+      pointer._lf.length = 0;
 
-      thisFrameRenderOrder.map(object => {
-        lastFrameRenderOrder.push(object);
+      pointer._cf.map(object => {
+        pointer._lf.push(object);
       });
 
-      thisFrameRenderOrder.length = 0;
+      pointer._cf.length = 0;
     });
   }
 }
@@ -324,17 +327,20 @@ export function initPointer() {
  */
 export function track(...objects) {
   objects.map(object => {
+    let canvas = object.context ? object.context.canvas : getCanvas();
+    let pointer = pointers.get(canvas);
 
-    // override the objects render function to keep track of render order
+    // override the objects render function to keep track of render
+    // order
     if (!object._r) {
       object._r = object.render;
 
       object.render = function() {
-        thisFrameRenderOrder.push(this);
+        pointer._cf.push(this);
         this._r();
       };
 
-      trackedObjects.push(object);
+      pointer._o.push(object);
     }
   });
 }
@@ -354,16 +360,18 @@ export function track(...objects) {
  */
 export function untrack(...objects) {
   objects.map(object => {
+    let canvas = object.context ? object.context.canvas : getCanvas();
+    let pointer = pointers.get(canvas);
 
     // restore original render function to no longer track render order
     object.render = object._r;
     object._r = 0;  // 0 is the shortest falsy value
 
-    let index = trackedObjects.indexOf(object);
+    let index = pointer._o.indexOf(object);
     if (index !== -1) {
-      trackedObjects.splice(index, 1);
+      pointer._o.splice(index, 1);
     }
-  })
+  });
 }
 
 /**
@@ -405,9 +413,10 @@ export function untrack(...objects) {
  * @returns {Boolean} `true` if the pointer is currently over the object, `false` otherwise.
  */
 export function pointerOver(object) {
-  if (!trackedObjects.includes(object)) return false;
+  let canvas = object.context ? object.context.canvas : getCanvas();
+  let pointer = pointers.get(canvas);
 
-  return getCurrentObject() === object;
+  return pointer._o.includes(object) && getCurrentObject(pointer) === object;
 }
 
 /**

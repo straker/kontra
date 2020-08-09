@@ -8,9 +8,9 @@
       margin: 0;
     }
     canvas {
-      background: transparent;
+      background: #333;
     }
-    .score {
+    /*.score {
       position: absolute;
       top: 5px;
       left: 480px;
@@ -45,18 +45,54 @@
       font-family: Helvetica, sans-serif;
       font-size: 30px;
       cursor: default;
+    }*/
+
+    #progress {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      height: 320px;
+    }
+
+    #progress:before,
+    #progress:after {
+      content: '';
+      display: inline-block;
+      height: 100%;
+      vertical-align: middle;
+    }
+
+    .progress-wrapper {
+      display: inline-block;
+    }
+
+    #play {
+      visibility: hidden;
+      line-height: 24px;
+      margin-top: 5px;
+      padding: 0 10px;
+      border-radius: 5px;
+      outline: 0;
     }
   </style>
   <script type="text/javascript" src="../../kontra.js"></script>
+
 </head>
 <body>
-  <canvas id="game" width="600" height="360"></canvas>
-  <p>M - Mute</p>
-  <p>P - Pause</p>
+    <canvas id="game" width="600" height="360"></canvas>
+    <p>M - Mute</p>
+    <p>P - Pause</p>
 
-  <div class="score">SCORE: <span id="score">0</span></div>
+  <!-- <div class="score">SCORE: <span id="score">0</span></div>
   <div class="game-over" id="game-over">GAME OVER<p><span onclick="startGame()">Restart</span></p></div>
   <div class="loading" id="loading">LOADING...<p>Please wait</p></div>
-  <script src='js/galaxian.js'></script>
+   -->
+   <script>
+    // must init kontra before we can load modules
+    kontra.init();
+    kontra.initKeys();
+    kontra.initPointer();
+  </script>
+  <script src='js/index.js' type="module"></script>
 </body>
 </html>

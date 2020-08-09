@@ -4,10 +4,10 @@ Download the latest version of Kontra.
 
 ## Source Code
 
-- [Global object production version](https://raw.githubusercontent.com/straker/kontra/master/kontra.min.js)
-- [Global object development version](https://raw.githubusercontent.com/straker/kontra/master/kontra.js)
-- [ES Module production version](https://raw.githubusercontent.com/straker/kontra/master/kontra.min.mjs)
-- [ES Module development version](https://raw.githubusercontent.com/straker/kontra/master/kontra.mjs)
+- [Global object production version](https://unpkg.com/kontra@latest/kontra.min.js)
+- [Global object development version](https://unpkg.com/kontra@latest/kontra.js)
+- [ES Module production version](https://unpkg.com/kontra@latest/kontra.min.mjs)
+- [ES Module development version](https://unpkg.com/kontra@latest/kontra.mjs)
 - [TGZ file](https://registry.npmjs.org/kontra/-/kontra-__packageVersion__.tgz)
 - [Github repo](https://github.com/straker/kontra)
 

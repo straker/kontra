@@ -82,7 +82,7 @@ function parseFont(font) {
  */
 class Text extends GameObject.class {
 
-  init(properties) {
+  init({
 
     // --------------------------------------------------
     // defaults
@@ -93,28 +93,28 @@ class Text extends GameObject.class {
      * @memberof Text
      * @property {String} text
      */
-    this.text = '';
+    text = '',
 
     /**
      * The text alignment.
      * @memberof Text
      * @property {String} textAlign
      */
-    this.textAlign = '';
+    textAlign = '',
 
     /**
      * The distance between two lines of text. The value is multiplied by the texts font size.
      * @memberof Text
      * @property {Number} lineHeight
      */
-    this.lineHeight = 1;
+    lineHeight = 1,
 
    /**
     * The font style.
     * @memberof Text
     * @property {String} font
     */
-    this.font = getContext().font;
+    font = getContext().font,
 
     /**
      * The color of the text.
@@ -122,7 +122,15 @@ class Text extends GameObject.class {
      * @property {String} color
      */
 
-    super.init(properties);
+     ...props
+  } = {}) {
+    super.init({
+      text,
+      textAlign,
+      lineHeight,
+      font,
+      ...props
+    });
 
     // p = prerender
     this._p();

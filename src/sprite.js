@@ -15,8 +15,7 @@ class Sprite extends GameObject.class {
    * @docs docs/api_docs/sprite.js
    */
 
-  init(properties = {}) {
-
+  init({
     /**
      * The color of the game object if it was passed as an argument.
      * @memberof Sprite
@@ -41,15 +40,19 @@ class Sprite extends GameObject.class {
      * @memberof Sprite
      * @property {HTMLImageElement|HTMLCanvasElement} image
      */
-
-    let { image } = properties;
-    if (image) {
-      this.width = image.width;
-      this.height = image.height;
-    }
+    image,
+    width = image ? image.width : undefined,
+    height = image ? image.height : undefined,
     // @endif
 
-    return super.init(properties);
+    ...props
+  } = {}) {
+    super.init({
+      image,
+      width,
+      height,
+      ...props
+    });
   }
 
   // @ifdef SPRITE_ANIMATION

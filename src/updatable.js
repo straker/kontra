@@ -22,7 +22,7 @@ class Updatable {
     // --------------------------------------------------
 
     /**
-     * The game objects position vector. The game objects position is its position in the world, as opposed to the position in the [viewport](api/gameObject#viewX). Typically the position in the world and viewport are the same value. If the game object has been [added to a tileEngine](/api/tileEngine#addObject), the position vector represents where in the tile world the game object is while the viewport represents where to draw the game object in relation to the top-left corner of the canvas.
+     * The game objects position vector. Does not take into account position from any parent objects.
      * @memberof GameObject
      * @property {Vector} position
      * @page GameObject

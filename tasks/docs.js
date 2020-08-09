@@ -151,7 +151,7 @@ function parseType(type) {
     type = 'Function';
   }
   else if (type.startsWith('{')) {
-    type = 'Object';
+    type = type.replace(/\{.*?\}/, 'Object');
   }
   else if (type.startsWith('...')) {
     type = type.replace('...', 'A list of ');
@@ -475,5 +475,5 @@ function buildApi() {
 gulp.task('build:docs', gulp.series(buildApi, buildPages));
 
 gulp.task('watch:docs', function() {
-  gulp.watch(['src/*.js','docs/pages/*.js','docs/template/**/*.hbs'], gulp.series('build:docs'));
+  gulp.watch(['src/*.js','docs/pages/*.js','docs/api_docs/*.js','docs/template/**/*.hbs'], gulp.series('build:docs'));
 });

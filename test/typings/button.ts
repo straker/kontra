@@ -1,9 +1,14 @@
 import * as kontra from '../../kontra.js';
 
 let button: kontra.Button = kontra.Button({
-  text: 'Hello World!',
-  color: 'black',
-  font: '32px Arial'
+  padX: 0,
+  padY: 10,
+  text: {
+    text: 'Hello World!',
+    color: 'black',
+    font: '32px Arial',
+    align: {x: 0.5, y: 0.5}
+  },
 });
 
 let str: string = button.text;

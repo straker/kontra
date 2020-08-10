@@ -1,5 +1,6 @@
 import Scene from '../../src/scene.js';
-import { srOnlyStyle } from '../../src/utils.js'
+import { srOnlyStyle } from '../../src/utils.js';
+import { collides } from '../../src/helpers.js';
 
 // --------------------------------------------------
 // scene
@@ -25,9 +26,12 @@ describe('scene', () => {
     it('should setup basic properties', () => {
       expect(scene.id).to.equal('myId');
       expect(scene.name).to.equal('myId');
+      expect(scene.cullObjects).to.equal(true);
+      expect(scene.cullFunction).to.equal(collides);
     });
 
     it('should set all additional properties on the scene', () => {
+      scene.destroy();
       scene = Scene({
         foo: 'bar',
         alive: true
@@ -45,6 +49,10 @@ describe('scene', () => {
       expect(document.body.contains(scene._dn)).to.be.true;
     });
 
+    it('should add the scene as an immediate sibling to the canvas', () => {
+      expect(scene.context.canvas.nextSibling).to.equal(scene._dn);
+    });
+
     it('should hide the DOM node', () => {
       srOnlyStyle.split(';').forEach(style => {
         let parts = style.split(':');
@@ -54,6 +62,7 @@ describe('scene', () => {
 
     it('should allow children', () => {
       let child = {};
+      scene.destroy();
       scene = Scene({
         id: 'myId',
         children: [child]
@@ -63,16 +72,14 @@ describe('scene', () => {
       expect(scene.children[0]).to.equal(child);
     });
 
-    it('should add any children with DOM nodes to the scenes DOM node', () => {
-      let child = {
-        _dn: document.createElement('div')
-      };
-      scene = Scene({
-        id: 'myId',
-        children: [child]
-      });
-
-      expect(scene._dn.contains(child._dn));
+    it('should create the camera and center it', () => {
+      let canvas = scene.context.canvas;
+      expect(scene.camera).to.exist;
+      expect(scene.camera.x).to.equal(canvas.width / 2);
+      expect(scene.camera.y).to.equal(canvas.height / 2);
+      expect(scene.camera.width).to.equal(canvas.width);
+      expect(scene.camera.height).to.equal(canvas.height);
+      expect(scene.camera.anchor).to.deep.equal({x: 0.5, y: 0.5});
     });
 
   });
@@ -87,6 +94,7 @@ describe('scene', () => {
   describe('show', () => {
 
     it('should unset the hidden property', () => {
+      scene.hidden = true;
       scene.show();
 
       expect(scene.hidden).to.equal(false);
@@ -103,10 +111,7 @@ describe('scene', () => {
       let child = {
         focus: sinon.spy()
       };
-      scene = Scene({
-        id: 'myId',
-        children: [child]
-      });
+      scene.addChild(child);
       scene.show();
 
       expect(child.focus.called).to.be.true;
@@ -131,6 +136,7 @@ describe('scene', () => {
   describe('hide', () => {
 
     it('should set the hidden property', () => {
+      scene.hidden = false;
       scene.hide();
 
       expect(scene.hidden).to.equal(true);
@@ -155,6 +161,13 @@ describe('scene', () => {
   // --------------------------------------------------
   describe('addChild', () => {
 
+    it('should add the child', () => {
+      let child = {};
+      scene.addChild(child);
+
+      expect(scene.children.length).to.equal(1);
+    });
+
     it('should add any children with DOM nodes to the scenes DOM node', () => {
       let child = {
         _dn: document.createElement('div')
@@ -162,6 +175,42 @@ describe('scene', () => {
       scene.addChild(child);
 
       expect(scene._dn.contains(child._dn)).to.be.true;
+    });
+
+    it('should add DOM nodes of all descendants', () => {
+      let node1 = document.createElement('div');
+      let node2 = document.createElement('div');
+      let child = {
+        children: [{
+          children: [{
+            _dn: node1
+          }]
+        },
+        {
+          _dn: node2
+        }]
+      };
+      scene.addChild(child);
+
+      expect(scene._dn.contains(node1)).to.be.true;
+      expect(scene._dn.contains(node2)).to.be.true;
+    });
+
+    it('should not take DOM nodes from descendants who have a DOM parent', () => {
+      let node1 = document.createElement('div');
+      let node2 = document.createElement('div');
+      let child = {
+        children: [{
+          _dn: node1,
+          children: [{
+            _dn: node2
+          }]
+        }]
+      };
+      scene.addChild(child);
+
+      expect(scene._dn.contains(node1)).to.be.true;
+      expect(scene._dn.contains(node2)).to.be.false;
     });
 
   });
@@ -173,9 +222,17 @@ describe('scene', () => {
   // --------------------------------------------------
   // removeChild
   // --------------------------------------------------
-  describe('remove', () => {
+  describe('removeChild', () => {
 
-    it('should remove the DOM node from the scenes DOM node', () => {
+    it('should remove the child', () => {
+      let child = {};
+      scene.addChild(child);
+      scene.removeChild(child);
+
+      expect(scene.children.length).to.equal(0);
+    });
+
+    it('should remove any children with DOM nodes', () => {
       let child = {
         _dn: document.createElement('div')
       };
@@ -183,6 +240,48 @@ describe('scene', () => {
       scene.removeChild(child);
 
       expect(scene._dn.contains(child._dn)).to.be.false;
+      expect(document.body.contains(child._dn)).to.be.true;
+    });
+
+    it('should remove DOM nodes of all descendants', () => {
+      let node1 = document.createElement('div');
+      let node2 = document.createElement('div');
+      let child = {
+        children: [{
+          children: [{
+            _dn: node1
+          }]
+        },
+        {
+          _dn: node2
+        }]
+      };
+      scene.addChild(child);
+      scene.removeChild(child);
+
+      expect(scene._dn.contains(node1)).to.be.false;
+      expect(scene._dn.contains(node2)).to.be.false;
+    });
+
+    it('should not take DOM nodes from descendants who have a DOM parent', () => {
+      let node1 = document.createElement('div');
+      let node2 = document.createElement('div');
+      node1.appendChild(node2);
+
+      let child = {
+        children: [{
+          _dn: node1,
+          children: [{
+            _dn: node2
+          }]
+        }]
+      };
+      scene.addChild(child);
+      scene.removeChild(child);
+
+      expect(scene._dn.contains(node1)).to.be.false;
+      expect(scene._dn.contains(node2)).to.be.false;
+      expect(node1.contains(node2)).to.be.true;
     });
 
   });
@@ -227,7 +326,6 @@ describe('scene', () => {
       let child = {
         update: sinon.spy()
       };
-      console.log('hidden:', scene.hidden);
       scene.addChild(child);
       scene.update();
 
@@ -252,12 +350,41 @@ describe('scene', () => {
 
 
   // --------------------------------------------------
+  // lookAt
+  // --------------------------------------------------
+  describe('lookAt', () => {
+
+    it('should set the camera position to the object', () => {
+      scene.lookAt({x: 10, y: 10});
+
+      expect(scene.camera.x).to.equal(10);
+      expect(scene.camera.y).to.equal(10);
+    });
+
+    it('should take into account scale', () => {
+      scene.lookAt({x: 10, y: 10, scaleX: 2, scaleY: 2});
+
+      expect(scene.camera.x).to.equal(5);
+      expect(scene.camera.y).to.equal(5);
+    });
+
+  });
+
+
+
+
+
+  // --------------------------------------------------
   // render
   // --------------------------------------------------
   describe('render', () => {
 
     it('should call render on all children', () => {
       let child = {
+        x: 0,
+        y: 0,
+        width: 10,
+        height: 10,
         render: sinon.spy()
       };
       scene.addChild(child);
@@ -268,6 +395,10 @@ describe('scene', () => {
 
     it('should not call render on all children if scene is hidden', () => {
       let child = {
+        x: 0,
+        y: 0,
+        width: 10,
+        height: 10,
         render: sinon.spy()
       };
       scene.addChild(child);
@@ -275,6 +406,70 @@ describe('scene', () => {
       scene.render();
 
       expect(child.render.called).to.be.false;
+    });
+
+    it('should cull objects outside camera bounds', () => {
+      let child = {
+        x: -20,
+        y: 0,
+        width: 10,
+        height: 10,
+        render: sinon.spy()
+      };
+      scene.addChild(child);
+      scene.render();
+
+      expect(child.render.called).to.be.false;
+    });
+
+    it('should not cull objects if cullObjects is false', () => {
+      let child = {
+        x: -20,
+        y: 0,
+        width: 10,
+        height: 10,
+        render: sinon.spy()
+      };
+      scene.cullObjects = false;
+      scene.addChild(child);
+      scene.render();
+
+      expect(child.render.called).to.be.true;
+    });
+
+    it('should update the sx and sy of the scene', () => {
+      scene.lookAt({x: 10, y: 10});
+      scene.render();
+
+      expect(scene.sx).to.equal(-290);
+      expect(scene.sy).to.equal(-290);
+    });
+
+    it('should take into account the scene scale', () => {
+      scene.lookAt({x: 10, y: 10});
+      scene.setScale(2, 2);
+      scene.render();
+
+      expect(scene.sx).to.equal(-280);
+      expect(scene.sy).to.equal(-280);
+    });
+
+  });
+
+
+
+
+
+  // --------------------------------------------------
+  // camera world
+  // --------------------------------------------------
+  describe('camera world', () => {
+
+    it('should not change width/height based on scale', () => {
+      scene.setScale(2, 2);
+
+      expect(scene.camera.world.width).to.equal(600);
+      expect(scene.camera.world.height).to.equal(600);
     });
 
   });

@@ -125,7 +125,7 @@ describe('sprite with properties: ' + JSON.stringify(properties,null,4), () => {
           'walk': {
             width: 10,
             height: 20,
-            update: noop,
+            update: sinon.stub().callsFake(noop),
             clone: function() {
               return this;
             }
@@ -137,14 +137,33 @@ describe('sprite with properties: ' + JSON.stringify(properties,null,4), () => {
           y: 20,
           animations: animations
         });
-
-        sinon.stub(sprite.currentAnimation, 'update').callsFake(noop);
-
         sprite.update();
 
         expect(sprite.currentAnimation.update.called).to.be.true;
+      });
+    }
+    else {
+      it('should not update the animation', () => {
+        let animations = {
+          'walk': {
+            width: 10,
+            height: 20,
+            update: sinon.stub().callsFake(noop),
+            clone: function() {
+              return this;
+            }
+          }
+        };
 
-        sprite.currentAnimation.update.restore();
+        let sprite = Sprite({
+          x: 10,
+          y: 20,
+          animations: animations,
+          currentAnimation: animations.walk
+        });
+        sprite.update();
+
+        expect(sprite.currentAnimation.update.called).to.be.false;
       });
     }
   });
@@ -236,9 +255,9 @@ describe('sprite with properties: ' + JSON.stringify(properties,null,4), () => {
   // --------------------------------------------------
   // playAnimation
   // --------------------------------------------------
-  if (hasAnimation) {
-    describe('playAnimation', () => {
+  describe('playAnimation', () => {
 
+    if (hasAnimation) {
       it('should set the animation to play', () => {
         let animations = {
           'walk': {
@@ -291,8 +310,14 @@ describe('sprite with properties: ' + JSON.stringify(properties,null,4), () => {
 
         expect(animations.walk.reset.called).to.be.true;
       });
+    }
+    else {
+      it('should not have animation property', () => {
+        let sprite = Sprite();
+        expect(sprite.animations).to.not.exist;
+      });
+    }
 
-    });
-  }
+  });
 
 });

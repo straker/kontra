@@ -8,6 +8,8 @@ let targetSprite = kontra.Sprite({x: 10, y: 10});
 let angleToTargetXY: number = kontra.angleToTarget({x: 0, y: 0}, {x: 10, y: 10});
 let angleToTargetSprite = kontra.angleToTarget(sourceSprite, targetSprite);
 
+let point: {x: number, y: number} = kontra.rotatePoint({x: 0, y: 0}, Math.PI);
+
 let randInt: number = kontra.randInt(10, 20);
 
 let seed: Function = kontra.seedRand('kontra');

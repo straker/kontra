@@ -72,22 +72,22 @@ Options are passed by nesting the option with the parent source. For example, to
 
 | Name            | Functionality Enabled |
 | --------------- | ------------- |
-| `velocity`      | `velocity`, `dx`, `dy` |
 | `acceleration`  | `acceleration`, `ddx`, `ddy` |
-| `rotation`      | `rotation` |
-| `ttl`           | `ttl`, `isAlive` |
 | `anchor`        | `anchor` |
 | `camera`        | `sx`, `sy` |
 | `group`         | `children`, `parent`, `addChild`, `removeChild` |
-| `scale`         | `scale`, `setScale()` |
 | `opacity`       | `opacity` |
+| `rotation`      | `rotation` |
+| `scale`         | `scale`, `setScale()` |
+| `ttl`           | `ttl`, `isAlive` |
+| `velocity`      | `velocity`, `dx`, `dy` |
 
 #### `sprite` Options:
 
 | Name          | Functionality Enabled |
 | ------------- | ------------- |
-| `image`       | `image` |
 | `animation`   | `animations`, `playAnimation` |
+| `image`       | `image` |
 
 #### `text` Options:
 
@@ -95,21 +95,21 @@ Options are passed by nesting the option with the parent source. For example, to
 | ------------- | ------------- |
 | `autoNewline` | Setting a fixed with that automatically adds new lines to the text |
 | `newline`     | Support for new line characters (`\n`) in the text |
-| `textAlign`   | `textAlign` |
 | `rtl`         | Support for RTL languages |
+| `textAlign`   | `textAlign` |
 
 #### `vector` Options:
 
 | Name          | Functionality Enabled |
 | ------------- | ------------- |
-| `subtract`    | `subract()` |
-| `scale`       | `scale()` |
-| `length`      | `length()` |
-| `normalize`   | `normalize()` (also enables `length`) |
-| `dot`         | `dot()` |
-| `distance`    | `distance()` |
 | `angle`       | `angle()` (also enables `length` and `dot`) |
 | `clamp`       | `clamp()` |
+| `distance`    | `distance()` |
+| `dot`         | `dot()` |
+| `length`      | `length()` |
+| `normalize`   | `normalize()` (also enables `length`) |
+| `scale`       | `scale()` |
+| `subtract`    | `subract()` |
 
 #### General Options:
 

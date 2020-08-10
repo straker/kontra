@@ -12,8 +12,10 @@ sinon.spy(testText.context, 'fillText');
 
 let hasNewline = testText._s.length === 2;
 
-testText.width = 1000;
-let hasAutoNewline = testText.hasOwnProperty('_fw');
+testText.text = 'Hello World'
+testText.width = 20;
+testText._p();
+let hasAutoNewline = testText._s.length === 2;
 
 testText.context.canvas.dir = 'rtl';
 testText.render(0, 0);
@@ -157,6 +159,17 @@ describe('text with properties: ' + JSON.stringify(properties,null,4), () => {
         expect(text.height).to.be.above(32);
       });
     }
+    else {
+      it('should not calculate new lines', () => {
+        let text = Text({
+          text: 'Hello\nWorld',
+          font: '32px Arial',
+          color: 'black'
+        });
+
+        expect(text._s.length).to.equal(1);
+      });
+    }
 
     if (hasAutoNewline) {
       it('should calculate new lines when the width is set', function() {
@@ -180,6 +193,18 @@ describe('text with properties: ' + JSON.stringify(properties,null,4), () => {
         });
 
         expect(text.height).to.be.above(32);
+      });
+    }
+    else {
+      it('should not calculate auto new lines', () => {
+        let text = Text({
+          text: 'Hello World',
+          font: '32px Arial',
+          color: 'black',
+          width: 50
+        });
+
+        expect(text._s.length).to.equal(1);
       });
     }
 

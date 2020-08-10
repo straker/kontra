@@ -22,18 +22,6 @@ class Sprite extends GameObject.class {
      * @property {String} color
      */
 
-    /**
-     * The width of the sprite. If the sprite is a [rectangle sprite](api/sprite#rectangle-sprite), it uses the passed in value. For an [image sprite](api/sprite#image-sprite) it is the width of the image. And for an [animation sprite](api/sprite#animation-sprite) it is the width of a single frame of the animation.
-     * @memberof Sprite
-     * @property {Number} width
-     */
-
-    /**
-     * The height of the sprite. If the sprite is a [rectangle sprite](api/sprite#rectangle-sprite), it uses the passed in value. For an [image sprite](api/sprite#image-sprite) it is the height of the image. And for an [animation sprite](api/sprite#animation-sprite) it is the height of a single frame of the animation.
-     * @memberof Sprite
-     * @property {Number} height
-     */
-
     // @ifdef SPRITE_IMAGE
     /**
      * The image the sprite will use when drawn if passed as an argument.
@@ -41,16 +29,30 @@ class Sprite extends GameObject.class {
      * @property {HTMLImageElement|HTMLCanvasElement} image
      */
     image,
+
+    /**
+     * The width of the sprite. If the sprite is a [rectangle sprite](api/sprite#rectangle-sprite), it uses the passed in value. For an [image sprite](api/sprite#image-sprite) it is the width of the image. And for an [animation sprite](api/sprite#animation-sprite) it is the width of a single frame of the animation.
+     * @memberof Sprite
+     * @property {Number} width
+     */
     width = image ? image.width : undefined,
+
+    /**
+     * The height of the sprite. If the sprite is a [rectangle sprite](api/sprite#rectangle-sprite), it uses the passed in value. For an [image sprite](api/sprite#image-sprite) it is the height of the image. And for an [animation sprite](api/sprite#animation-sprite) it is the height of a single frame of the animation.
+     * @memberof Sprite
+     * @property {Number} height
+     */
     height = image ? image.height : undefined,
     // @endif
 
     ...props
   } = {}) {
     super.init({
+      // @ifdef SPRITE_IMAGE
       image,
       width,
       height,
+      // @endif
       ...props
     });
   }

@@ -78,11 +78,17 @@ export function angleToTarget(source, target) {
 }
 
 /**
+ * Rotate a point by an angle.
+ * @function rotatePoint
  *
+ * @param {{x: Number, y: Number}} point - The point to rotate.
+ * @param {Number} angle - Angle (in radians) to rotate.
+ *
+ * @returns {{x: Number, y: Number}} The new x and y coordinates after rotation.
  */
-export function rotateAroundPoint(point, rad) {
-  let sin = Math.sin(rad);
-  let cos = Math.cos(rad);
+export function rotatePoint(point, angle) {
+  let sin = Math.sin(angle);
+  let cos = Math.cos(angle);
   let x = point.x * cos - point.y * sin;
   let y = point.x * sin + point.y * cos;
 

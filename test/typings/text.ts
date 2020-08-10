@@ -13,6 +13,7 @@ let textAlign: string = text.textAlign;
 let width: number = text.width;
 let height: number = text.height;
 let lineHeight: number = text.lineHeight;
+let dir: string = text.dir;
 
 // inheritance
 text.x += 20;

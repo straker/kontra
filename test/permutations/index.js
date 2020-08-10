@@ -4,39 +4,43 @@ const fs = require('fs');
 const pp = require('preprocess');
 const path = require('path');
 const execSync = require('child_process').execSync;
+const rollup = require('rollup');
 
 let options = {
+  // updatable: [
+  //   'GAMEOBJECT_VELOCITY',
+  //   'GAMEOBJECT_ACCELERATION',
+  //   'GAMEOBJECT_TTL',
+  //   'VECTOR_SCALE'
+  // ],
   gameObject: [
-    'GAMEOBJECT_GROUP',
-    'GAMEOBJECT_VELOCITY',
-    'GAMEOBJECT_ACCELERATION',
-    'GAMEOBJECT_ROTATION',
-    'GAMEOBJECT_TTL',
     'GAMEOBJECT_ANCHOR',
     'GAMEOBJECT_CAMERA',
-    'GAMEOBJECT_SCALE',
+    'GAMEOBJECT_GROUP',
     'GAMEOBJECT_OPACITY'
+    'GAMEOBJECT_ROTATION',
+    'GAMEOBJECT_SCALE',
   ],
-  sprite: [
-    'SPRITE_IMAGE',
-    'SPRITE_ANIMATION'
-  ],
-  text: [
-    'TEXT_AUTONEWLINE',
-    'TEXT_NEWLINE',
-    'TEXT_RTL',
-    'TEXT_ALIGN'
-  ],
-  vector: [
-    'VECTOR_SUBTRACT',
-    'VECTOR_SCALE',
-    'VECTOR_NORMALIZE',
-    'VECTOR_DOT',
-    'VECTOR_LENGTH',
-    'VECTOR_DISTANCE',
-    'VECTOR_ANGLE',
-    'VECTOR_CLAMP'
-  ]
+  // sprite: [
+  //   'SPRITE_IMAGE',
+  //   'SPRITE_ANIMATION'
+  // ],
+  // text: [
+  //   'TEXT_AUTONEWLINE',
+  //   'TEXT_NEWLINE',
+  //   'TEXT_RTL',
+  //   'TEXT_ALIGN'
+  // ],
+  // vector: [
+  //   'VECTOR_ANGLE',
+  //   'VECTOR_CLAMP'
+  //   'VECTOR_DISTANCE',
+  //   'VECTOR_DOT',
+  //   'VECTOR_LENGTH',
+  //   'VECTOR_NORMALIZE',
+  //   'VECTOR_SCALE',
+  //   'VECTOR_SUBTRACT',
+  // ]
 };
 
 // run permutations in parallel by passing in which permutation suite to run
@@ -47,14 +51,14 @@ if (optionName && options[optionName]) {
   }
 }
 
-Object.keys(options).forEach(option => {
+Object.keys(options).forEach(async (option) => {
   // get the setup code
   let setup = fs.readFileSync(path.join(__dirname, '../setup.js'), 'utf-8');
   setup = setup.replace('../src/core.js', '../../src/core.js');
 
   // copy test suite and change path
   let test = fs.readFileSync(path.join(__dirname, `../unit/${option}.spec.js`), 'utf-8');
-  test = test.replace(`../../src/${option}.js`, `./${option}.js`);
+  // test = test.replace(`../../src/${option}.js`, `./${option}.js`);
 
   // since loading the setup code causes the core file to be loaded
   // twice (and destroying context references) we'll need to inject
@@ -65,9 +69,18 @@ Object.keys(options).forEach(option => {
 
   fs.writeFileSync(path.join(__dirname, `${option}.spec.js`), test, 'utf-8');
 
+  // rollup test file
+  const bundle = await rollup.rollup({
+    input: path.join(__dirname, `${option}.spec.js`)
+  });
+  const { output } = await bundle.generate({
+    file: path.join(__dirname, `${option}.spec.js`),
+    format: 'iife'
+  });
+
   // copy file and correct paths
-  let file = fs.readFileSync(path.join(__dirname, `../../src/${option}.js`), 'utf-8');
-  file = file.replace(/from '\.\/(.*?)'/g, `from '../../src/$1'`);
+  // let file = fs.readFileSync(path.join(__dirname, `../../src/${option}.js`), 'utf-8');
+  // file = file.replace(/from '\.\/(.*?)'/g, `from '../../src/$1'`);
 
   // copy karma.conf and change path
   let karma = fs.readFileSync(path.join(__dirname, `./karma.conf.template.js`), 'utf-8');
@@ -86,11 +99,11 @@ Object.keys(options).forEach(option => {
     });
 
     let contents = pp.preprocess(
-      file,
+      output[0].code,
       context,
       {type: 'js'}
     );
-    fs.writeFileSync(path.join(__dirname, `${option}.js`), contents, 'utf-8');
+    fs.writeFileSync(path.join(__dirname, `${option}.spec.js`), contents, 'utf-8');
 
     execSync('npx karma start ' + path.join(__dirname, 'karma.conf.js'), {stdio: 'inherit'});
   }

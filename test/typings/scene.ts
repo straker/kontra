@@ -4,25 +4,28 @@ let scene: kontra.Scene = kontra.Scene({
   id: 'game'
 });
 
-let id: String = scene.id;
-let name: String = scene.name;
-let children: Object[] = scene.children;
-let hidden: Boolean = scene.hidden;
+let id: string = scene.id;
+let name: string = scene.name;
+let hidden: boolean = scene.hidden;
+let cullObjects: boolean = scene.cullObjects;
+let camera: kontra.GameObject = scene.camera;
 
+scene.cullFunction();
 scene.show();
 scene.hide();
-scene.add({x: 1, y: 1});
-scene.remove({x: 1, y: 1});
 scene.destroy();
 scene.update();
 scene.update(1/60);
 scene.render();
+scene.lookAt({x: 10, y: 20});
+scene.onShow();
+scene.onHide();
 
 // options
 kontra.Scene({
   id: 'options',
   name: 'Options Menu',
-  children: [{x: 1, y: 1}],
+  children: [kontra.GameObject()],
   onShow() {},
   onHide() {}
 });

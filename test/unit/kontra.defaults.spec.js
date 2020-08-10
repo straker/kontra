@@ -5,7 +5,7 @@ import kontra from '../../src/kontra.defaults.js'
 // --------------------------------------------------
 describe('kontra.defaults', () => {
 
-  it('should add Animation api', () => {
+  it('should add animation api', () => {
     expect(kontra.Animation).to.exist;
   });
 
@@ -46,8 +46,8 @@ describe('kontra.defaults', () => {
     expect(kontra.GameObject).to.exist;
   });
 
-  it('should add gridManager api', () => {
-    expect(kontra.GridManager).to.exist;
+  it('should add grid api', () => {
+    expect(kontra.Grid).to.exist;
   });
 
   it('should add helpers api', () => {
@@ -80,7 +80,7 @@ describe('kontra.defaults', () => {
 
   it('should add pointer api', () => {
     expect(kontra.initPointer).to.exist;
-    expect(kontra.pointer).to.exist;
+    expect(kontra.getPointer).to.exist;
     expect(kontra.track).to.exist;
     expect(kontra.untrack).to.exist;
     expect(kontra.pointerOver).to.exist;

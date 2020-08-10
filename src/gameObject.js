@@ -1,6 +1,7 @@
 import { getContext } from './core.js';
 import Updatable from './updatable.js';
-import { rotateAroundPoint } from './helpers.js';
+import { rotatePoint } from './helpers.js';
+import { noop } from './utils.js';
 
 /**
  * The base class of most renderable classes. Handles things such as position, rotation, anchor, and the update and render life cycle.
@@ -76,6 +77,7 @@ class GameObject extends Updatable {
     context = getContext(),
 
     render = this.draw,
+    update = this.advance,
 
     // --------------------------------------------------
     // optionals
@@ -211,13 +213,29 @@ class GameObject extends Updatable {
       width,
       height,
       context,
+
+      // @ifdef GAMEOBJECT_ANCHOR
       anchor,
+      // @endif
+
+      // @ifdef GAMEOBJECT_CAMERA
       sx,
       sy,
+      // @endif
+
+      // @ifdef GAMEOBJECT_OPACITY
       opacity,
+      // @endif
+
+      // @ifdef GAMEOBJECT_ROTATION
       rotation,
+      // @endif
+
+      // @ifdef GAMEOBJECT_SCALE
       scaleX,
       scaleY,
+      // @endif
+
       ...props
     });
 
@@ -231,6 +249,9 @@ class GameObject extends Updatable {
 
     // rf = render function
     this._rf = render;
+
+    // uf = update function
+    this._uf = update;
   }
 
   /**
@@ -444,7 +465,7 @@ class GameObject extends Updatable {
     // wr = world rotation
     this._wr = parent._wr + this.rotation;
 
-    let {x, y} = rotateAroundPoint({x: this.x, y: this.y}, parent._wr);
+    let {x, y} = rotatePoint({x: this.x, y: this.y}, parent._wr);
     this._wx = x;
     this._wy = y;
     // @endif
@@ -468,8 +489,8 @@ class GameObject extends Updatable {
 
   /**
    * The world position, width, height, opacity, rotation, and scale. The world property is the true position, width, height, etc. of the object, taking into account all parents.
+   * @property {{x: number, y: number, width: number, height: number, opacity: number, rotation: number, scaleX: number, scaleY: number}} world
    * @memberof GameObject
-   * @property {{x: number, y: number, width: number, height: number, opacity: number, rotation: number, scaleX, number, scaleY: number}} world
    */
   get world() {
     return {
@@ -541,6 +562,7 @@ class GameObject extends Updatable {
   addChild(child, { absolute = false } = {}) {
     this.children.push(child);
     child.parent = this;
+    child._pc = child._pc || noop;
     child._pc();
   }
 
@@ -558,6 +580,15 @@ class GameObject extends Updatable {
       child.parent = null;
       child._pc();
     }
+  }
+
+  /**
+   * Update all children
+   */
+  update(dt) {
+    this._uf(dt);
+
+    this.children.map(child => child.update && child.update());
   }
   // @endif
 

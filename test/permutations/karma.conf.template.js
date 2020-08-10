@@ -7,8 +7,6 @@ module.exports = function(config) {
     autoWatch: true,
     frameworks: ['mocha', 'chai', 'sinon'],
     files: [
-      {pattern: path.join(__dirname, '../../src/*.js'), type: 'module', included: false },
-      {pattern: path.join(__dirname, '__option__.js'), type: 'module', included: false },
       {pattern: path.join(__dirname, '__option__.spec.js'), type: 'module' },
     ],
     proxies: {

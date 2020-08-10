@@ -12,7 +12,6 @@ let children: kontra.GameObject[] = gameObject.children;
 let rotation: number = gameObject.rotation;
 let ttl: number = gameObject.ttl;
 let anchor: {x: number, y: number} = gameObject.anchor;
-let scale: {x: number, y: number} = gameObject.scale;
 let sx: number = gameObject.sx;
 let sy: number = gameObject.sy;
 let x: number = gameObject.x;
@@ -21,11 +20,19 @@ let dx: number = gameObject.dx;
 let dy: number = gameObject.dy;
 let ddx: number = gameObject.ddx;
 let ddy: number = gameObject.ddy;
-let viewX: number = gameObject.viewX;
-let viewY: number = gameObject.viewY;
-let scaledWidth: number = gameObject.scaledWidth;
-let scaledHeight: number = gameObject.scaledHeight;
+let scaleX: number = gameObject.scaleX;
+let scaleY: number = gameObject.scaleY;
 let opacity: number = gameObject.opacity;
+let world: {
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+  rotation: number,
+  opacity: number,
+  scaleX: number,
+  scaleY: number
+} = gameObject.world;
 
 let alive: boolean = gameObject.isAlive();
 gameObject.addChild(kontra.GameObject());
@@ -35,6 +42,7 @@ gameObject.update(1/60);
 gameObject.advance();
 gameObject.advance(1/60);
 gameObject.render();
+gameObject.render(() => true);
 gameObject.draw();
 gameObject.setScale(1);
 gameObject.setScale(1, 2);
@@ -52,7 +60,8 @@ kontra.GameObject({
   ttl: 10,
   rotation: 10,
   anchor: {x: 2, y: 2},
-  scale: {x: 2, y: 2},
+  scaleX: 2,
+  scaleY: 2,
   opacity: 0.5,
   context: document.createElement('canvas').getContext('2d'),
   update() {},

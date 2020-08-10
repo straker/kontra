@@ -80,7 +80,6 @@ class Button extends Sprite.class {
     // dn = dom node
     const button = this._dn = document.createElement('button');
     button.style = srOnlyStyle;
-    button.setAttribute('data-kontra', '');
     button.textContent = this.text;
 
     // sync events between the button element and the class

@@ -8,8 +8,15 @@ export const srOnlyStyle = 'position:absolute;left:-9999px';
 // element of other kontra nodes
 export function addToDom(node, canvas) {
   let container = canvas.parentNode;
-  let target = container.querySelector('[data-kontra]:last-of-type') || canvas;
-  container.insertBefore(node, target.nextSibling);
+
+  node.setAttribute('data-kontra', '');
+  if (container) {
+    let target = container.querySelector('[data-kontra]:last-of-type') || canvas;
+    container.insertBefore(node, target.nextSibling);
+  }
+  else {
+    document.body.appendChild(node);
+  }
 }
 
 // get world x, y, width, and height of object

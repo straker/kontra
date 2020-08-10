@@ -2,37 +2,30 @@ import GameObject from '../../src/gameObject.js'
 import { getContext } from '../../src/core.js'
 import { noop } from '../../src/utils.js'
 
-// let testGameObject = GameObject();
+let testGameObject = GameObject();
 
-// // optional properties used to test that each permutation of
-// // options works correctly
-// let hasGroup = testGameObject.hasOwnProperty('children');
-// let hasVelocity = testGameObject.hasOwnProperty('velocity');
-// let hasAcceleration = testGameObject.hasOwnProperty('acceleration');
-// let hasRotation = typeof testGameObject.rotation !== 'undefined';
-// let hasTTL = testGameObject.hasOwnProperty('ttl');
-// let hasAnchor = testGameObject.hasOwnProperty('anchor');
-// let hasCamera = typeof testGameObject.sx !== 'undefined';
-// let hasScale = testGameObject.hasOwnProperty('scale');
-// let hasOpacity = typeof testGameObject.opacity !== 'undefined';
+// optional properties used to test that each permutation of
+// options works correctly
+let hasAnchor = typeof testGameObject.anchor !== 'undefined';
+let hasCamera = typeof testGameObject.sx !== 'undefined';
+let hasGroup = typeof testGameObject.children !== 'undefined';
+let hasOpacity = typeof testGameObject.opacity !== 'undefined';
+let hasRotation = typeof testGameObject.rotation !== 'undefined';
+let hasScale = typeof testGameObject.scale !== 'undefined';
 
-// let properties = {
-//   group: hasGroup,
-//   velocity: hasVelocity,
-//   acceleration: hasAcceleration,
-//   rotation: hasRotation,
-//   ttl: hasTTL,
-//   anchor: hasAnchor,
-//   camera: hasCamera,
-//   scale: hasScale,
-//   opacity: hasOpacity
-// };
+let properties = {
+  anchor: hasAnchor,
+  camera: hasCamera,
+  group: hasGroup,
+  opacity: hasOpacity,
+  rotation: hasRotation,
+  scale: hasScale
+};
 
 // --------------------------------------------------
 // gameObject
 // --------------------------------------------------
-// describe('gameObject with properties: ' + JSON.stringify(properties,null,4), () => {
-describe('gameObject', () => {
+describe('gameObject with properties: ' + JSON.stringify(properties,null,4), () => {
 
   let spy;
   let gameObject;

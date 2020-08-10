@@ -33,6 +33,38 @@ describe('gameLoop', () => {
 
 
   // --------------------------------------------------
+  // start
+  // --------------------------------------------------
+  describe('start', () => {
+    it('should call requestAnimationFrame', () => {
+      sinon.stub(window, 'requestAnimationFrame').callsFake(noop);
+
+      loop = GameLoop({
+        render: noop,
+        clearCanvas: false
+      });
+
+      loop.start();
+
+      expect(window.requestAnimationFrame.called).to.be.true;
+
+      window.requestAnimationFrame.restore();
+    });
+
+    it('should unset isStopped', () => {
+      loop.isStopped = true;
+      loop.start();
+
+      expect(loop.isStopped).to.be.false;
+    });
+
+  });
+
+
+
+
+
+  // --------------------------------------------------
   // stop
   // --------------------------------------------------
   describe('stop', () => {
@@ -40,7 +72,6 @@ describe('gameLoop', () => {
       sinon.stub(window, 'cancelAnimationFrame').callsFake(noop);
 
       loop = GameLoop({
-        update: noop,
         render: noop,
         clearCanvas: false
       });
@@ -50,6 +81,13 @@ describe('gameLoop', () => {
       expect(window.cancelAnimationFrame.called).to.be.true;
 
       window.cancelAnimationFrame.restore();
+    });
+
+    it('should set isStopped', () => {
+      loop.isStopped = false;
+      loop.stop();
+
+      expect(loop.isStopped).to.be.true;
     });
 
   });
@@ -81,7 +119,6 @@ describe('gameLoop', () => {
 
     it('should call the render function', (done) => {
       loop = GameLoop({
-        update: noop,
         render: sinon.spy(),
         clearCanvas: false
       });
@@ -142,7 +179,6 @@ describe('gameLoop', () => {
 
     it('should call clearCanvas by default', () => {
       loop = GameLoop({
-        update: noop,
         render: noop
       });
       let context = getContext();
@@ -159,7 +195,6 @@ describe('gameLoop', () => {
 
     it('should not clear the canvas if clearCanvas is false', function() {
       loop = GameLoop({
-        update: noop,
         render: noop,
         clearCanvas: false
       });
@@ -175,11 +210,30 @@ describe('gameLoop', () => {
       context.clearRect.restore();
     });
 
+    it('should call clearCanvas on the passed in context', () => {
+      let context = {
+        canvas: {
+          width: 0,
+          height: 0,
+        },
+        clearRect: sinon.stub().callsFake(noop)
+      };
+
+      loop = GameLoop({
+        render: noop,
+        context
+      });
+
+      loop._last = performance.now() - (1E3/60);
+      loop._frame();
+
+      expect(context.clearRect.called).to.be.true;
+    });
+
     it('should emit the tick event', done => {
       on('tick', done);
 
       loop = GameLoop({
-        update: noop,
         render: noop
       });
       loop._last = performance.now() - (1E3/60);

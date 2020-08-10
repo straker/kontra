@@ -27,7 +27,7 @@ let alignment = {
  * @param {Number|Number[]} [properties.colGap=0] - The horizontal gap between each column in the grid.
  * @param {Number|Number[]} [properties.rowGap=0] - The vertical gap between each row in the grid.
  * @param {Number} [properties.numCols=1] - The number of columns in the grid. Only applies if the `flow` property is set to `grid`.
- * @param {String} [properties.dir] - The direction of the grid.
+ * @param {String} [properties.dir='ltr'] - The direction of the grid.
  * @param {{metric: Function, callback: Function}[]} [properties.breakpoints=[]] - How the grid should change based on different metrics.
  */
 class Grid extends GameObject.class {
@@ -105,6 +105,7 @@ class Grid extends GameObject.class {
      * @memberof Grid
      * @property {String} dir
      */
+    dir = 'ltr',
 
     /**
      * How the grid should change based on different metrics. Based on the concept of CSS Media Queries so you can update how the grid organizes the objects when things change (such as the scale).
@@ -147,6 +148,7 @@ class Grid extends GameObject.class {
       colGap,
       rowGap,
       numCols,
+      dir,
       breakpoints,
       ...props
     });

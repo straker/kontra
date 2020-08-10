@@ -12,7 +12,7 @@ import Vector from './vector.js';
 class Updatable {
 
   constructor(properties) {
-    return this.init(properties);
+    this.init(properties);
   }
 
   init(properties = {}) {
@@ -23,8 +23,8 @@ class Updatable {
 
     /**
      * The game objects position vector. Represents the local position of the object as opposed to the [world](/api/gameObject#world) position.
-     * @memberof GameObject
      * @property {Vector} position
+     * @memberof GameObject
      * @page GameObject
      */
     this.position = Vector();
@@ -76,9 +76,7 @@ class Updatable {
    * @param {Number} [dt] - Time since last update.
    */
   update(dt) {
-    // @ifdef GAMEOBJECT_VELOCITY||GAMEOBJECT_ACCELERATION||GAMEOBJECT_TTL
     this.advance(dt);
-    // @endif
   }
 
   /**
@@ -237,6 +235,8 @@ class Updatable {
     return this.ttl > 0;
   }
   // @endif
+
+  _pc() {}
 }
 
 export default Updatable;

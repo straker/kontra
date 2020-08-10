@@ -1,6 +1,5 @@
 import GameObject from './gameObject.js';
 import { srOnlyStyle, addToDom } from './utils.js';
-import { getCanvas } from './core.js';
 import { collides } from './helpers.js';
 
 function getAllNodes(object) {
@@ -101,12 +100,14 @@ class Scene extends GameObject.class {
 
     addToDom(section, this.context.canvas);
 
-    let canvas = getCanvas();
+    let canvas = this.context.canvas;
 
     /**
-     * The camera object of the scene. The camera is used as the focal point for the scene. The scene will not render objects that are outside the bounds of the camera.
+     * The camera object which is used as the focal point for the scene. The scene will not render objects that are outside the bounds of the camera.
      *
      * Additionally, the camera can be used to [lookAt](/api/scene#lookAt) an object which will center the camera to that object. This allows you to zoom the scene in and out while the camera remains centered on the object.
+     * @memberof Scene
+     * @property {GameObject} camera
      */
     this.camera = GameObject({
       x: canvas.width / 2,
@@ -211,9 +212,11 @@ class Scene extends GameObject.class {
    * @memberof Scene
    * @function lookAt
    *
-   * @param {Object} object - Object with x/y properties or a GameObject.
+   * @param {{x: number, y: number}} object - Object with x/y properties.
    */
   lookAt(object) {
+
+    // don't call getWorldRect so we can ignore the objects anchor
     object = object.world || object;
     let x = object.x;
     let y = object.y;
@@ -230,6 +233,9 @@ class Scene extends GameObject.class {
 
   _pc() {
     super._pc();
+
+    // this can be called before the camera is initialized so we
+    // need to guard it
     this.camera && this.camera._pc();
   }
 

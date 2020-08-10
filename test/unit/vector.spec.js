@@ -82,8 +82,8 @@ describe('vector with properties: ' + JSON.stringify(properties,null,4), () => {
   // --------------------------------------------------
   // subtract
   // --------------------------------------------------
-  if (hasSubtract) {
-    describe('subtract', () => {
+  describe('subtract', () => {
+    if (hasSubtract) {
 
       it('should subtract one vector from another', () => {
         let vector1 = Vector(10, 20);
@@ -107,8 +107,14 @@ describe('vector with properties: ' + JSON.stringify(properties,null,4), () => {
         expect(vector2.y).to.deep.equal(10);
       });
 
-    });
-  }
+    }
+    else {
+      it('should not have subtract', () => {
+        let vector = Vector();
+        expect(vector.subtract).to.not.exist;
+      });
+    }
+  });
 
 
 
@@ -117,8 +123,8 @@ describe('vector with properties: ' + JSON.stringify(properties,null,4), () => {
   // --------------------------------------------------
   // scale
   // --------------------------------------------------
-  if (hasScale) {
-    describe('scale', () => {
+  describe('scale', () => {
+    if (hasScale) {
 
       it('should scale a vector by a scalar', () => {
         let vector1 = Vector(5, 10);
@@ -138,8 +144,14 @@ describe('vector with properties: ' + JSON.stringify(properties,null,4), () => {
         expect(vector1.y).to.deep.equal(10);
       });
 
-    });
-  }
+    }
+    else {
+      it('should not have scale', () => {
+        let vector = Vector();
+        expect(vector.scale).to.not.exist;
+      });
+    }
+  });
 
 
 
@@ -148,8 +160,8 @@ describe('vector with properties: ' + JSON.stringify(properties,null,4), () => {
   // --------------------------------------------------
   // normalize
   // --------------------------------------------------
-  if (hasNormalize) {
-    describe('normalize', () => {
+  describe('normalize', () => {
+    if (hasNormalize) {
 
       it('should calculate the normalized vector', () => {
         let vector1 = Vector(4, 3);
@@ -160,8 +172,14 @@ describe('vector with properties: ' + JSON.stringify(properties,null,4), () => {
         expect(normalize.y).to.deep.equal(3/5);
       });
 
-    });
-  }
+    }
+    else {
+      it('should not have normalize', () => {
+        let vector = Vector();
+        expect(vector.normalize).to.not.exist;
+      });
+    }
+  });
 
 
 
@@ -170,8 +188,8 @@ describe('vector with properties: ' + JSON.stringify(properties,null,4), () => {
   // --------------------------------------------------
   // dot
   // --------------------------------------------------
-  if (hasDot) {
-    describe('dot', () => {
+  describe('dot', () => {
+    if (hasDot) {
 
       it('should calculate dot product of two vectors', () => {
         let vector1 = Vector(10, 20);
@@ -182,8 +200,14 @@ describe('vector with properties: ' + JSON.stringify(properties,null,4), () => {
         expect(dot).to.deep.equal(250);
       });
 
-    });
-  }
+    }
+    else {
+      it('should not have dot', () => {
+        let vector = Vector();
+        expect(vector.dot).to.not.exist;
+      });
+    }
+  });
 
 
 
@@ -192,8 +216,8 @@ describe('vector with properties: ' + JSON.stringify(properties,null,4), () => {
   // --------------------------------------------------
   // length
   // --------------------------------------------------
-  if (hasLength) {
-    describe('length', () => {
+  describe('length', () => {
+    if (hasLength) {
 
       it('should calculate the length of the vector', () => {
         let vector1 = Vector(4, 3);
@@ -203,8 +227,14 @@ describe('vector with properties: ' + JSON.stringify(properties,null,4), () => {
         expect(length).to.deep.equal(5);
       });
 
-    });
-  }
+    }
+    else {
+      it('should not have length', () => {
+        let vector = Vector();
+        expect(vector.length).to.not.exist;
+      });
+    }
+  });
 
 
 
@@ -213,8 +243,8 @@ describe('vector with properties: ' + JSON.stringify(properties,null,4), () => {
   // --------------------------------------------------
   // distance
   // --------------------------------------------------
-  if (hasDistance) {
-    describe('distance', () => {
+  describe('distance', () => {
+    if (hasDistance) {
 
       it('should calculate the distance between two vectors', () => {
         let vector1 = Vector(10, 20);
@@ -224,9 +254,14 @@ describe('vector with properties: ' + JSON.stringify(properties,null,4), () => {
 
         expect(distance).to.deep.equal(5);
       });
-
-    });
-  }
+    }
+    else {
+      it('should not have distance', () => {
+        let vector = Vector();
+        expect(vector.distance).to.not.exist;
+      });
+    }
+  });
 
 
 
@@ -235,9 +270,8 @@ describe('vector with properties: ' + JSON.stringify(properties,null,4), () => {
   // --------------------------------------------------
   // angle
   // --------------------------------------------------
-  if (hasAngle) {
-    describe('angle', () => {
-
+  describe('angle', () => {
+    if (hasAngle) {
       it('should calculate the angle between two vectors', () => {
         let vector1 = Vector(4, 3);
         let vector2 = Vector(3, 5);
@@ -246,9 +280,14 @@ describe('vector with properties: ' + JSON.stringify(properties,null,4), () => {
 
         expect(angle.toFixed(2)).to.deep.equal('0.39');
       });
-
-    });
-  }
+    }
+    else {
+      it('should not have angle', () => {
+        let vector = Vector();
+        expect(vector.angle).to.not.exist;
+      });
+    }
+  });
 
 
 
@@ -257,8 +296,8 @@ describe('vector with properties: ' + JSON.stringify(properties,null,4), () => {
   // --------------------------------------------------
   // clamp
   // --------------------------------------------------
-  if (hasClamp) {
-    describe('clamp', () => {
+  describe('clamp', () => {
+    if (hasClamp) {
       let vector;
 
       beforeEach(() => {
@@ -292,8 +331,13 @@ describe('vector with properties: ' + JSON.stringify(properties,null,4), () => {
         expect(vec.x).to.equal(50);
         expect(vec.y).to.equal(75);
       });
-
-    });
-  }
+    }
+    else {
+      it('should not have clamp', () => {
+        let vector = Vector();
+        expect(vector.clamp).to.not.exist;
+      });
+    }
+  });
 
 });

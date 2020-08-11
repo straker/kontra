@@ -57,4 +57,4 @@ jobs:
       keep_history: true
       local_dir: docs
       on:
-        branch: v7 #Test this branch
+        branch: main

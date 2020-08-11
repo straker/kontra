@@ -31,16 +31,21 @@ jobs:
     script:
       - npm run build
       - npm run test:permutations vector
-  - name: "Permutation Tests: sprite"
-    if: type = pull_request
-    script:
-      - npm run build
-      - npm run test:permutations sprite
   - name: "Permutation Tests: text"
     if: type = pull_request
     script:
       - npm run build
       - npm run test:permutations text
+  - name: "Permutation Tests: updatable"
+    if: type = pull_request
+    script:
+      - npm run build
+      - npm run test:permutations updatable
+  - name: "Permutation Tests: sprite"
+    if: type = pull_request
+    script:
+      - npm run build
+      - npm run test:permutations sprite
 
   - name: "Deploy gh-pages"
     if: type = push

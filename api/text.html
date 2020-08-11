@@ -47,6 +47,7 @@
               <li><a href="api/events" >Events</a></li>
               <li><a href="api/gameLoop" >GameLoop</a></li>
               <li><a href="api/gameobject" >GameObject</a></li>
+              <li><a href="api/grid" >Grid</a></li>
               <li><a href="api/helpers" >Helpers</a></li>
               <li><a href="api/keyboard" >Keyboard</a></li>
               <li><a href="api/plugin" >Plugin</a></li>
@@ -88,22 +89,22 @@
 
         <p>An object for drawing text to the screen. Supports newline characters as well as automatic new lines when setting the <code>width</code> property.</p>
 <p>You can also display RTL languages by setting the attribute <code>dir=&quot;rtl&quot;</code> on the main canvas element. Due to the limited browser support for individual text to have RTL settings, it must be set globally for the entire game.</p>
-<canvas id="game-canvas-7"></canvas>
+<canvas id="game-canvas-10"></canvas>
 
 <div class="tablist">
   <ul role="tablist">
     <li role="presentation" data-tab="global">
-      <button role="tab" id="game-canvas-7-global-tab">Global Object</button>
+      <button role="tab" id="game-canvas-10-global-tab">Global Object</button>
     </li>
     <li role="presentation" data-tab="es">
-      <button role="tab" id="game-canvas-7-es-tab">ES Module Import</button>
+      <button role="tab" id="game-canvas-10-es-tab">ES Module Import</button>
     </li>
     <li role="presentation" data-tab="bundle">
-      <button role="tab" id="game-canvas-7-bundle-tab">Module Bundler</button>
+      <button role="tab" id="game-canvas-10-bundle-tab">Module Bundler</button>
     </li>
     <li role="presentation"></li>
   </ul>
-  <section role="tabpanel" aria-labelledby=game-canvas-7-global-tab data-tabpanel="global">
+  <section role="tabpanel" aria-labelledby=game-canvas-10-global-tab data-tabpanel="global">
     <pre><code class="lang-js">let { Text } &#x3D; kontra
 
 let text &#x3D; Text({
@@ -118,7 +119,7 @@ let text &#x3D; Text({
 
 text.render();</code></pre>
   </section>
-  <section role="tabpanel" aria-labelledby=game-canvas-7-es-tab data-tabpanel="es">
+  <section role="tabpanel" aria-labelledby=game-canvas-10-es-tab data-tabpanel="es">
     <pre><code class="lang-js">import { Text } from &#x27;path/to/kontra.mjs&#x27;
 
 let text &#x3D; Text({
@@ -133,7 +134,7 @@ let text &#x3D; Text({
 
 text.render();</code></pre>
   </section>
-  <section role="tabpanel" aria-labelledby=game-canvas-7-bundle-tab data-tabpanel="bundle">
+  <section role="tabpanel" aria-labelledby=game-canvas-10-bundle-tab data-tabpanel="bundle">
     <pre><code class="lang-js">import { Text } from &#x27;kontra&#x27;;
 
 let text &#x3D; Text({
@@ -151,8 +152,8 @@ text.render();</code></pre>
 </div>
 
 <script>(function() {
-  kontra.init("game-canvas-7");
-  var canvas = document.querySelector("#game-canvas-7");
+  kontra.init("game-canvas-10");
+  var canvas = document.querySelector("#game-canvas-10");
   canvas.width = 600;
   canvas.height = 200;
   var context = canvas.getContext("2d");

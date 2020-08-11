@@ -47,6 +47,7 @@
               <li><a href="api/events" >Events</a></li>
               <li><a href="api/gameLoop" >GameLoop</a></li>
               <li><a href="api/gameobject" aria-current="page">GameObject</a></li>
+              <li><a href="api/grid" >Grid</a></li>
               <li><a href="api/helpers" >Helpers</a></li>
               <li><a href="api/keyboard" >Keyboard</a></li>
               <li><a href="api/plugin" >Plugin</a></li>
@@ -87,7 +88,7 @@
         </h1>
 
         <p>The base class of most renderable classes. Handles things such as position, rotation, anchor, and the update and render life cycle.</p>
-<p>Typically you don&#39;t create a GameObject directly, but rather extend it for new classes. Because of this, trying to draw using a GameOjbect directly will prove difficult.</p>
+<p>Typically you don&#39;t create a GameObject directly, but rather extend it for new classes.</p>
         <h3 id="title-GameObject"><span class="visually-hidden">GameObject</span> Parameters</span></h3>
         <dl aria-labelledby="title-GameObject">
           <dt>
@@ -107,6 +108,24 @@
             <span class="optional">Optional</span>
           </dt>
           <dd><p><em>Number</em>. Y coordinate of the position vector.</p>
+        </dd>
+          <dt>
+            <code>properties.width</code>
+            <span class="optional">Optional</span>
+          </dt>
+          <dd><p><em>Number</em>. Width of the game object.</p>
+        </dd>
+          <dt>
+            <code>properties.height</code>
+            <span class="optional">Optional</span>
+          </dt>
+          <dd><p><em>Number</em>. Height of the game object.</p>
+        </dd>
+          <dt>
+            <code>properties.context</code>
+            <span class="optional">Optional</span>
+          </dt>
+          <dd><p><em>CanvasRenderingContext2D</em>. The context the game object should draw to. Defaults to <a href="api/core#getContext">core.getContext()</a>.</p>
         </dd>
           <dt>
             <code>properties.dx</code>
@@ -133,28 +152,10 @@
           <dd><p><em>Number</em>. Y coordinate of the acceleration vector.</p>
         </dd>
           <dt>
-            <code>properties.width</code>
-            <span class="optional">Optional</span>
-          </dt>
-          <dd><p><em>Number</em>. Width of the game object.</p>
-        </dd>
-          <dt>
-            <code>properties.height</code>
-            <span class="optional">Optional</span>
-          </dt>
-          <dd><p><em>Number</em>. Height of the game object.</p>
-        </dd>
-          <dt>
             <code>properties.ttl</code>
             <span class="optional">Optional</span>
           </dt>
           <dd><p><em>Number</em>. How many frames the game object should be alive. Used by <a href="api/pool">Pool</a>. Defaults to <code>Infinity</code>.</p>
-        </dd>
-          <dt>
-            <code>properties.rotation</code>
-            <span class="optional">Optional</span>
-          </dt>
-          <dd><p><em>Number</em>. The rotation around the origin in radians. Defaults to <code>0</code>.</p>
         </dd>
           <dt>
             <code>properties.anchor</code>
@@ -163,16 +164,22 @@
           <dd><p><em>Object</em>. The x and y origin of the game object. {x:0, y:0} is the top left corner of the game object, {x:1, y:1} is the bottom right corner. Defaults to <code>{x:0,y:0}</code>.</p>
         </dd>
           <dt>
+            <code>properties.sx</code>
+            <span class="optional">Optional</span>
+          </dt>
+          <dd><p><em>Number</em>. The x camera position. Defaults to <code>0</code>.</p>
+        </dd>
+          <dt>
+            <code>properties.sy</code>
+            <span class="optional">Optional</span>
+          </dt>
+          <dd><p><em>Number</em>. The y camera position. Defaults to <code>0</code>.</p>
+        </dd>
+          <dt>
             <code>properties.children</code>
             <span class="optional">Optional</span>
           </dt>
-          <dd><p><em>An Array of <a href="api/gameObject">GameObject</a>s</em>. Children to add to the game object. Children added this way have their x/y position treated as relative to the parents x/y position.</p>
-        </dd>
-          <dt>
-            <code>properties.scale</code>
-            <span class="optional">Optional</span>
-          </dt>
-          <dd><p><em>Object</em>. The x and y scale of the game object. Calls <a href="api/gameObject#setScale">setScale</a> with the passed in values. Defaults to <code>{x:1,y:1}</code>.</p>
+          <dd><p><em>An Array of <a href="api/gameObject">GameObject</a>s</em>. Children to add to the game object.</p>
         </dd>
           <dt>
             <code>properties.opacity</code>
@@ -181,10 +188,22 @@
           <dd><p><em>Number</em>. The opacity of the game object. Defaults to <code>1</code>.</p>
         </dd>
           <dt>
-            <code>properties.context</code>
+            <code>properties.rotation</code>
             <span class="optional">Optional</span>
           </dt>
-          <dd><p><em>CanvasRenderingContext2D</em>. The context the game object should draw to. Defaults to <a href="api/core#getContext">core.getContext()</a>.</p>
+          <dd><p><em>Number</em>. The rotation around the anchor in radians. Defaults to <code>0</code>.</p>
+        </dd>
+          <dt>
+            <code>properties.scaleX</code>
+            <span class="optional">Optional</span>
+          </dt>
+          <dd><p><em>Number</em>. The x scale of the game object. Defaults to <code>1</code>.</p>
+        </dd>
+          <dt>
+            <code>properties.scaleY</code>
+            <span class="optional">Optional</span>
+          </dt>
+          <dd><p><em>Number</em>. The y scale of the game object. Defaults to <code>1</code>.</p>
         </dd>
           <dt>
             <code>properties.update</code>
@@ -286,8 +305,13 @@
                   </a>
                 </li>
                 <li>
-                  <a href="api/gameobject#scale">
-                    <span>GameObject&#8203;.scale</span>
+                  <a href="api/gameobject#scaleX">
+                    <span>GameObject&#8203;.scaleX</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="api/gameobject#scaleY">
+                    <span>GameObject&#8203;.scaleY</span>
                   </a>
                 </li>
                 <li>
@@ -311,18 +335,13 @@
                   </a>
                 </li>
                 <li>
-                  <a href="api/gameobject#viewX">
-                    <span>GameObject&#8203;.viewX</span>
-                  </a>
-                </li>
-                <li>
-                  <a href="api/gameobject#viewY">
-                    <span>GameObject&#8203;.viewY</span>
-                  </a>
-                </li>
-                <li>
                   <a href="api/gameobject#width">
                     <span>GameObject&#8203;.width</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="api/gameobject#world">
+                    <span>GameObject&#8203;.world</span>
                   </a>
                 </li>
                 <li>
@@ -343,7 +362,7 @@
               <ul aria-labelledby="methods">
                 <li>
                   <a href="api/gameobject#addChild">
-                    <span>GameObject&#8203;.addChild(&#8203;child[, options])</span>
+                    <span>GameObject&#8203;.addChild(&#8203;child)</span>
                   </a>
                 </li>
                 <li>
@@ -373,7 +392,7 @@
                 </li>
                 <li>
                   <a href="api/gameobject#render">
-                    <span>GameObject&#8203;.render(&#8203;)</span>
+                    <span>GameObject&#8203;.render(&#8203;[filterObjects])</span>
                   </a>
                 </li>
                 <li>
@@ -393,7 +412,7 @@
 
         <section>
           <h2 id="extending-a-gameobject">
-            <a href="#extending-a-gameobject" class="section-link">
+            <a href="api/gameobject#extending-a-gameobject" class="section-link">
               <span>Extending A GameObject</span>
               <span aria-hidden="true">#</span>
             </a>
@@ -401,23 +420,24 @@
 
           <p>A GameObject is just a base class and typically isn&#39;t used directly. Instead, it&#39;s main purpose is to be extended by other classes, such as <a href="/api/sprite">Sprite</a>.</p>
 <p>To extend the GameObject class, use the <code>.class</code> property of the constructor (since the GameObject is a factory function). You should also override the <code>draw()</code> function in your class.</p>
-<p>The <code>draw()</code> function determines how to draw the GameObject. It is called by the <code>render</code> function after transforms and rotations have been applied. Do note that the canvas has been rotated and translated to the objects position (taking into account anchor), so {0,0} will be the top-left corner of the game object when drawing.</p>
-<canvas id="game-canvas-0"></canvas>
+<p>The <code>draw()</code> function determines how to draw the GameObject. It is called by the <code>render</code> function after transforms and rotations have been applied.</p>
+<p>Do note that the canvas has been rotated and translated to the objects position (taking into account anchor), so {0,0} will be the top-left corner of the game object when drawing.</p>
+<canvas id="game-canvas-2"></canvas>
 
 <div class="tablist">
   <ul role="tablist">
     <li role="presentation" data-tab="global">
-      <button role="tab" id="game-canvas-0-global-tab">Global Object</button>
+      <button role="tab" id="game-canvas-2-global-tab">Global Object</button>
     </li>
     <li role="presentation" data-tab="es">
-      <button role="tab" id="game-canvas-0-es-tab">ES Module Import</button>
+      <button role="tab" id="game-canvas-2-es-tab">ES Module Import</button>
     </li>
     <li role="presentation" data-tab="bundle">
-      <button role="tab" id="game-canvas-0-bundle-tab">Module Bundler</button>
+      <button role="tab" id="game-canvas-2-bundle-tab">Module Bundler</button>
     </li>
     <li role="presentation"></li>
   </ul>
-  <section role="tabpanel" aria-labelledby=game-canvas-0-global-tab data-tabpanel="global">
+  <section role="tabpanel" aria-labelledby=game-canvas-2-global-tab data-tabpanel="global">
     <pre><code class="lang-js">let { GameObject } &#x3D; kontra
 
 class Triangle extends GameObject.class {
@@ -445,7 +465,7 @@ let triangle &#x3D; new Triangle({
 });
 triangle.render();</code></pre>
   </section>
-  <section role="tabpanel" aria-labelledby=game-canvas-0-es-tab data-tabpanel="es">
+  <section role="tabpanel" aria-labelledby=game-canvas-2-es-tab data-tabpanel="es">
     <pre><code class="lang-js">import { GameObject } from &#x27;path/to/kontra.mjs&#x27;
 
 class Triangle extends GameObject.class {
@@ -473,7 +493,7 @@ let triangle &#x3D; new Triangle({
 });
 triangle.render();</code></pre>
   </section>
-  <section role="tabpanel" aria-labelledby=game-canvas-0-bundle-tab data-tabpanel="bundle">
+  <section role="tabpanel" aria-labelledby=game-canvas-2-bundle-tab data-tabpanel="bundle">
     <pre><code class="lang-js">import { GameObject } from &#x27;kontra&#x27;;
 
 class Triangle extends GameObject.class {
@@ -504,8 +524,8 @@ triangle.render();</code></pre>
 </div>
 
 <script>(function() {
-  kontra.init("game-canvas-0");
-  var canvas = document.querySelector("#game-canvas-0");
+  kontra.init("game-canvas-2");
+  var canvas = document.querySelector("#game-canvas-2");
   canvas.width = 600;
   canvas.height = 200;
   var context = canvas.getContext("2d");
@@ -555,30 +575,28 @@ triangle.render();
         <section>
           <h2 id="addChild">
             <a href="api/gameobject#addChild" class="section-link">
-              <span>GameObject&#8203;.addChild(&#8203;child[, options])</span>
+              <span>GameObject&#8203;.addChild(&#8203;child)</span>
               <span aria-hidden="true">#</span>
             </a>
           </h2>
 
-          <p>Add an object as a child to this object. The child objects position and rotation will be calculated based on this objects position and rotation.</p>
-<p>By default the childs x/y position is interpreted to be relative to the x/y position of the parent. This means that if the childs position is {x: 0, y: 0}, the position will be updated to equal to the parents x/y position when added.</p>
-<p>If instead the position should not be updated based on the parents x/y position, set the <code>absolute</code> option to <code>true</code>.</p>
-<canvas id="game-canvas-2"></canvas>
+          <p>Add an object as a child to this object. The childs <a href="/api/gameObject#world">world</a> property will be updated to take into account this object and all of its parents.</p>
+<canvas id="game-canvas-4"></canvas>
 
 <div class="tablist">
   <ul role="tablist">
     <li role="presentation" data-tab="global">
-      <button role="tab" id="game-canvas-2-global-tab">Global Object</button>
+      <button role="tab" id="game-canvas-4-global-tab">Global Object</button>
     </li>
     <li role="presentation" data-tab="es">
-      <button role="tab" id="game-canvas-2-es-tab">ES Module Import</button>
+      <button role="tab" id="game-canvas-4-es-tab">ES Module Import</button>
     </li>
     <li role="presentation" data-tab="bundle">
-      <button role="tab" id="game-canvas-2-bundle-tab">Module Bundler</button>
+      <button role="tab" id="game-canvas-4-bundle-tab">Module Bundler</button>
     </li>
     <li role="presentation"></li>
   </ul>
-  <section role="tabpanel" aria-labelledby=game-canvas-2-global-tab data-tabpanel="global">
+  <section role="tabpanel" aria-labelledby=game-canvas-4-global-tab data-tabpanel="global">
     <pre><code class="lang-js">let { GameObject } &#x3D; kontra
 
 function createObject(x, y, color, size &#x3D; 1) {
@@ -597,15 +615,13 @@ function createObject(x, y, color, size &#x3D; 1) {
 }
 
 let parent &#x3D; createObject(300, 100, &#x27;red&#x27;);
-let relativeChild &#x3D; createObject(25, 25, &#x27;#62a2f9&#x27;, 2);
-let absoluteChild &#x3D; createObject(25, 25, &#x27;yellow&#x27;, 2);
+let child &#x3D; createObject(25, 25, &#x27;yellow&#x27;, 2);
 
-parent.addChild(relativeChild);
-parent.addChild(absoluteChild, {absolute: true});
+parent.addChild(child);
 
 parent.render();</code></pre>
   </section>
-  <section role="tabpanel" aria-labelledby=game-canvas-2-es-tab data-tabpanel="es">
+  <section role="tabpanel" aria-labelledby=game-canvas-4-es-tab data-tabpanel="es">
     <pre><code class="lang-js">import { GameObject } from &#x27;path/to/kontra.mjs&#x27;
 
 function createObject(x, y, color, size &#x3D; 1) {
@@ -624,15 +640,13 @@ function createObject(x, y, color, size &#x3D; 1) {
 }
 
 let parent &#x3D; createObject(300, 100, &#x27;red&#x27;);
-let relativeChild &#x3D; createObject(25, 25, &#x27;#62a2f9&#x27;, 2);
-let absoluteChild &#x3D; createObject(25, 25, &#x27;yellow&#x27;, 2);
+let child &#x3D; createObject(25, 25, &#x27;yellow&#x27;, 2);
 
-parent.addChild(relativeChild);
-parent.addChild(absoluteChild, {absolute: true});
+parent.addChild(child);
 
 parent.render();</code></pre>
   </section>
-  <section role="tabpanel" aria-labelledby=game-canvas-2-bundle-tab data-tabpanel="bundle">
+  <section role="tabpanel" aria-labelledby=game-canvas-4-bundle-tab data-tabpanel="bundle">
     <pre><code class="lang-js">import { GameObject } from &#x27;kontra&#x27;;
 
 function createObject(x, y, color, size &#x3D; 1) {
@@ -651,19 +665,17 @@ function createObject(x, y, color, size &#x3D; 1) {
 }
 
 let parent &#x3D; createObject(300, 100, &#x27;red&#x27;);
-let relativeChild &#x3D; createObject(25, 25, &#x27;#62a2f9&#x27;, 2);
-let absoluteChild &#x3D; createObject(25, 25, &#x27;yellow&#x27;, 2);
+let child &#x3D; createObject(25, 25, &#x27;yellow&#x27;, 2);
 
-parent.addChild(relativeChild);
-parent.addChild(absoluteChild, {absolute: true});
+parent.addChild(child);
 
 parent.render();</code></pre>
   </section>
 </div>
 
 <script>(function() {
-  kontra.init("game-canvas-2");
-  var canvas = document.querySelector("#game-canvas-2");
+  kontra.init("game-canvas-4");
+  var canvas = document.querySelector("#game-canvas-4");
   canvas.width = 600;
   canvas.height = 200;
   var context = canvas.getContext("2d");
@@ -689,11 +701,9 @@ function createObject(x, y, color, size = 1) {
 }
 
 let parent = createObject(300, 100, 'red');
-let relativeChild = createObject(25, 25, '#62a2f9', 2);
-let absoluteChild = createObject(25, 25, 'yellow', 2);
+let child = createObject(25, 25, 'yellow', 2);
 
-parent.addChild(relativeChild);
-parent.addChild(absoluteChild, {absolute: true});
+parent.addChild(child);
 
 parent.render();
 })();</script>          <h3 id="title-addChild"><span class="visually-hidden">addChild</span> Parameters</span></h3>
@@ -703,18 +713,6 @@ parent.render();
               
             </dt>
             <dd><p><em><a href="api/gameObject">GameObject</a></em>. Object to add as a child.</p>
-          </dd>
-            <dt>
-              <code>options</code>
-              <span class="optional">Optional</span>
-            </dt>
-            <dd><p><em>Object</em>. Options for adding the child.</p>
-          </dd>
-            <dt>
-              <code>options.absolute</code>
-              <span class="optional">Optional</span>
-            </dt>
-            <dd><p><em>Boolean</em>. If set the true, the x/y position of the child is treated as an absolute position in the world rather than being relative to the x/y position of the parent. Defaults to <code>false</code>.</p>
           </dd>
           </dl>
           
@@ -727,7 +725,7 @@ parent.render();
             </a>
           </h2>
 
-          <p>Move the game object by its acceleration and velocity. If the game object is an [animation game object](api/gameObject#animation-game object), it also advances the animation every frame.</p>
+          <p>Move the game object by its acceleration and velocity. If you pass <code>dt</code> it will multiply the vector and acceleration by that number. This means the <code>dx</code>, <code>dy</code>, <code>ddx</code> and <code>ddy</code> should be the how far you want the object to move in 1 second rather than in 1 frame.</p>
 <p>If you override the game objects <a href="api/gameObject#update">update()</a> function with your own update function, you can call this function to move the game object normally.</p>
 <div class="tablist">
   <ul role="tablist">
@@ -835,22 +833,22 @@ let gameObject = GameObject({
           </h2>
 
           <p><em>Object</em>. The x and y origin of the game object. {x:0, y:0} is the top left corner of the game object, {x:1, y:1} is the bottom right corner.</p>
-<canvas id="game-canvas-1"></canvas>
+<canvas id="game-canvas-3"></canvas>
 
 <div class="tablist">
   <ul role="tablist">
     <li role="presentation" data-tab="global">
-      <button role="tab" id="game-canvas-1-global-tab">Global Object</button>
+      <button role="tab" id="game-canvas-3-global-tab">Global Object</button>
     </li>
     <li role="presentation" data-tab="es">
-      <button role="tab" id="game-canvas-1-es-tab">ES Module Import</button>
+      <button role="tab" id="game-canvas-3-es-tab">ES Module Import</button>
     </li>
     <li role="presentation" data-tab="bundle">
-      <button role="tab" id="game-canvas-1-bundle-tab">Module Bundler</button>
+      <button role="tab" id="game-canvas-3-bundle-tab">Module Bundler</button>
     </li>
     <li role="presentation"></li>
   </ul>
-  <section role="tabpanel" aria-labelledby=game-canvas-1-global-tab data-tabpanel="global">
+  <section role="tabpanel" aria-labelledby=game-canvas-3-global-tab data-tabpanel="global">
     <pre><code class="lang-js">let { GameObject } &#x3D; kontra
 
 let gameObject &#x3D; GameObject({
@@ -885,7 +883,7 @@ gameObject.x &#x3D; 450;
 gameObject.render();
 drawOrigin(gameObject);</code></pre>
   </section>
-  <section role="tabpanel" aria-labelledby=game-canvas-1-es-tab data-tabpanel="es">
+  <section role="tabpanel" aria-labelledby=game-canvas-3-es-tab data-tabpanel="es">
     <pre><code class="lang-js">import { GameObject } from &#x27;path/to/kontra.mjs&#x27;
 
 let gameObject &#x3D; GameObject({
@@ -920,7 +918,7 @@ gameObject.x &#x3D; 450;
 gameObject.render();
 drawOrigin(gameObject);</code></pre>
   </section>
-  <section role="tabpanel" aria-labelledby=game-canvas-1-bundle-tab data-tabpanel="bundle">
+  <section role="tabpanel" aria-labelledby=game-canvas-3-bundle-tab data-tabpanel="bundle">
     <pre><code class="lang-js">import { GameObject } from &#x27;kontra&#x27;;
 
 let gameObject &#x3D; GameObject({
@@ -958,8 +956,8 @@ drawOrigin(gameObject);</code></pre>
 </div>
 
 <script>(function() {
-  kontra.init("game-canvas-1");
-  var canvas = document.querySelector("#game-canvas-1");
+  kontra.init("game-canvas-3");
+  var canvas = document.querySelector("#game-canvas-3");
   canvas.width = 600;
   canvas.height = 200;
   var context = canvas.getContext("2d");
@@ -1054,7 +1052,8 @@ drawOrigin(gameObject);
             </a>
           </h2>
 
-          <p>Draw the game object at its X and Y position, taking into account rotation and anchor.</p>
+          <p>Draw the game object at its X and Y position, taking into account rotation, scale, and anchor.</p>
+<p>Do note that the canvas has been rotated and translated to the objects position (taking into account anchor), so {0,0} will be the top-left corner of the game object when drawing.</p>
 <p>If you override the game objects <code>render()</code> function with your own render function, you can call this function to draw the game object normally.</p>
 <div class="tablist">
   <ul role="tablist">
@@ -1162,8 +1161,7 @@ gameObject.render();</code></pre></section>
             </a>
           </h2>
 
-          <p><em>Number</em>. The height of the game object. Does not take into account the
-objects scale.</p>
+          <p><em>Number</em>. The height of the game object. Represents the local height of the object as opposed to the <a href="/api/gameObject#world">world</a> height.</p>
           
         </section>
         <section>
@@ -1194,7 +1192,7 @@ objects scale.</p>
             </a>
           </h2>
 
-          <p>Check if the game object is alive. Primarily used by <a href="api/pool">Pool</a> to know when to recycle an object.</p>
+          <p>Check if the game object is alive.</p>
           
           <h3><span class="visually-hidden">isAlive</span> Return value</h3>
           <p><p><em>Boolean</em>. <code>true</code> if the game objects <a href="api/gameObject#ttl">ttl</a> property is above <code>0</code>, <code>false</code> otherwise.</p>
@@ -1208,8 +1206,7 @@ objects scale.</p>
             </a>
           </h2>
 
-          <p><em>Number</em>. The opacity of the object. Does not take into account opacity
-from any parent objects.</p>
+          <p><em>Number</em>. The opacity of the object. Represents the local opacity of the object as opposed to the <a href="/api/gameObject#world">world</a> opacity.</p>
           
         </section>
         <section>
@@ -1231,7 +1228,7 @@ from any parent objects.</p>
             </a>
           </h2>
 
-          <p><em><a href="api/vector">Vector</a></em>. The game objects position vector. The game objects position is its position in the world, as opposed to the position in the <a href="api/gameObject#viewX">viewport</a>. Typically the position in the world and viewport are the same value. If the game object has been <a href="/api/tileEngine#addObject">added to a tileEngine</a>, the position vector represents where in the tile world the game object is while the viewport represents where to draw the game object in relation to the top-left corner of the canvas.</p>
+          <p><em><a href="api/vector">Vector</a></em>. The game objects position vector. Represents the local position of the object as opposed to the <a href="/api/gameObject#world">world</a> position.</p>
           
         </section>
         <section>
@@ -1242,7 +1239,7 @@ from any parent objects.</p>
             </a>
           </h2>
 
-          <p>Remove an object as a child of this object. The removed objects position and rotation will no longer be calculated based off this objects position and rotation.</p>
+          <p>Remove an object as a child of this object. The removed objects <a href="/api/gameObject#world">world</a> property will be updated to not take into account this object and all of its parents.</p>
           <h3 id="title-removeChild"><span class="visually-hidden">removeChild</span> Parameters</span></h3>
           <dl aria-labelledby="title-removeChild">
             <dt>
@@ -1257,12 +1254,21 @@ from any parent objects.</p>
         <section>
           <h2 id="render">
             <a href="api/gameobject#render" class="section-link">
-              <span>GameObject&#8203;.render(&#8203;)</span>
+              <span>GameObject&#8203;.render(&#8203;[filterObjects])</span>
               <span aria-hidden="true">#</span>
             </a>
           </h2>
 
           <p>Render the game object. Calls the game objects <a href="api/gameObject#draw">draw()</a> function.</p>
+          <h3 id="title-render"><span class="visually-hidden">render</span> Parameters</span></h3>
+          <dl aria-labelledby="title-render">
+            <dt>
+              <code>filterObjects</code>
+              <span class="optional">Optional</span>
+            </dt>
+            <dd><p><em>Function</em>. <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter">Array.prototype.filter()</a> function which is used to filter which children to render.</p>
+          </dd>
+          </dl>
           
         </section>
         <section>
@@ -1273,18 +1279,29 @@ from any parent objects.</p>
             </a>
           </h2>
 
-          <p><em>Number</em>. The rotation of the game object around the origin in radians. This rotation takes into account rotations from parent objects and represents the final rotation value.</p>
+          <p><em>Number</em>. The rotation of the game object around the anchor in radians. . Represents the local rotation of the object as opposed to the <a href="/api/gameObject#world">world</a> rotation.</p>
           
         </section>
         <section>
-          <h2 id="scale">
-            <a href="api/gameobject#scale" class="section-link">
-              <span>GameObject&#8203;.scale</span>
+          <h2 id="scaleX">
+            <a href="api/gameobject#scaleX" class="section-link">
+              <span>GameObject&#8203;.scaleX</span>
               <span aria-hidden="true">#</span>
             </a>
           </h2>
 
-          <p><em>Object</em>. The x and y scale of the object. Typically you would not set these properties yourself but use <a href="/api/gameObject#setScale">setScale</a> instead. Setting these properties directly will not result in the scale property of children being updated.</p>
+          <p><em>Number</em>. The x scale of the object. Represents the local x scale of the object as opposed to the <a href="/api/gameObject#world">world</a> x scale.</p>
+          
+        </section>
+        <section>
+          <h2 id="scaleY">
+            <a href="api/gameobject#scaleY" class="section-link">
+              <span>GameObject&#8203;.scaleY</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
+
+          <p><em>Number</em>. The y scale of the object. Represents the local y scale of the object as opposed to the <a href="/api/gameObject#world">world</a> y scale.</p>
           
         </section>
         <section>
@@ -1321,7 +1338,7 @@ from any parent objects.</p>
             </a>
           </h2>
 
-          <p><em>Number</em>. The X coordinate of the camera. Used to determine <a href="api/gameObject#viewX">viewX</a>.</p>
+          <p><em>Number</em>. The X coordinate of the camera.</p>
           
         </section>
         <section>
@@ -1332,7 +1349,7 @@ from any parent objects.</p>
             </a>
           </h2>
 
-          <p><em>Number</em>. The Y coordinate of the camera. Used to determine <a href="api/gameObject#viewY">viewY</a>.</p>
+          <p><em>Number</em>. The Y coordinate of the camera.</p>
           
         </section>
         <section>
@@ -1343,7 +1360,7 @@ from any parent objects.</p>
             </a>
           </h2>
 
-          <p><em>Number</em>. How may frames the game object should be alive. Primarily used by <a href="api/pool">Pool</a> to know when to recycle an object.</p>
+          <p><em>Number</em>. How may frames the game object should be alive.</p>
           
         </section>
         <section>
@@ -1378,28 +1395,6 @@ from any parent objects.</p>
           
         </section>
         <section>
-          <h2 id="viewX">
-            <a href="api/gameobject#viewX" class="section-link">
-              <span>GameObject&#8203;.viewX</span>
-              <span aria-hidden="true">#</span>
-            </a>
-          </h2>
-
-          <p><em>Number</em>. Readonly. X coordinate of where to draw the game object. Typically the same value as the <a href="api/gameObject#position">position vector</a> unless the game object has been <a href="api/tileEngine#addObject">added to a tileEngine</a>.</p>
-          
-        </section>
-        <section>
-          <h2 id="viewY">
-            <a href="api/gameobject#viewY" class="section-link">
-              <span>GameObject&#8203;.viewY</span>
-              <span aria-hidden="true">#</span>
-            </a>
-          </h2>
-
-          <p><em>Number</em>. Readonly. Y coordinate of where to draw the game object. Typically the same value as the <a href="api/gameObject#position">position vector</a> unless the game object has been <a href="api/tileEngine#addObject">added to a tileEngine</a>.</p>
-          
-        </section>
-        <section>
           <h2 id="width">
             <a href="api/gameobject#width" class="section-link">
               <span>GameObject&#8203;.width</span>
@@ -1407,8 +1402,18 @@ from any parent objects.</p>
             </a>
           </h2>
 
-          <p><em>Number</em>. The width of the game object. Does not take into account the
-objects scale.</p>
+          <p><em>Number</em>. The width of the game object. Represents the local width of the object as opposed to the <a href="/api/gameObject#world">world</a> width.</p>
+          
+        </section>
+        <section>
+          <h2 id="world">
+            <a href="api/gameobject#world" class="section-link">
+              <span>GameObject&#8203;.world</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
+
+          <p><em>Object</em>. The world position, width, height, opacity, rotation, and scale. The world property is the true position, width, height, etc. of the object, taking into account all parents.</p>
           
         </section>
         <section>

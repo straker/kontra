@@ -47,6 +47,7 @@
               <li><a href="api/events" >Events</a></li>
               <li><a href="api/gameLoop" >GameLoop</a></li>
               <li><a href="api/gameobject" >GameObject</a></li>
+              <li><a href="api/grid" >Grid</a></li>
               <li><a href="api/helpers" aria-current="page">Helpers</a></li>
               <li><a href="api/keyboard" >Keyboard</a></li>
               <li><a href="api/plugin" >Plugin</a></li>
@@ -166,6 +167,11 @@ let radians = degToRad(180);  // =&gt; 3.14</code></pre></section>
                   </a>
                 </li>
                 <li>
+                  <a href="api/helpers#rotatePoint">
+                    <span>rotatePoint(&#8203;point, angle)</span>
+                  </a>
+                </li>
+                <li>
                   <a href="api/helpers#seedRand">
                     <span>seedRand(&#8203;str)</span>
                   </a>
@@ -189,7 +195,7 @@ let radians = degToRad(180);  // =&gt; 3.14</code></pre></section>
             </a>
           </h2>
 
-          <p>Return the angle (in radians) from one point to another point.</p>
+          <p>Return the angle in radians from one point to another point.</p>
 <div class="tablist">
   <ul role="tablist">
     <li role="presentation" data-tab="global">
@@ -648,6 +654,35 @@ console.log( lerp(10, 20, 2) );  // =&gt; 30</code></pre></section>
           
           <h3><span class="visually-hidden">randInt</span> Return value</h3>
           <p><p><em>Number</em>. Random integer between min and max values.</p>
+          </p>
+        </section>
+        <section>
+          <h2 id="rotatePoint">
+            <a href="api/helpers#rotatePoint" class="section-link">
+              <span>rotatePoint(&#8203;point, angle)</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
+
+          <p>Rotate a point by an angle.</p>
+          <h3 id="title-rotatePoint"><span class="visually-hidden">rotatePoint</span> Parameters</span></h3>
+          <dl aria-labelledby="title-rotatePoint">
+            <dt>
+              <code>point</code>
+              
+            </dt>
+            <dd><p><em>Object</em>. The point to rotate.</p>
+          </dd>
+            <dt>
+              <code>angle</code>
+              
+            </dt>
+            <dd><p><em>Number</em>. Angle (in radians) to rotate.</p>
+          </dd>
+          </dl>
+          
+          <h3><span class="visually-hidden">rotatePoint</span> Return value</h3>
+          <p><p><em>Object</em>. The new x and y coordinates after rotation.</p>
           </p>
         </section>
         <section>

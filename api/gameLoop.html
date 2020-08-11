@@ -47,6 +47,7 @@
               <li><a href="api/events" >Events</a></li>
               <li><a href="api/gameLoop" aria-current="page">GameLoop</a></li>
               <li><a href="api/gameobject" >GameObject</a></li>
+              <li><a href="api/grid" >Grid</a></li>
               <li><a href="api/helpers" >Helpers</a></li>
               <li><a href="api/keyboard" >Keyboard</a></li>
               <li><a href="api/plugin" >Plugin</a></li>
@@ -88,7 +89,7 @@
 
         <p>The game loop updates and renders the game every frame. The game loop is stopped by default and will not start until the loops <code>start()</code> function is called.</p>
 <p>The game loop uses a time-based animation with a fixed <code>dt</code> to <a href="http://blog.sklambert.com/using-time-based-animation-implement/">avoid frame rate issues</a>. Each update call is guaranteed to equal 1/60 of a second.</p>
-<p>This means that you can avoid having to do time based calculations in your update functions  and instead do fixed updates.</p>
+<p>This means that you can avoid having to do time based calculations in your update functions and instead do fixed updates.</p>
 <div class="tablist">
   <ul role="tablist">
     <li role="presentation" data-tab="global">
@@ -191,7 +192,7 @@ loop.start();</code></pre></section>
         </dd>
           <dt>
             <code>properties.update</code>
-            
+            <span class="optional">Optional</span>
           </dt>
           <dd><p><em>Function</em>. Function called every frame to update the game. Is passed the fixed <code>dt</code> as a parameter.</p>
         </dd>
@@ -212,6 +213,12 @@ loop.start();</code></pre></section>
             <span class="optional">Optional</span>
           </dt>
           <dd><p><em>Boolean</em>. Clear the canvas every frame before the <code>render()</code> function is called. Defaults to <code>true</code>.</p>
+        </dd>
+          <dt>
+            <code>properties.context</code>
+            <span class="optional">Optional</span>
+          </dt>
+          <dd><p><em>CanvasRenderingContext2D</em>. The context that should be cleared each frame if <code>clearContext</code> is not set to <code>false</code>. Defaults to <a href="api/core#getContext">core.getContext()</a>.</p>
         </dd>
         </dl>
         

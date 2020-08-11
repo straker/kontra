@@ -47,6 +47,7 @@
               <li><a href="api/events" >Events</a></li>
               <li><a href="api/gameLoop" >GameLoop</a></li>
               <li><a href="api/gameobject" >GameObject</a></li>
+              <li><a href="api/grid" >Grid</a></li>
               <li><a href="api/helpers" >Helpers</a></li>
               <li><a href="api/keyboard" >Keyboard</a></li>
               <li><a href="api/plugin" >Plugin</a></li>
@@ -111,7 +112,7 @@ loop.start();</code></pre>
 <pre><code class="language-bash">$ rollup game.js --format iife --file game.bundle.js</code></pre>
 <h2 id="rollup-plugin-kontra">Rollup-plugin-kontra</h2>
 <p>Kontra supports even more granular control over the output. If you&#39;re looking to remove unused parts of the Sprite class, such as <code>rotation</code> or <code>anchor</code>, you can use <a href="https://github.com/straker/rollup-plugin-kontra">rollup-plugin-kontra</a> to remove entire parts of the Sprite codebase. Just pass the functionality you want enabled and rollup-plugin-kontra will remove the rest.</p>
-<p><strong>Note:</strong> All options default to <code>false</code> when using rollup-plugin-kontra, so only pass the options you wish to enable. Passing no options will result in a Sprite with just <code>position</code>, <code>width,</code> and <code>height</code>.</p>
+<p><strong>Note:</strong> All options default to <code>false</code> when using rollup-plugin-kontra, so only pass the options you wish to enable. Passing no options will result in a Sprite with just <code>position</code>, <code>width,</code> <code>height</code>, and <code>color</code>.</p>
 <pre><code class="language-js">// rollup.config.js
 import kontra from &#39;rollup-plugin-kontra&#39;
 
@@ -134,9 +135,9 @@ export default {
     })
   ]
 }</code></pre>
-<h3 id="available-options">Available options</h3>
+<h3 id="available-options">Available Options</h3>
 <p>Options are passed by nesting the option with the parent source. For example, to enable the <code>image</code> functionality of a sprite, you would pass <code>sprite: { image: true }</code>.</p>
-<h4 id="gameobject-options"><code>gameObject</code> options:</h4>
+<h4 id="gameobject-options"><code>gameObject</code> Options:</h4>
 <table>
 <thead>
 <tr>
@@ -145,39 +146,43 @@ export default {
 </tr>
 </thead>
 <tbody><tr>
-<td>velocity</td>
-<td><code>velocity</code>, <code>dx</code>, <code>dy</code></td>
-</tr>
-<tr>
-<td>acceleration</td>
+<td><code>acceleration</code></td>
 <td><code>acceleration</code>, <code>ddx</code>, <code>ddy</code></td>
 </tr>
 <tr>
-<td>rotation</td>
-<td><code>rotation</code></td>
-</tr>
-<tr>
-<td>ttl</td>
-<td><code>ttl</code>, <code>isAlive</code></td>
-</tr>
-<tr>
-<td>anchor</td>
+<td><code>anchor</code></td>
 <td><code>anchor</code></td>
 </tr>
 <tr>
-<td>camera</td>
-<td><code>sx</code>, <code>sy</code>, <code>viewX</code>, <code>viewY</code></td>
+<td><code>camera</code></td>
+<td><code>sx</code>, <code>sy</code></td>
 </tr>
 <tr>
-<td>group</td>
-<td><code>children</code>, <code>parent</code></td>
+<td><code>group</code></td>
+<td><code>children</code>, <code>parent</code>, <code>addChild</code>, <code>removeChild</code></td>
 </tr>
 <tr>
-<td>scale</td>
-<td><code>scale</code>, <code>scaledWidth</code>, <code>scaledHeight</code>, <code>setScale()</code></td>
+<td><code>opacity</code></td>
+<td><code>opacity</code></td>
+</tr>
+<tr>
+<td><code>rotation</code></td>
+<td><code>rotation</code></td>
+</tr>
+<tr>
+<td><code>scale</code></td>
+<td><code>scale</code>, <code>setScale()</code></td>
+</tr>
+<tr>
+<td><code>ttl</code></td>
+<td><code>ttl</code>, <code>isAlive</code></td>
+</tr>
+<tr>
+<td><code>velocity</code></td>
+<td><code>velocity</code>, <code>dx</code>, <code>dy</code></td>
 </tr>
 </tbody></table>
-<h4 id="sprite-options"><code>sprite</code> options:</h4>
+<h4 id="sprite-options"><code>sprite</code> Options:</h4>
 <table>
 <thead>
 <tr>
@@ -186,15 +191,15 @@ export default {
 </tr>
 </thead>
 <tbody><tr>
-<td>image</td>
-<td><code>image</code></td>
-</tr>
-<tr>
-<td>animation</td>
+<td><code>animation</code></td>
 <td><code>animations</code>, <code>playAnimation</code></td>
 </tr>
+<tr>
+<td><code>image</code></td>
+<td><code>image</code></td>
+</tr>
 </tbody></table>
-<h4 id="text-options"><code>text</code> options:</h4>
+<h4 id="text-options"><code>text</code> Options:</h4>
 <table>
 <thead>
 <tr>
@@ -203,23 +208,23 @@ export default {
 </tr>
 </thead>
 <tbody><tr>
-<td>autoNewline</td>
+<td><code>autoNewline</code></td>
 <td>Setting a fixed with that automatically adds new lines to the text</td>
 </tr>
 <tr>
-<td>newline</td>
+<td><code>newline</code></td>
 <td>Support for new line characters (<code>\n</code>) in the text</td>
 </tr>
 <tr>
-<td>textAlign</td>
-<td><code>textAlign</code></td>
-</tr>
-<tr>
-<td>rtl</td>
+<td><code>rtl</code></td>
 <td>Support for RTL languages</td>
 </tr>
+<tr>
+<td><code>textAlign</code></td>
+<td><code>textAlign</code></td>
+</tr>
 </tbody></table>
-<h4 id="vector-options"><code>vector</code> options:</h4>
+<h4 id="vector-options"><code>vector</code> Options:</h4>
 <table>
 <thead>
 <tr>
@@ -228,36 +233,36 @@ export default {
 </tr>
 </thead>
 <tbody><tr>
-<td>subtract</td>
-<td><code>subract()</code></td>
-</tr>
-<tr>
-<td>scale</td>
-<td><code>scale()</code></td>
-</tr>
-<tr>
-<td>length</td>
-<td><code>length()</code></td>
-</tr>
-<tr>
-<td>normalize</td>
-<td><code>normalize()</code> (also enables <code>length</code>)</td>
-</tr>
-<tr>
-<td>dot</td>
-<td><code>dot()</code></td>
-</tr>
-<tr>
-<td>distance</td>
-<td><code>distance()</code></td>
-</tr>
-<tr>
-<td>angle</td>
+<td><code>angle</code></td>
 <td><code>angle()</code> (also enables <code>length</code> and <code>dot</code>)</td>
 </tr>
 <tr>
-<td>clamp</td>
+<td><code>clamp</code></td>
 <td><code>clamp()</code></td>
+</tr>
+<tr>
+<td><code>distance</code></td>
+<td><code>distance()</code></td>
+</tr>
+<tr>
+<td><code>dot</code></td>
+<td><code>dot()</code></td>
+</tr>
+<tr>
+<td><code>length</code></td>
+<td><code>length()</code></td>
+</tr>
+<tr>
+<td><code>normalize</code></td>
+<td><code>normalize()</code> (also enables <code>length</code>)</td>
+</tr>
+<tr>
+<td><code>scale</code></td>
+<td><code>scale()</code></td>
+</tr>
+<tr>
+<td><code>subtract</code></td>
+<td><code>subract()</code></td>
 </tr>
 </tbody></table>
 <h4 id="general-options">General Options:</h4>
@@ -270,7 +275,7 @@ export default {
 </tr>
 </thead>
 <tbody><tr>
-<td>debug</td>
+<td><code>debug</code></td>
 <td>Turn on debugging information</td>
 </tr>
 </tbody></table>

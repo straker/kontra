@@ -47,6 +47,7 @@
               <li><a href="api/events" >Events</a></li>
               <li><a href="api/gameLoop" >GameLoop</a></li>
               <li><a href="api/gameobject" >GameObject</a></li>
+              <li><a href="api/grid" >Grid</a></li>
               <li><a href="api/helpers" >Helpers</a></li>
               <li><a href="api/keyboard" >Keyboard</a></li>
               <li><a href="api/plugin" >Plugin</a></li>
@@ -168,7 +169,19 @@ scene.render();</code></pre></section>
             <code>properties.name</code>
             <span class="optional">Optional</span>
           </dt>
-          <dd><p><em>String</em>. The name of the scene. Used by screen readers to identify each scene. Use this property to give the scene a human friendly name. Defaults to the id. Defaults to <code>properties.id</code>.</p>
+          <dd><p><em>String</em>. The name of the scene. Used by screen readers to identify each scene. Use this property to give the scene a human friendly name. Defaults to <code>properties.id</code>.</p>
+        </dd>
+          <dt>
+            <code>properties.cullObjects</code>
+            <span class="optional">Optional</span>
+          </dt>
+          <dd><p><em>Boolean</em>. If the scene should not render objects outside the camera bounds. Defaults to <code>true</code>.</p>
+        </dd>
+          <dt>
+            <code>properties.cullFunction</code>
+            <span class="optional">Optional</span>
+          </dt>
+          <dd><p><em>Function</em>. The function used to filter objects to render. Defaults to <a href="/api/helpers#collides">helpers.collides</a>.</p>
         </dd>
         </dl>
         
@@ -181,6 +194,21 @@ scene.render();</code></pre></section>
             <li>
               <h3 id="properties">Properties</h3>
               <ul aria-labelledby="properties">
+                <li>
+                  <a href="api/scene#camera">
+                    <span>Scene&#8203;.camera</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="api/scene#cullFunction">
+                    <span>Scene&#8203;.cullFunction</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="api/scene#cullObjects">
+                    <span>Scene&#8203;.cullObjects</span>
+                  </a>
+                </li>
                 <li>
                   <a href="api/scene#hidden">
                     <span>Scene&#8203;.hidden</span>
@@ -210,6 +238,11 @@ scene.render();</code></pre></section>
                 <li>
                   <a href="api/scene#hide">
                     <span>Scene&#8203;.hide(&#8203;)</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="api/scene#lookAt">
+                    <span>Scene&#8203;.lookAt(&#8203;object)</span>
                   </a>
                 </li>
                 <li>
@@ -243,6 +276,40 @@ scene.render();</code></pre></section>
         </section>
 
 
+        <section>
+          <h2 id="camera">
+            <a href="api/scene#camera" class="section-link">
+              <span>Scene&#8203;.camera</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
+
+          <p><em><a href="api/gameObject">GameObject</a></em>. The camera object which is used as the focal point for the scene. The scene will not render objects that are outside the bounds of the camera.</p>
+<p>Additionally, the camera can be used to <a href="/api/scene#lookAt">lookAt</a> an object which will center the camera to that object. This allows you to zoom the scene in and out while the camera remains centered on the object.</p>
+          
+        </section>
+        <section>
+          <h2 id="cullFunction">
+            <a href="api/scene#cullFunction" class="section-link">
+              <span>Scene&#8203;.cullFunction</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
+
+          <p><em>Function</em>. Camera culling function which prevents objects outside the camera screen from rendering. Is passed as the <code>filterFunction</code> to the <a href="/api/gameObject#render">render</a> function.</p>
+          
+        </section>
+        <section>
+          <h2 id="cullObjects">
+            <a href="api/scene#cullObjects" class="section-link">
+              <span>Scene&#8203;.cullObjects</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
+
+          <p><em>Boolean</em>. If the camera should cull objects outside the camera bounds. Not rendering objects which can&#39;t be seen greatly improves the performance.</p>
+          
+        </section>
         <section>
           <h2 id="destroy">
             <a href="api/scene#destroy" class="section-link">
@@ -288,6 +355,26 @@ scene.render();</code></pre></section>
           
         </section>
         <section>
+          <h2 id="lookAt">
+            <a href="api/scene#lookAt" class="section-link">
+              <span>Scene&#8203;.lookAt(&#8203;object)</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
+
+          <p>Focus the camera to the object or x/y position. As the scene is scaled the focal point will keep to the position.</p>
+          <h3 id="title-lookAt"><span class="visually-hidden">lookAt</span> Parameters</span></h3>
+          <dl aria-labelledby="title-lookAt">
+            <dt>
+              <code>object</code>
+              
+            </dt>
+            <dd><p><em>Object</em>. Object with x/y properties.</p>
+          </dd>
+          </dl>
+          
+        </section>
+        <section>
           <h2 id="name">
             <a href="api/scene#name" class="section-link">
               <span>Scene&#8203;.name</span>
@@ -328,7 +415,7 @@ scene.render();</code></pre></section>
             </a>
           </h2>
 
-          <p>Render the scene and call <code>render()</code> on all children. A hidden scene will not render nor will any children outside of the current game viewport.</p>
+          <p>Render the scene and call <code>render()</code> on all children. A hidden scene will not render nor will any children outside of the current camera.</p>
           
         </section>
         <section>

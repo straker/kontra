@@ -47,6 +47,7 @@
               <li><a href="api/events" >Events</a></li>
               <li><a href="api/gameLoop" >GameLoop</a></li>
               <li><a href="api/gameobject" >GameObject</a></li>
+              <li><a href="api/grid" >Grid</a></li>
               <li><a href="api/helpers" >Helpers</a></li>
               <li><a href="api/keyboard" >Keyboard</a></li>
               <li><a href="api/plugin" >Plugin</a></li>
@@ -238,23 +239,18 @@ let sprite = Srite({
               </ul>
             </li>
 
-            <li>
-              <h3 id="properties">Properties</h3>
-              <ul aria-labelledby="properties">
-                <li>
-                  <a href="api/pointer#pointer">
-                    <span>pointer</span>
-                  </a>
-                </li>
-              </ul>
-            </li>
 
             <li>
               <h3 id="methods">Methods</h3>
               <ul aria-labelledby="methods">
                 <li>
+                  <a href="api/pointer#getPointer">
+                    <span>getPointer(&#8203;[canvas])</span>
+                  </a>
+                </li>
+                <li>
                   <a href="api/pointer#initPointer">
-                    <span>initPointer(&#8203;)</span>
+                    <span>initPointer(&#8203;[canvas])</span>
                   </a>
                 </li>
                 <li>
@@ -294,7 +290,7 @@ let sprite = Srite({
 
         <section>
           <h2 id="available-buttons">
-            <a href="#available-buttons" class="section-link">
+            <a href="api/pointer#available-buttons" class="section-link">
               <span>Available Buttons</span>
               <span aria-hidden="true">#</span>
             </a>
@@ -307,15 +303,80 @@ let sprite = Srite({
         </section>
 
         <section>
+          <h2 id="getPointer">
+            <a href="api/pointer#getPointer" class="section-link">
+              <span>getPointer(&#8203;[canvas])</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
+
+          <p>Get the pointer object which contains the <code>radius</code>, current <code>x</code> and <code>y</code> position of the pointer relative to the top-left corner of the canvas, and which <code>canvas</code> the pointer applies to.</p>
+<div class="tablist">
+  <ul role="tablist">
+    <li role="presentation" data-tab="global">
+      <button role="tab" id="getpointer-global-tab">Global Object</button>
+    </li>
+    <li role="presentation" data-tab="es">
+      <button role="tab" id="getpointer-es-tab">ES Module Import</button>
+    </li>
+    <li role="presentation" data-tab="bundle">
+      <button role="tab" id="getpointer-bundle-tab">Module Bundler</button>
+    </li>
+    <li role="presentation"></li>
+  </ul>
+  <section role="tabpanel" aria-labelledby=getpointer-global-tab data-tabpanel="global"><pre><code class="language-js">let { initPointer, getPointer } = kontra;
+
+initPointer();
+
+console.log(getPointer());  //=&gt; { x: 100, y: 200, radius: 5, canvas: &lt;canvas&gt; };</code></pre></section>
+  <section role="tabpanel" aria-labelledby=getpointer-es-tab data-tabpanel="es"><pre><code class="language-js">import { initPointer, getPointer } from 'path/to/kontra.mjs';
+
+initPointer();
+
+console.log(getPointer());  //=&gt; { x: 100, y: 200, radius: 5, canvas: &lt;canvas&gt; };</code></pre></section>
+  <section role="tabpanel" aria-labelledby=getpointer-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { initPointer, getPointer } from &#39;kontra&#39;;
+
+initPointer();
+
+console.log(getPointer());  //=&gt; { x: 100, y: 200, radius: 5, canvas: &lt;canvas&gt; };</code></pre></section>
+</div>
+          <h3 id="title-getPointer"><span class="visually-hidden">getPointer</span> Parameters</span></h3>
+          <dl aria-labelledby="title-getPointer">
+            <dt>
+              <code>canvas</code>
+              <span class="optional">Optional</span>
+            </dt>
+            <dd><p><em>HTMLCanvasElement</em>. The canvas which maintains the pointer. Defaults to <a href="api/core#getCanvas">core.getCanvas()</a>.</p>
+          </dd>
+          </dl>
+          
+          <h3><span class="visually-hidden">getPointer</span> Return value</h3>
+          <p><p><em>Object</em>. pointer with properties <code>x</code>, <code>y</code>, and <code>radius</code>. If using touch events, also has a <code>touches</code> object with keys of the touch identifier and the x/y position of the touch as the value.</p>
+          </p>
+        </section>
+        <section>
           <h2 id="initPointer">
             <a href="api/pointer#initPointer" class="section-link">
-              <span>initPointer(&#8203;)</span>
+              <span>initPointer(&#8203;[canvas])</span>
               <span aria-hidden="true">#</span>
             </a>
           </h2>
 
           <p>Initialize pointer event listeners. This function must be called before using other pointer functions.</p>
+<p>If you need to use multiple canvas, you&#39;ll have to initialize the pointer for each one individually as each canvas maintains its own pointer object.</p>
+          <h3 id="title-initPointer"><span class="visually-hidden">initPointer</span> Parameters</span></h3>
+          <dl aria-labelledby="title-initPointer">
+            <dt>
+              <code>canvas</code>
+              <span class="optional">Optional</span>
+            </dt>
+            <dd><p><em>HTMLCanvasElement</em>. The canvas that event listeners will be attached to. Defaults to <a href="api/core#getCanvas">core.getCanvas()</a>.</p>
+          </dd>
+          </dl>
           
+          <h3><span class="visually-hidden">initPointer</span> Return value</h3>
+          <p><p><em>Object</em>. The pointer object for the canvas.</p>
+          </p>
         </section>
         <section>
           <h2 id="onPointerDown">
@@ -425,46 +486,6 @@ onPointerUp(function(e, object) {
             <dd><p><em>Function</em>. Function to call on pointer up.</p>
           </dd>
           </dl>
-          
-        </section>
-        <section>
-          <h2 id="pointer">
-            <a href="api/pointer#pointer" class="section-link">
-              <span>pointer</span>
-              <span aria-hidden="true">#</span>
-            </a>
-          </h2>
-
-          <p><em>Object</em>. Object containing the <code>radius</code> and current <code>x</code> and <code>y</code> position of the pointer relative to the top-left corner of the canvas.</p>
-<div class="tablist">
-  <ul role="tablist">
-    <li role="presentation" data-tab="global">
-      <button role="tab" id="pointer-global-tab">Global Object</button>
-    </li>
-    <li role="presentation" data-tab="es">
-      <button role="tab" id="pointer-es-tab">ES Module Import</button>
-    </li>
-    <li role="presentation" data-tab="bundle">
-      <button role="tab" id="pointer-bundle-tab">Module Bundler</button>
-    </li>
-    <li role="presentation"></li>
-  </ul>
-  <section role="tabpanel" aria-labelledby=pointer-global-tab data-tabpanel="global"><pre><code class="language-js">let { initPointer, pointer } = kontra;
-
-initPointer();
-
-console.log(pointer);  //=&gt; { x: 100, y: 200, radius: 5 };</code></pre></section>
-  <section role="tabpanel" aria-labelledby=pointer-es-tab data-tabpanel="es"><pre><code class="language-js">import { initPointer, pointer } from 'path/to/kontra.mjs';
-
-initPointer();
-
-console.log(pointer);  //=&gt; { x: 100, y: 200, radius: 5 };</code></pre></section>
-  <section role="tabpanel" aria-labelledby=pointer-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { initPointer, pointer } from &#39;kontra&#39;;
-
-initPointer();
-
-console.log(pointer);  //=&gt; { x: 100, y: 200, radius: 5 };</code></pre></section>
-</div>
           
         </section>
         <section>

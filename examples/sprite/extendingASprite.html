@@ -12,8 +12,9 @@
 
     // create a custom sprite
     class CustomSprite extends kontra.Sprite.class {
-      constructor(properties) {
-        super(properties);
+
+      init(properties) {
+        super.init(properties);
 
         // add custom properties
         this.color = 'green';
@@ -28,21 +29,23 @@
 
         this.context.fillStyle = this.altColor;
         while (pos < this.height) {
-          this.context.fillRect(this.x, this.y + pos, this.width, 10);
+          this.context.fillRect(0, pos, this.width, 10);
 
           pos += 20;
         }
       }
 
-      render() {
-        this.draw();  // draw the sprite normally
+      // don't override the render function
+      draw() {
+        super.draw();
         this.stripe();
       }
     }
 
     window.sprite = new CustomSprite({
-      x: 290,
-      y: 180
+      x: 300,
+      y: 200,
+      anchor: {x: 0.5, y: 0.5}
     });
 
     sprite.render();

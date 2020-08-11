@@ -34,8 +34,8 @@
         <input type="range" value="1" min="0.25" max="1.5" step="any"
         oninput="kontra.emit('scale', parseFloat(this.value))">
     </label>
-    <button id="rtl" onclick="game.dir = 'rtl'; assistManager._d = true;">Change to RTL</button>
-    <button id="ltr" onclick="game.dir = 'ltr'; assistManager._d = true;">Change to LTR</button>
+    <button id="rtl" onclick="game.dir = 'rtl'; grid._d = true;">Change to RTL</button>
+    <button id="ltr" onclick="game.dir = 'ltr'; grid._d = true;">Change to LTR</button>
   </div>
     <script>
     let { canvas, context } = kontra.init();
@@ -118,7 +118,7 @@
     let airDashesOption = createOptionSelect('Default', 'grey');
     let invincibilityOption = createOptionSelect('ON');
 
-    let assistManager = kontra.Grid({
+    let grid = kontra.Grid({
       flow: 'grid',
       numCols: 2,
       rowGap: 25,
@@ -164,7 +164,7 @@
     });
 
     kontra.on('scale', value => {
-      assistManager.setScale(value);
+      grid.setScale(value);
     });
 
     let loop = kontra.GameLoop({
@@ -176,11 +176,11 @@
         context.fillRect(0,0,canvas.width,canvas.height);
         context.restore();
 
-        assistManager.render();
+        grid.render();
       }
     });
     loop.start();
-    // assistManager.render();
+    // grid.render();
     </script>
 </body>
 </html>

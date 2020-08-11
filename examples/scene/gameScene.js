@@ -15,8 +15,6 @@ let availableCells = [];
 let gameScene = kontra.Scene({
   id: 'game',
   update() {
-    snake.update();
-
     // snake ate apple
     if (snake.x === apple.x && snake.y === apple.y) {
       snake.maxCells++;

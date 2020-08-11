@@ -107,7 +107,6 @@ class Button extends Sprite.class {
     // d = dirty
     this._d = true;
     this.textNode.text = value;
-    this._pc();
   }
 
   /**

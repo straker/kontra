@@ -6,7 +6,6 @@ docs/**/*.html
 docs/assets/js/kontra.js
 kontra.*
 test/permutations/*.js
-test/permutations/*.spec.js
 test/typings/*.js
 test/playground.html
 

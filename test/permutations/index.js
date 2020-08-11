@@ -105,10 +105,10 @@ Object.keys(options).forEach(async (option) => {
       fs.writeFileSync(path.join(__dirname, `${option}.spec.js`), contents, 'utf-8');
 
       execSync('npx karma start ' + path.join(__dirname, 'karma.conf.js'), {stdio: 'inherit'});
-    } catch(e) {
-      // for some reason a failing test/exec does not error the program
-      console.log(e);
-      return process.exit(1);
     }
+  } catch(e) {
+    // for some reason a failing test/exec does not error the program
+    console.log(e);
+    return process.exit(1);
   }
 });

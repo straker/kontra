@@ -114,11 +114,11 @@ describe('sprite with context: ' + JSON.stringify(testContext,null,4), () => {
       let sprite = Sprite({
           x: 10,
           y: 20,
-          advance: sinon.spy();
+          advance: sinon.spy()
         });
         sprite.update();
 
-        expect(sprite.advance.called).to.be.true;
+        expect(sprite.advance.called).to.be.false;
     });
 
     if (testContext.SPRITE_ANIMATION) {

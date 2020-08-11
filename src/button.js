@@ -107,6 +107,7 @@ class Button extends Sprite.class {
     // d = dirty
     this._d = true;
     this.textNode.text = value;
+    this._pc();
   }
 
   /**
@@ -116,7 +117,6 @@ class Button extends Sprite.class {
    */
   destroy() {
     this._dn.remove();
-    this.children.map(child => child.destroy && child.destroy());
   }
 
   _p() {

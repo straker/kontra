@@ -3,6 +3,18 @@ import GameObject from './gameObject.js';
 import { getWorldRect } from './utils.js';
 import { on } from './events.js';
 
+let handler = {
+  set(obj, prop, value) {
+
+    // don't set dirty for private properties
+    if (!prop.startsWith('_')) {
+      obj._d = true;
+    }
+
+    return Reflect.set(obj, prop, value);
+  }
+};
+
 let alignment = {
   start(rtl) {
     return rtl ? 1 : 0;
@@ -27,7 +39,7 @@ let alignment = {
  * @param {Number|Number[]} [properties.colGap=0] - The horizontal gap between each column in the grid.
  * @param {Number|Number[]} [properties.rowGap=0] - The vertical gap between each row in the grid.
  * @param {Number} [properties.numCols=1] - The number of columns in the grid. Only applies if the `flow` property is set to `grid`.
- * @param {String} [properties.dir='ltr'] - The direction of the grid.
+ * @param {String} [properties.dir=''] - The direction of the grid.
  * @param {{metric: Function, callback: Function}[]} [properties.breakpoints=[]] - How the grid should change based on different metrics.
  */
 class Grid extends GameObject.class {
@@ -105,7 +117,7 @@ class Grid extends GameObject.class {
      * @memberof Grid
      * @property {String} dir
      */
-    dir = 'ltr',
+    dir = '',
 
     /**
      * How the grid should change based on different metrics. Based on the concept of CSS Media Queries so you can update how the grid organizes the objects when things change (such as the scale).
@@ -152,26 +164,9 @@ class Grid extends GameObject.class {
       breakpoints,
       ...props
     });
-  }
 
-  // keep width and height getters/settings so we can set _w and _h and not
-  // trigger infinite call loops
-  get width() {
-    // w = width
-    return this._w;
-  }
-
-  set width(value) {
-    this._w = value;
-  }
-
-  get height() {
-    // h = height
-    return this._h;
-  }
-
-  set height(value) {
-    this._h = value;
+    this._p();
+    return new Proxy(this, handler);
   }
 
   addChild(child) {
@@ -198,14 +193,6 @@ class Grid extends GameObject.class {
    */
   destroy() {
     this.children.map(child => child.destroy && child.destroy());
-  }
-
-  /**
-   * Properties changed handler
-   */
-  _pc() {
-    super._pc();
-    this._d = true;
   }
 
   /**
@@ -316,32 +303,39 @@ class Grid extends GameObject.class {
 
           let pointX = colWidth * justify;
           let pointY = rowHeights[row] * align;
+          let anchorX = 0;
+          let anchorY = 0;
           let { width, height } = child;
+
+          if (child.anchor) {
+            anchorX = child.anchor.x;
+            anchorY = child.anchor.y;
+          }
 
           // calculate the x position based on the alignment and
           // anchor of the object
           if (justify === 0) {
-            pointX = pointX + width * child.anchor.x;
+            pointX = pointX + width * anchorX;
           }
           else if (justify === 0.5) {
-            let sign = child.anchor.x < 0.5 ? -1 : child.anchor.x === 0.5 ? 0 : 1;
+            let sign = anchorX < 0.5 ? -1 : anchorX === 0.5 ? 0 : 1;
             pointX = pointX + sign * width * justify;
           }
           else {
-            pointX = pointX - (width * (1 - child.anchor.x));
+            pointX = pointX - (width * (1 - anchorX));
           }
 
           // calculate the y position based on the justification and
           // anchor of the object
           if (align === 0) {
-            pointY = pointY + height * child.anchor.y;
+            pointY = pointY + height * anchorY;
           }
           else if (align === 0.5) {
-            let sign = child.anchor.y < 0.5 ? -1 : child.anchor.y === 0.5 ? 0 : 1;
+            let sign = anchorY < 0.5 ? -1 : anchorY === 0.5 ? 0 : 1;
             pointY = pointY + sign * height * align;
           }
           else {
-            pointY = pointY - (height * (1 - child.anchor.y));
+            pointY = pointY - (height * (1 - anchorY));
           }
 
           child.x = topLeftX + pointX;

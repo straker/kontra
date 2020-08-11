@@ -7,40 +7,40 @@ const execSync = require('child_process').execSync;
 const rollup = require('rollup');
 
 let options = {
-  // updatable: [
-  //   'GAMEOBJECT_VELOCITY',
-  //   'GAMEOBJECT_ACCELERATION',
-  //   'GAMEOBJECT_TTL',
-  //   'VECTOR_SCALE'
-  // ],
+  updatable: [
+    'GAMEOBJECT_VELOCITY',
+    'GAMEOBJECT_ACCELERATION',
+    'GAMEOBJECT_TTL',
+    'VECTOR_SCALE'
+  ],
   gameObject: [
     'GAMEOBJECT_ANCHOR',
     'GAMEOBJECT_CAMERA',
     'GAMEOBJECT_GROUP',
-    'GAMEOBJECT_OPACITY'
+    'GAMEOBJECT_OPACITY',
     'GAMEOBJECT_ROTATION',
-    'GAMEOBJECT_SCALE',
+    'GAMEOBJECT_SCALE'
   ],
-  // sprite: [
-  //   'SPRITE_IMAGE',
-  //   'SPRITE_ANIMATION'
-  // ],
-  // text: [
-  //   'TEXT_AUTONEWLINE',
-  //   'TEXT_NEWLINE',
-  //   'TEXT_RTL',
-  //   'TEXT_ALIGN'
-  // ],
-  // vector: [
-  //   'VECTOR_ANGLE',
-  //   'VECTOR_CLAMP'
-  //   'VECTOR_DISTANCE',
-  //   'VECTOR_DOT',
-  //   'VECTOR_LENGTH',
-  //   'VECTOR_NORMALIZE',
-  //   'VECTOR_SCALE',
-  //   'VECTOR_SUBTRACT',
-  // ]
+  sprite: [
+    'SPRITE_IMAGE',
+    'SPRITE_ANIMATION'
+  ],
+  text: [
+    'TEXT_AUTONEWLINE',
+    'TEXT_NEWLINE',
+    'TEXT_RTL',
+    'TEXT_ALIGN'
+  ],
+  vector: [
+    'VECTOR_ANGLE',
+    'VECTOR_CLAMP',
+    'VECTOR_DISTANCE',
+    'VECTOR_DOT',
+    'VECTOR_LENGTH',
+    'VECTOR_NORMALIZE',
+    'VECTOR_SCALE',
+    'VECTOR_SUBTRACT'
+  ]
 };
 
 // run permutations in parallel by passing in which permutation suite to run
@@ -58,7 +58,6 @@ Object.keys(options).forEach(async (option) => {
 
   // copy test suite and change path
   let test = fs.readFileSync(path.join(__dirname, `../unit/${option}.spec.js`), 'utf-8');
-  // test = test.replace(`../../src/${option}.js`, `./${option}.js`);
 
   // since loading the setup code causes the core file to be loaded
   // twice (and destroying context references) we'll need to inject
@@ -70,17 +69,13 @@ Object.keys(options).forEach(async (option) => {
   fs.writeFileSync(path.join(__dirname, `${option}.spec.js`), test, 'utf-8');
 
   // rollup test file
-  const bundle = await rollup.rollup({
+  let bundle = await rollup.rollup({
     input: path.join(__dirname, `${option}.spec.js`)
   });
-  const { output } = await bundle.generate({
+  let { output } = await bundle.generate({
     file: path.join(__dirname, `${option}.spec.js`),
     format: 'iife'
   });
-
-  // copy file and correct paths
-  // let file = fs.readFileSync(path.join(__dirname, `../../src/${option}.js`), 'utf-8');
-  // file = file.replace(/from '\.\/(.*?)'/g, `from '../../src/$1'`);
 
   // copy karma.conf and change path
   let karma = fs.readFileSync(path.join(__dirname, `./karma.conf.template.js`), 'utf-8');
@@ -88,18 +83,21 @@ Object.keys(options).forEach(async (option) => {
   fs.writeFileSync(path.join(__dirname, 'karma.conf.js'), karma, 'utf-8');
 
   // generate each option and run tests
-  const numPermutations = 2**(options[option].length);
+  let numPermutations = 2**(options[option].length);
   for (let i = 0; i < numPermutations; i++) {
-    const context = {};
+    let context = {};
 
     options[option].forEach((optionName, index) => {
-      if (!!(2**index & i)) {
-        context[optionName] = true;
-      }
+      context[optionName] = !!(2**index & i);
     });
 
+    // replace context in test suite
+    let testContents = output[0].code.replace(/\/\/ test-context([\s\S])*\/\/ test-context:end/, `let testContext = ${JSON.stringify(context)};`);
+
+    // console.log('testContents:', testContents);
+
     let contents = pp.preprocess(
-      output[0].code,
+      testContents,
       context,
       {type: 'js'}
     );

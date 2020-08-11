@@ -1,27 +1,19 @@
 import Updatable from '../../src/updatable.js';
 import Vector from '../../src/vector.js';
 
-let testUpdatable = new Updatable();
-let testVecotr = Vector();
-
-// optional properties used to test that each permutation of
-// options works correctly
-let hasVelocity = typeof testUpdatable.velocity !== 'undefined';
-let hasAcceleration = typeof testUpdatable.acceleration !== 'undefined';
-let hasTTL = typeof testUpdatable.ttl !== 'undefined';
-let hasScale = typeof testVecotr.scale !== 'undefined';
-
-let properties = {
-  velocity: hasVelocity,
-  acceleration: hasAcceleration,
-  ttl: hasTTL,
-  vectorScale: hasScale
+// test-context:start
+let testContext = {
+  GAMEOBJECT_VELOCITY: true,
+  GAMEOBJECT_ACCELERATION: true,
+  GAMEOBJECT_TTL: true,
+  VECTOR_SCALE: true
 };
+// test-context:end
 
 // --------------------------------------------------
 // updatable
 // --------------------------------------------------
-describe('updatable with properties: ' + JSON.stringify(properties,null,4), () => {
+describe('updatable with context: ' + JSON.stringify(testContext,null,4), () => {
 
   let object;
   beforeEach(() => {
@@ -64,7 +56,7 @@ describe('updatable with properties: ' + JSON.stringify(properties,null,4), () =
       expect(object.position.y).to.equal(0);
     });
 
-    if (hasVelocity) {
+    if (testContext.GAMEOBJECT_VELOCITY) {
       it('should default velocity', () => {
         expect(object.velocity instanceof Vector.class).to.be.true;
         expect(object.velocity.x).to.equal(0);
@@ -77,7 +69,7 @@ describe('updatable with properties: ' + JSON.stringify(properties,null,4), () =
       });
     }
 
-    if (hasAcceleration) {
+    if (testContext.GAMEOBJECT_ACCELERATION) {
       it('should default acceleration', () => {
         expect(object.acceleration instanceof Vector.class).to.be.true;
         expect(object.acceleration.x).to.equal(0);
@@ -90,7 +82,7 @@ describe('updatable with properties: ' + JSON.stringify(properties,null,4), () =
       });
     }
 
-    if (hasTTL) {
+    if (testContext.GAMEOBJECT_TTL) {
       it('should default ttl', () => {
         expect(object.ttl).to.equal(Infinity);
       });
@@ -101,7 +93,7 @@ describe('updatable with properties: ' + JSON.stringify(properties,null,4), () =
       });
     }
 
-    if (hasVelocity) {
+    if (testContext.GAMEOBJECT_VELOCITY) {
       it('should set dx and dy properties', () => {
         object = new Updatable({dx: 10, dy: 20});
 
@@ -110,7 +102,7 @@ describe('updatable with properties: ' + JSON.stringify(properties,null,4), () =
       });
     }
 
-    if (hasAcceleration) {
+    if (testContext.GAMEOBJECT_ACCELERATION) {
       it('should set ddx and ddy properties', () => {
         object = new Updatable({ddx: 10, ddy: 20});
 
@@ -119,7 +111,7 @@ describe('updatable with properties: ' + JSON.stringify(properties,null,4), () =
       });
     }
 
-    if (hasTTL) {
+    if (testContext.GAMEOBJECT_TTL) {
       it('should set ttl property', () => {
         object = new Updatable({ttl: 20});
 
@@ -142,7 +134,7 @@ describe('updatable with properties: ' + JSON.stringify(properties,null,4), () =
   // --------------------------------------------------
   // velocity
   // --------------------------------------------------
-  if (hasVelocity) {
+  if (testContext.GAMEOBJECT_VELOCITY) {
     describe('velocity', () => {
 
       it('should set the velocity x property', () => {
@@ -179,7 +171,7 @@ describe('updatable with properties: ' + JSON.stringify(properties,null,4), () =
   // --------------------------------------------------
   // acceleration
   // --------------------------------------------------
-  if (hasAcceleration) {
+  if (testContext.GAMEOBJECT_ACCELERATION) {
     describe('acceleration', () => {
 
       it('should set the acceleration x property', () => {
@@ -216,7 +208,7 @@ describe('updatable with properties: ' + JSON.stringify(properties,null,4), () =
   // --------------------------------------------------
   // isAlive
   // --------------------------------------------------
-  if (hasTTL) {
+  if (testContext.GAMEOBJECT_TTL) {
     describe('isAlive', () => {
 
       it('should return true if ttl is above 0', () => {
@@ -274,7 +266,7 @@ describe('updatable with properties: ' + JSON.stringify(properties,null,4), () =
   // --------------------------------------------------
   describe('advance', () => {
 
-    if (hasVelocity && hasAcceleration) {
+    if (testContext.GAMEOBJECT_VELOCITY && testContext.GAMEOBJECT_ACCELERATION) {
       it('should add the acceleration to the velocity', () => {
         object.velocity = Vector(5, 10);
         object.acceleration = Vector(15, 20);
@@ -285,7 +277,7 @@ describe('updatable with properties: ' + JSON.stringify(properties,null,4), () =
         expect(object.velocity.y).to.equal(30);
       });
 
-      if (hasScale) {
+      if (testContext.VECTOR_SCALE) {
         it('should use dt to scale the acceleration', () => {
           object.velocity = Vector(5, 10);
           object.acceleration = Vector(10, 20);
@@ -309,7 +301,7 @@ describe('updatable with properties: ' + JSON.stringify(properties,null,4), () =
       }
     }
 
-    if (hasVelocity) {
+    if (testContext.GAMEOBJECT_VELOCITY) {
       it('should add the velocity to the position', () => {
         object.position = Vector(5, 10);
         object.velocity = Vector(15, 20);
@@ -320,7 +312,7 @@ describe('updatable with properties: ' + JSON.stringify(properties,null,4), () =
         expect(object.position.y).to.equal(30);
       });
 
-      if (hasScale) {
+      if (testContext.VECTOR_SCALE) {
         it('should use dt to scale the velocity', () => {
           object.position = Vector(5, 10);
           object.velocity = Vector(10, 20);
@@ -355,7 +347,7 @@ describe('updatable with properties: ' + JSON.stringify(properties,null,4), () =
       });
     }
 
-    if (hasTTL) {
+    if (testContext.GAMEOBJECT_TTL) {
       it('should update ttl', () => {
         object.ttl = 10;
 

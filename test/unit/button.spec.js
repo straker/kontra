@@ -1,6 +1,7 @@
 import Button from '../../src/button.js';
 import Text from '../../src/text.js';
-import { srOnlyStyle } from '../../src/utils.js'
+import { initPointer, resetPointers } from '../../src/pointer.js';
+import { srOnlyStyle } from '../../src/utils.js';
 
 // --------------------------------------------------
 // button
@@ -9,6 +10,8 @@ describe('button', () => {
 
   let button;
   beforeEach(() => {
+    initPointer();
+
     button = Button({
       text: {
         text: 'Hello'
@@ -18,6 +21,7 @@ describe('button', () => {
 
   afterEach(() => {
     button.destroy();
+    resetPointers();
   });
 
   // --------------------------------------------------
@@ -25,7 +29,10 @@ describe('button', () => {
   // --------------------------------------------------
   describe('init', () => {
 
-    it('should setup basic properties', () => {
+    it('should set default properties', () => {
+      button.destroy()
+      button = Button();
+
       expect(button.padX).to.equal(0);
       expect(button.padY).to.equal(0);
       expect(button.textNode instanceof Text).to.be.true;
@@ -89,9 +96,11 @@ describe('button', () => {
     });
 
     it('should pass the context to the textNode', () => {
-      let context = document.createElement('canvas').getContext('2d');
+      let canvas = document.createElement('canvas');
+      initPointer(canvas);
+      let context = canvas.getContext('2d');
 
-button.destroy()
+      button.destroy()
       button = Button({
         context
       });
@@ -268,9 +277,23 @@ button.destroy()
 
 
   // --------------------------------------------------
-  // render
+  // prerender
   // --------------------------------------------------
-  describe('render', () => {
+  describe('prerender', () => {
+
+    it('should be called if a property was changed since the last render', () => {
+      sinon.stub(button, '_p');
+
+      button.render();
+
+      expect(button._p.called).to.be.false;
+
+      button.text = 'Foo';
+
+      button.render();
+
+      expect(button._p.called).to.be.true;
+    });
 
     it('should update the DOM node text if the button text has changed', () => {
       button.text = 'World!';

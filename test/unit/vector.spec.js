@@ -1,32 +1,22 @@
 import Vector from '../../src/vector.js'
 
-let testVector = Vector();
-
-// optional properties
-let hasSubtract = typeof testVector.subtract !== 'undefined';
-let hasScale = typeof testVector.scale !== 'undefined';
-let hasNormalize = typeof testVector.normalize !== 'undefined';
-let hasDot = typeof testVector.dot !== 'undefined';
-let hasLength = typeof testVector.length !== 'undefined';
-let hasDistance = typeof testVector.distance !== 'undefined';
-let hasAngle = typeof testVector.angle !== 'undefined';
-let hasClamp = typeof testVector.clamp !== 'undefined';
-
-let properties = {
-  subtract: hasSubtract,
-  scale: hasScale,
-  normalize: hasNormalize,
-  dot: hasDot,
-  length: hasLength,
-  distance: hasDistance,
-  angle: hasAngle,
-  clamp: hasClamp
+// test-context:start
+let testContext = {
+  VECTOR_ANGLE: true,
+  VECTOR_CLAMP: true,
+  VECTOR_DISTANCE: true,
+  VECTOR_DOT: true,
+  VECTOR_LENGTH: true,
+  VECTOR_NORMALIZE: true,
+  VECTOR_SCALE: true,
+  VECTOR_SUBTRACT: true
 };
+// test-context:end
 
 // --------------------------------------------------
 // vector
 // --------------------------------------------------
-describe('vector with properties: ' + JSON.stringify(properties,null,4), () => {
+describe('vector with context: ' + JSON.stringify(testContext,null,4), () => {
 
   // --------------------------------------------------
   // init
@@ -83,7 +73,7 @@ describe('vector with properties: ' + JSON.stringify(properties,null,4), () => {
   // subtract
   // --------------------------------------------------
   describe('subtract', () => {
-    if (hasSubtract) {
+    if (testContext.VECTOR_SUBTRACT) {
 
       it('should subtract one vector from another', () => {
         let vector1 = Vector(10, 20);
@@ -124,7 +114,7 @@ describe('vector with properties: ' + JSON.stringify(properties,null,4), () => {
   // scale
   // --------------------------------------------------
   describe('scale', () => {
-    if (hasScale) {
+    if (testContext.VECTOR_SCALE) {
 
       it('should scale a vector by a scalar', () => {
         let vector1 = Vector(5, 10);
@@ -161,7 +151,7 @@ describe('vector with properties: ' + JSON.stringify(properties,null,4), () => {
   // normalize
   // --------------------------------------------------
   describe('normalize', () => {
-    if (hasNormalize) {
+    if (testContext.VECTOR_NORMALIZE) {
 
       it('should calculate the normalized vector', () => {
         let vector1 = Vector(4, 3);
@@ -189,7 +179,7 @@ describe('vector with properties: ' + JSON.stringify(properties,null,4), () => {
   // dot
   // --------------------------------------------------
   describe('dot', () => {
-    if (hasDot) {
+    if (testContext.VECTOR_DOT || testContext.VECTOR_ANGLE) {
 
       it('should calculate dot product of two vectors', () => {
         let vector1 = Vector(10, 20);
@@ -217,7 +207,7 @@ describe('vector with properties: ' + JSON.stringify(properties,null,4), () => {
   // length
   // --------------------------------------------------
   describe('length', () => {
-    if (hasLength) {
+    if (testContext.VECTOR_LENGTH || testContext.VECTOR_NORMALIZE || testContext.VECTOR_ANGLE) {
 
       it('should calculate the length of the vector', () => {
         let vector1 = Vector(4, 3);
@@ -244,7 +234,7 @@ describe('vector with properties: ' + JSON.stringify(properties,null,4), () => {
   // distance
   // --------------------------------------------------
   describe('distance', () => {
-    if (hasDistance) {
+    if (testContext.VECTOR_DISTANCE) {
 
       it('should calculate the distance between two vectors', () => {
         let vector1 = Vector(10, 20);
@@ -271,7 +261,7 @@ describe('vector with properties: ' + JSON.stringify(properties,null,4), () => {
   // angle
   // --------------------------------------------------
   describe('angle', () => {
-    if (hasAngle) {
+    if (testContext.VECTOR_ANGLE) {
       it('should calculate the angle between two vectors', () => {
         let vector1 = Vector(4, 3);
         let vector2 = Vector(3, 5);
@@ -297,7 +287,7 @@ describe('vector with properties: ' + JSON.stringify(properties,null,4), () => {
   // clamp
   // --------------------------------------------------
   describe('clamp', () => {
-    if (hasClamp) {
+    if (testContext.VECTOR_CLAMP) {
       let vector;
 
       beforeEach(() => {

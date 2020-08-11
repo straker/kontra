@@ -15,6 +15,7 @@ beforeEach(() => {
 
 afterEach(() => {
   document.querySelectorAll('canvas').forEach(canvas => canvas.remove());
+  document.querySelectorAll('[data-kontra]').forEach(node => node.remove());
 });
 
 setup();

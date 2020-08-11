@@ -202,7 +202,10 @@ class GameObject extends Updatable {
 
     ...props
   } = {}) {
+
+    // @ifdef GAMEOBJECT_GROUP
     this.children = [];
+    // @endif
 
     // by setting defaults to the parameters and passing them into
     // the init, we can ensure that a parent class can set overriding
@@ -385,9 +388,7 @@ class GameObject extends Updatable {
     this._uw();
 
     // @ifdef GAMEOBJECT_GROUP
-    // since this can be called before children are set
-    // we need to guard it
-    (this.children || []).map(child => child._pc());
+    this.children.map(child => child._pc());
     // @endif
   }
 
@@ -421,6 +422,26 @@ class GameObject extends Updatable {
     this._pc();
   }
 
+  get width() {
+    // w = width
+    return this._w;
+  }
+
+  set width(value) {
+    this._w = value;
+    this._pc();
+  }
+
+  get height() {
+    // h = height
+    return this._h;
+  }
+
+  set height(value) {
+    this._h = value;
+    this._pc();
+  }
+
   /**
    * Update world properties
    */
@@ -429,23 +450,23 @@ class GameObject extends Updatable {
     if (!this._di) return;
 
     // @ifdef GAMEOBJECT_GROUP||GAMEOBJECT_OPACITY||GAMEOBJECT_ROTATION||GAMEOBJECT_SCALE
-    let parent = this.parent || {
-      _wx: 0,
-      _wy: 0,
+    let {
+      _wx = 0,
+      _wy = 0,
 
       // @ifdef GAMEOBJECT_OPACITY
-      _wo: 1,
+      _wo = 1,
       // @endif
 
       // @ifdef GAMEOBJECT_ROTATION
-      _wr: 0,
+      _wr = 0,
       // @endif
 
       // @ifdef GAMEOBJECT_SCALE
-      _wsx: 1,
-      _wsy: 1
+      _wsx = 1,
+      _wsy = 1
       // @endif
-    };
+    } = (this.parent || {});
     // @endif
 
     // wx = world x, wy = world y
@@ -458,32 +479,32 @@ class GameObject extends Updatable {
 
     // @ifdef GAMEOBJECT_OPACITY
     // wo = world opacity
-    this._wo = parent._wo * this.opacity;
+    this._wo = _wo * this.opacity;
     // @endif
 
     // @ifdef GAMEOBJECT_ROTATION
     // wr = world rotation
-    this._wr = parent._wr + this.rotation;
+    this._wr = _wr + this.rotation;
 
-    let {x, y} = rotatePoint({x: this.x, y: this.y}, parent._wr);
+    let {x, y} = rotatePoint({x: this.x, y: this.y}, _wr);
     this._wx = x;
     this._wy = y;
     // @endif
 
     // @ifdef GAMEOBJECT_SCALE
     // wsx = world scale x, wsy = world scale y
-    this._wsx = parent._wsx * this.scaleX;
-    this._wsy = parent._wsy * this.scaleY;
+    this._wsx = _wsx * this.scaleX;
+    this._wsy = _wsy * this.scaleY;
 
-    this._wx = this.x * parent._wsx;
-    this._wy = this.y * parent._wsy;
+    this._wx = this.x * _wsx;
+    this._wy = this.y * _wsy;
     this._ww = this.width * this._wsx;
     this._wh = this.height * this._wsy;
     // @endif
 
     // @ifdef GAMEOBJECT_GROUP
-    this._wx += parent._wx;
-    this._wy += parent._wy;
+    this._wx += _wx;
+    this._wy += _wy;
     // @endif
   }
 

@@ -1,32 +1,24 @@
 import Sprite from '../../src/sprite.js'
 import { noop } from '../../src/utils.js'
 
-// optional properties
-let img = new Image();
-img.width = 10;
-img.height = 20;
-
-let testSprite = Sprite({ image: img });
-
-let hasImage = testSprite.width === 10 && testSprite.height === 20;
-let hasAnimation = !!testSprite.playAnimation;
-
-let properties = {
-  image: hasImage,
-  animation: hasAnimation
+// test-context:start
+let testContext = {
+  SPRITE_IMAGE: true,
+  SPRITE_ANIMATION: true
 };
+// test-context:end
 
 // --------------------------------------------------
 // sprite
 // --------------------------------------------------
-describe('sprite with properties: ' + JSON.stringify(properties,null,4), () => {
+describe('sprite with context: ' + JSON.stringify(testContext,null,4), () => {
 
   // --------------------------------------------------
   // init
   // --------------------------------------------------
   describe('init', () => {
 
-    if (hasImage) {
+    if (testContext.SPRITE_IMAGE) {
       it('should set the width and height of the sprite to an image if passed', () => {
         let img = new Image();
         img.width = 10;
@@ -42,7 +34,7 @@ describe('sprite with properties: ' + JSON.stringify(properties,null,4), () => {
       });
     }
 
-    if (hasImage) {
+    if (testContext.SPRITE_IMAGE) {
       it('should allow user to override with and height of image', () => {
         let img = new Image();
         img.width = 10;
@@ -60,7 +52,7 @@ describe('sprite with properties: ' + JSON.stringify(properties,null,4), () => {
       });
     }
 
-    if (hasAnimation) {
+    if (testContext.SPRITE_ANIMATION) {
       it('should set the width and height of the sprite to an animation if passed', () => {
         // simple animation object from spriteSheet
         let animations = {
@@ -84,7 +76,7 @@ describe('sprite with properties: ' + JSON.stringify(properties,null,4), () => {
       });
     }
 
-    if (hasAnimation) {
+    if (testContext.SPRITE_ANIMATION) {
       it('should clone any animations to prevent frame corruption', () => {
 
         let animations = {
@@ -118,7 +110,18 @@ describe('sprite with properties: ' + JSON.stringify(properties,null,4), () => {
   // --------------------------------------------------
   describe('update', () => {
 
-    if (hasAnimation) {
+    it('should update the sprite', () => {
+      let sprite = Sprite({
+          x: 10,
+          y: 20,
+          dx: 10
+        });
+        sprite.update();
+
+        expect(sprite.x).to.equal(20);
+    });
+
+    if (testContext.SPRITE_ANIMATION) {
       it('should update the animation', () => {
         // simple animation object from spriteSheet
         let animations = {
@@ -193,7 +196,7 @@ describe('sprite with properties: ' + JSON.stringify(properties,null,4), () => {
       sprite.context.fillRect.restore();
     });
 
-    if (hasImage) {
+    if (testContext.SPRITE_IMAGE) {
       it('should draw an image sprite', () => {
         let img = new Image();
         img.width = 10;
@@ -215,7 +218,7 @@ describe('sprite with properties: ' + JSON.stringify(properties,null,4), () => {
       });
     }
 
-    if (hasAnimation) {
+    if (testContext.SPRITE_ANIMATION) {
       it('should draw an animation sprite', () => {
         // simple animation object from spriteSheet
         let animations = {
@@ -257,7 +260,7 @@ describe('sprite with properties: ' + JSON.stringify(properties,null,4), () => {
   // --------------------------------------------------
   describe('playAnimation', () => {
 
-    if (hasAnimation) {
+    if (testContext.SPRITE_ANIMATION) {
       it('should set the animation to play', () => {
         let animations = {
           'walk': {

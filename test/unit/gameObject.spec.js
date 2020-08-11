@@ -2,30 +2,21 @@ import GameObject from '../../src/gameObject.js'
 import { getContext } from '../../src/core.js'
 import { noop } from '../../src/utils.js'
 
-let testGameObject = GameObject();
-
-// optional properties used to test that each permutation of
-// options works correctly
-let hasAnchor = typeof testGameObject.anchor !== 'undefined';
-let hasCamera = typeof testGameObject.sx !== 'undefined';
-let hasGroup = typeof testGameObject.children !== 'undefined';
-let hasOpacity = typeof testGameObject.opacity !== 'undefined';
-let hasRotation = typeof testGameObject.rotation !== 'undefined';
-let hasScale = typeof testGameObject.scale !== 'undefined';
-
-let properties = {
-  anchor: hasAnchor,
-  camera: hasCamera,
-  group: hasGroup,
-  opacity: hasOpacity,
-  rotation: hasRotation,
-  scale: hasScale
+// test-context:start
+let testContext = {
+  GAMEOBJECT_ANCHOR: true,
+  GAMEOBJECT_CAMERA: true,
+  GAMEOBJECT_GROUP: true,
+  GAMEOBJECT_OPACITY: true,
+  GAMEOBJECT_ROTATION: true,
+  GAMEOBJECT_SCALE: true
 };
+// test-context:end
 
 // --------------------------------------------------
 // gameObject
 // --------------------------------------------------
-describe('gameObject with properties: ' + JSON.stringify(properties,null,4), () => {
+describe('gameObject with context: ' + JSON.stringify(testContext,null,4), () => {
 
   let spy;
   let gameObject;
@@ -43,20 +34,9 @@ describe('gameObject with properties: ' + JSON.stringify(properties,null,4), () 
   describe('init', () => {
 
     it('should set default properties', () => {
-      // defaults
       expect(gameObject.context).to.equal(getContext());
       expect(gameObject.width).to.equal(0);
       expect(gameObject.height).to.equal(0);
-
-      // options
-      expect(gameObject.anchor).to.deep.equal({x: 0, y: 0});
-      expect(gameObject.sx).to.equal(0);
-      expect(gameObject.sy).to.equal(0);
-      expect(gameObject.children).to.deep.equal([]);
-      expect(gameObject.opacity).to.equal(1);
-      expect(gameObject.rotation).to.equal(0);
-      expect(gameObject.scaleX).to.equal(1);
-      expect(gameObject.scaleY).to.equal(1);
     });
 
     it('should set width and height properties', () => {
@@ -74,60 +54,10 @@ describe('gameObject with properties: ' + JSON.stringify(properties,null,4), () 
       expect(gameObject.context).to.equal(context);
     });
 
-    it('should set anchor property', () => {
-      gameObject = GameObject({anchor: {x: 0.5, y: 0.5}});
-
-      expect(gameObject.anchor).to.deep.equal({x: 0.5, y: 0.5});
-    });
-
-    it('should set sx and sy properties', () => {
-      gameObject = GameObject({sx: 10, sy: 20});
-
-      expect(gameObject.sx).to.equal(10);
-      expect(gameObject.sy).to.equal(20);
-    });
-
-    it('should set children property', () => {
-      gameObject = GameObject({
-        children: [GameObject(), GameObject()]
-      });
-
-      expect(gameObject.children).to.have.lengthOf(2);
-    });
-
-    it('should set opacity property', () => {
-      gameObject = GameObject({opacity: 0.5});
-
-      expect(gameObject.opacity).to.equal(0.5);
-    });
-
-    it('should set rotation property', () => {
-      gameObject = GameObject({rotation: 0.5});
-
-      expect(gameObject.rotation).to.equal(0.5);
-    });
-
-    it('should set scaleX and scaleY properties', () => {
-      gameObject = GameObject({scaleX: 10, scaleY: 20});
-
-      expect(gameObject.scaleX).to.equal(10);
-      expect(gameObject.scaleY).to.equal(20);
-    });
-
     it('should set any property', () => {
       gameObject = GameObject({myProp: 'foo'});
 
       expect(gameObject.myProp).to.equal('foo');
-    });
-
-    it('should call "addChild" for each child', () => {
-      spy = sinon.stub(GameObject.prototype, 'addChild').callsFake(noop);
-
-      gameObject = GameObject({children: ['child1', 'child2']});
-
-      expect(spy.calledTwice).to.be.true;
-      expect(spy.firstCall.calledWith('child1')).to.be.true;
-      expect(spy.secondCall.calledWith('child2')).to.be.true;
     });
 
     it('should set render function', () => {
@@ -135,6 +65,142 @@ describe('gameObject with properties: ' + JSON.stringify(properties,null,4), () 
 
       expect(gameObject._rf).to.equal(noop);
     });
+
+    it('should not override properties from parent object', () => {
+      class MyClass extends GameObject.class {
+        init() {
+          super.init({
+            width: 20,
+            height: 30
+          });
+        }
+      }
+
+      let obj = new MyClass();
+      expect(obj.width).to.equal(20);
+      expect(obj.height).to.equal(30);
+    });
+
+    if (testContext.GAMEOBJECT_ANCHOR) {
+      it('should set default anchor', () => {
+        expect(gameObject.anchor).to.deep.equal({x: 0, y: 0});
+      });
+
+      it('should set anchor property', () => {
+        gameObject = GameObject({anchor: {x: 0.5, y: 0.5}});
+
+        expect(gameObject.anchor).to.deep.equal({x: 0.5, y: 0.5});
+      });
+    }
+    else {
+      it('should not default anchor', () => {
+        expect(gameObject.anchor).to.not.exist;
+      });
+    }
+
+    if (testContext.GAMEOBJECT_CAMERA) {
+      it('should set default camera', () => {
+        expect(gameObject.sx).to.equal(0);
+        expect(gameObject.sy).to.equal(0);
+      });
+
+      it('should set sx and sy properties', () => {
+        gameObject = GameObject({sx: 10, sy: 20});
+
+        expect(gameObject.sx).to.equal(10);
+        expect(gameObject.sy).to.equal(20);
+      });
+    }
+    else {
+      it('should not default camera', () => {
+        expect(gameObject.sx).to.not.exist;
+        expect(gameObject.sy).to.not.exist;
+      });
+    }
+
+    if (testContext.GAMEOBJECT_GROUP) {
+      it('should set default children', () => {
+        expect(gameObject.children).to.deep.equal([]);
+      });
+
+      it('should set children property', () => {
+        gameObject = GameObject({
+          children: [GameObject(), GameObject()]
+        });
+
+        expect(gameObject.children).to.have.lengthOf(2);
+      });
+
+      it('should call "addChild" for each child', () => {
+        spy = sinon.stub(GameObject.prototype, 'addChild').callsFake(noop);
+
+        gameObject = GameObject({children: ['child1', 'child2']});
+
+        expect(spy.calledTwice).to.be.true;
+        expect(spy.firstCall.calledWith('child1')).to.be.true;
+        expect(spy.secondCall.calledWith('child2')).to.be.true;
+      });
+    }
+    else {
+      it('should not default children', () => {
+        expect(gameObject.children).to.not.exist;
+      });
+    }
+
+    if (testContext.GAMEOBJECT_OPACITY) {
+      it('should set default opacity', () => {
+        expect(gameObject.opacity).to.equal(1);
+      });
+
+      it('should set opacity property', () => {
+        gameObject = GameObject({opacity: 0.5});
+
+        expect(gameObject.opacity).to.equal(0.5);
+      });
+    }
+    else {
+      it('should not default opacity', () => {
+        expect(gameObject.opacity).to.not.exist;
+      });
+    }
+
+    if (testContext.GAMEOBJECT_ROTATION) {
+      it('should set default camera', () => {
+        expect(gameObject.rotation).to.equal(0);
+      });
+
+
+      it('should set rotation property', () => {
+        gameObject = GameObject({rotation: 0.5});
+
+        expect(gameObject.rotation).to.equal(0.5);
+      });
+    }
+    else {
+      it('should not default camera', () => {
+        expect(gameObject.rotation).to.not.exist;
+      });
+    }
+
+    if (testContext.GAMEOBJECT_SCALE) {
+      it('should set default camera', () => {
+        expect(gameObject.scaleX).to.equal(1);
+        expect(gameObject.scaleY).to.equal(1);
+      });
+
+      it('should set scaleX and scaleY properties', () => {
+        gameObject = GameObject({scaleX: 10, scaleY: 20});
+
+        expect(gameObject.scaleX).to.equal(10);
+        expect(gameObject.scaleY).to.equal(20);
+      });
+    }
+    else {
+      it('should not default camera', () => {
+        expect(gameObject.scaleY).to.not.exist;
+        expect(gameObject.scaleY).to.not.exist;
+      });
+    }
 
   });
 
@@ -166,19 +232,6 @@ describe('gameObject with properties: ' + JSON.stringify(properties,null,4), () 
       expect(gameObject.context.translate.calledWith(10, 20)).to.be.true;
     });
 
-    it('should translate to the viewX and viewY position', () => {
-      gameObject.x = 30;
-      gameObject.y = 40;
-      gameObject.sx = 5;
-      gameObject.sy = 10;
-
-      sinon.stub(gameObject.context, 'translate');
-
-      gameObject.render();
-
-      expect(gameObject.context.translate.calledWith(25, 30)).to.be.true;
-    });
-
     it('should not translate if the position is 0', () => {
       sinon.stub(gameObject.context, 'translate');
 
@@ -187,74 +240,176 @@ describe('gameObject with properties: ' + JSON.stringify(properties,null,4), () 
       expect(gameObject.context.translate.called).to.be.false;
     });
 
-    it('should rotate by the rotation', () => {
-      gameObject.rotation = 10;
+    if (testContext.GAMEOBJECT_ROTATION) {
+      it('should rotate by the rotation', () => {
+        gameObject.rotation = 10;
 
-      sinon.stub(gameObject.context, 'rotate');
+        sinon.stub(gameObject.context, 'rotate');
 
-      gameObject.render();
+        gameObject.render();
 
-      expect(gameObject.context.rotate.calledWith(10)).to.be.true;
-    });
+        expect(gameObject.context.rotate.calledWith(10)).to.be.true;
+      });
 
-    it('should not rotate if the rotation is 0', () => {
-      sinon.stub(gameObject.context, 'rotate');
+      it('should not rotate if the rotation is 0', () => {
+        sinon.stub(gameObject.context, 'rotate');
 
-      gameObject.render();
+        gameObject.render();
 
-      expect(gameObject.context.rotate.called).to.be.false;
-    });
+        expect(gameObject.context.rotate.called).to.be.false;
+      });
+    }
+    else {
+      it('should not rotate', () => {
+        gameObject.rotation = 10;
 
-    it('should scale the canvas', () => {
-      gameObject.scaleX = 2;
-      gameObject.scaleY = 2;
+        sinon.stub(gameObject.context, 'rotate');
 
-      sinon.stub(gameObject.context, 'scale');
+        gameObject.render();
 
-      gameObject.render();
+        expect(gameObject.context.rotate.called).to.be.false;
+      });
+    }
 
-      expect(gameObject.context.scale.calledWith(2, 2)).to.be.true;
-    });
+    if (testContext.GAMEOBJECT_CAMERA) {
+      it('should translate by the camera', () => {
+        gameObject.sx = 10;
+        gameObject.sy = 20;
 
-    it('should not scale if scaleX and scaleY are 1', () => {
-      sinon.stub(gameObject.context, 'scale');
+        sinon.stub(gameObject.context, 'translate');
 
-      gameObject.render();
+        gameObject.render();
 
-      expect(gameObject.context.scale.called).to.be.false;
-    });
+        expect(gameObject.context.translate.calledWith(-10, -20)).to.be.true;
+      });
 
-    it('should translate to the anchor position', () => {
-      gameObject.anchor = {x: 0.5, y: 0.5};
-      gameObject.width = 20;
-      gameObject.height = 30;
+      it('should not translate if camera is {0, 0}', () => {
+        sinon.stub(gameObject.context, 'translate');
 
-      sinon.stub(gameObject.context, 'translate');
+        gameObject.render();
 
-      gameObject.render();
+        expect(gameObject.context.translate.called).to.be.false;
+      });
+    }
+    else {
+      it('should not translate by camera', () => {
+        gameObject.sx = 10;
+        gameObject.sy = 20;
 
-      expect(gameObject.context.translate.calledWith(-10, -15)).to.be.true;
-    });
+        sinon.stub(gameObject.context, 'translate');
 
-    it('should not translate if the anchor position is {0, 0}', () => {
-      sinon.stub(gameObject.context, 'translate');
+        gameObject.render();
 
-      gameObject.render();
+        expect(gameObject.context.translate.called).to.be.false;
+      });
+    }
 
-      expect(gameObject.context.translate.called).to.be.false;
-    });
+    if (testContext.GAMEOBJECT_SCALE) {
+      it('should scale the canvas', () => {
+        gameObject.scaleX = 2;
+        gameObject.scaleY = 2;
 
-    it('should set the globalAlpha', () => {
-      gameObject._fop = 0.5;
+        sinon.stub(gameObject.context, 'scale');
 
-      var spy = sinon.spy(gameObject.context, 'globalAlpha', ['set']);
+        gameObject.render();
 
-      gameObject.render();
+        expect(gameObject.context.scale.calledWith(2, 2)).to.be.true;
+      });
 
-      expect(spy.set.calledWith(0.5)).to.be.true;
+      it('should not scale if scaleX and scaleY are 1', () => {
+        sinon.stub(gameObject.context, 'scale');
 
-      spy.restore();
-    });
+        gameObject.render();
+
+        expect(gameObject.context.scale.called).to.be.false;
+      });
+    }
+    else {
+      it('should not scale', () => {
+        gameObject.scaleX = 2;
+        gameObject.scaleY = 2;
+
+        sinon.stub(gameObject.context, 'scale');
+
+        gameObject.render();
+
+        expect(gameObject.context.scale.called).to.be.false;
+      });
+    }
+
+    if (testContext.GAMEOBJECT_ANCHOR) {
+      it('should translate to the anchor position', () => {
+        gameObject.anchor = {x: 0.5, y: 0.5};
+        gameObject.width = 20;
+        gameObject.height = 30;
+
+        sinon.stub(gameObject.context, 'translate');
+
+        gameObject.render();
+
+        expect(gameObject.context.translate.firstCall.calledWith(-10, -15)).to.be.true;
+      });
+
+      it('should not translate if the anchor position is {0, 0}', () => {
+        sinon.stub(gameObject.context, 'translate');
+
+        gameObject.render();
+
+        expect(gameObject.context.translate.called).to.be.false;
+      });
+
+      it('should translate back to the x/y position', () => {
+        gameObject.anchor = {x: 0.5, y: 0.5};
+        gameObject.width = 20;
+        gameObject.height = 30;
+
+        sinon.stub(gameObject.context, 'translate');
+
+        gameObject.render();
+
+        expect(gameObject.context.translate.secondCall.calledWith(10, 15)).to.be.true;
+      });
+    }
+    else {
+      it('should not translate by anchor', () => {
+        gameObject.anchor = {x: 0.5, y: 0.5};
+        gameObject.width = 20;
+        gameObject.height = 30;
+
+        sinon.stub(gameObject.context, 'translate');
+
+        gameObject.render();
+
+        expect(gameObject.context.translate.called).to.be.false;
+      });
+    }
+
+    if (testContext.GAMEOBJECT_OPACITY) {
+      it('should set the globalAlpha', () => {
+        gameObject.opacity = 0.5;
+
+        var spy = sinon.spy(gameObject.context, 'globalAlpha', ['set']);
+
+        gameObject.render();
+
+        expect(spy.set.calledWith(0.5)).to.be.true;
+
+        spy.restore();
+      });
+    }
+    else {
+      it('should not set the globalAlpha', () => {
+        gameObject.opacity = 0.5;
+
+        var spy = sinon.spy(gameObject.context, 'globalAlpha', ['set']);
+
+        gameObject.render();
+
+        expect(spy.set.called).to.be.false;
+
+        spy.restore();
+      });
+    }
 
     it('should call the render function', () => {
       sinon.stub(gameObject, '_rf');
@@ -264,17 +419,50 @@ describe('gameObject with properties: ' + JSON.stringify(properties,null,4), () 
       expect(gameObject._rf.called).to.be.true;
     });
 
-    it('should call render on each child', () => {
-      let child = {
-        render: sinon.stub()
-      };
+    if (testContext.GAMEOBJECT_GROUP) {
+      it('should call render on each child', () => {
+        let child = {
+          render: sinon.stub()
+        };
 
-      gameObject.children = [child];
+        gameObject.children = [child];
 
-      gameObject.render();
+        gameObject.render();
 
-      expect(child.render.called).to.be.true;
-    });
+        expect(child.render.called).to.be.true;
+      });
+
+      it('should filter objects by a function if passed', () => {
+        let child1 = {
+          foo: 'bar',
+          render: sinon.stub()
+        };
+        let child2 = {
+          foo: 'baz',
+          render: sinon.stub()
+        };
+
+        gameObject.children = [child1, child2];
+
+        gameObject.render(obj => obj.foo === 'baz');
+
+        expect(child1.render.called).to.be.false;
+        expect(child2.render.called).to.be.true;
+      });
+    }
+    else {
+      it('should not call render on each child', () => {
+        let child = {
+          render: sinon.stub()
+        };
+
+        gameObject.children = [child];
+
+        gameObject.render();
+
+        expect(child.render.called).to.be.false;
+      });
+    }
 
   });
 
@@ -283,35 +471,196 @@ describe('gameObject with properties: ' + JSON.stringify(properties,null,4), () 
 
 
   // --------------------------------------------------
-  // camera
+  // world
   // --------------------------------------------------
-  describe('camera', () => {
+  describe('world', () => {
 
-    it('should return the camera offset position', () => {
+    it('should default position and size properties', () => {
+      expect(gameObject.world.x).to.equal(0);
+      expect(gameObject.world.y).to.equal(0);
+      expect(gameObject.world.width).to.equal(0);
+      expect(gameObject.world.height).to.equal(0);
+    });
+
+    it('should update position', () => {
       gameObject.x = 10;
       gameObject.y = 20;
 
-      expect(gameObject.viewX).to.equal(10);
-      expect(gameObject.viewY).to.equal(20);
-
-      gameObject.sx = 50;
-      gameObject.sy = 40;
-
-      expect(gameObject.viewX).to.equal(-40);
-      expect(gameObject.viewY).to.equal(-20);
+      expect(gameObject.world.x).to.equal(10);
+      expect(gameObject.world.y).to.equal(20);
     });
 
-    it('should be readonly', () => {
-      function viewX() {
-        gameObject.viewX = 10
-      }
-      function viewY() {
-        gameObject.viewY = 10
+    it('should update size', () => {
+      gameObject.width = 10;
+      gameObject.height = 20;
+
+      expect(gameObject.world.width).to.equal(10);
+      expect(gameObject.world.height).to.equal(20);
+    });
+
+    if (testContext.GAMEOBJECT_OPACITY) {
+      it('should default opacity', () => {
+        expect(gameObject.world.opacity).to.equal(1);
+      });
+
+      it('should update world opacity', () => {
+        gameObject.opacity = 0.5;
+
+        expect(gameObject.world.opacity).to.equal(0.5);
+      });
+    }
+    else {
+      it('should not have opacity', () => {
+        expect(gameObject.world.opacity).to.not.exist;
+      });
+    }
+
+    if (testContext.GAMEOBJECT_ROTATION) {
+      it('should default rotation', () => {
+        expect(gameObject.world.rotation).to.equal(0);
+      });
+
+      it('should update world rotation', () => {
+        gameObject.rotation = 0.5;
+
+        expect(gameObject.world.rotation).to.equal(0.5);
+      });
+    }
+    else {
+      it('should not have rotation', () => {
+        expect(gameObject.world.rotation).to.not.exist;
+      });
+    }
+
+    if (testContext.GAMEOBJECT_SCALE) {
+      it('should default scale', () => {
+        expect(gameObject.world.scaleX).to.equal(1);
+        expect(gameObject.world.scaleY).to.equal(1);
+      });
+
+      it('should update world scale', () => {
+        gameObject.scaleX = 2;
+        gameObject.scaleY = 3;
+
+        expect(gameObject.world.scaleX).to.equal(2);
+        expect(gameObject.world.scaleY).to.equal(3);
+      });
+
+      it('should update size based on scale', () => {
+        gameObject.width = 10;
+        gameObject.height = 20;
+
+        gameObject.scaleX = 2;
+        gameObject.scaleY = 2;
+
+        expect(gameObject.world.width).to.equal(20);
+        expect(gameObject.world.height).to.equal(40);
+      });
+    }
+    else {
+      it('should not have scale', () => {
+        expect(gameObject.world.scaleX).to.not.exist;
+        expect(gameObject.world.scaleY).to.not.exist;
+      });
+
+      it('should not update size based on scale', () => {
+        gameObject.width = 10;
+        gameObject.height = 20;
+
+        gameObject.scaleX = 2;
+        gameObject.scaleY = 2;
+
+        expect(gameObject.world.width).to.equal(10);
+        expect(gameObject.world.height).to.equal(20);
+      });
+    }
+
+    if (testContext.GAMEOBJECT_GROUP) {
+
+      it('should update world of each child', () => {
+        let parent = GameObject({
+          children: [gameObject]
+        });
+
+        parent.x = 10;
+        parent.y = 20;
+
+        expect(gameObject.world.x).to.equal(10);
+        expect(gameObject.world.y).to.equal(20);
+      });
+
+      if (testContext.GAMEOBJECT_OPACITY) {
+        it('should update opacity based on parent', () => {
+          let parent = GameObject({
+            opacity: 0.5,
+            children: [gameObject]
+          });
+
+          gameObject.opacity = 0.5;
+
+          expect(gameObject.world.opacity).to.equal(0.25);
+        });
       }
 
-      expect(viewX).to.throw();
-      expect(viewY).to.throw();
-    });
+      if (testContext.GAMEOBJECT_ROTATION) {
+        it('should update rotation based on parent', () => {
+          let parent = GameObject({
+            rotation: 10,
+            children: [gameObject]
+          });
+
+          gameObject.rotation = 20;
+
+          expect(gameObject.world.rotation).to.equal(30);
+        });
+      }
+
+      if (testContext.GAMEOBJECT_SCALE) {
+        it('should update scale based on parent', () => {
+          let parent = GameObject({
+            scaleX: 2,
+            scaleY: 2,
+            children: [gameObject]
+          });
+
+          gameObject.scaleX = 2;
+          gameObject.scaleY = 3;
+
+          expect(gameObject.world.scaleX).to.equal(4);
+          expect(gameObject.world.scaleY).to.equal(6);
+        });
+
+        it('should update position based on parent scale', () => {
+          let parent = GameObject({
+            scaleX: 2,
+            scaleY: 2,
+            children: [gameObject]
+          });
+
+          gameObject.x = 10;
+          gameObject.y = 20;
+
+          expect(gameObject.world.x).to.equal(20);
+          expect(gameObject.world.y).to.equal(40);
+        });
+
+        it('should update size based on all scales', () => {
+          let parent = GameObject({
+            scaleX: 2,
+            scaleY: 2,
+            children: [gameObject]
+          });
+
+          gameObject.width = 10;
+          gameObject.height = 20;
+          gameObject.scaleX = 3;
+          gameObject.scaleY = 3;
+
+          expect(gameObject.world.width).to.equal(60);
+          expect(gameObject.world.height).to.equal(120);
+        });
+      }
+    }
 
   });
 
@@ -329,135 +678,43 @@ describe('gameObject with properties: ' + JSON.stringify(properties,null,4), () 
     // --------------------------------------------------
     describe('addChild', () => {
 
-      it('should add the object as a child', () => {
-        let child = {
-          foo: 'bar'
-        };
-        gameObject.addChild(child);
+      if (testContext.GAMEOBJECT_GROUP) {
+        it('should add the object as a child', () => {
+          let child = {
+            foo: 'bar'
+          };
+          gameObject.addChild(child);
 
-        expect(gameObject.children).deep.equal([child]);
-      });
-
-      it('should set the childs parent to the game object', () => {
-        let child = {
-          foo: 'bar'
-        };
-        gameObject.addChild(child);
-
-        expect(child.parent).to.equal(gameObject);
-      });
-
-      it('should set the childs relative position', () => {
-        gameObject.x = 30;
-        gameObject.y = 35;
-
-        let child = GameObject({
-          x: 0,
-          y: 0
+          expect(gameObject.children).deep.equal([child]);
         });
 
-        gameObject.addChild(child);
+        it('should set the childs parent to the game object', () => {
+          let child = {
+            foo: 'bar'
+          };
+          gameObject.addChild(child);
 
-        expect(child.x).to.equal(30);
-        expect(child.y).to.equal(35);
-      });
-
-      it('should set the childs absolute position', () => {
-        gameObject.x = 30;
-        gameObject.y = 35;
-
-        let child = GameObject({
-          x: 0,
-          y: 0
+          expect(child.parent).to.equal(gameObject);
         });
 
-        gameObject.addChild(child, { absolute: true });
+        it('should update the world property', () => {
+          let child = GameObject({
+            x: 10,
+            y: 20
+          });
+          gameObject.x = 30;
+          gameObject.y = 40;
+          gameObject.addChild(child);
 
-        expect(child.x).to.equal(0);
-        expect(child.y).to.equal(0);
-      });
-
-      it('should set the childs relative sx and sy', () => {
-        gameObject.sx = 30;
-        gameObject.sy = 35;
-
-        let child = GameObject({
-          sx: 0,
-          sy: 0
+          expect(child.world.x).to.equal(40);
+          expect(child.world.y).to.equal(60);
         });
-
-        gameObject.addChild(child);
-
-        expect(child.sx).to.equal(30);
-        expect(child.sy).to.equal(35);
-      });
-
-      it('should set the childs absolute sx and sy', () => {
-        gameObject.sx = 30;
-        gameObject.sy = 35;
-
-        let child = GameObject({
-          sx: 0,
-          sy: 0
+      }
+      else {
+        it('should not have addChild', () => {
+          expect(gameObject.addChild).to.not.exist;
         });
-
-        gameObject.addChild(child, { absolute: true });
-
-        expect(child.x).to.equal(0);
-        expect(child.y).to.equal(0);
-      });
-
-      it('should set the childs final opacity', () => {
-        gameObject.opacity = 0.5;
-
-        let child = GameObject({
-          opacity: 1
-        });
-
-        gameObject.addChild(child);
-
-        expect(child.finalOpacity).to.equal(0.5);
-      });
-
-      it('should not change the childs opacity', () => {
-        gameObject.opacity = 0.5;
-
-        let child = GameObject({
-          opacity: 1
-        });
-
-        gameObject.addChild(child);
-
-        expect(child.opacity).to.equal(1);
-      });
-
-      it('should set the childs rotation', () => {
-        gameObject.rotation = 30;
-
-        let child = GameObject({
-          rotation: 10
-        });
-
-        gameObject.addChild(child);
-
-        expect(child.rotation).to.equal(40);
-      });
-
-
-      it('should set the childs scale', () => {
-        gameObject.scaleX = 2;
-        gameObject.scaleY = 2;
-
-        let child = GameObject({
-          scaleX: 1,
-          scaleY: 1
-        });
-
-        gameObject.addChild(child);
-
-        expect(child.scaleX).to.equal(2);
-        expect(child.scaleY).to.equal(2);
-      });
+      }
 
     });
 
@@ -470,179 +727,95 @@ describe('gameObject with properties: ' + JSON.stringify(properties,null,4), () 
     // --------------------------------------------------
     describe('removeChild', () => {
 
-      it('should remove the object as a child', () => {
-        let child = {
-          foo: 'bar'
-        };
-        gameObject.addChild(child);
-        gameObject.removeChild(child);
-
-        expect(gameObject.children.length).to.equal(0);
-      });
-
-      it('should remove the childs parent', () => {
-        let child = {
-          foo: 'bar'
-        };
-        gameObject.addChild(child);
-        gameObject.removeChild(child);
-
-        expect(child.parent).to.equal(null);
-      });
-
-      it('should not error if child was not added', () => {
-        let child = {
-          foo: 'bar'
-        };
-
-        function fn() {
-          gameObject.removeChild(child);
-        }
-
-        expect(fn).to.not.throw();
-      });
-
-    });
-
-
-
-
-
-    // --------------------------------------------------
-    // x/y/sx/sy/rotation/scaleX/scaleY
-    // --------------------------------------------------
-    ['x', 'y', 'sx', 'sy', 'rotation', 'scaleX', 'scaleY'].forEach(prop => {
-      describe(`gameObject.${prop}`, () => {
-        let gameObject, child;
-
-        beforeEach(() => {
-          gameObject = GameObject({
-            [prop]: 15
-          });
-          child = GameObject();
+      if (testContext.GAMEOBJECT_GROUP) {
+        it('should remove the object as a child', () => {
+          let child = {
+            foo: 'bar'
+          };
           gameObject.addChild(child);
+          gameObject.removeChild(child);
+
+          expect(gameObject.children.length).to.equal(0);
         });
 
-        it(`should set the ${prop}`, () => {
-          child[prop] = 20;
+        it('should remove the childs parent', () => {
+          let child = {
+            foo: 'bar'
+          };
+          gameObject.addChild(child);
+          gameObject.removeChild(child);
 
-          expect(child[prop]).to.equal(20);
+          expect(child.parent).to.equal(null);
         });
 
-        it(`should not change the parent ${prop}`, () => {
-          child[prop] = 20;
+        it('should not error if child was not added', () => {
+          let child = {
+            foo: 'bar'
+          };
 
-          expect(gameObject[prop]).to.equal(15);
+          function fn() {
+            gameObject.removeChild(child);
+          }
+
+          expect(fn).to.not.throw();
         });
 
-        it('should update all children', () => {
-          let child2 = GameObject();
-          gameObject.addChild(child2);
+        it('should update the world property', () => {
+          let child = GameObject({
+            x: 10,
+            y: 20
+          });
+          gameObject.x = 30;
+          gameObject.y = 40;
+          gameObject.addChild(child);
+          gameObject.removeChild(child);
 
-          child[prop] = 10;
-          child2[prop] = 5;
-
-          gameObject[prop] = 20;
-
-          expect(child[prop]).to.equal(15);
-          expect(child2[prop]).to.equal(10);
+          expect(child.world.x).to.equal(10);
+          expect(child.world.y).to.equal(20);
         });
-
-        it('should update the entire child hierarchy', () => {
-          let child2 = GameObject();
-          let child3 = GameObject();
-          child.addChild(child2);
-          child2.addChild(child3);
-
-          child[prop] = 10;
-          child2[prop] = 5;
-          child3[prop] = 15;
-
-          gameObject[prop] = 20;
-
-          expect(child[prop]).to.equal(15);
-          expect(child2[prop]).to.equal(10);
-          expect(child3[prop]).to.equal(20);
+      }
+      else {
+        it('should not have removeChild', () => {
+          expect(gameObject.removeChild).to.not.exist;
         });
+      }
 
-      });
     });
 
-    describe(`gameObject.finalOpacity`, () => {
 
-      let child;
-      beforeEach(() => {
-        gameObject = GameObject({
-          opacity: 1
+
+
+
+    // --------------------------------------------------
+    // update
+    // --------------------------------------------------
+    describe('update', () => {
+
+      if (testContext.GAMEOBJECT_GROUP) {
+        it('should call update on each child', () => {
+          let child = {
+            update: sinon.stub()
+          };
+
+          gameObject.addChild(child);
+          gameObject.update();
+
+          expect(child.update.called).to.be.true;
         });
-        child = GameObject();
-        gameObject.addChild(child);
-      });
+      }
+      else {
+        it('should not call update on each child', () => {
+          let child = {
+            update: sinon.stub()
+          };
 
-      it(`should set the finalOpacity`, () => {
-        child.opacity = 0.5;
+          gameObject.children = [child];
 
-        expect(child.finalOpacity).to.equal(0.5);
-      });
+          gameObject.update();
 
-      it(`should not change the parent opacity`, () => {
-        child.opacity = 0.5;
-
-        expect(gameObject.opacity).to.equal(1);
-      });
-
-      it('should update all children', () => {
-        let child2 = GameObject();
-        gameObject.addChild(child2);
-
-        child.opacity = 0.5;
-        child2.opacity = 0.25;
-
-        gameObject.opacity = 0.75;
-
-        expect(child.finalOpacity).to.equal(0.375);
-        expect(child2.finalOpacity).to.equal(0.1875);
-      });
-
-      it('should update the entire child hierarchy', () => {
-        let child2 = GameObject();
-        let child3 = GameObject();
-        child.addChild(child2);
-        child2.addChild(child3);
-
-        child.opacity = 0.5;
-        child2.opacity = 0.5;
-        child3.opacity = 0.5;
-
-        gameObject.opacity = 0.75;
-
-        expect(child.finalOpacity).to.equal(0.375);
-        expect(child2.finalOpacity).to.equal(0.1875);
-        expect(child3.finalOpacity).to.equal(0.09375);
-      });
-
-      it('should update the final opacity in the middle of the hierarchy', () => {
-        let child2 = GameObject();
-        let child3 = GameObject();
-        child.addChild(child2);
-        child2.addChild(child3);
-
-        child.opacity = 0.5;
-        child2.opacity = 0.5;
-        child3.opacity = 0.5;
-
-        child2.opacity = 0.75;
-
-        expect(child2.finalOpacity).to.equal(0.375);
-      });
-
-      it('should be readonly', () => {
-        function fn() {
-          gameObject.finalOpacity = 10;
-        }
-
-        expect(fn).to.throw();
-      });
+          expect(child.update.called).to.be.false;
+        });
+      }
 
     });
 
@@ -657,64 +830,26 @@ describe('gameObject with properties: ' + JSON.stringify(properties,null,4), () 
   // --------------------------------------------------
   describe('setScale', () => {
 
-    it('should set the x and y scale', () => {
-      gameObject = GameObject();
-      gameObject.setScale(2, 2);
+    if (testContext.GAMEOBJECT_SCALE) {
+      it('should set the x and y scale', () => {
+        gameObject.setScale(2, 2);
 
-      expect(gameObject.scaleX).to.equal(2);
-      expect(gameObject.scaleY).to.equal(2);
-    });
+        expect(gameObject.scaleX).to.equal(2);
+        expect(gameObject.scaleY).to.equal(2);
+      });
 
-    it('should default y to the x argument', () => {
-      gameObject = GameObject();
-      gameObject.setScale(2);
+      it('should default y to the x argument', () => {
+        gameObject.setScale(2);
 
-      expect(gameObject.scaleX).to.equal(2);
-      expect(gameObject.scaleY).to.equal(2);
-    });
-
-  });
-
-
-
-
-
-  // --------------------------------------------------
-  // scaledWidth/Height
-  // --------------------------------------------------
-  describe('scaledWidth/Height', () => {
-
-    it('should return the scaled width', () => {
-      gameObject.width = 20;
-
-      expect(gameObject.scaledWidth).to.equal(20);
-
-      gameObject.scaleX = 2;
-
-      expect(gameObject.scaledWidth).to.equal(40);
-    });
-
-    it('should return the scaled height', () => {
-      gameObject.height = 20;
-
-      expect(gameObject.scaledHeight).to.equal(20);
-
-      gameObject.scaleY = 2;
-
-      expect(gameObject.scaledHeight).to.equal(40);
-    });
-
-    it('should be readonly', () => {
-      function scaledWidth() {
-        gameObject.scaledWidth = 10
-      }
-      function scaledHeight() {
-        gameObject.scaledHeight = 10
-      }
-
-      expect(scaledWidth).to.throw();
-      expect(scaledHeight).to.throw();
-    });
+        expect(gameObject.scaleX).to.equal(2);
+        expect(gameObject.scaleY).to.equal(2);
+      });
+    }
+    else {
+      it('should not have setScale', () => {
+        expect(gameObject.setScale).to.not.exist;
+      });
+    }
 
   });
 

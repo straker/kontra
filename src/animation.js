@@ -36,7 +36,7 @@ import { getContext } from './core.js';
  * @param {Boolean} [properties.loop=true] - If the animation should loop.
  */
 class Animation {
-  constructor({spriteSheet, frames, frameRate, loop = true} = {}) {
+  constructor({spriteSheet, frames, frameRate, loop = true}) {
 
     /**
      * The sprite sheet to use for the animation.
@@ -148,7 +148,7 @@ class Animation {
    * @param {Number} [properties.height] - height of the sprite. Defaults to [Animation.height](api/animation#height).
    * @param {CanvasRenderingContext2D} [properties.context] - The context the animation should draw to. Defaults to [core.getContext()](api/core#getContext).
    */
-  render({x, y, width = this.width, height = this.height, context = getContext()} = {}) {
+  render({x, y, width = this.width, height = this.height, context = getContext()}) {
 
     // get the row and col of the frame
     let row = this.frames[this._f] / this.spriteSheet._f | 0;

@@ -228,13 +228,13 @@ class Text extends GameObject.class {
         width = Math.max(width, context.measureText(str).width);
       });
 
-      this._w = width;
+      this._w = this._fw || width;
     }
     // @endif
 
     if (!this._s.length) {
       this._s.push(this.text);
-      this._w = context.measureText(this.text).width;
+      this._w = this._fw || context.measureText(this.text).width;
     }
 
     this.height = this._fs + ((this._s.length - 1) * this._fs * this.lineHeight);

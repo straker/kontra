@@ -368,6 +368,13 @@ describe('scene', () => {
       expect(scene.camera.y).to.equal(5);
     });
 
+    it('should take into account world', () => {
+      scene.lookAt({world: { x: 10, y: 10, scaleX: 2, scaleY: 2} });
+
+      expect(scene.camera.x).to.equal(5);
+      expect(scene.camera.y).to.equal(5);
+    });
+
   });
 
 

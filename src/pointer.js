@@ -80,21 +80,21 @@ let buttonMap = {
 };
 
 /**
- * Get the pointer object which contains the `radius` and current `x` and `y` position of the pointer relative to the top-left corner of the canvas.
+ * Get the pointer object which contains the `radius`, current `x` and `y` position of the pointer relative to the top-left corner of the canvas, and which `canvas` the pointer applies to.
  *
  * ```js
  * import { initPointer, getPointer } from 'kontra';
  *
  * initPointer();
  *
- * console.log(getPointer());  //=> { x: 100, y: 200, radius: 5 };
+ * console.log(getPointer());  //=> { x: 100, y: 200, radius: 5, canvas: <canvas> };
  * ```
  *
  * @function getPointer
  *
- * @param {CanvasRenderingContext2D} [canvas] - The canvas which maintains the pointer. Defaults to [core.getCanvas()](api/core#getCanvas).
+ * @param {HTMLCanvasElement} [canvas] - The canvas which maintains the pointer. Defaults to [core.getCanvas()](api/core#getCanvas).
  *
- * @returns {{x: Number, y: Number, radius: Number, touches: Object}} pointer with properties `x`, `y`, and `radius`. If using touch events, also has a `touches` object with keys of the touch identifier and the x/y position of the touch as the value.
+ * @returns {{x: Number, y: Number, radius: Number, canvas: HTMLCanvasElement, touches: Object}} pointer with properties `x`, `y`, and `radius`. If using touch events, also has a `touches` object with keys of the touch identifier and the x/y position of the touch as the value.
  */
 export function getPointer(canvas = getCanvas()) {
   return pointers.get(canvas);
@@ -132,7 +132,7 @@ function getCurrentObject(pointer) {
   for (let i = renderedObjects.length - 1; i >= 0; i--) {
     let object = renderedObjects[i];
     let collides = object.collidesWithPointer ?
-      collides = object.collidesWithPointer(pointer) :
+      object.collidesWithPointer(pointer) :
       circleRectCollision(object, pointer);
 
     if (collides) {
@@ -265,9 +265,9 @@ function pointerHandler(evt, eventName) {
  * If you need to use multiple canvas, you'll have to initialize the pointer for each one individually as each canvas maintains its own pointer object.
  * @function initPointer
  *
- * @param {CanvasRenderingContext2D} [canvas] - The canvas that event listeners will be attached to. Defaults to [core.getCanvas()](api/core#getCanvas).
+ * @param {HTMLCanvasElement} [canvas] - The canvas that event listeners will be attached to. Defaults to [core.getCanvas()](api/core#getCanvas).
  *
- * @returns {{x: Number, y: Number, radius: Number, touches: Object}} The pointer object for the canvas.
+ * @returns {{x: Number, y: Number, radius: Number, canvas: HTMLCanvasElement, touches: Object}} The pointer object for the canvas.
  */
 export function initPointer(canvas = getCanvas()) {
   let pointer = pointers.get(canvas);
@@ -277,6 +277,7 @@ export function initPointer(canvas = getCanvas()) {
       y: 0,
       radius: 5, // arbitrary size
       touches: {},
+      canvas,
 
       // cf = current frame, lf = last frame, o = objects,
       // oo = over object
@@ -340,8 +341,11 @@ export function track(...objects) {
     let canvas = object.context ? object.context.canvas : getCanvas();
     let pointer = pointers.get(canvas);
 
-    // can't track object if pointer events haven't been initialized
-    if (!pointer) return;
+    // @ifdef DEBUG
+    if (!pointer) {
+      throw new ReferenceError('Pointer events not initialized for the objects canvas');
+    };
+    // @endif
 
     // override the objects render function to keep track of render
     // order
@@ -376,8 +380,11 @@ export function untrack(...objects) {
     let canvas = object.context ? object.context.canvas : getCanvas();
     let pointer = pointers.get(canvas);
 
-    // can't track object if pointer events haven't been initialized
-    if (!pointer) return;
+    // @ifdef DEBUG
+    if (!pointer) {
+      throw new ReferenceError('Pointer events not initialized for the objects canvas');
+    };
+    // @endif
 
     // restore original render function to no longer track render order
     object.render = object._r;
@@ -431,6 +438,12 @@ export function untrack(...objects) {
 export function pointerOver(object) {
   let canvas = object.context ? object.context.canvas : getCanvas();
   let pointer = pointers.get(canvas);
+
+  // @ifdef DEBUG
+  if (!pointer) {
+    throw new ReferenceError('Pointer events not initialized for the objects canvas');
+  };
+  // @endif
 
   return pointer._o.includes(object) && getCurrentObject(pointer) === object;
 }
@@ -502,4 +515,11 @@ export function onPointerUp(callback) {
  */
 export function pointerPressed(button) {
   return !!pressedButtons[button]
+}
+
+// expose for testing
+export function resetPointers() {
+  // no clear method so only alternative is to create a new WeakMap
+  // @see https://stackoverflow.com/questions/37528622/why-is-weakmap-clear-method-deprecated
+  pointers = new WeakMap()
 }

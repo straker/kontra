@@ -12,7 +12,7 @@ import Vector from './vector.js';
 class Updatable {
 
   constructor(properties) {
-    this.init(properties);
+    return this.init(properties);
   }
 
   init(properties = {}) {

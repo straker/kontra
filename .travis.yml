@@ -49,7 +49,7 @@ jobs:
 
   - name: "Deploy gh-pages"
     if: type = push
-    script: npm run build:docs
+    script: npm run build
     deploy:
       provider: pages
       skip_cleanup: true

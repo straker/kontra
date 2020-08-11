@@ -1,7 +1,4 @@
-import { getCanvas } from './core.js';
 import GameObject from './gameObject.js';
-import { getWorldRect } from './utils.js';
-import { on } from './events.js';
 
 let handler = {
   set(obj, prop, value) {
@@ -271,7 +268,7 @@ class Grid extends GameObject.class {
     this._uw();
 
     // reverse columns. direction property overrides canvas dir
-    let dir = getCanvas().dir;
+    let dir = this.context.canvas.dir;
     let rtl = (dir === 'rtl' && !this.dir) || this.dir === 'rtl';
     this._rtl = rtl;
     if (rtl) {

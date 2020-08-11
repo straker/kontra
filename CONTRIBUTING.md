@@ -24,7 +24,7 @@ To help keep the code small the library follows some unconventional code pattern
 
 ## Building
 
-To build the development code, run `npm run build`. To build the distribution version of the code, run `npm run dist`. Both should be built before submitting a pull request.
+To build the development code, run `npm run build`. To build the distribution version of the code, run `npm run dist`.
 
 ## Testing
 
@@ -32,15 +32,17 @@ Please add unit and/or integration tests for all new changes, as well as TypeScr
 
 The TypeScript tests just ensure that the TypesCript declaration file is correct and doesn't miss any obvious use cases with the various APIs.
 
+Some unit test files contain a `testContext` object which allows the suite to run tests conditionally when features are turned on or removed. When changing code in these types of suites, please pay attention to if the test should only run when a feature is enabled or removed.
+
 ## Exports
 
 Please update the export files for all new changes (if need be). [kontra.defaults.js](src/kontra.defaults.js) imports all functionality and then adds it to the `kontra` object. [kontra.js](src/kontra.js) exports all functionality directly. You will also need to tests to their respected spec files that ensures the functionality is exported.
 
 ## Documentation and TypeScript Declaration File
 
-The [documentation](/docs) and the [TypeScript declaration file](kontra.d.ts) is built from the JSDoc-like comments in the source files using [LivingCSS](https://github.com/straker/livingcss) (I know, not what it was intended for but it makes it really easy to build multiple pages of docs. And it's highly configurable). To update the documentation or the declaration file, just modify the JSDoc-like comments.
+The [documentation](/docs) and the [TypeScript declaration file](kontra.d.ts) is built from the JSDoc-like comments in the source files using [LivingCSS](https://github.com/straker/livingcss) (I know, not what it was intended for but it makes it really easy to build multiple pages of docs. And it's highly configurable). Both are built when running `npm run build`.
 
-The comments are not true JSDoc syntax, but a modified version that supports both JSDoc tags and TypeSript declarations. For example, a comment for an object will be declared using TypeSript for the JSDoc type.
+To update the documentation or the declaration file, just modify the JSDoc-like comments. The comments are not true JSDoc syntax, but a modified version that supports both JSDoc tags and TypeSript declarations. For example, a comment for an object will be declared using TypeSript for the JSDoc type.
 
 ```js
 /**
@@ -68,8 +70,6 @@ interface GameObject{
     anchor: {x: number, y: number};
 }
 ```
-
-The docs and declaration file are built along with the development version of the code, so running `npm run build` will build the docs as well. This ensures they stay in sync with any changes to the code.
 
 All documentation related gulp tasks and `@tag` information can be found in [tasks/doc.js](tasks/docs.js). All TypeScript related gulp tasks and `@tag` information can be found in [tasks/typescript.js](tasks/typescript.js).
 

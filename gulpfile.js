@@ -41,7 +41,8 @@ function buildIife() {
     input: './src/kontra.defaults.js',
     output: {
       format: 'iife',
-      name: 'kontra'
+      name: 'kontra',
+      strict: false
     }
   })
   .pipe(source('kontra.js'))
@@ -53,7 +54,8 @@ function buildModule() {
   return rollup({
       input: './src/kontra.js',
       output: {
-        format: 'es'
+        format: 'es',
+        strict: false
       }
     })
     .pipe(source('kontra.mjs'))

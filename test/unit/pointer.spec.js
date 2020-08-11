@@ -16,7 +16,7 @@ describe('pointer', () => {
    * @param {object} [config] - Additional settings for the event.
    * @param {number} [config.button]
    */
-  function simulateEvent(type, config) {
+  function simulateEvent(type, config, elm) {
     let evt;
 
     // PhantomJS <2.0.0 throws an error for the `new Event` call, so we need to supply an
@@ -34,7 +34,7 @@ describe('pointer', () => {
       evt[prop] = config[prop];
     }
 
-    canvas.dispatchEvent(evt);
+    (elm || canvas).dispatchEvent(evt);
   }
 
   // reset pressed buttons before each test
@@ -60,11 +60,11 @@ describe('pointer', () => {
   });
 
   afterEach(() => {
-    pointer.untrack(object);
+    pointer.resetPointers();
   });
 
   it('should export api', () => {
-    expect(pointer.pointer).to.be.an('object');
+    expect(pointer.getPointer).to.be.an('function');
     expect(pointer.initPointer).to.be.an('function');
     expect(pointer.track).to.be.an('function');
     expect(pointer.untrack).to.be.an('function');
@@ -89,6 +89,24 @@ describe('pointer', () => {
       spy.restore();
     });
 
+    it('should return the pointer object', () => {
+      let pntr = pointer.initPointer();
+
+      expect(pntr.x).to.exist;
+      expect(pntr.y).to.exist;
+      expect(pntr.radius).to.exist;
+    });
+
+    it('should allow multiple canvases', () => {
+      let pntr = pointer.initPointer();
+
+      let canvas = document.createElement('canvas');
+      let otherPntr = pointer.initPointer(canvas);
+
+      expect(pntr).to.not.equal(otherPntr);
+      expect(otherPntr.canvas).to.equal(canvas);
+    });
+
   });
 
 
@@ -98,7 +116,7 @@ describe('pointer', () => {
   // --------------------------------------------------
   // pointerPressed
   // --------------------------------------------------
-  describe('pressed', () => {
+  describe('pointerPressed', () => {
 
     it('should return false when a button is not pressed', () => {
       expect(pointer.pointerPressed('left')).to.be.false;
@@ -190,6 +208,33 @@ describe('pointer', () => {
       expect(render).to.equal(obj._r);
     });
 
+    it('should track objects separately for each canvas', () => {
+      let canvas = document.createElement('canvas');
+      pointer.initPointer(canvas);
+
+      let obj1 = { render: noop };
+      let obj2 = { context: { canvas } };
+
+      pointer.track(obj1, obj2);
+
+      let pntr1 = pointer.getPointer();
+      let pntr2 = pointer.getPointer(canvas);
+
+      expect(pntr1._o.includes(obj1)).to.be.true;
+      expect(pntr1._o.includes(obj2)).to.be.false;
+      expect(pntr2._o.includes(obj1)).to.be.false;
+      expect(pntr2._o.includes(obj2)).to.be.true;
+    });
+
+    it('should throw error if pointer events are not setup', () => {
+      function func() {
+        let canvas = document.createElement('canvas');
+        pointer.track({ context: { canvas } });
+      }
+
+      expect(func).to.throw();
+    });
+
   });
 
 
@@ -230,6 +275,34 @@ describe('pointer', () => {
       expect(func).to.not.throw();
     });
 
+    it('should untrack objects separately for each canvas', () => {
+      let canvas = document.createElement('canvas');
+      pointer.initPointer(canvas);
+
+      let obj1 = { render: noop };
+      let obj2 = { context: { canvas } };
+
+      pointer.track(obj1, obj2);
+      pointer.untrack(obj1, obj2);
+
+      let pntr1 = pointer.getPointer();
+      let pntr2 = pointer.getPointer(canvas);
+
+      expect(pntr1._o.includes(obj1)).to.be.false;
+      expect(pntr1._o.includes(obj2)).to.be.false;
+      expect(pntr2._o.includes(obj1)).to.be.false;
+      expect(pntr2._o.includes(obj2)).to.be.false;
+    });
+
+    it('should throw error if pointer events are not setup', () => {
+      function func() {
+        let canvas = document.createElement('canvas');
+        pointer.untrack({ context: { canvas } });
+      }
+
+      expect(func).to.throw();
+    });
+
   });
 
 
@@ -238,10 +311,12 @@ describe('pointer', () => {
 
   describe('events', () => {
 
+    let pntr;
     beforeEach(() => {
       pointer.track(object);
       object.render();
       emit('tick');
+      pntr = pointer.getPointer();
     });
 
     // --------------------------------------------------
@@ -250,21 +325,53 @@ describe('pointer', () => {
     describe('pointerOver', () => {
 
       it('should return false is object is not being tracked', () => {
-        expect(pointer.pointerOver()).to.equal(false);
+        expect(pointer.pointerOver({})).to.equal(false);
       });
 
       it('should return false if the pointer is not over the object', () => {
-        pointer.pointer.x = 50;
-        pointer.pointer.y = 55;
+
+        pntr.x = 50;
+        pntr.y = 55;
 
         expect(pointer.pointerOver(object)).to.equal(false);
       });
 
       it('should return true if the pointer is over the object', () => {
-        pointer.pointer.x = 105;
-        pointer.pointer.y = 55;
+        pntr.x = 105;
+        pntr.y = 55;
 
         expect(pointer.pointerOver(object)).to.equal(true);
+      });
+
+      it('should handle objects from different canvas', () => {
+        let canvas = document.createElement('canvas');
+        let pntr2 = pointer.initPointer(canvas);
+
+        let obj = {
+          x: 100,
+          y: 50,
+          width: 10,
+          height: 20,
+          render: noop,
+          context: { canvas }
+        };
+        pointer.track(obj);
+        obj.render();
+        emit('tick');
+
+        pntr2.x = 105;
+        pntr2.y = 55;
+
+        expect(pointer.pointerOver(obj)).to.equal(true);
+      });
+
+      it('should throw error if pointer events are not setup', () => {
+        function func() {
+          let canvas = document.createElement('canvas');
+          pointer.pointerOver({ context: { canvas } });
+        }
+
+        expect(func).to.throw();
       });
 
     });
@@ -293,12 +400,12 @@ describe('pointer', () => {
         obj.render();
         emit('tick');
 
-        pointer.pointer.x = 100;
-        pointer.pointer.y = 50;
+        pntr.x = 100;
+        pntr.y = 50;
 
         expect(pointer.pointerOver(object)).to.equal(true);
 
-        pointer.pointer.x = 108;
+        pntr.x = 108;
 
         // object rendered first so obj is on top
         expect(pointer.pointerOver(obj)).to.equal(true);
@@ -310,8 +417,8 @@ describe('pointer', () => {
           y: 0.5
         };
 
-        pointer.pointer.x = 95;
-        pointer.pointer.y = 55;
+        pntr.x = 95;
+        pntr.y = 55;
 
         expect(pointer.pointerOver(object)).to.equal(true);
       });
@@ -335,11 +442,11 @@ describe('pointer', () => {
     describe('mousemove', () => {
 
       it('should update the x and y pointer coordinates', () => {
-        pointer.pointer.x = pointer.pointer.y = 0;
+        pntr.x = pntr.y = 0;
         simulateEvent('mousemove', {clientX: 100, clientY: 50});
 
-        expect(pointer.pointer.x).to.equal(100);
-        expect(pointer.pointer.y).to.equal(50);
+        expect(pntr.x).to.equal(100);
+        expect(pntr.y).to.equal(50);
       });
 
       it('should call the objects onOver function if it is the target', () => {
@@ -393,6 +500,37 @@ describe('pointer', () => {
         expect(object.onOver.called).to.be.true;
       });
 
+      it('should handle objects from different canvas', () => {
+        let canvas = document.createElement('canvas');
+        document.body.appendChild(canvas);
+        canvas.width = canvas.height = 600;
+        canvas.style.position = 'absolute';
+        canvas.style.top = 0;
+        canvas.style.left = 0;
+
+        pointer.initPointer(canvas);
+
+        let obj = {
+          x: 100,
+          y: 50,
+          width: 10,
+          height: 20,
+          render: noop,
+          onOver: sinon.spy(),
+          context: { canvas }
+        };
+        pointer.track(obj);
+        obj.render();
+        emit('tick');
+
+        // wrong canvas
+        simulateEvent('mousemove', {clientX: 105, clientY: 55});
+        expect(obj.onOver.called).to.false;
+
+        simulateEvent('mousemove', {clientX: 105, clientY: 55}, canvas);
+        expect(obj.onOver.called).to.be.true;
+      });
+
     });
 
 
@@ -405,11 +543,11 @@ describe('pointer', () => {
     describe('mousedown', () => {
 
       it('should update the x and y pointer coordinates', () => {
-        pointer.pointer.x = pointer.pointer.y = 0;
+        pntr.x = pntr.y = 0;
         simulateEvent('mousedown', {clientX: 100, clientY: 50});
 
-        expect(pointer.pointer.x).to.equal(100);
-        expect(pointer.pointer.y).to.equal(50);
+        expect(pntr.x).to.equal(100);
+        expect(pntr.y).to.equal(50);
       });
 
       it('should call the onDown function', () => {
@@ -442,6 +580,37 @@ describe('pointer', () => {
         expect(object.onDown.called).to.be.true;
       });
 
+      it('should handle objects from different canvas', () => {
+        let canvas = document.createElement('canvas');
+        document.body.appendChild(canvas);
+        canvas.width = canvas.height = 600;
+        canvas.style.position = 'absolute';
+        canvas.style.top = 0;
+        canvas.style.left = 0;
+
+        pointer.initPointer(canvas);
+
+        let obj = {
+          x: 100,
+          y: 50,
+          width: 10,
+          height: 20,
+          render: noop,
+          onDown: sinon.spy(),
+          context: { canvas }
+        };
+        pointer.track(obj);
+        obj.render();
+        emit('tick');
+
+        // wrong canvas
+        simulateEvent('mousedown', {clientX: 105, clientY: 55});
+        expect(obj.onDown.called).to.false;
+
+        simulateEvent('mousedown', {clientX: 105, clientY: 55}, canvas);
+        expect(obj.onDown.called).to.be.true;
+      });
+
     });
 
 
@@ -455,11 +624,11 @@ describe('pointer', () => {
     describe('touchstart', () => {
 
       it('should update the x and y pointer coordinates', () => {
-        pointer.pointer.x = pointer.pointer.y = 0;
+        pntr.x = pntr.y = 0;
         simulateEvent('touchstart', {touches: [], changedTouches: [{clientX: 100, clientY: 50}]});
 
-        expect(pointer.pointer.x).to.equal(100);
-        expect(pointer.pointer.y).to.equal(50);
+        expect(pntr.x).to.equal(100);
+        expect(pntr.y).to.equal(50);
       });
 
       it('should call the onDown function', () => {
@@ -492,6 +661,37 @@ describe('pointer', () => {
         expect(object.onDown.called).to.be.true;
       });
 
+      it('should handle objects from different canvas', () => {
+        let canvas = document.createElement('canvas');
+        document.body.appendChild(canvas);
+        canvas.width = canvas.height = 600;
+        canvas.style.position = 'absolute';
+        canvas.style.top = 0;
+        canvas.style.left = 0;
+
+        pointer.initPointer(canvas);
+
+        let obj = {
+          x: 100,
+          y: 50,
+          width: 10,
+          height: 20,
+          render: noop,
+          onDown: sinon.spy(),
+          context: { canvas }
+        };
+        pointer.track(obj);
+        obj.render();
+        emit('tick');
+
+        // wrong canvas
+        simulateEvent('touchstart', {touches: [], changedTouches: [{clientX: 100, clientY: 50}]});
+        expect(obj.onDown.called).to.false;
+
+        simulateEvent('touchstart', {touches: [], changedTouches: [{clientX: 100, clientY: 50}]}, canvas);
+        expect(obj.onDown.called).to.be.true;
+      });
+
     });
 
 
@@ -504,11 +704,11 @@ describe('pointer', () => {
     describe('mouseup', () => {
 
       it('should update the x and y pointer coordinates', () => {
-        pointer.pointer.x = pointer.pointer.y = 0;
+        pntr.x = pntr.y = 0;
         simulateEvent('mouseup', {clientX: 100, clientY: 50});
 
-        expect(pointer.pointer.x).to.equal(100);
-        expect(pointer.pointer.y).to.equal(50);
+        expect(pntr.x).to.equal(100);
+        expect(pntr.y).to.equal(50);
       });
 
       it('should call the onUp function', () => {
@@ -541,6 +741,37 @@ describe('pointer', () => {
         expect(object.onUp.called).to.be.true;
       });
 
+      it('should handle objects from different canvas', () => {
+        let canvas = document.createElement('canvas');
+        document.body.appendChild(canvas);
+        canvas.width = canvas.height = 600;
+        canvas.style.position = 'absolute';
+        canvas.style.top = 0;
+        canvas.style.left = 0;
+
+        pointer.initPointer(canvas);
+
+        let obj = {
+          x: 100,
+          y: 50,
+          width: 10,
+          height: 20,
+          render: noop,
+          onUp: sinon.spy(),
+          context: { canvas }
+        };
+        pointer.track(obj);
+        obj.render();
+        emit('tick');
+
+        // wrong canvas
+        simulateEvent('mouseup', {clientX: 105, clientY: 55});
+        expect(obj.onUp.called).to.false;
+
+        simulateEvent('mouseup', {clientX: 105, clientY: 55}, canvas);
+        expect(obj.onUp.called).to.be.true;
+      });
+
     });
 
 
@@ -553,11 +784,11 @@ describe('pointer', () => {
     describe('touchend', () => {
 
       it('should update the x and y pointer coordinates', () => {
-        pointer.pointer.x = pointer.pointer.y = 0;
+        pntr.x = pntr.y = 0;
         simulateEvent('touchend', {touches: [], changedTouches: [{clientX: 100, clientY: 50}]});
 
-        expect(pointer.pointer.x).to.equal(100);
-        expect(pointer.pointer.y).to.equal(50);
+        expect(pntr.x).to.equal(100);
+        expect(pntr.y).to.equal(50);
       });
 
       it('should call the onUp function', () => {
@@ -593,11 +824,42 @@ describe('pointer', () => {
       it('should update pointer.touches', () => {
         simulateEvent('touchstart', {touches: [{clientX: 110, clientY: 55}], changedTouches: [{clientX: 110, clientY: 55}]});
 
-        expect(Object.keys(pointer.pointer.touches).length).to.equal(1);
+        expect(Object.keys(pntr.touches).length).to.equal(1);
 
         simulateEvent('touchend', {touches: [], changedTouches: [{clientX: 95, clientY: 55}]});
 
-        expect(Object.keys(pointer.pointer.touches).length).to.equal(0);
+        expect(Object.keys(pntr.touches).length).to.equal(0);
+      });
+
+      it('should handle objects from different canvas', () => {
+        let canvas = document.createElement('canvas');
+        document.body.appendChild(canvas);
+        canvas.width = canvas.height = 600;
+        canvas.style.position = 'absolute';
+        canvas.style.top = 0;
+        canvas.style.left = 0;
+
+        pointer.initPointer(canvas);
+
+        let obj = {
+          x: 100,
+          y: 50,
+          width: 10,
+          height: 20,
+          render: noop,
+          onUp: sinon.spy(),
+          context: { canvas }
+        };
+        pointer.track(obj);
+        obj.render();
+        emit('tick');
+
+        // wrong canvas
+        simulateEvent('touchend', {touches: [], changedTouches: [{clientX: 100, clientY: 50}]});
+        expect(obj.onUp.called).to.false;
+
+        simulateEvent('touchend', {touches: [], changedTouches: [{clientX: 100, clientY: 50}]}, canvas);
+        expect(obj.onUp.called).to.be.true;
       });
 
     });

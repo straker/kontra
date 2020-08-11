@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Button Image</title>
+  <script src="../../kontra.js"></script>
+</head>
+<body>
+  <canvas id="game" width="600" height="400" style="background: #333331"></canvas>
+  <script id="code">
+    // initialize the game and setup the canvas
+    kontra.init();
+
+    // set image path so we don't have to reference the image by it's path
+    kontra.setImagePath('../imgs/');
+
+    // load the image
+    kontra.load('blue_button02.png').then(function() {
+
+      // create a basic button
+      window.button = kontra.Button({
+        x: 300,
+        y: 200,
+
+        // center the button
+        anchor: {x: 0.5, y: 0.5},
+
+        // since Button is just a Sprite, give it an image to use
+        image: kontra.imageAssets.blue_button02,
+
+        // pass any options that kontra.Text accepts
+        text: {
+          color: 'white',
+          text: 'My Button',
+          font: '32px Arial',
+
+          // center the text inside the button
+          anchor: {x: 0.5, y: 0.5}
+        }
+      });
+
+      // render the button
+      button.render();
+    });
+  </script>
+  <script src="../prism/codeOutput.js"></script>
+</body>
+</html>

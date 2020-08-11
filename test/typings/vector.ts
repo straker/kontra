@@ -8,16 +8,16 @@ let y: number = vector.y;
 let newVec: kontra.Vector = vector.add({x: 1, y: 2});
 vector.add(newVec);
 vector.add({x: 10, y: 10});
-vector.subtract(newVec);
+let subtract: kontra.Vector = vector.subtract(newVec);
 vector.subtract({x: 10, y: 10});
-vector.scale(5);
-vector.normalize();
-vector.dot(newVec);
+let scale: kontra.Vector = vector.scale(5);
+let normalize: kontra.Vector = vector.normalize();
+let dot: number = vector.dot(newVec);
 vector.dot({x: 10, y: 10});
-vector.length();
-vector.distance(newVec);
+let length: number = vector.length();
+let distance: number = vector.distance(newVec);
 vector.distance({x: 10, y: 10});
-vector.angle(newVec);
+let angle: number = vector.angle(newVec);
 vector.clamp(10, 20, 100, 100);
 
 // options

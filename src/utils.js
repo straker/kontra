@@ -1,39 +1,32 @@
-/**
- * Noop function
- */
+// noop function
 export const noop = () => {};
-
-/**
- * Factory function that wraps all kontra classes.
- * @param {Object} classObj - Class to wrap in a factory function
- */
-export function Factory(classObj) {
-  function factory() {
-    return new classObj(...arguments);
-  }
-  factory.prototype = classObj.prototype;
-  factory.class = classObj;
-
-  return factory;
-}
 
 // style used for DOM nodes needed for screen readers
 export const srOnlyStyle = 'position:absolute;left:-9999px';
 
-// get correct x, y, width, and height of object
-export function getRect(obj) {
-  let x = obj.x;
-  let y = obj.y;
-  let width = obj.width;
-  let height = obj.height;
+// append a node directly after the canvas and as the last
+// element of other kontra nodes
+export function addToDom(node, canvas) {
+  let container = canvas.parentNode;
 
-  // @ifdef GAMEOBJECT_SCALE
-  // adjust for object scale
-  if (obj.scale) {
-    width = obj.scaledWidth;
-    height = obj.scaledHeight;
+  node.setAttribute('data-kontra', '');
+  if (container) {
+    let target = container.querySelector('[data-kontra]:last-of-type') || canvas;
+    container.insertBefore(node, target.nextSibling);
   }
-  // @endif
+  else {
+    document.body.appendChild(node);
+  }
+}
+
+// get world x, y, width, and height of object
+export function getWorldRect(obj) {
+  let world = obj.world || obj;
+
+  let x = world.x;
+  let y = world.y;
+  let width = world.width;
+  let height = world.height;
 
   // @ifdef GAMEOBJECT_ANCHOR
   // take into account object anchor

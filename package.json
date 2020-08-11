@@ -16,7 +16,7 @@
     "test": "karma start --single-run",
     "test:watch": "karma start",
     "test:permutations": "node test/permutations",
-    "test:typescript": "tsc test/typings/*.ts",
+    "test:ts": "tsc test/typings/*.ts",
     "build": "gulp build",
     "build:docs": "gulp build:docs",
     "dist": "gulp dist"

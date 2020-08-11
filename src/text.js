@@ -3,6 +3,7 @@ import { on } from './events.js';
 import { getCanvas, getContext } from './core.js';
 
 let fontSizeRegex = /(\d+)(\w+)/;
+let dirtyValues = ['text', 'font', 'width'];
 
 function parseFont(font) {
   let match = font.match(fontSizeRegex);
@@ -81,32 +82,39 @@ function parseFont(font) {
  */
 class Text extends GameObject.class {
 
-  init(properties) {
+  init({
 
     // --------------------------------------------------
     // defaults
     // --------------------------------------------------
 
     /**
+     * The string of text. Use newline characters to create multi-line strings.
+     * @memberof Text
+     * @property {String} text
+     */
+    text = '',
+
+    /**
      * The text alignment.
      * @memberof Text
      * @property {String} textAlign
      */
-    this.textAlign = '';
+    textAlign = '',
 
     /**
      * The distance between two lines of text. The value is multiplied by the texts font size.
      * @memberof Text
      * @property {Number} lineHeight
      */
-    this.lineHeight = 1;
+    lineHeight = 1,
 
    /**
     * The font style.
     * @memberof Text
     * @property {String} font
     */
-    this.font = getContext().font;
+    font = getContext().font,
 
     /**
      * The color of the text.
@@ -114,55 +122,63 @@ class Text extends GameObject.class {
      * @property {String} color
      */
 
-    super.init(properties);
+     ...props
+  } = {}) {
+    super.init({
+      text,
+      textAlign,
+      lineHeight,
+      font,
+      ...props
+    });
 
     // p = prerender
     this._p();
   }
 
-  /**
-   * The string of text. Use newline characters to create multi-line strings.
-   * @memberof Text
-   * @property {String} text
-   */
-  get text() {
-    // t = text
-    return this._t;
-  }
-
-  set text(value) {
-    this._t = value;
-
-    // d = dirty
-    this._d = true;
-  }
-
-  get font() {
-    // f = font
-    return this._f;
-  }
-
-  set font(value) {
-    this._f = value;
-
-    // fs = font size
-    this._fs = parseFont(value).computed;
-    this._d = true;
-  }
-
+  // keep width and height getters/settings so we can set _w and _h and not
+  // trigger infinite call loops
   get width() {
     // w = width
     return this._w;
   }
 
   set width(value) {
-    this._w = value;
+    // d = dirty
     this._d = true;
+    this._w = value;
 
-    // @ifdef TEXT_AUTONEWLINE
     // fw = fixed width
     this._fw = value;
-    // @endif
+  }
+
+  get text() {
+    return this._t;
+  }
+
+  set text(value) {
+    this._d = true;
+    this._t = value;
+  }
+
+  get font() {
+    return this._f;
+  }
+
+  set font(value) {
+    this._d = true;
+    this._f = value;
+    this._fs = parseFont(value).computed;
+  }
+
+  get lineHeight() {
+    // lh = line height
+    return this._lh;
+  }
+
+  set lineHeight(value) {
+    this._d = true;
+    this._lh = value;
   }
 
   render() {
@@ -179,18 +195,20 @@ class Text extends GameObject.class {
     // s = strings
     this._s = [];
     this._d = false;
-    this.context.font = this.font;
+    let context = this.context;
+
+    context.font = this.font;
 
     // @ifdef TEXT_AUTONEWLINE
     if (!this._s.length && this._fw) {
-      let parts = this._t.split(' ');
+      let parts = this.text.split(' ');
       let start = 0;
       let i = 2;
 
       // split the string into lines that all fit within the fixed width
       for (; i <= parts.length; i++) {
         let str = parts.slice(start, i).join(' ');
-        let width = this.context.measureText(str).width;
+        let width = context.measureText(str).width;
 
         if (width > this._fw) {
           this._s.push(parts.slice(start, i - 1).join(' '));
@@ -203,31 +221,33 @@ class Text extends GameObject.class {
     // @endif
 
     // @ifdef TEXT_NEWLINE
-    if (!this._s.length && this._t.includes('\n')) {
+    if (!this._s.length && this.text.includes('\n')) {
       let width = 0;
-      this._t.split('\n').map(str => {
+      this.text.split('\n').map(str => {
         this._s.push(str);
-        width = Math.max(width, this.context.measureText(str).width);
+        width = Math.max(width, context.measureText(str).width);
       });
 
-      this._w = width;
+      this._w = this._fw || width;
     }
     // @endif
 
     if (!this._s.length) {
       this._s.push(this.text);
-      this._w = this.context.measureText(this._t).width;
+      this._w = this._fw || context.measureText(this.text).width;
     }
 
-    this.height = this._s.length * this._fs;
+    this.height = this._fs + ((this._s.length - 1) * this._fs * this.lineHeight);
+    this._uw();
   }
 
   draw() {
     let alignX = 0;
     let textAlign = this.textAlign;
+    let context = this.context;
 
     // @ifdef TEXT_RTL
-    textAlign = this.textAlign || (this.context.canvas.dir === 'rtl' ? 'right' : 'left');
+    textAlign = this.textAlign || (context.canvas.dir === 'rtl' ? 'right' : 'left');
     // @endif
 
     // @ifdef TEXT_ALIGN||TEXT_RTL
@@ -239,11 +259,11 @@ class Text extends GameObject.class {
     // @endif
 
     this._s.map((str, index) => {
-      this.context.textBaseline = 'top';
-      this.context.textAlign = textAlign;
-      this.context.fillStyle = this.color;
-      this.context.font = this.font;
-      this.context.fillText(str, alignX, this._fs * this.lineHeight * index);
+      context.textBaseline = 'top';
+      context.textAlign = textAlign;
+      context.fillStyle = this.color;
+      context.font = this.font;
+      context.fillText(str, alignX, this._fs * this.lineHeight * index);
     });
   }
 }

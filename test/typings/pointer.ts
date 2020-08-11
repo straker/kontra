@@ -1,10 +1,10 @@
 import * as kontra from '../../kontra.js';
 
-let x: number = kontra.pointer.x;
-let y: number = kontra.pointer.y;
-let radius: number = kontra.pointer.radius;
+let pointer = kontra.initPointer();
 
-kontra.initPointer();
+let x: number = pointer.x;
+let y: number = pointer.y;
+let radius: number = pointer.radius;
 
 kontra.track({one: 1});
 kontra.track({one: 1}, {two: 2});

@@ -1,26 +1,27 @@
 let canvas = kontra.getCanvas();
 
 let startButton = kontra.Button({
-  color: 'white',
-  font: '30px Monospace',
+  text: {
+    color: 'white',
+    font: '30px Monospace',
+    text: 'Start',
+    anchor: { x: 0.5, y: 0.5 }
+  },
   anchor: { x: 0.5, y: 0.5 },
-  text: 'Start',
   x: canvas.width / 2,
   y: canvas.height / 2,
-  onFocus() {
-    this.color = 'green';
-    canvas.style.cursor = 'pointer';
-  },
-  onBlur() {
-    this.color = 'white';
-    canvas.style.cursor = 'initial';
-  },
-  onDown() {
-    this.color = 'red';
-  },
   onUp() {
-    this.color = this.focused ? 'green' : 'white';
     kontra.emit('navigate', this.text);
+  },
+  render() {
+    this.draw();
+
+    if (this.focused || this.hovered) {
+      this.textNode.color = 'red';
+    }
+    else {
+      this.textNode.color = 'white';
+    }
   }
 });
 
@@ -37,6 +38,6 @@ let menuScene = kontra.Scene({
   }
 });
 
-menuScene.add(startButton);
+menuScene.addChild(startButton);
 
 export default menuScene;

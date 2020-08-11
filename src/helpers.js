@@ -1,4 +1,4 @@
-import { getRect } from './utils.js';
+import { getWorldRect } from './utils.js';
 
 /**
  * A group of helpful functions that are commonly used for game development. Includes things such as converting between radians and degrees and getting random integers.
@@ -36,7 +36,7 @@ export function radToDeg(rad) {
 }
 
 /**
- * Return the angle (in radians) from one point to another point.
+ * Return the angle in radians from one point to another point.
  *
  * ```js
  * import { angleToTarget, Sprite } from 'kontra';
@@ -75,6 +75,24 @@ export function angleToTarget(source, target) {
   // so we need to add a quarter rotation to return a counter-clockwise
   // rotation in respect to the y-axis
   return Math.atan2(target.y - source.y, target.x - source.x) + Math.PI / 2;
+}
+
+/**
+ * Rotate a point by an angle.
+ * @function rotatePoint
+ *
+ * @param {{x: Number, y: Number}} point - The point to rotate.
+ * @param {Number} angle - Angle (in radians) to rotate.
+ *
+ * @returns {{x: Number, y: Number}} The new x and y coordinates after rotation.
+ */
+export function rotatePoint(point, angle) {
+  let sin = Math.sin(angle);
+  let cos = Math.cos(angle);
+  let x = point.x * cos - point.y * sin;
+  let y = point.x * sin + point.y * cos;
+
+  return {x, y};
 }
 
 /**
@@ -263,7 +281,7 @@ export function collides(obj1, obj2) {
 
   // @ifdef GAMEOBJECT_SCALE||GAMEOBJECT_ANCHOR
   // destructure results to obj1 and obj2
-  [obj1, obj2] = [obj1, obj2].map(obj => getRect(obj));
+  [obj1, obj2] = [obj1, obj2].map(obj => getWorldRect(obj));
   // @endif
 
   return obj1.x < obj2.x + obj2.width &&

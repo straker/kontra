@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Button States</title>
+  <script src="../../kontra.js"></script>
+</head>
+<body>
+  <canvas id="game" width="600" height="400" style="background: #333331"></canvas>
+  <button onclick="button.disabled ? button.enable() : button.disable();">Disable/Enable Button</button>
+  <script id="code">
+    // initialize the game and setup the canvas
+    let { canvas, context } = kontra.init();
+
+    // initialize pointer events
+    kontra.initPointer();
+
+    // create a basic button
+    window.button = kontra.Button({
+      x: 300,
+      y: 200,
+      anchor: {x: 0.5, y: 0.5},
+      padX: 20,
+      padY: 20,
+      text: {
+        color: 'white',
+        text: 'My Button',
+        font: '32px Arial',
+        anchor: {x: 0.5, y: 0.5}
+      },
+
+      render() {
+        // focused by keyboard
+        if (this.focused) {
+          this.context.setLineDash([8,10]);
+          this.context.lineWidth = 3;
+          this.context.strokeStyle = '#62a2f9';
+          this.context.strokeRect(0, 0, this.width, this.height);
+        }
+
+        // pressed by mouse or enter/space on keyboard
+        if (this.pressed) {
+          this.textNode.color = 'purple';
+        }
+        // hovered by mouse
+        else if (this.hovered) {
+          this.textNode.color = '#62a2f9';
+          canvas.style.cursor = 'pointer';
+        }
+        // disabled button
+        else if (this.disabled) {
+          this.textNode.color = '#999';
+        }
+        else  {
+          this.textNode.color = 'white';
+          canvas.style.cursor = 'initial';
+        }
+      }
+    });
+
+    // create a game loop to show updates to the button
+    window.loop = kontra.GameLoop({
+      update() {},
+      render() {
+        button.render();
+      }
+    });
+
+    // start the loop
+    loop.start();
+  </script>
+  <script src="../prism/codeOutput.js"></script>
+</body>
+</html>

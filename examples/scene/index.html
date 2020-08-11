@@ -36,10 +36,10 @@
     import gameScene from './gameScene.js';
     import menuScene from './menuScene.js';
 
-    let activeScene = menuScene;
+    window.activeScene = menuScene;
 
     // game loop
-    let loop = kontra.GameLoop({
+    window.loop = kontra.GameLoop({
       fps: 8,
       update() {
         activeScene.update();

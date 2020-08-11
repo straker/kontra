@@ -6,7 +6,7 @@ import kontra from '../../src/kontra.defaults.js'
 // --------------------------------------------------
 describe('kontra', () => {
 
-  it('should export Animation api', () => {
+  it('should export animation api', () => {
     expect(kontraExports.Animation).to.exist;
   });
 
@@ -61,8 +61,8 @@ describe('kontra', () => {
     expect(kontraExports.GameObject).to.exist;
   });
 
-  it('should export gridManager api', () => {
-    expect(kontraExports.GridManager).to.exist;
+  it('should export grid api', () => {
+    expect(kontraExports.Grid).to.exist;
   });
 
   it('should export keyboard api', () => {
@@ -81,7 +81,7 @@ describe('kontra', () => {
 
   it('should export pointer api', () => {
     expect(kontraExports.initPointer).to.exist;
-    expect(kontraExports.pointer).to.exist;
+    expect(kontraExports.getPointer).to.exist;
     expect(kontraExports.track).to.exist;
     expect(kontraExports.untrack).to.exist;
     expect(kontraExports.pointerOver).to.exist;
@@ -96,6 +96,10 @@ describe('kontra', () => {
 
   it('should export quadtree api', () => {
     expect(kontraExports.Quadtree).to.exist;
+  });
+
+  it('should add scene api', () => {
+    expect(kontraExports.Scene).to.exist;
   });
 
   it('should export sprite api', () => {

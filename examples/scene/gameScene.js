@@ -1,4 +1,4 @@
-import { gridSize, width, height, getRandomInt } from './globals.js';
+import { gridSize, width, height } from './globals.js';
 import snake from './snake.js';
 
 let apple = kontra.Sprite({
@@ -22,8 +22,8 @@ let gameScene = kontra.Scene({
       snake.maxCells++;
 
       availableCells = [];
-      for (let row = 0; row < height; row++) {
-        for (let col = 0; col < width; col++) {
+      for (let row = 0; row < height - 1; row++) {
+        for (let col = 0; col < width - 1; col++) {
           let snakeCell = snake.cells.find(cell => {
             return cell.x === col * gridSize && cell.y === row * gridSize;
           });
@@ -33,7 +33,7 @@ let gameScene = kontra.Scene({
         }
       }
 
-      let randomCell = getRandomInt(0, availableCells.length);
+      let randomCell = kontra.randInt(0, availableCells.length - 1);
       apple.x = availableCells[randomCell].col * gridSize;
       apple.y = availableCells[randomCell].row * gridSize;
     }
@@ -51,15 +51,16 @@ let gameScene = kontra.Scene({
           snake.dx = gridSize;
           snake.dy = 0;
 
-          apple.x = getRandomInt(0, width) * gridSize;
-          apple.y = getRandomInt(0, height) * gridSize;
+          apple.x = kontra.randInt(0, width) * gridSize;
+          apple.y = kontra.randInt(0, height) * gridSize;
         }
       }
     });
   }
 });
 
-gameScene.add(snake, apple);
+gameScene.addChild(snake);
+gameScene.addChild(apple);
 
 kontra.bindKeys('esc', () => {
   kontra.emit('navigate', 'Menu');

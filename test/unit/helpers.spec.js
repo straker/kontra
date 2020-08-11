@@ -207,8 +207,8 @@ describe('helpers', () => {
       expect(helpers.getStoreItem('boolean')).to.equal(true);
       expect(helpers.getStoreItem('number')).to.equal(1);
       expect(helpers.getStoreItem('string')).to.equal('hello');
-      expect(helpers.getStoreItem('object')).to.eql({foo: 'bar'});
-      expect(helpers.getStoreItem('array')).to.eql([1,2]);
+      expect(helpers.getStoreItem('object')).to.deep.equal({foo: 'bar'});
+      expect(helpers.getStoreItem('array')).to.deep.equal([1,2]);
     });
 
     it('should remove a key from local storage using the set function when passed undefined', () => {
@@ -302,10 +302,8 @@ describe('helpers', () => {
         y: 20,
         width: 10,
         height: 20,
-        scale: {
-          x: 1,
-          y: 1
-        }
+        scaleX: 1,
+        scaleY: 1
       });
 
       let sprite2 = Sprite({
@@ -317,11 +315,13 @@ describe('helpers', () => {
 
       expect(helpers.collides(sprite1, sprite2)).to.be.true;
 
-      sprite1.scale = {x: 0.5, y: 0.5};
+      sprite1.scaleX = 0.5;
+      sprite1.scaleY = 0.5;
 
       expect(helpers.collides(sprite1, sprite2)).to.be.false;
 
-      sprite1.scale = {x: 2, y: 2};
+      sprite1.scaleX = 2;
+      sprite1.scaleY = 2;
 
       expect(helpers.collides(sprite1, sprite2)).to.be.true;
     });

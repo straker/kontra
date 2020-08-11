@@ -17,5 +17,6 @@ let otherLoop = kontra.GameLoop({
   update: () => {},
   render: () => {},
   clearCanvas: false,
-  fps: 20
+  fps: 20,
+  context: document.createElement('canvas').getContext('2d')
 });

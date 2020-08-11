@@ -15,27 +15,12 @@ class Sprite extends GameObject.class {
    * @docs docs/api_docs/sprite.js
    */
 
-  init(properties = {}) {
-
+  init({
     /**
      * The color of the game object if it was passed as an argument.
      * @memberof Sprite
      * @property {String} color
      */
-
-    /**
-     * The width of the sprite. If the sprite is a [rectangle sprite](api/sprite#rectangle-sprite), it uses the passed in value. For an [image sprite](api/sprite#image-sprite) it is the width of the image. And for an [animation sprite](api/sprite#animation-sprite) it is the width of a single frame of the animation.
-     * @memberof Sprite
-     * @property {Number} width
-     */
-
-    /**
-     * The height of the sprite. If the sprite is a [rectangle sprite](api/sprite#rectangle-sprite), it uses the passed in value. For an [image sprite](api/sprite#image-sprite) it is the height of the image. And for an [animation sprite](api/sprite#animation-sprite) it is the height of a single frame of the animation.
-     * @memberof Sprite
-     * @property {Number} height
-     */
-
-    super.init(properties);
 
     // @ifdef SPRITE_IMAGE
     /**
@@ -43,13 +28,33 @@ class Sprite extends GameObject.class {
      * @memberof Sprite
      * @property {HTMLImageElement|HTMLCanvasElement} image
      */
+    image,
 
-    let { width, height, image } = properties;
-    if (image) {
-      this.width = (width !== undefined) ? width : image.width;
-      this.height = (height !== undefined) ? height : image.height;
-    }
+    /**
+     * The width of the sprite. If the sprite is a [rectangle sprite](api/sprite#rectangle-sprite), it uses the passed in value. For an [image sprite](api/sprite#image-sprite) it is the width of the image. And for an [animation sprite](api/sprite#animation-sprite) it is the width of a single frame of the animation.
+     * @memberof Sprite
+     * @property {Number} width
+     */
+    width = image ? image.width : undefined,
+
+    /**
+     * The height of the sprite. If the sprite is a [rectangle sprite](api/sprite#rectangle-sprite), it uses the passed in value. For an [image sprite](api/sprite#image-sprite) it is the height of the image. And for an [animation sprite](api/sprite#animation-sprite) it is the height of a single frame of the animation.
+     * @memberof Sprite
+     * @property {Number} height
+     */
+    height = image ? image.height : undefined,
     // @endif
+
+    ...props
+  } = {}) {
+    super.init({
+      // @ifdef SPRITE_IMAGE
+      image,
+      width,
+      height,
+      // @endif
+      ...props
+    });
   }
 
   // @ifdef SPRITE_ANIMATION

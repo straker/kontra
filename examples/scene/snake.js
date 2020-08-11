@@ -3,6 +3,8 @@ import { gridSize } from './globals.js';
 let snake = kontra.Sprite({
   x: 160,
   y: 160,
+  width: gridSize,
+  height: gridSize,
 
   // snake velocity. moves one grid length every frame in either the x or y direction
   dx: gridSize,
@@ -11,10 +13,19 @@ let snake = kontra.Sprite({
   // keep track of all grids the snake body occupies
   cells: [],
 
+  // keep track of moves
+  queue: [],
+
   // length of the snake. grows when eating an apple
   maxCells: 4,
 
   update() {
+    let move = this.queue.shift();
+    if (move) {
+      this.dx = move.dx;
+      this.dy = move.dy;
+    }
+
     this.advance();
     let canvas = kontra.getCanvas();
 
@@ -48,7 +59,7 @@ let snake = kontra.Sprite({
     snake.cells.forEach((cell, index) => {
 
       // drawing 1 px smaller than the grid creates a grid effect in the snake body so you can see how long it is
-      this.context.fillRect(cell.x, cell.y, gridSize-1, gridSize-1);
+      this.context.fillRect(cell.x - this.x, cell.y - this.y, gridSize-1, gridSize-1);
     });
   }
 });
@@ -59,26 +70,34 @@ let snake = kontra.Sprite({
 // shouldn't let you collide with your own body)
 kontra.bindKeys('left', () => {
   if (snake.dx === 0) {
-    snake.dx = -gridSize;
-    snake.dy = 0;
+    // queue the move so we also don't change directions before an
+    // update and still can run into ourselves
+    snake.queue.push({
+      dx: -gridSize,
+      dy: 0
+    });
   }
 });
 kontra.bindKeys('up', () => {
   if (snake.dy === 0) {
-    snake.dy = -gridSize;
-    snake.dx = 0;
+    snake.queue.push({
+      dy: -gridSize,
+      dx: 0
+    });
   }
 });
 kontra.bindKeys('right', () => {
-  if (snake.dx === 0) {
-    snake.dx = gridSize;
-    snake.dy = 0;
-  }
+  snake.queue.push({
+    dx: gridSize,
+    dy: 0
+  });
 });
 kontra.bindKeys('down', () => {
   if (snake.dy === 0) {
-    snake.dy = gridSize;
-    snake.dx = 0;
+    snake.queue.push({
+      dy: gridSize,
+      dx: 0
+    });
   }
 });
 

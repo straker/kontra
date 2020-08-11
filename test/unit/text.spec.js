@@ -1,48 +1,34 @@
 import Text from '../../src/text.js';
+import { getContext } from '../../src/core.js';
 import { noop } from '../../src/utils.js'
 
-let testText = Text({
-  text: 'Hello\nWorld',
-  font: '32px Arial',
-  color: 'black',
-});
-
-// optional properties
-sinon.spy(testText.context, 'fillText');
-
-let hasNewline = testText._s.length === 2;
-
-testText.width = 1000;
-let hasAutoNewline = testText.hasOwnProperty('_fw');
-
-testText.context.canvas.dir = 'rtl';
-testText.render(0, 0);
-
-let hasRTL = testText.context.fillText.calledWith(testText.text, 1000, 0) === true;
-
-testText.context.canvas.dir = 'left';
-testText.textAlign = 'right';
-
-let hasTextAlign = testText.context.fillText.calledWith(testText.text, 1000, 0) === true;
-
-testText.context.fillText.restore();
-
-let properties = {
-  autoNewline: hasAutoNewline,
-  newline: hasNewline,
-  rtl: hasRTL,
-  textAlign: hasTextAlign
+// test-context:start
+let testContext = {
+  TEXT_AUTONEWLINE: true,
+  TEXT_NEWLINE: true,
+  TEXT_RTL: true,
+  TEXT_ALIGN: true
 };
+// test-context:end
 
 // --------------------------------------------------
 // text
 // --------------------------------------------------
-describe('text with properties: ' + JSON.stringify(properties,null,4), () => {
+describe('text with context: ' + JSON.stringify(testContext,null,4), () => {
 
   // --------------------------------------------------
   // init
   // --------------------------------------------------
   describe('init', () => {
+
+    it('should set default properties', () => {
+      let text = Text();
+
+      expect(text.text).to.equal('');
+      expect(text.textAlign).to.equal('');
+      expect(text.lineHeight).to.equal(1);
+      expect(text.font).to.equal(getContext().font);
+    });
 
     it('should prerender the text and setup needed properties', () => {
       let text = Text({
@@ -100,6 +86,26 @@ describe('text with properties: ' + JSON.stringify(properties,null,4), () => {
   // --------------------------------------------------
   describe('prerender', () => {
 
+    it('should be called if a property was changed since the last render', () => {
+      let text = Text({
+        text: 'Hello',
+        font: '32px Arial',
+        color: 'black'
+      });
+
+      sinon.stub(text, '_p');
+
+      text.render();
+
+      expect(text._p.called).to.be.false;
+
+      text.text = 'Foo';
+
+      text.render();
+
+      expect(text._p.called).to.be.true;
+    });
+
     it('should calculate the width based on the size of the text and font', () => {
       let text = Text({
         text: 'Hello',
@@ -122,7 +128,18 @@ describe('text with properties: ' + JSON.stringify(properties,null,4), () => {
       expect(text.height).to.equal(32);
     });
 
-    if (hasNewline) {
+    it('should not modify the fixed width of the text', () => {
+      let text = Text({
+        text: 'Hello There\nWorld',
+        font: '32px Arial',
+        width: 1000,
+        color: 'black',
+      });
+
+      expect(text.width).to.equal(1000);
+    });
+
+    if (testContext.TEXT_NEWLINE) {
       it('should calculate new lines', () => {
         let text = Text({
           text: 'Hello\nWorld',
@@ -146,6 +163,16 @@ describe('text with properties: ' + JSON.stringify(properties,null,4), () => {
         expect(text.width).to.equal(width);
       });
 
+      it('should not modify the fixed width of the text (newlines)', () => {
+        let text = Text({
+          text: 'Hello There\nWorld',
+          font: '32px Arial',
+          width: 1000,
+          color: 'black',
+        });
+
+        expect(text.width).to.equal(1000);
+      });
 
       it('should calculate the height based on the number of lines', () => {
         let text = Text({
@@ -157,8 +184,19 @@ describe('text with properties: ' + JSON.stringify(properties,null,4), () => {
         expect(text.height).to.be.above(32);
       });
     }
+    else {
+      it('should not calculate new lines', () => {
+        let text = Text({
+          text: 'Hello\nWorld',
+          font: '32px Arial',
+          color: 'black'
+        });
 
-    if (hasAutoNewline) {
+        expect(text._s.length).to.equal(1);
+      });
+    }
+
+    if (testContext.TEXT_AUTONEWLINE) {
       it('should calculate new lines when the width is set', function() {
         let text = Text({
           text: 'Hello World',
@@ -180,6 +218,18 @@ describe('text with properties: ' + JSON.stringify(properties,null,4), () => {
         });
 
         expect(text.height).to.be.above(32);
+      });
+    }
+    else {
+      it('should not calculate auto new lines', () => {
+        let text = Text({
+          text: 'Hello World',
+          font: '32px Arial',
+          color: 'black',
+          width: 50
+        });
+
+        expect(text._s.length).to.equal(1);
       });
     }
 
@@ -209,7 +259,7 @@ describe('text with properties: ' + JSON.stringify(properties,null,4), () => {
       text.context.fillText.restore();
     });
 
-    if (hasTextAlign) {
+    if (testContext.TEXT_ALIGN) {
       it('should respect textAlign property', () => {
         let text = Text({
           text: 'Hello World',
@@ -233,7 +283,7 @@ describe('text with properties: ' + JSON.stringify(properties,null,4), () => {
       });
     }
 
-    if (hasRTL) {
+    if (testContext.TEXT_RTL) {
       it('should handle RTL languages', () => {
         let text = Text({
           text: 'Hello World',
@@ -252,7 +302,7 @@ describe('text with properties: ' + JSON.stringify(properties,null,4), () => {
       });
     }
 
-    if (hasAutoNewline) {
+    if (testContext.TEXT_AUTONEWLINE) {
       it('should render each line of the text', () => {
         let text = Text({
           text: 'Hello World',
@@ -287,7 +337,7 @@ describe('text with properties: ' + JSON.stringify(properties,null,4), () => {
       });
     }
 
-    if (hasNewline) {
+    if (testContext.TEXT_NEWLINE) {
       it('should render each line of the text', () => {
         let text = Text({
           text: 'Hello\nWorld',

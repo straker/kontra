@@ -1,5 +1,5 @@
 import { getCanvas } from './core.js';
-import { getRect } from './utils.js';
+import { getWorldRect } from './utils.js';
 
 /**
  * Determine which subnodes the object intersects with
@@ -15,7 +15,7 @@ function getIndices(object, bounds) {
   let verticalMidpoint = bounds.x + bounds.width / 2;
   let horizontalMidpoint = bounds.y + bounds.height / 2;
 
-  let { x, y, width, height } = getRect(object);
+  let { x, y, width, height } = getWorldRect(object);
 
   // save off quadrant checks for reuse
   let intersectsTopQuadrants = object.y < horizontalMidpoint;

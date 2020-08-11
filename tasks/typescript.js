@@ -5,6 +5,7 @@ const path = require('path');
 
 const optionalRegex = /^\[.*\]$/;
 const baseTypesRegex = /\b(String|Boolean|Number|Object)\b/g;
+const declaredAhead = [];
 
 // hack to add @section to every jsdoc section without explicitly
 // having to add them to every block :)
@@ -148,6 +149,7 @@ const tags = {
     this.block.memberof = this.tag.description;
     let parent = this.sections.find(section => section.class === this.tag.description);
     if (!parent) {
+      declaredAhead.push(this);
       return;
     }
 
@@ -235,6 +237,11 @@ function mergeParam(parent, child) {
 }
 
 function livingcssPreprocess(context, template, Handlebars) {
+  // resolve any declared ahead blocks
+  declaredAhead.forEach(ctx => {
+    tags.memberof.call(ctx);
+  });
+
   context.allSections.forEach(section => {
     // add any prop to GameObject
     if (section.name === 'GameObject') {

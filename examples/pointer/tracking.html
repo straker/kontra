@@ -11,7 +11,7 @@
   <script id="code">
     // initialize the game and setup the canvas
     let { canvas, context } = kontra.init();
-    const { Pool, Sprite, pointer, pointerPressed, onPointerDown } = kontra;
+    const { Pool, Sprite, getPointer, pointerPressed, onPointerDown } = kontra;
     canvas.width = window.innerWidth;
     canvas.height = window.innerWidth;
 
@@ -21,7 +21,7 @@
       console.error(e);
     }
 
-    kontra.initPointer();
+    let pointer = kontra.initPointer();
     let pool = new Pool({
       maxSize: 20,
       create: function() {

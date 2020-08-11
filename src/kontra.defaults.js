@@ -16,7 +16,7 @@ import { init, getCanvas, getContext } from './core.js';
 import { on, off, emit } from './events.js';
 import GameLoop from './gameLoop.js';
 import GameObject from './gameObject.js';
-import GridManager from './gridManager.js';
+import Grid from './grid.js';
 import {
   radToDeg,
   degToRad,
@@ -34,7 +34,7 @@ import { keyMap, initKeys, bindKeys, unbindKeys, keyPressed } from './keyboard.j
 import { registerPlugin, unregisterPlugin, extendObject } from './plugin.js';
 import {
   initPointer,
-  pointer,
+  getPointer,
   track,
   untrack,
   pointerOver,
@@ -77,7 +77,7 @@ let kontra = {
 
   GameLoop,
   GameObject,
-  GridManager,
+  Grid,
 
   degToRad,
   radToDeg,
@@ -102,7 +102,7 @@ let kontra = {
   extendObject,
 
   initPointer,
-  pointer,
+  getPointer,
   track,
   untrack,
   pointerOver,

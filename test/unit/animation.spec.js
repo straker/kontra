@@ -30,7 +30,7 @@ describe('animation', () => {
   describe('init', () => {
 
     it('should set properties on the animation', () => {
-      expect(animation.frames).to.eql([1,2,3,4]);
+      expect(animation.frames).to.deep.equal([1,2,3,4]);
       expect(animation.frameRate).to.equal(30);
       expect(animation.width).to.equal(5);
       expect(animation.height).to.equal(5);
@@ -53,7 +53,7 @@ describe('animation', () => {
       let anim = animation.clone();
 
       expect(anim).to.not.equal(animation);
-      expect(anim).to.eql(animation);
+      expect(anim).to.deep.equal(animation);
     });
 
   });

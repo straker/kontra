@@ -151,7 +151,7 @@ function parseType(type) {
     type = 'Function';
   }
   else if (type.startsWith('{')) {
-    type = 'Object';
+    type = type.replace(/\{.*?\}/, 'Object');
   }
   else if (type.startsWith('...')) {
     type = type.replace('...', 'A list of ');
@@ -362,65 +362,70 @@ let tags = {
 };
 
 function livingcssPreprocess(context, template, Handlebars) {
-  if (context.navbar) {
+  try {
+    if (context.navbar) {
 
-    // remove the .html from the nav item urls
-    context.navbar.forEach(navItem => {
-      navItem.url = navItem.url.replace('.html', '');
+      // remove the .html from the nav item urls
+      context.navbar.forEach(navItem => {
+        navItem.url = navItem.url.replace('.html', '');
 
-      // fix lower casing of names
-      if (navItem.url === 'gameloop') navItem.url = 'gameLoop';
-      else if (navItem.url === 'spritesheet') navItem.url = 'spriteSheet';
-      else if (navItem.url === 'tileengine') navItem.url = 'tileEngine';
+        // fix lower casing of names
+        if (navItem.url === 'gameloop') navItem.url = 'gameLoop';
+        else if (navItem.url === 'spritesheet') navItem.url = 'spriteSheet';
+        else if (navItem.url === 'tileengine') navItem.url = 'tileEngine';
 
+      });
+
+      context.navbar.sort(sortByName);
+      navbar = context.navbar;
+    }
+
+    // fix lower casing of names
+    if (context.id === 'gameloop') context.id = 'gameLoop';
+    else if (context.id === 'spritesheet') context.id = 'spriteSheet';
+    else if (context.id === 'tileengine') context.id = 'tileEngine';
+
+    // create 4 different sections that can be used to organize the page
+    context.otherSections = [];
+    context.methods = [];
+    context.properties = [];
+    context.methodsAndProperties = [];
+
+    context.sections.forEach((section, index) => {
+
+      // sort by methods and properties
+      if (section.function) {
+        context.methods.push(section);
+        context.methodsAndProperties.push(section);
+      }
+      else if (section.property) {
+        context.properties.push(section);
+        context.methodsAndProperties.push(section);
+      }
+      // the first section is always the description of the API
+      else if (index > 0) {
+        context.otherSections.push(section);
+        section.link = section.name.toLowerCase().replace(/ /g, '-');
+      }
+
+      context.methods.sort(sortByName);
+      context.properties.sort(sortByName);
+      context.methodsAndProperties.sort(sortByName);
+
+      buildImports(section);
     });
 
-    context.navbar.sort(sortByName);
-    navbar = context.navbar;
+    // load all handlebar partials
+    return livingcss.utils.readFileGlobs('docs/template/partials/*.hbs', function(data, file) {
+
+      // make the name of the partial the name of the file
+      var partialName = path.basename(file, path.extname(file));
+      Handlebars.registerPartial(partialName, data);
+    });
+  } catch (e) {
+    console.log(e);
+    throw e;
   }
-
-  // fix lower casing of names
-  if (context.id === 'gameloop') context.id = 'gameLoop';
-  else if (context.id === 'spritesheet') context.id = 'spriteSheet';
-  else if (context.id === 'tileengine') context.id = 'tileEngine';
-
-  // create 4 different sections that can be used to organize the page
-  context.otherSections = [];
-  context.methods = [];
-  context.properties = [];
-  context.methodsAndProperties = [];
-
-  context.sections.forEach((section, index) => {
-
-    // sort by methods and properties
-    if (section.function) {
-      context.methods.push(section);
-      context.methodsAndProperties.push(section);
-    }
-    else if (section.property) {
-      context.properties.push(section);
-      context.methodsAndProperties.push(section);
-    }
-    // the first section is always the description of the API
-    else if (index > 0) {
-      context.otherSections.push(section);
-      section.link = section.name.toLowerCase().replace(/ /g, '-');
-    }
-
-    context.methods.sort(sortByName);
-    context.properties.sort(sortByName);
-    context.methodsAndProperties.sort(sortByName);
-
-    buildImports(section);
-  });
-
-  // load all handlebar partials
-  return livingcss.utils.readFileGlobs('docs/template/partials/*.hbs', function(data, file) {
-
-    // make the name of the partial the name of the file
-    var partialName = path.basename(file, path.extname(file));
-    Handlebars.registerPartial(partialName, data);
-  });
 }
 
 function buildPages() {
@@ -470,5 +475,5 @@ function buildApi() {
 gulp.task('build:docs', gulp.series(buildApi, buildPages));
 
 gulp.task('watch:docs', function() {
-  gulp.watch(['src/*.js','docs/pages/*.js','docs/template/**/*.hbs'], gulp.series('build:docs'));
+  gulp.watch(['src/*.js','docs/pages/*.js','docs/api_docs/*.js','docs/template/**/*.hbs'], gulp.series('build:docs'));
 });

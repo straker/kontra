@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>GridManager Option Menu</title>
+  <title>Grid Option Menu</title>
   <script src="../../kontra.js"></script>
   <style>
     html, body {
@@ -39,6 +39,7 @@
   </div>
     <script>
     let { canvas, context } = kontra.init();
+    kontra.initPointer();
 
     function createText(props) {
       return kontra.Text({
@@ -91,10 +92,6 @@
       let leftBtn = createButton({
         text: '<',
         color: color || 'white'
-      },
-      {
-        width: 10,
-        height: 18,
       });
       let value = createText({
         text,
@@ -103,19 +100,14 @@
       let rightBtn = createButton({
         text: '>',
         color: color || 'grey',
-      },
-      {
-        // TODO: figure out better way to calculate text button width/height
-        width: 10,
-        height: 18
       });
 
       leftBtn.disable();  // TODO: let this be an option
 
-      return manager = kontra.GridManager({
+      return manager = kontra.Grid({
         flow: 'row',
         anchor: {x: 0.5, y: 0.5},
-        gapX: 10,
+        rowGap: 10,
         children: [leftBtn, value, rightBtn],
         justifySelf: 'end'
       });
@@ -126,11 +118,11 @@
     let airDashesOption = createOptionSelect('Default', 'grey');
     let invincibilityOption = createOptionSelect('ON');
 
-    let assistManager = kontra.GridManager({
+    let assistManager = kontra.Grid({
       flow: 'grid',
       numCols: 2,
-      gapX: 25,
-      gapY: 8,
+      rowGap: 25,
+      colGap: 8,
       anchor: {x: 0.5, y: 0.5},
       x: canvas.width / 2,
       y: canvas.height / 2,
@@ -146,18 +138,18 @@
         invincibilityOption
       ],
       breakpoints: [{
-        metric() { return this.scale.x < 0.85 },
+        metric() { return this.scaleX < 0.85 },
         callback() {
           this.numCols = 1;
-          this.gapY = 20;
+          this.colGap = [25, 10];
           this.children.forEach(child => child.justifySelf = 'center');
         }
       },
       {
-        metric() { return this.scale.x >= 0.85 },
+        metric() { return this.scaleX >= 0.85 },
         callback() {
           this.numCols = 2;
-          this.gapY = 8;
+          this.colGap = 8;
           for (let i = 1; i < this.children.length; i++) {
             let child = this.children[i];
             if (i % 2 === 0) {
@@ -188,7 +180,7 @@
       }
     });
     loop.start();
-    assistManager.render();
+    // assistManager.render();
     </script>
 </body>
 </html>

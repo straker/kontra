@@ -13,8 +13,8 @@ Kontra does provide some more advance data structures like object pools and quad
 
 Kontra prides itself in being:
 
-- **Lightweight**: 14.4 kB minified (5.21 kB gzipped) for the entire library.
-- **Modular**: pick and choose what you want through ES modules. No inter-dependencies.
+- **Lightweight**: tries to take up as little room as possible and strives to reduce the file size every major release.
+- **Modular**: pick and choose what you want through ES modules.
 - **Extensible**: everything is customizable and can be extended.
 - **Fast**: all logic has been removed from the update and render cycles.
 - **Memory conscious**: takes up as little memory as needed and tries not to be wasteful about the memory it does take up.
@@ -23,7 +23,7 @@ Kontra prides itself in being:
 
 - You want to get something up and running fairly quickly.
 - You want a basic structure that is easy to scale and extend.
-- In conjunction with other libraries (like [Playground.js](http://playgroundjs.com/)).
+- In conjunction with other libraries (like [Playground.js](https://github.com/rezoner/playground)).
 - Prototyping.
 - Game jams.
 

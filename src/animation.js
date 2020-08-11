@@ -36,7 +36,7 @@ import { getContext } from './core.js';
  * @param {Boolean} [properties.loop=true] - If the animation should loop.
  */
 class Animation {
-  constructor({spriteSheet, frames, frameRate, loop = true} = {}) {
+  constructor({spriteSheet, frames, frameRate, loop = true}) {
 
     /**
      * The sprite sheet to use for the animation.
@@ -69,21 +69,21 @@ class Animation {
     let { width, height, margin = 0 } = spriteSheet.frame;
 
     /**
-     * The width of an individual frame. Taken from the property of the same name in the [spriteSheet](api/animation#spriteSheet).
+     * The width of an individual frame. Taken from the [frame width value](/api/spriteSheet#frame) of the sprite sheet.
      * @memberof Animation
      * @property {Number} width
      */
     this.width = width;
 
     /**
-     * The height of an individual frame. Taken from the property of the same name in the [spriteSheet](api/animation#spriteSheet).
+     * The height of an individual frame. Taken from the [frame height value](/api/spriteSheet#frame) of the sprite sheet.
      * @memberof Animation
      * @property {Number} height
      */
     this.height = height;
 
     /**
-     * The space between each frame. Taken from the property of the same name in the [spriteSheet](api/animation#spriteSheet).
+     * The space between each frame. Taken from the [frame margin value](/api/spriteSheet#frame) of the sprite sheet.
      * @memberof Animation
      * @property {Number} margin
      */
@@ -148,7 +148,7 @@ class Animation {
    * @param {Number} [properties.height] - height of the sprite. Defaults to [Animation.height](api/animation#height).
    * @param {CanvasRenderingContext2D} [properties.context] - The context the animation should draw to. Defaults to [core.getContext()](api/core#getContext).
    */
-  render({x, y, width = this.width, height = this.height, context = getContext()} = {}) {
+  render({x, y, width = this.width, height = this.height, context = getContext()}) {
 
     // get the row and col of the frame
     let row = this.frames[this._f] / this.spriteSheet._f | 0;

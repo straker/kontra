@@ -1,22 +1,24 @@
-import { getCanvas, getContext } from './core.js'
+import { getCanvas, getContext } from './core.js';
+import { getWorldRect } from './utils.js';
+import { clamp } from './helpers.js';
 
 /**
  * A tile engine for managing and drawing tilesets.
  *
  * <figure>
  *   <a href="assets/imgs/mapPack_tilesheet.png">
- *     <img src="assets/imgs/mapPack_tilesheet.png" alt="Tileset to create an overworld map in various seasons.">
+ *     <img src="assets/imgs/mapPack_tilesheet.png" width="1088" height="768" alt="Tileset to create an overworld map in various seasons.">
  *   </a>
  *   <figcaption>Tileset image courtesy of <a href="https://kenney.nl/assets">Kenney</a>.</figcaption>
  * </figure>
- * @sectionName TileEngine
+ * @class TileEngine
  *
  * @param {Object} properties - Properties of the tile engine.
  * @param {Number} properties.width - Width of the tile map (in number of tiles).
  * @param {Number} properties.height - Height of the tile map (in number of tiles).
  * @param {Number} properties.tilewidth - Width of a single tile (in pixels).
  * @param {Number} properties.tileheight - Height of a single tile (in pixels).
- * @param {Canvas​Rendering​Context2D} [properties.context] - The context the tile engine should draw to. Defaults to [core.getContext()](api/core#getContext)
+ * @param {CanvasRenderingContext2D} [properties.context] - The context the tile engine should draw to. Defaults to [core.getContext()](api/core#getContext)
  *
  * @param {Object[]} properties.tilesets - Array of tileset objects.
  * @param {Number} properties.tilesetN.firstgid - First tile index of the tileset. The first tileset will have a firstgid of 1 as 0 represents an empty tile.
@@ -38,7 +40,7 @@ import { getCanvas, getContext } from './core.js'
  * @docs docs/api_docs/tileEngine.js
  */
 
-export default function TileEngine(properties = {}) {
+export default function TileEngine(properties) {
   let {
     width,
     height,
@@ -127,7 +129,6 @@ export default function TileEngine(properties = {}) {
     _sx: 0,
     _sy: 0,
 
-
     // d = dirty
     _d: false,
 
@@ -153,12 +154,12 @@ export default function TileEngine(properties = {}) {
     // Firefox and Safari won't draw it.
     // @see http://stackoverflow.com/questions/19338032/canvas-indexsizeerror-index-or-size-is-negative-or-greater-than-the-allowed-a
     set sx(value) {
-      this._sx = Math.min( Math.max(0, value), mapwidth - getCanvas().width );
+      this._sx = clamp(0, mapwidth - getCanvas().width, value);
       objects.forEach(obj => obj.sx = this._sx);
     },
 
     set sy(value) {
-      this._sy = Math.min( Math.max(0, value), mapheight - getCanvas().height );
+      this._sy = clamp(0, mapheight - getCanvas().height, value);
       objects.forEach(obj => obj.sy = this._sy);
     },
 
@@ -208,7 +209,7 @@ export default function TileEngine(properties = {}) {
     },
 
     /**
-     * Check if the object collides with the layer (shares a gird coordinate with any positive tile index in layers data). The object being checked must have the properties `x`, `y`, `width`, and `height` so that its position in the grid can be calculated. kontra.Sprite defines these properties for you.
+     * Check if the object collides with the layer (shares a gird coordinate with any positive tile index in layers data). The object being checked must have the properties `x`, `y`, `width`, and `height` so that its position in the grid can be calculated. [Sprite](api/sprite) defines these properties for you.
      *
      * ```js
      * import { TileEngine, Sprite } from 'kontra';
@@ -252,17 +253,12 @@ export default function TileEngine(properties = {}) {
      * @returns {boolean} `true` if the object collides with a tile, `false` otherwise.
      */
     layerCollidesWith(name, object) {
-      let x = object.x;
-      let y = object.y;
-      if (object.anchor) {
-        x -= object.width * object.anchor.x;
-        y -= object.height * object.anchor.y;
-      }
+      let { x, y, width, height } = getWorldRect(object);
 
       let row = getRow(y);
       let col = getCol(x);
-      let endRow = getRow(y + object.height);
-      let endCol = getCol(x + object.width);
+      let endRow = getRow(y + height);
+      let endCol = getCol(x + width);
 
       let layer = layerMap[name];
 
@@ -308,7 +304,7 @@ export default function TileEngine(properties = {}) {
      * @function tileAtLayer
      *
      * @param {String} name - Name of the layer.
-     * @param {Object} position - Position of the tile in either {x, y} or {row, col} coordinates.
+     * @param {{x: Number, y: Number}|{row: Number, col: Number}} position - Position of the tile in either {x, y} or {row, col} coordinates.
      *
      * @returns {Number} The tile index. Will return `-1` if no layer exists by the provided name.
      */
@@ -353,7 +349,7 @@ export default function TileEngine(properties = {}) {
      * @function setTileAtLayer
      *
      * @param {String} name - Name of the layer.
-     * @param {Object} position - Position of the tile in either {x, y} or {row, col} coordinates.
+     * @param {{x: Number, y: Number}|{row: Number, col: Number}} position - Position of the tile in either {x, y} or {row, col} coordinates.
      * @param {Number} tile - Tile index to set.
      */
     setTileAtLayer(name, position, tile) {
@@ -361,6 +357,7 @@ export default function TileEngine(properties = {}) {
       let col = position.col || getCol(position.x);
 
       if (layerMap[name]) {
+        this._d = true;
         layerMap[name]._d = true;
         layerMap[name].data[col + row * tileEngine.width] = tile;
       }
@@ -397,20 +394,19 @@ export default function TileEngine(properties = {}) {
     * @memberof TileEngine
     * @function setLayer
     * 
-    * @param {String} name - Name of the layer.
-    * @param {Number[]} data - 1D array of tile indices.
+    * @param {String} name - Name of the layer.
+    * @param {Number[]} data - 1D array of tile indices.
     */
     setLayer(name, data) {
       if (layerMap[name]) {
+        this._d = true;
         layerMap[name]._d = true;
         layerMap[name].data = data;
       }
     },
 
-
-
     /**
-     * Add an object to the tile engine. The tile engine will set the objects camera position (`sx`, `sy`) to be in sync with the tile engine camera. kontra.Sprite uses this information to draw the sprite to the correct position on the canvas.
+     * Add an object to the tile engine. The tile engine will set the objects camera position (`sx`, `sy`) to be in sync with the tile engine camera. [Sprite](api/sprite) uses this information to draw the sprite to the correct position on the canvas.
      * @memberof TileEngine
      * @function addObject
      *
@@ -441,7 +437,7 @@ export default function TileEngine(properties = {}) {
     _r: renderLayer,
     _p: prerender,
 
-    // @if DEBUG
+    // @ifdef DEBUG
     layerCanvases: layerCanvases,
     layerMap: layerMap
     // @endif
@@ -453,7 +449,7 @@ export default function TileEngine(properties = {}) {
     let url = (window.__k ? window.__k.dm.get(properties) : '') || window.location.href;
 
     if (tileset.source) {
-      // @if DEBUG
+      // @ifdef DEBUG
       if (!window.__k) {
         throw Error(`You must use "load" or "loadData" to resolve tileset.source`);
       }
@@ -461,7 +457,7 @@ export default function TileEngine(properties = {}) {
 
       let source = window.__k.d[window.__k.u(tileset.source, url)];
 
-      // @if DEBUG
+      // @ifdef DEBUG
       if (!source) {
         throw Error(`You must load the tileset source "${tileset.source}" before loading the tileset`);
       }
@@ -473,7 +469,7 @@ export default function TileEngine(properties = {}) {
     }
 
     if (''+tileset.image === tileset.image) {
-      // @if DEBUG
+      // @ifdef DEBUG
       if (!window.__k) {
         throw Error(`You must use "load" or "loadImage" to resolve tileset.image`);
       }
@@ -481,7 +477,7 @@ export default function TileEngine(properties = {}) {
 
       let image = window.__k.i[window.__k.u(tileset.image, url)];
 
-      // @if DEBUG
+      // @ifdef DEBUG
       if (!image) {
         throw Error(`You must load the image "${tileset.image}" before loading the tileset`);
       }
@@ -577,7 +573,7 @@ export default function TileEngine(properties = {}) {
         layer._d = false;
         layerMap[layer.name] = layer;
 
-        if (layer.visible !== false) {
+        if (layer.data && layer.visible !== false) {
           tileEngine._r(layer, offscreenContext);
         }
       });

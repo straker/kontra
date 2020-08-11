@@ -5,7 +5,7 @@ import kontra from '../../src/kontra.defaults.js'
 // --------------------------------------------------
 describe('kontra.defaults', () => {
 
-  it('should add Animation api', () => {
+  it('should add animation api', () => {
     expect(kontra.Animation).to.exist;
   });
 
@@ -20,6 +20,10 @@ describe('kontra.defaults', () => {
     expect(kontra.loadAudio).to.exist;
     expect(kontra.loadData).to.exist;
     expect(kontra.load).to.exist;
+  });
+
+  it('should add button api', () => {
+    expect(kontra.Button).to.exist;
   });
 
   it('should add core api', () => {
@@ -38,7 +42,29 @@ describe('kontra.defaults', () => {
     expect(kontra.GameLoop).to.exist;
   });
 
-  it('should add keys api', () => {
+  it('should add gameObject api', () => {
+    expect(kontra.GameObject).to.exist;
+  });
+
+  it('should add grid api', () => {
+    expect(kontra.Grid).to.exist;
+  });
+
+  it('should add helpers api', () => {
+    expect(kontra.degToRad).to.exist;
+    expect(kontra.radToDeg).to.exist;
+    expect(kontra.angleToTarget).to.exist;
+    expect(kontra.randInt).to.exist;
+    expect(kontra.seedRand).to.exist;
+    expect(kontra.lerp).to.exist;
+    expect(kontra.inverseLerp).to.exist;
+    expect(kontra.clamp).to.exist;
+    expect(kontra.getStoreItem).to.exist;
+    expect(kontra.setStoreItem).to.exist;
+    expect(kontra.collides).to.exist;
+  });
+
+  it('should add keyboard api', () => {
     expect(kontra.keyMap).to.exist;
     expect(kontra.initKeys).to.exist;
     expect(kontra.bindKeys).to.exist;
@@ -54,7 +80,7 @@ describe('kontra.defaults', () => {
 
   it('should add pointer api', () => {
     expect(kontra.initPointer).to.exist;
-    expect(kontra.pointer).to.exist;
+    expect(kontra.getPointer).to.exist;
     expect(kontra.track).to.exist;
     expect(kontra.untrack).to.exist;
     expect(kontra.pointerOver).to.exist;
@@ -71,6 +97,10 @@ describe('kontra.defaults', () => {
     expect(kontra.Quadtree).to.exist;
   });
 
+  it('should add scene api', () => {
+    expect(kontra.Scene).to.exist;
+  });
+
   it('should add sprite api', () => {
     expect(kontra.Sprite).to.exist;
   });
@@ -79,9 +109,8 @@ describe('kontra.defaults', () => {
     expect(kontra.SpriteSheet).to.exist;
   });
 
-  it('should add store api', () => {
-    expect(kontra.getStoreItem).to.exist;
-    expect(kontra.setStoreItem).to.exist;
+  it('should add text api', () => {
+    expect(kontra.Text).to.exist;
   });
 
   it('should add tileEngine api', () => {

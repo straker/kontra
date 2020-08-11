@@ -1,4 +1,4 @@
-import { emit } from './events.js'
+import { emit } from './events.js';
 
 /**
  * Functions for initializing the Kontra library and getting the canvas and context
@@ -50,7 +50,7 @@ export function getContext() {
  *
  * @param {String|HTMLCanvasElement} [canvas] - The canvas for Kontra to use. Can either be the ID of the canvas element or the canvas element itself. Defaults to using the first canvas element on the page.
  *
- * @returns {Object} An object with properties `canvas` and `context`. `canvas` it the canvas element for the game and `context` is the context object the game draws to.
+ * @returns {{canvas: HTMLCanvasElement, context: CanvasRenderingContext2D}} An object with properties `canvas` and `context`. `canvas` it the canvas element for the game and `context` is the context object the game draws to.
  */
 export function init(canvas) {
 
@@ -60,7 +60,7 @@ export function init(canvas) {
              canvas ||
              document.querySelector('canvas');
 
-  // @if DEBUG
+  // @ifdef DEBUG
   if (!canvasEl) {
     throw Error('You must provide a canvas element for the game');
   }

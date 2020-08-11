@@ -1,18 +1,10 @@
 import Quadtree from '../../src/quadtree.js'
-import { init, getCanvas } from '../../src/core.js'
+import { getCanvas } from '../../src/core.js'
 
 // --------------------------------------------------
 // quadtree
 // --------------------------------------------------
 describe('quadtree', () => {
-
-  before(() => {
-    if (!getCanvas()) {
-      let canvas = document.createElement('canvas');
-      canvas.width = canvas.height = 600;
-      init(canvas);
-    }
-  });
 
   // --------------------------------------------------
   // init
@@ -37,6 +29,14 @@ describe('quadtree', () => {
 
       expect(quadtree.maxDepth).to.equal(1);
       expect(quadtree.maxObjects).to.equal(10);
+    });
+
+    it('should allow you to set the bounds', () => {
+      let quadtree = Quadtree({
+        bounds: { x: 5, y: 10, width: 5, height: 10 }
+      });
+
+      expect(quadtree.bounds).to.deep.equal({ x: 5, y: 10, width: 5, height: 10 });
     });
 
   });
@@ -104,10 +104,10 @@ describe('quadtree', () => {
         quadtree.add({id: i});
       }
 
-      expect(quadtree._s[0].bounds).to.eql({x: 0, y: 0, width: 50, height: 50});
-      expect(quadtree._s[1].bounds).to.eql({x: 50, y: 0, width: 50, height: 50});
-      expect(quadtree._s[2].bounds).to.eql({x: 0, y: 50, width: 50, height: 50});
-      expect(quadtree._s[3].bounds).to.eql({x: 50, y: 50, width: 50, height: 50});
+      expect(quadtree._s[0].bounds).to.deep.equal({x: 0, y: 0, width: 50, height: 50});
+      expect(quadtree._s[1].bounds).to.deep.equal({x: 50, y: 0, width: 50, height: 50});
+      expect(quadtree._s[2].bounds).to.deep.equal({x: 0, y: 50, width: 50, height: 50});
+      expect(quadtree._s[3].bounds).to.deep.equal({x: 50, y: 50, width: 50, height: 50});
     });
 
     it('should add split objects to their correct subnodes', () => {
@@ -184,6 +184,41 @@ describe('quadtree', () => {
       // since splitting overrides the subnodes with new values this should
       // test that the subnodes were left alone after the 2nd split
       expect(quadtree._s).to.equal(subnodes);
+    });
+
+    it('should handle children outside the bounds of the quadtree', () => {
+      let subnode;
+      let quadtree = new Quadtree({
+        bounds: {x: 0, y: 0, width: 100, height: 100},
+        maxObjects: 2,
+        maxDepth: 1
+      });
+
+      quadtree.add({x: 105, y: 40, width: 10, height: 20});
+      quadtree.add({x: 105, y: 40, width: 10, height: 20});
+
+      // force the tree to split
+      quadtree.add({x: 105, y: 40, width: 10, height: 20});
+
+      // quadrant 0
+      subnode = quadtree._s[0]._o;
+
+      expect(subnode.length).to.equal(0);
+
+      // quadrant 1
+      subnode = quadtree._s[1]._o;
+
+      expect(subnode.length).to.equal(3);
+
+      // quadrant 2
+      subnode = quadtree._s[2]._o;
+
+      expect(subnode.length).to.equal(0);
+
+      // quadrant 3
+      subnode = quadtree._s[3]._o;
+
+      expect(subnode.length).to.equal(3);
     });
 
   });

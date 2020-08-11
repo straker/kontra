@@ -8,13 +8,17 @@ module.exports = function(config) {
     autoWatch: true,
     frameworks: ['mocha', 'chai', 'sinon'],
     files: [
+      // setup
+      {pattern: 'test/setup.js', type: 'module' },
+
       // assets
       {pattern: 'test/imgs/*.*', included: false, served: true },
       {pattern: 'test/audio/*.*', included: false, served: true },
       {pattern: 'test/data/*.*', included: false, served: true },
 
       {pattern: 'src/*.js', type: 'module', included: false },
-      {pattern: 'test/**/*.spec.js', type: 'module' },
+      {pattern: 'test/unit/*.spec.js', type: 'module' },
+      {pattern: 'test/integration/*.spec.js', type: 'module' },
     ],
     preprocessors: {
       'src/*.js': ["karma-coverage-istanbul-instrumenter"]

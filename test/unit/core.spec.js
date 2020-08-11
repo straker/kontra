@@ -6,12 +6,15 @@ import { on } from '../../src/events.js'
 // --------------------------------------------------
 describe('core', () => {
 
+  // ensure no canvas exists since these tests set it up
+  beforeEach(() => {
+    document.querySelectorAll('canvas').forEach(canvas => canvas.remove());
+  });
+
   // --------------------------------------------------
   // init
   // --------------------------------------------------
   describe('init', () => {
-    let canvas;
-
     it('should export api', () => {
       expect(core.init).to.be.an('function');
       expect(core.getCanvas).to.be.an('function');
@@ -27,7 +30,7 @@ describe('core', () => {
     });
 
     it('should set the canvas when passed no arguments', () => {
-      canvas = document.createElement('canvas');
+      let canvas = document.createElement('canvas');
       canvas.width = 600;
       canvas.height = 600;
       document.body.appendChild(canvas);
@@ -38,7 +41,7 @@ describe('core', () => {
     });
 
     it('should set the canvas when passed an id', () => {
-      canvas = document.createElement('canvas');
+      let canvas = document.createElement('canvas');
       canvas.width = 600;
       canvas.height = 600;
       canvas.id = 'game';
@@ -50,7 +53,7 @@ describe('core', () => {
     });
 
     it('should set the canvas when passed a canvas element', () => {
-      canvas = document.createElement('canvas');
+      let canvas = document.createElement('canvas');
       canvas.width = 600;
       canvas.height = 600;
       canvas.id = 'game2';
@@ -62,10 +65,24 @@ describe('core', () => {
     });
 
     it('should set the context from the canvas', () => {
+      let canvas = document.createElement('canvas');
+      canvas.width = 600;
+      canvas.height = 600;
+      canvas.id = 'game2';
+      document.body.appendChild(canvas);
+
+      core.init(canvas);
+
       expect(core.getContext().canvas).to.equal(canvas);
     });
 
     it('should emit the init event', done => {
+      let canvas = document.createElement('canvas');
+      canvas.width = 600;
+      canvas.height = 600;
+      canvas.id = 'game2';
+      document.body.appendChild(canvas);
+
       on('init', done);
       core.init();
 
@@ -73,10 +90,16 @@ describe('core', () => {
     });
 
     it('should return the canvas and context', () => {
+      let c = document.createElement('canvas');
+      c.width = 600;
+      c.height = 600;
+      c.id = 'game2';
+      document.body.appendChild(c);
+
       let { canvas, context } = core.init();
 
-      expect(canvas).to.equal(core.getCanvas());
-      expect(context).to.equal(core.getContext());
+      expect(canvas).to.equal(c);
+      expect(context).to.equal(c.getContext('2d'));
     });
 
   });

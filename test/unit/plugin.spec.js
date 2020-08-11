@@ -98,8 +98,8 @@ describe('plugin', () => {
         beforeBaz() {}
       });
 
-      expect(classObject.prototype.baz).to.not.be.ok;
-      expect(classObject.prototype._inc.baz).to.not.be.ok;
+      expect(classObject.prototype.baz).to.not.be.true;
+      expect(classObject.prototype._inc.baz).to.not.be.true;
     });
 
     it('should allow multiple plugins to be registered for the same method', () => {

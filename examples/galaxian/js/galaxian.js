@@ -1,21 +1,16 @@
-let { canvas, contex} = kontra.init();
-
-kontra.initKeys();
-
-// set default asset paths
-kontra.setImagePath('imgs/');
-kontra.setAudioPath('sounds/');
-
-// load assets
-kontra.load(
-  // images
-  'ship.png', 'bg.png', 'bullet_enemy.png', 'bullet.png', 'enemy.png',
-  // audios
-  'explosion.mp3', 'game_over.mp3', 'kick_shock.mp3', 'laser.mp3'
-).then(function() {
-  document.getElementById('loading').style.display = 'none';
-  let score = document.getElementById('score');
+// wrap in a function as it uses assets that won't exist before they
+// are loaded
+function getGameScene() {
+  let canvas = kontra.getCanvas();
   let playerScore = 0;
+  let scoreText = kontra.Text({
+    color: '#FF7F00',
+    text: 'Score: 0',
+    font: '18px Helvetica, sans-serif',
+    anchor: {x: 0.5, y: 0},
+    x: canvas.width - 100,
+    y: 5
+  });
 
   kontra.audioAssets.kick_shock.loop = true;
 
@@ -126,7 +121,7 @@ kontra.load(
     render: function() {
       this.draw();
 
-      this.context.drawImage(this.image, this.x, this.y - canvas.height);
+      this.context.drawImage(this.image, 0, -canvas.height);
     }
   });
 
@@ -238,12 +233,23 @@ kontra.load(
     }
   }
 
-  /*
-   * Game loop
+  kontra.bindKeys('m', function() {
+    toggleMusic();
+  });
+
+  /**
+   * Toggle the music on and off.
    */
-  let loop = kontra.GameLoop({
-    clearCanvas: false,
-    update: function(dt) {
+  function toggleMusic() {
+    kontra.audioAssets.kick_shock.muted = !kontra.audioAssets.kick_shock.muted;
+    kontra.audioAssets.game_over.muted = !kontra.audioAssets.game_over.muted
+    laserPool.toggleVolume();
+    explosionPool.toggleVolume();
+  }
+
+  let gameScene = kontra.Scene({
+    id: 'Galaxian',
+    update() {
       background.update();
       player.update();
       bullets.update();
@@ -258,11 +264,11 @@ kontra.load(
       quadtree.add(enemies.getAliveObjects(), enemyBullets.getAliveObjects());
 
       // find collisions between the player ship and enemy bullets
-      objects = quadtree.get(player);
+      let objects = quadtree.get(player);
 
       for (let i = 0, obj; obj = objects[i]; i++) {
-        if (obj.type === 'hostile' && obj.collidesWith(player)) {
-          gameOver();
+        if (obj.type === 'hostile' && kontra.collides(obj, player)) {
+          kontra.emit('gameOver');
         }
       }
 
@@ -271,14 +277,14 @@ kontra.load(
         objects = quadtree.get(bullet);
 
         for (let j = 0, obj; obj = objects[j]; j++) {
-          if (obj.type === 'enemy' && obj.collidesWith(bullet)) {
+          if (obj.type === 'enemy' && kontra.collides(obj, bullet)) {
             bullet.ttl = 0;
             obj.ttl = 0;
 
             explosionPool.get();
 
             playerScore += 10;
-            score.innerHTML = playerScore;
+            scoreText.text = 'Score: ' + playerScore;
           }
         }
       }
@@ -288,71 +294,32 @@ kontra.load(
         spawnWave();
       }
     },
-    render: function() {
+    render() {
       background.render();
       player.render();
       bullets.render();
       enemies.render();
       enemyBullets.render();
-    }
-  });
+      scoreText.render();
+    },
+    start() {
+      enemies.clear();
+      enemyBullets.clear();
+      bullets.clear();
 
-  kontra.bindKeys('m', function() {
-    toggleMusic();
-  });
+      playerScore = 0;
+      scoreText.text = 'Score: 0';
 
-  kontra.bindKeys('p', function() {
-    if (loop.isStopped) {
-      loop.start();
+      kontra.audioAssets.game_over.pause();
+      kontra.audioAssets.kick_shock.currentTime = 0;
       kontra.audioAssets.kick_shock.play();
-    }
-    else {
-      loop.stop();
-      kontra.audioAssets.kick_shock.pause();
+
+      player.position.x = 280;
+      player.position.y = 270;
     }
   });
 
-  /**
-   * Toggle the music on and off.
-   */
-  function toggleMusic() {
-    kontra.audioAssets.kick_shock.muted = !kontra.audioAssets.kick_shock.muted;
-    kontra.audioAssets.game_over.muted = !kontra.audioAssets.game_over.muted
-    laserPool.toggleVolume();
-    explosionPool.toggleVolume();
-  }
+  return gameScene;
+}
 
-  /**
-   * Show the game over screen.
-   */
-  function gameOver() {
-    loop.stop();
-    document.getElementById('game-over').style.display = 'block';
-    kontra.audioAssets.kick_shock.pause();
-    kontra.audioAssets.game_over.currentTime = 0;
-    kontra.audioAssets.game_over.play();
-  }
-
-  /**
-   * Start the game.
-   */
-  window.startGame = function() {
-    document.getElementById('game-over').style.display = 'none';
-    enemies.clear();
-    enemyBullets.clear();
-    bullets.clear();
-
-    playerScore = 0;
-    score.innerHTML = 0;
-
-    loop.start();
-    kontra.audioAssets.game_over.pause();
-    kontra.audioAssets.kick_shock.currentTime = 0;
-    kontra.audioAssets.kick_shock.play();
-
-    player.position.x = 280;
-    player.position.y = 270;
-  };
-
-  startGame();
-});
+export default getGameScene;

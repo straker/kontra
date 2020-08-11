@@ -1,4 +1,4 @@
-import { emit } from './events.js'
+import { emit } from './events.js';
 
 /**
  * A promise based asset loader for loading images, audio, and data files. An `assetLoaded` event is emitted after each asset is fully loaded. The callback for the event is passed the asset and the url to the asset as parameters.
@@ -99,7 +99,7 @@ function getName(url) {
  */
 function getCanPlay(audio) {
   return {
-    wav: '',
+    wav: audio.canPlayType('audio/wav; codecs="1"'),
     mp3: audio.canPlayType('audio/mpeg;'),
     ogg: audio.canPlayType('audio/ogg; codecs="vorbis"'),
     aac: audio.canPlayType('audio/aac;')
@@ -125,7 +125,7 @@ function getCanPlay(audio) {
  *   // path: imageAssets['character_walk_sheet.png']
  * });
  * ```
- * @property {Object} imageAssets
+ * @property {{[name: String]: HTMLImageElement}} imageAssets
  */
 export let imageAssets = {};
 
@@ -148,7 +148,7 @@ export let imageAssets = {};
  *   // path: audioAssets['sound.ogg']
  * });
  * ```
- * @property {Object} audioAssets
+ * @property {{[name: String]: HTMLAudioElement}} audioAssets
  */
 export let audioAssets = {};
 
@@ -171,7 +171,7 @@ export let audioAssets = {};
  *   // path: dataAssets['info.json']
  * });
  * ```
- * @property {Object} dataAssets
+ * @property {{[name: String]: any}} dataAssets
  */
 export let dataAssets = {};
 
@@ -258,7 +258,7 @@ export function setDataPath(path) {
  *
  * @param {String} url - The URL to the Image file.
  *
- * @returns {Promise} A deferred promise. Promise resolves with the Image.
+ * @returns {Promise<HTMLImageElement>} A deferred promise. Promise resolves with the Image.
  */
 export function loadImage(url) {
   addGlobal();
@@ -279,7 +279,7 @@ export function loadImage(url) {
     };
 
     image.onerror = function loadImageOnError() {
-      reject(/* @if DEBUG */ 'Unable to load image ' + /* @endif */ resolvedUrl);
+      reject(/* @ifdef DEBUG */ 'Unable to load image ' + /* @endif */ resolvedUrl);
     };
 
     image.src = resolvedUrl;
@@ -307,11 +307,11 @@ export function loadImage(url) {
  *
  * @param {String} url - The URL to the Audio file.
  *
- * @returns {Promise} A deferred promise. Promise resolves with the Audio.
+ * @returns {Promise<HTMLAudioElement>} A deferred promise. Promise resolves with the Audio.
  */
 export function loadAudio(url) {
   return new Promise((resolve, reject) => {
-    let audioEl, canPlay, resolvedUrl, fullUrl;
+    let _url = url, audioEl, canPlay, resolvedUrl, fullUrl;
 
     audioEl = new Audio();
     canPlay = getCanPlay(audioEl);
@@ -326,7 +326,7 @@ export function loadAudio(url) {
             , 0);  // 0 is the shortest falsy value
 
     if (!url) {
-      return reject(/* @if DEBUG */ 'cannot play any of the audio formats provided' + /* @endif */ url);
+      return reject(/* @ifdef DEBUG */ 'cannot play any of the audio formats provided ' + /* @endif */ _url);
     }
 
     resolvedUrl = joinPath(audioPath, url);
@@ -340,7 +340,7 @@ export function loadAudio(url) {
     });
 
     audioEl.onerror = function loadAudioOnError() {
-      reject(/* @if DEBUG */ 'Unable to load audio ' + /* @endif */ resolvedUrl);
+      reject(/* @ifdef DEBUG */ 'Unable to load audio ' + /* @endif */ resolvedUrl);
     };
 
     audioEl.src = resolvedUrl;
@@ -406,9 +406,9 @@ export function loadData(url) {
  * ```
  * @function load
  *
- * @param {String|String[]} urls - Comma separated list of asset urls to load.
+ * @param {...String[]} urls - Comma separated list of asset urls to load.
  *
- * @returns {Promise} A deferred promise. Resolves with all the loaded assets.
+ * @returns {Promise<any[]>} A deferred promise. Resolves with all the loaded assets.
  */
 export function load(...urls) {
   addGlobal();

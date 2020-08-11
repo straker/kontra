@@ -61,7 +61,7 @@
 /**
  * A sprite can use a spritesheet animation as well. To create an animation sprite, pass the `animations` argument. The size of the sprite will automatically be set as the width and height of a frame of the spritesheet.
  *
- * A sprite can have multiple named animations. The easiest way to create animations is to use kontra.SpriteSheet. All animations will automatically be [cloned](animation#clone) so no two sprites update the same animation.
+ * A sprite can have multiple named animations. The easiest way to create animations is to use [SpriteSheet](api/spriteSheet). All animations will automatically be [cloned](animation#clone) so no two sprites update the same animation.
  *
  * @sectionName Animation Sprite
  * @example
@@ -125,6 +125,8 @@
 /**
  * If you need to draw a different shape, such as a circle, you can pass in custom properties and a render function to handle drawing the sprite.
  *
+ * Do note that the canvas has been rotated and translated to the sprites position (taking into account anchor), so {0,0} will be the top-left corner of the sprite when drawing.
+ *
  * @sectionName Custom Properties
  * @example
  * // exclude-code:start
@@ -147,7 +149,7 @@
  *     this.context.fillStyle = this.color;
  *
  *     this.context.beginPath();
- *     this.context.arc(this.x, this.y, this.radius, 0, 2  * Math.PI);
+ *     this.context.arc(0, 0, this.radius, 0, 2  * Math.PI);
  *     this.context.fill();
  *   }
  * });

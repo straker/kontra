@@ -71,6 +71,15 @@ describe('pool', () => {
       expect(pool.maxSize).to.equal(1024);
     });
 
+    it('should allow setting maxSize', () => {
+      let pool = Pool({
+        create: sprite,
+        maxSize: 10
+      });
+
+      expect(pool.maxSize).to.equal(10);
+    });
+
   });
 
 
@@ -91,7 +100,7 @@ describe('pool', () => {
 
       pool.get();
 
-      expect(spy.called).to.be.ok;
+      expect(spy.called).to.be.true;
     });
 
     it('should pass the properties to the objects init function', () => {
@@ -107,7 +116,7 @@ describe('pool', () => {
 
       pool.get(args);
 
-      expect(spy.calledWith(args)).to.be.ok;
+      expect(spy.calledWith(args)).to.be.true;
     });
 
     it('should increase the size of the pool when there are no more objects', () => {

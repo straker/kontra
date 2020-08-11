@@ -1,19 +1,11 @@
 import TileEngine from '../../src/tileEngine.js'
-import { init, getCanvas, getContext } from '../../src/core.js'
+import { getCanvas, getContext } from '../../src/core.js'
 import { noop } from '../../src/utils.js'
 
 // --------------------------------------------------
 // tileEngine
 // --------------------------------------------------
 describe('tileEngine', () => {
-
-  before(() => {
-    if (!getCanvas()) {
-      let canvas = document.createElement('canvas');
-      canvas.width = canvas.height = 600;
-      init(canvas);
-    }
-  });
 
   // --------------------------------------------------
   // tileEngine.init
@@ -74,7 +66,7 @@ describe('tileEngine', () => {
       sinon.stub(context, 'drawImage').callsFake(noop);
       tileEngine.render();
 
-      expect(context.drawImage.called).to.be.ok;
+      expect(context.drawImage.called).to.be.true;
 
       context.drawImage.restore();
     });
@@ -95,12 +87,17 @@ describe('tileEngine', () => {
         }]
       });
 
-      tileEngine._d = true;
+      tileEngine._d = false;
       sinon.stub(tileEngine, '_p').callsFake(noop);
 
       tileEngine.render();
 
-      expect(tileEngine._p.called).to.be.ok;
+      expect(tileEngine._p.called).to.be.false;
+
+      tileEngine._d = true;
+      tileEngine.render();
+
+      expect(tileEngine._p.called).to.be.true;
 
       tileEngine._p.restore();
     });
@@ -286,6 +283,7 @@ describe('tileEngine', () => {
     it('should set the dirty flag', () => {
       expect(tileEngine.layerMap.test._d).to.equal(false);
       tileEngine.setTileAtLayer('test', {row: 1, col: 2}, 3);
+      expect(tileEngine._d).to.equal(true);
       expect(tileEngine.layerMap.test._d).to.equal(true);
     });
 
@@ -337,10 +335,11 @@ describe('tileEngine', () => {
     it("should set the dirty flag", () => {
       expect(tileEngine.layerMap.test._d).to.equal(false);
       tileEngine.setLayer("test", [1, 1, 0, 1]);
+      expect(tileEngine._d).to.equal(true);
       expect(tileEngine.layerMap.test._d).to.equal(true);
     });
   });
-  
+
 
 
 
@@ -370,12 +369,12 @@ describe('tileEngine', () => {
       sinon.stub(context, 'drawImage').callsFake(noop);
       tileEngine.renderLayer('test');
 
-      expect(context.drawImage.called).to.be.ok;
+      expect(context.drawImage.called).to.be.true;
       expect(context.drawImage.calledWith(
         tileEngine.layerCanvases.test,
         0, 0, tileEngine.layerCanvases.test.width, tileEngine.layerCanvases.test.height,
         0, 0, tileEngine.layerCanvases.test.width, tileEngine.layerCanvases.test.height
-      )).to.be.ok;
+      )).to.be.true;
 
       context.drawImage.restore();
     });
@@ -419,13 +418,13 @@ describe('tileEngine', () => {
       const img = new Image()
       img.src = tileEngine.layerCanvases.test.toDataURL()
 
-      expect(context.drawImage.called).to.be.ok;
+      expect(context.drawImage.called).to.be.true;
       expect(context.drawImage.calledWith(
         tileEngine.layerCanvases.test,
         tileEngine.sx, tileEngine.sy,
         tileEngine.layerCanvases.test.width, tileEngine.layerCanvases.test.height,
         0, 0, tileEngine.layerCanvases.test.width, tileEngine.layerCanvases.test.height
-      )).to.be.ok;
+      )).to.be.true;
 
       context.drawImage.restore();
     });
@@ -453,7 +452,7 @@ describe('tileEngine', () => {
       tileEngine.renderLayer('test');
       tileEngine.renderLayer('test');
 
-      expect(tileEngine._r.calledOnce).to.be.ok;
+      expect(tileEngine._r.calledOnce).to.be.true;
 
       tileEngine._r.restore();
     });
@@ -490,7 +489,7 @@ describe('tileEngine', () => {
 
       tileEngine.renderLayer('test');
 
-      expect(called).to.be.ok;
+      expect(called).to.be.true;
     });
 
     it('calls render if the tile engine is dirty', () => {
@@ -511,14 +510,41 @@ describe('tileEngine', () => {
       // Render once to create the canvas
       tileEngine.renderLayer('test');
 
-      tileEngine.layerMap.test._d = true;
+      tileEngine.layerMap.test._d = false;
       sinon.stub(tileEngine, '_r').callsFake(noop);
 
       tileEngine.renderLayer('test');
 
-      expect(tileEngine._r.called).to.be.ok;
+      expect(tileEngine._r.called).to.be.false;
+
+      tileEngine.layerMap.test._d = true;
+      tileEngine.renderLayer('test');
+
+      expect(tileEngine._r.called).to.be.true;
 
       tileEngine._r.restore();
+    });
+
+    it('should not error if layer does not have data', () => {
+      let tileEngine = TileEngine({
+        tilewidth: 10,
+        tileheight: 10,
+        width: 50,
+        height: 50,
+        tilesets: [{
+          image: new Image()
+        }],
+        layers: [{
+          name: 'test',
+          objects: []
+        }]
+      });
+
+      function fn() {
+        tileEngine.renderLayer('test');
+      }
+
+      expect(fn).to.not.throw();
     });
 
   });

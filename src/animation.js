@@ -1,11 +1,11 @@
-import { getContext } from './core.js'
+import { getContext } from './core.js';
 
 /**
  * An object for drawing sprite sheet animations.
  *
  * An animation defines the sequence of frames to use from a sprite sheet. It also defines at what speed the animation should run using `frameRate`.
  *
- * Typically you don't create an kontra.Animation directly, but rather you would create them from kontra.SpriteSheet by passing the `animations` argument.
+ * Typically you don't create an Animation directly, but rather you would create them from a [SpriteSheet](api/spriteSheet) by passing the `animations` argument.
  *
  * ```js
  * import { SpriteSheet, Animation } from 'kontra';
@@ -30,18 +30,18 @@ import { getContext } from './core.js'
  * @class Animation
  *
  * @param {Object} properties - Properties of the animation.
- * @param {kontra.SpriteSheet} properties.spriteSheet - Sprite sheet for the animation.
+ * @param {SpriteSheet} properties.spriteSheet - Sprite sheet for the animation.
  * @param {Number[]} properties.frames - List of frames of the animation.
  * @param {Number}  properties.frameRate - Number of frames to display in one second.
  * @param {Boolean} [properties.loop=true] - If the animation should loop.
  */
 class Animation {
-  constructor({spriteSheet, frames, frameRate, loop = true} = {}) {
+  constructor({spriteSheet, frames, frameRate, loop = true}) {
 
     /**
      * The sprite sheet to use for the animation.
      * @memberof Animation
-     * @property {kontra.SpriteSheet} spriteSheet
+     * @property {SpriteSheet} spriteSheet
      */
     this.spriteSheet = spriteSheet;
 
@@ -69,21 +69,21 @@ class Animation {
     let { width, height, margin = 0 } = spriteSheet.frame;
 
     /**
-     * The width of an individual frame. Taken from the property of the same name in the [spriteSheet](api/animation#spriteSheet).
+     * The width of an individual frame. Taken from the [frame width value](/api/spriteSheet#frame) of the sprite sheet.
      * @memberof Animation
      * @property {Number} width
      */
     this.width = width;
 
     /**
-     * The height of an individual frame. Taken from the property of the same name in the [spriteSheet](api/animation#spriteSheet).
+     * The height of an individual frame. Taken from the [frame height value](/api/spriteSheet#frame) of the sprite sheet.
      * @memberof Animation
      * @property {Number} height
      */
     this.height = height;
 
     /**
-     * The space between each frame. Taken from the property of the same name in the [spriteSheet](api/animation#spriteSheet).
+     * The space between each frame. Taken from the [frame margin value](/api/spriteSheet#frame) of the sprite sheet.
      * @memberof Animation
      * @property {Number} margin
      */
@@ -95,14 +95,14 @@ class Animation {
   }
 
   /**
-   * Clone an animation so it can be used more than once. By default animations passed to kontra.Sprite will be cloned so no two sprites update the same animation. Otherwise two sprites who shared the same animation would make it update twice as fast.
+   * Clone an animation so it can be used more than once. By default animations passed to [Sprite](api/sprite) will be cloned so no two sprites update the same animation. Otherwise two sprites who shared the same animation would make it update twice as fast.
    * @memberof Animation
    * @function clone
    *
-   * @returns {kontra.Animation} A new kontra.Animation instance.
+   * @returns {Animation} A new Animation instance.
    */
   clone() {
-    return animationFactory(this);
+    return new Animation(this);
   }
 
   /**
@@ -146,9 +146,9 @@ class Animation {
    * @param {Number} properties.y - Y position to draw the animation.
    * @param {Number} [properties.width] - width of the sprite. Defaults to [Animation.width](api/animation#width).
    * @param {Number} [properties.height] - height of the sprite. Defaults to [Animation.height](api/animation#height).
-   * @param {Canvas​Rendering​Context2D} [properties.context] - The context the animation should draw to. Defaults to [core.getContext()](api/core#getContext).
+   * @param {CanvasRenderingContext2D} [properties.context] - The context the animation should draw to. Defaults to [core.getContext()](api/core#getContext).
    */
-  render({x, y, width = this.width, height = this.height, context = getContext()} = {}) {
+  render({x, y, width = this.width, height = this.height, context = getContext()}) {
 
     // get the row and col of the frame
     let row = this.frames[this._f] / this.spriteSheet._f | 0;
@@ -165,8 +165,8 @@ class Animation {
   }
 }
 
-export default function animationFactory(properties) {
-  return new Animation(properties);
+export default function factory() {
+  return new Animation(...arguments);
 }
-animationFactory.prototype = Animation.prototype;
-animationFactory.class = Animation;
+factory.prototype = Animation.prototype;
+factory.class = Animation;

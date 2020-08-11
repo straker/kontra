@@ -87,6 +87,15 @@ p, ul, ol, dl, table, pre[class*=language-], canvas, form, figure, .tablist {
   margin: 0 0 1.312rem;
 }
 
+table {
+  border-collapse: collapse;
+}
+
+td, th {
+  border: 1px solid;
+  padding: 0.4rem;
+}
+
 ul, dl {
   padding-left: 1.312rem;
 }
@@ -271,6 +280,10 @@ nav {
   left: 0;
   width: 1.312rem;
   background: #fdfdfd;
+}
+
+.toc li + li {
+  margin-top: 0.5rem;
 }
 
 .toc li a {
@@ -473,6 +486,7 @@ figure {
 figure img {
   background: #333333;
   max-width: 100%;
+  height: auto;
 }
 
 figcaption {

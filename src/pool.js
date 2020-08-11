@@ -6,7 +6,7 @@
  * @class Pool
  *
  * @param {Object} properties - Properties of the pool.
- * @param {Function} properties.create - Function that returns a new object to be added to the pool when there are no more alive objects.
+ * @param {() => {update: (dt?: number) => void, render: Function, init: (properties?: object) => void, isAlive: () => boolean}} properties.create - Function that returns a new object to be added to the pool when there are no more alive objects.
  * @param {Number} [properties.maxSize=1024] - The maximum number of objects allowed in the pool. The pool will never grow beyond this size.
  */
 class Pool {
@@ -18,14 +18,14 @@ class Pool {
 
     // check for the correct structure of the objects added to pools so we know that the
     // rest of the pool code will work without errors
-    // @if DEBUG
+    // @ifdef DEBUG
     let obj;
     if (!create ||
         ( !( obj = create() ) ||
           !( obj.update && obj.init &&
-             obj.isAlive )
+             obj.isAlive && obj.render)
        )) {
-      throw Error('Must provide create() function which returns an object with init(), update(), and isAlive() functions');
+      throw Error('Must provide create() function which returns an object with init(), update(), render(), and isAlive() functions');
     }
     // @endif
 
@@ -55,7 +55,7 @@ class Pool {
   }
 
   /**
-   * Get and return an object from the pool. The properties parameter will be passed directly to the objects `init()` function. If you're using a kontra.Sprite, you should also pass the `ttl` property to designate how many frames you want the object to be alive for.
+   * Get and return an object from the pool. The properties parameter will be passed directly to the objects `init()` function. If you're using a [Sprite](api/sprite), you should also pass the `ttl` property to designate how many frames you want the object to be alive for.
    *
    * If you want to control when the sprite is ready for reuse, pass `Infinity` for `ttl`. You'll need to set the sprites `ttl` to `0` when you're ready for the sprite to be reused.
    *
@@ -77,7 +77,7 @@ class Pool {
    * @memberof Pool
    * @function get
    *
-   * @param {Object} properties - Properties to pass to the objects `init()` function.
+   * @param {Object} [properties] - Properties to pass to the objects `init()` function.
    *
    * @returns {Object} The newly initialized object.
    */
@@ -103,7 +103,7 @@ class Pool {
   }
 
   /**
-   * Returns an array of all alive objects. Useful if you need to do special processing on all alive objects outside of the pool, such as add all alive objects to a kontra.Quadtree.
+   * Returns an array of all alive objects. Useful if you need to do special processing on all alive objects outside of the pool, such as to add all alive objects to a [Quadtree](api/quadtree).
    * @memberof Pool
    * @function getAliveObjects
    *
@@ -161,8 +161,8 @@ class Pool {
   }
 }
 
-export default function poolFactory(properties) {
-  return new Pool(properties);
+export default function factory() {
+  return new Pool(...arguments);
 }
-poolFactory.prototype = Pool.prototype;
-poolFactory.class = Pool;
+factory.prototype = Pool.prototype;
+factory.class = Pool;

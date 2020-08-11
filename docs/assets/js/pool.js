@@ -5,24 +5,16 @@
   let midY = canvas.height / 2;
 
   let fields = [
-    kontra.Sprite({
+    {
       x: midX - 75,
       y: midY + 20,
-      width: 3,
-      height: 3,
-      color: 'green',
-      mass: 900,
-      size: 3
-    }),
-    kontra.Sprite({
+      mass: 900
+    },
+    {
       x: midX + 25,
       y: midY + 10,
-      width: 3,
-      height: 3,
-      color: 'red',
-      mass: -50,
-      size: 3
-    })
+      mass: -50
+    }
   ];
 
   let pool = kontra.Pool({
@@ -56,14 +48,6 @@
     this.advance();
   }
 
-  // redefine sprite render to not change context fillStyle every time
-  function render() {
-    context.save();
-    context.fillStyle = `rgba(255, 0, 0, ${this.ttl / 300})`
-    context.fillRect(this.x, this.y, 3, 3);
-    context.restore();
-  };
-
   let loop = kontra.GameLoop({
     update: function() {
       for (let i = 0; i < 4; i++) {
@@ -72,12 +56,11 @@
           y: midY,
           dx: 2 - Math.random() * 4,
           dy: 2 - Math.random() * 4,
-          color: 'white',
-          width: 1,
-          height: 1,
+          color: 'red',
+          width: 2,
+          height: 2,
           ttl: 300,
           update: update,
-          render: render
         });
       }
 

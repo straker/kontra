@@ -106,7 +106,7 @@
         this.context.fillStyle = this.color;
 
         this.cells.forEach(function(cell) {
-          this.context.fillRect(cell.x, cell.y, grid-1, grid-1);
+          this.context.fillRect(cell.x - this.x, cell.y - this.y, grid-1, grid-1);
         }.bind(this));
       }
     });

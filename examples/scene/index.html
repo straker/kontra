@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Scene</title>
+  <script src="../../kontra.js"></script>
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      color: white;
+      font: 20px Arial;
+    }
+    body {
+      background: black;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+    canvas {
+      border: 1px solid white;
+    }
+  </style>
+</head>
+<body>
+  <div>
+    <canvas id="game" width="384" height="384" style="background: #333331"></canvas>
+    <p>(Esc) Menu</p>
+  </div>
+  <script>
+    kontra.init();
+    kontra.initKeys();
+    kontra.initPointer();
+  </script>
+  <script id="code" type="module">
+    import gameScene from './gameScene.js';
+    import menuScene from './menuScene.js';
+
+    window.activeScene = menuScene;
+
+    // game loop
+    window.loop = kontra.GameLoop({
+      fps: 8,
+      update() {
+        activeScene.update();
+      },
+      render() {
+        activeScene.render();
+      }
+    });
+
+    kontra.on('navigate', (name) => {
+      switch(name) {
+        case 'Start':
+        case 'Resume':
+          activeScene.hide();
+          gameScene.show();
+          activeScene = gameScene;
+          break;
+        case 'Menu':
+          activeScene.hide();
+          menuScene.show();
+          activeScene = menuScene;
+          break;
+      }
+    });
+
+    loop.start();
+    menuScene.focus();
+  </script>
+</body>
+</html>

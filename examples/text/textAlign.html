@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Text Align</title>
+  <script src="../../kontra.js"></script>
+</head>
+<body>
+  <canvas id="game" width="600" height="400" style="background: #333331"></canvas>
+  <script id="code">
+    // initialize the game and setup the canvas
+    kontra.init();
+
+    // create a basic text
+    window.text = kontra.Text({
+      x: 300,
+      y: 200,
+      anchor: {x: 0.5, y: 0.5},
+      color: 'white',
+      textAlign: 'center',
+      text: 'Hello World,\nGoodbye Friend!',
+      font: '32px Arial'
+    });
+
+    // render the text
+    text.render();
+  </script>
+  <script src="../prism/codeOutput.js"></script>
+</body>
+</html>

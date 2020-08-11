@@ -6,7 +6,7 @@ import kontra from '../../src/kontra.defaults.js'
 // --------------------------------------------------
 describe('kontra', () => {
 
-  it('should export Animation api', () => {
+  it('should export animation api', () => {
     expect(kontraExports.Animation).to.exist;
   });
 
@@ -23,6 +23,10 @@ describe('kontra', () => {
     expect(kontraExports.load).to.exist;
   });
 
+  it('should export button api', () => {
+    expect(kontraExports.Button).to.exist;
+  });
+
   it('should export core api', () => {
     expect(kontraExports.init).to.exist;
     expect(kontraExports.getCanvas).to.exist;
@@ -35,11 +39,33 @@ describe('kontra', () => {
     expect(kontraExports.emit).to.exist;
   });
 
+  it('should export helpers api', () => {
+    expect(kontraExports.degToRad).to.exist;
+    expect(kontraExports.radToDeg).to.exist;
+    expect(kontraExports.angleToTarget).to.exist;
+    expect(kontraExports.randInt).to.exist;
+    expect(kontraExports.seedRand).to.exist;
+    expect(kontraExports.lerp).to.exist;
+    expect(kontraExports.inverseLerp).to.exist;
+    expect(kontraExports.clamp).to.exist;
+    expect(kontraExports.getStoreItem).to.exist;
+    expect(kontraExports.setStoreItem).to.exist;
+    expect(kontraExports.collides).to.exist;
+  });
+
   it('should export gameLoop api', () => {
     expect(kontraExports.GameLoop).to.exist;
   });
 
-  it('should export keys api', () => {
+  it('should export gameObject api', () => {
+    expect(kontraExports.GameObject).to.exist;
+  });
+
+  it('should export grid api', () => {
+    expect(kontraExports.Grid).to.exist;
+  });
+
+  it('should export keyboard api', () => {
     expect(kontraExports.keyMap).to.exist;
     expect(kontraExports.initKeys).to.exist;
     expect(kontraExports.bindKeys).to.exist;
@@ -55,7 +81,7 @@ describe('kontra', () => {
 
   it('should export pointer api', () => {
     expect(kontraExports.initPointer).to.exist;
-    expect(kontraExports.pointer).to.exist;
+    expect(kontraExports.getPointer).to.exist;
     expect(kontraExports.track).to.exist;
     expect(kontraExports.untrack).to.exist;
     expect(kontraExports.pointerOver).to.exist;
@@ -72,6 +98,10 @@ describe('kontra', () => {
     expect(kontraExports.Quadtree).to.exist;
   });
 
+  it('should add scene api', () => {
+    expect(kontraExports.Scene).to.exist;
+  });
+
   it('should export sprite api', () => {
     expect(kontraExports.Sprite).to.exist;
   });
@@ -80,9 +110,8 @@ describe('kontra', () => {
     expect(kontraExports.SpriteSheet).to.exist;
   });
 
-  it('should export store api', () => {
-    expect(kontraExports.getStoreItem).to.exist;
-    expect(kontraExports.setStoreItem).to.exist;
+  it('should export text api', () => {
+    expect(kontraExports.Text).to.exist;
   });
 
   it('should export tileEngine api', () => {

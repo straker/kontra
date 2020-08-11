@@ -1,7 +1,5 @@
 (function() {
   let nav = document.querySelector('.main-nav');
-  nav.classList.add('main-nav', 'showScroll');
-
   nav.addEventListener('scroll', function(e) {
     if (this.offsetHeight + this.scrollTop >= this.scrollHeight) {
       this.classList.remove('showScroll');
@@ -23,5 +21,10 @@
     else {
       menu.style.height = null;
     }
+  });
+
+  // save scroll position between page loads
+  window.addEventListener('unload', function(event) {
+    sessionStorage.setItem('kontra-nav-scroll', nav.scrollTop);
   });
 })();

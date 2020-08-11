@@ -23,11 +23,13 @@ describe('spriteSheet', () => {
       let spriteSheet = SpriteSheet({
         image: new Image(100, 200),
         frameWidth: 10,
-        frameHeight: 10
+        frameHeight: 10,
+        frameMargin: 10
       });
 
       expect(spriteSheet.frame.width).to.equal(10);
       expect(spriteSheet.frame.height).to.equal(10);
+      expect(spriteSheet.frame.margin).to.equal(10);
       expect(spriteSheet._f).to.equal(10);
     });
 
@@ -41,7 +43,7 @@ describe('spriteSheet', () => {
         animations: {}
       });
 
-      expect(SpriteSheet.prototype.createAnimations.called).to.be.ok;
+      expect(SpriteSheet.prototype.createAnimations.called).to.be.true;
 
       SpriteSheet.prototype.createAnimations.restore();
     });
@@ -84,7 +86,7 @@ describe('spriteSheet', () => {
       });
 
       expect(spriteSheet.animations.walk).to.exist;
-      expect(spriteSheet.animations.walk.frames).to.eql([1]);
+      expect(spriteSheet.animations.walk.frames).to.deep.equal([1]);
     });
 
     it('should accept a string of ascending consecutive frames', () => {
@@ -95,7 +97,7 @@ describe('spriteSheet', () => {
       });
 
       expect(spriteSheet.animations.walk).to.exist;
-      expect(spriteSheet.animations.walk.frames).to.eql([1,2,3,4,5]);
+      expect(spriteSheet.animations.walk.frames).to.deep.equal([1,2,3,4,5]);
     });
 
     it('should accept a string of descending consecutive frames', () => {
@@ -106,7 +108,7 @@ describe('spriteSheet', () => {
       });
 
       expect(spriteSheet.animations.walk).to.exist;
-      expect(spriteSheet.animations.walk.frames).to.eql([5,4,3,2,1]);
+      expect(spriteSheet.animations.walk.frames).to.deep.equal([5,4,3,2,1]);
     });
 
     it('should accept an array of consecutive frames', () => {
@@ -117,7 +119,7 @@ describe('spriteSheet', () => {
       });
 
       expect(spriteSheet.animations.walk).to.exist;
-      expect(spriteSheet.animations.walk.frames).to.eql([1,2,3]);
+      expect(spriteSheet.animations.walk.frames).to.deep.equal([1,2,3]);
     });
 
     it('should accept an array of non-consecutive frames', () => {
@@ -128,7 +130,7 @@ describe('spriteSheet', () => {
       });
 
       expect(spriteSheet.animations.walk).to.exist;
-      expect(spriteSheet.animations.walk.frames).to.eql([1,3,5]);
+      expect(spriteSheet.animations.walk.frames).to.deep.equal([1,3,5]);
     });
 
     it('should accept a mixture of numbers, strings, and arrays', () => {
@@ -139,7 +141,7 @@ describe('spriteSheet', () => {
       });
 
       expect(spriteSheet.animations.walk).to.exist;
-      expect(spriteSheet.animations.walk.frames).to.eql([1,2,3,4,5,4,3,2,1]);
+      expect(spriteSheet.animations.walk.frames).to.deep.equal([1,2,3,4,5,4,3,2,1]);
     });
 
   });

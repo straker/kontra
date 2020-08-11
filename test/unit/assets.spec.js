@@ -416,6 +416,14 @@ describe('assets', () => {
       });
     });
 
+    it('should load multiple assets', done => {
+      assets.load('/imgs/bullet.png', ['/audio/shoot.mp3', '/audio/shoot.ogg'], '/data/test.json').then(loadedAssets => {
+        expect(loadedAssets).to.have.lengthOf(3);
+
+        done();
+      });
+    });
+
   });
 
 });

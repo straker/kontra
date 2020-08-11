@@ -1,4 +1,5 @@
-import { getCanvas } from './core.js'
+import { getCanvas } from './core.js';
+import { getWorldRect } from './utils.js';
 
 /**
  * Determine which subnodes the object intersects with
@@ -14,12 +15,14 @@ function getIndices(object, bounds) {
   let verticalMidpoint = bounds.x + bounds.width / 2;
   let horizontalMidpoint = bounds.y + bounds.height / 2;
 
+  let { x, y, width, height } = getWorldRect(object);
+
   // save off quadrant checks for reuse
-  let intersectsTopQuadrants = object.y < horizontalMidpoint && object.y + object.height >= bounds.y;
-  let intersectsBottomQuadrants = object.y + object.height >= horizontalMidpoint && object.y < bounds.y + bounds.height;
+  let intersectsTopQuadrants = object.y < horizontalMidpoint;
+  let intersectsBottomQuadrants = object.y + object.height >= horizontalMidpoint;
 
   // object intersects with the left quadrants
-  if (object.x < verticalMidpoint && object.x + object.width >= bounds.x) {
+  if (object.x < verticalMidpoint) {
     if (intersectsTopQuadrants) {  // top left
       indices.push(0);
     }
@@ -30,8 +33,8 @@ function getIndices(object, bounds) {
   }
 
   // object intersects with the right quadrants
-  if (object.x + object.width >= verticalMidpoint && object.x < bounds.x + bounds.width) {  // top right
-    if (intersectsTopQuadrants) {
+  if (object.x + object.width >= verticalMidpoint) {
+    if (intersectsTopQuadrants) {  // top right
       indices.push(1);
     }
 
@@ -62,10 +65,10 @@ The quadrant indices are numbered as follows (following a z-order curve):
  * <script src="assets/js/quadtree.js"></script>
  * @class Quadtree
  *
- * @param {Object} properties - Properties of the quadtree.
+ * @param {Object} [properties] - Properties of the quadtree.
  * @param {Number} [properties.maxDepth=3] - Maximum node depth of the quadtree.
  * @param {Number} [properties.maxObjects=25] - Maximum number of objects a node can have before splitting.
- * @param {Object} [properties.bounds] - The 2D space (x, y, width, height) the quadtree occupies. Defaults to the entire canvas width and height.
+ * @param {{x: Number, y: Number, width: Number, height: Number}} [properties.bounds] - The 2D space (x, y, width, height) the quadtree occupies. Defaults to the entire canvas width and height.
  */
 class Quadtree {
   /**
@@ -91,7 +94,7 @@ class Quadtree {
     /**
      * The 2D space (x, y, width, height) the quadtree occupies.
      * @memberof Quadtree
-     * @property {Object} bounds
+     * @property {{x: Number, y: Number, width: Number, height: Number}} bounds
      */
     let canvas = getCanvas();
     this.bounds = bounds || {
@@ -150,7 +153,7 @@ class Quadtree {
    * @memberof Quadtree
    * @function get
    *
-   * @param {Object} object - Object to use for finding other objects. The object must have the properties `x`, `y`, `width`, and `height` so that its position in the quadtree can be calculated.
+   * @param {{x: Number, y: Number, width: Number, height: Number}} object - Object to use for finding other objects. The object must have the properties `x`, `y`, `width`, and `height` so that its position in the quadtree can be calculated.
    *
    * @returns {Object[]} A list of objects in the same node as the object, not including the object itself.
    */
@@ -161,11 +164,9 @@ class Quadtree {
 
     // traverse the tree until we get to a leaf node
     while (this._s.length && this._b) {
-      indices = getIndices(object, this.bounds);
-
-      for (i = 0; i < indices.length; i++) {
-        this._s[ indices[i] ].get(object).forEach(obj => objects.add(obj));
-      }
+      getIndices(object, this.bounds).map(index => {
+        this._s[index].get(object).map(obj => objects.add(obj));
+      });
 
       return Array.from(objects);
     }
@@ -209,26 +210,20 @@ class Quadtree {
    * @memberof Quadtree
    * @function add
    *
-   * @param {Object|Object[]} objectsN - Objects to add to the quadtree.
+   * @param {...Object[]} objects - Objects to add to the quadtree.
    */
-  add() {
-    let i, j, object, obj, indices, index;
-
-    for (j = 0; j < arguments.length; j++) {
-      object = arguments[j];
-
+  add(...objects) {
+    objects.map(object => {
       // add a group of objects separately
       if (Array.isArray(object)) {
         this.add.apply(this, object);
-
-        continue;
+        return;
       }
 
       // current node has subnodes, so we need to add this object into a subnode
       if (this._b) {
         this._a(object);
-
-        continue;
+        return;
       }
 
       // this node is a leaf node so add the object to it
@@ -239,13 +234,10 @@ class Quadtree {
         this._sp();
 
         // move all objects to their corresponding subnodes
-        for (i = 0; (obj = this._o[i]); i++) {
-          this._a(obj);
-        }
-
+        this._o.map(obj => this._a(obj));
         this._o.length = 0;
       }
-    }
+    });
   }
 
   /**
@@ -253,14 +245,11 @@ class Quadtree {
    *
    * @param {Object} object - Object to add into a subnode
    */
-  // @see https://github.com/jed/140bytes/wiki/Byte-saving-techniques#use-placeholder-arguments-instead-of-var
-  _a(object, indices, i) {
-    indices = getIndices(object, this.bounds);
-
+  _a(object) {
     // add the object to all subnodes it intersects
-    for (i = 0; i < indices.length; i++) {
-      this._s[ indices[i] ].add(object);
-    }
+    getIndices(object, this.bounds).map(index => {
+      this._s[index].add(object);
+    });
   }
 
   /**
@@ -279,7 +268,7 @@ class Quadtree {
     subHeight = this.bounds.height / 2 | 0;
 
     for (i = 0; i < 4; i++) {
-      this._s[i] = quadtreeFactory({
+      this._s[i] = new Quadtree({
         bounds: {
           x: this.bounds.x + (i % 2 === 1 ? subWidth : 0),  // nodes 1 and 3
           y: this.bounds.y + (i >= 2 ? subHeight : 0),      // nodes 2 and 3
@@ -292,7 +281,7 @@ class Quadtree {
 
       // d = depth, p = parent
       this._s[i]._d = this._d+1;
-      /* @if VISUAL_DEBUG */
+      /* @ifdef VISUAL_DEBUG */
       this._s[i]._p = this;
       /* @endif */
     }
@@ -301,7 +290,7 @@ class Quadtree {
   /**
    * Draw the quadtree. Useful for visual debugging.
    */
-   /* @if VISUAL_DEBUG **
+   /* @ifdef VISUAL_DEBUG **
    render() {
      // don't draw empty leaf nodes, always draw branch nodes and the first node
      if (this._o.length || this._d === 0 ||
@@ -320,8 +309,8 @@ class Quadtree {
    /* @endif */
 }
 
-export default function quadtreeFactory(properties) {
-  return new Quadtree(properties);
+export default function factory() {
+  return new Quadtree(...arguments);
 }
-quadtreeFactory.prototype = Quadtree.prototype;
-quadtreeFactory.class = Quadtree;
+factory.prototype = Quadtree.prototype;
+factory.class = Quadtree;

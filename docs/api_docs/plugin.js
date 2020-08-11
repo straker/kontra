@@ -3,7 +3,7 @@
  *
  * An intercept function is named the same name as the function it will intercept. The function name is also prefixed with `before` to have the function run before the intercepted function, or `after` to run after the intercepted function.
  *
- * For example, if you wish to add a function to run after a Sprites `collidesWidth()` function, the name of the intercept function would be `afterCollidesWidth` (note the capitalization of the `collidesWidth` function name). `beforeCollidesWidth` would run before the Sprites `collidesWidth()` function.
+ * For example, if you wish to add a function to run after a Sprites `collidesWith()` function, the name of the intercept function would be `afterCollidesWith` (note the capitalization of the `collidesWith` function name). `beforeCollidesWith` would run before the Sprites `collidesWith()` function.
  *
  * A plugin can define any number of before and after intercept functions. When the plugin is registered for a Kontra object, only intercept functions that match a function name in the Kontra object will be intercepted.
  *
@@ -22,17 +22,27 @@
  *
  * ```js
  * // consumerCode.js
- * import { registerPlugin, Sprite } from 'kontra';
+ * import { registerPlugin, Sprite, collides } from 'kontra';
  * import loggingPlugin from pluginCode.js;
  *
- * // have the plugin run for all Sprites
- * registerPlugin(Sprite, loggingPlugin);
+ * class SpriteBox extends Sprite.class {
+ *   constructor(props) {
+ *     super(props);
+ *   }
  *
- * let sprite1 = Sprite({
+ *   collidesWith(object) {
+ *     return collides(this, object);
+ *   }
+ * }
+ *
+ * // have the plugin run for all Sprites
+ * registerPlugin(SpriteBox, loggingPlugin);
+ *
+ * let sprite1 = new SpriteBox({
  *   x: 10,
  *   y: 20,
  *   width: 10,
- *   height: 10
+ *   height: 10,
  * });
  *
  * let sprite2 = Sprite({

@@ -1,0 +1,35 @@
+declare namespace kontra {
+  {{#each allSections}}
+    {{#if class}}
+  {{! copied from Typescript es5 definitions of standard API functions }}
+  {{! @see https://github.com/microsoft/TypeScript/blob/master/lib/lib.es5.d.ts#L272-L316 }}
+  interface {{class}}{{#if extends}} extends {{extends}}{{/if}} {
+    {{#each children}}
+      {{#if function}}
+    {{name}}({{{params}}}): {{{returns}}};
+      {{/if}}
+      {{#if property}}
+    {{#if readonly}}readonly {{/if}}{{property.name}}: {{{property.type}}};
+      {{/if}}
+    {{/each}}
+  }
+  interface {{class}}Constructor {
+    readonly class: {{class}}Constructor;
+    readonly prototype: {{class}};
+    new({{{params}}}): {{class}};
+    ({{{params}}}): {{class}};
+  }
+  var {{class}}: {{class}}Constructor
+    {{/if}}
+    {{#unless memberof}}
+      {{#if function}}
+  function {{name}}({{{params}}}): {{{returns}}};
+      {{/if}}
+      {{#if property}}
+  var {{property.name}}: {{{property.type}}};
+      {{/if}}
+    {{/unless}}
+  {{/each}}
+}
+
+export = kontra

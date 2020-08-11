@@ -5,4 +5,56 @@ dist: trusty
 sudo: required
 addons:
   chrome: stable
-after_script: "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
+
+jobs:
+  include:
+  - name: "Unit Tests"
+    if: type = pull_request
+    script:
+      - npm test
+    after_success: "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
+  - name: "Typescript Tests"
+    if: type = pull_request
+    script:
+      - npm run build
+      - npm run test:ts
+
+  # run permutations in parallel (starting with the longer running ones
+  # so they have more time to complete while the shorter ones finish)
+  - name: "Permutation Tests: vector"
+    if: type = pull_request
+    script:
+      - npm run build
+      - npm run test:permutations vector
+  - name: "Permutation Tests: gameObject"
+    if: type = pull_request
+    script:
+      - npm run build
+      - npm run test:permutations gameObject
+  - name: "Permutation Tests: text"
+    if: type = pull_request
+    script:
+      - npm run build
+      - npm run test:permutations text
+  - name: "Permutation Tests: updatable"
+    if: type = pull_request
+    script:
+      - npm run build
+      - npm run test:permutations updatable
+  - name: "Permutation Tests: sprite"
+    if: type = pull_request
+    script:
+      - npm run build
+      - npm run test:permutations sprite
+
+  - name: "Deploy gh-pages"
+    if: type = push
+    script: npm run build:docs
+    deploy:
+      provider: pages
+      skip_cleanup: true
+      github_token: $GITHUB_TOKEN
+      keep_history: true
+      local_dir: docs
+      on:
+        branch: main

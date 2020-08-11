@@ -1,3 +1,13 @@
 node_modules
 .DS_Store
 coverage
+docs/api
+docs/**/*.html
+docs/assets/js/kontra.js
+kontra.*
+test/permutations/*.js
+test/typings/*.js
+test/playground.html
+
+!test/permutations/index.js
+!test/permutations/karma.conf.template.js

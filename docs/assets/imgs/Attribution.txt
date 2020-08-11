@@ -6,6 +6,7 @@ CC0 1.0 Universal
 
 Assets from:
     http://opengameart.org/content/platformer-tiles
+    https://www.kenney.nl/assets/ui-pack
 
 Kenney.nl
     OpenGameArt  Kenney

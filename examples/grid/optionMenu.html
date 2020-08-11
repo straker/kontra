@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Grid Option Menu</title>
+  <script src="../../kontra.js"></script>
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      color: white;
+      font: 20px Arial;
+    }
+    body {
+      background: black;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+    canvas {
+      border: 1px solid white;
+    }
+    label {
+      background: white;
+      color: black;
+      display: flex;
+    }
+  </style>
+</head>
+<body>
+  <div>
+    <canvas id="game" width="384" height="384" style="background: #333331"></canvas>
+    <label>Scale:
+        <input type="range" value="1" min="0.25" max="1.5" step="any"
+        oninput="kontra.emit('scale', parseFloat(this.value))">
+    </label>
+    <button id="rtl" onclick="game.dir = 'rtl'; assistManager._d = true;">Change to RTL</button>
+    <button id="ltr" onclick="game.dir = 'ltr'; assistManager._d = true;">Change to LTR</button>
+  </div>
+    <script>
+    let { canvas, context } = kontra.init();
+    kontra.initPointer();
+
+    function createText(props) {
+      return kontra.Text({
+        font: '18px Arial',
+        text: 'ASSIST MODE',
+        textAlign: 'center',
+        color: 'white',
+        anchor: { x: 0.5, y: 0.5 },
+        ...props
+      });
+    }
+
+    let title = createText({
+      font: 'bold 32px Arial',
+      text: 'ASSIST MODE',
+      color: '#999',
+      colSpan: 2,
+      justifySelf: 'center'
+    });
+
+    let gameSpeed = createText({
+      text: 'Game Speed'
+    });
+    let infiniteStamina = createText({
+      text: 'Infinite Stamina'
+    });
+    let airDashes = createText({
+      text: 'Air Dashes',
+      color: 'grey'
+    });
+    let invincibility = createText({
+      text: 'Invincibility'
+    });
+
+    function createButton(textProps, btnProps) {
+      return kontra.Button({
+        anchor: { x: 0.5, y: 0.5 },
+        text: {
+          font: '18px Arial',
+          textAlign: 'center',
+          color: 'white',
+          anchor: { x: 0.5, y: 0.5 },
+          ...textProps
+        },
+        ...btnProps
+      });
+    }
+
+    function createOptionSelect(text, color) {
+      let leftBtn = createButton({
+        text: '<',
+        color: color || 'white'
+      });
+      let value = createText({
+        text,
+        color: color || 'white'
+      });
+      let rightBtn = createButton({
+        text: '>',
+        color: color || 'grey',
+      });
+
+      leftBtn.disable();  // TODO: let this be an option
+
+      return manager = kontra.Grid({
+        flow: 'row',
+        anchor: {x: 0.5, y: 0.5},
+        rowGap: 10,
+        children: [leftBtn, value, rightBtn],
+        justifySelf: 'end'
+      });
+    }
+
+    let gameSpeedOption = createOptionSelect('100%');
+    let infiniteStaminaOption = createOptionSelect('ON');
+    let airDashesOption = createOptionSelect('Default', 'grey');
+    let invincibilityOption = createOptionSelect('ON');
+
+    let assistManager = kontra.Grid({
+      flow: 'grid',
+      numCols: 2,
+      rowGap: 25,
+      colGap: 8,
+      anchor: {x: 0.5, y: 0.5},
+      x: canvas.width / 2,
+      y: canvas.height / 2,
+      children: [
+        title,
+        gameSpeed,
+        gameSpeedOption,
+        infiniteStamina,
+        infiniteStaminaOption,
+        airDashes,
+        airDashesOption,
+        invincibility,
+        invincibilityOption
+      ],
+      breakpoints: [{
+        metric() { return this.scaleX < 0.85 },
+        callback() {
+          this.numCols = 1;
+          this.colGap = [25, 10];
+          this.children.forEach(child => child.justifySelf = 'center');
+        }
+      },
+      {
+        metric() { return this.scaleX >= 0.85 },
+        callback() {
+          this.numCols = 2;
+          this.colGap = 8;
+          for (let i = 1; i < this.children.length; i++) {
+            let child = this.children[i];
+            if (i % 2 === 0) {
+              child.justifySelf = 'end';
+            }
+            else {
+              child.justifySelf = 'start';
+            }
+          }
+        }
+      }]
+    });
+
+    kontra.on('scale', value => {
+      assistManager.setScale(value);
+    });
+
+    let loop = kontra.GameLoop({
+      update() {},
+      render() {
+        context.save();
+        context.globalAlpha = 0.75;
+        context.fillStyle = 'black';
+        context.fillRect(0,0,canvas.width,canvas.height);
+        context.restore();
+
+        assistManager.render();
+      }
+    });
+    loop.start();
+    // assistManager.render();
+    </script>
+</body>
+</html>

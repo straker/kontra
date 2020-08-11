@@ -4,30 +4,59 @@ const size = require('gulp-size');
 const terser = require('gulp-terser');
 const plumber = require('gulp-plumber');
 const preprocess = require('gulp-preprocess');
-const rollup = require('rollup-stream');
+const rollup = require('@rollup/stream');
 const source = require('vinyl-source-stream');
-require('./doc-tasks.js');
+require('./tasks/docs.js');
+require('./tasks/typescript.js');
 
-// Enables/Disables visual debugging in Kontra
-const VISUAL_DEBUG = false;
-
-// Enables/Disables DEBUG mode in Kontra
-const DEBUG = false;
+const context = {
+  GAMEOBJECT_GROUP: true,
+  GAMEOBJECT_ROTATION: true,
+  GAMEOBJECT_VELOCITY: true,
+  GAMEOBJECT_ACCELERATION: true,
+  GAMEOBJECT_TTL: true,
+  GAMEOBJECT_ANCHOR: true,
+  GAMEOBJECT_CAMERA: true,
+  GAMEOBJECT_SCALE: true,
+  GAMEOBJECT_OPACITY: true,
+  SPRITE_IMAGE: true,
+  SPRITE_ANIMATION: true,
+  TEXT_AUTONEWLINE: true,
+  TEXT_NEWLINE: true,
+  TEXT_RTL: true,
+  TEXT_ALIGN: true,
+  VECTOR_SUBTRACT: true,
+  VECTOR_SCALE: true,
+  VECTOR_NORMALIZE: true,
+  VECTOR_DOT: true,
+  VECTOR_LENGTH: true,
+  VECTOR_DISTANCE: true,
+  VECTOR_ANGLE: true,
+  VECTOR_CLAMP: true
+  // DEBUG and VISUAL_DEBUG are turned off
+};
 
 function buildIife() {
   return rollup({
     input: './src/kontra.defaults.js',
-    format: 'iife',
-    name: 'kontra'
+    output: {
+      format: 'iife',
+      name: 'kontra',
+      strict: false
+    }
   })
   .pipe(source('kontra.js'))
-  .pipe(gulp.dest('.'));
+  .pipe(gulp.dest('.'))
+  .pipe(gulp.dest('./docs/assets/js'));
 }
 
 function buildModule() {
   return rollup({
       input: './src/kontra.js',
-      format: 'es'
+      output: {
+        format: 'es',
+        strict: false
+      }
     })
     .pipe(source('kontra.mjs'))
     .pipe(gulp.dest('.'));
@@ -35,7 +64,7 @@ function buildModule() {
 
 function distIife() {
   return gulp.src('kontra.js')
-    .pipe(preprocess({context: { DEBUG: DEBUG, VISUAL_DEBUG: VISUAL_DEBUG }}))
+    .pipe(preprocess({context}))
     .pipe(plumber())
     .pipe(terser())
     .pipe(plumber.stop())
@@ -53,7 +82,7 @@ function distIife() {
 
 function distModule() {
   return gulp.src('kontra.mjs')
-    .pipe(preprocess({context: { DEBUG: DEBUG, VISUAL_DEBUG: VISUAL_DEBUG }}))
+    .pipe(preprocess({context}))
     .pipe(plumber())
     .pipe(terser())
     .pipe(plumber.stop())
@@ -68,7 +97,7 @@ function distModule() {
     .pipe(gulp.dest('.'));
 }
 
-gulp.task('build', gulp.series(buildIife, buildModule, 'build:docs'));
+gulp.task('build', gulp.series(buildIife, buildModule, 'build:docs', 'build:ts'));
 
 gulp.task('dist', gulp.series(distIife, distModule));
 

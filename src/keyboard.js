@@ -41,7 +41,7 @@ let pressedKeys = {};
  *   // handle pageDown key
  * });
  * ```
- * @property {Object} keyMap
+ * @property {{[key in (String|Number)]: string}} keyMap
  */
 export let keyMap = {
   // named keys
@@ -51,15 +51,7 @@ export let keyMap = {
   'ArrowLeft': 'left',
   'ArrowUp': 'up',
   'ArrowRight': 'right',
-  'ArrowDown': 'down',
-  // for Edge compatibility
-  13: 'enter',
-  27: 'esc',
-  32: 'space',
-  37: 'left',
-  38: 'up',
-  39: 'right',
-  40: 'down'
+  'ArrowDown': 'down'
 };
 
 /**
@@ -68,7 +60,7 @@ export let keyMap = {
  * @param {KeyboardEvent} evt
  */
 function keydownEventHandler(evt) {
-  let key = keyMap[evt.code || evt.which];
+  let key = keyMap[evt.code];
   pressedKeys[key] = true;
 
   if (callbacks[key]) {
@@ -82,7 +74,7 @@ function keydownEventHandler(evt) {
  * @param {KeyboardEvent} evt
  */
 function keyupEventHandler(evt) {
-  pressedKeys[ keyMap[evt.code || evt.which] ] = false;
+  pressedKeys[ keyMap[evt.code] ] = false;
 }
 
 /**
@@ -136,6 +128,7 @@ export function initKeys() {
  * @function bindKeys
  *
  * @param {String|String[]} keys - Key or keys to bind.
+ * @param {(evt: KeyboardEvent) => void} callback - The function to be called when the key is pressed.
  */
 export function bindKeys(keys, callback) {
   // smaller than doing `Array.isArray(keys) ? keys : [keys]`

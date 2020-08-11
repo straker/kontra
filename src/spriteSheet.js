@@ -1,4 +1,4 @@
-import Animation from './animation.js'
+import Animation from './animation.js';
 
 /**
  * Parse a string of consecutive frames.
@@ -44,7 +44,7 @@ function parseFrames(consecutiveFrames) {
  *
  * <figure>
  *   <a href="assets/imgs/character_walk_sheet.png">
- *     <img src="assets/imgs/character_walk_sheet.png" alt="11 frames of a walking pill-like alien wearing a space helmet.">
+ *     <img src="assets/imgs/character_walk_sheet.png" width="266" height="512" alt="11 frames of a walking pill-like alien wearing a space helmet.">
  *   </a>
  *   <figcaption>Sprite sheet image courtesy of <a href="https://kenney.nl/assets">Kenney</a>.</figcaption>
  * </figure>
@@ -82,22 +82,22 @@ function parseFrames(consecutiveFrames) {
  * @class SpriteSheet
  *
  * @param {Object} properties - Properties of the sprite sheet.
- * @param {Image|HTMLCanvasElement} properties.image - The sprite sheet image.
+ * @param {HTMLImageElement|HTMLCanvasElement} properties.image - The sprite sheet image.
  * @param {Number} properties.frameWidth - The width of a single frame.
  * @param {Number} properties.frameHeight - The height of a single frame.
  * @param {Number} [properties.frameMargin=0] - The amount of whitespace between each frame.
- * @param {Object} [properties.animations] - Animations to create from the sprite sheet using kontra.Animation. Passed directly into the sprite sheets [createAnimations()](api/spriteSheet#createAnimations) function.
+ * @param {Object} [properties.animations] - Animations to create from the sprite sheet using [Animation](api/animation). Passed directly into the sprite sheets [createAnimations()](api/spriteSheet#createAnimations) function.
  */
 class SpriteSheet {
   constructor({image, frameWidth, frameHeight, frameMargin, animations} = {}) {
-    // @if DEBUG
+    // @ifdef DEBUG
     if (!image) {
       throw Error('You must provide an Image for the SpriteSheet');
     }
     // @endif
 
     /**
-     * An object of named kontra.Animation objects. Typically you pass this object into kontra.Sprite to create an [animation sprites](api/spriteSheet#animation-sprite).
+     * An object of named [Animation](api/animation) objects. Typically you pass this object into [Sprite](api/sprite) to create an [animation sprites](api/spriteSheet#animation-sprite).
      * @memberof SpriteSheet
      * @property {Object} animations
      */
@@ -106,7 +106,7 @@ class SpriteSheet {
     /**
      * The sprite sheet image.
      * @memberof SpriteSheet
-     * @property {Image|HTMLCanvasElement} image
+     * @property {HTMLImageElement|HTMLCanvasElement} image
      */
     this.image = image;
 
@@ -132,7 +132,7 @@ class SpriteSheet {
   /**
    * Create named animations from the sprite sheet. Called from the constructor if the `animations` argument is passed.
    *
-   * This function populates the sprite sheets `animations` property with kontra.Animation objects. Each animation is accessible by its name.
+   * This function populates the sprite sheets `animations` property with [Animation](api/animation) objects. Each animation is accessible by its name.
    *
    * ```js
    * import { Sprite, SpriteSheet } from 'kontra';
@@ -200,7 +200,7 @@ class SpriteSheet {
       // array that holds the order of the animation
       sequence = [];
 
-      // @if DEBUG
+      // @ifdef DEBUG
       if (frames === undefined) {
         throw Error('Animation ' + name + ' must provide a frames property');
       }
@@ -221,8 +221,8 @@ class SpriteSheet {
   }
 }
 
-export default function spriteSheetFactory(properties) {
-  return new SpriteSheet(properties);
+export default function factory() {
+  return new SpriteSheet(...arguments);
 }
-spriteSheetFactory.prototype = SpriteSheet.prototype;
-spriteSheetFactory.class = SpriteSheet;
+factory.prototype = SpriteSheet.prototype;
+factory.class = SpriteSheet;

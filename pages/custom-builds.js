@@ -38,6 +38,8 @@ Kontra supports even more granular control over the output. If you're looking to
 
 __Note:__ All options default to `false` when using rollup-plugin-kontra, so only pass the options you wish to enable. Passing no options will result in a Sprite with just `position`, `width,` `height`, and `color`.
 
+__Also Note:__ Some of the more advance classes – such as Button, Scene, and Grid – require some of the gameObject functionality to work properly. If you are using those, you will need to enable the `group` feature or they will not work.
+
 * ```js
 * // exclude-tablist
 * // rollup.config.js

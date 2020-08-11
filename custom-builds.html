@@ -113,6 +113,7 @@ loop.start();</code></pre>
 <h2 id="rollup-plugin-kontra">Rollup-plugin-kontra</h2>
 <p>Kontra supports even more granular control over the output. If you&#39;re looking to remove unused parts of the Sprite class, such as <code>rotation</code> or <code>anchor</code>, you can use <a href="https://github.com/straker/rollup-plugin-kontra">rollup-plugin-kontra</a> to remove entire parts of the Sprite codebase. Just pass the functionality you want enabled and rollup-plugin-kontra will remove the rest.</p>
 <p><strong>Note:</strong> All options default to <code>false</code> when using rollup-plugin-kontra, so only pass the options you wish to enable. Passing no options will result in a Sprite with just <code>position</code>, <code>width,</code> <code>height</code>, and <code>color</code>.</p>
+<p><strong>Also Note:</strong> Some of the more advance classes – such as Button, Scene, and Grid – require some of the gameObject functionality to work properly. If you are using those, you will need to enable the <code>group</code> feature or they will not work.</p>
 <pre><code class="language-js">// rollup.config.js
 import kontra from &#39;rollup-plugin-kontra&#39;
 

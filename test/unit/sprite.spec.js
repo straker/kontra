@@ -110,15 +110,15 @@ describe('sprite with context: ' + JSON.stringify(testContext,null,4), () => {
   // --------------------------------------------------
   describe('update', () => {
 
-    it('should update the sprite', () => {
+    it.only('should call advance', () => {
       let sprite = Sprite({
           x: 10,
           y: 20,
-          dx: 10
+          advance: sinon.spy();
         });
         sprite.update();
 
-        expect(sprite.x).to.equal(20);
+        expect(sprite.advance.called).to.be.true;
     });
 
     if (testContext.SPRITE_ANIMATION) {

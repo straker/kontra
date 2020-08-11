@@ -103,6 +103,13 @@ Object.keys(options).forEach(async (option) => {
     );
     fs.writeFileSync(path.join(__dirname, `${option}.spec.js`), contents, 'utf-8');
 
-    execSync('npx karma start ' + path.join(__dirname, 'karma.conf.js'), {stdio: 'inherit'});
+    try {
+      execSync('npx karma start ' + path.join(__dirname, 'karma.conf.js'), {stdio: 'inherit'});
+    } catch(e) {
+      // for some reason a failing test/exec does not error the program
+      // don't need to see the exec process error as the failing test
+      // is enough
+      return process.exit(1);
+    }
   }
 });

@@ -52,63 +52,62 @@ if (optionName && options[optionName]) {
 }
 
 Object.keys(options).forEach(async (option) => {
-  // get the setup code
-  let setup = fs.readFileSync(path.join(__dirname, '../setup.js'), 'utf-8');
-  setup = setup.replace('../src/core.js', '../../src/core.js');
+  try {
+    // get the setup code
+    let setup = fs.readFileSync(path.join(__dirname, '../setup.js'), 'utf-8');
+    setup = setup.replace('../src/core.js', '../../src/core.js');
 
-  // copy test suite and change path
-  let test = fs.readFileSync(path.join(__dirname, `../unit/${option}.spec.js`), 'utf-8');
+    // copy test suite and change path
+    let test = fs.readFileSync(path.join(__dirname, `../unit/${option}.spec.js`), 'utf-8');
 
-  // since loading the setup code causes the core file to be loaded
-  // twice (and destroying context references) we'll need to inject
-  // the setup code into each test suite manually
-  let matches = test.match(/(import.*?from.*?[\n\r])/g);
-  let lastImport = matches[matches.length - 1];
-  test = test.replace(lastImport, `${lastImport}${setup}`);
+    // since loading the setup code causes the core file to be loaded
+    // twice (and destroying context references) we'll need to inject
+    // the setup code into each test suite manually
+    let matches = test.match(/(import.*?from.*?[\n\r])/g);
+    let lastImport = matches[matches.length - 1];
+    test = test.replace(lastImport, `${lastImport}${setup}`);
 
-  fs.writeFileSync(path.join(__dirname, `${option}.spec.js`), test, 'utf-8');
+    fs.writeFileSync(path.join(__dirname, `${option}.spec.js`), test, 'utf-8');
 
-  // rollup test file
-  let bundle = await rollup.rollup({
-    input: path.join(__dirname, `${option}.spec.js`)
-  });
-  let { output } = await bundle.generate({
-    file: path.join(__dirname, `${option}.spec.js`),
-    format: 'iife'
-  });
-
-  // copy karma.conf and change path
-  let karma = fs.readFileSync(path.join(__dirname, `./karma.conf.template.js`), 'utf-8');
-  karma = karma.replace(/__option__/g, option);
-  fs.writeFileSync(path.join(__dirname, 'karma.conf.js'), karma, 'utf-8');
-
-  // generate each option and run tests
-  let numPermutations = 2**(options[option].length);
-  for (let i = 0; i < numPermutations; i++) {
-    let context = {};
-
-    options[option].forEach((optionName, index) => {
-      context[optionName] = !!(2**index & i);
+    // rollup test file
+    let bundle = await rollup.rollup({
+      input: path.join(__dirname, `${option}.spec.js`)
+    });
+    let { output } = await bundle.generate({
+      file: path.join(__dirname, `${option}.spec.js`),
+      format: 'iife'
     });
 
-    // replace context in test suite
-    let testContents = output[0].code.replace(/\/\/ test-context([\s\S])*\/\/ test-context:end/, `let testContext = ${JSON.stringify(context)};`);
+    // copy karma.conf and change path
+    let karma = fs.readFileSync(path.join(__dirname, `./karma.conf.template.js`), 'utf-8');
+    karma = karma.replace(/__option__/g, option);
+    fs.writeFileSync(path.join(__dirname, 'karma.conf.js'), karma, 'utf-8');
 
-    // console.log('testContents:', testContents);
+    // generate each option and run tests
+    let numPermutations = 2**(options[option].length);
+    for (let i = 0; i < numPermutations; i++) {
+      let context = {};
 
-    let contents = pp.preprocess(
-      testContents,
-      context,
-      {type: 'js'}
-    );
-    fs.writeFileSync(path.join(__dirname, `${option}.spec.js`), contents, 'utf-8');
+      options[option].forEach((optionName, index) => {
+        context[optionName] = !!(2**index & i);
+      });
 
-    try {
+      // replace context in test suite
+      let testContents = output[0].code.replace(/\/\/ test-context([\s\S])*\/\/ test-context:end/, `let testContext = ${JSON.stringify(context)};`);
+
+      // console.log('testContents:', testContents);
+
+      let contents = pp.preprocess(
+        testContents,
+        context,
+        {type: 'js'}
+      );
+      fs.writeFileSync(path.join(__dirname, `${option}.spec.js`), contents, 'utf-8');
+
       execSync('npx karma start ' + path.join(__dirname, 'karma.conf.js'), {stdio: 'inherit'});
     } catch(e) {
       // for some reason a failing test/exec does not error the program
-      // don't need to see the exec process error as the failing test
-      // is enough
+      console.log(e);
       return process.exit(1);
     }
   }

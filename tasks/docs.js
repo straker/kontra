@@ -373,7 +373,7 @@ function livingcssPreprocess(context, template, Handlebars) {
         if (navItem.url === 'gameloop') navItem.url = 'gameLoop';
         else if (navItem.url === 'spritesheet') navItem.url = 'spriteSheet';
         else if (navItem.url === 'tileengine') navItem.url = 'tileEngine';
-
+        else if (navItem.url === 'gameobject') navItem.url = 'gameObject';
       });
 
       context.navbar.sort(sortByName);
@@ -384,6 +384,7 @@ function livingcssPreprocess(context, template, Handlebars) {
     if (context.id === 'gameloop') context.id = 'gameLoop';
     else if (context.id === 'spritesheet') context.id = 'spriteSheet';
     else if (context.id === 'tileengine') context.id = 'tileEngine';
+    else if (context.id === 'gameobject') context.id = 'gameObject';
 
     // create 4 different sections that can be used to organize the page
     context.otherSections = [];

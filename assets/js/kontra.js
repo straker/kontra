@@ -3696,7 +3696,7 @@ var kontra = (function () {
    * @param {Object} [properties] - Properties of the grid manager.
    * @param {String} [properties.flow='column'] - The flow of the grid.
    * @param {String} [properties.align='start'] - The vertical alignment of the grid.
-   * @param {String} [properties.justify='start`] - The horizontal alignment of the grid.
+   * @param {String} [properties.justify='start'] - The horizontal alignment of the grid.
    * @param {Number|Number[]} [properties.colGap=0] - The horizontal gap between each column in the grid.
    * @param {Number|Number[]} [properties.rowGap=0] - The vertical gap between each row in the grid.
    * @param {Number} [properties.numCols=1] - The number of columns in the grid. Only applies if the `flow` property is set to `grid`.
@@ -4900,6 +4900,8 @@ var kontra = (function () {
    * @param {String} [properties.name=properties.id] - The name of the scene. Used by screen readers to identify each scene. Use this property to give the scene a human friendly name.
    * @param {Boolean} [properties.cullObjects=true] - If the scene should not render objects outside the camera bounds.
    * @param {Function} [properties.cullFunction] - The function used to filter objects to render. Defaults to [helpers.collides](api/helpers#collides).
+   * @param {Function} [properties.onShow] - Function called when the scene is shown.
+   * @param {Function} [properties.onHide] - Function called when the scene is hidden.
    */
   class Scene extends factory$2.class {
 
@@ -5047,13 +5049,6 @@ var kontra = (function () {
       this.children.map(child => child.destroy && child.destroy());
     }
 
-    /**
-     * Update the scene and call `update()` on all children. A hidden scene will not update.
-     * @memberof Scene
-     * @function update
-     *
-     * @param {Number} [dt] - Time since last update.
-     */
     update(dt) {
       if (!this.hidden) {
         super.update(dt);
@@ -5092,11 +5087,6 @@ var kontra = (function () {
       this.camera && this.camera._pc();
     }
 
-    /**
-     * Render the scene and call `render()` on all children. A hidden scene will not render nor will any children outside of the current camera.
-     * @memberof Scene
-     * @function render
-     */
     render() {
       let { x, y, width, height } = this.camera;
 

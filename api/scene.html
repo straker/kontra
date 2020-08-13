@@ -183,6 +183,18 @@ scene.render();</code></pre></section>
           </dt>
           <dd><p><em>Function</em>. The function used to filter objects to render. Defaults to <a href="api/helpers#collides">helpers.collides</a>.</p>
         </dd>
+          <dt>
+            <code>properties.onShow</code>
+            <span class="optional">Optional</span>
+          </dt>
+          <dd><p><em>Function</em>. Function called when the scene is shown.</p>
+        </dd>
+          <dt>
+            <code>properties.onHide</code>
+            <span class="optional">Optional</span>
+          </dt>
+          <dd><p><em>Function</em>. Function called when the scene is hidden.</p>
+        </dd>
         </dl>
         
 
@@ -256,18 +268,8 @@ scene.render();</code></pre></section>
                   </a>
                 </li>
                 <li>
-                  <a href="api/scene#render">
-                    <span>Scene&#8203;.render(&#8203;)</span>
-                  </a>
-                </li>
-                <li>
                   <a href="api/scene#show">
                     <span>Scene&#8203;.show(&#8203;)</span>
-                  </a>
-                </li>
-                <li>
-                  <a href="api/scene#update">
-                    <span>Scene&#8203;.update(&#8203;[dt])</span>
                   </a>
                 </li>
               </ul>
@@ -408,17 +410,6 @@ scene.render();</code></pre></section>
           
         </section>
         <section>
-          <h2 id="render">
-            <a href="api/scene#render" class="section-link">
-              <span>Scene&#8203;.render(&#8203;)</span>
-              <span aria-hidden="true">#</span>
-            </a>
-          </h2>
-
-          <p>Render the scene and call <code>render()</code> on all children. A hidden scene will not render nor will any children outside of the current camera.</p>
-          
-        </section>
-        <section>
           <h2 id="show">
             <a href="api/scene#show" class="section-link">
               <span>Scene&#8203;.show(&#8203;)</span>
@@ -427,26 +418,6 @@ scene.render();</code></pre></section>
           </h2>
 
           <p>Show the scene and resume update and render. Calls <a href="api/scene#onShow">onShow</a> if passed.</p>
-          
-        </section>
-        <section>
-          <h2 id="update">
-            <a href="api/scene#update" class="section-link">
-              <span>Scene&#8203;.update(&#8203;[dt])</span>
-              <span aria-hidden="true">#</span>
-            </a>
-          </h2>
-
-          <p>Update the scene and call <code>update()</code> on all children. A hidden scene will not update.</p>
-          <h3 id="title-update"><span class="visually-hidden">update</span> Parameters</span></h3>
-          <dl aria-labelledby="title-update">
-            <dt>
-              <code>dt</code>
-              <span class="optional">Optional</span>
-            </dt>
-            <dd><p><em>Number</em>. Time since last update.</p>
-          </dd>
-          </dl>
           
         </section>
 

@@ -56,14 +56,14 @@ class GameObject extends Updatable {
     // --------------------------------------------------
 
     /**
-     * The width of the game object. Represents the local width of the object as opposed to the [world](/api/gameObject#world) width.
+     * The width of the game object. Represents the local width of the object as opposed to the [world](api/gameObject#world) width.
      * @memberof GameObject
      * @property {Number} width
      */
     width = 0,
 
     /**
-     * The height of the game object. Represents the local height of the object as opposed to the [world](/api/gameObject#world) height.
+     * The height of the game object. Represents the local height of the object as opposed to the [world](api/gameObject#world) height.
      * @memberof GameObject
      * @property {Number} height
      */
@@ -168,7 +168,7 @@ class GameObject extends Updatable {
 
     // @ifdef GAMEOBJECT_OPACITY
     /**
-     * The opacity of the object. Represents the local opacity of the object as opposed to the [world](/api/gameObject#world) opacity.
+     * The opacity of the object. Represents the local opacity of the object as opposed to the [world](api/gameObject#world) opacity.
      * @memberof GameObject
      * @property {Number} opacity
      */
@@ -177,7 +177,7 @@ class GameObject extends Updatable {
 
     // @ifdef GAMEOBJECT_ROTATION
     /**
-     * The rotation of the game object around the anchor in radians. . Represents the local rotation of the object as opposed to the [world](/api/gameObject#world) rotation.
+     * The rotation of the game object around the anchor in radians. . Represents the local rotation of the object as opposed to the [world](api/gameObject#world) rotation.
      * @memberof GameObject
      * @property {Number} rotation
      */
@@ -186,14 +186,14 @@ class GameObject extends Updatable {
 
     // @ifdef GAMEOBJECT_SCALE
     /**
-     * The x scale of the object. Represents the local x scale of the object as opposed to the [world](/api/gameObject#world) x scale.
+     * The x scale of the object. Represents the local x scale of the object as opposed to the [world](api/gameObject#world) x scale.
      * @memberof GameObject
      * @property {Number} scaleX
      */
     scaleX = 1,
 
     /**
-     * The y scale of the object. Represents the local y scale of the object as opposed to the [world](/api/gameObject#world) y scale.
+     * The y scale of the object. Represents the local y scale of the object as opposed to the [world](api/gameObject#world) y scale.
      * @memberof GameObject
      * @property {Number} scaleY
      */
@@ -541,7 +541,7 @@ class GameObject extends Updatable {
 
   // @ifdef GAMEOBJECT_GROUP
   /**
-   * Add an object as a child to this object. The childs [world](/api/gameObject#world) property will be updated to take into account this object and all of its parents.
+   * Add an object as a child to this object. The childs [world](api/gameObject#world) property will be updated to take into account this object and all of its parents.
    * @memberof GameObject
    * @function addChild
    *
@@ -588,7 +588,7 @@ class GameObject extends Updatable {
   }
 
   /**
-   * Remove an object as a child of this object. The removed objects [world](/api/gameObject#world) property will be updated to not take into account this object and all of its parents.
+   * Remove an object as a child of this object. The removed objects [world](api/gameObject#world) property will be updated to not take into account this object and all of its parents.
    * @memberof GameObject
    * @function removeChild
    *

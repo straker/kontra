@@ -4,12 +4,12 @@ import { track } from './pointer.js';
 import { srOnlyStyle, noop, addToDom } from './utils.js';
 
 /**
- * An accessible button. Supports screen readers and keyboard navigation using the <kbd>Tab</kbd> key. The button is automatically [tracked](/api/pointer#track) by the pointer and accepts all pointer functions, but you will still need to call [initPointer](/api/pointer#initPointer) to have pointer events enabled.
+ * An accessible button. Supports screen readers and keyboard navigation using the <kbd>Tab</kbd> key. The button is automatically [tracked](api/pointer#track) by the pointer and accepts all pointer functions, but you will still need to call [initPointer](api/pointer#initPointer) to have pointer events enabled.
  * @class Button
  * @extends Sprite
  *
  * @param {Object} [properties] - Properties of the button (in addition to all Sprite properties).
- * @param {Object} [properties.text] - Properties of [Text](/api/text) which are used to create the [textNode](/api/button#textNode).
+ * @param {Object} [properties.text] - Properties of [Text](api/text) which are used to create the [textNode](api/button#textNode).
  * @param {Number} [properties.padX=0] - The horizontal padding.
  * @param {Number} [properties.padY=0] - The vertical padding.
  * @param {Function} [properties.onEnable] - Function called when the button is enabled.
@@ -145,7 +145,7 @@ class Button extends Sprite.class {
   }
 
   /**
-   * Enable the button. Calls [onEnable](/api/button#onEnable) if passed.
+   * Enable the button. Calls [onEnable](api/button#onEnable) if passed.
    * @memberof Button
    * @function enable
    */
@@ -161,7 +161,7 @@ class Button extends Sprite.class {
   }
 
   /**
-   * Disable the button. A disabled button will not longer render nor respond to pointer and keyboard events. Calls [onDisable](/api/button#onDisable) if passed.
+   * Disable the button. A disabled button will not longer render nor respond to pointer and keyboard events. Calls [onDisable](api/button#onDisable) if passed.
    * @memberof Button
    * @function disable
    */
@@ -171,7 +171,7 @@ class Button extends Sprite.class {
   }
 
   /**
-   * Focus the button. Calls [onFocus](/api/button#onFocus) if passed.
+   * Focus the button. Calls [onFocus](api/button#onFocus) if passed.
    * @memberof Button
    * @function focus
    */
@@ -192,7 +192,7 @@ class Button extends Sprite.class {
   }
 
   /**
-   * Blur the button. Calls [onBlur](/api/button#onBlur) if passed.
+   * Blur the button. Calls [onBlur](api/button#onBlur) if passed.
    * @memberof Button
    * @function blur
    */

@@ -46,7 +46,7 @@ function getAllNodes(object) {
  * @param {String} properties.id - The id of the scene.
  * @param {String} [properties.name=properties.id] - The name of the scene. Used by screen readers to identify each scene. Use this property to give the scene a human friendly name.
  * @param {Boolean} [properties.cullObjects=true] - If the scene should not render objects outside the camera bounds.
- * @param {Function} [properties.cullFunction] - The function used to filter objects to render. Defaults to [helpers.collides](/api/helpers#collides).
+ * @param {Function} [properties.cullFunction] - The function used to filter objects to render. Defaults to [helpers.collides](api/helpers#collides).
  */
 class Scene extends GameObject.class {
 
@@ -73,7 +73,7 @@ class Scene extends GameObject.class {
     cullObjects = true,
 
      /**
-     * Camera culling function which prevents objects outside the camera screen from rendering. Is passed as the `filterFunction` to the [render](/api/gameObject#render) function.
+     * Camera culling function which prevents objects outside the camera screen from rendering. Is passed as the `filterFunction` to the [render](api/gameObject#render) function.
      * @memberof Scene
      * @property {Function} cullFunction
      */
@@ -105,7 +105,7 @@ class Scene extends GameObject.class {
     /**
      * The camera object which is used as the focal point for the scene. The scene will not render objects that are outside the bounds of the camera.
      *
-     * Additionally, the camera can be used to [lookAt](/api/scene#lookAt) an object which will center the camera to that object. This allows you to zoom the scene in and out while the camera remains centered on the object.
+     * Additionally, the camera can be used to [lookAt](api/scene#lookAt) an object which will center the camera to that object. This allows you to zoom the scene in and out while the camera remains centered on the object.
      * @memberof Scene
      * @property {GameObject} camera
      */
@@ -130,7 +130,7 @@ class Scene extends GameObject.class {
   }
 
   /**
-   * Show the scene and resume update and render. Calls [onShow](/api/scene#onShow) if passed.
+   * Show the scene and resume update and render. Calls [onShow](api/scene#onShow) if passed.
    * @memberof Scene
    * @function show
    */
@@ -156,7 +156,7 @@ class Scene extends GameObject.class {
   }
 
   /**
-   * Hide the scene. A hidden scene will not update or render. Calls [onHide](/api/scene#onHide) if passed.
+   * Hide the scene. A hidden scene will not update or render. Calls [onHide](api/scene#onHide) if passed.
    * @memberof Scene
    * @function hide
    */

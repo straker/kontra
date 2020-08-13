@@ -69,21 +69,21 @@ class Animation {
     let { width, height, margin = 0 } = spriteSheet.frame;
 
     /**
-     * The width of an individual frame. Taken from the [frame width value](/api/spriteSheet#frame) of the sprite sheet.
+     * The width of an individual frame. Taken from the [frame width value](api/spriteSheet#frame) of the sprite sheet.
      * @memberof Animation
      * @property {Number} width
      */
     this.width = width;
 
     /**
-     * The height of an individual frame. Taken from the [frame height value](/api/spriteSheet#frame) of the sprite sheet.
+     * The height of an individual frame. Taken from the [frame height value](api/spriteSheet#frame) of the sprite sheet.
      * @memberof Animation
      * @property {Number} height
      */
     this.height = height;
 
     /**
-     * The space between each frame. Taken from the [frame margin value](/api/spriteSheet#frame) of the sprite sheet.
+     * The space between each frame. Taken from the [frame margin value](api/spriteSheet#frame) of the sprite sheet.
      * @memberof Animation
      * @property {Number} margin
      */

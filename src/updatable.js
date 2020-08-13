@@ -22,7 +22,7 @@ class Updatable {
     // --------------------------------------------------
 
     /**
-     * The game objects position vector. Represents the local position of the object as opposed to the [world](/api/gameObject#world) position.
+     * The game objects position vector. Represents the local position of the object as opposed to the [world](api/gameObject#world) position.
      * @property {Vector} position
      * @memberof GameObject
      * @page GameObject

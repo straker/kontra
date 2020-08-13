@@ -50,7 +50,7 @@ class Grid extends GameObject.class {
      *
      * - `column` - organize into a single column
      * - `row` - organize into a single row
-     * - `grid` - organize into a grid with [numCols](/api/grid#numCols) number of columns
+     * - `grid` - organize into a grid with [numCols](api/grid#numCols) number of columns
      * @memberof Grid
      * @property {String} flow
      */
@@ -76,7 +76,7 @@ class Grid extends GameObject.class {
      * - `center` - align to the center of the column
      * - `end` - align to the the right of the column
      *
-     * If the [dir](/api/grid#dir) property is set to `rtl`, then `start` and `end` are reversed.
+     * If the [dir](api/grid#dir) property is set to `rtl`, then `start` and `end` are reversed.
      *
      * Additionally, each child of the grid can use the `justifySelf` property to change it's alignment in the grid.
      * @memberof Grid
@@ -103,7 +103,7 @@ class Grid extends GameObject.class {
     rowGap = 0,
 
     /**
-     * The number of columns in the grid. Only applies if the [flow](/api/grid#flow) property is set to `grid`.
+     * The number of columns in the grid. Only applies if the [flow](api/grid#flow) property is set to `grid`.
      * @memberof Grid
      * @property {Number} numCols
      */

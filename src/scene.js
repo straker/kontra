@@ -47,6 +47,8 @@ function getAllNodes(object) {
  * @param {String} [properties.name=properties.id] - The name of the scene. Used by screen readers to identify each scene. Use this property to give the scene a human friendly name.
  * @param {Boolean} [properties.cullObjects=true] - If the scene should not render objects outside the camera bounds.
  * @param {Function} [properties.cullFunction] - The function used to filter objects to render. Defaults to [helpers.collides](api/helpers#collides).
+ * @param {Function} [properties.onShow] - Function called when the scene is shown.
+ * @param {Function} [properties.onHide] - Function called when the scene is hidden.
  */
 class Scene extends GameObject.class {
 
@@ -194,13 +196,6 @@ class Scene extends GameObject.class {
     this.children.map(child => child.destroy && child.destroy());
   }
 
-  /**
-   * Update the scene and call `update()` on all children. A hidden scene will not update.
-   * @memberof Scene
-   * @function update
-   *
-   * @param {Number} [dt] - Time since last update.
-   */
   update(dt) {
     if (!this.hidden) {
       super.update(dt);
@@ -239,11 +234,6 @@ class Scene extends GameObject.class {
     this.camera && this.camera._pc();
   }
 
-  /**
-   * Render the scene and call `render()` on all children. A hidden scene will not render nor will any children outside of the current camera.
-   * @memberof Scene
-   * @function render
-   */
   render() {
     let { x, y, width, height } = this.camera;
 

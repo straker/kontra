@@ -204,21 +204,21 @@ var kontra = (function () {
       let { width, height, margin = 0 } = spriteSheet.frame;
 
       /**
-       * The width of an individual frame. Taken from the [frame width value](/api/spriteSheet#frame) of the sprite sheet.
+       * The width of an individual frame. Taken from the [frame width value](api/spriteSheet#frame) of the sprite sheet.
        * @memberof Animation
        * @property {Number} width
        */
       this.width = width;
 
       /**
-       * The height of an individual frame. Taken from the [frame height value](/api/spriteSheet#frame) of the sprite sheet.
+       * The height of an individual frame. Taken from the [frame height value](api/spriteSheet#frame) of the sprite sheet.
        * @memberof Animation
        * @property {Number} height
        */
       this.height = height;
 
       /**
-       * The space between each frame. Taken from the [frame margin value](/api/spriteSheet#frame) of the sprite sheet.
+       * The space between each frame. Taken from the [frame margin value](api/spriteSheet#frame) of the sprite sheet.
        * @memberof Animation
        * @property {Number} margin
        */
@@ -1155,7 +1155,7 @@ var kontra = (function () {
 
     // @ifdef VECTOR_NORMALIZE
     /**
-     * Calculate the normalized value of the current vector. Requires the Vector [length](/api/vector#length) function.
+     * Calculate the normalized value of the current vector. Requires the Vector [length](api/vector#length) function.
      * @memberof Vector
      * @function normalize
      *
@@ -1215,7 +1215,7 @@ var kontra = (function () {
 
     // @ifdef VECTOR_ANGLE
     /**
-     * Calculate the angle (in radians) between the current vector and the given vector. Requires the Vector [dot](/api/vector#dot) and [length](/api/vector#length) functions.
+     * Calculate the angle (in radians) between the current vector and the given vector. Requires the Vector [dot](api/vector#dot) and [length](api/vector#length) functions.
      * @memberof Vector
      * @function angle
      *
@@ -1319,7 +1319,7 @@ var kontra = (function () {
       // --------------------------------------------------
 
       /**
-       * The game objects position vector. Represents the local position of the object as opposed to the [world](/api/gameObject#world) position.
+       * The game objects position vector. Represents the local position of the object as opposed to the [world](api/gameObject#world) position.
        * @property {Vector} position
        * @memberof GameObject
        * @page GameObject
@@ -1589,14 +1589,14 @@ var kontra = (function () {
       // --------------------------------------------------
 
       /**
-       * The width of the game object. Represents the local width of the object as opposed to the [world](/api/gameObject#world) width.
+       * The width of the game object. Represents the local width of the object as opposed to the [world](api/gameObject#world) width.
        * @memberof GameObject
        * @property {Number} width
        */
       width = 0,
 
       /**
-       * The height of the game object. Represents the local height of the object as opposed to the [world](/api/gameObject#world) height.
+       * The height of the game object. Represents the local height of the object as opposed to the [world](api/gameObject#world) height.
        * @memberof GameObject
        * @property {Number} height
        */
@@ -1701,7 +1701,7 @@ var kontra = (function () {
 
       // @ifdef GAMEOBJECT_OPACITY
       /**
-       * The opacity of the object. Represents the local opacity of the object as opposed to the [world](/api/gameObject#world) opacity.
+       * The opacity of the object. Represents the local opacity of the object as opposed to the [world](api/gameObject#world) opacity.
        * @memberof GameObject
        * @property {Number} opacity
        */
@@ -1710,7 +1710,7 @@ var kontra = (function () {
 
       // @ifdef GAMEOBJECT_ROTATION
       /**
-       * The rotation of the game object around the anchor in radians. . Represents the local rotation of the object as opposed to the [world](/api/gameObject#world) rotation.
+       * The rotation of the game object around the anchor in radians. . Represents the local rotation of the object as opposed to the [world](api/gameObject#world) rotation.
        * @memberof GameObject
        * @property {Number} rotation
        */
@@ -1719,14 +1719,14 @@ var kontra = (function () {
 
       // @ifdef GAMEOBJECT_SCALE
       /**
-       * The x scale of the object. Represents the local x scale of the object as opposed to the [world](/api/gameObject#world) x scale.
+       * The x scale of the object. Represents the local x scale of the object as opposed to the [world](api/gameObject#world) x scale.
        * @memberof GameObject
        * @property {Number} scaleX
        */
       scaleX = 1,
 
       /**
-       * The y scale of the object. Represents the local y scale of the object as opposed to the [world](/api/gameObject#world) y scale.
+       * The y scale of the object. Represents the local y scale of the object as opposed to the [world](api/gameObject#world) y scale.
        * @memberof GameObject
        * @property {Number} scaleY
        */
@@ -2074,7 +2074,7 @@ var kontra = (function () {
 
     // @ifdef GAMEOBJECT_GROUP
     /**
-     * Add an object as a child to this object. The childs [world](/api/gameObject#world) property will be updated to take into account this object and all of its parents.
+     * Add an object as a child to this object. The childs [world](api/gameObject#world) property will be updated to take into account this object and all of its parents.
      * @memberof GameObject
      * @function addChild
      *
@@ -2121,7 +2121,7 @@ var kontra = (function () {
     }
 
     /**
-     * Remove an object as a child of this object. The removed objects [world](/api/gameObject#world) property will be updated to not take into account this object and all of its parents.
+     * Remove an object as a child of this object. The removed objects [world](api/gameObject#world) property will be updated to not take into account this object and all of its parents.
      * @memberof GameObject
      * @function removeChild
      *
@@ -3202,12 +3202,12 @@ var kontra = (function () {
   }
 
   /**
-   * An accessible button. Supports screen readers and keyboard navigation using the <kbd>Tab</kbd> key. The button is automatically [tracked](/api/pointer#track) by the pointer and accepts all pointer functions, but you will still need to call [initPointer](/api/pointer#initPointer) to have pointer events enabled.
+   * An accessible button. Supports screen readers and keyboard navigation using the <kbd>Tab</kbd> key. The button is automatically [tracked](api/pointer#track) by the pointer and accepts all pointer functions, but you will still need to call [initPointer](api/pointer#initPointer) to have pointer events enabled.
    * @class Button
    * @extends Sprite
    *
    * @param {Object} [properties] - Properties of the button (in addition to all Sprite properties).
-   * @param {Object} [properties.text] - Properties of [Text](/api/text) which are used to create the [textNode](/api/button#textNode).
+   * @param {Object} [properties.text] - Properties of [Text](api/text) which are used to create the [textNode](api/button#textNode).
    * @param {Number} [properties.padX=0] - The horizontal padding.
    * @param {Number} [properties.padY=0] - The vertical padding.
    * @param {Function} [properties.onEnable] - Function called when the button is enabled.
@@ -3343,7 +3343,7 @@ var kontra = (function () {
     }
 
     /**
-     * Enable the button. Calls [onEnable](/api/button#onEnable) if passed.
+     * Enable the button. Calls [onEnable](api/button#onEnable) if passed.
      * @memberof Button
      * @function enable
      */
@@ -3359,7 +3359,7 @@ var kontra = (function () {
     }
 
     /**
-     * Disable the button. A disabled button will not longer render nor respond to pointer and keyboard events. Calls [onDisable](/api/button#onDisable) if passed.
+     * Disable the button. A disabled button will not longer render nor respond to pointer and keyboard events. Calls [onDisable](api/button#onDisable) if passed.
      * @memberof Button
      * @function disable
      */
@@ -3369,7 +3369,7 @@ var kontra = (function () {
     }
 
     /**
-     * Focus the button. Calls [onFocus](/api/button#onFocus) if passed.
+     * Focus the button. Calls [onFocus](api/button#onFocus) if passed.
      * @memberof Button
      * @function focus
      */
@@ -3390,7 +3390,7 @@ var kontra = (function () {
     }
 
     /**
-     * Blur the button. Calls [onBlur](/api/button#onBlur) if passed.
+     * Blur the button. Calls [onBlur](api/button#onBlur) if passed.
      * @memberof Button
      * @function blur
      */
@@ -3714,7 +3714,7 @@ var kontra = (function () {
        *
        * - `column` - organize into a single column
        * - `row` - organize into a single row
-       * - `grid` - organize into a grid with [numCols](/api/grid#numCols) number of columns
+       * - `grid` - organize into a grid with [numCols](api/grid#numCols) number of columns
        * @memberof Grid
        * @property {String} flow
        */
@@ -3740,7 +3740,7 @@ var kontra = (function () {
        * - `center` - align to the center of the column
        * - `end` - align to the the right of the column
        *
-       * If the [dir](/api/grid#dir) property is set to `rtl`, then `start` and `end` are reversed.
+       * If the [dir](api/grid#dir) property is set to `rtl`, then `start` and `end` are reversed.
        *
        * Additionally, each child of the grid can use the `justifySelf` property to change it's alignment in the grid.
        * @memberof Grid
@@ -3767,7 +3767,7 @@ var kontra = (function () {
       rowGap = 0,
 
       /**
-       * The number of columns in the grid. Only applies if the [flow](/api/grid#flow) property is set to `grid`.
+       * The number of columns in the grid. Only applies if the [flow](api/grid#flow) property is set to `grid`.
        * @memberof Grid
        * @property {Number} numCols
        */
@@ -4899,7 +4899,7 @@ var kontra = (function () {
    * @param {String} properties.id - The id of the scene.
    * @param {String} [properties.name=properties.id] - The name of the scene. Used by screen readers to identify each scene. Use this property to give the scene a human friendly name.
    * @param {Boolean} [properties.cullObjects=true] - If the scene should not render objects outside the camera bounds.
-   * @param {Function} [properties.cullFunction] - The function used to filter objects to render. Defaults to [helpers.collides](/api/helpers#collides).
+   * @param {Function} [properties.cullFunction] - The function used to filter objects to render. Defaults to [helpers.collides](api/helpers#collides).
    */
   class Scene extends factory$2.class {
 
@@ -4926,7 +4926,7 @@ var kontra = (function () {
       cullObjects = true,
 
        /**
-       * Camera culling function which prevents objects outside the camera screen from rendering. Is passed as the `filterFunction` to the [render](/api/gameObject#render) function.
+       * Camera culling function which prevents objects outside the camera screen from rendering. Is passed as the `filterFunction` to the [render](api/gameObject#render) function.
        * @memberof Scene
        * @property {Function} cullFunction
        */
@@ -4958,7 +4958,7 @@ var kontra = (function () {
       /**
        * The camera object which is used as the focal point for the scene. The scene will not render objects that are outside the bounds of the camera.
        *
-       * Additionally, the camera can be used to [lookAt](/api/scene#lookAt) an object which will center the camera to that object. This allows you to zoom the scene in and out while the camera remains centered on the object.
+       * Additionally, the camera can be used to [lookAt](api/scene#lookAt) an object which will center the camera to that object. This allows you to zoom the scene in and out while the camera remains centered on the object.
        * @memberof Scene
        * @property {GameObject} camera
        */
@@ -4983,7 +4983,7 @@ var kontra = (function () {
     }
 
     /**
-     * Show the scene and resume update and render. Calls [onShow](/api/scene#onShow) if passed.
+     * Show the scene and resume update and render. Calls [onShow](api/scene#onShow) if passed.
      * @memberof Scene
      * @function show
      */
@@ -5009,7 +5009,7 @@ var kontra = (function () {
     }
 
     /**
-     * Hide the scene. A hidden scene will not update or render. Calls [onHide](/api/scene#onHide) if passed.
+     * Hide the scene. A hidden scene will not update or render. Calls [onHide](api/scene#onHide) if passed.
      * @memberof Scene
      * @function hide
      */

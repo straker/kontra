@@ -142,6 +142,49 @@ function getCurrentObject(pointer) {
 }
 
 /**
+ * Get the style property value.
+ */
+function getPropValue(style, value) {
+  return parseFloat(style.getPropertyValue(value)) || 0;
+}
+
+/**
+ * Calculate the canvas size, scale, and offset.
+ *
+ * @param {Object} The pointer object
+ *
+ * @returns {Object} The scale and offset of the canvas
+ */
+function getCanvasOffset(pointer) {
+  // we need to account for CSS scale, transform, border, padding,
+  // and margin in order to get the correct scale and offset of the
+  // canvas
+  let { canvas, _s } = pointer;
+  let rect = canvas.getBoundingClientRect();
+
+  // @see https://stackoverflow.com/a/53405390/2124254
+  let transform = _s.transform !== 'none'
+    ? _s.transform.replace('matrix(', '').split(',')
+    : [1,1,1,1];
+  let transformScaleX = parseFloat(transform[0]);
+  let transformScaleY = parseFloat(transform[3]);
+
+  // scale transform applies to the border and padding of the element
+  let borderWidth = (getPropValue(_s, 'border-left-width') + getPropValue(_s, 'border-right-width')) * transformScaleX;
+  let borderHeight = (getPropValue(_s, 'border-top-width') + getPropValue(_s, 'border-bottom-width')) * transformScaleY;
+
+  let paddingWidth = (getPropValue(_s, 'padding-left') + getPropValue(_s, 'padding-right')) * transformScaleX;
+  let paddingHeight = (getPropValue(_s, 'padding-top') + getPropValue(_s, 'padding-bottom')) * transformScaleY;
+
+  return {
+    scaleX: (rect.width - borderWidth - paddingWidth) / canvas.width,
+    scaleY: (rect.height - borderHeight - paddingHeight) / canvas.height,
+    offsetX: rect.left + (getPropValue(_s, 'border-left-width') + getPropValue(_s, 'padding-left')) * transformScaleX,
+    offsetY: rect.top + (getPropValue(_s, 'border-top-width') + getPropValue(_s, 'padding-top')) * transformScaleY
+  };
+}
+
+/**
  * Execute the onDown callback for an object.
  *
  * @param {MouseEvent|TouchEvent} evt
@@ -196,24 +239,29 @@ function pointerHandler(evt, eventName) {
 
   let canvas = evt.target;
   let pointer = pointers.get(canvas);
-
-  let ratio = canvas.height / canvas.offsetHeight;
-  let rect = canvas.getBoundingClientRect();
+  let {
+    scaleX,
+    scaleY,
+    offsetX,
+    offsetY
+  } = getCanvasOffset(pointer);
 
   let isTouchEvent = ['touchstart', 'touchmove', 'touchend'].indexOf(evt.type) !== -1;
 
   if (isTouchEvent) {
-    // Update pointer.touches
+
+    // update pointer.touches
     pointer.touches = {};
     for (var i = 0; i < evt.touches.length; i++) {
       pointer.touches[evt.touches[i].identifier] = {
         id: evt.touches[i].identifier,
-        x: (evt.touches[i].clientX - rect.left) * ratio,
-        y: (evt.touches[i].clientY - rect.top) * ratio,
+        x: (evt.touches[i].clientX - offsetX) / scaleX,
+        y: (evt.touches[i].clientY - offsetY) / scaleY,
         changed: false
       };
     }
-    // Handle all touches
+
+    // handle all touches
     for (var i = evt.changedTouches.length; i--;) {
       const id = evt.changedTouches[i].identifier;
       if (typeof pointer.touches[id] !== "undefined") {
@@ -222,8 +270,8 @@ function pointerHandler(evt, eventName) {
 
       let clientX = evt.changedTouches[i].clientX;
       let clientY = evt.changedTouches[i].clientY;
-      pointer.x = (clientX - rect.left) * ratio;
-      pointer.y = (clientY - rect.top) * ratio;
+      pointer.x = (clientX - offsetX) / scaleX;
+      pointer.y = (clientY - offsetY) / scaleY;
 
       // Trigger events
       let object = getCurrentObject(pointer);
@@ -235,9 +283,13 @@ function pointerHandler(evt, eventName) {
         callbacks[eventName](evt, object);
       }
     }
-  } else {
-    pointer.x = (evt.clientX - rect.left) * ratio;
-    pointer.y = (evt.clientY - rect.top) * ratio;
+  }
+  else {
+
+    // translate the scaled size back as if the canvas was at a
+    // 1:1 scale
+    pointer.x = (evt.clientX - offsetX) / scaleX;
+    pointer.y = (evt.clientY - offsetY) / scaleY;
 
     let object = getCurrentObject(pointer);
     if (object && object[eventName]) {
@@ -272,6 +324,8 @@ function pointerHandler(evt, eventName) {
 export function initPointer(canvas = getCanvas()) {
   let pointer = pointers.get(canvas);
   if (!pointer) {
+    let style = window.getComputedStyle(canvas);
+
     pointer = {
       x: 0,
       y: 0,
@@ -280,11 +334,12 @@ export function initPointer(canvas = getCanvas()) {
       canvas,
 
       // cf = current frame, lf = last frame, o = objects,
-      // oo = over object
+      // oo = over object, _s = style
       _cf: [],
       _lf: [],
       _o: [],
-      _oo: null
+      _oo: null,
+      _s: style
     };
     pointers.set(canvas, pointer);
   }

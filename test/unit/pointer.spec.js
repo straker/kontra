@@ -17,24 +17,24 @@ describe('pointer', () => {
    * @param {number} [config.button]
    */
   function simulateEvent(type, config, elm) {
-    let evt;
+    let event;
 
     // PhantomJS <2.0.0 throws an error for the `new Event` call, so we need to supply an
     // alternative form of creating an event just for PhantomJS
     // @see https://github.com/ariya/phantomjs/issues/11289#issuecomment-38880333
     try {
-      evt = new Event(type, {bubbles: true});
+      event = new Event(type, {bubbles: true});
     } catch(e) {
-      evt = document.createEvent('Event');
-      evt.initEvent(type, true, false);
+      event = document.createEvent('Event');
+      event.initEvent(type, true, false);
     }
 
     config = config || {};
     for (let prop in config) {
-      evt[prop] = config[prop];
+      event[prop] = config[prop];
     }
 
-    (elm || canvas).dispatchEvent(evt);
+    (elm || canvas).dispatchEvent(event);
   }
 
   // reset pressed buttons before each test
@@ -449,6 +449,64 @@ describe('pointer', () => {
         expect(pntr.y).to.equal(50);
       });
 
+      it('should take into account padding and border style', () => {
+        pntr.x = pntr.y = 0;
+
+        pointer.resetPointers();
+        canvas.style.border = '32px solid';
+        canvas.style.padding = '32px';
+        pntr = pointer.initPointer(canvas);
+
+        simulateEvent('mousemove', {clientX: 100, clientY: 50});
+
+        expect(pntr.x).to.equal(36);
+        expect(pntr.y).to.equal(-14);
+      });
+
+      it('should take into account transform: scale style', () => {
+        pntr.x = pntr.y = 0;
+
+        pointer.resetPointers();
+        canvas.style.transform = 'scale(0.5)';
+        canvas.style.transformOrigin = 'top left';
+        pntr = pointer.initPointer(canvas);
+
+        simulateEvent('mousemove', {clientX: 50, clientY: 25});
+
+        expect(pntr.x).to.equal(100);
+        expect(pntr.y).to.equal(50);
+      });
+
+      it('should take into account width style', () => {
+        pntr.x = pntr.y = 0;
+
+        pointer.resetPointers();
+        canvas.style.width = canvas.width * 2 + 'px';
+        pntr = pointer.initPointer(canvas);
+
+        simulateEvent('mousemove', {clientX: 100, clientY: 50});
+
+        expect(pntr.x).to.equal(50);
+        expect(pntr.y).to.equal(25);
+      });
+
+      it('should take into account all style properties', () => {
+        pntr.x = pntr.y = 0;
+
+        pointer.resetPointers();
+        canvas.style.border = '32px solid';
+        canvas.style.padding = '32px';
+        canvas.style.transform = 'scale(0.5)';
+        canvas.style.transformOrigin = 'top left';
+        canvas.style.width = canvas.width * 2 + 'px';
+        pntr = pointer.initPointer(canvas);
+
+        simulateEvent('mousemove', {clientX: 100, clientY: 50});
+
+        expect(pntr.x).to.equal(68);
+        expect(pntr.y).to.equal(18);
+      });
+
       it('should call the objects onOver function if it is the target', () => {
         object.onOver = sinon.spy();
         simulateEvent('mousemove', {clientX: 105, clientY: 55});
@@ -538,328 +596,168 @@ describe('pointer', () => {
 
 
     // --------------------------------------------------
-    // mousedown
+    // mousedown, mouseup, touchstart, touchend
     // --------------------------------------------------
-    describe('mousedown', () => {
+    ['mousedown', 'mouseup', 'touchstart', 'touchend'].forEach(eventName => {
+      describe(eventName, () => {
+        const event = {clientX: 0, clientY: 0};
+        const config = eventName.startsWith('mouse')
+          ? event
+          : {touches: [], changedTouches: [event]};
+        const eventHandler = eventName === 'mousedown' || eventName === 'touchstart'
+            ? 'onDown'
+            : 'onUp';
+        const pointerHandler = eventHandler === 'onDown'
+          ? 'onPointerDown'
+          : 'onPointerUp'
+
+        it('should update the x and y pointer coordinates', () => {
+          pntr.x = pntr.y = 0;
+          event.clientX = 100;
+          event.clientY = 50;
+          simulateEvent(eventName, config);
+
+          expect(pntr.x).to.equal(100);
+          expect(pntr.y).to.equal(50);
+        });
+
+        it('should take into account padding and border style', () => {
+          pntr.x = pntr.y = 0;
+
+          pointer.resetPointers();
+          canvas.style.border = '32px solid';
+          canvas.style.padding = '32px';
+          pntr = pointer.initPointer(canvas);
+
+          event.clientX = 100;
+          event.clientY = 50;
+          simulateEvent(eventName, config);
+
+          expect(pntr.x).to.equal(36);
+          expect(pntr.y).to.equal(-14);
+        });
+
+        it('should take into account transform: scale style', () => {
+          pntr.x = pntr.y = 0;
+
+          pointer.resetPointers();
+          canvas.style.transform = 'scale(0.5)';
+          canvas.style.transformOrigin = 'top left';
+          pntr = pointer.initPointer(canvas);
+
+          event.clientX = 50;
+          event.clientY = 25;
+          simulateEvent(eventName, config);
+
+          expect(pntr.x).to.equal(100);
+          expect(pntr.y).to.equal(50);
+        });
+
+        it('should take into account width style', () => {
+          pntr.x = pntr.y = 0;
+
+          pointer.resetPointers();
+          canvas.style.width = canvas.width * 2 + 'px';
+          pntr = pointer.initPointer(canvas);
+
+          event.clientX = 100;
+          event.clientY = 50;
+          simulateEvent(eventName, config);
+
+          expect(pntr.x).to.equal(50);
+          expect(pntr.y).to.equal(25);
+        });
+
+        it('should take into account all style properties', () => {
+          pntr.x = pntr.y = 0;
+
+          pointer.resetPointers();
+          canvas.style.border = '32px solid';
+          canvas.style.padding = '32px';
+          canvas.style.transform = 'scale(0.5)';
+          canvas.style.transformOrigin = 'top left';
+          canvas.style.width = canvas.width * 2 + 'px';
+          pntr = pointer.initPointer(canvas);
+
+          event.clientX = 100;
+          event.clientY = 50;
+          simulateEvent(eventName, config);
+
+          expect(pntr.x).to.equal(68);
+          expect(pntr.y).to.equal(18);
+        });
+
+        it(`should call the ${pointerHandler} function`, () => {
+          let spy = sinon.spy();
+          pointer[pointerHandler](spy);
+          event.clientX = 100;
+          event.clientY = 50;
+          simulateEvent(eventName, config);
+
+          expect(spy.called).to.be.true;
+        });
+
+        it(`should call the objects ${eventHandler} function if it is the target`, () => {
+          object[eventHandler] = sinon.spy();
+          event.clientX = 105;
+          event.clientY = 55;
+          simulateEvent(eventName, config);
+
+          expect(object[eventHandler].called).to.be.true;
+        });
+
+        it('should take into account object anchor', () => {
+          object.anchor = {
+            x: 0.5,
+            y: 0.5
+          };
+          object[eventHandler] = sinon.spy();
+          event.clientX = 110;
+          event.clientY = 55;
+          simulateEvent(eventName, config);
+
+          expect(object[eventHandler].called).to.not.be.true;
+
+          event.clientX = 95;
+          event.clientY = 55;
+          simulateEvent(eventName, config);
+
+          expect(object[eventHandler].called).to.be.true;
+        });
+
+        it('should handle objects from different canvas', () => {
+          let canvas = document.createElement('canvas');
+          document.body.appendChild(canvas);
+          canvas.width = canvas.height = 600;
+          canvas.style.position = 'absolute';
+          canvas.style.top = 0;
+          canvas.style.left = 0;
+
+          pointer.initPointer(canvas);
+
+          let obj = {
+            x: 100,
+            y: 50,
+            width: 10,
+            height: 20,
+            render: noop,
+            [eventHandler]: sinon.spy(),
+            context: { canvas }
+          };
+          pointer.track(obj);
+          obj.render();
+          emit('tick');
+
+          // wrong canvas
+          event.clientX = 105;
+          event.clientY = 55;
+          simulateEvent(eventName, config);
+          expect(obj[eventHandler].called).to.false;
+
+          simulateEvent(eventName, config, canvas);
+          expect(obj[eventHandler].called).to.be.true;
+        });
 
-      it('should update the x and y pointer coordinates', () => {
-        pntr.x = pntr.y = 0;
-        simulateEvent('mousedown', {clientX: 100, clientY: 50});
-
-        expect(pntr.x).to.equal(100);
-        expect(pntr.y).to.equal(50);
-      });
-
-      it('should call the onDown function', () => {
-        let onDown = sinon.spy();
-        pointer.onPointerDown(onDown);
-        simulateEvent('mousedown', {clientX: 100, clientY: 50});
-
-        expect(onDown.called).to.be.true;
-      });
-
-      it('should call the objects onDown function if it is the target', () => {
-        object.onDown = sinon.spy();
-        simulateEvent('mousedown', {clientX: 105, clientY: 55});
-
-        expect(object.onDown.called).to.be.true;
-      });
-
-      it('should take into account object anchor', () => {
-        object.anchor = {
-          x: 0.5,
-          y: 0.5
-        };
-        object.onDown = sinon.spy();
-        simulateEvent('mousedown', {clientX: 110, clientY: 55});
-
-        expect(object.onDown.called).to.not.be.true;
-
-        simulateEvent('mousedown', {clientX: 95, clientY: 55});
-
-        expect(object.onDown.called).to.be.true;
-      });
-
-      it('should handle objects from different canvas', () => {
-        let canvas = document.createElement('canvas');
-        document.body.appendChild(canvas);
-        canvas.width = canvas.height = 600;
-        canvas.style.position = 'absolute';
-        canvas.style.top = 0;
-        canvas.style.left = 0;
-
-        pointer.initPointer(canvas);
-
-        let obj = {
-          x: 100,
-          y: 50,
-          width: 10,
-          height: 20,
-          render: noop,
-          onDown: sinon.spy(),
-          context: { canvas }
-        };
-        pointer.track(obj);
-        obj.render();
-        emit('tick');
-
-        // wrong canvas
-        simulateEvent('mousedown', {clientX: 105, clientY: 55});
-        expect(obj.onDown.called).to.false;
-
-        simulateEvent('mousedown', {clientX: 105, clientY: 55}, canvas);
-        expect(obj.onDown.called).to.be.true;
-      });
-
-    });
-
-
-
-
-
-
-    // --------------------------------------------------
-    // touchstart
-    // --------------------------------------------------
-    describe('touchstart', () => {
-
-      it('should update the x and y pointer coordinates', () => {
-        pntr.x = pntr.y = 0;
-        simulateEvent('touchstart', {touches: [], changedTouches: [{clientX: 100, clientY: 50}]});
-
-        expect(pntr.x).to.equal(100);
-        expect(pntr.y).to.equal(50);
-      });
-
-      it('should call the onDown function', () => {
-        let onDown = sinon.spy();
-        pointer.onPointerDown(onDown);
-        simulateEvent('touchstart', {touches: [], changedTouches: [{clientX: 100, clientY: 50}]});
-
-        expect(onDown.called).to.be.true;
-      });
-
-      it('should call the objects onDown function if it is the target', () => {
-        object.onDown = sinon.spy();
-        simulateEvent('touchstart', {touches: [], changedTouches: [{clientX: 105, clientY: 55}]});
-
-        expect(object.onDown.called).to.be.true;
-      });
-
-      it('should take into account object anchor', () => {
-        object.anchor = {
-          x: 0.5,
-          y: 0.5
-        };
-        object.onDown = sinon.spy();
-        simulateEvent('touchstart', {touches: [], changedTouches: [{clientX: 110, clientY: 55}]});
-
-        expect(object.onDown.called).to.not.be.true;
-
-        simulateEvent('touchstart', {touches: [], changedTouches: [{clientX: 95, clientY: 55}]});
-
-        expect(object.onDown.called).to.be.true;
-      });
-
-      it('should handle objects from different canvas', () => {
-        let canvas = document.createElement('canvas');
-        document.body.appendChild(canvas);
-        canvas.width = canvas.height = 600;
-        canvas.style.position = 'absolute';
-        canvas.style.top = 0;
-        canvas.style.left = 0;
-
-        pointer.initPointer(canvas);
-
-        let obj = {
-          x: 100,
-          y: 50,
-          width: 10,
-          height: 20,
-          render: noop,
-          onDown: sinon.spy(),
-          context: { canvas }
-        };
-        pointer.track(obj);
-        obj.render();
-        emit('tick');
-
-        // wrong canvas
-        simulateEvent('touchstart', {touches: [], changedTouches: [{clientX: 100, clientY: 50}]});
-        expect(obj.onDown.called).to.false;
-
-        simulateEvent('touchstart', {touches: [], changedTouches: [{clientX: 100, clientY: 50}]}, canvas);
-        expect(obj.onDown.called).to.be.true;
-      });
-
-    });
-
-
-
-
-
-    // --------------------------------------------------
-    // mouseup
-    // --------------------------------------------------
-    describe('mouseup', () => {
-
-      it('should update the x and y pointer coordinates', () => {
-        pntr.x = pntr.y = 0;
-        simulateEvent('mouseup', {clientX: 100, clientY: 50});
-
-        expect(pntr.x).to.equal(100);
-        expect(pntr.y).to.equal(50);
-      });
-
-      it('should call the onUp function', () => {
-        let onUp = sinon.spy();
-        pointer.onPointerUp(onUp);
-        simulateEvent('mouseup', {clientX: 100, clientY: 50});
-
-        expect(onUp.called).to.be.true;
-      });
-
-      it('should call the objects onUp function if it is the target', () => {
-        object.onUp = sinon.spy();
-        simulateEvent('mouseup', {clientX: 105, clientY: 55});
-
-        expect(object.onUp.called).to.be.true;
-      });
-
-      it('should take into account object anchor', () => {
-        object.anchor = {
-          x: 0.5,
-          y: 0.5
-        };
-        object.onUp = sinon.spy();
-        simulateEvent('mouseup', {clientX: 110, clientY: 55});
-
-        expect(object.onUp.called).to.not.be.true;
-
-        simulateEvent('mouseup', {clientX: 95, clientY: 55});
-
-        expect(object.onUp.called).to.be.true;
-      });
-
-      it('should handle objects from different canvas', () => {
-        let canvas = document.createElement('canvas');
-        document.body.appendChild(canvas);
-        canvas.width = canvas.height = 600;
-        canvas.style.position = 'absolute';
-        canvas.style.top = 0;
-        canvas.style.left = 0;
-
-        pointer.initPointer(canvas);
-
-        let obj = {
-          x: 100,
-          y: 50,
-          width: 10,
-          height: 20,
-          render: noop,
-          onUp: sinon.spy(),
-          context: { canvas }
-        };
-        pointer.track(obj);
-        obj.render();
-        emit('tick');
-
-        // wrong canvas
-        simulateEvent('mouseup', {clientX: 105, clientY: 55});
-        expect(obj.onUp.called).to.false;
-
-        simulateEvent('mouseup', {clientX: 105, clientY: 55}, canvas);
-        expect(obj.onUp.called).to.be.true;
-      });
-
-    });
-
-
-
-
-
-    // --------------------------------------------------
-    // touchend
-    // --------------------------------------------------
-    describe('touchend', () => {
-
-      it('should update the x and y pointer coordinates', () => {
-        pntr.x = pntr.y = 0;
-        simulateEvent('touchend', {touches: [], changedTouches: [{clientX: 100, clientY: 50}]});
-
-        expect(pntr.x).to.equal(100);
-        expect(pntr.y).to.equal(50);
-      });
-
-      it('should call the onUp function', () => {
-        let onUp = sinon.spy();
-        pointer.onPointerUp(onUp);
-        simulateEvent('touchend', {touches: [], changedTouches: [{clientX: 100, clientY: 50}]});
-
-        expect(onUp.called).to.be.true;
-      });
-
-      it('should call the objects onUp function if it is the target', () => {
-        object.onUp = sinon.spy();
-        simulateEvent('touchend', {touches: [], changedTouches: [{clientX: 105, clientY: 55}]});
-
-        expect(object.onUp.called).to.be.true;
-      });
-
-      it('should take into account object anchor', () => {
-        object.anchor = {
-          x: 0.5,
-          y: 0.5
-        };
-        object.onUp = sinon.spy();
-        simulateEvent('touchend', {touches: [], changedTouches: [{clientX: 110, clientY: 55}]});
-
-        expect(object.onUp.called).to.not.be.true;
-
-        simulateEvent('touchend', {touches: [], changedTouches: [{clientX: 95, clientY: 55}]});
-
-        expect(object.onUp.called).to.be.true;
-      });
-
-      it('should update pointer.touches', () => {
-        simulateEvent('touchstart', {touches: [{clientX: 110, clientY: 55}], changedTouches: [{clientX: 110, clientY: 55}]});
-
-        expect(Object.keys(pntr.touches).length).to.equal(1);
-
-        simulateEvent('touchend', {touches: [], changedTouches: [{clientX: 95, clientY: 55}]});
-
-        expect(Object.keys(pntr.touches).length).to.equal(0);
-      });
-
-      it('should handle objects from different canvas', () => {
-        let canvas = document.createElement('canvas');
-        document.body.appendChild(canvas);
-        canvas.width = canvas.height = 600;
-        canvas.style.position = 'absolute';
-        canvas.style.top = 0;
-        canvas.style.left = 0;
-
-        pointer.initPointer(canvas);
-
-        let obj = {
-          x: 100,
-          y: 50,
-          width: 10,
-          height: 20,
-          render: noop,
-          onUp: sinon.spy(),
-          context: { canvas }
-        };
-        pointer.track(obj);
-        obj.render();
-        emit('tick');
-
-        // wrong canvas
-        simulateEvent('touchend', {touches: [], changedTouches: [{clientX: 100, clientY: 50}]});
-        expect(obj.onUp.called).to.false;
-
-        simulateEvent('touchend', {touches: [], changedTouches: [{clientX: 100, clientY: 50}]}, canvas);
-        expect(obj.onUp.called).to.be.true;
       });
 
     });

@@ -246,15 +246,6 @@ function pointerHandler(evt, eventName) {
     offsetY
   } = getCanvasOffset(pointer);
 
-  // console.log({
-  //   scaleX,
-  //   scaleY,
-  //   offsetX,
-  //   offsetY,
-  //   clientX: evt.clientX,
-  //   clientY: evt.clientY
-  // })
-
   let isTouchEvent = ['touchstart', 'touchmove', 'touchend'].indexOf(evt.type) !== -1;
 
   if (isTouchEvent) {
@@ -299,13 +290,6 @@ function pointerHandler(evt, eventName) {
     // 1:1 scale
     pointer.x = (evt.clientX - offsetX) / scaleX;
     pointer.y = (evt.clientY - offsetY) / scaleY;
-
-    // console.log({
-    //   x: (evt.clientX - offsetX) / scaleX,
-    //   y: (evt.clientY - offsetY) / scaleY
-    // })
-
-    // console.log(pointer);
 
     let object = getCurrentObject(pointer);
     if (object && object[eventName]) {

@@ -550,6 +550,64 @@ describe('pointer', () => {
         expect(pntr.y).to.equal(50);
       });
 
+      it('should take into account padding and border style', () => {
+        pntr.x = pntr.y = 0;
+
+        pointer.resetPointers();
+        canvas.style.border = '32px solid';
+        canvas.style.padding = '32px';
+        pntr = pointer.initPointer(canvas);
+
+        simulateEvent('mousedown', {clientX: 100, clientY: 50});
+
+        expect(pntr.x).to.equal(36);
+        expect(pntr.y).to.equal(-14);
+      });
+
+      it('should take into account transform: scale style', () => {
+        pntr.x = pntr.y = 0;
+
+        pointer.resetPointers();
+        canvas.style.transform = 'scale(0.5)';
+        canvas.style.transformOrigin = 'top left';
+        pntr = pointer.initPointer(canvas);
+
+        simulateEvent('mousedown', {clientX: 50, clientY: 25});
+
+        expect(pntr.x).to.equal(100);
+        expect(pntr.y).to.equal(50);
+      });
+
+      it('should take into account width style', () => {
+        pntr.x = pntr.y = 0;
+
+        pointer.resetPointers();
+        canvas.style.width = canvas.width * 2 + 'px';
+        pntr = pointer.initPointer(canvas);
+
+        simulateEvent('mousedown', {clientX: 100, clientY: 50});
+
+        expect(pntr.x).to.equal(50);
+        expect(pntr.y).to.equal(25);
+      });
+
+      it('should take into account all style properties', () => {
+        pntr.x = pntr.y = 0;
+
+        pointer.resetPointers();
+        canvas.style.border = '32px solid';
+        canvas.style.padding = '32px';
+        canvas.style.transform = 'scale(0.5)';
+        canvas.style.transformOrigin = 'top left';
+        canvas.style.width = canvas.width * 2 + 'px';
+        pntr = pointer.initPointer(canvas);
+
+        simulateEvent('mousedown', {clientX: 100, clientY: 50});
+
+        expect(pntr.x).to.equal(68);
+        expect(pntr.y).to.equal(18);
+      });
+
       it('should call the onDown function', () => {
         let onDown = sinon.spy();
         pointer.onPointerDown(onDown);
@@ -629,6 +687,64 @@ describe('pointer', () => {
 
         expect(pntr.x).to.equal(100);
         expect(pntr.y).to.equal(50);
+      });
+
+      it('should take into account padding and border style', () => {
+        pntr.x = pntr.y = 0;
+
+        pointer.resetPointers();
+        canvas.style.border = '32px solid';
+        canvas.style.padding = '32px';
+        pntr = pointer.initPointer(canvas);
+
+        simulateEvent('touchstart', {touches: [], changedTouches: [{clientX: 100, clientY: 50}]});
+
+        expect(pntr.x).to.equal(36);
+        expect(pntr.y).to.equal(-14);
+      });
+
+      it('should take into account transform: scale style', () => {
+        pntr.x = pntr.y = 0;
+
+        pointer.resetPointers();
+        canvas.style.transform = 'scale(0.5)';
+        canvas.style.transformOrigin = 'top left';
+        pntr = pointer.initPointer(canvas);
+
+        simulateEvent('touchstart', {touches: [], changedTouches: [{clientX: 50, clientY: 25}]});
+
+        expect(pntr.x).to.equal(100);
+        expect(pntr.y).to.equal(50);
+      });
+
+      it('should take into account width style', () => {
+        pntr.x = pntr.y = 0;
+
+        pointer.resetPointers();
+        canvas.style.width = canvas.width * 2 + 'px';
+        pntr = pointer.initPointer(canvas);
+
+        simulateEvent('touchstart', {touches: [], changedTouches: [{clientX: 100, clientY: 50}]});
+
+        expect(pntr.x).to.equal(50);
+        expect(pntr.y).to.equal(25);
+      });
+
+      it('should take into account all style properties', () => {
+        pntr.x = pntr.y = 0;
+
+        pointer.resetPointers();
+        canvas.style.border = '32px solid';
+        canvas.style.padding = '32px';
+        canvas.style.transform = 'scale(0.5)';
+        canvas.style.transformOrigin = 'top left';
+        canvas.style.width = canvas.width * 2 + 'px';
+        pntr = pointer.initPointer(canvas);
+
+        simulateEvent('touchstart', {touches: [], changedTouches: [{clientX: 100, clientY: 50}]});
+
+        expect(pntr.x).to.equal(68);
+        expect(pntr.y).to.equal(18);
       });
 
       it('should call the onDown function', () => {
@@ -711,6 +827,64 @@ describe('pointer', () => {
         expect(pntr.y).to.equal(50);
       });
 
+      it('should take into account padding and border style', () => {
+        pntr.x = pntr.y = 0;
+
+        pointer.resetPointers();
+        canvas.style.border = '32px solid';
+        canvas.style.padding = '32px';
+        pntr = pointer.initPointer(canvas);
+
+        simulateEvent('mouseup', {clientX: 100, clientY: 50});
+
+        expect(pntr.x).to.equal(36);
+        expect(pntr.y).to.equal(-14);
+      });
+
+      it('should take into account transform: scale style', () => {
+        pntr.x = pntr.y = 0;
+
+        pointer.resetPointers();
+        canvas.style.transform = 'scale(0.5)';
+        canvas.style.transformOrigin = 'top left';
+        pntr = pointer.initPointer(canvas);
+
+        simulateEvent('mouseup', {clientX: 50, clientY: 25});
+
+        expect(pntr.x).to.equal(100);
+        expect(pntr.y).to.equal(50);
+      });
+
+      it('should take into account width style', () => {
+        pntr.x = pntr.y = 0;
+
+        pointer.resetPointers();
+        canvas.style.width = canvas.width * 2 + 'px';
+        pntr = pointer.initPointer(canvas);
+
+        simulateEvent('mouseup', {clientX: 100, clientY: 50});
+
+        expect(pntr.x).to.equal(50);
+        expect(pntr.y).to.equal(25);
+      });
+
+      it('should take into account all style properties', () => {
+        pntr.x = pntr.y = 0;
+
+        pointer.resetPointers();
+        canvas.style.border = '32px solid';
+        canvas.style.padding = '32px';
+        canvas.style.transform = 'scale(0.5)';
+        canvas.style.transformOrigin = 'top left';
+        canvas.style.width = canvas.width * 2 + 'px';
+        pntr = pointer.initPointer(canvas);
+
+        simulateEvent('mouseup', {clientX: 100, clientY: 50});
+
+        expect(pntr.x).to.equal(68);
+        expect(pntr.y).to.equal(18);
+      });
+
       it('should call the onUp function', () => {
         let onUp = sinon.spy();
         pointer.onPointerUp(onUp);
@@ -789,6 +963,64 @@ describe('pointer', () => {
 
         expect(pntr.x).to.equal(100);
         expect(pntr.y).to.equal(50);
+      });
+
+      it('should take into account padding and border style', () => {
+        pntr.x = pntr.y = 0;
+
+        pointer.resetPointers();
+        canvas.style.border = '32px solid';
+        canvas.style.padding = '32px';
+        pntr = pointer.initPointer(canvas);
+
+        simulateEvent('touchend', {touches: [], changedTouches: [{clientX: 100, clientY: 50}]});
+
+        expect(pntr.x).to.equal(36);
+        expect(pntr.y).to.equal(-14);
+      });
+
+      it('should take into account transform: scale style', () => {
+        pntr.x = pntr.y = 0;
+
+        pointer.resetPointers();
+        canvas.style.transform = 'scale(0.5)';
+        canvas.style.transformOrigin = 'top left';
+        pntr = pointer.initPointer(canvas);
+
+        simulateEvent('touchend', {touches: [], changedTouches: [{clientX: 50, clientY: 25}]});
+
+        expect(pntr.x).to.equal(100);
+        expect(pntr.y).to.equal(50);
+      });
+
+      it('should take into account width style', () => {
+        pntr.x = pntr.y = 0;
+
+        pointer.resetPointers();
+        canvas.style.width = canvas.width * 2 + 'px';
+        pntr = pointer.initPointer(canvas);
+
+        simulateEvent('touchend', {touches: [], changedTouches: [{clientX: 100, clientY: 50}]});
+
+        expect(pntr.x).to.equal(50);
+        expect(pntr.y).to.equal(25);
+      });
+
+      it('should take into account all style properties', () => {
+        pntr.x = pntr.y = 0;
+
+        pointer.resetPointers();
+        canvas.style.border = '32px solid';
+        canvas.style.padding = '32px';
+        canvas.style.transform = 'scale(0.5)';
+        canvas.style.transformOrigin = 'top left';
+        canvas.style.width = canvas.width * 2 + 'px';
+        pntr = pointer.initPointer(canvas);
+
+        simulateEvent('touchend', {touches: [], changedTouches: [{clientX: 100, clientY: 50}]});
+
+        expect(pntr.x).to.equal(68);
+        expect(pntr.y).to.equal(18);
       });
 
       it('should call the onUp function', () => {

@@ -28,7 +28,8 @@ export {
   clamp,
   setStoreItem,
   getStoreItem,
-  collides
+  collides,
+  getWorldRect
 } from './helpers.js';
 export { keyMap, initKeys, bindKeys, unbindKeys, keyPressed } from './keyboard.js';
 export { registerPlugin, unregisterPlugin, extendObject } from './plugin.js';

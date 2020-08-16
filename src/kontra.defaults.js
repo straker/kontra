@@ -28,7 +28,8 @@ import {
   clamp,
   setStoreItem,
   getStoreItem,
-  collides
+  collides,
+  getWorldRect
 } from './helpers.js';
 import { keyMap, initKeys, bindKeys, unbindKeys, keyPressed } from './keyboard.js';
 import { registerPlugin, unregisterPlugin, extendObject } from './plugin.js';
@@ -90,6 +91,7 @@ let kontra = {
   setStoreItem,
   getStoreItem,
   collides,
+  getWorldRect,
 
   keyMap,
   initKeys,

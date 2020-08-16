@@ -17,6 +17,7 @@ describe('helpers', () => {
     expect(helpers.getStoreItem).to.be.an('function');
     expect(helpers.setStoreItem).to.be.an('function');
     expect(helpers.collides).to.be.an('function');
+    expect(helpers.getWorldRect).to.be.an('function');
   });
 
   // --------------------------------------------------

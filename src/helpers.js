@@ -294,7 +294,7 @@ export function collides(obj1, obj2) {
  *
  * @param {Object} obj - Object to get world rect of.
  *
- * @returns {{x: number, y: number, width: number, height: number}}
+ * @returns {{x: number, y: number, width: number, height: number}} The world `x`, `y`, `width`, and `height` of the object.
  */
 export function getWorldRect(obj) {
   let world = obj.world || obj;

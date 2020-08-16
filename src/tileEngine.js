@@ -1,6 +1,5 @@
 import { getCanvas, getContext } from './core.js';
-import { getWorldRect } from './utils.js';
-import { clamp } from './helpers.js';
+import { clamp, getWorldRect } from './helpers.js';
 
 /**
  * A tile engine for managing and drawing tilesets.

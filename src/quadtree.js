@@ -1,5 +1,5 @@
 import { getCanvas } from './core.js';
-import { getWorldRect } from './utils.js';
+import { getWorldRect } from './helpers.js';
 
 /**
  * Determine which subnodes the object intersects with

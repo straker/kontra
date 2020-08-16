@@ -385,7 +385,7 @@ export function initPointer(canvas = getCanvas()) {
  * initPointer();
  *
  * track(obj);
- * track([obj1, obj2]);
+ * track(obj1, obj2);
  * ```
  * @function track
  *
@@ -424,7 +424,7 @@ export function track(...objects) {
  * import { untrack } from 'kontra';
  *
  * untrack(obj);
- * untrack([obj1, obj2]);
+ * untrack(obj1, obj2);
  * ```
  * @function untrack
  *
@@ -473,7 +473,7 @@ export function untrack(...objects) {
  *   height: 10
  * });
  *
- * track([sprite1, sprite2]);
+ * track(sprite1, sprite2);
  *
  * sprite1.render();
  * sprite2.render();

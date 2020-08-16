@@ -3072,7 +3072,7 @@ var kontra = (function () {
    * initPointer();
    *
    * track(obj);
-   * track([obj1, obj2]);
+   * track(obj1, obj2);
    * ```
    * @function track
    *
@@ -3110,7 +3110,7 @@ var kontra = (function () {
    * import { untrack } from 'kontra';
    *
    * untrack(obj);
-   * untrack([obj1, obj2]);
+   * untrack(obj1, obj2);
    * ```
    * @function untrack
    *
@@ -3158,7 +3158,7 @@ var kontra = (function () {
    *   height: 10
    * });
    *
-   * track([sprite1, sprite2]);
+   * track(sprite1, sprite2);
    *
    * sprite1.render();
    * sprite2.render();

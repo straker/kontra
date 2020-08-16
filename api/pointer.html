@@ -527,7 +527,7 @@ let sprite2 = Sprite({
   height: 10
 });
 
-track([sprite1, sprite2]);
+track(sprite1, sprite2);
 
 sprite1.render();
 sprite2.render();
@@ -554,7 +554,7 @@ let sprite2 = Sprite({
   height: 10
 });
 
-track([sprite1, sprite2]);
+track(sprite1, sprite2);
 
 sprite1.render();
 sprite2.render();
@@ -581,7 +581,7 @@ let sprite2 = Sprite({
   height: 10
 });
 
-track([sprite1, sprite2]);
+track(sprite1, sprite2);
 
 sprite1.render();
 sprite2.render();
@@ -712,19 +712,19 @@ Sprite({
 initPointer();
 
 track(obj);
-track([obj1, obj2]);</code></pre></section>
+track(obj1, obj2);</code></pre></section>
   <section role="tabpanel" aria-labelledby=track-es-tab data-tabpanel="es"><pre><code class="language-js">import { initPointer, track } from 'path/to/kontra.mjs';
 
 initPointer();
 
 track(obj);
-track([obj1, obj2]);</code></pre></section>
+track(obj1, obj2);</code></pre></section>
   <section role="tabpanel" aria-labelledby=track-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { initPointer, track } from &#39;kontra&#39;;
 
 initPointer();
 
 track(obj);
-track([obj1, obj2]);</code></pre></section>
+track(obj1, obj2);</code></pre></section>
 </div>
           <h3 id="title-track"><span class="visually-hidden">track</span> Parameters</span></h3>
           <dl aria-labelledby="title-track">
@@ -762,15 +762,15 @@ track([obj1, obj2]);</code></pre></section>
   <section role="tabpanel" aria-labelledby=untrack-global-tab data-tabpanel="global"><pre><code class="language-js">let { untrack } = kontra;
 
 untrack(obj);
-untrack([obj1, obj2]);</code></pre></section>
+untrack(obj1, obj2);</code></pre></section>
   <section role="tabpanel" aria-labelledby=untrack-es-tab data-tabpanel="es"><pre><code class="language-js">import { untrack } from 'path/to/kontra.mjs';
 
 untrack(obj);
-untrack([obj1, obj2]);</code></pre></section>
+untrack(obj1, obj2);</code></pre></section>
   <section role="tabpanel" aria-labelledby=untrack-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { untrack } from &#39;kontra&#39;;
 
 untrack(obj);
-untrack([obj1, obj2]);</code></pre></section>
+untrack(obj1, obj2);</code></pre></section>
 </div>
           <h3 id="title-untrack"><span class="visually-hidden">untrack</span> Parameters</span></h3>
           <dl aria-labelledby="title-untrack">

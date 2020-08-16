@@ -423,6 +423,47 @@ describe('pointer', () => {
         expect(pointer.pointerOver(object)).to.equal(true);
       });
 
+      it('should take into account object camera', () => {
+        object.sx = 5;
+        object.sy = 10;
+
+        pntr.x = 95;
+        pntr.y = 55;
+
+        expect(pointer.pointerOver(object)).to.equal(true);
+      });
+
+      it('should take into account parent object camera', () => {
+        let parent = {
+          sx: 5,
+          sy: 10
+        };
+        object.parent = parent;
+
+        pntr.x = 95;
+        pntr.y = 55;
+
+        expect(pointer.pointerOver(object)).to.equal(true);
+      });
+
+      it('should take into account all parent object camera', () => {
+        let grandparent = {
+          sx: 9,
+          sy: 9
+        };
+        let parent = {
+          sx: 1,
+          sy: 1
+        };
+        object.parent = parent;
+        parent.parent = grandparent;
+
+        pntr.x = 90;
+        pntr.y = 50;
+
+        expect(pointer.pointerOver(object)).to.equal(true);
+      });
+
       it('should call the objects collidesWithPointer function', () => {
         object.collidesWithPointer = sinon.spy();
         pointer.pointerOver(object);

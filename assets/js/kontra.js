@@ -1798,6 +1798,17 @@ var kontra = (function () {
     }
 
     /**
+     * Update all children
+     */
+    update(dt) {
+      this._uf(dt);
+
+      // @ifdef GAMEOBJECT_GROUP
+      this.children.map(child => child.update && child.update());
+      // @endif
+    }
+
+    /**
      * Render the game object. Calls the game objects [draw()](api/gameObject#draw) function.
      * @memberof GameObject
      * @function render
@@ -2141,15 +2152,6 @@ var kontra = (function () {
         child.parent = null;
         child._pc();
       }
-    }
-
-    /**
-     * Update all children
-     */
-    update(dt) {
-      this._uf(dt);
-
-      this.children.map(child => child.update && child.update());
     }
     // @endif
 

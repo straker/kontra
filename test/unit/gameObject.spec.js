@@ -16,7 +16,7 @@ let testContext = {
 // --------------------------------------------------
 // gameObject
 // --------------------------------------------------
-describe.only('gameObject with context: ' + JSON.stringify(testContext,null,4), () => {
+describe('gameObject with context: ' + JSON.stringify(testContext,null,4), () => {
 
   let spy;
   let gameObject;

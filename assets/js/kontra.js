@@ -733,52 +733,6 @@ var kontra = (function () {
     );
   }
 
-  // noop function
-  const noop = () => {};
-
-  // style used for DOM nodes needed for screen readers
-  const srOnlyStyle = 'position:absolute;left:-9999px';
-
-  // append a node directly after the canvas and as the last
-  // element of other kontra nodes
-  function addToDom(node, canvas) {
-    let container = canvas.parentNode;
-
-    node.setAttribute('data-kontra', '');
-    if (container) {
-      let target = container.querySelector('[data-kontra]:last-of-type') || canvas;
-      container.insertBefore(node, target.nextSibling);
-    }
-    else {
-      document.body.appendChild(node);
-    }
-  }
-
-  // get world x, y, width, and height of object
-  function getWorldRect(obj) {
-    let world = obj.world || obj;
-
-    let x = world.x;
-    let y = world.y;
-    let width = world.width;
-    let height = world.height;
-
-    // @ifdef GAMEOBJECT_ANCHOR
-    // take into account object anchor
-    if (obj.anchor) {
-      x -= width * obj.anchor.x;
-      y -= height * obj.anchor.y;
-    }
-    // @endif
-
-    return {
-      x,
-      y,
-      width,
-      height
-    };
-  }
-
   /**
    * A group of helpful functions that are commonly used for game development. Includes things such as converting between radians and degrees and getting random integers.
    *
@@ -1067,6 +1021,38 @@ var kontra = (function () {
            obj1.x + obj1.width > obj2.x &&
            obj1.y < obj2.y + obj2.height &&
            obj1.y + obj1.height > obj2.y;
+  }
+
+  /**
+   * Return the world rect of an object. Takes into account the objects anchor.
+   * @function getWorldRect
+   *
+   * @param {Object} obj - Object to get world rect of.
+   *
+   * @returns {{x: number, y: number, width: number, height: number}} The world `x`, `y`, `width`, and `height` of the object.
+   */
+  function getWorldRect(obj) {
+    let world = obj.world || obj;
+
+    let x = world.x;
+    let y = world.y;
+    let width = world.width;
+    let height = world.height;
+
+    // @ifdef GAMEOBJECT_ANCHOR
+    // take into account object anchor
+    if (obj.anchor) {
+      x -= width * obj.anchor.x;
+      y -= height * obj.anchor.y;
+    }
+    // @endif
+
+    return {
+      x,
+      y,
+      width,
+      height
+    };
   }
 
   /**
@@ -1534,6 +1520,27 @@ var kontra = (function () {
     // @endif
 
     _pc() {}
+  }
+
+  // noop function
+  const noop = () => {};
+
+  // style used for DOM nodes needed for screen readers
+  const srOnlyStyle = 'position:absolute;left:-9999px';
+
+  // append a node directly after the canvas and as the last
+  // element of other kontra nodes
+  function addToDom(node, canvas) {
+    let container = canvas.parentNode;
+
+    node.setAttribute('data-kontra', '');
+    if (container) {
+      let target = container.querySelector('[data-kontra]:last-of-type') || canvas;
+      container.insertBefore(node, target.nextSibling);
+    }
+    else {
+      document.body.appendChild(node);
+    }
   }
 
   /**
@@ -2788,13 +2795,19 @@ var kontra = (function () {
   }
 
   /**
-   * Detection collision between a rectangle and a circlevt.
+   * Detection collision between a rectangle and a circle.
    * @see https://yal.cc/rectangle-circle-intersection-test/
    *
    * @param {Object} object - Object to check collision against.
    */
   function circleRectCollision(object, pointer) {
     let { x, y, width, height } = getWorldRect(object);
+
+    // account for camera
+    do {
+      x -= object.sx || 0;
+      y -= object.sy || 0;
+    } while ((object = object.parent));
 
     let dx = pointer.x - Math.max(x, Math.min(pointer.x, x + width));
     let dy = pointer.y - Math.max(y, Math.min(pointer.y, y + height));
@@ -6040,6 +6053,7 @@ var kontra = (function () {
     setStoreItem,
     getStoreItem,
     collides,
+    getWorldRect,
 
     keyMap,
     initKeys,

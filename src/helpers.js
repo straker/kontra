@@ -1,5 +1,3 @@
-import { getWorldRect } from './utils.js';
-
 /**
  * A group of helpful functions that are commonly used for game development. Includes things such as converting between radians and degrees and getting random integers.
  *
@@ -288,4 +286,36 @@ export function collides(obj1, obj2) {
          obj1.x + obj1.width > obj2.x &&
          obj1.y < obj2.y + obj2.height &&
          obj1.y + obj1.height > obj2.y;
+}
+
+/**
+ * Return the world rect of an object. Takes into account the objects anchor.
+ * @function getWorldRect
+ *
+ * @param {Object} obj - Object to get world rect of.
+ *
+ * @returns {{x: number, y: number, width: number, height: number}} The world `x`, `y`, `width`, and `height` of the object.
+ */
+export function getWorldRect(obj) {
+  let world = obj.world || obj;
+
+  let x = world.x;
+  let y = world.y;
+  let width = world.width;
+  let height = world.height;
+
+  // @ifdef GAMEOBJECT_ANCHOR
+  // take into account object anchor
+  if (obj.anchor) {
+    x -= width * obj.anchor.x;
+    y -= height * obj.anchor.y;
+  }
+  // @endif
+
+  return {
+    x,
+    y,
+    width,
+    height
+  };
 }

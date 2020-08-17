@@ -51,6 +51,7 @@ describe('kontra', () => {
     expect(kontraExports.getStoreItem).to.exist;
     expect(kontraExports.setStoreItem).to.exist;
     expect(kontraExports.collides).to.exist;
+    expect(kontraExports.getWorldRect).to.exist;
   });
 
   it('should export gameLoop api', () => {

@@ -25,7 +25,7 @@ describe('gameObject with context: ' + JSON.stringify(testContext,null,4), () =>
   });
 
   afterEach(() => {
-    spy && spy.restore();
+    spy && spy.restore && spy.restore();
   });
 
   // --------------------------------------------------
@@ -411,12 +411,25 @@ describe('gameObject with context: ' + JSON.stringify(testContext,null,4), () =>
       });
     }
 
-    it('should call the render function', () => {
-      sinon.stub(gameObject, '_rf');
+    it('should call the default render function', () => {
+      spy = sinon.spy(GameObject.prototype, 'draw');
+
+      // redeclare now that the spy is set
+      gameObject = GameObject();
+      gameObject.render();
+
+      expect(spy.called).to.be.true;
+    });
+
+    it('should call a custom render function', () => {
+      spy = sinon.spy();
+      let gameObject = GameObject({
+        render: spy
+      });
 
       gameObject.render();
 
-      expect(gameObject._rf.called).to.be.true;
+      expect(spy.called).to.be.true;
     });
 
     if (testContext.GAMEOBJECT_GROUP) {
@@ -790,6 +803,27 @@ describe('gameObject with context: ' + JSON.stringify(testContext,null,4), () =>
     // update
     // --------------------------------------------------
     describe('update', () => {
+
+      it('should call the default update function', () => {
+        spy = sinon.spy(GameObject.prototype, 'advance');
+
+        // redeclare now that the spy is set
+        gameObject = GameObject();
+        gameObject.update();
+
+        expect(spy.called).to.be.true;
+      });
+
+      it('should call a custom update function', () => {
+        spy = sinon.spy();
+        let gameObject = GameObject({
+          update: spy
+        });
+
+        gameObject.update();
+
+        expect(spy.called).to.be.true;
+      });
 
       if (testContext.GAMEOBJECT_GROUP) {
         it('should call update on each child', () => {

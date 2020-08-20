@@ -10,6 +10,7 @@ describe('helpers', () => {
     expect(helpers.degToRad).to.be.an('function');
     expect(helpers.radToDeg).to.be.an('function');
     expect(helpers.angleToTarget).to.be.an('function');
+    expect(helpers.rotatePoint).to.be.an('function');
     expect(helpers.randInt).to.be.an('function');
     expect(helpers.lerp).to.be.an('function');
     expect(helpers.inverseLerp).to.be.an('function');

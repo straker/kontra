@@ -6047,6 +6047,7 @@ var kontra = (function () {
     degToRad,
     radToDeg,
     angleToTarget,
+    rotatePoint,
     randInt,
     seedRand,
     lerp,

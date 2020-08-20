@@ -54,6 +54,7 @@ describe('kontra.defaults', () => {
     expect(kontra.degToRad).to.exist;
     expect(kontra.radToDeg).to.exist;
     expect(kontra.angleToTarget).to.exist;
+    expect(kontra.rotatePoint).to.exist;
     expect(kontra.randInt).to.exist;
     expect(kontra.seedRand).to.exist;
     expect(kontra.lerp).to.exist;

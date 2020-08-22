@@ -1,6 +1,6 @@
 /**
 
-As of kontra 6.0.0, custom builds can be achieved by using a module bundler such as [Rollup](https://rollupjs.org/) or [webpack](https://webpack.js.org/). Kontra supports ES modules, allowing you to use [tree-shaking](https://rollupjs.org/guide/en#tree-shaking) to only bundle the code you need.
+By default, the `kontra` export is the entire library. This means that by default Kontra is a bit large. However, Kontra has been written using ES Modules which means you can use a module bundler such as [Rollup](https://rollupjs.org/) or [webpack](https://webpack.js.org/) to take advantage of [tree-shaking](https://rollupjs.org/guide/en#tree-shaking). This will reduce the file size by only bundling the code you need.
 
 * ```js
 * // exclude-tablist
@@ -34,7 +34,7 @@ $ rollup game.js --format iife --file game.bundle.js
 
 ## Rollup-plugin-kontra
 
-Kontra supports even more granular control over the output. If you're looking to remove unused parts of the Sprite class, such as `rotation` or `anchor`, you can use [rollup-plugin-kontra](https://github.com/straker/rollup-plugin-kontra) to remove entire parts of the Sprite codebase. Just pass the functionality you want enabled and rollup-plugin-kontra will remove the rest.
+Kontra supports even more granular control over the file size if tree shaking is not enough. If you're looking to remove unused parts of the Sprite class, such as `rotation` or `anchor`, you can use [rollup-plugin-kontra](https://github.com/straker/rollup-plugin-kontra) to remove entire parts of the Sprite codebase. Just pass the functionality you want enabled and rollup-plugin-kontra will remove the rest.
 
 __Note:__ All options default to `false` when using rollup-plugin-kontra, so only pass the options you wish to enable. Passing no options will result in a Sprite with just `position`, `width,` `height`, and `color`.
 
@@ -121,6 +121,6 @@ General options do not have a parent source and are passed as siblings to the ot
 | ------------- | ------------- |
 | `debug`       | Turn on debugging information |
 
-@section Custom Builds
-@page custom-builds
+@section Reducing File Size
+@page reducing-file-size
 */

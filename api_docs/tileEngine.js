@@ -67,6 +67,8 @@
  *
  * The one requirement is that you must preload all of the tileset images and tileset sources using the appropriate [asset loader functions](./assets) before you create the tile engine.
  *
+ * **Note:** The Layer Format must be set to CSV (not Base64) and any `source` files must also be JSON files (not XML or TMX).
+ *
  * @sectionName Advance Use
  * @example {576x576}
  * // exclude-code:start

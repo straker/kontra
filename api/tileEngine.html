@@ -545,6 +545,7 @@ img.onload = function() {
 
           <p>Adding all the tileset images and layers to a tile engine can be tedious, especially if you have multiple layers. If you want a simpler way to create a tile engine, Kontra has been written to work directly with the JSON output of the <a href="http://www.mapeditor.org/">Tiled Map Editor</a>.</p>
 <p>The one requirement is that you must preload all of the tileset images and tileset sources using the appropriate <a href="./assets">asset loader functions</a> before you create the tile engine.</p>
+<p><strong>Note:</strong> The Layer Format must be set to CSV (not Base64) and any <code>source</code> files must also be JSON files (not XML or TMX).</p>
 <canvas id="game-canvas-12"></canvas>
 
 <div class="tablist">

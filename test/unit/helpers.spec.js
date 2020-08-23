@@ -274,10 +274,7 @@ describe('helpers', () => {
         y: 20,
         width: 10,
         height: 20,
-        anchor: {
-          x: 0.5,
-          y: 0.5
-        }
+        anchor: { x: 0.5, y: 0.5 }
       });
 
       let sprite2 = Sprite({
@@ -369,6 +366,69 @@ describe('helpers', () => {
 
       expect(helpers.collides(sprite1, obj)).to.be.true;
       expect(helpers.collides(obj, sprite1)).to.be.true;
+    });
+
+  });
+
+
+
+
+
+  // --------------------------------------------------
+  // getWorldRect
+  // --------------------------------------------------
+  describe('getWorldRect', () => {
+
+    it('should return world x, y, width, and height', () => {
+      let sprite = Sprite({
+        x: 40,
+        y: 40,
+        width: 10,
+        height: 10
+      });
+      let rect = helpers.getWorldRect(sprite);
+
+      expect(rect.x).to.equal(40);
+      expect(rect.y).to.equal(40);
+      expect(rect.width).to.equal(10);
+      expect(rect.height).to.equal(10);
+    });
+
+    it('should take into account negative scale', () => {
+      let sprite = Sprite({
+        x: 40,
+        y: 40,
+        width: 10,
+        height: 20,
+        scaleX: -2,
+        scaleY: -2
+      });
+      let rect = helpers.getWorldRect(sprite);
+
+      expect(rect.x).to.equal(20);
+      expect(rect.y).to.equal(0);
+      expect(rect.width).to.equal(20);
+      expect(rect.height).to.equal(40);
+    });
+
+    it('should take into account anchor', () => {
+      let sprite = Sprite({
+        x: 40,
+        y: 40,
+        width: 10,
+        height: 10,
+        anchor: {x: 0.5, y: 0.5}
+      });
+      let rect = helpers.getWorldRect(sprite);
+
+      expect(rect.x).to.equal(35);
+      expect(rect.y).to.equal(35);
+
+      sprite.anchor = {x: 1, y: 1};
+      rect = helpers.getWorldRect(sprite);
+
+      expect(rect.x).to.equal(30);
+      expect(rect.y).to.equal(30);
     });
 
   });

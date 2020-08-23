@@ -289,7 +289,7 @@ export function collides(obj1, obj2) {
 }
 
 /**
- * Return the world rect of an object. Takes into account the objects anchor.
+ * Return the world rect of an object. The rect is the world position of the top-left corner of the object and its size. Takes into account the objects anchor and scale.
  * @function getWorldRect
  *
  * @param {Object} obj - Object to get world rect of.
@@ -297,18 +297,25 @@ export function collides(obj1, obj2) {
  * @returns {{x: number, y: number, width: number, height: number}} The world `x`, `y`, `width`, and `height` of the object.
  */
 export function getWorldRect(obj) {
-  let world = obj.world || obj;
-
-  let x = world.x;
-  let y = world.y;
-  let width = world.width;
-  let height = world.height;
+  let { x, y, width, height } = obj.world || obj;
 
   // @ifdef GAMEOBJECT_ANCHOR
-  // take into account object anchor
+  // account for anchor
   if (obj.anchor) {
     x -= width * obj.anchor.x;
     y -= height * obj.anchor.y;
+  }
+  // @endif
+
+  // @ifdef GAMEOBJECT_SCALE
+  // account for negative scales
+  if (width < 0) {
+    x += width
+    width *= -1;
+  }
+  if (height < 0) {
+    y += height;
+    height *= -1;
   }
   // @endif
 

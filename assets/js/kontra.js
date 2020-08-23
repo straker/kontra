@@ -1024,7 +1024,7 @@ var kontra = (function () {
   }
 
   /**
-   * Return the world rect of an object. Takes into account the objects anchor.
+   * Return the world rect of an object. The rect is the world position of the top-left corner of the object and its size. Takes into account the objects anchor and scale.
    * @function getWorldRect
    *
    * @param {Object} obj - Object to get world rect of.
@@ -1032,18 +1032,25 @@ var kontra = (function () {
    * @returns {{x: number, y: number, width: number, height: number}} The world `x`, `y`, `width`, and `height` of the object.
    */
   function getWorldRect(obj) {
-    let world = obj.world || obj;
-
-    let x = world.x;
-    let y = world.y;
-    let width = world.width;
-    let height = world.height;
+    let { x, y, width, height } = obj.world || obj;
 
     // @ifdef GAMEOBJECT_ANCHOR
-    // take into account object anchor
+    // account for anchor
     if (obj.anchor) {
       x -= width * obj.anchor.x;
       y -= height * obj.anchor.y;
+    }
+    // @endif
+
+    // @ifdef GAMEOBJECT_SCALE
+    // account for negative scales
+    if (width < 0) {
+      x += width;
+      width *= -1;
+    }
+    if (height < 0) {
+      y += height;
+      height *= -1;
     }
     // @endif
 
@@ -2061,6 +2068,8 @@ var kontra = (function () {
 
     /**
      * The world position, width, height, opacity, rotation, and scale. The world property is the true position, width, height, etc. of the object, taking into account all parents.
+     *
+     * The world property does not adjust for anchor or scale, so if you set a negative scale the world width or height could be negative. Use [getWorldRect](/api/helpers#getWorldRect) to get the world position and size adjusted for anchor and scale.
      * @property {{x: number, y: number, width: number, height: number, opacity: number, rotation: number, scaleX: number, scaleY: number}} world
      * @memberof GameObject
      */

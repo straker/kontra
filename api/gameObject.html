@@ -1414,6 +1414,7 @@ gameObject.render();</code></pre></section>
           </h2>
 
           <p><em>Object</em>. The world position, width, height, opacity, rotation, and scale. The world property is the true position, width, height, etc. of the object, taking into account all parents.</p>
+<p>The world property does not adjust for anchor or scale, so if you set a negative scale the world width or height could be negative. Use <a href="/api/helpers#getWorldRect">getWorldRect</a> to get the world position and size adjusted for anchor and scale.</p>
           
         </section>
         <section>

@@ -293,7 +293,7 @@ bindKeys([&#39;enter&#39;, &#39;space&#39;], function(e) {
             </a>
           </h2>
 
-          <p><em>Object</em>. A map of keycodes to key names. Add to this object to expand the list of <a href="api/keyboard#available-keys">available keys</a>.</p>
+          <p><em>Object</em>. A map of <a href="https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/code/code_values">KeyboardEvent code values</a> to key names. Add to this object to expand the list of <a href="api/keyboard#available-keys">available keys</a>.</p>
 <div class="tablist">
   <ul role="tablist">
     <li role="presentation" data-tab="global">
@@ -309,24 +309,24 @@ bindKeys([&#39;enter&#39;, &#39;space&#39;], function(e) {
   </ul>
   <section role="tabpanel" aria-labelledby=keymap-global-tab data-tabpanel="global"><pre><code class="language-js">let { keyMap, bindKeys } = kontra;
 
-keyMap[34] = &#39;pageDown&#39;;
+keyMap[&#39;ControlRight&#39;] = &#39;ctrl&#39;;
 
-bindKeys(&#39;pageDown&#39;, function(e) {
-  // handle pageDown key
+bindKeys(&#39;ctrl&#39;, function(e) {
+  // handle ctrl key
 });</code></pre></section>
   <section role="tabpanel" aria-labelledby=keymap-es-tab data-tabpanel="es"><pre><code class="language-js">import { keyMap, bindKeys } from 'path/to/kontra.mjs';
 
-keyMap[34] = &#39;pageDown&#39;;
+keyMap[&#39;ControlRight&#39;] = &#39;ctrl&#39;;
 
-bindKeys(&#39;pageDown&#39;, function(e) {
-  // handle pageDown key
+bindKeys(&#39;ctrl&#39;, function(e) {
+  // handle ctrl key
 });</code></pre></section>
   <section role="tabpanel" aria-labelledby=keymap-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { keyMap, bindKeys } from &#39;kontra&#39;;
 
-keyMap[34] = &#39;pageDown&#39;;
+keyMap[&#39;ControlRight&#39;] = &#39;ctrl&#39;;
 
-bindKeys(&#39;pageDown&#39;, function(e) {
-  // handle pageDown key
+bindKeys(&#39;ctrl&#39;, function(e) {
+  // handle ctrl key
 });</code></pre></section>
 </div>
           

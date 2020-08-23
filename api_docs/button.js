@@ -3,6 +3,8 @@
  *
  * The size of the button will automatically be set as the width and height of the text or image, whichever is greater.
  *
+ * _Button image courtesy of [Kenney](https://kenney.nl/assets)._
+ *
  * @sectionName Basic Use
  * @example
  * // exclude-code:start

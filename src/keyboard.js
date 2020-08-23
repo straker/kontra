@@ -30,15 +30,15 @@ let callbacks = {};
 let pressedKeys = {};
 
 /**
- * A map of keycodes to key names. Add to this object to expand the list of [available keys](api/keyboard#available-keys).
+ * A map of [KeyboardEvent code values](https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/code/code_values) to key names. Add to this object to expand the list of [available keys](api/keyboard#available-keys).
  *
  * ```js
  * import { keyMap, bindKeys } from 'kontra';
  *
- * keyMap[34] = 'pageDown';
+ * keyMap['ControlRight'] = 'ctrl';
  *
- * bindKeys('pageDown', function(e) {
- *   // handle pageDown key
+ * bindKeys('ctrl', function(e) {
+ *   // handle ctrl key
  * });
  * ```
  * @property {{[key in (String|Number)]: string}} keyMap

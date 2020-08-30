@@ -1004,8 +1004,8 @@ var kontra = (function () {
    * ```
    * @function collides
    *
-   * @param {Object} obj1 - Object reference.
-   * @param {Object} obj2 - Object to check collision against.
+   * @param {{x: number, y: number, width: number, height: number}|{world: {x: number, y: number, width: number, height: number}}} obj1 - Object reference.
+   * @param {{x: number, y: number, width: number, height: number}|{world: {x: number, y: number, width: number, height: number}}} obj2 - Object to check collision against.
    *
    * @returns {Boolean|null} `true` if the objects collide, `false` otherwise. Will return `null` if the either of the two objects are rotated.
    */
@@ -1027,7 +1027,7 @@ var kontra = (function () {
    * Return the world rect of an object. The rect is the world position of the top-left corner of the object and its size. Takes into account the objects anchor and scale.
    * @function getWorldRect
    *
-   * @param {Object} obj - Object to get world rect of.
+   * @param {{x: number, y: number, width: number, height: number}|{world: {x: number, y: number, width: number, height: number}}} obj - Object to get world rect of.
    *
    * @returns {{x: number, y: number, width: number, height: number}} The world `x`, `y`, `width`, and `height` of the object.
    */
@@ -2246,7 +2246,7 @@ var kontra = (function () {
    * @param {Object} [properties] - Properties of the sprite.
    * @param {String} [properties.color] - Fill color for the game object if no image or animation is provided.
    * @param {HTMLImageElement|HTMLCanvasElement} [properties.image] - Use an image to draw the sprite.
-   * @param {Object} [properties.animations] - An object of [Animations](api/animation) from a [Spritesheet](api/spriteSheet) to animate the sprite.
+   * @param {{[name: string] : Animation}} [properties.animations] - An object of [Animations](api/animation) from a [Spritesheet](api/spriteSheet) to animate the sprite.
    */
   class Sprite extends factory$2.class {
     /**
@@ -2324,7 +2324,7 @@ var kontra = (function () {
      * sprite.playAnimation('idle');
      * ```
      * @memberof Sprite
-     * @property {Object} animations
+     * @property {{[name: string] : Animation}} animations
      */
     get animations() {
       return this._a;
@@ -4625,7 +4625,7 @@ var kontra = (function () {
    * Determine which subnodes the object intersects with
    *
    * @param {Object} object - Object to check.
-   * @param {Object} bounds - Bounds of the quadtree.
+   * @param {{x: number, y: number, width: number, height: number}} bounds - Bounds of the quadtree.
    *
    * @returns {Number[]} List of all subnodes object intersects.
    */
@@ -5297,7 +5297,7 @@ var kontra = (function () {
       /**
        * An object of named [Animation](api/animation) objects. Typically you pass this object into [Sprite](api/sprite) to create an [animation sprites](api/spriteSheet#animation-sprite).
        * @memberof SpriteSheet
-       * @property {Object} animations
+       * @property {{[name: string] : Animation}} animations
        */
       this.animations = {};
 
@@ -5313,7 +5313,7 @@ var kontra = (function () {
        *
        * `width` and `height` are the width of a single frame, while `margin` defines the amount of whitespace between each frame.
        * @memberof SpriteSheet
-       * @property {Object} frame
+       * @property {{width: number, height: number, margin: number}} frame
        */
       this.frame = {
         width: frameWidth,

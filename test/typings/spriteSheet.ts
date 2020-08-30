@@ -6,6 +6,10 @@ let spriteSheet: kontra.SpriteSheet = kontra.SpriteSheet({
   frameHeight: 32
 });
 
+let width: number = spriteSheet.frame.width;
+let height: number = spriteSheet.frame.height;
+let margin: number = spriteSheet.frame.margin;
+
 spriteSheet.createAnimations({
   walk: {
     frames: 1,

@@ -5,7 +5,7 @@ import { getWorldRect } from './helpers.js';
  * Determine which subnodes the object intersects with
  *
  * @param {Object} object - Object to check.
- * @param {Object} bounds - Bounds of the quadtree.
+ * @param {{x: number, y: number, width: number, height: number}} bounds - Bounds of the quadtree.
  *
  * @returns {Number[]} List of all subnodes object intersects.
  */

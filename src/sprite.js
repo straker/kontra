@@ -8,7 +8,7 @@ import GameObject from './gameObject.js';
  * @param {Object} [properties] - Properties of the sprite.
  * @param {String} [properties.color] - Fill color for the game object if no image or animation is provided.
  * @param {HTMLImageElement|HTMLCanvasElement} [properties.image] - Use an image to draw the sprite.
- * @param {Object} [properties.animations] - An object of [Animations](api/animation) from a [Spritesheet](api/spriteSheet) to animate the sprite.
+ * @param {{[name: string] : Animation}} [properties.animations] - An object of [Animations](api/animation) from a [Spritesheet](api/spriteSheet) to animate the sprite.
  */
 class Sprite extends GameObject.class {
   /**
@@ -86,7 +86,7 @@ class Sprite extends GameObject.class {
    * sprite.playAnimation('idle');
    * ```
    * @memberof Sprite
-   * @property {Object} animations
+   * @property {{[name: string] : Animation}} animations
    */
   get animations() {
     return this._a;

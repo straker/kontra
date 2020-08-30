@@ -51,3 +51,13 @@ let withAnchor = kontra.collides(sprite1, sprite2);
 // scale
 sprite1.scale = {x: 2, y: 2};
 let withScale = kontra.collides(sprite1, sprite2);
+
+let rect = kontra.getWorldRect({
+  x: 10,
+  y: 20,
+  width: 100,
+  height: 100
+});
+
+// sprites
+rect = kontra.getWorldRect(sprite1);

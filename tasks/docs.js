@@ -169,7 +169,7 @@ function parseType(type) {
   let isArray = false;
   if (type.includes('[]')) {
     isArray = true;
-    type = type.replace(/(\w+)\[\]/, function(match, p1, index) {
+    type = type.replace(/(\w+)\[\]/g, function(match, p1, index) {
       return `${index === 0 ? 'A' : 'a'}n Array of ${p1}s`;
     });
   }

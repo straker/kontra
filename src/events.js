@@ -20,7 +20,7 @@ export let callbacks = {};
 
 /**
  * There are currently only three lifecycle events:
- * - `init` - Emitted after `konta.init()` is called.
+ * - `init` - Emitted after `kontra.init()` is called.
  * - `tick` - Emitted every frame of [GameLoop](api/gameLoop) before the loops `update()` and `render()` functions are called.
  * - `assetLoaded` - Emitted after an asset has fully loaded using the asset loader. The callback function is passed the asset and the url of the asset as parameters.
  * @sectionName Lifecycle Events

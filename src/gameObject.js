@@ -177,7 +177,7 @@ class GameObject extends Updatable {
 
     // @ifdef GAMEOBJECT_ROTATION
     /**
-     * The rotation of the game object around the anchor in radians. . Represents the local rotation of the object as opposed to the [world](api/gameObject#world) rotation.
+     * The rotation of the game object around the anchor in radians. Represents the local rotation of the object as opposed to the [world](api/gameObject#world) rotation.
      * @memberof GameObject
      * @property {Number} rotation
      */

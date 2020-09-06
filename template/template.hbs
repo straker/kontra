@@ -174,5 +174,18 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/components/prism-javascript.min.js"></script>
   <script src="assets/js/navbar.js"></script>
   <script src="assets/js/exampleTabList.js"></script>
+  <script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('service-worker.js')
+      .then(registration => {
+        console.log('Service Worker is registered', registration);
+      })
+      .catch(err => {
+        console.error('Registration failed:', err);
+      });
+    });
+  }
+  </script>
 </body>
 </html>

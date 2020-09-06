@@ -1,9 +1,9 @@
 /**
  * A GameObject is just a base class and typically isn't used directly. Instead, it's main purpose is to be extended by other classes, such as [Sprite](/api/sprite).
  *
- * To extend the GameObject class, use the `.class` property of the constructor (since the GameObject is a factory function). You should also override the `draw()` function in your class.
+ * To extend the GameObject class, use the `.class` property of the constructor (since the GameObject is a factory function).
  *
- * The `draw()` function determines how to draw the GameObject. It is called by the `render` function after transforms and rotations have been applied.
+ * You should also override the `draw()` function instead of the `render()` function in your class. The `draw()` function determines how to draw the GameObject. It is called by the `render` function after transforms and rotations have been applied.
  *
  * Do note that the canvas has been rotated and translated to the objects position (taking into account anchor), so {0,0} will be the top-left corner of the game object when drawing.
  *

@@ -39,11 +39,10 @@ const filesToCache = [
   `${prefix}/assets/styles.css`
 ];
 
-const staticCacheName = 'kontra-docs-v1';
+const staticCacheName = 'kontra-docs-v2';
 
 // cache the application shell
 self.addEventListener('install', event => {
-  console.log('Attempting to install service worker and cache static assets');
   event.waitUntil(
     caches.open(staticCacheName)
     .then(cache => {
@@ -54,37 +53,38 @@ self.addEventListener('install', event => {
 
 // serve files from the cache
 self.addEventListener('fetch', event => {
-  console.log('Fetch event for ', event.request.url);
 
+  // respond with the cache first
   event.respondWith(
     caches.match(event.request)
       .then(response => {
         if (response) {
-          console.log('Found ', event.request.url, ' in cache');
           return response;
         }
 
-        console.log('Network request for ', event.request.url);
-
-        return fetch(event.request).then(response => {
-          return caches.open(staticCacheName).then(cache => {
-
-            console.log('Added to cache ', event.request.url);
-            cache.put(event.request.url, response.clone());
-            return response;
-          });
-        });
+        // progressively add new files to the cache
+        return updateCache(event.request);
       })
       .catch(error => {
         // TODO 6 - Respond with custom offline page
       })
   );
+
+  // update the cache with newest version
+  event.waitUntil(updateCache(event.request));
 });
+
+function updateCache(request) {
+  return fetch(request).then(response => {
+    return caches.open(staticCacheName).then(cache => {
+      cache.put(request.url, response.clone());
+      return response;
+    });
+  });
+}
 
 // delete outdated caches
 self.addEventListener('activate', event => {
-  console.log('Activating new service worker...');
-
   const cacheAllowlist = [staticCacheName];
 
   event.waitUntil(

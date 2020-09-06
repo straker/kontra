@@ -419,8 +419,8 @@
           </h2>
 
           <p>A GameObject is just a base class and typically isn&#39;t used directly. Instead, it&#39;s main purpose is to be extended by other classes, such as <a href="/api/sprite">Sprite</a>.</p>
-<p>To extend the GameObject class, use the <code>.class</code> property of the constructor (since the GameObject is a factory function). You should also override the <code>draw()</code> function in your class.</p>
-<p>The <code>draw()</code> function determines how to draw the GameObject. It is called by the <code>render</code> function after transforms and rotations have been applied.</p>
+<p>To extend the GameObject class, use the <code>.class</code> property of the constructor (since the GameObject is a factory function).</p>
+<p>You should also override the <code>draw()</code> function instead of the <code>render()</code> function in your class. The <code>draw()</code> function determines how to draw the GameObject. It is called by the <code>render</code> function after transforms and rotations have been applied.</p>
 <p>Do note that the canvas has been rotated and translated to the objects position (taking into account anchor), so {0,0} will be the top-left corner of the game object when drawing.</p>
 <canvas id="game-canvas-2"></canvas>
 
@@ -1279,7 +1279,7 @@ gameObject.render();</code></pre></section>
             </a>
           </h2>
 
-          <p><em>Number</em>. The rotation of the game object around the anchor in radians. . Represents the local rotation of the object as opposed to the <a href="api/gameObject#world">world</a> rotation.</p>
+          <p><em>Number</em>. The rotation of the game object around the anchor in radians. Represents the local rotation of the object as opposed to the <a href="api/gameObject#world">world</a> rotation.</p>
           
         </section>
         <section>

@@ -198,7 +198,7 @@ main > div {
 
 .main-nav {
   background: #333333;
-  padding: 1.325rem;
+  padding: 1.325rem 1.325rem 1.325rem 2rem;
   width: 13.8889rem;
   flex-shrink: 0;
   overflow-y: auto;
@@ -215,6 +215,10 @@ nav {
 
 .main-nav section:first-child {
   margin-top: 0;
+}
+
+.main-nav li {
+  position: relative;
 }
 
 .main-nav a {
@@ -259,6 +263,38 @@ nav {
   padding-bottom: 0.5rem;
   border-bottom: 1px solid #fdfdfd;
   color: #fdfdfd;
+}
+
+.cached-icon {
+  display: none;
+  position: absolute;
+  background: #fdfdfd;
+  border-radius: 50%;
+  width: 0.75rem;
+  height: 0.75rem;
+  top: 50%;
+  left: -1.25rem;
+  transform: translateY(-50%);
+}
+
+.cached-icon:hover .visually-hidden {
+  top: -2rem;
+  font-size: 0.5rem;
+  width: auto;
+  height: auto;
+  white-space: nowrap;
+  padding: 0 0.25rem;
+  overflow: visible;
+  clip: initial;
+  background: #f5f2f0;
+  color: #333333;
+  border: 1px solid;
+  border-radius: 4px;
+  z-index: 10;
+}
+
+.cached .cached-icon {
+  display: block;
 }
 
 /*nav * {

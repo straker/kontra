@@ -30,18 +30,53 @@
              css list-style: none is set
              @see https://web-a11y.slack.com/archives/C042TSFGN/p1501699529181172 -->
         <ul id="menu" role="list">
-          <li><a href="." {{#if nav-index}}aria-current="page"{{/if}}>Introduction</a></li>
-          <li><a href="getting-started" {{#if nav-getting-started}}aria-current="page"{{/if}}>Getting Started</a></li>
-          <li><a href="download" {{#if nav-download}}aria-current="page"{{/if}}>Download</a></li>
-          <li><a href="reducing-file-size" {{#if nav-reducing-file-size}}aria-current="page"{{/if}}>Reducing File Size</a></li>
-          <li><a href="tutorials" {{#if nav-tutorials}}aria-current="page"{{/if}}>Tutorials</a></li>
-          <li><a href="made-with-kontra" {{#if nav-made-with-kontra}}aria-current="page"{{/if}}>Made With Kontra</a></li>
+          <li>
+            <div aria-hidden="true" class="cached-icon" id="link-intro">
+              <span class="visually-hidden">Cached for offline viewing</span>
+            </div>
+            <a href="/" id="root-link" {{#if nav-index}}aria-current="page"{{/if}}>Introduction</a>
+          </li>
+          <li>
+             <div aria-hidden="true" class="cached-icon" id="link-getting-started">
+              <span class="visually-hidden">Cached for offline viewing</span>
+            </div>
+            <a href="getting-started" {{#if nav-getting-started}}aria-current="page"{{/if}}>Getting Started</a>
+          </li>
+          <li>
+             <div aria-hidden="true" class="cached-icon" id="link-download">
+              <span class="visually-hidden">Cached for offline viewing</span>
+            </div>
+            <a href="download" {{#if nav-download}}aria-current="page"{{/if}}>Download</a>
+          </li>
+          <li>
+             <div aria-hidden="true" class="cached-icon" id="link-file-size">
+              <span class="visually-hidden">Cached for offline viewing</span>
+            </div>
+            <a href="reducing-file-size" {{#if nav-reducing-file-size}}aria-current="page"{{/if}}>Reducing File Size</a>
+          </li>
+          <li>
+             <div aria-hidden="true" class="cached-icon" id="link-tutorials">
+              <span class="visually-hidden">Cached for offline viewing</span>
+            </div>
+            <a href="tutorials" {{#if nav-tutorials}}aria-current="page"{{/if}}>Tutorials</a>
+          </li>
+          <li>
+             <div aria-hidden="true" class="cached-icon" id="link-made-with">
+              <span class="visually-hidden">Cached for offline viewing</span>
+            </div>
+            <a href="made-with-kontra" {{#if nav-made-with-kontra}}aria-current="page"{{/if}}>Made With Kontra</a>
+          </li>
 
           <li>
             <span id="api" class="nav-api-heading">API</span>
             <ul aria-labelledby="api">
               {{#each navbar}}
-              <li><a href="api/{{ url }}" {{#if selected}}aria-current="page"{{/if}}>{{ name }}</a></li>
+              <li>
+                <div aria-hidden="true" class="cached-icon" id="link-{{ url }}">
+                  <span class="visually-hidden">Cached for offline viewing</span>
+                </div>
+                <a href="api/{{ url }}" {{#if selected}}aria-current="page"{{/if}}>{{ name }}</a>
+              </li>
               {{/each}}
             </ul>
           </li>
@@ -172,14 +207,35 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/prism.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/components/prism-javascript.min.js"></script>
-  <script src="assets/js/navbar.js"></script>
-  <script src="assets/js/exampleTabList.js"></script>
   <script>
-  if ('serviceWorker' in navigator) {
+  // only service worker off localhost
+  if (
+    'serviceWorker' in navigator &&
+    !['localhost', '127.0.0.1'].includes(window.location.hostname)
+  ) {
     window.addEventListener('load', () => {
       navigator.serviceWorker.register('service-worker.js')
       .then(registration => {
         console.log('Service Worker is registered', registration);
+
+        // cache this page
+        let cachedPages = JSON.parse(localStorage.getItem('kontra-docs-pages') || "{}");
+        cachedPages[window.location.href] = true;
+
+        // always cache the index
+        cachedPages[document.querySelector('#root-link').href] = true;
+
+        localStorage.setItem('kontra-docs-pages', JSON.stringify(cachedPages));
+
+        // show user cached pages
+        document.querySelectorAll('#menu a').forEach(anchor => {
+          if (cachedPages[anchor.href]) {
+            let id = anchor.previousElementSibling.getAttribute('id');
+
+            anchor.parentNode.classList.add('cached');
+            anchor.setAttribute('aria-describedby', id);
+          }
+        });
       })
       .catch(err => {
         console.error('Registration failed:', err);
@@ -187,5 +243,7 @@
     });
   }
   </script>
+  <script src="assets/js/navbar.js"></script>
+  <script src="assets/js/exampleTabList.js"></script>
 </body>
 </html>

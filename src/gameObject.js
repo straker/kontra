@@ -264,7 +264,7 @@ class GameObject extends Updatable {
     this._uf(dt);
 
     // @ifdef GAMEOBJECT_GROUP
-    this.children.map(child => child.update && child.update());
+    this.children.map(child => child.update && child.update(dt));
     // @endif
   }
 

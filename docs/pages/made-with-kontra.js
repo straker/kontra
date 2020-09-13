@@ -355,6 +355,14 @@ Have a game you want to add? [Let me know](https://github.com/straker/kontra/iss
       <span><span class="visually-hidden">. By </span><small>Yngwarrx
 </small></span>
     </a>
+
+  <li>
+    <a href="https://js13kgames.com/entries/population-404">
+      <img src="assets/imgs/games/population-404.png" alt="" width="320" height="200"/>
+      <span>POPULATION: 404</span>
+      <span><span class="visually-hidden">. By </span><small>Felladrin
+</small></span>
+    </a>
   </li>
 </ul>
 

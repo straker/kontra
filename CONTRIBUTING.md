@@ -30,17 +30,17 @@ To build the development code, run `npm run build`. To build the distribution ve
 
 Please add unit and/or integration tests for all new changes, as well as TypeScript tests found in [test/typings](test/typings). To run the tests, run `npm test`.
 
-The TypeScript tests just ensure that the TypesCript declaration file is correct and doesn't miss any obvious use cases with the various APIs.
+The TypeScript tests just ensure that the TypeScript declaration file is correct and doesn't miss any obvious use cases with the various APIs.
 
 Some unit test files contain a `testContext` object which allows the suite to run tests conditionally when features are turned on or removed. When changing code in these types of suites, please pay attention to if the test should only run when a feature is enabled or removed.
 
 ## Exports
 
-Please update the export files for all new changes (if need be). [kontra.defaults.js](src/kontra.defaults.js) imports all functionality and then adds it to the `kontra` object. [kontra.js](src/kontra.js) exports all functionality directly. You will also need to tests to their respected spec files that ensures the functionality is exported.
+Please update the export files for all new changes (if need be). [kontra.defaults.js](src/kontra.defaults.js) imports all functionality and then adds it to the `kontra` object. [kontra.js](src/kontra.js) exports all functionality directly. You will also need to add tests to their respected spec files to ensure the functionality is exported.
 
 ## Documentation and TypeScript Declaration File
 
-The [documentation](/docs) and the [TypeScript declaration file](kontra.d.ts) is built from the JSDoc-like comments in the source files using [LivingCSS](https://github.com/straker/livingcss) (I know, not what it was intended for but it makes it really easy to build multiple pages of docs. And it's highly configurable). Both are built when running `npm run build`.
+The [documentation](/docs) and the [TypeScript declaration file](kontra.d.ts) are built from the JSDoc-like comments in the source files using [LivingCSS](https://github.com/straker/livingcss) (I know, not what it was intended for but it makes it really easy to build multiple pages of docs. And it's highly configurable). Both are built when running `npm run build`.
 
 To update the documentation or the declaration file, just modify the JSDoc-like comments. The comments are not true JSDoc syntax, but a modified version that supports both JSDoc tags and TypeSript declarations. For example, a comment for an object will be declared using TypeSript for the JSDoc type.
 

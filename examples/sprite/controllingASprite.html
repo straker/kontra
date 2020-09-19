@@ -60,6 +60,10 @@
       e.preventDefault();
     });
 
+    kontra.bindKeys(['up', 'down', 'left', 'right'], function(e) {
+      console.log('key released: ', e)
+    }, 'keyup');
+
     // create the game loop to update and render the sprite
     window.loop = kontra.GameLoop({
       update: function() {

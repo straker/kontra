@@ -1,6 +1,6 @@
 /**
 
-A list of articles and tutorials for making games with Kontra.js. I've collected as many as I could all in one place for you're reading pleasure.
+A list of articles and tutorials for making games with Kontra.js. I've collected as many as I could all in one place for your reading pleasure.
 
 Have a tutorial you want to add? [Let me know](https://github.com/straker/kontra/issues)!
 

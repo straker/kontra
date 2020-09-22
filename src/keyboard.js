@@ -135,7 +135,7 @@ export function initKeys() {
  *
  * @param {String|String[]} keys - Key or keys to bind.
  * @param {(evt: KeyboardEvent) => void} callback - The function to be called when the key is pressed.
- * @param {'keydown'|'keyup'} handler - Whether to bind to keydown or keyup events. Default: 'keydown'.
+ * @param {'keydown'|'keyup'} [handler=keydown] - Whether to bind to keydown or keyup events.
  */
 export function bindKeys(keys, callback, handler='keydown') {
   const callbacks = handler == 'keydown' ? keydownCallbacks : keyupCallbacks;
@@ -155,10 +155,10 @@ export function bindKeys(keys, callback, handler='keydown') {
  * @function unbindKeys
  *
  * @param {String|String[]} keys - Key or keys to unbind.
- * @param {'keydown'|'keyup'} handler - Whether to unbind from keydown or keyup events. Default: 'keydown'.
+ * @param {'keydown'|'keyup'} [handler=keydown] - Whether to unbind from keydown or keyup events.
  */
 export function unbindKeys(keys, handler='keydown') {
-    const callbacks = handler == 'keydown' ? keydownCallbacks : keyupCallbacks;
+  const callbacks = handler == 'keydown' ? keydownCallbacks : keyupCallbacks;
   // 0 is the smallest falsy value
   [].concat(keys).map(key => callbacks[key] = 0);
 }

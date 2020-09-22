@@ -166,27 +166,60 @@ describe('keyboard', () => {
   // --------------------------------------------------
   describe('unbind', () => {
 
-    it('should not call the callback when the combination has been unbound', () => {
-      keyboard.bindKeys('a', () => {
-        // this should never be called since the key combination was unbound
-        expect(false).to.be.true;
+    // Defaults to keydown
+    describe('handler=keydown', () => {
+
+      it('should not call the callback when the combination has been unbound', () => {
+        keyboard.bindKeys('a', () => {
+          // this should never be called since the key combination was unbound
+          expect(false).to.be.true;
+        });
+
+        keyboard.unbindKeys('a');
+
+        simulateEvent('keydown', {which: 65});
       });
 
-      keyboard.unbindKeys('a');
+      it('should accept an array of key combinations to unbind', () => {
+        keyboard.bindKeys(['a', 'b'], () => {
+          // this should never be called since the key combination was unbound
+          expect(false).to.be.true;
+        });
 
-      simulateEvent('keydown', {which: 65});
+        keyboard.unbindKeys(['a', 'b']);
+
+        simulateEvent('keydown', {which: 65});
+        simulateEvent('keydown', {which: 66});
+      });
+
     });
 
-    it('should accept an array of key combinations to unbind', () => {
-      keyboard.bindKeys(['a', 'b'], () => {
-        // this should never be called since the key combination was unbound
-        expect(false).to.be.true;
+    describe('handler=keyup', () => {
+      const handler = 'keyup'
+
+      it('should not call the callback when the combination has been unbound', () => {
+        keyboard.bindKeys('a', () => {
+          // this should never be called since the key combination was unbound
+          expect(false).to.be.true;
+        }, handler);
+
+        keyboard.unbindKeys('a');
+
+        simulateEvent('keyup', {which: 65});
       });
 
-      keyboard.unbindKeys(['a', 'b']);
+      it('should accept an array of key combinations to unbind', () => {
+        keyboard.bindKeys(['a', 'b'], () => {
+          // this should never be called since the key combination was unbound
+          expect(false).to.be.true;
+        }, handler);
 
-      simulateEvent('keydown', {which: 65});
-      simulateEvent('keydown', {which: 66});
+        keyboard.unbindKeys(['a', 'b']);
+
+        simulateEvent('keyup', {which: 65});
+        simulateEvent('keyup', {which: 66});
+      });
+
     });
 
   });

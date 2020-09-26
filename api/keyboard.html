@@ -292,7 +292,7 @@ function update() {
               <ul aria-labelledby="methods">
                 <li>
                   <a href="api/keyboard#bindKeys">
-                    <span>bindKeys(&#8203;keys, callback)</span>
+                    <span>bindKeys(&#8203;keys, callback[, handler])</span>
                   </a>
                 </li>
                 <li>
@@ -307,7 +307,7 @@ function update() {
                 </li>
                 <li>
                   <a href="api/keyboard#unbindKeys">
-                    <span>unbindKeys(&#8203;keys)</span>
+                    <span>unbindKeys(&#8203;keys[, handler])</span>
                   </a>
                 </li>
               </ul>
@@ -334,7 +334,7 @@ function update() {
         <section>
           <h2 id="bindKeys">
             <a href="api/keyboard#bindKeys" class="section-link">
-              <span>bindKeys(&#8203;keys, callback)</span>
+              <span>bindKeys(&#8203;keys, callback[, handler])</span>
               <span aria-hidden="true">#</span>
             </a>
           </h2>
@@ -359,7 +359,7 @@ initKeys();
 
 bindKeys(&#39;p&#39;, function(e) {
   // pause the game
-});
+}, &#39;keyup&#39;);
 bindKeys([&#39;enter&#39;, &#39;space&#39;], function(e) {
   e.preventDefault();
   // fire gun
@@ -370,7 +370,7 @@ initKeys();
 
 bindKeys(&#39;p&#39;, function(e) {
   // pause the game
-});
+}, &#39;keyup&#39;);
 bindKeys([&#39;enter&#39;, &#39;space&#39;], function(e) {
   e.preventDefault();
   // fire gun
@@ -381,7 +381,7 @@ initKeys();
 
 bindKeys(&#39;p&#39;, function(e) {
   // pause the game
-});
+}, &#39;keyup&#39;);
 bindKeys([&#39;enter&#39;, &#39;space&#39;], function(e) {
   e.preventDefault();
   // fire gun
@@ -400,6 +400,12 @@ bindKeys([&#39;enter&#39;, &#39;space&#39;], function(e) {
               
             </dt>
             <dd><p><em>Function</em>. The function to be called when the key is pressed.</p>
+          </dd>
+            <dt>
+              <code>handler</code>
+              <span class="optional">Optional</span>
+            </dt>
+            <dd><p><em>&#39;keydown&#39; or &#39;keyup&#39;</em>. Whether to bind to keydown or keyup events. Defaults to <code>keydown</code>.</p>
           </dd>
           </dl>
           
@@ -564,7 +570,7 @@ let sprite = Sprite({
         <section>
           <h2 id="unbindKeys">
             <a href="api/keyboard#unbindKeys" class="section-link">
-              <span>unbindKeys(&#8203;keys)</span>
+              <span>unbindKeys(&#8203;keys[, handler])</span>
               <span aria-hidden="true">#</span>
             </a>
           </h2>
@@ -603,6 +609,12 @@ unbindKeys([&#39;enter&#39;, &#39;space&#39;]);</code></pre></section>
               
             </dt>
             <dd><p><em>String or an Array of Strings</em>. Key or keys to unbind.</p>
+          </dd>
+            <dt>
+              <code>handler</code>
+              <span class="optional">Optional</span>
+            </dt>
+            <dd><p><em>&#39;keydown&#39; or &#39;keyup&#39;</em>. Whether to unbind from keydown or keyup events. Defaults to <code>keydown</code>.</p>
           </dd>
           </dl>
           

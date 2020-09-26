@@ -4124,7 +4124,8 @@ var kontra = (function () {
    * @sectionName Available Keys
    */
 
-  let callbacks$2 = {};
+  let keydownCallbacks = {};
+  let keyupCallbacks = {};
   let pressedKeys = {};
 
   /**
@@ -4161,8 +4162,8 @@ var kontra = (function () {
     let key = keyMap[evt.code];
     pressedKeys[key] = true;
 
-    if (callbacks$2[key]) {
-      callbacks$2[key](evt);
+    if (keydownCallbacks[key]) {
+      keydownCallbacks[key](evt);
     }
   }
 
@@ -4172,7 +4173,12 @@ var kontra = (function () {
    * @param {KeyboardEvent} evt
    */
   function keyupEventHandler(evt) {
-    pressedKeys[ keyMap[evt.code] ] = false;
+    let key = keyMap[evt.code];
+    pressedKeys[key] = false;
+
+    if (keyupCallbacks[key]) {
+      keyupCallbacks[key](evt);
+    }
   }
 
   /**
@@ -4217,7 +4223,7 @@ var kontra = (function () {
    *
    * bindKeys('p', function(e) {
    *   // pause the game
-   * });
+   * }, 'keyup');
    * bindKeys(['enter', 'space'], function(e) {
    *   e.preventDefault();
    *   // fire gun
@@ -4227,10 +4233,12 @@ var kontra = (function () {
    *
    * @param {String|String[]} keys - Key or keys to bind.
    * @param {(evt: KeyboardEvent) => void} callback - The function to be called when the key is pressed.
+   * @param {'keydown'|'keyup'} [handler=keydown] - Whether to bind to keydown or keyup events.
    */
-  function bindKeys(keys, callback) {
+  function bindKeys(keys, callback, handler='keydown') {
+    const callbacks = handler == 'keydown' ? keydownCallbacks : keyupCallbacks;
     // smaller than doing `Array.isArray(keys) ? keys : [keys]`
-    [].concat(keys).map(key => callbacks$2[key] = callback);
+    [].concat(keys).map(key => callbacks[key] = callback);
   }
 
   /**
@@ -4245,10 +4253,12 @@ var kontra = (function () {
    * @function unbindKeys
    *
    * @param {String|String[]} keys - Key or keys to unbind.
+   * @param {'keydown'|'keyup'} [handler=keydown] - Whether to unbind from keydown or keyup events.
    */
-  function unbindKeys(keys) {
+  function unbindKeys(keys, handler='keydown') {
+    const callbacks = handler == 'keydown' ? keydownCallbacks : keyupCallbacks;
     // 0 is the smallest falsy value
-    [].concat(keys).map(key => callbacks$2[key] = 0);
+    [].concat(keys).map(key => callbacks[key] = 0);
   }
 
   /**

@@ -26,7 +26,8 @@
  * @sectionName Available Keys
  */
 
-let callbacks = {};
+let keydownCallbacks = {};
+let keyupCallbacks = {};
 let pressedKeys = {};
 
 /**
@@ -63,8 +64,8 @@ function keydownEventHandler(evt) {
   let key = keyMap[evt.code];
   pressedKeys[key] = true;
 
-  if (callbacks[key]) {
-    callbacks[key](evt);
+  if (keydownCallbacks[key]) {
+    keydownCallbacks[key](evt);
   }
 }
 
@@ -74,7 +75,12 @@ function keydownEventHandler(evt) {
  * @param {KeyboardEvent} evt
  */
 function keyupEventHandler(evt) {
-  pressedKeys[ keyMap[evt.code] ] = false;
+  let key = keyMap[evt.code];
+  pressedKeys[key] = false;
+
+  if (keyupCallbacks[key]) {
+    keyupCallbacks[key](evt);
+  }
 }
 
 /**
@@ -119,7 +125,7 @@ export function initKeys() {
  *
  * bindKeys('p', function(e) {
  *   // pause the game
- * });
+ * }, 'keyup');
  * bindKeys(['enter', 'space'], function(e) {
  *   e.preventDefault();
  *   // fire gun
@@ -129,8 +135,10 @@ export function initKeys() {
  *
  * @param {String|String[]} keys - Key or keys to bind.
  * @param {(evt: KeyboardEvent) => void} callback - The function to be called when the key is pressed.
+ * @param {'keydown'|'keyup'} [handler=keydown] - Whether to bind to keydown or keyup events.
  */
-export function bindKeys(keys, callback) {
+export function bindKeys(keys, callback, handler='keydown') {
+  const callbacks = handler == 'keydown' ? keydownCallbacks : keyupCallbacks;
   // smaller than doing `Array.isArray(keys) ? keys : [keys]`
   [].concat(keys).map(key => callbacks[key] = callback);
 }
@@ -147,8 +155,10 @@ export function bindKeys(keys, callback) {
  * @function unbindKeys
  *
  * @param {String|String[]} keys - Key or keys to unbind.
+ * @param {'keydown'|'keyup'} [handler=keydown] - Whether to unbind from keydown or keyup events.
  */
-export function unbindKeys(keys) {
+export function unbindKeys(keys, handler='keydown') {
+  const callbacks = handler == 'keydown' ? keydownCallbacks : keyupCallbacks;
   // 0 is the smallest falsy value
   [].concat(keys).map(key => callbacks[key] = 0);
 }

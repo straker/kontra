@@ -39,6 +39,10 @@ Kontra.js is made possible by users like you. Through helping find issues, openi
 
 When you become a Patron, you get access to behind the scenes development logs, the ability to vote on which features to work on next, and early access to development builds.
 
+### Top Patrons
+
+- Innkeeper Games
+
 @section What is Kontra.js?
 @page index
 

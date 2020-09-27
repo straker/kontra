@@ -375,6 +375,22 @@ Have a game you want to add? [Let me know](https://github.com/straker/kontra/iss
     </a>
   </li>
 
+  <li>
+    <a href="https://js13kgames.com/entries/the-waffle">
+      <img src="assets/imgs/games/the-waffle.jpg" alt="" loading="lazy" width="320" height="200"/>
+      <span>The Waffle</span>
+      <span><span class="visually-hidden">. By </span><small>Tero & Sami</small></span>
+    </a>
+  </li>
+
+  <li>
+    <a href="http://js13kgames.com/entries/lost-pages">
+      <img src="assets/imgs/games/lost-pages.jpg" alt="" loading="lazy" width="320" height="200"/>
+      <span>Lost Pages</span>
+      <span><span class="visually-hidden">. By </span><small>Ragnatic</small></span>
+    </a>
+  </li>
+
 </ul>
 
 @section Games Made with Kontra.js

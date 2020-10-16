@@ -42,6 +42,7 @@ When you become a Patron, you get access to behind the scenes development logs, 
 ### Top Patrons
 
 - Innkeeper Games
+- Karar Al-Remahy
 
 @section What is Kontra.js?
 @page index

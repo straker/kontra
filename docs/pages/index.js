@@ -7,9 +7,9 @@ Kontra is a lightweight JavaScript gaming micro-library created specifically for
 
 The goal of Kontra is not to implement everything you could possibly need to make a game. There are already libraries out there that do that (like [Phaser](http://phaser.io/)).
 
-Instead, Kontra aims to implement basic game requirements like asset loading, input, the game loop, and spites to keep the library very small and focused. This allows it to be used when your game size is limited (a la Js13k).
+Instead, Kontra aims to implement basic game requirements like asset loading, input, the game loop, and sprites to keep the library very small and focused. This allows it to be used when your game size is limited (a la Js13k).
 
-Kontra does provide some more advance data structures like object pools and quadtrees that have been fine tuned to be small, fast, and memory efficient.
+Kontra does provide some more advanced data structures like object pools and quadtrees that have been fine tuned to be small, fast, and memory efficient.
 
 Kontra prides itself in being:
 

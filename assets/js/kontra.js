@@ -1032,7 +1032,18 @@ var kontra = (function () {
    * @returns {{x: number, y: number, width: number, height: number}} The world `x`, `y`, `width`, and `height` of the object.
    */
   function getWorldRect(obj) {
-    let { x, y, width, height } = obj.world || obj;
+    let {
+      x = 0,
+      y = 0,
+      width,
+      height
+    } = obj.world || obj;
+
+    // take into account tileEngine
+    if (obj.mapwidth) {
+      width = obj.mapwidth;
+      height = obj.mapheight;
+    }
 
     // @ifdef GAMEOBJECT_ANCHOR
     // account for anchor

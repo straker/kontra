@@ -45,6 +45,14 @@ describe('text with context: ' + JSON.stringify(testContext,null,4), () => {
       expect(text.color).to.equal('black');
     });
 
+    it('should cast text to string', () => {
+      let text = Text({
+        text: 1
+      });
+
+      expect(text.text).to.equal('1');
+    });
+
     it('should set the text as dirty when setting font', () => {
       let text = Text({text: ''});
 

@@ -124,6 +124,9 @@ class Text extends GameObject.class {
 
      ...props
   } = {}) {
+    // cast to string
+    text = '' + text;
+
     super.init({
       text,
       textAlign,

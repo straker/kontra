@@ -297,7 +297,18 @@ export function collides(obj1, obj2) {
  * @returns {{x: number, y: number, width: number, height: number}} The world `x`, `y`, `width`, and `height` of the object.
  */
 export function getWorldRect(obj) {
-  let { x, y, width, height } = obj.world || obj;
+  let {
+    x = 0,
+    y = 0,
+    width,
+    height
+  } = obj.world || obj;
+
+  // take into account tileEngine
+  if (obj.mapwidth) {
+    width = obj.mapwidth;
+    height = obj.mapheight;
+  }
 
   // @ifdef GAMEOBJECT_ANCHOR
   // account for anchor

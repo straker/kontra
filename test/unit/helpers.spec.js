@@ -1,5 +1,6 @@
 import * as helpers from '../../src/helpers.js'
 import Sprite from '../../src/sprite.js'
+import TileEngine from '../../src/tileEngine.js'
 
 // --------------------------------------------------
 // helpers
@@ -429,6 +430,22 @@ describe('helpers', () => {
 
       expect(rect.x).to.equal(30);
       expect(rect.y).to.equal(30);
+    });
+
+    it('should work for tileEngine', () => {
+      let tileEngine = TileEngine({
+        width: 10,
+        height: 12,
+        tilewidth: 32,
+        tileheight: 32,
+        tilesets: []
+      });
+      let rect = helpers.getWorldRect(tileEngine);
+
+      expect(rect.x).to.equal(0);
+      expect(rect.y).to.equal(0);
+      expect(rect.width).to.equal(320);
+      expect(rect.height).to.equal(384);
     });
 
   });

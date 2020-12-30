@@ -56,3 +56,8 @@ let customPoolOpts = kontra.Pool({
     }
   }
 });
+
+// kontra object create
+let spriteCreate = kontra.Pool({
+  create: kontra.Sprite
+});

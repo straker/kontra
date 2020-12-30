@@ -2557,6 +2557,9 @@ var kontra = (function () {
 
        ...props
     } = {}) {
+      // cast to string
+      text = '' + text;
+
       super.init({
         text,
         textAlign,

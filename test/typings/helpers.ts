@@ -61,3 +61,14 @@ let rect = kontra.getWorldRect({
 
 // sprites
 rect = kontra.getWorldRect(sprite1);
+
+// tileEngines
+let tileEngine = kontra.TileEngine({
+  width: 10,
+  height: 12,
+  tilewidth: 32,
+  tileheight: 32,
+  tilesets: [],
+  layers: []
+});
+rect = kontra.getWorldRect(tileEngine);

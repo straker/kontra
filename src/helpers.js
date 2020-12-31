@@ -292,7 +292,7 @@ export function collides(obj1, obj2) {
  * Return the world rect of an object. The rect is the world position of the top-left corner of the object and its size. Takes into account the objects anchor and scale.
  * @function getWorldRect
  *
- * @param {{x: number, y: number, width: number, height: number}|{world: {x: number, y: number, width: number, height: number}}} obj - Object to get world rect of.
+ * @param {{x: number, y: number, width: number, height: number}|{world: {x: number, y: number, width: number, height: number}}|{mapwidth: number, mapheight: number}} obj - Object to get world rect of.
  *
  * @returns {{x: number, y: number, width: number, height: number}} The world `x`, `y`, `width`, and `height` of the object.
  */

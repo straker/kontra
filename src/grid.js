@@ -111,6 +111,8 @@ class Grid extends GameObject.class {
 
     /**
      * The direction of the grid. Defaults to organizing the grid objects left-to-right, but if set to `rtl` then the grid is organized right-to-left.
+     *
+     * When determining the direction of the grid, the canvas `dir` attribute is also taken into account. Setting the attribute to `rtl` is equivalent to setting the `dir` property to `rtl`. The `dir` property is used instead of the canvas attribute if both are set.
      * @memberof Grid
      * @property {String} dir
      */

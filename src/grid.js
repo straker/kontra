@@ -274,6 +274,7 @@ class Grid extends GameObject.class {
     if (rtl) {
       this._g = grid.map(row => row.reverse());
       this._cw = colWidths.reverse();
+      colGap = colGap.reverse();
     }
 
     let topLeftY = -this.anchor.y * this.height;

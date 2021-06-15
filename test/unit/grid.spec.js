@@ -655,6 +655,66 @@ describe('grid', () => {
 
 
     // --------------------------------------------------
+    // colGap
+    // --------------------------------------------------
+    describe('colGap', () => {
+      let grid, child1, child2, child3, child4;
+
+      beforeEach(() => {
+        child1 = {
+          width: 100,
+          height: 25
+        };
+        child2 = {
+          width: 25,
+          height: 100
+        };
+        child3 = {
+          width: 50,
+          height: 50
+        };
+        child4 = {
+          width: 25,
+          height: 75
+        };
+        grid = Grid({
+          x: 100,
+          y: 50,
+          flow: 'grid',
+          colGap: [5, 10, 15],
+          flow: 'row',
+          children: [child1, child2, child3, child4]
+        });
+      });
+
+      it('should reverse the order when dir=rtl', () => {
+        grid.dir = 'rtl';
+        grid.render();
+
+        expect(child4.x).to.equal(0);
+        expect(child3.x).to.equal(40);
+        expect(child2.x).to.equal(100);
+        expect(child1.x).to.equal(130);
+      });
+
+      it('should reverse the order if canvas dir=rtl', () => {
+        getCanvas().dir = 'rtl';
+        grid._d = true;
+        grid.render();
+
+        expect(child4.x).to.equal(0);
+        expect(child3.x).to.equal(40);
+        expect(child2.x).to.equal(100);
+        expect(child1.x).to.equal(130);
+      });
+
+    });
+
+
+
+
+
+    // --------------------------------------------------
     // colSpan
     // --------------------------------------------------
     describe('colSpan', () => {

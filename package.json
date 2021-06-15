@@ -43,7 +43,7 @@
     "chai": "^4.2.0",
     "coveralls": "^3.0.3",
     "glob": "^7.1.6",
-    "gulp": "^3.9.1",
+    "gulp": "^4.0.0",
     "gulp-livingcss": "^4.1.2",
     "gulp-plumber": "^1.2.1",
     "gulp-preprocess": "github:straker/gulp-preprocess",

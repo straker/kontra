@@ -1,60 +1,61 @@
 language: node_js
 node_js:
-  - "10"
+- '14'
 dist: trusty
 sudo: required
 addons:
   chrome: stable
-
 jobs:
   include:
-  - name: "Unit Tests"
+  - name: Unit Tests
     if: type = pull_request
     script:
-      - npm test
-    after_success: "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
-  - name: "Typescript Tests"
+    - npm test
+    after_success: cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
+  - name: Typescript Tests
     if: type = pull_request
     script:
-      - npm run build
-      - npm run test:ts
-
-  # run permutations in parallel (starting with the longer running ones
-  # so they have more time to complete while the shorter ones finish)
-  - name: "Permutation Tests: vector"
+    - npm run build
+    - npm run test:ts
+  - name: 'Permutation Tests: vector'
     if: type = pull_request
     script:
-      - npm run build
-      - npm run test:permutations vector
-  - name: "Permutation Tests: gameObject"
+    - npm run build
+    - npm run test:permutations vector
+  - name: 'Permutation Tests: gameObject'
     if: type = pull_request
     script:
-      - npm run build
-      - npm run test:permutations gameObject
-  - name: "Permutation Tests: text"
+    - npm run build
+    - npm run test:permutations gameObject
+  - name: 'Permutation Tests: text'
     if: type = pull_request
     script:
-      - npm run build
-      - npm run test:permutations text
-  - name: "Permutation Tests: updatable"
+    - npm run build
+    - npm run test:permutations text
+  - name: 'Permutation Tests: updatable'
     if: type = pull_request
     script:
-      - npm run build
-      - npm run test:permutations updatable
-  - name: "Permutation Tests: sprite"
+    - npm run build
+    - npm run test:permutations updatable
+  - name: 'Permutation Tests: sprite'
     if: type = pull_request
     script:
-      - npm run build
-      - npm run test:permutations sprite
-
-  - name: "Deploy gh-pages"
+    - npm run build
+    - npm run test:permutations sprite
+  - name: Deploy gh-pages
     if: type = push
     script: npm run build
     deploy:
       provider: pages
       skip_cleanup: true
-      github_token: $GITHUB_TOKEN
+      github_token: "$GITHUB_TOKEN"
       keep_history: true
       local_dir: docs
       on:
         branch: main
+before_install:
+- openssl aes-256-cbc -K $encrypted_3dbbb9ed4f10_key -iv $encrypted_3dbbb9ed4f10_iv
+  -in travis-key.enc -out ./travis-key -d
+- eval "$(ssh-agent -s)"
+- chmod 600 ./travis-key
+- ssh-add ./travis-key

@@ -690,6 +690,7 @@ let grid = Grid({
           </h2>
 
           <p><em>String</em>. The direction of the grid. Defaults to organizing the grid objects left-to-right, but if set to <code>rtl</code> then the grid is organized right-to-left.</p>
+<p>When determining the direction of the grid, the canvas <code>dir</code> attribute is also taken into account. Setting the attribute to <code>rtl</code> is equivalent to setting the <code>dir</code> property to <code>rtl</code>. The <code>dir</code> property is used instead of the canvas attribute if both are set.</p>
           
         </section>
         <section>

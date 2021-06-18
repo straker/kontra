@@ -380,7 +380,7 @@ let sprite = Srite({
                 </li>
                 <li>
                   <a href="api/pointer#initPointer">
-                    <span>initPointer(&#8203;[canvas])</span>
+                    <span>initPointer(&#8203;[options])</span>
                   </a>
                 </li>
                 <li>
@@ -487,7 +487,7 @@ console.log(getPointer());  //=&gt; { x: 100, y: 200, radius: 5, canvas: &lt;can
         <section>
           <h2 id="initPointer">
             <a href="api/pointer#initPointer" class="section-link">
-              <span>initPointer(&#8203;[canvas])</span>
+              <span>initPointer(&#8203;[options])</span>
               <span aria-hidden="true">#</span>
             </a>
           </h2>
@@ -497,7 +497,19 @@ console.log(getPointer());  //=&gt; { x: 100, y: 200, radius: 5, canvas: &lt;can
           <h3 id="title-initPointer"><span class="visually-hidden">initPointer</span> Parameters</span></h3>
           <dl aria-labelledby="title-initPointer">
             <dt>
-              <code>canvas</code>
+              <code>options</code>
+              <span class="optional">Optional</span>
+            </dt>
+            <dd><p><em>Object</em>. Pointer options.</p>
+          </dd>
+            <dt>
+              <code>options.radius</code>
+              <span class="optional">Optional</span>
+            </dt>
+            <dd><p><em>Number</em>. Radius of the pointer. Defaults to <code>5</code>.</p>
+          </dd>
+            <dt>
+              <code>options.canvas</code>
               <span class="optional">Optional</span>
             </dt>
             <dd><p><em>HTMLCanvasElement</em>. The canvas that event listeners will be attached to. Defaults to <a href="api/core#getCanvas">core.getCanvas()</a>.</p>

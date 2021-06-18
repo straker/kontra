@@ -3042,11 +3042,13 @@ var kontra = (function () {
    * If you need to use multiple canvas, you'll have to initialize the pointer for each one individually as each canvas maintains its own pointer object.
    * @function initPointer
    *
-   * @param {HTMLCanvasElement} [canvas] - The canvas that event listeners will be attached to. Defaults to [core.getCanvas()](api/core#getCanvas).
+   * @param {Object} [options] - Pointer options.
+   * @param {Number} [options.radius=5] - Radius of the pointer.
+   * @param {HTMLCanvasElement} [options.canvas] - The canvas that event listeners will be attached to. Defaults to [core.getCanvas()](api/core#getCanvas).
    *
    * @returns {{x: Number, y: Number, radius: Number, canvas: HTMLCanvasElement, touches: Object}} The pointer object for the canvas.
    */
-  function initPointer(canvas = getCanvas()) {
+  function initPointer({radius = 5, canvas = getCanvas()} = {}) {
     let pointer = pointers.get(canvas);
     if (!pointer) {
       let style = window.getComputedStyle(canvas);
@@ -3054,7 +3056,7 @@ var kontra = (function () {
       pointer = {
         x: 0,
         y: 0,
-        radius: 5, // arbitrary size
+        radius,
         touches: {},
         canvas,
 

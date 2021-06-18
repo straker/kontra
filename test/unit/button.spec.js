@@ -97,7 +97,7 @@ describe('button', () => {
 
     it('should pass the context to the textNode', () => {
       let canvas = document.createElement('canvas');
-      initPointer(canvas);
+      initPointer({canvas});
       let context = canvas.getContext('2d');
 
       button.destroy()

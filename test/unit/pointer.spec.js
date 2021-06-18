@@ -101,10 +101,19 @@ describe('pointer', () => {
       let pntr = pointer.initPointer();
 
       let canvas = document.createElement('canvas');
-      let otherPntr = pointer.initPointer(canvas);
+      let otherPntr = pointer.initPointer({canvas});
 
       expect(pntr).to.not.equal(otherPntr);
       expect(otherPntr.canvas).to.equal(canvas);
+    });
+
+    it('should update radius', () => {
+      let pntr = pointer.initPointer();
+      let canvas = document.createElement('canvas');
+      let otherPntr = pointer.initPointer({canvas, radius: 10});
+
+      expect(pntr.radius).to.not.equal(otherPntr.radius);
+      expect(otherPntr.radius).to.equal(10);
     });
 
   });
@@ -210,7 +219,7 @@ describe('pointer', () => {
 
     it('should track objects separately for each canvas', () => {
       let canvas = document.createElement('canvas');
-      pointer.initPointer(canvas);
+      pointer.initPointer({canvas});
 
       let obj1 = { render: noop };
       let obj2 = { context: { canvas } };
@@ -277,7 +286,7 @@ describe('pointer', () => {
 
     it('should untrack objects separately for each canvas', () => {
       let canvas = document.createElement('canvas');
-      pointer.initPointer(canvas);
+      pointer.initPointer({canvas});
 
       let obj1 = { render: noop };
       let obj2 = { context: { canvas } };
@@ -345,7 +354,7 @@ describe('pointer', () => {
 
       it('should handle objects from different canvas', () => {
         let canvas = document.createElement('canvas');
-        let pntr2 = pointer.initPointer(canvas);
+        let pntr2 = pointer.initPointer({canvas});
 
         let obj = {
           x: 100,
@@ -496,7 +505,7 @@ describe('pointer', () => {
         pointer.resetPointers();
         canvas.style.border = '32px solid';
         canvas.style.padding = '32px';
-        pntr = pointer.initPointer(canvas);
+        pntr = pointer.initPointer({canvas});
 
         simulateEvent('mousemove', {clientX: 100, clientY: 50});
 
@@ -510,7 +519,7 @@ describe('pointer', () => {
         pointer.resetPointers();
         canvas.style.transform = 'scale(0.5)';
         canvas.style.transformOrigin = 'top left';
-        pntr = pointer.initPointer(canvas);
+        pntr = pointer.initPointer({canvas});
 
         simulateEvent('mousemove', {clientX: 50, clientY: 25});
 
@@ -523,7 +532,7 @@ describe('pointer', () => {
 
         pointer.resetPointers();
         canvas.style.width = canvas.width * 2 + 'px';
-        pntr = pointer.initPointer(canvas);
+        pntr = pointer.initPointer({canvas});
 
         simulateEvent('mousemove', {clientX: 100, clientY: 50});
 
@@ -540,7 +549,7 @@ describe('pointer', () => {
         canvas.style.transform = 'scale(0.5)';
         canvas.style.transformOrigin = 'top left';
         canvas.style.width = canvas.width * 2 + 'px';
-        pntr = pointer.initPointer(canvas);
+        pntr = pointer.initPointer({canvas});
 
         simulateEvent('mousemove', {clientX: 100, clientY: 50});
 
@@ -607,7 +616,7 @@ describe('pointer', () => {
         canvas.style.top = 0;
         canvas.style.left = 0;
 
-        pointer.initPointer(canvas);
+        pointer.initPointer({canvas});
 
         let obj = {
           x: 100,
@@ -668,7 +677,7 @@ describe('pointer', () => {
           pointer.resetPointers();
           canvas.style.border = '32px solid';
           canvas.style.padding = '32px';
-          pntr = pointer.initPointer(canvas);
+          pntr = pointer.initPointer({canvas});
 
           event.clientX = 100;
           event.clientY = 50;
@@ -684,7 +693,7 @@ describe('pointer', () => {
           pointer.resetPointers();
           canvas.style.transform = 'scale(0.5)';
           canvas.style.transformOrigin = 'top left';
-          pntr = pointer.initPointer(canvas);
+          pntr = pointer.initPointer({canvas});
 
           event.clientX = 50;
           event.clientY = 25;
@@ -699,7 +708,7 @@ describe('pointer', () => {
 
           pointer.resetPointers();
           canvas.style.width = canvas.width * 2 + 'px';
-          pntr = pointer.initPointer(canvas);
+          pntr = pointer.initPointer({canvas});
 
           event.clientX = 100;
           event.clientY = 50;
@@ -718,7 +727,7 @@ describe('pointer', () => {
           canvas.style.transform = 'scale(0.5)';
           canvas.style.transformOrigin = 'top left';
           canvas.style.width = canvas.width * 2 + 'px';
-          pntr = pointer.initPointer(canvas);
+          pntr = pointer.initPointer({canvas});
 
           event.clientX = 100;
           event.clientY = 50;
@@ -774,7 +783,7 @@ describe('pointer', () => {
           canvas.style.top = 0;
           canvas.style.left = 0;
 
-          pointer.initPointer(canvas);
+          pointer.initPointer({canvas});
 
           let obj = {
             x: 100,

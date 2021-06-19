@@ -1544,7 +1544,7 @@ var kontra = (function () {
   const noop = () => {};
 
   // style used for DOM nodes needed for screen readers
-  const srOnlyStyle = 'position:absolute;left:-9999px';
+  const srOnlyStyle = 'position:absolute;width:1px;height:1px;overflow:hidden;';
 
   // append a node directly after the canvas and as the last
   // element of other kontra nodes
@@ -4288,7 +4288,7 @@ var kontra = (function () {
    * @function unbindKeys
    *
    * @param {String|String[]} keys - Key or keys to unbind.
-   * @param {Object} options - Unbind options.
+   * @param {Object} [options] - Unbind options.
    * @param {'keydown'|'keyup'} [options.handler=keydown] - Whether to unbind from keydown or keyup events.
    */
   function unbindKeys(keys, {

@@ -139,7 +139,6 @@ export function initKeys() {
  *   // pause the game
  * }, 'keyup');
  * bindKeys(['enter', 'space'], function(e) {
- *   e.preventDefault();
  *   // fire gun
  * });
  * ```
@@ -147,7 +146,7 @@ export function initKeys() {
  *
  * @param {String|String[]} keys - Key or keys to bind.
  * @param {(evt: KeyboardEvent) => void} callback - The function to be called when the key is pressed.
- * @param {Object} [options] - Key options.
+ * @param {Object} [options] - Bind options.
  * @param {'keydown'|'keyup'} [options.handler=keydown] - Whether to bind to keydown or keyup events.
  * @param {Boolean} [options.preventDefault=true] - Call `event. preventDefault()` when the key is activated.
  */
@@ -174,7 +173,8 @@ export function bindKeys(keys, callback, {
  * @function unbindKeys
  *
  * @param {String|String[]} keys - Key or keys to unbind.
- * @param {'keydown'|'keyup'} [handler=keydown] - Whether to unbind from keydown or keyup events.
+ * @param {Object} options - Unbind options.
+ * @param {'keydown'|'keyup'} [options.handler=keydown] - Whether to unbind from keydown or keyup events.
  */
 export function unbindKeys(keys, {
   handler = 'keydown'

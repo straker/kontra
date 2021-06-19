@@ -9,6 +9,26 @@ import { noop } from '../../src/utils.js'
 describe('gameLoop', () => {
   let loop;
 
+  /**
+   * Simulate an event.
+   * @param {string} type - Type of keyboard event.
+   */
+  function simulateEvent(type) {
+    let evt;
+
+    // PhantomJS <2.0.0 throws an error for the `new Event` call, so we need to supply an
+    // alternative form of creating an event just for PhantomJS
+    // @see https://github.com/ariya/phantomjs/issues/11289#issuecomment-38880333
+    try {
+      evt = new Event(type);
+    } catch(e) {
+      evt = document.createEvent('Event');
+      evt.initEvent(type, true, false);
+    }
+
+    window.dispatchEvent(evt);
+  }
+
   afterEach(() => {
     loop && loop.stop();
   });
@@ -236,6 +256,35 @@ describe('gameLoop', () => {
       loop = GameLoop({
         render: noop
       });
+      loop._last = performance.now() - (1E3/60);
+      loop._frame();
+
+      throw new Error('should not get here');
+    });
+
+    it('should not update if page is blurred', (done) => {
+      loop = GameLoop({
+        update() {
+          throw new Error('should not get here');
+        },
+        render: noop
+      });
+      simulateEvent('blur');
+      loop._last = performance.now() - (1E3/60);
+      loop._frame();
+
+      setTimeout(done, 100);
+    });
+
+    it('should update if page is blurred when blur is true', (done) => {
+      loop = GameLoop({
+        blur: true,
+        update() {
+          done();
+        },
+        render: noop
+      });
+      simulateEvent('blur');
       loop._last = performance.now() - (1E3/60);
       loop._frame();
 

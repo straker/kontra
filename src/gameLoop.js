@@ -53,13 +53,15 @@ function clear(context) {
  * @param {Number}   [properties.fps=60] - Desired frame rate.
  * @param {Boolean}  [properties.clearCanvas=true] - Clear the canvas every frame before the `render()` function is called.
  * @param {CanvasRenderingContext2D} [properties.context] - The context that should be cleared each frame if `clearContext` is not set to `false`. Defaults to [core.getContext()](api/core#getContext).
+ * @param {Boolean} [properties.blur=false] - If the loop should still update and render if the page does not have focus.
  */
 export default function GameLoop({
   fps = 60,
   clearCanvas = true,
   update = noop,
   render,
-  context = getContext()
+  context = getContext(),
+  blur = false
 } = {}) {
   // check for required functions
   // @ifdef DEBUG
@@ -74,12 +76,21 @@ export default function GameLoop({
   let step = 1 / fps;
   let clearFn = clearCanvas ? clear : noop
   let last, rAF, now, dt, loop;
+  let focused = true;
+
+  if (!blur) {
+    window.addEventListener('focus', () => { focused = true; });
+    window.addEventListener('blur', () => { focused = false; });
+  }
 
   /**
    * Called every frame of the game loop.
    */
   function frame() {
     rAF = requestAnimationFrame(frame);
+
+    // don't update the frame if tab isn't focused
+    if (!focused) return;
 
     now = performance.now();
     dt = now - last;

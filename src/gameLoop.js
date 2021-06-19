@@ -53,7 +53,7 @@ function clear(context) {
  * @param {Number}   [properties.fps=60] - Desired frame rate.
  * @param {Boolean}  [properties.clearCanvas=true] - Clear the canvas every frame before the `render()` function is called.
  * @param {CanvasRenderingContext2D} [properties.context] - The context that should be cleared each frame if `clearContext` is not set to `false`. Defaults to [core.getContext()](api/core#getContext).
- * @param {Boolean} [properties.blur=false] - If the loop should should still update and render while the page is blurred.
+ * @param {Boolean} [properties.blur=false] - If the loop should still update and render if the page does not have focus.
  */
 export default function GameLoop({
   fps = 60,

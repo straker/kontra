@@ -307,7 +307,7 @@ function update() {
                 </li>
                 <li>
                   <a href="api/keyboard#unbindKeys">
-                    <span>unbindKeys(&#8203;keys[, handler])</span>
+                    <span>unbindKeys(&#8203;keys, options)</span>
                   </a>
                 </li>
               </ul>
@@ -362,7 +362,6 @@ bindKeys(&#39;p&#39;, function(e) {
   // pause the game
 }, &#39;keyup&#39;);
 bindKeys([&#39;enter&#39;, &#39;space&#39;], function(e) {
-  e.preventDefault();
   // fire gun
 });</code></pre></section>
   <section role="tabpanel" aria-labelledby=bindkeys-es-tab data-tabpanel="es"><pre><code class="language-js">import { initKeys, bindKeys } from 'path/to/kontra.mjs';
@@ -373,7 +372,6 @@ bindKeys(&#39;p&#39;, function(e) {
   // pause the game
 }, &#39;keyup&#39;);
 bindKeys([&#39;enter&#39;, &#39;space&#39;], function(e) {
-  e.preventDefault();
   // fire gun
 });</code></pre></section>
   <section role="tabpanel" aria-labelledby=bindkeys-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { initKeys, bindKeys } from &#39;kontra&#39;;
@@ -384,7 +382,6 @@ bindKeys(&#39;p&#39;, function(e) {
   // pause the game
 }, &#39;keyup&#39;);
 bindKeys([&#39;enter&#39;, &#39;space&#39;], function(e) {
-  e.preventDefault();
   // fire gun
 });</code></pre></section>
 </div>
@@ -406,7 +403,7 @@ bindKeys([&#39;enter&#39;, &#39;space&#39;], function(e) {
               <code>options</code>
               <span class="optional">Optional</span>
             </dt>
-            <dd><p><em>Object</em>. Key options.</p>
+            <dd><p><em>Object</em>. Bind options.</p>
           </dd>
             <dt>
               <code>options.handler</code>
@@ -583,7 +580,7 @@ let sprite = Sprite({
         <section>
           <h2 id="unbindKeys">
             <a href="api/keyboard#unbindKeys" class="section-link">
-              <span>unbindKeys(&#8203;keys[, handler])</span>
+              <span>unbindKeys(&#8203;keys, options)</span>
               <span aria-hidden="true">#</span>
             </a>
           </h2>
@@ -624,7 +621,13 @@ unbindKeys([&#39;enter&#39;, &#39;space&#39;]);</code></pre></section>
             <dd><p><em>String or an Array of Strings</em>. Key or keys to unbind.</p>
           </dd>
             <dt>
-              <code>handler</code>
+              <code>options</code>
+              
+            </dt>
+            <dd><p><em>Object</em>. Unbind options.</p>
+          </dd>
+            <dt>
+              <code>options.handler</code>
               <span class="optional">Optional</span>
             </dt>
             <dd><p><em>&#39;keydown&#39; or &#39;keyup&#39;</em>. Whether to unbind from keydown or keyup events. Defaults to <code>keydown</code>.</p>

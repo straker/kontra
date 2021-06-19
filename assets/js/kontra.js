@@ -4254,7 +4254,6 @@ var kontra = (function () {
    *   // pause the game
    * }, 'keyup');
    * bindKeys(['enter', 'space'], function(e) {
-   *   e.preventDefault();
    *   // fire gun
    * });
    * ```
@@ -4262,7 +4261,7 @@ var kontra = (function () {
    *
    * @param {String|String[]} keys - Key or keys to bind.
    * @param {(evt: KeyboardEvent) => void} callback - The function to be called when the key is pressed.
-   * @param {Object} [options] - Key options.
+   * @param {Object} [options] - Bind options.
    * @param {'keydown'|'keyup'} [options.handler=keydown] - Whether to bind to keydown or keyup events.
    * @param {Boolean} [options.preventDefault=true] - Call `event. preventDefault()` when the key is activated.
    */
@@ -4289,7 +4288,8 @@ var kontra = (function () {
    * @function unbindKeys
    *
    * @param {String|String[]} keys - Key or keys to unbind.
-   * @param {'keydown'|'keyup'} [handler=keydown] - Whether to unbind from keydown or keyup events.
+   * @param {Object} options - Unbind options.
+   * @param {'keydown'|'keyup'} [options.handler=keydown] - Whether to unbind from keydown or keyup events.
    */
   function unbindKeys(keys, {
     handler = 'keydown'

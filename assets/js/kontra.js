@@ -4173,17 +4173,27 @@ var kontra = (function () {
   };
 
   /**
+   * Call the callback handler of an event.
+   * @param {Function} callback
+   * @param {KeyboardEvent} evt
+   */
+  function call(callback = noop, evt) {
+    if (callback._pd) {
+      evt.preventDefault();
+    }
+    callback(evt);
+  }
+
+  /**
    * Execute a function that corresponds to a keyboard key.
    *
    * @param {KeyboardEvent} evt
    */
   function keydownEventHandler(evt) {
     let key = keyMap[evt.code];
+    let callback = keydownCallbacks[key];
     pressedKeys[key] = true;
-
-    if (keydownCallbacks[key]) {
-      keydownCallbacks[key](evt);
-    }
+    call(callback, evt);
   }
 
   /**
@@ -4193,11 +4203,9 @@ var kontra = (function () {
    */
   function keyupEventHandler(evt) {
     let key = keyMap[evt.code];
+    let callback = keyupCallbacks[key];
     pressedKeys[key] = false;
-
-    if (keyupCallbacks[key]) {
-      keyupCallbacks[key](evt);
-    }
+    call(callback, evt);
   }
 
   /**
@@ -4235,6 +4243,8 @@ var kontra = (function () {
   /**
    * Bind a set of keys that will call the callback function when they are pressed. Takes a single key or an array of keys. Is passed the original KeyboardEvent as a parameter.
    *
+   * By default, the default action will be prevented for any bound key. To not do this, pass the `preventDefault` option.
+   *
    * ```js
    * import { initKeys, bindKeys } from 'kontra';
    *
@@ -4252,10 +4262,17 @@ var kontra = (function () {
    *
    * @param {String|String[]} keys - Key or keys to bind.
    * @param {(evt: KeyboardEvent) => void} callback - The function to be called when the key is pressed.
-   * @param {'keydown'|'keyup'} [handler=keydown] - Whether to bind to keydown or keyup events.
+   * @param {Object} [options] - Key options.
+   * @param {'keydown'|'keyup'} [options.handler=keydown] - Whether to bind to keydown or keyup events.
+   * @param {Boolean} [options.preventDefault=true] - Call `event. preventDefault()` when the key is activated.
    */
-  function bindKeys(keys, callback, handler='keydown') {
+  function bindKeys(keys, callback, {
+    handler = 'keydown',
+    preventDefault = true
+  } = {}) {
     const callbacks = handler == 'keydown' ? keydownCallbacks : keyupCallbacks;
+    // pd = preventDefault
+    callback._pd = preventDefault;
     // smaller than doing `Array.isArray(keys) ? keys : [keys]`
     [].concat(keys).map(key => callbacks[key] = callback);
   }
@@ -4274,7 +4291,9 @@ var kontra = (function () {
    * @param {String|String[]} keys - Key or keys to unbind.
    * @param {'keydown'|'keyup'} [handler=keydown] - Whether to unbind from keydown or keyup events.
    */
-  function unbindKeys(keys, handler='keydown') {
+  function unbindKeys(keys, {
+    handler = 'keydown'
+  } = {}) {
     const callbacks = handler == 'keydown' ? keydownCallbacks : keyupCallbacks;
     // 0 is the smallest falsy value
     [].concat(keys).map(key => callbacks[key] = 0);

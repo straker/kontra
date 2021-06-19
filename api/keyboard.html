@@ -292,7 +292,7 @@ function update() {
               <ul aria-labelledby="methods">
                 <li>
                   <a href="api/keyboard#bindKeys">
-                    <span>bindKeys(&#8203;keys, callback[, handler])</span>
+                    <span>bindKeys(&#8203;keys, callback[, options])</span>
                   </a>
                 </li>
                 <li>
@@ -334,12 +334,13 @@ function update() {
         <section>
           <h2 id="bindKeys">
             <a href="api/keyboard#bindKeys" class="section-link">
-              <span>bindKeys(&#8203;keys, callback[, handler])</span>
+              <span>bindKeys(&#8203;keys, callback[, options])</span>
               <span aria-hidden="true">#</span>
             </a>
           </h2>
 
           <p>Bind a set of keys that will call the callback function when they are pressed. Takes a single key or an array of keys. Is passed the original KeyboardEvent as a parameter.</p>
+<p>By default, the default action will be prevented for any bound key. To not do this, pass the <code>preventDefault</code> option.</p>
 <div class="tablist">
   <ul role="tablist">
     <li role="presentation" data-tab="global">
@@ -402,10 +403,22 @@ bindKeys([&#39;enter&#39;, &#39;space&#39;], function(e) {
             <dd><p><em>Function</em>. The function to be called when the key is pressed.</p>
           </dd>
             <dt>
-              <code>handler</code>
+              <code>options</code>
+              <span class="optional">Optional</span>
+            </dt>
+            <dd><p><em>Object</em>. Key options.</p>
+          </dd>
+            <dt>
+              <code>options.handler</code>
               <span class="optional">Optional</span>
             </dt>
             <dd><p><em>&#39;keydown&#39; or &#39;keyup&#39;</em>. Whether to bind to keydown or keyup events. Defaults to <code>keydown</code>.</p>
+          </dd>
+            <dt>
+              <code>options.preventDefault</code>
+              <span class="optional">Optional</span>
+            </dt>
+            <dd><p><em>Boolean</em>. Call <code>event. preventDefault()</code> when the key is activated. Defaults to <code>true</code>.</p>
           </dd>
           </dl>
           

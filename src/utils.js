@@ -1,8 +1,8 @@
 // noop function
-export const noop = () => {};
+export let noop = () => {};
 
 // style used for DOM nodes needed for screen readers
-export const srOnlyStyle = 'position:absolute;width:1px;height:1px;overflow:hidden;';
+export let srOnlyStyle = 'position:absolute;width:1px;height:1px;overflow:hidden;';
 
 // append a node directly after the canvas and as the last
 // element of other kontra nodes

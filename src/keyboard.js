@@ -173,7 +173,7 @@ export function bindKeys(keys, callback, {
  * @function unbindKeys
  *
  * @param {String|String[]} keys - Key or keys to unbind.
- * @param {Object} options - Unbind options.
+ * @param {Object} [options] - Unbind options.
  * @param {'keydown'|'keyup'} [options.handler=keydown] - Whether to unbind from keydown or keyup events.
  */
 export function unbindKeys(keys, {

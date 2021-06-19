@@ -14,8 +14,9 @@ describe('keyboard', () => {
    * @param {boolean} [config.altKey=false]
    * @param {boolean} [config.metaKey=false]
    * @param {boolean} [config.keyCode=0]
+   * @param {boolean} [async=false] - If the event should fire async.
    */
-  function simulateEvent(type, config) {
+  function simulateEvent(type, config, async = false) {
     let evt;
 
     // PhantomJS <2.0.0 throws an error for the `new Event` call, so we need to supply an
@@ -33,7 +34,16 @@ describe('keyboard', () => {
       evt[prop] = config[prop];
     }
 
-    window.dispatchEvent(evt);
+    if (async) {
+      setTimeout(() => {
+        window.dispatchEvent(evt);
+      }, 100);
+    }
+    else {
+      window.dispatchEvent(evt);
+    }
+
+    return evt;
   }
 
   // reset pressed keys before each test
@@ -114,8 +124,6 @@ describe('keyboard', () => {
         });
 
         simulateEvent('keydown', {code: 'KeyA'});
-
-        throw new Error('should not get here');
       });
 
       it('should accept an array of key combinations to bind', (done) => {
@@ -124,8 +132,6 @@ describe('keyboard', () => {
         });
 
         simulateEvent('keydown', {code: 'KeyB'});
-
-        throw new Error('should not get here');
       });
 
     });
@@ -136,21 +142,47 @@ describe('keyboard', () => {
       it('should call the callback when a single key combination is pressed', (done) => {
         keyboard.bindKeys('a', evt => {
           done();
-        }, handler);
+        }, { handler });
 
         simulateEvent('keyup', {code: 'KeyA'});
-
-        throw new Error('should not get here');
       });
 
       it('should accept an array of key combinations to bind', (done) => {
         keyboard.bindKeys(['a', 'b'], evt => {
           done();
-        }, handler);
+        }, { handler });
 
         simulateEvent('keyup', {code: 'KeyB'});
+      });
 
-        throw new Error('should not get here');
+    });
+
+    describe('preventDefault=true', () => {
+
+      it('should call preventDefault on the event', (done) => {
+        keyboard.initKeys();
+        let spy;
+
+        keyboard.bindKeys('a', evt => {
+          expect(spy.called).to.be.true;
+          done();
+        });
+
+        let event = simulateEvent('keydown', {code: 'KeyA'}, true);
+        spy = sinon.spy(event, 'preventDefault');
+      });
+
+    });
+
+    describe('preventDefault=false', () => {
+
+      it('should not call preventDefault on the event', (done) => {
+        keyboard.bindKeys('a', evt => {
+          expect(evt.defaultPrevented).to.be.false;
+          done();
+        }, { preventDefault: false });
+
+        simulateEvent('keydown', {code: 'KeyA'});
       });
 
     });

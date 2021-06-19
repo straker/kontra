@@ -1,3 +1,5 @@
+import { noop } from './utils.js';
+
 /**
  * A minimalistic keyboard API. You can use it move the main sprite or respond to a key press.
  *
@@ -56,17 +58,27 @@ export let keyMap = {
 };
 
 /**
+ * Call the callback handler of an event.
+ * @param {Function} callback
+ * @param {KeyboardEvent} evt
+ */
+function call(callback = noop, evt) {
+  if (callback._pd) {
+    evt.preventDefault();
+  }
+  callback(evt);
+}
+
+/**
  * Execute a function that corresponds to a keyboard key.
  *
  * @param {KeyboardEvent} evt
  */
 function keydownEventHandler(evt) {
   let key = keyMap[evt.code];
+  let callback = keydownCallbacks[key];
   pressedKeys[key] = true;
-
-  if (keydownCallbacks[key]) {
-    keydownCallbacks[key](evt);
-  }
+  call(callback, evt);
 }
 
 /**
@@ -76,11 +88,9 @@ function keydownEventHandler(evt) {
  */
 function keyupEventHandler(evt) {
   let key = keyMap[evt.code];
+  let callback = keyupCallbacks[key];
   pressedKeys[key] = false;
-
-  if (keyupCallbacks[key]) {
-    keyupCallbacks[key](evt);
-  }
+  call(callback, evt);
 }
 
 /**
@@ -118,6 +128,8 @@ export function initKeys() {
 /**
  * Bind a set of keys that will call the callback function when they are pressed. Takes a single key or an array of keys. Is passed the original KeyboardEvent as a parameter.
  *
+ * By default, the default action will be prevented for any bound key. To not do this, pass the `preventDefault` option.
+ *
  * ```js
  * import { initKeys, bindKeys } from 'kontra';
  *
@@ -135,10 +147,17 @@ export function initKeys() {
  *
  * @param {String|String[]} keys - Key or keys to bind.
  * @param {(evt: KeyboardEvent) => void} callback - The function to be called when the key is pressed.
- * @param {'keydown'|'keyup'} [handler=keydown] - Whether to bind to keydown or keyup events.
+ * @param {Object} [options] - Key options.
+ * @param {'keydown'|'keyup'} [options.handler=keydown] - Whether to bind to keydown or keyup events.
+ * @param {Boolean} [options.preventDefault=true] - Call `event. preventDefault()` when the key is activated.
  */
-export function bindKeys(keys, callback, handler='keydown') {
+export function bindKeys(keys, callback, {
+  handler = 'keydown',
+  preventDefault = true
+} = {}) {
   const callbacks = handler == 'keydown' ? keydownCallbacks : keyupCallbacks;
+  // pd = preventDefault
+  callback._pd = preventDefault;
   // smaller than doing `Array.isArray(keys) ? keys : [keys]`
   [].concat(keys).map(key => callbacks[key] = callback);
 }
@@ -157,7 +176,9 @@ export function bindKeys(keys, callback, handler='keydown') {
  * @param {String|String[]} keys - Key or keys to unbind.
  * @param {'keydown'|'keyup'} [handler=keydown] - Whether to unbind from keydown or keyup events.
  */
-export function unbindKeys(keys, handler='keydown') {
+export function unbindKeys(keys, {
+  handler = 'keydown'
+} = {}) {
   const callbacks = handler == 'keydown' ? keydownCallbacks : keyupCallbacks;
   // 0 is the smallest falsy value
   [].concat(keys).map(key => callbacks[key] = 0);

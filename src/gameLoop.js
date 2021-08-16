@@ -48,7 +48,7 @@ function clear(context) {
  * @class GameLoop
  *
  * @param {Object} properties - Properties of the game loop.
- * @param {(dt?: Number) => void} [properties.update] - Function called every frame to update the game. Is passed the fixed `dt` as a parameter.
+ * @param {(dt: Number) => void} [properties.update] - Function called every frame to update the game. Is passed the fixed `dt` as a parameter.
  * @param {Function} properties.render - Function called every frame to render the game.
  * @param {Number}   [properties.fps=60] - Desired frame rate.
  * @param {Boolean}  [properties.clearCanvas=true] - Clear the canvas every frame before the `render()` function is called.

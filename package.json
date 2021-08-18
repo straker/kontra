@@ -19,7 +19,8 @@
     "test:ts": "tsc test/typings/*.ts",
     "build": "gulp build",
     "build:docs": "gulp build:docs",
-    "dist": "gulp dist"
+    "dist": "gulp dist",
+    "publish": "npm run dist && npm publish"
   },
   "repository": {
     "type": "git",
@@ -32,6 +33,10 @@
     "library",
     "js13k"
   ],
+  "engines": {
+    "node": ">=14.0.0",
+    "npm": "<7.0.0"
+  },
   "author": "Steven Lambert",
   "license": "MIT",
   "bugs": {
@@ -43,10 +48,10 @@
     "chai": "^4.2.0",
     "coveralls": "^3.0.3",
     "glob": "^7.1.6",
-    "gulp": "^4.0.0",
+    "gulp": "^4.0.2",
     "gulp-livingcss": "^4.1.2",
     "gulp-plumber": "^1.2.1",
-    "gulp-preprocess": "github:straker/gulp-preprocess",
+    "gulp-preprocess": "git+https://github.com/straker/gulp-preprocess.git",
     "gulp-rename": "^1.4.0",
     "gulp-size": "^3.0.0",
     "gulp-terser": "^1.1.7",
@@ -61,7 +66,7 @@
     "livingcss": "^6.0.3",
     "marked": "^0.7.0",
     "mocha": "^8.0.1",
-    "preprocess": "github:straker/preprocess",
+    "preprocess": "git+https://github.com/straker/preprocess.git",
     "rollup": "^1.6.0",
     "sinon": "^7.2.7",
     "typescript": "^3.7.2",

@@ -53,9 +53,3 @@ jobs:
       local_dir: docs
       on:
         branch: main
-before_install:
-- openssl aes-256-cbc -K $encrypted_3dbbb9ed4f10_key -iv $encrypted_3dbbb9ed4f10_iv
-  -in travis-key.enc -out ./travis-key -d
-- eval "$(ssh-agent -s)"
-- chmod 600 ./travis-key
-- ssh-add ./travis-key

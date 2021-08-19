@@ -99,7 +99,7 @@ function distModule() {
 
 gulp.task('build', gulp.series(buildIife, buildModule, 'build:docs', 'build:ts'));
 
-gulp.task('dist', gulp.series(distIife, distModule));
+gulp.task('dist', gulp.series('build', distIife, distModule));
 
 gulp.task('watch', function() {
   gulp.watch('src/*.js', gulp.series('build', 'dist'));

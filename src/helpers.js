@@ -61,8 +61,8 @@ export function radToDeg(rad) {
  * ```
  * @function angleToTarget
  *
- * @param {{x: Number, y: Number}} source - The source point.
- * @param {{x: Number, y: Number}} target - The target point.
+ * @param {{x: Number, y: Number}} source - The {x,y} source point.
+ * @param {{x: Number, y: Number}} target - The {x,y} target point.
  *
  * @returns {Number} Angle (in radians) from the source point to the target point.
  */
@@ -79,7 +79,7 @@ export function angleToTarget(source, target) {
  * Rotate a point by an angle.
  * @function rotatePoint
  *
- * @param {{x: Number, y: Number}} point - The point to rotate.
+ * @param {{x: Number, y: Number}} point - The {x,y} point to rotate.
  * @param {Number} angle - Angle (in radians) to rotate.
  *
  * @returns {{x: Number, y: Number}} The new x and y coordinates after rotation.

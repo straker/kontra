@@ -269,7 +269,7 @@ class GameObject extends Updatable {
   }
 
   /**
-   * Render the game object. Calls the game objects [draw()](api/gameObject#draw) function.
+   * Render the game object and all children. Calls the game objects [draw()](api/gameObject#draw) function.
    * @memberof GameObject
    * @function render
    *

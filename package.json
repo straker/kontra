@@ -20,7 +20,7 @@
     "build": "gulp build",
     "build:docs": "gulp build:docs",
     "dist": "gulp dist",
-    "publish": "npm run dist && npm publish"
+    "release": "npm run dist && npm publish"
   },
   "repository": {
     "type": "git",

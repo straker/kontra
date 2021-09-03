@@ -333,7 +333,7 @@ var kontra = (function () {
    * @sectionName Assets
    */
 
-  let imageRegex = /(jpeg|jpg|gif|png)$/;
+  let imageRegex = /(jpeg|jpg|gif|png|webp)$/;
   let audioRegex = /(wav|mp3|ogg|aac)$/;
   let leadingSlash = /^\//;
   let trailingSlash = /\/$/;

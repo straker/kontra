@@ -84,12 +84,11 @@ class Button extends Sprite.class {
     button.style = srOnlyStyle;
     button.textContent = this.text;
 
-    /**
-     * If the button is disabled.
-     * @memberof Button
-     * @property {Boolean} disabled
-     */
-    this.disabled = this._dn.disabled = disabled;
+    if (disabled) {
+      this.disable();
+    } else {
+      this.enable();
+    }
 
     // sync events between the button element and the class
     button.addEventListener('focus', () => this.focus());
@@ -159,6 +158,11 @@ class Button extends Sprite.class {
    * @function enable
    */
   enable() {
+    /**
+     * If the button is disabled.
+     * @memberof Button
+     * @property {Boolean} disabled
+     */
     this.disabled = this._dn.disabled = false;
     this.onEnable();
   }

@@ -3303,6 +3303,7 @@ var kontra = (function () {
    *
    * @param {Object} [properties] - Properties of the button (in addition to all Sprite properties).
    * @param {Object} [properties.text] - Properties of [Text](api/text) which are used to create the [textNode](api/button#textNode).
+   * @param {Boolean} [properties.disabled] - Whether the button is disabled when created.
    * @param {Number} [properties.padX=0] - The horizontal padding.
    * @param {Number} [properties.padY=0] - The vertical padding.
    * @param {Function} [properties.onEnable] - Function called when the button is enabled.
@@ -3331,6 +3332,7 @@ var kontra = (function () {
       padY = 0,
 
       text,
+      disabled = false,
       onDown,
       onUp,
       ...props
@@ -3374,6 +3376,10 @@ var kontra = (function () {
       const button = this._dn = document.createElement('button');
       button.style = srOnlyStyle;
       button.textContent = this.text;
+
+      if (disabled) {
+        this.disable();
+      }
 
       // sync events between the button element and the class
       button.addEventListener('focus', () => this.focus());
@@ -3443,7 +3449,6 @@ var kontra = (function () {
      * @function enable
      */
     enable() {
-
       /**
        * If the button is disabled.
        * @memberof Button
@@ -3518,28 +3523,28 @@ var kontra = (function () {
      * @memberof Button
      * @function onEnable
      */
-    onEnable() {}
+    onEnable() { }
 
     /**
      * Function called when then button is disabled. Override this function to have the button do something when disabled.
      * @memberof Button
      * @function onDisable
      */
-    onDisable() {}
+    onDisable() { }
 
     /**
      * Function called when then button is focused. Override this function to have the button do something when focused.
      * @memberof Button
      * @function onFocus
      */
-    onFocus() {}
+    onFocus() { }
 
     /**
      * Function called when then button is blurred. Override this function to have the button do something when blurred.
      * @memberof Button
      * @function onBlur
      */
-    onBlur() {}
+    onBlur() { }
 
     onDown() {
       if (!this.disabled) {

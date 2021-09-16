@@ -86,8 +86,6 @@ class Button extends Sprite.class {
 
     if (disabled) {
       this.disable();
-    } else {
-      this.enable();
     }
 
     // sync events between the button element and the class

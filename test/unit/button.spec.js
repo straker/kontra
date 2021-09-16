@@ -35,7 +35,6 @@ describe('button', () => {
 
       expect(button.padX).to.equal(0);
       expect(button.padY).to.equal(0);
-      expect(button.disabled).to.be.false;
       expect(button.textNode instanceof Text).to.be.true;
     });
 

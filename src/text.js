@@ -161,7 +161,7 @@ class Text extends GameObject.class {
 
   set text(value) {
     this._d = true;
-    this._t = value;
+    this._t = '' + value;
   }
 
   get font() {

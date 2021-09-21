@@ -72,6 +72,14 @@ describe('text with context: ' + JSON.stringify(testContext,null,4), () => {
 
       expect(text._d).to.be.true;
     });
+    
+    it('should cast the value when setting text', () => {
+      let text = Text({text: ''});
+
+      text.text = 123;
+
+      expect(text.text).to.equal('123');
+    });
 
     it('should set the text as dirty when setting width', () => {
       let text = Text({text: ''});

@@ -2605,7 +2605,7 @@ var kontra = (function () {
 
     set text(value) {
       this._d = true;
-      this._t = value;
+      this._t = '' + value;
     }
 
     get font() {

@@ -1,4 +1,4 @@
-(function() {
+(function () {
   let { canvas, context } = kontra.init('pool-example');
 
   let midX = canvas.width / 2;
@@ -28,11 +28,10 @@
   // redefine sprite update to account for fields
   function update() {
     // apply field
-    let totalAccelerationX = 0
+    let totalAccelerationX = 0;
     let totalAccelerationY = 0;
 
-    for (let i = 0, field; field = fields[i]; i++) {
-
+    for (let i = 0, field; (field = fields[i]); i++) {
       let vectorX = field.x - this.x;
       let vectorY = field.y - this.y;
 
@@ -42,14 +41,14 @@
       totalAccelerationY += vectorY * force;
     }
 
-    this.ddx = totalAccelerationX
-    this.ddy = totalAccelerationY
+    this.ddx = totalAccelerationX;
+    this.ddy = totalAccelerationY;
 
     this.advance();
   }
 
   let loop = kontra.GameLoop({
-    update: function() {
+    update: function () {
       for (let i = 0; i < 4; i++) {
         pool.get({
           x: midX + 75,
@@ -60,13 +59,13 @@
           width: 2,
           height: 2,
           ttl: 300,
-          update: update,
+          update: update
         });
       }
 
       pool.update();
     },
-    render: function() {
+    render: function () {
       pool.render();
 
       context.fillStyle = 'white';

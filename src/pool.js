@@ -14,18 +14,15 @@ class Pool {
    * @docs docs/api_docs/pool.js
    */
 
-  constructor({create, maxSize = 1024} = {}) {
-
+  constructor({ create, maxSize = 1024 } = {}) {
     // check for the correct structure of the objects added to pools so we know that the
     // rest of the pool code will work without errors
     // @ifdef DEBUG
     let obj;
-    if (!create ||
-        ( !( obj = create() ) ||
-          !( obj.update && obj.init &&
-             obj.isAlive && obj.render)
-       )) {
-      throw Error('Must provide create() function which returns an object with init(), update(), render(), and isAlive() functions');
+    if (!create || !(obj = create()) || !(obj.update && obj.init && obj.isAlive && obj.render)) {
+      throw Error(
+        'Must provide create() function which returns an object with init(), update(), render(), and isAlive() functions'
+      );
     }
     // @endif
 
@@ -164,5 +161,4 @@ class Pool {
 export default function factory() {
   return new Pool(...arguments);
 }
-factory.prototype = Pool.prototype;
-factory.class = Pool;
+export { Pool as PoolClass };

@@ -1,4 +1,4 @@
-import Sprite from './sprite.js';
+import { SpriteClass } from './sprite.js';
 import Text from './text.js';
 import { track } from './pointer.js';
 import { srOnlyStyle, noop, addToDom } from './utils.js';
@@ -18,7 +18,7 @@ import { srOnlyStyle, noop, addToDom } from './utils.js';
  * @param {Function} [properties.onFocus] - Function called when the button is focused by the keyboard.
  * @param {Function} [properties.onBlur] - Function called when the button losses focus either by the pointer or keyboard.
  */
-class Button extends Sprite.class {
+class Button extends SpriteClass {
   /**
    * @docs docs/api_docs/button.js
    */
@@ -80,7 +80,7 @@ class Button extends Sprite.class {
 
     // create an accessible DOM node for screen readers
     // dn = dom node
-    const button = this._dn = document.createElement('button');
+    const button = (this._dn = document.createElement('button'));
     button.style = srOnlyStyle;
     button.textContent = this.text;
 
@@ -91,8 +91,8 @@ class Button extends Sprite.class {
     // sync events between the button element and the class
     button.addEventListener('focus', () => this.focus());
     button.addEventListener('blur', () => this.blur());
-    button.addEventListener('keydown', (evt) => this._kd(evt));
-    button.addEventListener('keyup', (evt) => this._ku(evt));
+    button.addEventListener('keydown', evt => this._kd(evt));
+    button.addEventListener('keyup', evt => this._ku(evt));
 
     addToDom(button, this.context.canvas);
 
@@ -182,7 +182,6 @@ class Button extends Sprite.class {
    */
   focus() {
     if (!this.disabled) {
-
       /**
        * If the button is focused.
        * @memberof Button
@@ -211,7 +210,6 @@ class Button extends Sprite.class {
 
   onOver() {
     if (!this.disabled) {
-
       /**
        * If the button is hovered.
        * @memberof Button
@@ -230,32 +228,31 @@ class Button extends Sprite.class {
    * @memberof Button
    * @function onEnable
    */
-  onEnable() { }
+  onEnable() {}
 
   /**
    * Function called when then button is disabled. Override this function to have the button do something when disabled.
    * @memberof Button
    * @function onDisable
    */
-  onDisable() { }
+  onDisable() {}
 
   /**
    * Function called when then button is focused. Override this function to have the button do something when focused.
    * @memberof Button
    * @function onFocus
    */
-  onFocus() { }
+  onFocus() {}
 
   /**
    * Function called when then button is blurred. Override this function to have the button do something when blurred.
    * @memberof Button
    * @function onBlur
    */
-  onBlur() { }
+  onBlur() {}
 
   onDown() {
     if (!this.disabled) {
-
       /**
        * If the button is pressed.
        * @memberof Button
@@ -293,5 +290,4 @@ class Button extends Sprite.class {
 export default function factory() {
   return new Button(...arguments);
 }
-factory.prototype = Button.prototype;
-factory.class = Button;
+export { Button as ButtonClass };

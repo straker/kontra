@@ -50,7 +50,6 @@ class GameObject extends Updatable {
    * @param {Object} properties - Properties of the game object.
    */
   init({
-
     // --------------------------------------------------
     // defaults
     // --------------------------------------------------
@@ -147,7 +146,7 @@ class GameObject extends Updatable {
      * gameObject.render();
      * drawOrigin(gameObject);
      */
-    anchor = {x: 0, y: 0},
+    anchor = { x: 0, y: 0 },
     // @endif
 
     // @ifdef GAMEOBJECT_CAMERA
@@ -202,7 +201,6 @@ class GameObject extends Updatable {
 
     ...props
   } = {}) {
-
     // @ifdef GAMEOBJECT_GROUP
     this.children = [];
     // @endif
@@ -477,7 +475,7 @@ class GameObject extends Updatable {
       _wsx = 1,
       _wsy = 1
       // @endif
-    } = (this.parent || {});
+    } = this.parent || {};
     // @endif
 
     // wx = world x, wy = world y
@@ -497,7 +495,7 @@ class GameObject extends Updatable {
     // wr = world rotation
     this._wr = _wr + this.rotation;
 
-    let {x, y} = rotatePoint({x: this.x, y: this.y}, _wr);
+    let { x, y } = rotatePoint({ x: this.x, y: this.y }, _wr);
     this._wx = x;
     this._wy = y;
     // @endif
@@ -545,7 +543,7 @@ class GameObject extends Updatable {
       scaleX: this._wsx,
       scaleY: this._wsy
       // @endif
-    }
+    };
   }
 
   // --------------------------------------------------
@@ -688,5 +686,4 @@ class GameObject extends Updatable {
 export default function factory() {
   return new GameObject(...arguments);
 }
-factory.prototype = GameObject.prototype;
-factory.class = GameObject;
+export { GameObject as GameObjectClass };

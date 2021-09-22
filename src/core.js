@@ -53,12 +53,9 @@ export function getContext() {
  * @returns {{canvas: HTMLCanvasElement, context: CanvasRenderingContext2D}} An object with properties `canvas` and `context`. `canvas` it the canvas element for the game and `context` is the context object the game draws to.
  */
 export function init(canvas) {
-
   // check if canvas is a string first, an element next, or default to getting
   // first canvas on page
-  canvasEl = document.getElementById(canvas) ||
-             canvas ||
-             document.querySelector('canvas');
+  canvasEl = document.getElementById(canvas) || canvas || document.querySelector('canvas');
 
   // @ifdef DEBUG
   if (!canvasEl) {

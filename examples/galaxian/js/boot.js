@@ -20,7 +20,7 @@ let loadingText = kontra.Text({
   color: '#FF7F00',
   text: 'Loading...',
   font: '18px Helvetica, sans-serif',
-  anchor: {x: 0.5, y: 0.5},
+  anchor: { x: 0.5, y: 0.5 }
 });
 
 // create a progress bar
@@ -28,23 +28,20 @@ let loadingBar = kontra.Sprite({
   width: canvas.width / 2,
   height: 30,
   progress: 0,
-  anchor: {x: 0.5, y: 0.5},
+  anchor: { x: 0.5, y: 0.5 },
   render() {
     context.strokeStyle = 'white';
     context.strokeRect(0, 0, this.width, this.height);
 
     context.fillStyle = 'green';
-    context.fillRect(1, 1,
-      this.width * (this.progress / assets.length) - 2,
-      this.height - 2
-    );
+    context.fillRect(1, 1, this.width * (this.progress / assets.length) - 2, this.height - 2);
   }
 });
 
 let playButton = kontra.Button({
   padX: 15,
   padY: 15,
-  anchor: {x: 0.5, y: 0.5},
+  anchor: { x: 0.5, y: 0.5 },
 
   // align center to the grid
   justifySelf: 'center',
@@ -53,7 +50,7 @@ let playButton = kontra.Button({
     text: 'Play',
     color: '#FF7F00',
     font: '28px Helvetica, sans-serif',
-    anchor: {x: 0.5, y: 0.5},
+    anchor: { x: 0.5, y: 0.5 }
   },
 
   render() {
@@ -67,12 +64,10 @@ let playButton = kontra.Button({
 
     if (this.pressed) {
       this.textNode.color = 'white';
-    }
-    else if (this.focused || this.hovered) {
+    } else if (this.focused || this.hovered) {
       this.textNode.color = '#62a2f9';
       canvas.style.cursor = 'pointer';
-    }
-    else  {
+    } else {
       this.textNode.color = '#FF7F00';
       canvas.style.cursor = 'initial';
     }
@@ -91,14 +86,14 @@ let grid = kontra.Grid({
 
   // put extra space between the button and progress bar
   gapY: [0, 40],
-  anchor: {x: 0.5, y: 0.5},
+  anchor: { x: 0.5, y: 0.5 },
   children: [loadingText, loadingBar, playButton]
 });
 
 let bootScene = kontra.Scene({
   id: 'boot',
   children: [grid]
-});;
+});
 
 // set default asset paths
 kontra.setImagePath('imgs/');

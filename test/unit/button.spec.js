@@ -1,5 +1,5 @@
 import Button from '../../src/button.js';
-import Text from '../../src/text.js';
+import Text, { TextClass } from '../../src/text.js';
 import { initPointer, resetPointers } from '../../src/pointer.js';
 import { srOnlyStyle } from '../../src/utils.js';
 
@@ -7,7 +7,6 @@ import { srOnlyStyle } from '../../src/utils.js';
 // button
 // --------------------------------------------------
 describe('button', () => {
-
   let button;
   beforeEach(() => {
     initPointer();
@@ -28,18 +27,17 @@ describe('button', () => {
   // init
   // --------------------------------------------------
   describe('init', () => {
-
     it('should set default properties', () => {
-      button.destroy()
+      button.destroy();
       button = Button();
 
       expect(button.padX).to.equal(0);
       expect(button.padY).to.equal(0);
-      expect(button.textNode instanceof Text).to.be.true;
+      expect(button.textNode instanceof TextClass).to.be.true;
     });
 
     it('should setup text properties', () => {
-      button.destroy()
+      button.destroy();
       button = Button({
         text: {
           text: 'Hello',
@@ -57,9 +55,8 @@ describe('button', () => {
       expect(button.textNode.color).to.equal('black');
     });
 
-
     it('should start disabled if specified', () => {
-      button.destroy()
+      button.destroy();
       button = Button({
         disabled: true
       });
@@ -68,11 +65,11 @@ describe('button', () => {
     });
 
     it('should default width to the text size', () => {
-      button.destroy()
+      button.destroy();
       button = Button({
         text: {
           text: 'Hello',
-          width: 100,
+          width: 100
         }
       });
 
@@ -80,12 +77,12 @@ describe('button', () => {
     });
 
     it('should set the button to the width if it is greater', () => {
-      button.destroy()
+      button.destroy();
       button = Button({
         width: 150,
         text: {
           text: 'Hello',
-          width: 100,
+          width: 100
         }
       });
 
@@ -93,12 +90,12 @@ describe('button', () => {
     });
 
     it('should set the button to the text width if it is greater', () => {
-      button.destroy()
+      button.destroy();
       button = Button({
         width: 50,
         text: {
           text: 'Hello',
-          width: 100,
+          width: 100
         }
       });
 
@@ -110,7 +107,7 @@ describe('button', () => {
       initPointer({ canvas });
       let context = canvas.getContext('2d');
 
-      button.destroy()
+      button.destroy();
       button = Button({
         context
       });
@@ -150,18 +147,12 @@ describe('button', () => {
 
       expect(button.blur.called).to.be.true;
     });
-
   });
-
-
-
-
 
   // --------------------------------------------------
   // keyboard events
   // --------------------------------------------------
   describe('keyboard events', () => {
-
     function simulateEvent(type, config) {
       let evt;
 
@@ -187,7 +178,6 @@ describe('button', () => {
     // onDown
     // --------------------------------------------------
     describe('onDown', () => {
-
       it('should call onDown if Enter is pressed', () => {
         sinon.spy(button, 'onDown');
         simulateEvent('keydown', { code: 'Enter' });
@@ -210,15 +200,10 @@ describe('button', () => {
       });
     });
 
-
-
-
-
     // --------------------------------------------------
     // onUp
     // --------------------------------------------------
     describe('onUp', () => {
-
       it('should call onUp if Enter is pressed', () => {
         sinon.spy(button, 'onUp');
         simulateEvent('keyup', { code: 'Enter' });
@@ -239,20 +224,13 @@ describe('button', () => {
 
         expect(button.onUp.called).to.be.false;
       });
-
     });
-
   });
-
-
-
-
 
   // --------------------------------------------------
   // text
   // --------------------------------------------------
   describe('text', () => {
-
     it('should return the text of the textNode', () => {
       expect(button.text).to.equal('Hello');
     });
@@ -262,35 +240,23 @@ describe('button', () => {
 
       expect(button.textNode.text).to.equal('my text');
     });
-
   });
-
-
-
-
 
   // --------------------------------------------------
   // destroy
   // --------------------------------------------------
   describe('destroy', () => {
-
     it('should remove the DOM node', () => {
       button.destroy();
 
       expect(document.body.contains(button._dn)).to.be.false;
     });
-
   });
-
-
-
-
 
   // --------------------------------------------------
   // prerender
   // --------------------------------------------------
   describe('prerender', () => {
-
     it('should be called if a property was changed since the last render', () => {
       sinon.stub(button, '_p');
 
@@ -334,18 +300,12 @@ describe('button', () => {
       expect(button.width).to.be.equal(300);
       expect(button.height).to.equal(300);
     });
-
   });
-
-
-
-
 
   // --------------------------------------------------
   // focus
   // --------------------------------------------------
   describe('focus', () => {
-
     it('should set the focused property', () => {
       button.focused = false;
       button.focus();
@@ -384,18 +344,12 @@ describe('button', () => {
       expect(button.focused).to.be.false;
       expect(button.onFocus.called).to.be.false;
     });
-
   });
-
-
-
-
 
   // --------------------------------------------------
   // blur
   // --------------------------------------------------
   describe('blur', () => {
-
     beforeEach(() => {
       button.focus();
     });
@@ -429,18 +383,12 @@ describe('button', () => {
 
       expect(button._dn.blur.called).to.be.false;
     });
-
   });
-
-
-
-
 
   // --------------------------------------------------
   // enable
   // --------------------------------------------------
   describe('enable', () => {
-
     it('should unset the disabled property', () => {
       button.disabled = true;
       button.enable();
@@ -460,18 +408,12 @@ describe('button', () => {
 
       expect(button.onEnable.called).to.be.true;
     });
-
   });
-
-
-
-
 
   // --------------------------------------------------
   // disable
   // --------------------------------------------------
   describe('disable', () => {
-
     it('should set the disabled property', () => {
       button.disabled = false;
       button.disable();
@@ -491,18 +433,12 @@ describe('button', () => {
 
       expect(button.onDisable.called).to.be.true;
     });
-
   });
-
-
-
-
 
   // --------------------------------------------------
   // onOver
   // --------------------------------------------------
   describe('onOver', () => {
-
     it('should set the hovered property', () => {
       button.hovered = false;
       button.onOver();
@@ -516,37 +452,25 @@ describe('button', () => {
       button.onOver();
 
       expect(button.hovered).to.be.false;
-
     });
-
   });
-
-
-
-
 
   // --------------------------------------------------
   // onOut
   // --------------------------------------------------
   describe('onOut', () => {
-
     it('should unset the hovered property', () => {
       button.hovered = true;
       button.onOut();
 
       expect(button.hovered).to.be.false;
     });
-
   });
-
-
-
 
   // --------------------------------------------------
   // onDown
   // --------------------------------------------------
   describe('onDown', () => {
-
     it('should set the pressed property', () => {
       button.pressed = false;
       button.onDown();
@@ -575,18 +499,12 @@ describe('button', () => {
 
       expect(button.pressed).to.be.false;
     });
-
   });
-
-
-
-
 
   // --------------------------------------------------
   // onUp
   // --------------------------------------------------
   describe('onUp', () => {
-
     it('should unset the pressed property', () => {
       button.pressed = true;
       button.onUp();
@@ -615,7 +533,5 @@ describe('button', () => {
 
       expect(button.pressed).to.be.true;
     });
-
   });
-
 });

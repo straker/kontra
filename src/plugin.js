@@ -23,7 +23,7 @@
  * @returns {String}
  */
 function getMethod(methodName) {
-  let methodTitle = methodName.substr( methodName.search(/[A-Z]/) );
+  let methodTitle = methodName.substr(methodName.search(/[A-Z]/));
   return methodTitle[0].toLowerCase() + methodTitle.substr(1);
 }
 
@@ -80,7 +80,6 @@ export function registerPlugin(kontraObj, pluginObj) {
       objectProto['_o' + method] = objectProto[method];
 
       objectProto[method] = function interceptedFn(...args) {
-
         // call before interceptors
         let alteredArgs = this._bInc(this, method, ...args);
 
@@ -101,8 +100,7 @@ export function registerPlugin(kontraObj, pluginObj) {
 
     if (methodName.startsWith('before')) {
       objectProto._inc[method].before.push(pluginObj[methodName]);
-    }
-    else if (methodName.startsWith('after')) {
+    } else if (methodName.startsWith('after')) {
       objectProto._inc[method].after.push(pluginObj[methodName]);
     }
   });
@@ -126,8 +124,7 @@ export function unregisterPlugin(kontraObj, pluginObj) {
 
     if (methodName.startsWith('before')) {
       removeInterceptor(objectProto._inc[method].before, pluginObj[methodName]);
-    }
-    else if (methodName.startsWith('after')) {
+    } else if (methodName.startsWith('after')) {
       removeInterceptor(objectProto._inc[method].after, pluginObj[methodName]);
     }
   });
@@ -137,10 +134,10 @@ export function unregisterPlugin(kontraObj, pluginObj) {
  * Safely extend the functionality of a Kontra object. Any properties that already exist on the Kontra object will not be added.
  *
  * ```js
- * import { extendObject, Vector } from 'kontra';
+ * import { extendObject, Vector, VectorClass } from 'kontra';
  *
  * // add a subtract function to all Vectors
- * extendObject(Vector, {
+ * extendObject(VectorClass, {
  *   subtract(vec) {
  *     return Vector(this.x - vec.x, this.y - vec.y);
  *   }
@@ -148,7 +145,7 @@ export function unregisterPlugin(kontraObj, pluginObj) {
  * ```
  * @function extendObject
  *
- * @param {Object} kontraObj - Kontra object to extend
+ * @param {Object} kontraObj - Kontra class to extend
  * @param {Object} properties - Properties to add.
  */
 export function extendObject(kontraObj, properties) {

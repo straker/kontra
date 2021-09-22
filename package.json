@@ -67,6 +67,7 @@
     "marked": "^0.7.0",
     "mocha": "^8.0.1",
     "preprocess": "git+https://github.com/straker/preprocess.git",
+    "prettier": "^2.2.1",
     "rollup": "^1.6.0",
     "sinon": "^7.2.7",
     "typescript": "^3.7.2",

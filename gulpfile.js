@@ -45,55 +45,65 @@ function buildIife() {
       strict: false
     }
   })
-  .pipe(source('kontra.js'))
-  .pipe(gulp.dest('.'))
-  .pipe(gulp.dest('./docs/assets/js'));
+    .pipe(source('kontra.js'))
+    .pipe(gulp.dest('.'))
+    .pipe(gulp.dest('./docs/assets/js'));
 }
 
 function buildModule() {
   return rollup({
-      input: './src/kontra.js',
-      output: {
-        format: 'es',
-        strict: false
-      }
-    })
+    input: './src/kontra.js',
+    output: {
+      format: 'es',
+      strict: false
+    }
+  })
     .pipe(source('kontra.mjs'))
     .pipe(gulp.dest('.'));
 }
 
 function distIife() {
-  return gulp.src('kontra.js')
-    .pipe(preprocess({context}))
+  return gulp
+    .src('kontra.js')
+    .pipe(preprocess({ context }))
     .pipe(plumber())
     .pipe(terser())
     .pipe(plumber.stop())
     .pipe(gulp.dest('./docs/assets/js'))
     .pipe(rename('kontra.min.js'))
-    .pipe(size({
-      showFiles: true
-    }))
-    .pipe(size({
-      showFiles: true,
-      gzip: true
-    }))
+    .pipe(
+      size({
+        showFiles: true
+      })
+    )
+    .pipe(
+      size({
+        showFiles: true,
+        gzip: true
+      })
+    )
     .pipe(gulp.dest('.'));
 }
 
 function distModule() {
-  return gulp.src('kontra.mjs')
-    .pipe(preprocess({context}))
+  return gulp
+    .src('kontra.mjs')
+    .pipe(preprocess({ context }))
     .pipe(plumber())
     .pipe(terser())
     .pipe(plumber.stop())
     .pipe(rename('kontra.min.mjs'))
-    .pipe(size({
-      showFiles: true
-    }))
-    .pipe(size({
-      showFiles: true,
-      gzip: true
-    }))
+    .pipe(
+      size({
+        showFiles: true
+      })
+    )
+    .pipe(
+      size({
+        showFiles: true,
+        gzip: true
+      })
+    )
     .pipe(gulp.dest('.'));
 }
 
@@ -101,7 +111,7 @@ gulp.task('build', gulp.series(buildIife, buildModule, 'build:docs', 'build:ts')
 
 gulp.task('dist', gulp.series('build', distIife, distModule));
 
-gulp.task('watch', function() {
+gulp.task('watch', function () {
   gulp.watch('src/*.js', gulp.series('build', 'dist'));
 });
 

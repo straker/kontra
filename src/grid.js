@@ -1,8 +1,7 @@
-import GameObject from './gameObject.js';
+import { GameObjectClass } from './gameObject.js';
 
 let handler = {
   set(obj, prop, value) {
-
     // don't set dirty for private properties
     if (!prop.startsWith('_')) {
       obj._d = true;
@@ -39,7 +38,7 @@ let alignment = {
  * @param {String} [properties.dir=''] - The direction of the grid.
  * @param {{metric: Function, callback: Function}[]} [properties.breakpoints=[]] - How the grid should change based on different metrics.
  */
-class Grid extends GameObject.class {
+class Grid extends GameObjectClass {
   /**
    * @docs docs/api_docs/grid.js
    */
@@ -93,7 +92,7 @@ class Grid extends GameObject.class {
      */
     colGap = 0,
 
-     /**
+    /**
      * The vertical gap between each row in the grid.
      *
      * An array of numbers means the grid will set the gap between rows using the order of the array. For example, if the gap is set to be `[10, 5]`, then every odd row gap with use 10 and every even row gap will use 5.
@@ -209,21 +208,18 @@ class Grid extends GameObject.class {
     });
 
     // g = grid, cw = colWidths, rh = rowHeights
-    let grid = this._g = [];
-    let colWidths = this._cw = [];
-    let rowHeights = this._rh = [];
+    let grid = (this._g = []);
+    let colWidths = (this._cw = []);
+    let rowHeights = (this._rh = []);
     let children = this.children;
 
     // nc = numCols
-    let numCols = this._nc = this.flow === 'column'
-      ? 1
-      : this.flow === 'row'
-        ? children.length
-        : this.numCols;
+    let numCols = (this._nc =
+      this.flow === 'column' ? 1 : this.flow === 'row' ? children.length : this.numCols);
 
     let row = 0;
     let col = 0;
-    for (let i = 0, child; child = children[i]; i++) {
+    for (let i = 0, child; (child = children[i]); i++) {
       grid[row] = grid[row] || [];
 
       // prerender child to get current width/height
@@ -257,12 +253,12 @@ class Grid extends GameObject.class {
     let colGap = [].concat(this.colGap);
     let rowGap = [].concat(this.rowGap);
 
-    this._w = colWidths.reduce((acc, width) => acc += width, 0);
+    this._w = colWidths.reduce((acc, width) => (acc += width), 0);
     for (let i = 0; i < numCols - 1; i++) {
       this._w += colGap[i % colGap.length];
     }
 
-    this._h = rowHeights.reduce((acc, height) => acc += height, 0);
+    this._h = rowHeights.reduce((acc, height) => (acc += height), 0);
     for (let i = 0; i < numRows - 1; i++) {
       this._h += rowGap[i % rowGap.length];
     }
@@ -316,26 +312,22 @@ class Grid extends GameObject.class {
           // anchor of the object
           if (justify === 0) {
             pointX = pointX + width * anchorX;
-          }
-          else if (justify === 0.5) {
+          } else if (justify === 0.5) {
             let sign = anchorX < 0.5 ? -1 : anchorX === 0.5 ? 0 : 1;
             pointX = pointX + sign * width * justify;
-          }
-          else {
-            pointX = pointX - (width * (1 - anchorX));
+          } else {
+            pointX = pointX - width * (1 - anchorX);
           }
 
           // calculate the y position based on the justification and
           // anchor of the object
           if (align === 0) {
             pointY = pointY + height * anchorY;
-          }
-          else if (align === 0.5) {
+          } else if (align === 0.5) {
             let sign = anchorY < 0.5 ? -1 : anchorY === 0.5 ? 0 : 1;
             pointY = pointY + sign * height * align;
-          }
-          else {
-            pointY = pointY - (height * (1 - anchorY));
+          } else {
+            pointY = pointY - height * (1 - anchorY);
           }
 
           child.x = topLeftX + pointX;
@@ -353,5 +345,4 @@ class Grid extends GameObject.class {
 export default function factory() {
   return new Grid(...arguments);
 }
-factory.prototype = Grid.prototype;
-factory.class = Grid;
+export { Grid as GridClass };

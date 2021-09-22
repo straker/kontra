@@ -1,4 +1,4 @@
-export { default as Animation } from './animation.js';
+export { default as Animation, AnimationClass } from './animation.js';
 export {
   imageAssets,
   audioAssets,
@@ -11,12 +11,12 @@ export {
   loadData,
   load
 } from './assets.js';
-export { default as Button } from './button.js';
+export { default as Button, ButtonClass } from './button.js';
 export { init, getCanvas, getContext } from './core.js';
 export { on, off, emit } from './events.js';
 export { default as GameLoop } from './gameLoop.js';
-export { default as GameObject } from './gameObject.js';
-export { default as Grid } from './grid.js';
+export { default as GameObject, GameObjectClass } from './gameObject.js';
+export { default as Grid, GridClass } from './grid.js';
 export {
   degToRad,
   radToDeg,
@@ -44,12 +44,12 @@ export {
   onPointerUp,
   pointerPressed
 } from './pointer.js';
-export { default as Pool } from './pool.js';
-export { default as Quadtree } from './quadtree.js';
-export { default as Scene } from './scene.js';
-export { default as Sprite } from './sprite.js';
-export { default as SpriteSheet } from './spriteSheet.js';
-export { default as Text } from './text.js';
+export { default as Pool, PoolClass } from './pool.js';
+export { default as Quadtree, QuadtreeClass } from './quadtree.js';
+export { default as Scene, SceneClass } from './scene.js';
+export { default as Sprite, SpriteClass } from './sprite.js';
+export { default as SpriteSheet, SpriteSheetClass } from './spriteSheet.js';
+export { default as Text, TextClass } from './text.js';
 export { default as TileEngine } from './tileEngine.js';
-export { default as Vector } from './vector.js';
+export { default as Vector, VectorClass } from './vector.js';
 export { default } from './kontra.defaults.js';

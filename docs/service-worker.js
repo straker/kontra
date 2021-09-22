@@ -1,8 +1,7 @@
 let prefix = '/kontra';
 
 // adjust path based on location (github pages required kontra url)
-if (['localhost', '127.0.0.1'].includes(self.location.hostname
-)) {
+if (['localhost', '127.0.0.1'].includes(self.location.hostname)) {
   prefix = '';
 }
 
@@ -24,8 +23,7 @@ const staticCacheName = 'kontra-docs-v3';
 // cache the application shell
 self.addEventListener('install', event => {
   event.waitUntil(
-    caches.open(staticCacheName)
-    .then(cache => {
+    caches.open(staticCacheName).then(cache => {
       return cache.addAll(filesToCache);
     })
   );
@@ -33,10 +31,10 @@ self.addEventListener('install', event => {
 
 // serve files from the cache
 self.addEventListener('fetch', event => {
-
   // respond with the cache first
   event.respondWith(
-    caches.match(event.request)
+    caches
+      .match(event.request)
       .then(response => {
         if (response) {
           return response;

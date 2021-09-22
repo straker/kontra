@@ -40,11 +40,7 @@ class Vector {
    * @returns {Vector} A new Vector instance whose value is the addition of the two vectors.
    */
   add(vec) {
-    return new Vector(
-      this.x + vec.x,
-      this.y + vec.y,
-      this
-    );
+    return new Vector(this.x + vec.x, this.y + vec.y, this);
   }
 
   // @ifdef VECTOR_SUBTRACT
@@ -57,12 +53,8 @@ class Vector {
    *
    * @returns {Vector} A new Vector instance whose value is the subtraction of the two vectors.
    */
-   subtract(vec) {
-    return new Vector(
-      this.x - vec.x,
-      this.y - vec.y,
-      this
-    );
+  subtract(vec) {
+    return new Vector(this.x - vec.x, this.y - vec.y, this);
   }
   // @endif
 
@@ -77,10 +69,7 @@ class Vector {
    * @returns {Vector} A new Vector instance whose value is multiplied by the scalar.
    */
   scale(value) {
-    return new Vector(
-      this.x * value,
-      this.y * value
-    );
+    return new Vector(this.x * value, this.y * value);
   }
   // @endif
 
@@ -94,10 +83,7 @@ class Vector {
    */
   // @see https://github.com/jed/140bytes/wiki/Byte-saving-techniques#use-placeholder-arguments-instead-of-var
   normalize(length = this.length()) {
-    return new Vector(
-      this.x / length,
-      this.y / length
-    );
+    return new Vector(this.x / length, this.y / length);
   }
   // @endif
 
@@ -213,11 +199,11 @@ class Vector {
   }
 
   set x(value) {
-    this._x = (this._c ? clamp(this._a, this._d, value) : value);
+    this._x = this._c ? clamp(this._a, this._d, value) : value;
   }
 
   set y(value) {
-    this._y = (this._c ? clamp(this._b, this._e, value) : value);
+    this._y = this._c ? clamp(this._b, this._e, value) : value;
   }
   // @endif
 }
@@ -225,5 +211,4 @@ class Vector {
 export default function factory() {
   return new Vector(...arguments);
 }
-factory.prototype = Vector.prototype;
-factory.class = Vector;
+export { Vector as VectorClass };

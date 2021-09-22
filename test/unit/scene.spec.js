@@ -6,10 +6,9 @@ import { collides } from '../../src/helpers.js';
 // scene
 // --------------------------------------------------
 describe('scene', () => {
-
   let scene;
   beforeEach(() => {
-   scene = Scene({
+    scene = Scene({
       id: 'myId'
     });
   });
@@ -22,7 +21,6 @@ describe('scene', () => {
   // init
   // --------------------------------------------------
   describe('init', () => {
-
     it('should setup basic properties', () => {
       expect(scene.id).to.equal('myId');
       expect(scene.name).to.equal('myId');
@@ -56,7 +54,7 @@ describe('scene', () => {
     it('should hide the DOM node', () => {
       srOnlyStyle.split(';').forEach(style => {
         let parts = style.split(':');
-        expect(scene._dn.style[ parts[0] ]).to.equal(parts[1]);
+        expect(scene._dn.style[parts[0]]).to.equal(parts[1]);
       });
     });
 
@@ -79,20 +77,14 @@ describe('scene', () => {
       expect(scene.camera.y).to.equal(canvas.height / 2);
       expect(scene.camera.width).to.equal(canvas.width);
       expect(scene.camera.height).to.equal(canvas.height);
-      expect(scene.camera.anchor).to.deep.equal({x: 0.5, y: 0.5});
+      expect(scene.camera.anchor).to.deep.equal({ x: 0.5, y: 0.5 });
     });
-
   });
-
-
-
-
 
   // --------------------------------------------------
   // show
   // --------------------------------------------------
   describe('show', () => {
-
     it('should unset the hidden property', () => {
       scene.hidden = true;
       scene.show();
@@ -123,18 +115,12 @@ describe('scene', () => {
 
       expect(scene.onShow.called).to.be.true;
     });
-
   });
-
-
-
-
 
   // --------------------------------------------------
   // hide
   // --------------------------------------------------
   describe('hide', () => {
-
     it('should set the hidden property', () => {
       scene.hidden = false;
       scene.hide();
@@ -149,18 +135,12 @@ describe('scene', () => {
 
       expect(scene.onHide.called).to.be.true;
     });
-
   });
-
-
-
-
 
   // --------------------------------------------------
   // addChild
   // --------------------------------------------------
   describe('addChild', () => {
-
     it('should add the child', () => {
       let child = {};
       scene.addChild(child);
@@ -181,14 +161,18 @@ describe('scene', () => {
       let node1 = document.createElement('div');
       let node2 = document.createElement('div');
       let child = {
-        children: [{
-          children: [{
-            _dn: node1
-          }]
-        },
-        {
-          _dn: node2
-        }]
+        children: [
+          {
+            children: [
+              {
+                _dn: node1
+              }
+            ]
+          },
+          {
+            _dn: node2
+          }
+        ]
       };
       scene.addChild(child);
 
@@ -200,30 +184,28 @@ describe('scene', () => {
       let node1 = document.createElement('div');
       let node2 = document.createElement('div');
       let child = {
-        children: [{
-          _dn: node1,
-          children: [{
-            _dn: node2
-          }]
-        }]
+        children: [
+          {
+            _dn: node1,
+            children: [
+              {
+                _dn: node2
+              }
+            ]
+          }
+        ]
       };
       scene.addChild(child);
 
       expect(scene._dn.contains(node1)).to.be.true;
       expect(scene._dn.contains(node2)).to.be.false;
     });
-
   });
-
-
-
-
 
   // --------------------------------------------------
   // removeChild
   // --------------------------------------------------
   describe('removeChild', () => {
-
     it('should remove the child', () => {
       let child = {};
       scene.addChild(child);
@@ -247,14 +229,18 @@ describe('scene', () => {
       let node1 = document.createElement('div');
       let node2 = document.createElement('div');
       let child = {
-        children: [{
-          children: [{
-            _dn: node1
-          }]
-        },
-        {
-          _dn: node2
-        }]
+        children: [
+          {
+            children: [
+              {
+                _dn: node1
+              }
+            ]
+          },
+          {
+            _dn: node2
+          }
+        ]
       };
       scene.addChild(child);
       scene.removeChild(child);
@@ -269,12 +255,16 @@ describe('scene', () => {
       node1.appendChild(node2);
 
       let child = {
-        children: [{
-          _dn: node1,
-          children: [{
-            _dn: node2
-          }]
-        }]
+        children: [
+          {
+            _dn: node1,
+            children: [
+              {
+                _dn: node2
+              }
+            ]
+          }
+        ]
       };
       scene.addChild(child);
       scene.removeChild(child);
@@ -283,18 +273,12 @@ describe('scene', () => {
       expect(scene._dn.contains(node2)).to.be.false;
       expect(node1.contains(node2)).to.be.true;
     });
-
   });
-
-
-
-
 
   // --------------------------------------------------
   // destroy
   // --------------------------------------------------
   describe('destroy', () => {
-
     it('should remove the DOM node', () => {
       scene.destroy();
 
@@ -310,18 +294,12 @@ describe('scene', () => {
 
       expect(child.destroy.called).to.be.true;
     });
-
   });
-
-
-
-
 
   // --------------------------------------------------
   // update
   // --------------------------------------------------
   describe('update', () => {
-
     it('should call update on all children if scene is not hidden', () => {
       let child = {
         update: sinon.spy()
@@ -342,50 +320,38 @@ describe('scene', () => {
 
       expect(child.update.called).to.be.false;
     });
-
   });
-
-
-
-
 
   // --------------------------------------------------
   // lookAt
   // --------------------------------------------------
   describe('lookAt', () => {
-
     it('should set the camera position to the object', () => {
-      scene.lookAt({x: 10, y: 10});
+      scene.lookAt({ x: 10, y: 10 });
 
       expect(scene.camera.x).to.equal(10);
       expect(scene.camera.y).to.equal(10);
     });
 
     it('should take into account scale', () => {
-      scene.lookAt({x: 10, y: 10, scaleX: 2, scaleY: 2});
+      scene.lookAt({ x: 10, y: 10, scaleX: 2, scaleY: 2 });
 
       expect(scene.camera.x).to.equal(5);
       expect(scene.camera.y).to.equal(5);
     });
 
     it('should take into account world', () => {
-      scene.lookAt({world: { x: 10, y: 10, scaleX: 2, scaleY: 2} });
+      scene.lookAt({ world: { x: 10, y: 10, scaleX: 2, scaleY: 2 } });
 
       expect(scene.camera.x).to.equal(5);
       expect(scene.camera.y).to.equal(5);
     });
-
   });
-
-
-
-
 
   // --------------------------------------------------
   // render
   // --------------------------------------------------
   describe('render', () => {
-
     it('should call render on all children', () => {
       let child = {
         x: 0,
@@ -445,7 +411,7 @@ describe('scene', () => {
     });
 
     it('should update the sx and sy of the scene', () => {
-      scene.lookAt({x: 10, y: 10});
+      scene.lookAt({ x: 10, y: 10 });
       scene.render();
 
       expect(scene.sx).to.equal(-290);
@@ -453,32 +419,24 @@ describe('scene', () => {
     });
 
     it('should take into account the scene scale', () => {
-      scene.lookAt({x: 10, y: 10});
+      scene.lookAt({ x: 10, y: 10 });
       scene.setScale(2, 2);
       scene.render();
 
       expect(scene.sx).to.equal(-280);
       expect(scene.sy).to.equal(-280);
     });
-
   });
-
-
-
-
 
   // --------------------------------------------------
   // camera world
   // --------------------------------------------------
   describe('camera world', () => {
-
     it('should not change width/height based on scale', () => {
       scene.setScale(2, 2);
 
       expect(scene.camera.world.width).to.equal(600);
       expect(scene.camera.world.height).to.equal(600);
     });
-
   });
-
 });

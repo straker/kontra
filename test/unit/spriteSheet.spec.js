@@ -1,16 +1,14 @@
-import SpriteSheet from '../../src/spriteSheet.js'
-import { noop } from '../../src/utils.js'
+import SpriteSheet, { SpriteSheetClass } from '../../src/spriteSheet.js';
+import { noop } from '../../src/utils.js';
 
 // --------------------------------------------------
 // spriteSheet
 // --------------------------------------------------
 describe('spriteSheet', () => {
-
   // --------------------------------------------------
   // init
   // --------------------------------------------------
   describe('init', () => {
-
     it('should log an error if no image is provided', () => {
       function func() {
         SpriteSheet();
@@ -34,7 +32,7 @@ describe('spriteSheet', () => {
     });
 
     it('should create animations if passed an animation object', () => {
-      sinon.stub(SpriteSheet.prototype, 'createAnimations').callsFake(noop);
+      sinon.stub(SpriteSheetClass.prototype, 'createAnimations').callsFake(noop);
 
       let spriteSheet = SpriteSheet({
         image: new Image(100, 200),
@@ -43,16 +41,11 @@ describe('spriteSheet', () => {
         animations: {}
       });
 
-      expect(SpriteSheet.prototype.createAnimations.called).to.be.true;
+      expect(SpriteSheetClass.prototype.createAnimations.called).to.be.true;
 
-      SpriteSheet.prototype.createAnimations.restore();
+      SpriteSheetClass.prototype.createAnimations.restore();
     });
-
   });
-
-
-
-
 
   // --------------------------------------------------
   // createAnimations
@@ -66,12 +59,12 @@ describe('spriteSheet', () => {
         frameWidth: 10,
         frameHeight: 10
       });
-    })
+    });
 
     it('should log an error if no frames property was passed', () => {
       function func() {
         spriteSheet.createAnimations({
-          'walk': {}
+          walk: {}
         });
       }
 
@@ -97,7 +90,7 @@ describe('spriteSheet', () => {
       });
 
       expect(spriteSheet.animations.walk).to.exist;
-      expect(spriteSheet.animations.walk.frames).to.deep.equal([1,2,3,4,5]);
+      expect(spriteSheet.animations.walk.frames).to.deep.equal([1, 2, 3, 4, 5]);
     });
 
     it('should accept a string of descending consecutive frames', () => {
@@ -108,29 +101,29 @@ describe('spriteSheet', () => {
       });
 
       expect(spriteSheet.animations.walk).to.exist;
-      expect(spriteSheet.animations.walk.frames).to.deep.equal([5,4,3,2,1]);
+      expect(spriteSheet.animations.walk.frames).to.deep.equal([5, 4, 3, 2, 1]);
     });
 
     it('should accept an array of consecutive frames', () => {
       spriteSheet.createAnimations({
         walk: {
-          frames: [1,2,3]
+          frames: [1, 2, 3]
         }
       });
 
       expect(spriteSheet.animations.walk).to.exist;
-      expect(spriteSheet.animations.walk.frames).to.deep.equal([1,2,3]);
+      expect(spriteSheet.animations.walk.frames).to.deep.equal([1, 2, 3]);
     });
 
     it('should accept an array of non-consecutive frames', () => {
       spriteSheet.createAnimations({
         walk: {
-          frames: [1,3,5]
+          frames: [1, 3, 5]
         }
       });
 
       expect(spriteSheet.animations.walk).to.exist;
-      expect(spriteSheet.animations.walk.frames).to.deep.equal([1,3,5]);
+      expect(spriteSheet.animations.walk.frames).to.deep.equal([1, 3, 5]);
     });
 
     it('should accept a mixture of numbers, strings, and arrays', () => {
@@ -141,9 +134,7 @@ describe('spriteSheet', () => {
       });
 
       expect(spriteSheet.animations.walk).to.exist;
-      expect(spriteSheet.animations.walk.frames).to.deep.equal([1,2,3,4,5,4,3,2,1]);
+      expect(spriteSheet.animations.walk.frames).to.deep.equal([1, 2, 3, 4, 5, 4, 3, 2, 1]);
     });
-
   });
-
 });

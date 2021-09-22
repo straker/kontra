@@ -1,16 +1,14 @@
-import Quadtree from '../../src/quadtree.js'
-import { getCanvas } from '../../src/core.js'
+import Quadtree from '../../src/quadtree.js';
+import { getCanvas } from '../../src/core.js';
 
 // --------------------------------------------------
 // quadtree
 // --------------------------------------------------
 describe('quadtree', () => {
-
   // --------------------------------------------------
   // init
   // --------------------------------------------------
   describe('init', () => {
-
     it('should create an initial bounding box', () => {
       let quadtree = Quadtree();
 
@@ -36,14 +34,14 @@ describe('quadtree', () => {
         bounds: { x: 5, y: 10, width: 5, height: 10 }
       });
 
-      expect(quadtree.bounds).to.deep.equal({ x: 5, y: 10, width: 5, height: 10 });
+      expect(quadtree.bounds).to.deep.equal({
+        x: 5,
+        y: 10,
+        width: 5,
+        height: 10
+      });
     });
-
   });
-
-
-
-
 
   // --------------------------------------------------
   // add
@@ -68,32 +66,32 @@ describe('quadtree', () => {
     });
 
     it('should add an object to the quadtree', () => {
-      quadtree.add({id: 1});
+      quadtree.add({ id: 1 });
 
       expect(quadtree._o.length).to.equal(1);
     });
 
     it('should take multiple objects and add them to the quadtree', () => {
-      quadtree.add({id: 1}, {id: 2}, {id: 3});
+      quadtree.add({ id: 1 }, { id: 2 }, { id: 3 });
 
       expect(quadtree._o.length).to.equal(3);
     });
 
     it('should take an array of objects and add them to the quadtree', () => {
-      quadtree.add([{id: 1}, {id: 2}], {id: 3});
+      quadtree.add([{ id: 1 }, { id: 2 }], { id: 3 });
 
       expect(quadtree._o.length).to.equal(3);
     });
 
     it('should split the quadtree if there are too many objects', () => {
       for (let i = 0; i < 5; i++) {
-        quadtree.add({id: i});
+        quadtree.add({ id: i });
       }
 
       expect(quadtree._o.length).to.equal(5);
       expect(quadtree._s.length).to.equal(0);
 
-      quadtree.add({id: 4});
+      quadtree.add({ id: 4 });
 
       expect(quadtree._o.length).to.equal(0);
       expect(quadtree._s.length).to.equal(4);
@@ -101,24 +99,44 @@ describe('quadtree', () => {
 
     it('should make each subnode 1/4 the size of the bounds when split', () => {
       for (let i = 0; i < 6; i++) {
-        quadtree.add({id: i});
+        quadtree.add({ id: i });
       }
 
-      expect(quadtree._s[0].bounds).to.deep.equal({x: 0, y: 0, width: 50, height: 50});
-      expect(quadtree._s[1].bounds).to.deep.equal({x: 50, y: 0, width: 50, height: 50});
-      expect(quadtree._s[2].bounds).to.deep.equal({x: 0, y: 50, width: 50, height: 50});
-      expect(quadtree._s[3].bounds).to.deep.equal({x: 50, y: 50, width: 50, height: 50});
+      expect(quadtree._s[0].bounds).to.deep.equal({
+        x: 0,
+        y: 0,
+        width: 50,
+        height: 50
+      });
+      expect(quadtree._s[1].bounds).to.deep.equal({
+        x: 50,
+        y: 0,
+        width: 50,
+        height: 50
+      });
+      expect(quadtree._s[2].bounds).to.deep.equal({
+        x: 0,
+        y: 50,
+        width: 50,
+        height: 50
+      });
+      expect(quadtree._s[3].bounds).to.deep.equal({
+        x: 50,
+        y: 50,
+        width: 50,
+        height: 50
+      });
     });
 
     it('should add split objects to their correct subnodes', () => {
       let subnode;
       let objects = [
-        {id: 0, x: 15, y: 10, width: 10, height: 10}, // quadrant 0
-        {id: 1, x: 30, y: 20, width: 10, height: 10}, // quadrant 0
-        {id: 2, x: 45, y: 30, width: 10, height: 10}, // quadrant 0,1
-        {id: 3, x: 60, y: 40, width: 10, height: 10}, // quadrant 1,3
-        {id: 4, x: 75, y: 50, width: 10, height: 10}, // quadrant 3
-        {id: 5, x: 90, y: 60, width: 10, height: 10}  // quadrant 3
+        { id: 0, x: 15, y: 10, width: 10, height: 10 }, // quadrant 0
+        { id: 1, x: 30, y: 20, width: 10, height: 10 }, // quadrant 0
+        { id: 2, x: 45, y: 30, width: 10, height: 10 }, // quadrant 0,1
+        { id: 3, x: 60, y: 40, width: 10, height: 10 }, // quadrant 1,3
+        { id: 4, x: 75, y: 50, width: 10, height: 10 }, // quadrant 3
+        { id: 5, x: 90, y: 60, width: 10, height: 10 } // quadrant 3
       ];
 
       quadtree.add(objects);
@@ -154,10 +172,10 @@ describe('quadtree', () => {
 
     it('should add an object to a subnode if the quadtree is already split', () => {
       for (let i = 0; i < 6; i++) {
-        quadtree.add({id: i});
+        quadtree.add({ id: i });
       }
 
-      let object = {x: 10, y: 10, width: 10, height: 10};
+      let object = { x: 10, y: 10, width: 10, height: 10 };
       let subnode = quadtree._s[0]._o;
 
       quadtree.add(object);
@@ -166,10 +184,10 @@ describe('quadtree', () => {
       expect(subnode[0]).to.equal(object);
     });
 
-    it('shouldn\'t split a quadtree node twice after clearing', () => {
+    it("shouldn't split a quadtree node twice after clearing", () => {
       // cause the tree to split
       for (let i = 0; i < 6; i++) {
-        quadtree.add({id: i});
+        quadtree.add({ id: i });
       }
 
       let subnodes = quadtree._s;
@@ -178,7 +196,7 @@ describe('quadtree', () => {
 
       // cause to split again
       for (let i = 0; i < 6; i++) {
-        quadtree.add({id: i});
+        quadtree.add({ id: i });
       }
 
       // since splitting overrides the subnodes with new values this should
@@ -189,16 +207,16 @@ describe('quadtree', () => {
     it('should handle children outside the bounds of the quadtree', () => {
       let subnode;
       let quadtree = new Quadtree({
-        bounds: {x: 0, y: 0, width: 100, height: 100},
+        bounds: { x: 0, y: 0, width: 100, height: 100 },
         maxObjects: 2,
         maxDepth: 1
       });
 
-      quadtree.add({x: 105, y: 40, width: 10, height: 20});
-      quadtree.add({x: 105, y: 40, width: 10, height: 20});
+      quadtree.add({ x: 105, y: 40, width: 10, height: 20 });
+      quadtree.add({ x: 105, y: 40, width: 10, height: 20 });
 
       // force the tree to split
-      quadtree.add({x: 105, y: 40, width: 10, height: 20});
+      quadtree.add({ x: 105, y: 40, width: 10, height: 20 });
 
       // quadrant 0
       subnode = quadtree._s[0]._o;
@@ -220,12 +238,7 @@ describe('quadtree', () => {
 
       expect(subnode.length).to.equal(3);
     });
-
   });
-
-
-
-
 
   // --------------------------------------------------
   // clear
@@ -247,7 +260,7 @@ describe('quadtree', () => {
 
     it('should clear all objects of the quadtree', () => {
       for (let i = 0; i < 4; i++) {
-        quadtree.add({id: i, x: i*15, y: i*10, width: 10, height: 10});
+        quadtree.add({ id: i, x: i * 15, y: i * 10, width: 10, height: 10 });
       }
 
       quadtree.clear();
@@ -257,7 +270,7 @@ describe('quadtree', () => {
 
     it('should clear all objects in subnodes of the quadtree', () => {
       for (let i = 0; i < 9; i++) {
-        quadtree.add({id: i, x: i*10, y: i*10, width: 10, height: 10});
+        quadtree.add({ id: i, x: i * 10, y: i * 10, width: 10, height: 10 });
       }
 
       quadtree.clear();
@@ -268,12 +281,7 @@ describe('quadtree', () => {
       expect(quadtree._s[2]._o.length).to.equal(0);
       expect(quadtree._s[3]._o.length).to.equal(0);
     });
-
   });
-
-
-
-
 
   // --------------------------------------------------
   // get
@@ -298,11 +306,11 @@ describe('quadtree', () => {
     });
 
     it('should return an object in the same node as the passed object', () => {
-      let object = {x: 10, y: 10, width: 10, height: 10};
+      let object = { x: 10, y: 10, width: 10, height: 10 };
 
       quadtree.add(object);
 
-      let getObjects = quadtree.get({x: 30, y: 30, width: 20, height: 20});
+      let getObjects = quadtree.get({ x: 30, y: 30, width: 20, height: 20 });
 
       expect(getObjects.length).to.equal(1);
       expect(getObjects[0]).to.equal(object);
@@ -310,13 +318,13 @@ describe('quadtree', () => {
 
     it('should return all objects in multiple subnodes if the object intercepts multiple subnodes', () => {
       let objects = [
-        {x: 10, y: 10, width: 10, height: 10},
-        {x: 60, y: 10, width: 10, height: 10}
+        { x: 10, y: 10, width: 10, height: 10 },
+        { x: 60, y: 10, width: 10, height: 10 }
       ];
 
       quadtree.add(objects);
 
-      let getObjects = quadtree.get({x: 45, y: 25, width: 20, height: 20});
+      let getObjects = quadtree.get({ x: 45, y: 25, width: 20, height: 20 });
 
       expect(getObjects.length).to.equal(2);
       expect(getObjects[0]).to.equal(objects[0]);
@@ -325,18 +333,18 @@ describe('quadtree', () => {
 
     it('should return objects from leaf nodes', () => {
       let objects = [
-        {x: 0, y: 0, width: 10, height: 10},
-        {x: 10, y: 10, width: 10, height: 10},
-        {x: 20, y: 20, width: 10, height: 10},
-        {x: 30, y: 30, width: 10, height: 10},
-        {x: 40, y: 40, width: 10, height: 10},
-        {x: 50, y: 50, width: 10, height: 10},
-        {x: 60, y: 10, width: 10, height: 10}
+        { x: 0, y: 0, width: 10, height: 10 },
+        { x: 10, y: 10, width: 10, height: 10 },
+        { x: 20, y: 20, width: 10, height: 10 },
+        { x: 30, y: 30, width: 10, height: 10 },
+        { x: 40, y: 40, width: 10, height: 10 },
+        { x: 50, y: 50, width: 10, height: 10 },
+        { x: 60, y: 10, width: 10, height: 10 }
       ];
 
       quadtree.add(objects);
 
-      let getObjects = quadtree.get({x: 5, y: 25, width: 20, height: 20});
+      let getObjects = quadtree.get({ x: 5, y: 25, width: 20, height: 20 });
 
       expect(getObjects.length).to.equal(5);
       expect(getObjects[0]).to.equal(objects[0]);
@@ -348,8 +356,8 @@ describe('quadtree', () => {
 
     it('should not return the passed object', () => {
       let objects = [
-        {x: 10, y: 10, width: 10, height: 10},
-        {x: 20, y: 10, width: 10, height: 10}
+        { x: 10, y: 10, width: 10, height: 10 },
+        { x: 20, y: 10, width: 10, height: 10 }
       ];
 
       quadtree.add(objects);
@@ -362,22 +370,20 @@ describe('quadtree', () => {
 
     it('should not return the same object more than once', () => {
       let objects = [
-        {x: 0, y: 0, width: 10, height: 10},
-        {x: 10, y: 10, width: 10, height: 10},
-        {x: 20, y: 20, width: 10, height: 10},
-        {x: 30, y: 30, width: 10, height: 10},
-        {x: 40, y: 40, width: 10, height: 10},
-        {x: 50, y: 50, width: 10, height: 10},
-        {x: 60, y: 10, width: 10, height: 10}
+        { x: 0, y: 0, width: 10, height: 10 },
+        { x: 10, y: 10, width: 10, height: 10 },
+        { x: 20, y: 20, width: 10, height: 10 },
+        { x: 30, y: 30, width: 10, height: 10 },
+        { x: 40, y: 40, width: 10, height: 10 },
+        { x: 50, y: 50, width: 10, height: 10 },
+        { x: 60, y: 10, width: 10, height: 10 }
       ];
 
       quadtree.add(objects);
 
-      let getObjects = quadtree.get({x: 45, y: 45, width: 20, height: 20});
+      let getObjects = quadtree.get({ x: 45, y: 45, width: 20, height: 20 });
 
       expect(getObjects.length).to.equal(7);
     });
-
   });
-
 });

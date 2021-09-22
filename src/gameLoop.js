@@ -72,15 +72,19 @@ export default function GameLoop({
 
   // animation variables
   let accumulator = 0;
-  let delta = 1E3 / fps;  // delta between performance.now timings (in ms)
+  let delta = 1e3 / fps; // delta between performance.now timings (in ms)
   let step = 1 / fps;
-  let clearFn = clearCanvas ? clear : noop
+  let clearFn = clearCanvas ? clear : noop;
   let last, rAF, now, dt, loop;
   let focused = true;
 
   if (!blur) {
-    window.addEventListener('focus', () => { focused = true; });
-    window.addEventListener('blur', () => { focused = false; });
+    window.addEventListener('focus', () => {
+      focused = true;
+    });
+    window.addEventListener('blur', () => {
+      focused = false;
+    });
   }
 
   /**
@@ -98,7 +102,7 @@ export default function GameLoop({
 
     // prevent updating the game with a very large dt if the game were to lose focus
     // and then regain focus later
-    if (dt > 1E3) {
+    if (dt > 1e3) {
       return;
     }
 
@@ -186,4 +190,4 @@ export default function GameLoop({
   };
 
   return loop;
-};
+}

@@ -50,12 +50,12 @@
  * menu.render();
  */
 
- /**
-  * The grid supports properties on the child objects that change how the child is positioned within the grid.
-  *
-  * - `alignSelf` - *String*. Align this item individually in the grid, overriding the grids [align](/api/grid#align) setting.
-  * - `justifySelf` - *String*. Justify this item individually in the grid, overriding the grids [justify](/api/grid#justify) setting.
-  * - `colSpan` - *Number*. Have the item take up more than 1 column. Great for menu titles.
-  *
-  * @sectionName Child Properties
-  */
+/**
+ * The grid supports properties on the child objects that change how the child is positioned within the grid.
+ *
+ * - `alignSelf` - *String*. Align this item individually in the grid, overriding the grids [align](/api/grid#align) setting.
+ * - `justifySelf` - *String*. Justify this item individually in the grid, overriding the grids [justify](/api/grid#justify) setting.
+ * - `colSpan` - *Number*. Have the item take up more than 1 column. Great for menu titles.
+ *
+ * @sectionName Child Properties
+ */

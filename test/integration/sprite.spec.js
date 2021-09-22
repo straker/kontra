@@ -1,8 +1,7 @@
-import Sprite from '../../src/sprite.js'
-import SpriteSheet from '../../src/spriteSheet.js'
+import Sprite from '../../src/sprite.js';
+import SpriteSheet from '../../src/spriteSheet.js';
 
 describe('sprite integration', () => {
-
   it('should clone spriteSheet animations to prevent frame corruption ', () => {
     let spriteSheet = SpriteSheet({
       image: new Image(100, 200),
@@ -11,7 +10,7 @@ describe('sprite integration', () => {
       animations: {
         walk: {
           frames: '1..10',
-          frameRate: 30,
+          frameRate: 30
         }
       }
     });
@@ -46,7 +45,7 @@ describe('sprite integration', () => {
       animations: {
         walk: {
           frames: '1..10',
-          frameRate: 30,
+          frameRate: 30
         }
       }
     });
@@ -72,5 +71,4 @@ describe('sprite integration', () => {
     expect(sprite2.animations.walk._f).to.equal(0);
     expect(sprite3.animations.walk._f).to.equal(0);
   });
-
 });

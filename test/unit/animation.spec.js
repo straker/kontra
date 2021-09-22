@@ -1,5 +1,5 @@
-import Animation from '../../src/animation.js'
-import { getContext } from '../../src/core.js'
+import Animation from '../../src/animation.js';
+import { getContext } from '../../src/core.js';
 
 // --------------------------------------------------
 // animation
@@ -9,7 +9,7 @@ describe('animation', () => {
 
   beforeEach(() => {
     animation = Animation({
-      frames: [1,2,3,4],
+      frames: [1, 2, 3, 4],
       frameRate: 30,
       spriteSheet: {
         image: new Image(),
@@ -23,50 +23,36 @@ describe('animation', () => {
     });
   });
 
-
   // --------------------------------------------------
   // init
   // --------------------------------------------------
   describe('init', () => {
-
     it('should set properties on the animation', () => {
-      expect(animation.frames).to.deep.equal([1,2,3,4]);
+      expect(animation.frames).to.deep.equal([1, 2, 3, 4]);
       expect(animation.frameRate).to.equal(30);
       expect(animation.width).to.equal(5);
       expect(animation.height).to.equal(5);
       expect(animation.loop).to.equal(true);
       expect(animation.margin).to.equal(0);
     });
-
   });
-
-
-
-
 
   // --------------------------------------------------
   // clone
   // --------------------------------------------------
   describe('clone', () => {
-
     it('should return a new animation with the same properties', () => {
       let anim = animation.clone();
 
       expect(anim).to.not.equal(animation);
       expect(anim).to.deep.equal(animation);
     });
-
   });
-
-
-
-
 
   // --------------------------------------------------
   // reset
   // --------------------------------------------------
   describe('reset', () => {
-
     it('should reset the animation', () => {
       animation._f = 4;
       animation._a = 4;
@@ -76,18 +62,12 @@ describe('animation', () => {
       expect(animation._f).to.equal(0);
       expect(animation._a).to.equal(0);
     });
-
   });
-
-
-
-
 
   // --------------------------------------------------
   // update
   // --------------------------------------------------
   describe('update', () => {
-
     it('should not update the current frame if not enough time has passed', () => {
       animation.update();
 
@@ -103,7 +83,7 @@ describe('animation', () => {
     });
 
     it('should take dt as a parameter and update the current frame correctly', () => {
-      animation.update(1/30);
+      animation.update(1 / 30);
 
       expect(animation._f).to.equal(1);
     });
@@ -133,20 +113,14 @@ describe('animation', () => {
 
       expect(animation._f).to.equal(3);
     });
-
   });
-
-
-
-
 
   // --------------------------------------------------
   // render
   // --------------------------------------------------
   describe('render', () => {
-
     it('should render the spriteSheet at its initial frame', () => {
-      let context = {drawImage: sinon.stub()};
+      let context = { drawImage: sinon.stub() };
 
       animation.render({
         x: 10,
@@ -155,10 +129,8 @@ describe('animation', () => {
       });
 
       expect(context.drawImage.called).to.be.true;
-      expect(context.drawImage.calledWith(
-        animation.spriteSheet.image,
-        5, 0, 5, 5, 10, 10, 5, 5
-      )).to.be.true;
+      expect(context.drawImage.calledWith(animation.spriteSheet.image, 5, 0, 5, 5, 10, 10, 5, 5)).to
+        .be.true;
     });
 
     it('should use the default context', () => {
@@ -176,7 +148,7 @@ describe('animation', () => {
     });
 
     it('should render the spriteSheet in the middle of the animation', () => {
-      let context = {drawImage: sinon.stub()};
+      let context = { drawImage: sinon.stub() };
 
       animation._f = 2;
 
@@ -187,12 +159,8 @@ describe('animation', () => {
       });
 
       expect(context.drawImage.called).to.be.true;
-      expect(context.drawImage.calledWith(
-        animation.spriteSheet.image,
-        5, 5, 5, 5, 10, 10, 5, 5
-      )).to.be.true;
+      expect(context.drawImage.calledWith(animation.spriteSheet.image, 5, 5, 5, 5, 10, 10, 5, 5)).to
+        .be.true;
     });
-
   });
-
 });

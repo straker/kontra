@@ -13,8 +13,7 @@ export function addToDom(node, canvas) {
   if (container) {
     let target = container.querySelector('[data-kontra]:last-of-type') || canvas;
     container.insertBefore(node, target.nextSibling);
-  }
-  else {
+  } else {
     document.body.appendChild(node);
   }
 }

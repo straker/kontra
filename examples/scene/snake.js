@@ -32,21 +32,19 @@ let snake = kontra.Sprite({
     // wrap snake position horizontally on edge of screen
     if (this.x < 0) {
       this.x = canvas.width - gridSize;
-    }
-    else if (this.x >= canvas.width) {
+    } else if (this.x >= canvas.width) {
       this.x = 0;
     }
 
     // wrap snake position vertically on edge of screen
     if (this.y < 0) {
       this.y = canvas.height - gridSize;
-    }
-    else if (this.y >= canvas.height) {
+    } else if (this.y >= canvas.height) {
       this.y = 0;
     }
 
     // keep track of where snake has been. front of the array is always the head
-    this.cells.unshift({x: this.x, y: this.y});
+    this.cells.unshift({ x: this.x, y: this.y });
 
     // remove cells as we move away from them
     if (this.cells.length > this.maxCells) {
@@ -57,9 +55,8 @@ let snake = kontra.Sprite({
   render() {
     this.context.fillStyle = 'green';
     snake.cells.forEach((cell, index) => {
-
       // drawing 1 px smaller than the grid creates a grid effect in the snake body so you can see how long it is
-      this.context.fillRect(cell.x - this.x, cell.y - this.y, gridSize-1, gridSize-1);
+      this.context.fillRect(cell.x - this.x, cell.y - this.y, gridSize - 1, gridSize - 1);
     });
   }
 });

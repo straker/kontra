@@ -1,4 +1,4 @@
-import GameObject from './gameObject.js';
+import { GameObjectClass } from './gameObject.js';
 import { on } from './events.js';
 import { getCanvas, getContext } from './core.js';
 
@@ -80,10 +80,8 @@ function parseFont(font) {
  * @param {String} [properties.textAlign='left'] - The [textAlign](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/textAlign) for the context. If the `dir` attribute is set to `rtl` on the main canvas, the text will automatically be aligned to the right, but you can override that by setting this property.
  * @param {Number} [properties.lineHeight=1] - The distance between two lines of text.
  */
-class Text extends GameObject.class {
-
+class Text extends GameObjectClass {
   init({
-
     // --------------------------------------------------
     // defaults
     // --------------------------------------------------
@@ -109,11 +107,11 @@ class Text extends GameObject.class {
      */
     lineHeight = 1,
 
-   /**
-    * The font style.
-    * @memberof Text
-    * @property {String} font
-    */
+    /**
+     * The font style.
+     * @memberof Text
+     * @property {String} font
+     */
     font = getContext().font,
 
     /**
@@ -122,7 +120,7 @@ class Text extends GameObject.class {
      * @property {String} color
      */
 
-     ...props
+    ...props
   } = {}) {
     // cast to string
     text = '' + text;
@@ -240,7 +238,7 @@ class Text extends GameObject.class {
       this._w = this._fw || context.measureText(this.text).width;
     }
 
-    this.height = this._fs + ((this._s.length - 1) * this._fs * this.lineHeight);
+    this.height = this._fs + (this._s.length - 1) * this._fs * this.lineHeight;
     this._uw();
   }
 
@@ -254,11 +252,7 @@ class Text extends GameObject.class {
     // @endif
 
     // @ifdef TEXT_ALIGN||TEXT_RTL
-    alignX = textAlign === 'right'
-      ? this.width
-      : textAlign === 'center'
-        ? this.width / 2 | 0
-        : 0;
+    alignX = textAlign === 'right' ? this.width : textAlign === 'center' ? (this.width / 2) | 0 : 0;
     // @endif
 
     this._s.map((str, index) => {
@@ -274,5 +268,4 @@ class Text extends GameObject.class {
 export default function factory() {
   return new Text(...arguments);
 }
-factory.prototype = Text.prototype;
-factory.class = Text;
+export { Text as TextClass };

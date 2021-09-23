@@ -7,7 +7,7 @@ function getGameScene() {
     color: '#FF7F00',
     text: 'Score: 0',
     font: '18px Helvetica, sans-serif',
-    anchor: {x: 0.5, y: 0},
+    anchor: { x: 0.5, y: 0 },
     x: canvas.width - 100,
     y: 5
   });
@@ -19,17 +19,17 @@ function getGameScene() {
    */
   // create an audio sprite for use in an audio pool, mimicking a normal image sprite
   let audioSprite = {
-    isAlive: function() {
+    isAlive: function () {
       return !this.audio.ended;
     },
-    init: function(properties) {
+    init: function (properties) {
       if (properties.play !== false) {
         this.audio.play();
       }
     },
     // set required properties
-    render: function() {},
-    update: function() {}
+    render: function () {},
+    update: function () {}
   };
 
   // common create functions for audio pool
@@ -53,15 +53,15 @@ function getGameScene() {
    * Toggle all the audios in the pool
    */
   function toggleVolume() {
-    for (let i = 0, obj; obj = this.objects[i]; i++) {
+    for (let i = 0, obj; (obj = this.objects[i]); i++) {
       obj.audio.muted = !obj.audio.muted;
     }
   }
 
   // create audio pools
   let laserPool = kontra.Pool({
-    create: function() {
-      return create({audio: kontra.audioAssets.laser})
+    create: function () {
+      return create({ audio: kontra.audioAssets.laser });
     },
     fill: true,
     maxSize: 5
@@ -69,19 +69,19 @@ function getGameScene() {
   laserPool.toggleVolume = toggleVolume;
 
   for (let i = 0; i < 5; i++) {
-    laserPool.get({'play': false});
+    laserPool.get({ play: false });
   }
 
   let explosionPool = kontra.Pool({
-    create: function() {
-      return create({audio: kontra.audioAssets.explosion})
+    create: function () {
+      return create({ audio: kontra.audioAssets.explosion });
     },
     maxSize: 10
   });
   explosionPool.toggleVolume = toggleVolume;
 
   for (let i = 0; i < 5; i++) {
-    explosionPool.get({'play': false});
+    explosionPool.get({ play: false });
   }
 
   /*
@@ -111,14 +111,14 @@ function getGameScene() {
   let background = kontra.Sprite({
     dy: 1,
     image: kontra.imageAssets.bg,
-    update: function() {
+    update: function () {
       this.advance();
 
       if (this.y >= canvas.height) {
         this.y = 0;
       }
     },
-    render: function() {
+    render: function () {
       this.draw();
 
       this.context.drawImage(this.image, 0, -canvas.height);
@@ -131,27 +131,25 @@ function getGameScene() {
     y: 270,
     image: kontra.imageAssets.ship,
     counter: 15,
-    update: function() {
+    update: function () {
       this.counter++;
 
       if (kontra.keyPressed('left')) {
         this.x -= 3;
-      }
-      else if (kontra.keyPressed('right')) {
+      } else if (kontra.keyPressed('right')) {
         this.x += 3;
       }
 
       if (kontra.keyPressed('up')) {
         this.y -= 3;
-      }
-      else if (kontra.keyPressed('down')) {
+      } else if (kontra.keyPressed('down')) {
         this.y += 3;
       }
 
       if (kontra.keyPressed('space') && this.counter >= 15) {
         for (let i = 0; i < 2; i++) {
           bullets.get({
-            x: this.x + 6 + (i * 27),
+            x: this.x + 6 + i * 27,
             y: this.y,
             dy: -3,
             image: kontra.imageAssets.bullet,
@@ -169,8 +167,10 @@ function getGameScene() {
 
   // clamp player position to lower third of the screen
   player.position.clamp(
-    0, canvas.height * 2 / 3,
-    canvas.width - player.width, canvas.height - player.height
+    0,
+    (canvas.height * 2) / 3,
+    canvas.width - player.width,
+    canvas.height - player.height
   );
 
   /**
@@ -194,24 +194,22 @@ function getGameScene() {
         bottomEdge: y + 140,
         speed: 2,
         type: 'enemy',
-        update: function() {
+        update: function () {
           this.advance();
 
           // change enemy velocity to move back and forth
           if (this.x <= this.leftEdge) {
             this.dx = this.speed;
-          }
-          else if (this.x >= this.rightEdge) {
+          } else if (this.x >= this.rightEdge) {
             this.dx = -this.speed;
-          }
-          else if (this.y >= this.bottomEdge) {
+          } else if (this.y >= this.bottomEdge) {
             this.dy = 0;
             this.dx = -this.speed;
             this.y -= 5;
           }
 
           // randomly fire bullets
-          if (Math.floor(Math.random()*101)/100 < .01) {
+          if (Math.floor(Math.random() * 101) / 100 < 0.01) {
             enemyBullets.get({
               x: this.x + this.width / 2,
               y: this.y + this.height,
@@ -221,7 +219,7 @@ function getGameScene() {
               type: 'hostile'
             });
           }
-        },
+        }
       });
 
       x += width + 25;
@@ -233,7 +231,7 @@ function getGameScene() {
     }
   }
 
-  kontra.bindKeys('m', function() {
+  kontra.bindKeys('m', function () {
     toggleMusic();
   });
 
@@ -242,7 +240,7 @@ function getGameScene() {
    */
   function toggleMusic() {
     kontra.audioAssets.kick_shock.muted = !kontra.audioAssets.kick_shock.muted;
-    kontra.audioAssets.game_over.muted = !kontra.audioAssets.game_over.muted
+    kontra.audioAssets.game_over.muted = !kontra.audioAssets.game_over.muted;
     laserPool.toggleVolume();
     explosionPool.toggleVolume();
   }
@@ -266,17 +264,17 @@ function getGameScene() {
       // find collisions between the player ship and enemy bullets
       let objects = quadtree.get(player);
 
-      for (let i = 0, obj; obj = objects[i]; i++) {
+      for (let i = 0, obj; (obj = objects[i]); i++) {
         if (obj.type === 'hostile' && kontra.collides(obj, player)) {
           kontra.emit('gameOver');
         }
       }
 
       // find collisions between the player bullets and enemy ships
-      for (let i = 0, bullet; bullet = liveBullets[i]; i++) {
+      for (let i = 0, bullet; (bullet = liveBullets[i]); i++) {
         objects = quadtree.get(bullet);
 
-        for (let j = 0, obj; obj = objects[j]; j++) {
+        for (let j = 0, obj; (obj = objects[j]); j++) {
           if (obj.type === 'enemy' && kontra.collides(obj, bullet)) {
             bullet.ttl = 0;
             obj.ttl = 0;

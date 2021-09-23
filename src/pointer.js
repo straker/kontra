@@ -117,7 +117,7 @@ function circleRectCollision(object, pointer) {
 
   let dx = pointer.x - Math.max(x, Math.min(pointer.x, x + width));
   let dy = pointer.y - Math.max(y, Math.min(pointer.y, y + height));
-  return (dx * dx + dy * dy) < (pointer.radius * pointer.radius);
+  return dx * dx + dy * dy < pointer.radius * pointer.radius;
 }
 
 /**
@@ -128,18 +128,15 @@ function circleRectCollision(object, pointer) {
  * @returns {Object} First object to collide with the pointer.
  */
 function getCurrentObject(pointer) {
-
   // if pointer events are required on the very first frame or
   // without a game loop, use the current frame
-  let renderedObjects = pointer._lf.length ?
-    pointer._lf :
-    pointer._cf;
+  let renderedObjects = pointer._lf.length ? pointer._lf : pointer._cf;
 
   for (let i = renderedObjects.length - 1; i >= 0; i--) {
     let object = renderedObjects[i];
-    let collides = object.collidesWithPointer ?
-      object.collidesWithPointer(pointer) :
-      circleRectCollision(object, pointer);
+    let collides = object.collidesWithPointer
+      ? object.collidesWithPointer(pointer)
+      : circleRectCollision(object, pointer);
 
     if (collides) {
       return object;
@@ -169,24 +166,33 @@ function getCanvasOffset(pointer) {
   let rect = canvas.getBoundingClientRect();
 
   // @see https://stackoverflow.com/a/53405390/2124254
-  let transform = _s.transform !== 'none'
-    ? _s.transform.replace('matrix(', '').split(',')
-    : [1,1,1,1];
+  let transform =
+    _s.transform !== 'none' ? _s.transform.replace('matrix(', '').split(',') : [1, 1, 1, 1];
   let transformScaleX = parseFloat(transform[0]);
   let transformScaleY = parseFloat(transform[3]);
 
   // scale transform applies to the border and padding of the element
-  let borderWidth = (getPropValue(_s, 'border-left-width') + getPropValue(_s, 'border-right-width')) * transformScaleX;
-  let borderHeight = (getPropValue(_s, 'border-top-width') + getPropValue(_s, 'border-bottom-width')) * transformScaleY;
+  let borderWidth =
+    (getPropValue(_s, 'border-left-width') + getPropValue(_s, 'border-right-width')) *
+    transformScaleX;
+  let borderHeight =
+    (getPropValue(_s, 'border-top-width') + getPropValue(_s, 'border-bottom-width')) *
+    transformScaleY;
 
-  let paddingWidth = (getPropValue(_s, 'padding-left') + getPropValue(_s, 'padding-right')) * transformScaleX;
-  let paddingHeight = (getPropValue(_s, 'padding-top') + getPropValue(_s, 'padding-bottom')) * transformScaleY;
+  let paddingWidth =
+    (getPropValue(_s, 'padding-left') + getPropValue(_s, 'padding-right')) * transformScaleX;
+  let paddingHeight =
+    (getPropValue(_s, 'padding-top') + getPropValue(_s, 'padding-bottom')) * transformScaleY;
 
   return {
     scaleX: (rect.width - borderWidth - paddingWidth) / canvas.width,
     scaleY: (rect.height - borderHeight - paddingHeight) / canvas.height,
-    offsetX: rect.left + (getPropValue(_s, 'border-left-width') + getPropValue(_s, 'padding-left')) * transformScaleX,
-    offsetY: rect.top + (getPropValue(_s, 'border-top-width') + getPropValue(_s, 'padding-top')) * transformScaleY
+    offsetX:
+      rect.left +
+      (getPropValue(_s, 'border-left-width') + getPropValue(_s, 'padding-left')) * transformScaleX,
+    offsetY:
+      rect.top +
+      (getPropValue(_s, 'border-top-width') + getPropValue(_s, 'padding-top')) * transformScaleY
   };
 }
 
@@ -196,7 +202,6 @@ function getCanvasOffset(pointer) {
  * @param {MouseEvent|TouchEvent} evt
  */
 function pointerDownHandler(evt) {
-
   // touchstart should be treated like a left mouse button
   let button = evt.button !== undefined ? buttonMap[evt.button] : 'left';
   pressedButtons[button] = true;
@@ -245,17 +250,11 @@ function pointerHandler(evt, eventName) {
 
   let canvas = evt.target;
   let pointer = pointers.get(canvas);
-  let {
-    scaleX,
-    scaleY,
-    offsetX,
-    offsetY
-  } = getCanvasOffset(pointer);
+  let { scaleX, scaleY, offsetX, offsetY } = getCanvasOffset(pointer);
 
   let isTouchEvent = ['touchstart', 'touchmove', 'touchend'].indexOf(evt.type) !== -1;
 
   if (isTouchEvent) {
-
     // update pointer.touches
     pointer.touches = {};
     for (var i = 0; i < evt.touches.length; i++) {
@@ -268,9 +267,9 @@ function pointerHandler(evt, eventName) {
     }
 
     // handle all touches
-    for (var i = evt.changedTouches.length; i--;) {
+    for (var i = evt.changedTouches.length; i--; ) {
       const id = evt.changedTouches[i].identifier;
-      if (typeof pointer.touches[id] !== "undefined") {
+      if (typeof pointer.touches[id] !== 'undefined') {
         pointer.touches[id].changed = true;
       }
 
@@ -289,9 +288,7 @@ function pointerHandler(evt, eventName) {
         callbacks[eventName](evt, object);
       }
     }
-  }
-  else {
-
+  } else {
     // translate the scaled size back as if the canvas was at a
     // 1:1 scale
     pointer.x = (evt.clientX - offsetX) / scaleX;
@@ -329,7 +326,7 @@ function pointerHandler(evt, eventName) {
  *
  * @returns {{x: Number, y: Number, radius: Number, canvas: HTMLCanvasElement, touches: Object}} The pointer object for the canvas.
  */
-export function initPointer({radius = 5, canvas = getCanvas()} = {}) {
+export function initPointer({ radius = 5, canvas = getCanvas() } = {}) {
   let pointer = pointers.get(canvas);
   if (!pointer) {
     let style = window.getComputedStyle(canvas);
@@ -407,7 +404,7 @@ export function track(...objects) {
     // @ifdef DEBUG
     if (!pointer) {
       throw new ReferenceError('Pointer events not initialized for the objects canvas');
-    };
+    }
     // @endif
 
     // override the objects render function to keep track of render
@@ -415,7 +412,7 @@ export function track(...objects) {
     if (!object._r) {
       object._r = object.render;
 
-      object.render = function() {
+      object.render = function () {
         pointer._cf.push(this);
         this._r();
       };
@@ -426,7 +423,7 @@ export function track(...objects) {
 }
 
 /**
-* Remove the callback function for a bound set of objects.
+ * Remove the callback function for a bound set of objects.
  *
  * ```js
  * import { untrack } from 'kontra';
@@ -446,12 +443,12 @@ export function untrack(...objects) {
     // @ifdef DEBUG
     if (!pointer) {
       throw new ReferenceError('Pointer events not initialized for the objects canvas');
-    };
+    }
     // @endif
 
     // restore original render function to no longer track render order
     object.render = object._r;
-    object._r = 0;  // 0 is the shortest falsy value
+    object._r = 0; // 0 is the shortest falsy value
 
     let index = pointer._o.indexOf(object);
     if (index !== -1) {
@@ -505,7 +502,7 @@ export function pointerOver(object) {
   // @ifdef DEBUG
   if (!pointer) {
     throw new ReferenceError('Pointer events not initialized for the objects canvas');
-  };
+  }
   // @endif
 
   return pointer._o.includes(object) && getCurrentObject(pointer) === object;
@@ -532,7 +529,7 @@ export function onPointerDown(callback) {
 }
 
 /**
-* Register a function to be called on all pointer up events. Is passed the original Event and the target object (if there is one).
+ * Register a function to be called on all pointer up events. Is passed the original Event and the target object (if there is one).
  *
  * ```js
  * import { initPointer, onPointerUp } from 'kontra';
@@ -577,12 +574,12 @@ export function onPointerUp(callback) {
  * @returns {Boolean} `true` if the button is pressed, `false` otherwise.
  */
 export function pointerPressed(button) {
-  return !!pressedButtons[button]
+  return !!pressedButtons[button];
 }
 
 // expose for testing
 export function resetPointers() {
   // no clear method so only alternative is to create a new WeakMap
   // @see https://stackoverflow.com/questions/37528622/why-is-weakmap-clear-method-deprecated
-  pointers = new WeakMap()
+  pointers = /*@__PURE__*/ new WeakMap();
 }

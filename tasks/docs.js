@@ -7,22 +7,24 @@ const fs = require('fs');
 const glob = require('glob');
 
 const optionalRegex = /^\[.*\]$/;
-const kontraTypesRegex = new RegExp(`(${
-  glob.sync('src/*.js')
+const kontraTypesRegex = new RegExp(
+  `(${glob
+    .sync('src/*.js')
     .map(fileName => getPageName(path.basename(fileName, '.js')))
-    .sort((a,b) => b.length - a.length)
-    .join('|')
-})`, 'g');
+    .sort((a, b) => b.length - a.length)
+    .join('|')})`,
+  'g'
+);
 const packageVersionRegex = /__packageVersion__/g;
 const excludeCodeRegex = /\s*\/\/ exclude-code:start[\s\S]*?\/\/ exclude-code:end/g;
 const excludeScriptRegex = /\s*\/\/ exclude-script:start[\r\n]([\s\S]*?[\r\n])\/\/ exclude-script:end[\r\n]/g;
-const codeRegex =/<pre>[\s\S]*?<code class="(.*)">([\s\S]*?)<\/code><\/pre>/g;
+const codeRegex = /<pre>[\s\S]*?<code class="(.*)">([\s\S]*?)<\/code><\/pre>/g;
 const importRegex = /import \{(.*)\} from .+kontra.+?;/g;
 let uuid = 0;
 let navbar;
 
 function getPageName(file) {
-  return file[0].toUpperCase() + file.substring(1)
+  return file[0].toUpperCase() + file.substring(1);
 }
 
 /**
@@ -31,11 +33,7 @@ function getPageName(file) {
  * @param {Object} b
  */
 function sortByName(a, b) {
-  return a.name < b.name
-    ? -1
-    : a.name > b.name
-      ? 1
-      : 0;
+  return a.name < b.name ? -1 : a.name > b.name ? 1 : 0;
 }
 
 // hack to add @section and @page to every jsdoc section without explicitly
@@ -46,13 +44,7 @@ function addSectionAndPage() {
   let fn = this.block.function;
   let clas = this.block.class;
 
-  let sectionName = property
-    ? property.name
-    : fn
-      ? fn
-      : clas
-        ? clas
-        : description;
+  let sectionName = property ? property.name : fn ? fn : clas ? clas : description;
 
   // TODO: temporary fix for `length` name (zero-width space added to end)
   if (sectionName === 'length') {
@@ -91,15 +83,13 @@ function addSectionAndPage() {
  * @param {Object} section
  */
 function buildImports(section) {
-  section.description = section.description
-    .replace(codeRegex, (match, className) => {
+  section.description = section.description.replace(codeRegex, (match, className) => {
+    if (className === 'language-js' && !match.includes('// exclude-tablist')) {
+      let globalImport = match.replace(importRegex, `let {$1} = kontra`);
+      let esImport = match.replace(importRegex, `import {$1} from 'path/to/kontra.mjs'`);
+      let bundlerImport = match;
 
-      if (className === 'language-js' && !match.includes('// exclude-tablist')) {
-        let globalImport = match.replace(importRegex, `let {$1} = kontra`);
-        let esImport = match.replace(importRegex, `import {$1} from 'path/to/kontra.mjs'`);
-        let bundlerImport = match;
-
-        return `<div class="tablist">
+      return `<div class="tablist">
   <ul role="tablist">
     <li role="presentation" data-tab="global">
       <button role="tab" id="${section.id}-global-tab">Global Object</button>
@@ -116,11 +106,10 @@ function buildImports(section) {
   <section role="tabpanel" aria-labelledby=${section.id}-es-tab data-tabpanel="es">${esImport}</section>
   <section role="tabpanel" aria-labelledby=${section.id}-bundle-tab data-tabpanel="bundle">${bundlerImport}</section>
 </div>`;
-      }
-      else {
-        return match.replace('// exclude-tablist\n', '');
-      }
-    });
+    } else {
+      return match.replace('// exclude-tablist\n', '');
+    }
+  });
 }
 
 /**
@@ -129,7 +118,7 @@ function buildImports(section) {
  * @param {Boolean} isArray - If the type is an array.
  */
 function resolveKontraType(string, isArray) {
-  return string.replace(kontraTypesRegex, function(match, p1) {
+  return string.replace(kontraTypesRegex, function (match, p1) {
     let url = p1;
     // if (isArray) {
     //   url = url;
@@ -149,11 +138,9 @@ function parseType(type) {
   // parse typescript specific typings
   if (type.startsWith('(')) {
     type = 'Function';
-  }
-  else if (type.startsWith('{')) {
+  } else if (type.startsWith('{')) {
     type = type.replace(/\{.*?\}/, 'Object');
-  }
-  else if (type.startsWith('...')) {
+  } else if (type.startsWith('...')) {
     type = type.replace('...', 'A list of ');
 
     // make the type plural instead of an array for reset parameters
@@ -169,7 +156,7 @@ function parseType(type) {
   let isArray = false;
   if (type.includes('[]')) {
     isArray = true;
-    type = type.replace(/(\w+)\[\]/g, function(match, p1, index) {
+    type = type.replace(/(\w+)\[\]/g, function (match, p1, index) {
       return `${index === 0 ? 'A' : 'a'}n Array of ${p1}s`;
     });
   }
@@ -183,9 +170,8 @@ function parseType(type) {
 }
 
 let tags = {
-
   // output information about the parameter
-  param: function() {
+  param: function () {
     let { name, description, type } = this.tag;
     let paramValue = '';
     let entry = {};
@@ -196,8 +182,8 @@ let tags = {
 
     // optional param
     if (optionalRegex.test(name)) {
-       name = name.substring(1, name.length - 1);
-       entry.optional = true;
+      name = name.substring(1, name.length - 1);
+      entry.optional = true;
     }
 
     // default param
@@ -214,7 +200,7 @@ let tags = {
 
     // build paramList
     if (entry.optional) {
-      paramValue += '['
+      paramValue += '[';
     }
     if (this.block.paramList.length >= 1) {
       paramValue += ', ';
@@ -225,7 +211,9 @@ let tags = {
     }
 
     type = parseType(type);
-    description = `<em>${type}</em>. ${description}${entry.default ? ` Defaults to \`${entry.default}\`.` : ''}`;
+    description = `<em>${type}</em>. ${description}${
+      entry.default ? ` Defaults to \`${entry.default}\`.` : ''
+    }`;
 
     entry.name = name;
     entry.description = marked(description);
@@ -241,7 +229,7 @@ let tags = {
   },
 
   // output information about the returns value
-  returns: function() {
+  returns: function () {
     let type = parseType(this.tag.type);
     let description = this.tag.description;
 
@@ -254,7 +242,7 @@ let tags = {
 
   // create a canvas element and code block that shows code and it actually
   // working as written.
-  example: function() {
+  example: function () {
     let width = 600;
     let height = 200;
 
@@ -275,7 +263,8 @@ let tags = {
      */
     let id = `game-canvas-${uuid++}`;
 
-    let codeOutput = this.tag.description.trim()
+    let codeOutput = this.tag.description
+      .trim()
       .replace(excludeCodeRegex, '')
       .replace(excludeScriptRegex, '$1');
     let globalImport = codeOutput.replace(importRegex, `let {$1} = kontra`);
@@ -300,18 +289,18 @@ let tags = {
 
   // automatically make @class, @function, @property, and @sectionName add
   // their own @section and @page tags for ease of use
-  class: function() {
+  class: function () {
     this.block.class = this.tag.description;
     addSectionAndPage.call(this);
   },
-  extends: function() {
+  extends: function () {
     this.block.extends = parseType(this.tag.description);
   },
-  function: function() {
+  function: function () {
     this.block.function = this.tag.description;
     addSectionAndPage.call(this);
   },
-  property: function() {
+  property: function () {
     let type = parseType(this.tag.type);
 
     this.block.property = {
@@ -324,7 +313,7 @@ let tags = {
     this.comment.description = `<em>${type}</em>. ${this.comment.description.substr(1)}`;
     addSectionAndPage.call(this);
   },
-  sectionName: function() {
+  sectionName: function () {
     this.comment.tags.push({
       tag: 'section',
       description: this.tag.description,
@@ -338,16 +327,19 @@ let tags = {
 
   // put the package version anywhere there is `{{ packageVersion }}` in the
   // description. primarily used for the download page
-  packageVersion: function() {
-    this.block.description = this.block.description.replace(packageVersionRegex, packageJson.version);
+  packageVersion: function () {
+    this.block.description = this.block.description.replace(
+      packageVersionRegex,
+      packageJson.version
+    );
   },
 
   // read a separate file for docs
-  docs: function() {
+  docs: function () {
     let contents = fs.readFileSync(this.tag.description);
 
-    let parseComments = require( path.join(require.resolve('livingcss'), '../lib/parseComments.js') );
-    let livingCSSTags = require( path.join(require.resolve('livingcss'), '../lib/tags.js') );
+    let parseComments = require(path.join(require.resolve('livingcss'), '../lib/parseComments.js'));
+    let livingCSSTags = require(path.join(require.resolve('livingcss'), '../lib/tags.js'));
     let tagList = {
       ...livingCSSTags,
       example: tags.example,
@@ -364,7 +356,6 @@ let tags = {
 function livingcssPreprocess(context, template, Handlebars) {
   try {
     if (context.navbar) {
-
       // remove the .html from the nav item urls
       context.navbar.forEach(navItem => {
         navItem.url = navItem.url.replace('.html', '');
@@ -393,13 +384,11 @@ function livingcssPreprocess(context, template, Handlebars) {
     context.methodsAndProperties = [];
 
     context.sections.forEach((section, index) => {
-
       // sort by methods and properties
       if (section.function) {
         context.methods.push(section);
         context.methodsAndProperties.push(section);
-      }
-      else if (section.property) {
+      } else if (section.property) {
         context.properties.push(section);
         context.methodsAndProperties.push(section);
       }
@@ -417,8 +406,7 @@ function livingcssPreprocess(context, template, Handlebars) {
     });
 
     // load all handlebar partials
-    return livingcss.utils.readFileGlobs('docs/template/partials/*.hbs', function(data, file) {
-
+    return livingcss.utils.readFileGlobs('docs/template/partials/*.hbs', function (data, file) {
       // make the name of the partial the name of the file
       var partialName = path.basename(file, path.extname(file));
       Handlebars.registerPartial(partialName, data);
@@ -434,47 +422,58 @@ function buildPages() {
     navItem.selected = false;
   });
 
-  return gulp.src('docs/pages/*.js')
-    .pipe(livingcss('docs', {
-      loadcss: false,
-      template: 'docs/template/template.hbs',
-      tags: {...tags},
-      preprocess: function(context, template, Handlebars) {
-        context.navbar = navbar;
-        context.otherSections = context.sections.slice(1);
-        context['nav-'+context.id] = true;
+  return gulp
+    .src('docs/pages/*.js')
+    .pipe(
+      livingcss('docs', {
+        loadcss: false,
+        template: 'docs/template/template.hbs',
+        tags: { ...tags },
+        preprocess: function (context, template, Handlebars) {
+          context.navbar = navbar;
+          context.otherSections = context.sections.slice(1);
+          context['nav-' + context.id] = true;
 
-        context.sections.forEach(section => {
-          buildImports(section);
-        });
+          context.sections.forEach(section => {
+            buildImports(section);
+          });
 
-        // load all handlebar partials
-        return livingcss.utils.readFileGlobs('docs/template/partials/*.hbs', function(data, file) {
-
-          // make the name of the partial the name of the file
-          var partialName = path.basename(file, path.extname(file));
-          Handlebars.registerPartial(partialName, data);
-        });
-      }
-    }))
-    .pipe(gulp.dest('docs'))
+          // load all handlebar partials
+          return livingcss.utils.readFileGlobs(
+            'docs/template/partials/*.hbs',
+            function (data, file) {
+              // make the name of the partial the name of the file
+              var partialName = path.basename(file, path.extname(file));
+              Handlebars.registerPartial(partialName, data);
+            }
+          );
+        }
+      })
+    )
+    .pipe(gulp.dest('docs'));
 }
 
 function buildApi() {
   uuid = 0;
 
-  return gulp.src('src/*.js')
-    .pipe(livingcss('docs/api', {
-      loadcss: false,
-      template: 'docs/template/template.hbs',
-      tags: {...tags},
-      preprocess: livingcssPreprocess
-    }))
-    .pipe(gulp.dest('docs/api'))
+  return gulp
+    .src('src/*.js')
+    .pipe(
+      livingcss('docs/api', {
+        loadcss: false,
+        template: 'docs/template/template.hbs',
+        tags: { ...tags },
+        preprocess: livingcssPreprocess
+      })
+    )
+    .pipe(gulp.dest('docs/api'));
 }
 
 gulp.task('build:docs', gulp.series(buildApi, buildPages));
 
-gulp.task('watch:docs', function() {
-  gulp.watch(['src/*.js','docs/pages/*.js','docs/api_docs/*.js','docs/template/**/*.hbs'], gulp.series('build:docs'));
+gulp.task('watch:docs', function () {
+  gulp.watch(
+    ['src/*.js', 'docs/pages/*.js', 'docs/api_docs/*.js', 'docs/template/**/*.hbs'],
+    gulp.series('build:docs')
+  );
 });

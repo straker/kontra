@@ -1,11 +1,10 @@
-import * as core from '../../src/core.js'
-import { on } from '../../src/events.js'
+import * as core from '../../src/core.js';
+import { on } from '../../src/events.js';
 
 // --------------------------------------------------
 // core
 // --------------------------------------------------
 describe('core', () => {
-
   // ensure no canvas exists since these tests set it up
   beforeEach(() => {
     document.querySelectorAll('canvas').forEach(canvas => canvas.remove());
@@ -101,7 +100,5 @@ describe('core', () => {
       expect(canvas).to.equal(c);
       expect(context).to.equal(c.getContext('2d'));
     });
-
   });
-
 });

@@ -1,6 +1,9 @@
-(function() {
+(function () {
   var pre = document.createElement('pre');
-  pre.innerHTML = '<code class="language-javascript" style="font-size: 14px;">' + document.getElementById('code').innerHTML + '</code>';
+  pre.innerHTML =
+    '<code class="language-javascript" style="font-size: 14px;">' +
+    document.getElementById('code').innerHTML +
+    '</code>';
   document.body.appendChild(pre);
 
   var prisimcss = document.createElement('link');

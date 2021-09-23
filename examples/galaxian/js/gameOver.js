@@ -5,13 +5,13 @@ let gameOverText = kontra.Text({
   color: '#FF7F00',
   text: 'Game Over',
   font: '28px Helvetica, sans-serif',
-  anchor: {x: 0.5, y: 0.5},
+  anchor: { x: 0.5, y: 0.5 }
 });
 
 let restartButton = kontra.Button({
   padX: 15,
   padY: 15,
-  anchor: {x: 0.5, y: 0.5},
+  anchor: { x: 0.5, y: 0.5 },
 
   // align center to the grid
   justifySelf: 'center',
@@ -20,7 +20,7 @@ let restartButton = kontra.Button({
     text: 'Restart',
     color: '#FF7F00',
     font: '18px Helvetica, sans-serif',
-    anchor: {x: 0.5, y: 0.5},
+    anchor: { x: 0.5, y: 0.5 }
   },
 
   render() {
@@ -34,12 +34,10 @@ let restartButton = kontra.Button({
 
     if (this.pressed) {
       this.textNode.color = 'white';
-    }
-    else if (this.focused || this.hovered) {
+    } else if (this.focused || this.hovered) {
       this.textNode.color = '#62a2f9';
       canvas.style.cursor = 'pointer';
-    }
-    else  {
+    } else {
       this.textNode.color = '#FF7F00';
       canvas.style.cursor = 'initial';
     }
@@ -57,7 +55,7 @@ let grid = kontra.Grid({
 
   // put extra space between the button and text
   gapY: 40,
-  anchor: {x: 0.5, y: 0.5},
+  anchor: { x: 0.5, y: 0.5 },
   children: [gameOverText, restartButton]
 });
 

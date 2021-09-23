@@ -1,4 +1,4 @@
-import { init } from '../src/core.js'
+import { init } from '../src/core.js';
 
 // ensure canvas exists before each test
 function setup() {

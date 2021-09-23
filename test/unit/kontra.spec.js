@@ -1,11 +1,10 @@
-import * as kontraExports from '../../src/kontra.js'
-import kontra from '../../src/kontra.defaults.js'
+import * as kontraExports from '../../src/kontra.js';
+import kontra from '../../src/kontra.defaults.js';
 
 // --------------------------------------------------
 // kontra
 // --------------------------------------------------
 describe('kontra', () => {
-
   it('should export animation api', () => {
     expect(kontraExports.Animation).to.exist;
   });
@@ -128,5 +127,4 @@ describe('kontra', () => {
     expect(kontraExports.default).to.exist;
     expect(kontraExports.default).to.equal(kontra);
   });
-
 });

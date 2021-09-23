@@ -1,4 +1,4 @@
-import Animation from './animation.js';
+import Animation, { AnimationClass } from './animation.js';
 import {
   imageAssets,
   audioAssets,
@@ -11,12 +11,12 @@ import {
   loadData,
   load
 } from './assets.js';
-import Button from './button.js';
+import Button, { ButtonClass } from './button.js';
 import { init, getCanvas, getContext } from './core.js';
 import { on, off, emit } from './events.js';
 import GameLoop from './gameLoop.js';
-import GameObject from './gameObject.js';
-import Grid from './grid.js';
+import GameObject, { GameObjectClass } from './gameObject.js';
+import Grid, { GridClass } from './grid.js';
 import {
   radToDeg,
   degToRad,
@@ -44,17 +44,18 @@ import {
   onPointerUp,
   pointerPressed
 } from './pointer.js';
-import Pool from './pool.js';
-import Quadtree from './quadtree.js';
-import Scene from './scene.js';
-import Sprite from './sprite.js';
-import SpriteSheet from './spriteSheet.js';
-import Text from './text.js';
+import Pool, { PoolClass } from './pool.js';
+import Quadtree, { QuadtreeClass } from './quadtree.js';
+import Scene, { SceneClass } from './scene.js';
+import Sprite, { SpriteClass } from './sprite.js';
+import SpriteSheet, { SpriteSheetClass } from './spriteSheet.js';
+import Text, { TextClass } from './text.js';
 import TileEngine from './tileEngine.js';
-import Vector from './vector.js';
+import Vector, { VectorClass } from './vector.js';
 
 let kontra = {
   Animation,
+  AnimationClass,
 
   imageAssets,
   audioAssets,
@@ -68,6 +69,7 @@ let kontra = {
   load,
 
   Button,
+  ButtonClass,
 
   init,
   getCanvas,
@@ -79,7 +81,10 @@ let kontra = {
 
   GameLoop,
   GameObject,
+  GameObjectClass,
+
   Grid,
+  GridClass,
 
   degToRad,
   radToDeg,
@@ -115,14 +120,27 @@ let kontra = {
   pointerPressed,
 
   Pool,
+  PoolClass,
+
   Quadtree,
+  QuadtreeClass,
+
   Scene,
+  SceneClass,
+
   Sprite,
+  SpriteClass,
+
   SpriteSheet,
+  SpriteSheetClass,
 
   Text,
+  TextClass,
+
   TileEngine,
-  Vector
+
+  Vector,
+  VectorClass
 };
 
-export default kontra
+export default kontra;

@@ -1,10 +1,9 @@
-import kontra from '../../src/kontra.defaults.js'
+import kontra from '../../src/kontra.defaults.js';
 
 // --------------------------------------------------
 // kontra.defaults
 // --------------------------------------------------
 describe('kontra.defaults', () => {
-
   it('should add animation api', () => {
     expect(kontra.Animation).to.exist;
   });
@@ -122,5 +121,4 @@ describe('kontra.defaults', () => {
   it('should add vector api', () => {
     expect(kontra.Vector).to.exist;
   });
-
 });

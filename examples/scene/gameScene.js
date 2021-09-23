@@ -4,8 +4,8 @@ import snake from './snake.js';
 let apple = kontra.Sprite({
   x: 320,
   y: 320,
-  width: gridSize-1,
-  height: gridSize-1,
+  width: gridSize - 1,
+  height: gridSize - 1,
   color: 'red'
 });
 
@@ -26,7 +26,7 @@ let gameScene = kontra.Scene({
             return cell.x === col * gridSize && cell.y === row * gridSize;
           });
           if (!snakeCell) {
-            availableCells.push({row, col});
+            availableCells.push({ row, col });
           }
         }
       }
@@ -39,7 +39,6 @@ let gameScene = kontra.Scene({
     // check collision with all cells after this one
     snake.cells.forEach((cell, index) => {
       for (var i = index + 1; i < snake.cells.length; i++) {
-
         // snake occupies same space as a body part. reset game
         if (cell.x === snake.cells[i].x && cell.y === snake.cells[i].y) {
           snake.x = 160;

@@ -1,7 +1,7 @@
 // Karma configuration
 // Generated on Tue Apr 07 2015 23:14:35 GMT-0600 (MDT)
 
-module.exports = function(config) {
+module.exports = function (config) {
   config.set({
     basePath: '',
     singleRun: false,
@@ -9,19 +9,19 @@ module.exports = function(config) {
     frameworks: ['mocha', 'chai', 'sinon'],
     files: [
       // setup
-      {pattern: 'test/setup.js', type: 'module' },
+      { pattern: 'test/setup.js', type: 'module' },
 
       // assets
-      {pattern: 'test/imgs/*.*', included: false, served: true },
-      {pattern: 'test/audio/*.*', included: false, served: true },
-      {pattern: 'test/data/*.*', included: false, served: true },
+      { pattern: 'test/imgs/*.*', included: false, served: true },
+      { pattern: 'test/audio/*.*', included: false, served: true },
+      { pattern: 'test/data/*.*', included: false, served: true },
 
-      {pattern: 'src/*.js', type: 'module', included: false },
-      {pattern: 'test/unit/*.spec.js', type: 'module' },
-      {pattern: 'test/integration/*.spec.js', type: 'module' },
+      { pattern: 'src/*.js', type: 'module', included: false },
+      { pattern: 'test/unit/*.spec.js', type: 'module' },
+      { pattern: 'test/integration/*.spec.js', type: 'module' }
     ],
     preprocessors: {
-      'src/*.js': ["karma-coverage-istanbul-instrumenter"]
+      'src/*.js': ['karma-coverage-istanbul-instrumenter']
     },
     browsers: ['ChromeHeadless'],
     proxies: {

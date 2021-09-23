@@ -48,13 +48,13 @@ let pressedKeys = {};
  */
 export let keyMap = {
   // named keys
-  'Enter': 'enter',
-  'Escape': 'esc',
-  'Space': 'space',
-  'ArrowLeft': 'left',
-  'ArrowUp': 'up',
-  'ArrowRight': 'right',
-  'ArrowDown': 'down'
+  Enter: 'enter',
+  Escape: 'esc',
+  Space: 'space',
+  ArrowLeft: 'left',
+  ArrowUp: 'up',
+  ArrowRight: 'right',
+  ArrowDown: 'down'
 };
 
 /**
@@ -117,7 +117,7 @@ export function initKeys() {
 
   // numeric keys
   for (i = 0; i < 10; i++) {
-    keyMap[48+i] = keyMap['Digit'+i] = ''+i;
+    keyMap[48 + i] = keyMap['Digit' + i] = '' + i;
   }
 
   window.addEventListener('keydown', keydownEventHandler);
@@ -150,15 +150,12 @@ export function initKeys() {
  * @param {'keydown'|'keyup'} [options.handler=keydown] - Whether to bind to keydown or keyup events.
  * @param {Boolean} [options.preventDefault=true] - Call `event. preventDefault()` when the key is activated.
  */
-export function bindKeys(keys, callback, {
-  handler = 'keydown',
-  preventDefault = true
-} = {}) {
+export function bindKeys(keys, callback, { handler = 'keydown', preventDefault = true } = {}) {
   const callbacks = handler == 'keydown' ? keydownCallbacks : keyupCallbacks;
   // pd = preventDefault
   callback._pd = preventDefault;
   // smaller than doing `Array.isArray(keys) ? keys : [keys]`
-  [].concat(keys).map(key => callbacks[key] = callback);
+  [].concat(keys).map(key => (callbacks[key] = callback));
 }
 
 /**
@@ -176,12 +173,10 @@ export function bindKeys(keys, callback, {
  * @param {Object} [options] - Unbind options.
  * @param {'keydown'|'keyup'} [options.handler=keydown] - Whether to unbind from keydown or keyup events.
  */
-export function unbindKeys(keys, {
-  handler = 'keydown'
-} = {}) {
+export function unbindKeys(keys, { handler = 'keydown' } = {}) {
   const callbacks = handler == 'keydown' ? keydownCallbacks : keyupCallbacks;
   // 0 is the smallest falsy value
-  [].concat(keys).map(key => callbacks[key] = 0);
+  [].concat(keys).map(key => (callbacks[key] = 0));
 }
 
 /**

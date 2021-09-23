@@ -5,12 +5,10 @@ import { getCanvas } from '../../src/core.js';
 // grid
 // --------------------------------------------------
 describe('grid', () => {
-
   // --------------------------------------------------
   // init
   // --------------------------------------------------
   describe('init', () => {
-
     it('should set default properties', () => {
       let grid = Grid();
 
@@ -43,18 +41,12 @@ describe('grid', () => {
       expect(grid.numCols).to.equal(3);
       expect(grid.dir).to.equal('rtl');
     });
-
   });
-
-
-
-
 
   // --------------------------------------------------
   // destroy
   // --------------------------------------------------
   describe('destroy', () => {
-
     it('should call destroy for each child', () => {
       let child = {
         destroy: sinon.spy()
@@ -67,12 +59,7 @@ describe('grid', () => {
 
       expect(child.destroy.called).to.be.true;
     });
-
   });
-
-
-
-
 
   // --------------------------------------------------
   // prerender
@@ -84,7 +71,6 @@ describe('grid', () => {
     // column
     // --------------------------------------------------
     describe('column', () => {
-
       beforeEach(() => {
         child1 = {
           width: 100,
@@ -167,7 +153,7 @@ describe('grid', () => {
       });
 
       it('should take into account grid anchor', () => {
-        grid.anchor = {x: 0.5, y: 0.5};
+        grid.anchor = { x: 0.5, y: 0.5 };
         grid.render();
 
         expect(child1.x).to.equal(-50);
@@ -184,32 +170,26 @@ describe('grid', () => {
       });
 
       it('should take into account child anchor', () => {
-        child1.anchor = {x: 0.5, y: 0.5};
+        child1.anchor = { x: 0.5, y: 0.5 };
         grid._d = true;
         grid.render();
 
         expect(child1.x).to.equal(50);
         expect(child1.y).to.equal(12.5);
 
-        child1.anchor = {x: 1, y: 1};
+        child1.anchor = { x: 1, y: 1 };
         grid._d = true;
         grid.render();
 
         expect(child1.x).to.equal(100);
         expect(child1.y).to.equal(25);
       });
-
     });
-
-
-
-
 
     // --------------------------------------------------
     // row
     // --------------------------------------------------
     describe('row', () => {
-
       // copy from col just so we can see it closer to the tests
       beforeEach(() => {
         child1 = {
@@ -294,7 +274,7 @@ describe('grid', () => {
       });
 
       it('should take into account grid anchor', () => {
-        grid.anchor = {x: 0.5, y: 0.5};
+        grid.anchor = { x: 0.5, y: 0.5 };
         grid.render();
 
         expect(child1.x).to.equal(-100);
@@ -311,14 +291,14 @@ describe('grid', () => {
       });
 
       it('should take into account child anchor', () => {
-        child1.anchor = {x: 0.5, y: 0.5};
+        child1.anchor = { x: 0.5, y: 0.5 };
         grid._d = true;
         grid.render();
 
         expect(child1.x).to.equal(50);
         expect(child1.y).to.equal(12.5);
 
-        child1.anchor = {x: 1, y: 1};
+        child1.anchor = { x: 1, y: 1 };
         grid._d = true;
         grid.render();
 
@@ -360,18 +340,12 @@ describe('grid', () => {
         expect(child4.x).to.equal(0);
         expect(child4.y).to.equal(0);
       });
-
     });
-
-
-
-
 
     // --------------------------------------------------
     // grid
     // --------------------------------------------------
     describe('grid', () => {
-
       beforeEach(() => {
         child1 = {
           width: 100,
@@ -456,7 +430,7 @@ describe('grid', () => {
       });
 
       it('should take into account grid anchor', () => {
-        grid.anchor = {x: 0.5, y: 0.5};
+        grid.anchor = { x: 0.5, y: 0.5 };
         grid.render();
 
         expect(child1.x).to.equal(-62.5);
@@ -473,32 +447,26 @@ describe('grid', () => {
       });
 
       it('should take into account child anchor', () => {
-        child1.anchor = {x: 0.5, y: 0.5};
+        child1.anchor = { x: 0.5, y: 0.5 };
         grid._d = true;
         grid.render();
 
         expect(child1.x).to.equal(50);
         expect(child1.y).to.equal(12.5);
 
-        child1.anchor = {x: 1, y: 1};
+        child1.anchor = { x: 1, y: 1 };
         grid._d = true;
         grid.render();
 
         expect(child1.x).to.equal(100);
         expect(child1.y).to.equal(25);
       });
-
     });
-
-
-
-
 
     // --------------------------------------------------
     // align
     // --------------------------------------------------
     describe('align', () => {
-
       beforeEach(() => {
         child1 = {
           width: 100,
@@ -567,18 +535,12 @@ describe('grid', () => {
         expect(child1.x).to.equal(0);
         expect(child1.y).to.equal(37.5);
       });
-
     });
-
-
-
-
 
     // --------------------------------------------------
     // justify
     // --------------------------------------------------
     describe('justify', () => {
-
       beforeEach(() => {
         child1 = {
           width: 100,
@@ -647,12 +609,7 @@ describe('grid', () => {
         expect(child3.x).to.equal(25);
         expect(child3.y).to.equal(100);
       });
-
     });
-
-
-
-
 
     // --------------------------------------------------
     // colGap
@@ -707,18 +664,12 @@ describe('grid', () => {
         expect(child2.x).to.equal(100);
         expect(child1.x).to.equal(130);
       });
-
     });
-
-
-
-
 
     // --------------------------------------------------
     // colSpan
     // --------------------------------------------------
     describe('colSpan', () => {
-
       beforeEach(() => {
         child1 = {
           width: 100,
@@ -781,27 +732,25 @@ describe('grid', () => {
         expect(child4.x).to.equal(75);
         expect(child4.y).to.equal(125);
       });
-
     });
-
-
-
-
 
     // --------------------------------------------------
     // breakpoints
     // --------------------------------------------------
     describe('breakpoints', () => {
-
       it('should call the callback if the metric returns true', () => {
         let callback = sinon.spy();
 
         grid = Grid({
           numCols: 2,
-          breakpoints: [{
-            metric() { return this.scaleX === 2 },
-            callback
-          }]
+          breakpoints: [
+            {
+              metric() {
+                return this.scaleX === 2;
+              },
+              callback
+            }
+          ]
         });
 
         expect(callback.called).to.be.false;
@@ -812,15 +761,19 @@ describe('grid', () => {
         expect(callback.called).to.be.true;
       });
 
-      it('should not call the callback twice if it hasn\'t changed', () => {
+      it("should not call the callback twice if it hasn't changed", () => {
         let callback = sinon.spy();
 
         grid = Grid({
           numCols: 2,
-          breakpoints: [{
-            metric() { return this.scaleX === 2 },
-            callback
-          }]
+          breakpoints: [
+            {
+              metric() {
+                return this.scaleX === 2;
+              },
+              callback
+            }
+          ]
         });
 
         expect(callback.called).to.be.false;
@@ -833,9 +786,6 @@ describe('grid', () => {
 
         expect(callback.calledTwice).to.be.false;
       });
-
     });
-
   });
-
 });

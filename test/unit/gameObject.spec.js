@@ -1,6 +1,6 @@
-import GameObject from '../../src/gameObject.js'
-import { getContext } from '../../src/core.js'
-import { noop } from '../../src/utils.js'
+import GameObject, { GameObjectClass } from '../../src/gameObject.js';
+import { getContext } from '../../src/core.js';
+import { noop } from '../../src/utils.js';
 
 // test-context:start
 let testContext = {
@@ -16,8 +16,7 @@ let testContext = {
 // --------------------------------------------------
 // gameObject
 // --------------------------------------------------
-describe('gameObject with context: ' + JSON.stringify(testContext,null,4), () => {
-
+describe('gameObject with context: ' + JSON.stringify(testContext, null, 4), () => {
   let spy;
   let gameObject;
   beforeEach(() => {
@@ -32,7 +31,6 @@ describe('gameObject with context: ' + JSON.stringify(testContext,null,4), () =>
   // init
   // --------------------------------------------------
   describe('init', () => {
-
     it('should set default properties', () => {
       expect(gameObject.context).to.equal(getContext());
       expect(gameObject.width).to.equal(0);
@@ -40,7 +38,7 @@ describe('gameObject with context: ' + JSON.stringify(testContext,null,4), () =>
     });
 
     it('should set width and height properties', () => {
-      gameObject = GameObject({width: 10, height: 20});
+      gameObject = GameObject({ width: 10, height: 20 });
 
       expect(gameObject.width).to.equal(10);
       expect(gameObject.height).to.equal(20);
@@ -49,25 +47,25 @@ describe('gameObject with context: ' + JSON.stringify(testContext,null,4), () =>
     it('should set context property', () => {
       let canvas = document.createElement('canvas');
       let context = canvas.getContext('2d');
-      gameObject = GameObject({context: context});
+      gameObject = GameObject({ context: context });
 
       expect(gameObject.context).to.equal(context);
     });
 
     it('should set any property', () => {
-      gameObject = GameObject({myProp: 'foo'});
+      gameObject = GameObject({ myProp: 'foo' });
 
       expect(gameObject.myProp).to.equal('foo');
     });
 
     it('should set render function', () => {
-      gameObject =  GameObject({render: noop});
+      gameObject = GameObject({ render: noop });
 
       expect(gameObject._rf).to.equal(noop);
     });
 
     it('should not override properties from parent object', () => {
-      class MyClass extends GameObject.class {
+      class MyClass extends GameObjectClass {
         init() {
           super.init({
             width: 20,
@@ -83,16 +81,15 @@ describe('gameObject with context: ' + JSON.stringify(testContext,null,4), () =>
 
     if (testContext.GAMEOBJECT_ANCHOR) {
       it('should set default anchor', () => {
-        expect(gameObject.anchor).to.deep.equal({x: 0, y: 0});
+        expect(gameObject.anchor).to.deep.equal({ x: 0, y: 0 });
       });
 
       it('should set anchor property', () => {
-        gameObject = GameObject({anchor: {x: 0.5, y: 0.5}});
+        gameObject = GameObject({ anchor: { x: 0.5, y: 0.5 } });
 
-        expect(gameObject.anchor).to.deep.equal({x: 0.5, y: 0.5});
+        expect(gameObject.anchor).to.deep.equal({ x: 0.5, y: 0.5 });
       });
-    }
-    else {
+    } else {
       it('should not default anchor', () => {
         expect(gameObject.anchor).to.not.exist;
       });
@@ -105,13 +102,12 @@ describe('gameObject with context: ' + JSON.stringify(testContext,null,4), () =>
       });
 
       it('should set sx and sy properties', () => {
-        gameObject = GameObject({sx: 10, sy: 20});
+        gameObject = GameObject({ sx: 10, sy: 20 });
 
         expect(gameObject.sx).to.equal(10);
         expect(gameObject.sy).to.equal(20);
       });
-    }
-    else {
+    } else {
       it('should not default camera', () => {
         expect(gameObject.sx).to.not.exist;
         expect(gameObject.sy).to.not.exist;
@@ -132,16 +128,15 @@ describe('gameObject with context: ' + JSON.stringify(testContext,null,4), () =>
       });
 
       it('should call "addChild" for each child', () => {
-        spy = sinon.stub(GameObject.prototype, 'addChild').callsFake(noop);
+        spy = sinon.stub(GameObjectClass.prototype, 'addChild').callsFake(noop);
 
-        gameObject = GameObject({children: ['child1', 'child2']});
+        gameObject = GameObject({ children: ['child1', 'child2'] });
 
         expect(spy.calledTwice).to.be.true;
         expect(spy.firstCall.calledWith('child1')).to.be.true;
         expect(spy.secondCall.calledWith('child2')).to.be.true;
       });
-    }
-    else {
+    } else {
       it('should not default children', () => {
         expect(gameObject.children).to.not.exist;
       });
@@ -153,12 +148,11 @@ describe('gameObject with context: ' + JSON.stringify(testContext,null,4), () =>
       });
 
       it('should set opacity property', () => {
-        gameObject = GameObject({opacity: 0.5});
+        gameObject = GameObject({ opacity: 0.5 });
 
         expect(gameObject.opacity).to.equal(0.5);
       });
-    }
-    else {
+    } else {
       it('should not default opacity', () => {
         expect(gameObject.opacity).to.not.exist;
       });
@@ -169,14 +163,12 @@ describe('gameObject with context: ' + JSON.stringify(testContext,null,4), () =>
         expect(gameObject.rotation).to.equal(0);
       });
 
-
       it('should set rotation property', () => {
-        gameObject = GameObject({rotation: 0.5});
+        gameObject = GameObject({ rotation: 0.5 });
 
         expect(gameObject.rotation).to.equal(0.5);
       });
-    }
-    else {
+    } else {
       it('should not default camera', () => {
         expect(gameObject.rotation).to.not.exist;
       });
@@ -189,32 +181,23 @@ describe('gameObject with context: ' + JSON.stringify(testContext,null,4), () =>
       });
 
       it('should set scaleX and scaleY properties', () => {
-        gameObject = GameObject({scaleX: 10, scaleY: 20});
+        gameObject = GameObject({ scaleX: 10, scaleY: 20 });
 
         expect(gameObject.scaleX).to.equal(10);
         expect(gameObject.scaleY).to.equal(20);
       });
-    }
-    else {
+    } else {
       it('should not default camera', () => {
         expect(gameObject.scaleY).to.not.exist;
         expect(gameObject.scaleY).to.not.exist;
       });
     }
-
   });
-
-
-
-
-
-
 
   // --------------------------------------------------
   // render
   // --------------------------------------------------
   describe('render', () => {
-
     afterEach(() => {
       gameObject.context.translate.restore && gameObject.context.translate.restore();
       gameObject.context.rotate.restore && gameObject.context.rotate.restore();
@@ -258,8 +241,7 @@ describe('gameObject with context: ' + JSON.stringify(testContext,null,4), () =>
 
         expect(gameObject.context.rotate.called).to.be.false;
       });
-    }
-    else {
+    } else {
       it('should not rotate', () => {
         gameObject.rotation = 10;
 
@@ -290,8 +272,7 @@ describe('gameObject with context: ' + JSON.stringify(testContext,null,4), () =>
 
         expect(gameObject.context.translate.called).to.be.false;
       });
-    }
-    else {
+    } else {
       it('should not translate by camera', () => {
         gameObject.sx = 10;
         gameObject.sy = 20;
@@ -323,8 +304,7 @@ describe('gameObject with context: ' + JSON.stringify(testContext,null,4), () =>
 
         expect(gameObject.context.scale.called).to.be.false;
       });
-    }
-    else {
+    } else {
       it('should not scale', () => {
         gameObject.scaleX = 2;
         gameObject.scaleY = 2;
@@ -339,7 +319,7 @@ describe('gameObject with context: ' + JSON.stringify(testContext,null,4), () =>
 
     if (testContext.GAMEOBJECT_ANCHOR) {
       it('should translate to the anchor position', () => {
-        gameObject.anchor = {x: 0.5, y: 0.5};
+        gameObject.anchor = { x: 0.5, y: 0.5 };
         gameObject.width = 20;
         gameObject.height = 30;
 
@@ -359,7 +339,7 @@ describe('gameObject with context: ' + JSON.stringify(testContext,null,4), () =>
       });
 
       it('should translate back to the x/y position', () => {
-        gameObject.anchor = {x: 0.5, y: 0.5};
+        gameObject.anchor = { x: 0.5, y: 0.5 };
         gameObject.width = 20;
         gameObject.height = 30;
 
@@ -369,10 +349,9 @@ describe('gameObject with context: ' + JSON.stringify(testContext,null,4), () =>
 
         expect(gameObject.context.translate.secondCall.calledWith(10, 15)).to.be.true;
       });
-    }
-    else {
+    } else {
       it('should not translate by anchor', () => {
-        gameObject.anchor = {x: 0.5, y: 0.5};
+        gameObject.anchor = { x: 0.5, y: 0.5 };
         gameObject.width = 20;
         gameObject.height = 30;
 
@@ -396,8 +375,7 @@ describe('gameObject with context: ' + JSON.stringify(testContext,null,4), () =>
 
         spy.restore();
       });
-    }
-    else {
+    } else {
       it('should not set the globalAlpha', () => {
         gameObject.opacity = 0.5;
 
@@ -412,7 +390,7 @@ describe('gameObject with context: ' + JSON.stringify(testContext,null,4), () =>
     }
 
     it('should call the default render function', () => {
-      spy = sinon.spy(GameObject.prototype, 'draw');
+      spy = sinon.spy(GameObjectClass.prototype, 'draw');
 
       // redeclare now that the spy is set
       gameObject = GameObject();
@@ -462,8 +440,7 @@ describe('gameObject with context: ' + JSON.stringify(testContext,null,4), () =>
         expect(child1.render.called).to.be.false;
         expect(child2.render.called).to.be.true;
       });
-    }
-    else {
+    } else {
       it('should not call render on each child', () => {
         let child = {
           render: sinon.stub()
@@ -476,18 +453,12 @@ describe('gameObject with context: ' + JSON.stringify(testContext,null,4), () =>
         expect(child.render.called).to.be.false;
       });
     }
-
   });
-
-
-
-
 
   // --------------------------------------------------
   // world
   // --------------------------------------------------
   describe('world', () => {
-
     it('should default position and size properties', () => {
       expect(gameObject.world.x).to.equal(0);
       expect(gameObject.world.y).to.equal(0);
@@ -521,8 +492,7 @@ describe('gameObject with context: ' + JSON.stringify(testContext,null,4), () =>
 
         expect(gameObject.world.opacity).to.equal(0.5);
       });
-    }
-    else {
+    } else {
       it('should not have opacity', () => {
         expect(gameObject.world.opacity).to.not.exist;
       });
@@ -538,8 +508,7 @@ describe('gameObject with context: ' + JSON.stringify(testContext,null,4), () =>
 
         expect(gameObject.world.rotation).to.equal(0.5);
       });
-    }
-    else {
+    } else {
       it('should not have rotation', () => {
         expect(gameObject.world.rotation).to.not.exist;
       });
@@ -569,8 +538,7 @@ describe('gameObject with context: ' + JSON.stringify(testContext,null,4), () =>
         expect(gameObject.world.width).to.equal(20);
         expect(gameObject.world.height).to.equal(40);
       });
-    }
-    else {
+    } else {
       it('should not have scale', () => {
         expect(gameObject.world.scaleX).to.not.exist;
         expect(gameObject.world.scaleY).to.not.exist;
@@ -589,7 +557,6 @@ describe('gameObject with context: ' + JSON.stringify(testContext,null,4), () =>
     }
 
     if (testContext.GAMEOBJECT_GROUP) {
-
       it('should update world of each child', () => {
         let parent = GameObject({
           children: [gameObject]
@@ -674,23 +641,16 @@ describe('gameObject with context: ' + JSON.stringify(testContext,null,4), () =>
         });
       }
     }
-
   });
-
-
-
-
 
   // --------------------------------------------------
   // group
   // --------------------------------------------------
   describe('group', () => {
-
     // --------------------------------------------------
     // addChild
     // --------------------------------------------------
     describe('addChild', () => {
-
       if (testContext.GAMEOBJECT_GROUP) {
         it('should add the object as a child', () => {
           let child = {
@@ -722,24 +682,17 @@ describe('gameObject with context: ' + JSON.stringify(testContext,null,4), () =>
           expect(child.world.x).to.equal(40);
           expect(child.world.y).to.equal(60);
         });
-      }
-      else {
+      } else {
         it('should not have addChild', () => {
           expect(gameObject.addChild).to.not.exist;
         });
       }
-
     });
-
-
-
-
 
     // --------------------------------------------------
     // removeChild
     // --------------------------------------------------
     describe('removeChild', () => {
-
       if (testContext.GAMEOBJECT_GROUP) {
         it('should remove the object as a child', () => {
           let child = {
@@ -786,26 +739,19 @@ describe('gameObject with context: ' + JSON.stringify(testContext,null,4), () =>
           expect(child.world.x).to.equal(10);
           expect(child.world.y).to.equal(20);
         });
-      }
-      else {
+      } else {
         it('should not have removeChild', () => {
           expect(gameObject.removeChild).to.not.exist;
         });
       }
-
     });
-
-
-
-
 
     // --------------------------------------------------
     // update
     // --------------------------------------------------
     describe('update', () => {
-
       it('should call the default update function', () => {
-        spy = sinon.spy(GameObject.prototype, 'advance');
+        spy = sinon.spy(GameObjectClass.prototype, 'advance');
 
         // redeclare now that the spy is set
         gameObject = GameObject();
@@ -836,8 +782,7 @@ describe('gameObject with context: ' + JSON.stringify(testContext,null,4), () =>
 
           expect(child.update.called).to.be.true;
         });
-      }
-      else {
+      } else {
         it('should not call update on each child', () => {
           let child = {
             update: sinon.stub()
@@ -850,20 +795,13 @@ describe('gameObject with context: ' + JSON.stringify(testContext,null,4), () =>
           expect(child.update.called).to.be.false;
         });
       }
-
     });
-
   });
-
-
-
-
 
   // --------------------------------------------------
   // setScale
   // --------------------------------------------------
   describe('setScale', () => {
-
     if (testContext.GAMEOBJECT_SCALE) {
       it('should set the x and y scale', () => {
         gameObject.setScale(2, 2);
@@ -878,13 +816,10 @@ describe('gameObject with context: ' + JSON.stringify(testContext,null,4), () =>
         expect(gameObject.scaleX).to.equal(2);
         expect(gameObject.scaleY).to.equal(2);
       });
-    }
-    else {
+    } else {
       it('should not have setScale', () => {
         expect(gameObject.setScale).to.not.exist;
       });
     }
-
   });
-
 });

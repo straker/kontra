@@ -22,10 +22,10 @@
  *
  * ```js
  * // consumerCode.js
- * import { registerPlugin, Sprite, collides } from 'kontra';
+ * import { registerPlugin, Sprite, SpriteClass, collides } from 'kontra';
  * import loggingPlugin from pluginCode.js;
  *
- * class SpriteBox extends Sprite.class {
+ * class SpriteBox extends SpriteClass {
  *   constructor(props) {
  *     super(props);
  *   }

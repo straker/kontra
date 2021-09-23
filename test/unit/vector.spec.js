@@ -1,4 +1,4 @@
-import Vector from '../../src/vector.js'
+import Vector from '../../src/vector.js';
 
 // test-context:start
 let testContext = {
@@ -16,31 +16,23 @@ let testContext = {
 // --------------------------------------------------
 // vector
 // --------------------------------------------------
-describe('vector with context: ' + JSON.stringify(testContext,null,4), () => {
-
+describe('vector with context: ' + JSON.stringify(testContext, null, 4), () => {
   // --------------------------------------------------
   // init
   // --------------------------------------------------
   describe('init', () => {
-
     it('should set x and y', () => {
       let vector = Vector(10, 20);
 
       expect(vector.x).to.equal(10);
       expect(vector.y).to.equal(20);
     });
-
   });
-
-
-
-
 
   // --------------------------------------------------
   // add
   // --------------------------------------------------
   describe('add', () => {
-
     it('should add one vector to another', () => {
       let vector1 = Vector(10, 20);
       let vector2 = Vector(5, 10);
@@ -62,19 +54,13 @@ describe('vector with context: ' + JSON.stringify(testContext,null,4), () => {
       expect(vector2.x).to.deep.equal(5);
       expect(vector2.y).to.deep.equal(10);
     });
-
   });
-
-
-
-
 
   // --------------------------------------------------
   // subtract
   // --------------------------------------------------
   describe('subtract', () => {
     if (testContext.VECTOR_SUBTRACT) {
-
       it('should subtract one vector from another', () => {
         let vector1 = Vector(10, 20);
         let vector2 = Vector(5, 10);
@@ -96,9 +82,7 @@ describe('vector with context: ' + JSON.stringify(testContext,null,4), () => {
         expect(vector2.x).to.deep.equal(5);
         expect(vector2.y).to.deep.equal(10);
       });
-
-    }
-    else {
+    } else {
       it('should not have subtract', () => {
         let vector = Vector();
         expect(vector.subtract).to.not.exist;
@@ -106,16 +90,11 @@ describe('vector with context: ' + JSON.stringify(testContext,null,4), () => {
     }
   });
 
-
-
-
-
   // --------------------------------------------------
   // scale
   // --------------------------------------------------
   describe('scale', () => {
     if (testContext.VECTOR_SCALE) {
-
       it('should scale a vector by a scalar', () => {
         let vector1 = Vector(5, 10);
 
@@ -133,9 +112,7 @@ describe('vector with context: ' + JSON.stringify(testContext,null,4), () => {
         expect(vector1.x).to.deep.equal(5);
         expect(vector1.y).to.deep.equal(10);
       });
-
-    }
-    else {
+    } else {
       it('should not have scale', () => {
         let vector = Vector();
         expect(vector.scale).to.not.exist;
@@ -143,27 +120,20 @@ describe('vector with context: ' + JSON.stringify(testContext,null,4), () => {
     }
   });
 
-
-
-
-
   // --------------------------------------------------
   // normalize
   // --------------------------------------------------
   describe('normalize', () => {
     if (testContext.VECTOR_NORMALIZE) {
-
       it('should calculate the normalized vector', () => {
         let vector1 = Vector(4, 3);
 
         let normalize = vector1.normalize();
 
-        expect(normalize.x).to.deep.equal(4/5);
-        expect(normalize.y).to.deep.equal(3/5);
+        expect(normalize.x).to.deep.equal(4 / 5);
+        expect(normalize.y).to.deep.equal(3 / 5);
       });
-
-    }
-    else {
+    } else {
       it('should not have normalize', () => {
         let vector = Vector();
         expect(vector.normalize).to.not.exist;
@@ -171,16 +141,11 @@ describe('vector with context: ' + JSON.stringify(testContext,null,4), () => {
     }
   });
 
-
-
-
-
   // --------------------------------------------------
   // dot
   // --------------------------------------------------
   describe('dot', () => {
     if (testContext.VECTOR_DOT || testContext.VECTOR_ANGLE) {
-
       it('should calculate dot product of two vectors', () => {
         let vector1 = Vector(10, 20);
         let vector2 = Vector(5, 10);
@@ -189,9 +154,7 @@ describe('vector with context: ' + JSON.stringify(testContext,null,4), () => {
 
         expect(dot).to.deep.equal(250);
       });
-
-    }
-    else {
+    } else {
       it('should not have dot', () => {
         let vector = Vector();
         expect(vector.dot).to.not.exist;
@@ -199,16 +162,11 @@ describe('vector with context: ' + JSON.stringify(testContext,null,4), () => {
     }
   });
 
-
-
-
-
   // --------------------------------------------------
   // length
   // --------------------------------------------------
   describe('length', () => {
     if (testContext.VECTOR_LENGTH || testContext.VECTOR_NORMALIZE || testContext.VECTOR_ANGLE) {
-
       it('should calculate the length of the vector', () => {
         let vector1 = Vector(4, 3);
 
@@ -216,9 +174,7 @@ describe('vector with context: ' + JSON.stringify(testContext,null,4), () => {
 
         expect(length).to.deep.equal(5);
       });
-
-    }
-    else {
+    } else {
       it('should not have length', () => {
         let vector = Vector();
         expect(vector.length).to.not.exist;
@@ -226,16 +182,11 @@ describe('vector with context: ' + JSON.stringify(testContext,null,4), () => {
     }
   });
 
-
-
-
-
   // --------------------------------------------------
   // distance
   // --------------------------------------------------
   describe('distance', () => {
     if (testContext.VECTOR_DISTANCE) {
-
       it('should calculate the distance between two vectors', () => {
         let vector1 = Vector(10, 20);
         let vector2 = Vector(6, 17);
@@ -244,18 +195,13 @@ describe('vector with context: ' + JSON.stringify(testContext,null,4), () => {
 
         expect(distance).to.deep.equal(5);
       });
-    }
-    else {
+    } else {
       it('should not have distance', () => {
         let vector = Vector();
         expect(vector.distance).to.not.exist;
       });
     }
   });
-
-
-
-
 
   // --------------------------------------------------
   // angle
@@ -270,18 +216,13 @@ describe('vector with context: ' + JSON.stringify(testContext,null,4), () => {
 
         expect(angle.toFixed(2)).to.deep.equal('0.39');
       });
-    }
-    else {
+    } else {
       it('should not have angle', () => {
         let vector = Vector();
         expect(vector.angle).to.not.exist;
       });
     }
   });
-
-
-
-
 
   // --------------------------------------------------
   // clamp
@@ -293,7 +234,7 @@ describe('vector with context: ' + JSON.stringify(testContext,null,4), () => {
       beforeEach(() => {
         vector = Vector(10, 20);
         vector.clamp(0, 10, 50, 75);
-      })
+      });
 
       it('should clamp the vectors x value', () => {
         vector.x = -10;
@@ -321,13 +262,11 @@ describe('vector with context: ' + JSON.stringify(testContext,null,4), () => {
         expect(vec.x).to.equal(50);
         expect(vec.y).to.equal(75);
       });
-    }
-    else {
+    } else {
       it('should not have clamp', () => {
         let vector = Vector();
         expect(vector.clamp).to.not.exist;
       });
     }
   });
-
 });

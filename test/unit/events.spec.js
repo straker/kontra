@@ -1,10 +1,9 @@
-import * as events from '../../src/events.js'
+import * as events from '../../src/events.js';
 
 // --------------------------------------------------
 // on
 // --------------------------------------------------
 describe('events', () => {
-
   it('should export api', () => {
     expect(events.on).to.be.an('function');
     expect(events.off).to.be.an('function');
@@ -15,7 +14,6 @@ describe('events', () => {
   // on
   // --------------------------------------------------
   describe('on', () => {
-
     afterEach(() => {
       delete events.callbacks.foo;
     });
@@ -39,10 +37,6 @@ describe('events', () => {
       expect(events.callbacks.foo[1]).to.equal(func2);
     });
   });
-
-
-
-
 
   // --------------------------------------------------
   // off
@@ -94,10 +88,6 @@ describe('events', () => {
     });
   });
 
-
-
-
-
   // --------------------------------------------------
   // emit
   // --------------------------------------------------
@@ -122,7 +112,7 @@ describe('events', () => {
     it('should pass all parameters to the callback', () => {
       events.emit('foo', 1, 2, 3);
 
-      expect(func.calledWith(1,2,3)).to.equal(true);
+      expect(func.calledWith(1, 2, 3)).to.equal(true);
     });
 
     it('should call the callbacks in order', () => {
@@ -143,7 +133,5 @@ describe('events', () => {
 
       expect(fn).to.not.throw();
     });
-
   });
-
 });

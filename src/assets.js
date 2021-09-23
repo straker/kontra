@@ -31,7 +31,7 @@ let imageRegex = /(jpeg|jpg|gif|png|webp)$/;
 let audioRegex = /(wav|mp3|ogg|aac)$/;
 let leadingSlash = /^\//;
 let trailingSlash = /\/$/;
-let dataMap = new WeakMap();
+let dataMap = /*@__PURE__*/ new WeakMap();
 
 let imagePath = '';
 let audioPath = '';
@@ -60,7 +60,7 @@ function getUrl(url, base) {
 function joinPath(base, url) {
   return [base.replace(trailingSlash, ''), base ? url.replace(leadingSlash, '') : url]
     .filter(s => s)
-    .join('/')
+    .join('/');
 }
 
 /**
@@ -187,7 +187,7 @@ function addGlobal() {
       u: getUrl,
       d: dataAssets,
       i: imageAssets
-    }
+    };
   }
 }
 
@@ -273,7 +273,7 @@ export function loadImage(url) {
 
     image.onload = function loadImageOnLoad() {
       fullUrl = getUrl(resolvedUrl, window.location.href);
-      imageAssets[ getName(url) ] = imageAssets[resolvedUrl] = imageAssets[fullUrl] = this;
+      imageAssets[getName(url)] = imageAssets[resolvedUrl] = imageAssets[fullUrl] = this;
       emit('assetLoaded', this, url);
       resolve(this);
     };
@@ -311,22 +311,28 @@ export function loadImage(url) {
  */
 export function loadAudio(url) {
   return new Promise((resolve, reject) => {
-    let _url = url, audioEl, canPlay, resolvedUrl, fullUrl;
+    let _url = url,
+      audioEl,
+      canPlay,
+      resolvedUrl,
+      fullUrl;
 
     audioEl = new Audio();
     canPlay = getCanPlay(audioEl);
 
     // determine the first audio format the browser can play
-    url = [].concat(url)
-            .reduce((playableSource, source) => playableSource
-              ? playableSource
-              : canPlay[ getExtension(source) ]
-                ? source
-                : null
-            , 0);  // 0 is the shortest falsy value
+    url = []
+      .concat(url)
+      .reduce(
+        (playableSource, source) =>
+          playableSource ? playableSource : canPlay[getExtension(source)] ? source : null,
+        0
+      ); // 0 is the shortest falsy value
 
     if (!url) {
-      return reject(/* @ifdef DEBUG */ 'cannot play any of the audio formats provided ' + /* @endif */ _url);
+      return reject(
+        /* @ifdef DEBUG */ 'cannot play any of the audio formats provided ' + /* @endif */ _url
+      );
     }
 
     resolvedUrl = joinPath(audioPath, url);
@@ -334,7 +340,7 @@ export function loadAudio(url) {
 
     audioEl.addEventListener('canplay', function loadAudioOnLoad() {
       fullUrl = getUrl(resolvedUrl, window.location.href);
-      audioAssets[ getName(url) ] = audioAssets[resolvedUrl] = audioAssets[fullUrl] = this;
+      audioAssets[getName(url)] = audioAssets[resolvedUrl] = audioAssets[fullUrl] = this;
       emit('assetLoaded', this, url);
       resolve(this);
     });
@@ -373,19 +379,24 @@ export function loadData(url) {
   resolvedUrl = joinPath(dataPath, url);
   if (dataAssets[resolvedUrl]) return Promise.resolve(dataAssets[resolvedUrl]);
 
-  return fetch(resolvedUrl).then(response => {
-    if (!response.ok) throw response;
-    return response.clone().json().catch(() => response.text())
-  }).then(response => {
-    fullUrl = getUrl(resolvedUrl, window.location.href);
-    if (typeof response === 'object') {
-      dataMap.set(response, fullUrl);
-    }
+  return fetch(resolvedUrl)
+    .then(response => {
+      if (!response.ok) throw response;
+      return response
+        .clone()
+        .json()
+        .catch(() => response.text());
+    })
+    .then(response => {
+      fullUrl = getUrl(resolvedUrl, window.location.href);
+      if (typeof response === 'object') {
+        dataMap.set(response, fullUrl);
+      }
 
-    dataAssets[ getName(url) ] = dataAssets[resolvedUrl] = dataAssets[fullUrl] = response;
-    emit('assetLoaded', response, url);
-    return response;
-  });
+      dataAssets[getName(url)] = dataAssets[resolvedUrl] = dataAssets[fullUrl] = response;
+      emit('assetLoaded', response, url);
+      return response;
+    });
 }
 
 /**
@@ -416,13 +427,13 @@ export function load(...urls) {
   return Promise.all(
     urls.map(asset => {
       // account for a string or an array for the url
-      let extension = getExtension( [].concat(asset)[0] );
+      let extension = getExtension([].concat(asset)[0]);
 
       return extension.match(imageRegex)
         ? loadImage(asset)
         : extension.match(audioRegex)
-          ? loadAudio(asset)
-          : loadData(asset);
+        ? loadAudio(asset)
+        : loadData(asset);
     })
   );
 }

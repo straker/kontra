@@ -114,12 +114,9 @@ var kontra = (function () {
    * @returns {{canvas: HTMLCanvasElement, context: CanvasRenderingContext2D}} An object with properties `canvas` and `context`. `canvas` it the canvas element for the game and `context` is the context object the game draws to.
    */
   function init(canvas) {
-
     // check if canvas is a string first, an element next, or default to getting
     // first canvas on page
-    canvasEl = document.getElementById(canvas) ||
-               canvas ||
-               document.querySelector('canvas');
+    canvasEl = document.getElementById(canvas) || canvas || document.querySelector('canvas');
 
     // @ifdef DEBUG
     if (!canvasEl) {
@@ -171,8 +168,7 @@ var kontra = (function () {
    * @param {Boolean} [properties.loop=true] - If the animation should loop.
    */
   class Animation {
-    constructor({spriteSheet, frames, frameRate, loop = true}) {
-
+    constructor({ spriteSheet, frames, frameRate, loop = true }) {
       /**
        * The sprite sheet to use for the animation.
        * @memberof Animation
@@ -257,10 +253,9 @@ var kontra = (function () {
      *
      * @param {Number} [dt=1/60] - Time since last update.
      */
-    update(dt = 1/60) {
-
+    update(dt = 1 / 60) {
       // if the animation doesn't loop we stop at the last frame
-      if (!this.loop && this._f == this.frames.length-1) return;
+      if (!this.loop && this._f == this.frames.length - 1) return;
 
       this._a += dt;
 
@@ -283,19 +278,21 @@ var kontra = (function () {
      * @param {Number} [properties.height] - height of the sprite. Defaults to [Animation.height](api/animation#height).
      * @param {CanvasRenderingContext2D} [properties.context] - The context the animation should draw to. Defaults to [core.getContext()](api/core#getContext).
      */
-    render({x, y, width = this.width, height = this.height, context = getContext()}) {
-
+    render({ x, y, width = this.width, height = this.height, context = getContext() }) {
       // get the row and col of the frame
-      let row = this.frames[this._f] / this.spriteSheet._f | 0;
+      let row = (this.frames[this._f] / this.spriteSheet._f) | 0;
       let col = this.frames[this._f] % this.spriteSheet._f | 0;
 
       context.drawImage(
         this.spriteSheet.image,
         col * this.width + (col * 2 + 1) * this.margin,
         row * this.height + (row * 2 + 1) * this.margin,
-        this.width, this.height,
-        x, y,
-        width, height
+        this.width,
+        this.height,
+        x,
+        y,
+        width,
+        height
       );
     }
   }
@@ -303,8 +300,6 @@ var kontra = (function () {
   function factory() {
     return new Animation(...arguments);
   }
-  factory.prototype = Animation.prototype;
-  factory.class = Animation;
 
   /**
    * A promise based asset loader for loading images, audio, and data files. An `assetLoaded` event is emitted after each asset is fully loaded. The callback for the event is passed the asset and the url to the asset as parameters.
@@ -337,7 +332,7 @@ var kontra = (function () {
   let audioRegex = /(wav|mp3|ogg|aac)$/;
   let leadingSlash = /^\//;
   let trailingSlash = /\/$/;
-  let dataMap = new WeakMap();
+  let dataMap = /*@__PURE__*/ new WeakMap();
 
   let imagePath = '';
   let audioPath = '';
@@ -366,7 +361,7 @@ var kontra = (function () {
   function joinPath(base, url) {
     return [base.replace(trailingSlash, ''), base ? url.replace(leadingSlash, '') : url]
       .filter(s => s)
-      .join('/')
+      .join('/');
   }
 
   /**
@@ -579,7 +574,7 @@ var kontra = (function () {
 
       image.onload = function loadImageOnLoad() {
         fullUrl = getUrl(resolvedUrl, window.location.href);
-        imageAssets[ getName(url) ] = imageAssets[resolvedUrl] = imageAssets[fullUrl] = this;
+        imageAssets[getName(url)] = imageAssets[resolvedUrl] = imageAssets[fullUrl] = this;
         emit('assetLoaded', this, url);
         resolve(this);
       };
@@ -617,22 +612,28 @@ var kontra = (function () {
    */
   function loadAudio(url) {
     return new Promise((resolve, reject) => {
-      let _url = url, audioEl, canPlay, resolvedUrl, fullUrl;
+      let _url = url,
+        audioEl,
+        canPlay,
+        resolvedUrl,
+        fullUrl;
 
       audioEl = new Audio();
       canPlay = getCanPlay(audioEl);
 
       // determine the first audio format the browser can play
-      url = [].concat(url)
-              .reduce((playableSource, source) => playableSource
-                ? playableSource
-                : canPlay[ getExtension(source) ]
-                  ? source
-                  : null
-              , 0);  // 0 is the shortest falsy value
+      url = []
+        .concat(url)
+        .reduce(
+          (playableSource, source) =>
+            playableSource ? playableSource : canPlay[getExtension(source)] ? source : null,
+          0
+        ); // 0 is the shortest falsy value
 
       if (!url) {
-        return reject(/* @ifdef DEBUG */ 'cannot play any of the audio formats provided ' + /* @endif */ _url);
+        return reject(
+          /* @ifdef DEBUG */ 'cannot play any of the audio formats provided ' + /* @endif */ _url
+        );
       }
 
       resolvedUrl = joinPath(audioPath, url);
@@ -640,7 +641,7 @@ var kontra = (function () {
 
       audioEl.addEventListener('canplay', function loadAudioOnLoad() {
         fullUrl = getUrl(resolvedUrl, window.location.href);
-        audioAssets[ getName(url) ] = audioAssets[resolvedUrl] = audioAssets[fullUrl] = this;
+        audioAssets[getName(url)] = audioAssets[resolvedUrl] = audioAssets[fullUrl] = this;
         emit('assetLoaded', this, url);
         resolve(this);
       });
@@ -679,19 +680,24 @@ var kontra = (function () {
     resolvedUrl = joinPath(dataPath, url);
     if (dataAssets[resolvedUrl]) return Promise.resolve(dataAssets[resolvedUrl]);
 
-    return fetch(resolvedUrl).then(response => {
-      if (!response.ok) throw response;
-      return response.clone().json().catch(() => response.text())
-    }).then(response => {
-      fullUrl = getUrl(resolvedUrl, window.location.href);
-      if (typeof response === 'object') {
-        dataMap.set(response, fullUrl);
-      }
+    return fetch(resolvedUrl)
+      .then(response => {
+        if (!response.ok) throw response;
+        return response
+          .clone()
+          .json()
+          .catch(() => response.text());
+      })
+      .then(response => {
+        fullUrl = getUrl(resolvedUrl, window.location.href);
+        if (typeof response === 'object') {
+          dataMap.set(response, fullUrl);
+        }
 
-      dataAssets[ getName(url) ] = dataAssets[resolvedUrl] = dataAssets[fullUrl] = response;
-      emit('assetLoaded', response, url);
-      return response;
-    });
+        dataAssets[getName(url)] = dataAssets[resolvedUrl] = dataAssets[fullUrl] = response;
+        emit('assetLoaded', response, url);
+        return response;
+      });
   }
 
   /**
@@ -722,13 +728,13 @@ var kontra = (function () {
     return Promise.all(
       urls.map(asset => {
         // account for a string or an array for the url
-        let extension = getExtension( [].concat(asset)[0] );
+        let extension = getExtension([].concat(asset)[0]);
 
         return extension.match(imageRegex)
           ? loadImage(asset)
           : extension.match(audioRegex)
-            ? loadAudio(asset)
-            : loadData(asset);
+          ? loadAudio(asset)
+          : loadData(asset);
       })
     );
   }
@@ -753,7 +759,7 @@ var kontra = (function () {
    * @returns {Number} The value in radians.
    */
   function degToRad(deg) {
-    return deg * Math.PI / 180;
+    return (deg * Math.PI) / 180;
   }
 
   /**
@@ -765,7 +771,7 @@ var kontra = (function () {
    * @returns {Number} The value in degrees.
    */
   function radToDeg(rad) {
-    return rad * 180 / Math.PI;
+    return (rad * 180) / Math.PI;
   }
 
   /**
@@ -802,7 +808,6 @@ var kontra = (function () {
    * @returns {Number} Angle (in radians) from the source point to the target point.
    */
   function angleToTarget(source, target) {
-
     // atan2 returns the counter-clockwise angle in respect to the x-axis, but
     // the canvas rotation system is based on the y-axis (rotation of 0 = up).
     // so we need to add a quarter rotation to return a counter-clockwise
@@ -825,7 +830,7 @@ var kontra = (function () {
     let x = point.x * cos - point.y * sin;
     let y = point.x * sin + point.y * cos;
 
-    return {x, y};
+    return { x, y };
   }
 
   /**
@@ -860,22 +865,24 @@ var kontra = (function () {
    *
    * @returns {() => Number} Seeded random number generator function.
    */
-   function seedRand(str) {
+  function seedRand(str) {
     // based on the above references, this was the smallest code yet decent
     // quality seed random function
 
     // first create a suitable hash of the seed string using xfnv1a
     // @see https://github.com/bryc/code/blob/master/jshash/PRNGs.md#addendum-a-seed-generating-functions
-    for(var i = 0, h = 2166136261 >>> 0; i < str.length; i++) {
+    for (var i = 0, h = 2166136261 >>> 0; i < str.length; i++) {
       h = Math.imul(h ^ str.charCodeAt(i), 16777619);
     }
-    h += h << 13; h ^= h >>> 7;
-    h += h << 3;  h ^= h >>> 17;
+    h += h << 13;
+    h ^= h >>> 7;
+    h += h << 3;
+    h ^= h >>> 17;
     let seed = (h += h << 5) >>> 0;
 
     // then return the seed function and discard the first result
     // @see https://github.com/bryc/code/blob/master/jshash/PRNGs.md#lcg-lehmer-rng
-    let rand = () => (2 ** 31 - 1 & (seed = Math.imul(48271, seed))) / 2 ** 31;
+    let rand = () => ((2 ** 31 - 1) & (seed = Math.imul(48271, seed))) / 2 ** 31;
     rand();
     return rand;
   }
@@ -933,7 +940,7 @@ var kontra = (function () {
    * @returns {Number} Value clamped between min and max.
    */
   function clamp(min, max, value) {
-    return Math.min( Math.max(min, value), max );
+    return Math.min(Math.max(min, value), max);
   }
 
   /**
@@ -946,8 +953,7 @@ var kontra = (function () {
   function setStoreItem(key, value) {
     if (value === undefined) {
       localStorage.removeItem(key);
-    }
-    else {
+    } else {
       localStorage.setItem(key, JSON.stringify(value));
     }
   }
@@ -967,8 +973,7 @@ var kontra = (function () {
 
     try {
       value = JSON.parse(value);
-    }
-    catch(e) {}
+    } catch (e) {}
 
     return value;
   }
@@ -1017,10 +1022,12 @@ var kontra = (function () {
     [obj1, obj2] = [obj1, obj2].map(obj => getWorldRect(obj));
     // @endif
 
-    return obj1.x < obj2.x + obj2.width &&
-           obj1.x + obj1.width > obj2.x &&
-           obj1.y < obj2.y + obj2.height &&
-           obj1.y + obj1.height > obj2.y;
+    return (
+      obj1.x < obj2.x + obj2.width &&
+      obj1.x + obj1.width > obj2.x &&
+      obj1.y < obj2.y + obj2.height &&
+      obj1.y + obj1.height > obj2.y
+    );
   }
 
   /**
@@ -1032,12 +1039,7 @@ var kontra = (function () {
    * @returns {{x: number, y: number, width: number, height: number}} The world `x`, `y`, `width`, and `height` of the object.
    */
   function getWorldRect(obj) {
-    let {
-      x = 0,
-      y = 0,
-      width,
-      height
-    } = obj.world || obj;
+    let { x = 0, y = 0, width, height } = obj.world || obj;
 
     // take into account tileEngine
     if (obj.mapwidth) {
@@ -1113,11 +1115,7 @@ var kontra = (function () {
      * @returns {Vector} A new Vector instance whose value is the addition of the two vectors.
      */
     add(vec) {
-      return new Vector(
-        this.x + vec.x,
-        this.y + vec.y,
-        this
-      );
+      return new Vector(this.x + vec.x, this.y + vec.y, this);
     }
 
     // @ifdef VECTOR_SUBTRACT
@@ -1130,12 +1128,8 @@ var kontra = (function () {
      *
      * @returns {Vector} A new Vector instance whose value is the subtraction of the two vectors.
      */
-     subtract(vec) {
-      return new Vector(
-        this.x - vec.x,
-        this.y - vec.y,
-        this
-      );
+    subtract(vec) {
+      return new Vector(this.x - vec.x, this.y - vec.y, this);
     }
     // @endif
 
@@ -1150,10 +1144,7 @@ var kontra = (function () {
      * @returns {Vector} A new Vector instance whose value is multiplied by the scalar.
      */
     scale(value) {
-      return new Vector(
-        this.x * value,
-        this.y * value
-      );
+      return new Vector(this.x * value, this.y * value);
     }
     // @endif
 
@@ -1167,10 +1158,7 @@ var kontra = (function () {
      */
     // @see https://github.com/jed/140bytes/wiki/Byte-saving-techniques#use-placeholder-arguments-instead-of-var
     normalize(length = this.length()) {
-      return new Vector(
-        this.x / length,
-        this.y / length
-      );
+      return new Vector(this.x / length, this.y / length);
     }
     // @endif
 
@@ -1286,11 +1274,11 @@ var kontra = (function () {
     }
 
     set x(value) {
-      this._x = (this._c ? clamp(this._a, this._d, value) : value);
+      this._x = this._c ? clamp(this._a, this._d, value) : value;
     }
 
     set y(value) {
-      this._y = (this._c ? clamp(this._b, this._e, value) : value);
+      this._y = this._c ? clamp(this._b, this._e, value) : value;
     }
     // @endif
   }
@@ -1298,8 +1286,6 @@ var kontra = (function () {
   function factory$1() {
     return new Vector(...arguments);
   }
-  factory$1.prototype = Vector.prototype;
-  factory$1.class = Vector;
 
   /**
    * This is a private class that is used just to help make the GameObject class more manageable and smaller.
@@ -1311,13 +1297,11 @@ var kontra = (function () {
    * ttl
    */
   class Updatable {
-
     constructor(properties) {
       return this.init(properties);
     }
 
     init(properties = {}) {
-
       // --------------------------------------------------
       // defaults
       // --------------------------------------------------
@@ -1555,8 +1539,7 @@ var kontra = (function () {
     if (container) {
       let target = container.querySelector('[data-kontra]:last-of-type') || canvas;
       container.insertBefore(node, target.nextSibling);
-    }
-    else {
+    } else {
       document.body.appendChild(node);
     }
   }
@@ -1608,7 +1591,6 @@ var kontra = (function () {
      * @param {Object} properties - Properties of the game object.
      */
     init({
-
       // --------------------------------------------------
       // defaults
       // --------------------------------------------------
@@ -1705,7 +1687,7 @@ var kontra = (function () {
        * gameObject.render();
        * drawOrigin(gameObject);
        */
-      anchor = {x: 0, y: 0},
+      anchor = { x: 0, y: 0 },
       // @endif
 
       // @ifdef GAMEOBJECT_CAMERA
@@ -1760,7 +1742,6 @@ var kontra = (function () {
 
       ...props
     } = {}) {
-
       // @ifdef GAMEOBJECT_GROUP
       this.children = [];
       // @endif
@@ -2035,7 +2016,7 @@ var kontra = (function () {
         _wsx = 1,
         _wsy = 1
         // @endif
-      } = (this.parent || {});
+      } = this.parent || {};
       // @endif
 
       // wx = world x, wy = world y
@@ -2055,7 +2036,7 @@ var kontra = (function () {
       // wr = world rotation
       this._wr = _wr + this.rotation;
 
-      let {x, y} = rotatePoint({x: this.x, y: this.y}, _wr);
+      let { x, y } = rotatePoint({ x: this.x, y: this.y }, _wr);
       this._wx = x;
       this._wy = y;
       // @endif
@@ -2103,7 +2084,7 @@ var kontra = (function () {
         scaleX: this._wsx,
         scaleY: this._wsy
         // @endif
-      }
+      };
     }
 
     // --------------------------------------------------
@@ -2246,8 +2227,6 @@ var kontra = (function () {
   function factory$2() {
     return new GameObject(...arguments);
   }
-  factory$2.prototype = GameObject.prototype;
-  factory$2.class = GameObject;
 
   /**
    * A versatile way to update and draw your sprites. It can handle simple rectangles, images, and sprite sheet animations. It can be used for your main player object as well as tiny particles in a particle engine.
@@ -2259,7 +2238,7 @@ var kontra = (function () {
    * @param {HTMLImageElement|HTMLCanvasElement} [properties.image] - Use an image to draw the sprite.
    * @param {{[name: string] : Animation}} [properties.animations] - An object of [Animations](api/animation) from a [Spritesheet](api/spriteSheet) to animate the sprite.
    */
-  class Sprite extends factory$2.class {
+  class Sprite extends GameObject {
     /**
      * @docs docs/api_docs/sprite.js
      */
@@ -2415,10 +2394,7 @@ var kontra = (function () {
     draw() {
       // @ifdef SPRITE_IMAGE
       if (this.image) {
-        this.context.drawImage(
-          this.image,
-          0, 0, this.image.width, this.image.height
-        );
+        this.context.drawImage(this.image, 0, 0, this.image.width, this.image.height);
       }
       // @endif
 
@@ -2444,8 +2420,6 @@ var kontra = (function () {
   function factory$3() {
     return new Sprite(...arguments);
   }
-  factory$3.prototype = Sprite.prototype;
-  factory$3.class = Sprite;
 
   let fontSizeRegex = /(\d+)(\w+)/;
 
@@ -2524,10 +2498,8 @@ var kontra = (function () {
    * @param {String} [properties.textAlign='left'] - The [textAlign](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/textAlign) for the context. If the `dir` attribute is set to `rtl` on the main canvas, the text will automatically be aligned to the right, but you can override that by setting this property.
    * @param {Number} [properties.lineHeight=1] - The distance between two lines of text.
    */
-  class Text extends factory$2.class {
-
+  class Text extends GameObject {
     init({
-
       // --------------------------------------------------
       // defaults
       // --------------------------------------------------
@@ -2553,11 +2525,11 @@ var kontra = (function () {
        */
       lineHeight = 1,
 
-     /**
-      * The font style.
-      * @memberof Text
-      * @property {String} font
-      */
+      /**
+       * The font style.
+       * @memberof Text
+       * @property {String} font
+       */
       font = getContext().font,
 
       /**
@@ -2566,7 +2538,7 @@ var kontra = (function () {
        * @property {String} color
        */
 
-       ...props
+      ...props
     } = {}) {
       // cast to string
       text = '' + text;
@@ -2684,7 +2656,7 @@ var kontra = (function () {
         this._w = this._fw || context.measureText(this.text).width;
       }
 
-      this.height = this._fs + ((this._s.length - 1) * this._fs * this.lineHeight);
+      this.height = this._fs + (this._s.length - 1) * this._fs * this.lineHeight;
       this._uw();
     }
 
@@ -2698,11 +2670,7 @@ var kontra = (function () {
       // @endif
 
       // @ifdef TEXT_ALIGN||TEXT_RTL
-      alignX = textAlign === 'right'
-        ? this.width
-        : textAlign === 'center'
-          ? this.width / 2 | 0
-          : 0;
+      alignX = textAlign === 'right' ? this.width : textAlign === 'center' ? (this.width / 2) | 0 : 0;
       // @endif
 
       this._s.map((str, index) => {
@@ -2718,8 +2686,6 @@ var kontra = (function () {
   function factory$4() {
     return new Text(...arguments);
   }
-  factory$4.prototype = Text.prototype;
-  factory$4.class = Text;
 
   /**
    * A simple pointer API. You can use it move the main sprite or respond to a pointer event. Works with both mouse and touch events.
@@ -2836,7 +2802,7 @@ var kontra = (function () {
 
     let dx = pointer.x - Math.max(x, Math.min(pointer.x, x + width));
     let dy = pointer.y - Math.max(y, Math.min(pointer.y, y + height));
-    return (dx * dx + dy * dy) < (pointer.radius * pointer.radius);
+    return dx * dx + dy * dy < pointer.radius * pointer.radius;
   }
 
   /**
@@ -2847,18 +2813,15 @@ var kontra = (function () {
    * @returns {Object} First object to collide with the pointer.
    */
   function getCurrentObject(pointer) {
-
     // if pointer events are required on the very first frame or
     // without a game loop, use the current frame
-    let renderedObjects = pointer._lf.length ?
-      pointer._lf :
-      pointer._cf;
+    let renderedObjects = pointer._lf.length ? pointer._lf : pointer._cf;
 
     for (let i = renderedObjects.length - 1; i >= 0; i--) {
       let object = renderedObjects[i];
-      let collides = object.collidesWithPointer ?
-        object.collidesWithPointer(pointer) :
-        circleRectCollision(object, pointer);
+      let collides = object.collidesWithPointer
+        ? object.collidesWithPointer(pointer)
+        : circleRectCollision(object, pointer);
 
       if (collides) {
         return object;
@@ -2888,24 +2851,33 @@ var kontra = (function () {
     let rect = canvas.getBoundingClientRect();
 
     // @see https://stackoverflow.com/a/53405390/2124254
-    let transform = _s.transform !== 'none'
-      ? _s.transform.replace('matrix(', '').split(',')
-      : [1,1,1,1];
+    let transform =
+      _s.transform !== 'none' ? _s.transform.replace('matrix(', '').split(',') : [1, 1, 1, 1];
     let transformScaleX = parseFloat(transform[0]);
     let transformScaleY = parseFloat(transform[3]);
 
     // scale transform applies to the border and padding of the element
-    let borderWidth = (getPropValue(_s, 'border-left-width') + getPropValue(_s, 'border-right-width')) * transformScaleX;
-    let borderHeight = (getPropValue(_s, 'border-top-width') + getPropValue(_s, 'border-bottom-width')) * transformScaleY;
+    let borderWidth =
+      (getPropValue(_s, 'border-left-width') + getPropValue(_s, 'border-right-width')) *
+      transformScaleX;
+    let borderHeight =
+      (getPropValue(_s, 'border-top-width') + getPropValue(_s, 'border-bottom-width')) *
+      transformScaleY;
 
-    let paddingWidth = (getPropValue(_s, 'padding-left') + getPropValue(_s, 'padding-right')) * transformScaleX;
-    let paddingHeight = (getPropValue(_s, 'padding-top') + getPropValue(_s, 'padding-bottom')) * transformScaleY;
+    let paddingWidth =
+      (getPropValue(_s, 'padding-left') + getPropValue(_s, 'padding-right')) * transformScaleX;
+    let paddingHeight =
+      (getPropValue(_s, 'padding-top') + getPropValue(_s, 'padding-bottom')) * transformScaleY;
 
     return {
       scaleX: (rect.width - borderWidth - paddingWidth) / canvas.width,
       scaleY: (rect.height - borderHeight - paddingHeight) / canvas.height,
-      offsetX: rect.left + (getPropValue(_s, 'border-left-width') + getPropValue(_s, 'padding-left')) * transformScaleX,
-      offsetY: rect.top + (getPropValue(_s, 'border-top-width') + getPropValue(_s, 'padding-top')) * transformScaleY
+      offsetX:
+        rect.left +
+        (getPropValue(_s, 'border-left-width') + getPropValue(_s, 'padding-left')) * transformScaleX,
+      offsetY:
+        rect.top +
+        (getPropValue(_s, 'border-top-width') + getPropValue(_s, 'padding-top')) * transformScaleY
     };
   }
 
@@ -2915,7 +2887,6 @@ var kontra = (function () {
    * @param {MouseEvent|TouchEvent} evt
    */
   function pointerDownHandler(evt) {
-
     // touchstart should be treated like a left mouse button
     let button = evt.button !== undefined ? buttonMap[evt.button] : 'left';
     pressedButtons[button] = true;
@@ -2964,17 +2935,11 @@ var kontra = (function () {
 
     let canvas = evt.target;
     let pointer = pointers.get(canvas);
-    let {
-      scaleX,
-      scaleY,
-      offsetX,
-      offsetY
-    } = getCanvasOffset(pointer);
+    let { scaleX, scaleY, offsetX, offsetY } = getCanvasOffset(pointer);
 
     let isTouchEvent = ['touchstart', 'touchmove', 'touchend'].indexOf(evt.type) !== -1;
 
     if (isTouchEvent) {
-
       // update pointer.touches
       pointer.touches = {};
       for (var i = 0; i < evt.touches.length; i++) {
@@ -2987,9 +2952,9 @@ var kontra = (function () {
       }
 
       // handle all touches
-      for (var i = evt.changedTouches.length; i--;) {
+      for (var i = evt.changedTouches.length; i--; ) {
         const id = evt.changedTouches[i].identifier;
-        if (typeof pointer.touches[id] !== "undefined") {
+        if (typeof pointer.touches[id] !== 'undefined') {
           pointer.touches[id].changed = true;
         }
 
@@ -3008,9 +2973,7 @@ var kontra = (function () {
           callbacks$1[eventName](evt, object);
         }
       }
-    }
-    else {
-
+    } else {
       // translate the scaled size back as if the canvas was at a
       // 1:1 scale
       pointer.x = (evt.clientX - offsetX) / scaleX;
@@ -3048,7 +3011,7 @@ var kontra = (function () {
    *
    * @returns {{x: Number, y: Number, radius: Number, canvas: HTMLCanvasElement, touches: Object}} The pointer object for the canvas.
    */
-  function initPointer({radius = 5, canvas = getCanvas()} = {}) {
+  function initPointer({ radius = 5, canvas = getCanvas() } = {}) {
     let pointer = pointers.get(canvas);
     if (!pointer) {
       let style = window.getComputedStyle(canvas);
@@ -3126,14 +3089,15 @@ var kontra = (function () {
       // @ifdef DEBUG
       if (!pointer) {
         throw new ReferenceError('Pointer events not initialized for the objects canvas');
-      }    // @endif
+      }
+      // @endif
 
       // override the objects render function to keep track of render
       // order
       if (!object._r) {
         object._r = object.render;
 
-        object.render = function() {
+        object.render = function () {
           pointer._cf.push(this);
           this._r();
         };
@@ -3144,7 +3108,7 @@ var kontra = (function () {
   }
 
   /**
-  * Remove the callback function for a bound set of objects.
+   * Remove the callback function for a bound set of objects.
    *
    * ```js
    * import { untrack } from 'kontra';
@@ -3164,11 +3128,12 @@ var kontra = (function () {
       // @ifdef DEBUG
       if (!pointer) {
         throw new ReferenceError('Pointer events not initialized for the objects canvas');
-      }    // @endif
+      }
+      // @endif
 
       // restore original render function to no longer track render order
       object.render = object._r;
-      object._r = 0;  // 0 is the shortest falsy value
+      object._r = 0; // 0 is the shortest falsy value
 
       let index = pointer._o.indexOf(object);
       if (index !== -1) {
@@ -3222,7 +3187,8 @@ var kontra = (function () {
     // @ifdef DEBUG
     if (!pointer) {
       throw new ReferenceError('Pointer events not initialized for the objects canvas');
-    }  // @endif
+    }
+    // @endif
 
     return pointer._o.includes(object) && getCurrentObject(pointer) === object;
   }
@@ -3248,7 +3214,7 @@ var kontra = (function () {
   }
 
   /**
-  * Register a function to be called on all pointer up events. Is passed the original Event and the target object (if there is one).
+   * Register a function to be called on all pointer up events. Is passed the original Event and the target object (if there is one).
    *
    * ```js
    * import { initPointer, onPointerUp } from 'kontra';
@@ -3293,7 +3259,7 @@ var kontra = (function () {
    * @returns {Boolean} `true` if the button is pressed, `false` otherwise.
    */
   function pointerPressed(button) {
-    return !!pressedButtons[button]
+    return !!pressedButtons[button];
   }
 
   /**
@@ -3311,7 +3277,7 @@ var kontra = (function () {
    * @param {Function} [properties.onFocus] - Function called when the button is focused by the keyboard.
    * @param {Function} [properties.onBlur] - Function called when the button losses focus either by the pointer or keyboard.
    */
-  class Button extends factory$3.class {
+  class Button extends Sprite {
     /**
      * @docs docs/api_docs/button.js
      */
@@ -3373,7 +3339,7 @@ var kontra = (function () {
 
       // create an accessible DOM node for screen readers
       // dn = dom node
-      const button = this._dn = document.createElement('button');
+      const button = (this._dn = document.createElement('button'));
       button.style = srOnlyStyle;
       button.textContent = this.text;
 
@@ -3384,8 +3350,8 @@ var kontra = (function () {
       // sync events between the button element and the class
       button.addEventListener('focus', () => this.focus());
       button.addEventListener('blur', () => this.blur());
-      button.addEventListener('keydown', (evt) => this._kd(evt));
-      button.addEventListener('keyup', (evt) => this._ku(evt));
+      button.addEventListener('keydown', evt => this._kd(evt));
+      button.addEventListener('keyup', evt => this._ku(evt));
 
       addToDom(button, this.context.canvas);
 
@@ -3475,7 +3441,6 @@ var kontra = (function () {
      */
     focus() {
       if (!this.disabled) {
-
         /**
          * If the button is focused.
          * @memberof Button
@@ -3504,7 +3469,6 @@ var kontra = (function () {
 
     onOver() {
       if (!this.disabled) {
-
         /**
          * If the button is hovered.
          * @memberof Button
@@ -3523,32 +3487,31 @@ var kontra = (function () {
      * @memberof Button
      * @function onEnable
      */
-    onEnable() { }
+    onEnable() {}
 
     /**
      * Function called when then button is disabled. Override this function to have the button do something when disabled.
      * @memberof Button
      * @function onDisable
      */
-    onDisable() { }
+    onDisable() {}
 
     /**
      * Function called when then button is focused. Override this function to have the button do something when focused.
      * @memberof Button
      * @function onFocus
      */
-    onFocus() { }
+    onFocus() {}
 
     /**
      * Function called when then button is blurred. Override this function to have the button do something when blurred.
      * @memberof Button
      * @function onBlur
      */
-    onBlur() { }
+    onBlur() {}
 
     onDown() {
       if (!this.disabled) {
-
         /**
          * If the button is pressed.
          * @memberof Button
@@ -3586,8 +3549,6 @@ var kontra = (function () {
   function factory$5() {
     return new Button(...arguments);
   }
-  factory$5.prototype = Button.prototype;
-  factory$5.class = Button;
 
   /**
    * Clear the canvas.
@@ -3659,15 +3620,19 @@ var kontra = (function () {
 
     // animation variables
     let accumulator = 0;
-    let delta = 1E3 / fps;  // delta between performance.now timings (in ms)
+    let delta = 1e3 / fps; // delta between performance.now timings (in ms)
     let step = 1 / fps;
     let clearFn = clearCanvas ? clear : noop;
     let last, rAF, now, dt, loop;
     let focused = true;
 
     if (!blur) {
-      window.addEventListener('focus', () => { focused = true; });
-      window.addEventListener('blur', () => { focused = false; });
+      window.addEventListener('focus', () => {
+        focused = true;
+      });
+      window.addEventListener('blur', () => {
+        focused = false;
+      });
     }
 
     /**
@@ -3685,7 +3650,7 @@ var kontra = (function () {
 
       // prevent updating the game with a very large dt if the game were to lose focus
       // and then regain focus later
-      if (dt > 1E3) {
+      if (dt > 1e3) {
         return;
       }
 
@@ -3777,7 +3742,6 @@ var kontra = (function () {
 
   let handler = {
     set(obj, prop, value) {
-
       // don't set dirty for private properties
       if (!prop.startsWith('_')) {
         obj._d = true;
@@ -3814,7 +3778,7 @@ var kontra = (function () {
    * @param {String} [properties.dir=''] - The direction of the grid.
    * @param {{metric: Function, callback: Function}[]} [properties.breakpoints=[]] - How the grid should change based on different metrics.
    */
-  class Grid extends factory$2.class {
+  class Grid extends GameObject {
     /**
      * @docs docs/api_docs/grid.js
      */
@@ -3868,7 +3832,7 @@ var kontra = (function () {
        */
       colGap = 0,
 
-       /**
+      /**
        * The vertical gap between each row in the grid.
        *
        * An array of numbers means the grid will set the gap between rows using the order of the array. For example, if the gap is set to be `[10, 5]`, then every odd row gap with use 10 and every even row gap will use 5.
@@ -3984,21 +3948,18 @@ var kontra = (function () {
       });
 
       // g = grid, cw = colWidths, rh = rowHeights
-      let grid = this._g = [];
-      let colWidths = this._cw = [];
-      let rowHeights = this._rh = [];
+      let grid = (this._g = []);
+      let colWidths = (this._cw = []);
+      let rowHeights = (this._rh = []);
       let children = this.children;
 
       // nc = numCols
-      let numCols = this._nc = this.flow === 'column'
-        ? 1
-        : this.flow === 'row'
-          ? children.length
-          : this.numCols;
+      let numCols = (this._nc =
+        this.flow === 'column' ? 1 : this.flow === 'row' ? children.length : this.numCols);
 
       let row = 0;
       let col = 0;
-      for (let i = 0, child; child = children[i]; i++) {
+      for (let i = 0, child; (child = children[i]); i++) {
         grid[row] = grid[row] || [];
 
         // prerender child to get current width/height
@@ -4032,12 +3993,12 @@ var kontra = (function () {
       let colGap = [].concat(this.colGap);
       let rowGap = [].concat(this.rowGap);
 
-      this._w = colWidths.reduce((acc, width) => acc += width, 0);
+      this._w = colWidths.reduce((acc, width) => (acc += width), 0);
       for (let i = 0; i < numCols - 1; i++) {
         this._w += colGap[i % colGap.length];
       }
 
-      this._h = rowHeights.reduce((acc, height) => acc += height, 0);
+      this._h = rowHeights.reduce((acc, height) => (acc += height), 0);
       for (let i = 0; i < numRows - 1; i++) {
         this._h += rowGap[i % rowGap.length];
       }
@@ -4091,26 +4052,22 @@ var kontra = (function () {
             // anchor of the object
             if (justify === 0) {
               pointX = pointX + width * anchorX;
-            }
-            else if (justify === 0.5) {
+            } else if (justify === 0.5) {
               let sign = anchorX < 0.5 ? -1 : anchorX === 0.5 ? 0 : 1;
               pointX = pointX + sign * width * justify;
-            }
-            else {
-              pointX = pointX - (width * (1 - anchorX));
+            } else {
+              pointX = pointX - width * (1 - anchorX);
             }
 
             // calculate the y position based on the justification and
             // anchor of the object
             if (align === 0) {
               pointY = pointY + height * anchorY;
-            }
-            else if (align === 0.5) {
+            } else if (align === 0.5) {
               let sign = anchorY < 0.5 ? -1 : anchorY === 0.5 ? 0 : 1;
               pointY = pointY + sign * height * align;
-            }
-            else {
-              pointY = pointY - (height * (1 - anchorY));
+            } else {
+              pointY = pointY - height * (1 - anchorY);
             }
 
             child.x = topLeftX + pointX;
@@ -4128,8 +4085,6 @@ var kontra = (function () {
   function factory$6() {
     return new Grid(...arguments);
   }
-  factory$6.prototype = Grid.prototype;
-  factory$6.class = Grid;
 
   /**
    * A minimalistic keyboard API. You can use it move the main sprite or respond to a key press.
@@ -4179,13 +4134,13 @@ var kontra = (function () {
    */
   let keyMap = {
     // named keys
-    'Enter': 'enter',
-    'Escape': 'esc',
-    'Space': 'space',
-    'ArrowLeft': 'left',
-    'ArrowUp': 'up',
-    'ArrowRight': 'right',
-    'ArrowDown': 'down'
+    Enter: 'enter',
+    Escape: 'esc',
+    Space: 'space',
+    ArrowLeft: 'left',
+    ArrowUp: 'up',
+    ArrowRight: 'right',
+    ArrowDown: 'down'
   };
 
   /**
@@ -4248,7 +4203,7 @@ var kontra = (function () {
 
     // numeric keys
     for (i = 0; i < 10; i++) {
-      keyMap[48+i] = keyMap['Digit'+i] = ''+i;
+      keyMap[48 + i] = keyMap['Digit' + i] = '' + i;
     }
 
     window.addEventListener('keydown', keydownEventHandler);
@@ -4281,15 +4236,12 @@ var kontra = (function () {
    * @param {'keydown'|'keyup'} [options.handler=keydown] - Whether to bind to keydown or keyup events.
    * @param {Boolean} [options.preventDefault=true] - Call `event. preventDefault()` when the key is activated.
    */
-  function bindKeys(keys, callback, {
-    handler = 'keydown',
-    preventDefault = true
-  } = {}) {
+  function bindKeys(keys, callback, { handler = 'keydown', preventDefault = true } = {}) {
     const callbacks = handler == 'keydown' ? keydownCallbacks : keyupCallbacks;
     // pd = preventDefault
     callback._pd = preventDefault;
     // smaller than doing `Array.isArray(keys) ? keys : [keys]`
-    [].concat(keys).map(key => callbacks[key] = callback);
+    [].concat(keys).map(key => (callbacks[key] = callback));
   }
 
   /**
@@ -4307,12 +4259,10 @@ var kontra = (function () {
    * @param {Object} [options] - Unbind options.
    * @param {'keydown'|'keyup'} [options.handler=keydown] - Whether to unbind from keydown or keyup events.
    */
-  function unbindKeys(keys, {
-    handler = 'keydown'
-  } = {}) {
+  function unbindKeys(keys, { handler = 'keydown' } = {}) {
     const callbacks = handler == 'keydown' ? keydownCallbacks : keyupCallbacks;
     // 0 is the smallest falsy value
-    [].concat(keys).map(key => callbacks[key] = 0);
+    [].concat(keys).map(key => (callbacks[key] = 0));
   }
 
   /**
@@ -4376,7 +4326,7 @@ var kontra = (function () {
    * @returns {String}
    */
   function getMethod(methodName) {
-    let methodTitle = methodName.substr( methodName.search(/[A-Z]/) );
+    let methodTitle = methodName.substr(methodName.search(/[A-Z]/));
     return methodTitle[0].toLowerCase() + methodTitle.substr(1);
   }
 
@@ -4433,7 +4383,6 @@ var kontra = (function () {
         objectProto['_o' + method] = objectProto[method];
 
         objectProto[method] = function interceptedFn(...args) {
-
           // call before interceptors
           let alteredArgs = this._bInc(this, method, ...args);
 
@@ -4454,8 +4403,7 @@ var kontra = (function () {
 
       if (methodName.startsWith('before')) {
         objectProto._inc[method].before.push(pluginObj[methodName]);
-      }
-      else if (methodName.startsWith('after')) {
+      } else if (methodName.startsWith('after')) {
         objectProto._inc[method].after.push(pluginObj[methodName]);
       }
     });
@@ -4479,8 +4427,7 @@ var kontra = (function () {
 
       if (methodName.startsWith('before')) {
         removeInterceptor(objectProto._inc[method].before, pluginObj[methodName]);
-      }
-      else if (methodName.startsWith('after')) {
+      } else if (methodName.startsWith('after')) {
         removeInterceptor(objectProto._inc[method].after, pluginObj[methodName]);
       }
     });
@@ -4490,10 +4437,10 @@ var kontra = (function () {
    * Safely extend the functionality of a Kontra object. Any properties that already exist on the Kontra object will not be added.
    *
    * ```js
-   * import { extendObject, Vector } from 'kontra';
+   * import { extendObject, Vector, VectorClass } from 'kontra';
    *
    * // add a subtract function to all Vectors
-   * extendObject(Vector, {
+   * extendObject(VectorClass, {
    *   subtract(vec) {
    *     return Vector(this.x - vec.x, this.y - vec.y);
    *   }
@@ -4501,7 +4448,7 @@ var kontra = (function () {
    * ```
    * @function extendObject
    *
-   * @param {Object} kontraObj - Kontra object to extend
+   * @param {Object} kontraObj - Kontra class to extend
    * @param {Object} properties - Properties to add.
    */
   function extendObject(kontraObj, properties) {
@@ -4532,18 +4479,15 @@ var kontra = (function () {
      * @docs docs/api_docs/pool.js
      */
 
-    constructor({create, maxSize = 1024} = {}) {
-
+    constructor({ create, maxSize = 1024 } = {}) {
       // check for the correct structure of the objects added to pools so we know that the
       // rest of the pool code will work without errors
       // @ifdef DEBUG
       let obj;
-      if (!create ||
-          ( !( obj = create() ) ||
-            !( obj.update && obj.init &&
-               obj.isAlive && obj.render)
-         )) {
-        throw Error('Must provide create() function which returns an object with init(), update(), render(), and isAlive() functions');
+      if (!create || !(obj = create()) || !(obj.update && obj.init && obj.isAlive && obj.render)) {
+        throw Error(
+          'Must provide create() function which returns an object with init(), update(), render(), and isAlive() functions'
+        );
       }
       // @endif
 
@@ -4682,8 +4626,6 @@ var kontra = (function () {
   function factory$7() {
     return new Pool(...arguments);
   }
-  factory$7.prototype = Pool.prototype;
-  factory$7.class = Pool;
 
   /**
    * Determine which subnodes the object intersects with
@@ -4707,22 +4649,26 @@ var kontra = (function () {
 
     // object intersects with the left quadrants
     if (object.x < verticalMidpoint) {
-      if (intersectsTopQuadrants) {  // top left
+      if (intersectsTopQuadrants) {
+        // top left
         indices.push(0);
       }
 
-      if (intersectsBottomQuadrants) {  // bottom left
+      if (intersectsBottomQuadrants) {
+        // bottom left
         indices.push(2);
       }
     }
 
     // object intersects with the right quadrants
     if (object.x + object.width >= verticalMidpoint) {
-      if (intersectsTopQuadrants) {  // top right
+      if (intersectsTopQuadrants) {
+        // top right
         indices.push(1);
       }
 
-      if (intersectsBottomQuadrants) {  // bottom right
+      if (intersectsBottomQuadrants) {
+        // bottom right
         indices.push(3);
       }
     }
@@ -4741,7 +4687,6 @@ var kontra = (function () {
        |
   */
 
-
   /**
    * A 2D [spatial partitioning](https://gameprogrammingpatterns.com/spatial-partition.html) data structure. Use it to quickly group objects by their position for faster access and collision checking.
    *
@@ -4759,8 +4704,7 @@ var kontra = (function () {
      * @docs docs/api_docs/quadtree.js
      */
 
-    constructor({maxDepth = 3, maxObjects = 25, bounds} = {}) {
-
+    constructor({ maxDepth = 3, maxObjects = 25, bounds } = {}) {
       /**
        * Maximum node depth of the quadtree.
        * @memberof Quadtree
@@ -4804,7 +4748,7 @@ var kontra = (function () {
      * @function clear
      */
     clear() {
-      this._s.map(function(subnode) {
+      this._s.map(function (subnode) {
         subnode.clear();
       });
 
@@ -4947,23 +4891,23 @@ var kontra = (function () {
         return;
       }
 
-      subWidth = this.bounds.width / 2 | 0;
-      subHeight = this.bounds.height / 2 | 0;
+      subWidth = (this.bounds.width / 2) | 0;
+      subHeight = (this.bounds.height / 2) | 0;
 
       for (i = 0; i < 4; i++) {
         this._s[i] = new Quadtree({
           bounds: {
-            x: this.bounds.x + (i % 2 === 1 ? subWidth : 0),  // nodes 1 and 3
-            y: this.bounds.y + (i >= 2 ? subHeight : 0),      // nodes 2 and 3
+            x: this.bounds.x + (i % 2 === 1 ? subWidth : 0), // nodes 1 and 3
+            y: this.bounds.y + (i >= 2 ? subHeight : 0), // nodes 2 and 3
             width: subWidth,
             height: subHeight
           },
           maxDepth: this.maxDepth,
-          maxObjects: this.maxObjects,
+          maxObjects: this.maxObjects
         });
 
         // d = depth, p = parent
-        this._s[i]._d = this._d+1;
+        this._s[i]._d = this._d + 1;
         /* @ifdef VISUAL_DEBUG */
         this._s[i]._p = this;
         /* @endif */
@@ -4973,7 +4917,7 @@ var kontra = (function () {
     /**
      * Draw the quadtree. Useful for visual debugging.
      */
-     /* @ifdef VISUAL_DEBUG **
+    /* @ifdef VISUAL_DEBUG **
      render() {
        // don't draw empty leaf nodes, always draw branch nodes and the first node
        if (this._o.length || this._d === 0 ||
@@ -4995,16 +4939,13 @@ var kontra = (function () {
   function factory$8() {
     return new Quadtree(...arguments);
   }
-  factory$8.prototype = Quadtree.prototype;
-  factory$8.class = Quadtree;
 
   function getAllNodes(object) {
     let nodes = [];
 
     if (object._dn) {
       nodes.push(object._dn);
-    }
-    else if (object.children) {
+    } else if (object.children) {
       object.children.map(child => {
         nodes = nodes.concat(getAllNodes(child));
       });
@@ -5046,8 +4987,7 @@ var kontra = (function () {
    * @param {Function} [properties.onShow] - Function called when the scene is shown.
    * @param {Function} [properties.onHide] - Function called when the scene is hidden.
    */
-  class Scene extends factory$2.class {
-
+  class Scene extends GameObject {
     init({
       /**
        * The id of the scene.
@@ -5061,7 +5001,7 @@ var kontra = (function () {
        * @memberof Scene
        * @property {String} name
        */
-       name = id,
+      name = id,
 
       /**
        * If the camera should cull objects outside the camera bounds. Not rendering objects which can't be seen greatly improves the performance.
@@ -5070,7 +5010,7 @@ var kontra = (function () {
        */
       cullObjects = true,
 
-       /**
+      /**
        * Camera culling function which prevents objects outside the camera screen from rendering. Is passed as the `filterFunction` to the [render](api/gameObject#render) function.
        * @memberof Scene
        * @property {Function} cullFunction
@@ -5082,7 +5022,7 @@ var kontra = (function () {
       // create an accessible DOM node for screen readers (do this first
       // so we can move DOM nodes in addChild)
       // dn = dom node
-      const section = this._dn = document.createElement('section');
+      const section = (this._dn = document.createElement('section'));
       section.tabIndex = -1;
       section.style = srOnlyStyle;
       section.id = id;
@@ -5133,7 +5073,6 @@ var kontra = (function () {
      * @function show
      */
     show() {
-
       /**
        * If the scene is hidden.
        * @memberof Scene
@@ -5145,8 +5084,7 @@ var kontra = (function () {
       let focusableChild = this.children.find(child => child.focus);
       if (focusableChild) {
         focusableChild.focus();
-      }
-      else {
+      } else {
         this._dn.focus();
       }
 
@@ -5206,7 +5144,6 @@ var kontra = (function () {
      * @param {{x: number, y: number}} object - Object with x/y properties.
      */
     lookAt(object) {
-
       // don't call getWorldRect so we can ignore the objects anchor
       object = object.world || object;
       let x = object.x;
@@ -5237,7 +5174,7 @@ var kontra = (function () {
       this.sy = y * this.scaleY - height / 2;
 
       if (!this.hidden) {
-        super.render(child => this.cullObjects ? this.cullFunction(child, this.camera) : true);
+        super.render(child => (this.cullObjects ? this.cullFunction(child, this.camera) : true));
       }
     }
 
@@ -5259,8 +5196,6 @@ var kontra = (function () {
   function factory$9() {
     return new Scene(...arguments);
   }
-  factory$9.prototype = Scene.prototype;
-  factory$9.class = Scene;
 
   /**
    * Parse a string of consecutive frames.
@@ -5351,7 +5286,7 @@ var kontra = (function () {
    * @param {Object} [properties.animations] - Animations to create from the sprite sheet using [Animation](api/animation). Passed directly into the sprite sheets [createAnimations()](api/spriteSheet#createAnimations) function.
    */
   class SpriteSheet {
-    constructor({image, frameWidth, frameHeight, frameMargin, animations} = {}) {
+    constructor({ image, frameWidth, frameHeight, frameMargin, animations } = {}) {
       // @ifdef DEBUG
       if (!image) {
         throw Error('You must provide an Image for the SpriteSheet');
@@ -5386,7 +5321,7 @@ var kontra = (function () {
       };
 
       // f = framesPerRow
-      this._f = image.width / frameWidth | 0;
+      this._f = (image.width / frameWidth) | 0;
 
       this.createAnimations(animations);
     }
@@ -5486,8 +5421,6 @@ var kontra = (function () {
   function factory$a() {
     return new SpriteSheet(...arguments);
   }
-  factory$a.prototype = SpriteSheet.prototype;
-  factory$a.class = SpriteSheet;
 
   /**
    * A tile engine for managing and drawing tilesets.
@@ -5591,344 +5524,346 @@ var kontra = (function () {
      * @property {Object[]} tilesets
      */
 
-    let tileEngine = Object.assign({
+    let tileEngine = Object.assign(
+      {
+        /**
+         * The context the tile engine will draw to.
+         * @memberof TileEngine
+         * @property {CanvasRenderingContext2D} context
+         */
+        context: context,
 
-      /**
-       * The context the tile engine will draw to.
-       * @memberof TileEngine
-       * @property {CanvasRenderingContext2D} context
-       */
-      context: context,
+        /**
+         * The width of the tile map (in pixels).
+         * @memberof TileEngine
+         * @property {Number} mapwidth
+         */
+        mapwidth: mapwidth,
 
-      /**
-       * The width of the tile map (in pixels).
-       * @memberof TileEngine
-       * @property {Number} mapwidth
-       */
-      mapwidth: mapwidth,
+        /**
+         * The height of the tile map (in pixels).
+         * @memberof TileEngine
+         * @property {Number} mapheight
+         */
+        mapheight: mapheight,
+        _sx: 0,
+        _sy: 0,
 
-      /**
-       * The height of the tile map (in pixels).
-       * @memberof TileEngine
-       * @property {Number} mapheight
-       */
-      mapheight: mapheight,
-      _sx: 0,
-      _sy: 0,
+        // d = dirty
+        _d: false,
 
-      // d = dirty
-      _d: false,
+        /**
+         * X coordinate of the tile map camera.
+         * @memberof TileEngine
+         * @property {Number} sx
+         */
+        get sx() {
+          return this._sx;
+        },
 
-      /**
-       * X coordinate of the tile map camera.
-       * @memberof TileEngine
-       * @property {Number} sx
-       */
-      get sx() {
-        return this._sx;
-      },
+        /**
+         * Y coordinate of the tile map camera.
+         * @memberof TileEngine
+         * @property {Number} sy
+         */
+        get sy() {
+          return this._sy;
+        },
 
-      /**
-       * Y coordinate of the tile map camera.
-       * @memberof TileEngine
-       * @property {Number} sy
-       */
-      get sy() {
-        return this._sy;
-      },
+        // when clipping an image, sx and sy must within the image region, otherwise
+        // Firefox and Safari won't draw it.
+        // @see http://stackoverflow.com/questions/19338032/canvas-indexsizeerror-index-or-size-is-negative-or-greater-than-the-allowed-a
+        set sx(value) {
+          this._sx = clamp(0, mapwidth - getCanvas().width, value);
+          objects.forEach(obj => (obj.sx = this._sx));
+        },
 
-      // when clipping an image, sx and sy must within the image region, otherwise
-      // Firefox and Safari won't draw it.
-      // @see http://stackoverflow.com/questions/19338032/canvas-indexsizeerror-index-or-size-is-negative-or-greater-than-the-allowed-a
-      set sx(value) {
-        this._sx = clamp(0, mapwidth - getCanvas().width, value);
-        objects.forEach(obj => obj.sx = this._sx);
-      },
+        set sy(value) {
+          this._sy = clamp(0, mapheight - getCanvas().height, value);
+          objects.forEach(obj => (obj.sy = this._sy));
+        },
 
-      set sy(value) {
-        this._sy = clamp(0, mapheight - getCanvas().height, value);
-        objects.forEach(obj => obj.sy = this._sy);
-      },
+        /**
+         * Render all visible layers.
+         * @memberof TileEngine
+         * @function render
+         */
+        render() {
+          if (this._d) {
+            this._d = false;
+            this._p();
+          }
 
-      /**
-       * Render all visible layers.
-       * @memberof TileEngine
-       * @function render
-       */
-      render() {
-        if (this._d) {
-          this._d = false;
-          this._p();
-        }
+          render(offscreenCanvas);
+        },
 
-        render(offscreenCanvas);
-      },
+        /**
+         * Render a specific layer by name.
+         * @memberof TileEngine
+         * @function renderLayer
+         *
+         * @param {String} name - Name of the layer to render.
+         */
+        renderLayer(name) {
+          let canvas = layerCanvases[name];
+          let layer = layerMap[name];
 
-      /**
-       * Render a specific layer by name.
-       * @memberof TileEngine
-       * @function renderLayer
-       *
-       * @param {String} name - Name of the layer to render.
-       */
-      renderLayer(name) {
-        let canvas = layerCanvases[name];
-        let layer = layerMap[name];
+          if (!canvas) {
+            // cache the rendered layer so we can render it again without redrawing
+            // all tiles
+            canvas = document.createElement('canvas');
+            canvas.width = mapwidth;
+            canvas.height = mapheight;
 
-        if (!canvas) {
-          // cache the rendered layer so we can render it again without redrawing
-          // all tiles
-          canvas = document.createElement('canvas');
-          canvas.width = mapwidth;
-          canvas.height = mapheight;
+            layerCanvases[name] = canvas;
+            tileEngine._r(layer, canvas.getContext('2d'));
+          }
 
-          layerCanvases[name] = canvas;
-          tileEngine._r(layer, canvas.getContext('2d'));
-        }
+          if (layer._d) {
+            layer._d = false;
+            canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+            tileEngine._r(layer, canvas.getContext('2d'));
+          }
 
-        if (layer._d) {
-          layer._d = false;
-          canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
-          tileEngine._r(layer, canvas.getContext('2d'));
-        }
+          render(canvas);
+        },
 
-        render(canvas);
-      },
+        /**
+         * Check if the object collides with the layer (shares a gird coordinate with any positive tile index in layers data). The object being checked must have the properties `x`, `y`, `width`, and `height` so that its position in the grid can be calculated. [Sprite](api/sprite) defines these properties for you.
+         *
+         * ```js
+         * import { TileEngine, Sprite } from 'kontra';
+         *
+         * let tileEngine = TileEngine({
+         *   tilewidth: 32,
+         *   tileheight: 32,
+         *   width: 4,
+         *   height: 4,
+         *   tilesets: [{
+         *     // ...
+         *   }],
+         *   layers: [{
+         *     name: 'collision',
+         *     data: [ 0,0,0,0,
+         *             0,1,4,0,
+         *             0,2,5,0,
+         *             0,0,0,0 ]
+         *   }]
+         * });
+         *
+         * let sprite = Sprite({
+         *   x: 50,
+         *   y: 20,
+         *   width: 5,
+         *   height: 5
+         * });
+         *
+         * tileEngine.layerCollidesWith('collision', sprite);  //=> false
+         *
+         * sprite.y = 28;
+         *
+         * tileEngine.layerCollidesWith('collision', sprite);  //=> true
+         * ```
+         * @memberof TileEngine
+         * @function layerCollidesWith
+         *
+         * @param {String} name - The name of the layer to check for collision.
+         * @param {Object} object - Object to check collision against.
+         *
+         * @returns {boolean} `true` if the object collides with a tile, `false` otherwise.
+         */
+        layerCollidesWith(name, object) {
+          let { x, y, width, height } = getWorldRect(object);
 
-      /**
-       * Check if the object collides with the layer (shares a gird coordinate with any positive tile index in layers data). The object being checked must have the properties `x`, `y`, `width`, and `height` so that its position in the grid can be calculated. [Sprite](api/sprite) defines these properties for you.
-       *
-       * ```js
-       * import { TileEngine, Sprite } from 'kontra';
-       *
-       * let tileEngine = TileEngine({
-       *   tilewidth: 32,
-       *   tileheight: 32,
-       *   width: 4,
-       *   height: 4,
-       *   tilesets: [{
-       *     // ...
-       *   }],
-       *   layers: [{
-       *     name: 'collision',
-       *     data: [ 0,0,0,0,
-       *             0,1,4,0,
-       *             0,2,5,0,
-       *             0,0,0,0 ]
-       *   }]
-       * });
-       *
-       * let sprite = Sprite({
-       *   x: 50,
-       *   y: 20,
-       *   width: 5,
-       *   height: 5
-       * });
-       *
-       * tileEngine.layerCollidesWith('collision', sprite);  //=> false
-       *
-       * sprite.y = 28;
-       *
-       * tileEngine.layerCollidesWith('collision', sprite);  //=> true
-       * ```
-       * @memberof TileEngine
-       * @function layerCollidesWith
-       *
-       * @param {String} name - The name of the layer to check for collision.
-       * @param {Object} object - Object to check collision against.
-       *
-       * @returns {boolean} `true` if the object collides with a tile, `false` otherwise.
-       */
-      layerCollidesWith(name, object) {
-        let { x, y, width, height } = getWorldRect(object);
+          let row = getRow(y);
+          let col = getCol(x);
+          let endRow = getRow(y + height);
+          let endCol = getCol(x + width);
 
-        let row = getRow(y);
-        let col = getCol(x);
-        let endRow = getRow(y + height);
-        let endCol = getCol(x + width);
+          let layer = layerMap[name];
 
-        let layer = layerMap[name];
-
-        // check all tiles
-        for (let r = row; r <= endRow; r++) {
-          for (let c = col; c <= endCol; c++) {
-            if (layer.data[c + r * this.width]) {
-              return true;
+          // check all tiles
+          for (let r = row; r <= endRow; r++) {
+            for (let c = col; c <= endCol; c++) {
+              if (layer.data[c + r * this.width]) {
+                return true;
+              }
             }
           }
-        }
 
-        return false;
+          return false;
+        },
+
+        /**
+         * Get the tile at the specified layer using either x and y coordinates or row and column coordinates.
+         *
+         * ```js
+         * import { TileEngine } from 'kontra';
+         *
+         * let tileEngine = TileEngine({
+         *   tilewidth: 32,
+         *   tileheight: 32,
+         *   width: 4,
+         *   height: 4,
+         *   tilesets: [{
+         *     // ...
+         *   }],
+         *   layers: [{
+         *     name: 'collision',
+         *     data: [ 0,0,0,0,
+         *             0,1,4,0,
+         *             0,2,5,0,
+         *             0,0,0,0 ]
+         *   }]
+         * });
+         *
+         * tileEngine.tileAtLayer('collision', {x: 50, y: 50});  //=> 1
+         * tileEngine.tileAtLayer('collision', {row: 2, col: 1});  //=> 2
+         * ```
+         * @memberof TileEngine
+         * @function tileAtLayer
+         *
+         * @param {String} name - Name of the layer.
+         * @param {{x: Number, y: Number}|{row: Number, col: Number}} position - Position of the tile in either {x, y} or {row, col} coordinates.
+         *
+         * @returns {Number} The tile index. Will return `-1` if no layer exists by the provided name.
+         */
+        tileAtLayer(name, position) {
+          let row = position.row || getRow(position.y);
+          let col = position.col || getCol(position.x);
+
+          if (layerMap[name]) {
+            return layerMap[name].data[col + row * tileEngine.width];
+          }
+
+          return -1;
+        },
+
+        /**
+         * Set the tile at the specified layer using either x and y coordinates or row and column coordinates.
+         *
+         * ```js
+         * import { TileEngine } from 'kontra';
+         *
+         * let tileEngine = TileEngine({
+         *   tilewidth: 32,
+         *   tileheight: 32,
+         *   width: 4,
+         *   height: 4,
+         *   tilesets: [{
+         *     // ...
+         *   }],
+         *   layers: [{
+         *     name: 'collision',
+         *     data: [ 0,0,0,0,
+         *             0,1,4,0,
+         *             0,2,5,0,
+         *             0,0,0,0 ]
+         *   }]
+         * });
+         *
+         * tileEngine.setTileAtLayer('collision', {row: 2, col: 1}, 10);
+         * tileEngine.tileAtLayer('collision', {row: 2, col: 1});  //=> 10
+         * ```
+         * @memberof TileEngine
+         * @function setTileAtLayer
+         *
+         * @param {String} name - Name of the layer.
+         * @param {{x: Number, y: Number}|{row: Number, col: Number}} position - Position of the tile in either {x, y} or {row, col} coordinates.
+         * @param {Number} tile - Tile index to set.
+         */
+        setTileAtLayer(name, position, tile) {
+          let row = position.row || getRow(position.y);
+          let col = position.col || getCol(position.x);
+
+          if (layerMap[name]) {
+            this._d = true;
+            layerMap[name]._d = true;
+            layerMap[name].data[col + row * tileEngine.width] = tile;
+          }
+        },
+
+        /**
+         * Set the data at the specified layer.
+         *
+         * ```js
+         * import { TileEngine } from 'kontra';
+         *
+         * let tileEngine = TileEngine({
+         *   tilewidth: 32,
+         *   tileheight: 32,
+         *   width: 2,
+         *   height: 2,
+         *   tilesets: [{
+         *     // ...
+         *   }],
+         *   layers: [{
+         *     name: 'collision',
+         *     data: [ 0,1,
+         *             2,3 ]
+         *   }]
+         * });
+         *
+         * tileEngine.setLayer('collision', [ 4,5,6,7]);
+         * tileEngine.tileAtLayer('collision', {row: 0, col: 0});  //=> 4
+         * tileEngine.tileAtLayer('collision', {row: 0, col: 1});  //=> 5
+         * tileEngine.tileAtLayer('collision', {row: 1, col: 0});  //=> 6
+         * tileEngine.tileAtLayer('collision', {row: 1, col: 1});  //=> 7
+         * ```
+         *
+         * @memberof TileEngine
+         * @function setLayer
+         *
+         * @param {String} name - Name of the layer.
+         * @param {Number[]} data - 1D array of tile indices.
+         */
+        setLayer(name, data) {
+          if (layerMap[name]) {
+            this._d = true;
+            layerMap[name]._d = true;
+            layerMap[name].data = data;
+          }
+        },
+
+        /**
+         * Add an object to the tile engine. The tile engine will set the objects camera position (`sx`, `sy`) to be in sync with the tile engine camera. [Sprite](api/sprite) uses this information to draw the sprite to the correct position on the canvas.
+         * @memberof TileEngine
+         * @function addObject
+         *
+         * @param {Object} object - Object to add to the tile engine.
+         */
+        addObject(object) {
+          objects.push(object);
+          object.sx = this._sx;
+          object.sy = this._sy;
+        },
+
+        /**
+         * Remove an object from the tile engine.
+         * @memberof TileEngine
+         * @function removeObject
+         *
+         * @param {Object} object - Object to remove from the tile engine.
+         */
+        removeObject(object) {
+          let index = objects.indexOf(object);
+          if (index !== -1) {
+            objects.splice(index, 1);
+            object.sx = object.sy = 0;
+          }
+        },
+
+        // expose for testing
+        _r: renderLayer,
+        _p: prerender,
+
+        // @ifdef DEBUG
+        layerCanvases: layerCanvases,
+        layerMap: layerMap
+        // @endif
       },
-
-      /**
-       * Get the tile at the specified layer using either x and y coordinates or row and column coordinates.
-       *
-       * ```js
-       * import { TileEngine } from 'kontra';
-       *
-       * let tileEngine = TileEngine({
-       *   tilewidth: 32,
-       *   tileheight: 32,
-       *   width: 4,
-       *   height: 4,
-       *   tilesets: [{
-       *     // ...
-       *   }],
-       *   layers: [{
-       *     name: 'collision',
-       *     data: [ 0,0,0,0,
-       *             0,1,4,0,
-       *             0,2,5,0,
-       *             0,0,0,0 ]
-       *   }]
-       * });
-       *
-       * tileEngine.tileAtLayer('collision', {x: 50, y: 50});  //=> 1
-       * tileEngine.tileAtLayer('collision', {row: 2, col: 1});  //=> 2
-       * ```
-       * @memberof TileEngine
-       * @function tileAtLayer
-       *
-       * @param {String} name - Name of the layer.
-       * @param {{x: Number, y: Number}|{row: Number, col: Number}} position - Position of the tile in either {x, y} or {row, col} coordinates.
-       *
-       * @returns {Number} The tile index. Will return `-1` if no layer exists by the provided name.
-       */
-      tileAtLayer(name, position) {
-        let row = position.row || getRow(position.y);
-        let col = position.col || getCol(position.x);
-
-        if (layerMap[name]) {
-          return layerMap[name].data[col + row * tileEngine.width];
-        }
-
-        return -1;
-      },
-
-      /**
-       * Set the tile at the specified layer using either x and y coordinates or row and column coordinates.
-       *
-       * ```js
-       * import { TileEngine } from 'kontra';
-       *
-       * let tileEngine = TileEngine({
-       *   tilewidth: 32,
-       *   tileheight: 32,
-       *   width: 4,
-       *   height: 4,
-       *   tilesets: [{
-       *     // ...
-       *   }],
-       *   layers: [{
-       *     name: 'collision',
-       *     data: [ 0,0,0,0,
-       *             0,1,4,0,
-       *             0,2,5,0,
-       *             0,0,0,0 ]
-       *   }]
-       * });
-       *
-       * tileEngine.setTileAtLayer('collision', {row: 2, col: 1}, 10);
-       * tileEngine.tileAtLayer('collision', {row: 2, col: 1});  //=> 10
-       * ```
-       * @memberof TileEngine
-       * @function setTileAtLayer
-       *
-       * @param {String} name - Name of the layer.
-       * @param {{x: Number, y: Number}|{row: Number, col: Number}} position - Position of the tile in either {x, y} or {row, col} coordinates.
-       * @param {Number} tile - Tile index to set.
-       */
-      setTileAtLayer(name, position, tile) {
-        let row = position.row || getRow(position.y);
-        let col = position.col || getCol(position.x);
-
-        if (layerMap[name]) {
-          this._d = true;
-          layerMap[name]._d = true;
-          layerMap[name].data[col + row * tileEngine.width] = tile;
-        }
-      },
-
-      /**
-      * Set the data at the specified layer.
-      * 
-      * ```js
-      * import { TileEngine } from 'kontra';
-      *
-      * let tileEngine = TileEngine({
-      *   tilewidth: 32,
-      *   tileheight: 32,
-      *   width: 2,
-      *   height: 2,
-      *   tilesets: [{
-      *     // ...
-      *   }],
-      *   layers: [{
-      *     name: 'collision',
-      *     data: [ 0,1,
-      *             2,3 ]
-      *   }]
-      * });
-      *
-      * tileEngine.setLayer('collision', [ 4,5,6,7]);
-      * tileEngine.tileAtLayer('collision', {row: 0, col: 0});  //=> 4
-      * tileEngine.tileAtLayer('collision', {row: 0, col: 1});  //=> 5
-      * tileEngine.tileAtLayer('collision', {row: 1, col: 0});  //=> 6
-      * tileEngine.tileAtLayer('collision', {row: 1, col: 1});  //=> 7
-      * ```
-      * 
-      * @memberof TileEngine
-      * @function setLayer
-      * 
-      * @param {String} name - Name of the layer.
-      * @param {Number[]} data - 1D array of tile indices.
-      */
-      setLayer(name, data) {
-        if (layerMap[name]) {
-          this._d = true;
-          layerMap[name]._d = true;
-          layerMap[name].data = data;
-        }
-      },
-
-      /**
-       * Add an object to the tile engine. The tile engine will set the objects camera position (`sx`, `sy`) to be in sync with the tile engine camera. [Sprite](api/sprite) uses this information to draw the sprite to the correct position on the canvas.
-       * @memberof TileEngine
-       * @function addObject
-       *
-       * @param {Object} object - Object to add to the tile engine.
-       */
-      addObject(object) {
-        objects.push(object);
-        object.sx = this._sx;
-        object.sy = this._sy;
-      },
-
-      /**
-       * Remove an object from the tile engine.
-       * @memberof TileEngine
-       * @function removeObject
-       *
-       * @param {Object} object - Object to remove from the tile engine.
-       */
-      removeObject(object) {
-        let index = objects.indexOf(object);
-        if (index !== -1) {
-          objects.splice(index, 1);
-          object.sx = object.sy = 0;
-        }
-      },
-
-      // expose for testing
-      _r: renderLayer,
-      _p: prerender,
-
-      // @ifdef DEBUG
-      layerCanvases: layerCanvases,
-      layerMap: layerMap
-      // @endif
-    }, properties);
+      properties
+    );
 
     // resolve linked files (source, image)
     tileEngine.tilesets.map(tileset => {
@@ -5946,7 +5881,9 @@ var kontra = (function () {
 
         // @ifdef DEBUG
         if (!source) {
-          throw Error(`You must load the tileset source "${tileset.source}" before loading the tileset`);
+          throw Error(
+            `You must load the tileset source "${tileset.source}" before loading the tileset`
+          );
         }
         // @endif
 
@@ -5955,7 +5892,7 @@ var kontra = (function () {
         });
       }
 
-      if (''+tileset.image === tileset.image) {
+      if ('' + tileset.image === tileset.image) {
         // @ifdef DEBUG
         if (!window.__k) {
           throw Error(`You must use "load" or "loadImage" to resolve tileset.image`);
@@ -5983,7 +5920,7 @@ var kontra = (function () {
      * @return {Number}
      */
     function getRow(y) {
-      return y / tileEngine.tileheight | 0;
+      return (y / tileEngine.tileheight) | 0;
     }
 
     /**
@@ -5995,7 +5932,7 @@ var kontra = (function () {
      * @return {Number}
      */
     function getCol(x) {
-      return x / tileEngine.tilewidth | 0;
+      return (x / tileEngine.tilewidth) | 0;
     }
 
     /**
@@ -6010,14 +5947,13 @@ var kontra = (function () {
       context.globalAlpha = layer.opacity;
 
       (layer.data || []).map((tile, index) => {
-
         // skip empty tiles (0)
         if (!tile) return;
 
         // find the tileset the tile belongs to
         // assume tilesets are ordered by firstgid
         let tileset;
-        for (let i = tileEngine.tilesets.length-1; i >= 0; i--) {
+        for (let i = tileEngine.tilesets.length - 1; i >= 0; i--) {
           tileset = tileEngine.tilesets[i];
 
           if (tile / tileset.firstgid >= 1) {
@@ -6032,19 +5968,14 @@ var kontra = (function () {
         let image = tileset.image;
 
         let offset = tile - tileset.firstgid;
-        let cols = tileset.columns ||
-          image.width / (tilewidth + margin) | 0;
+        let cols = tileset.columns || (image.width / (tilewidth + margin)) | 0;
 
         let x = (index % tileEngine.width) * tilewidth;
-        let y = (index / tileEngine.width | 0) * tileheight;
+        let y = ((index / tileEngine.width) | 0) * tileheight;
         let sx = (offset % cols) * (tilewidth + margin);
-        let sy = (offset / cols | 0) * (tileheight + margin);
+        let sy = ((offset / cols) | 0) * (tileheight + margin);
 
-        context.drawImage(
-          image,
-          sx, sy, tilewidth, tileheight,
-          x, y, tilewidth, tileheight
-        );
+        context.drawImage(image, sx, sy, tilewidth, tileheight, x, y, tilewidth, tileheight);
       });
 
       context.restore();
@@ -6080,8 +6011,14 @@ var kontra = (function () {
 
       tileEngine.context.drawImage(
         canvas,
-        tileEngine.sx, tileEngine.sy, sWidth, sHeight,
-        0, 0, sWidth, sHeight
+        tileEngine.sx,
+        tileEngine.sy,
+        sWidth,
+        sHeight,
+        0,
+        0,
+        sWidth,
+        sHeight
       );
     }
 
@@ -6091,6 +6028,7 @@ var kontra = (function () {
 
   let kontra = {
     Animation: factory,
+    AnimationClass: Animation,
 
     imageAssets,
     audioAssets,
@@ -6104,6 +6042,7 @@ var kontra = (function () {
     load,
 
     Button: factory$5,
+    ButtonClass: Button,
 
     init,
     getCanvas,
@@ -6115,7 +6054,10 @@ var kontra = (function () {
 
     GameLoop,
     GameObject: factory$2,
+    GameObjectClass: GameObject,
+
     Grid: factory$6,
+    GridClass: Grid,
 
     degToRad,
     radToDeg,
@@ -6151,14 +6093,27 @@ var kontra = (function () {
     pointerPressed,
 
     Pool: factory$7,
+    PoolClass: Pool,
+
     Quadtree: factory$8,
+    QuadtreeClass: Quadtree,
+
     Scene: factory$9,
+    SceneClass: Scene,
+
     Sprite: factory$3,
+    SpriteClass: Sprite,
+
     SpriteSheet: factory$a,
+    SpriteSheetClass: SpriteSheet,
 
     Text: factory$4,
+    TextClass: Text,
+
     TileEngine,
-    Vector: factory$1
+
+    Vector: factory$1,
+    VectorClass: Vector
   };
 
   return kontra;

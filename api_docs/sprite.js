@@ -161,16 +161,16 @@
  */
 
 /**
- * If you want to extend a Sprite, you can do so by extending the Sprite class. The one caveat is that `Sprite` is not the Sprite class, but actually is a factory function. To extend the Sprite class, use the `.class` property of the constructor.
+ * If you want to extend a Sprite, you can do so by extending the Sprite class. The one caveat is that `Sprite` is not the Sprite class, but actually is a factory function. To extend the Sprite class, import `SpriteClass` from kontra.
  *
  * You should also override the `draw()` function instead of the `render()` function in your class. The `draw()` function determines how to draw the Sprite. It is called by the `render` function after transforms and rotations have been applied.
  *
  * Do note that the canvas has been rotated and translated to the objects position (taking into account anchor), so {0,0} will be the top-left corner of the game object when drawing.
  *
  * ```js
- * import { Sprite } from 'kontra';
+ * import { Sprite, SpriteClass } from 'kontra';
  *
- * class CustomSprite extends Sprite.class {
+ * class CustomSprite extends SpriteClass {
  *   constructor(properties) {
  *     super(properties);
  *     this.myProp = properties.myProp;

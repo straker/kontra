@@ -1,7 +1,7 @@
 /**
  * A GameObject is just a base class and typically isn't used directly. Instead, it's main purpose is to be extended by other classes, such as [Sprite](/api/sprite).
  *
- * To extend the GameObject class, use the `.class` property of the constructor (since the GameObject is a factory function).
+ * To extend the GameObject class, import the underlying class as import {GameObjectClass}.
  *
  * You should also override the `draw()` function instead of the `render()` function in your class. The `draw()` function determines how to draw the GameObject. It is called by the `render` function after transforms and rotations have been applied.
  *
@@ -10,13 +10,13 @@
  * @sectionName Extending A GameObject
  * @example
  * // exclude-code:start
- * let { GameObject } = kontra;
+ * let { GameObjectClass } = kontra;
  * // exclude-code:end
  * // exclude-script:start
- * import { GameObject } from 'kontra';
+ * import { GameObjectClass } from 'kontra';
  * // exclude-script:end
  *
- * class Triangle extends GameObject.class {
+ * class Triangle extends GameObject {
  *   constructor(properties) {
  *     super(properties);
  *   }

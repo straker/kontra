@@ -318,10 +318,10 @@ export default loggingPlugin;</code></pre>
     <li role="presentation"></li>
   </ul>
   <section role="tabpanel" aria-labelledby=how-to-create-a-plugin-global-tab data-tabpanel="global"><pre><code class="language-js">// consumerCode.js
-let { registerPlugin, Sprite, collides } = kontra;
+let { registerPlugin, Sprite, SpriteClass, collides } = kontra;
 import loggingPlugin from pluginCode.js;
 
-class SpriteBox extends Sprite.class {
+class SpriteBox extends SpriteClass {
   constructor(props) {
     super(props);
   }
@@ -350,10 +350,10 @@ let sprite2 = Sprite({
 
 sprite1.collidesWith(sprite2);  //=&gt; &#39;collision between sprites!&#39;; true</code></pre></section>
   <section role="tabpanel" aria-labelledby=how-to-create-a-plugin-es-tab data-tabpanel="es"><pre><code class="language-js">// consumerCode.js
-import { registerPlugin, Sprite, collides } from 'path/to/kontra.mjs';
+import { registerPlugin, Sprite, SpriteClass, collides } from 'path/to/kontra.mjs';
 import loggingPlugin from pluginCode.js;
 
-class SpriteBox extends Sprite.class {
+class SpriteBox extends SpriteClass {
   constructor(props) {
     super(props);
   }
@@ -382,10 +382,10 @@ let sprite2 = Sprite({
 
 sprite1.collidesWith(sprite2);  //=&gt; &#39;collision between sprites!&#39;; true</code></pre></section>
   <section role="tabpanel" aria-labelledby=how-to-create-a-plugin-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">// consumerCode.js
-import { registerPlugin, Sprite, collides } from &#39;kontra&#39;;
+import { registerPlugin, Sprite, SpriteClass, collides } from &#39;kontra&#39;;
 import loggingPlugin from pluginCode.js;
 
-class SpriteBox extends Sprite.class {
+class SpriteBox extends SpriteClass {
   constructor(props) {
     super(props);
   }
@@ -537,26 +537,26 @@ obj.add(1, 2);  //=&gt; &#39;add passed: 1, 2 and returned 3&#39;; 6</code></pre
     </li>
     <li role="presentation"></li>
   </ul>
-  <section role="tabpanel" aria-labelledby=extendobject-global-tab data-tabpanel="global"><pre><code class="language-js">let { extendObject, Vector } = kontra;
+  <section role="tabpanel" aria-labelledby=extendobject-global-tab data-tabpanel="global"><pre><code class="language-js">let { extendObject, Vector, VectorClass } = kontra;
 
 // add a subtract function to all Vectors
-extendObject(Vector, {
+extendObject(VectorClass, {
   subtract(vec) {
     return Vector(this.x - vec.x, this.y - vec.y);
   }
 });</code></pre></section>
-  <section role="tabpanel" aria-labelledby=extendobject-es-tab data-tabpanel="es"><pre><code class="language-js">import { extendObject, Vector } from 'path/to/kontra.mjs';
+  <section role="tabpanel" aria-labelledby=extendobject-es-tab data-tabpanel="es"><pre><code class="language-js">import { extendObject, Vector, VectorClass } from 'path/to/kontra.mjs';
 
 // add a subtract function to all Vectors
-extendObject(Vector, {
+extendObject(VectorClass, {
   subtract(vec) {
     return Vector(this.x - vec.x, this.y - vec.y);
   }
 });</code></pre></section>
-  <section role="tabpanel" aria-labelledby=extendobject-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { extendObject, Vector } from &#39;kontra&#39;;
+  <section role="tabpanel" aria-labelledby=extendobject-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { extendObject, Vector, VectorClass } from &#39;kontra&#39;;
 
 // add a subtract function to all Vectors
-extendObject(Vector, {
+extendObject(VectorClass, {
   subtract(vec) {
     return Vector(this.x - vec.x, this.y - vec.y);
   }
@@ -568,7 +568,7 @@ extendObject(Vector, {
               <code>kontraObj</code>
               
             </dt>
-            <dd><p><em>Object</em>. Kontra object to extend</p>
+            <dd><p><em>Object</em>. Kontra class to extend</p>
           </dd>
             <dt>
               <code>properties</code>

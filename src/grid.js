@@ -231,10 +231,11 @@ class Grid extends GameObjectClass {
 
       let spans = child.colSpan || 1;
       let colSpan = spans;
+
       do {
         colWidths[col] = Math.max(colWidths[col] || 0, child.width / colSpan);
         grid[row][col] = child;
-      } while (colSpan + col++ <= numCols && --spans);
+      } while (col++ <= numCols && --spans);
 
       if (col >= numCols) {
         col = 0;

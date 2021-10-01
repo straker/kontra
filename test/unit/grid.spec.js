@@ -637,7 +637,6 @@ describe('grid', () => {
         grid = Grid({
           x: 100,
           y: 50,
-          flow: 'grid',
           colGap: [5, 10, 15],
           flow: 'row',
           children: [child1, child2, child3, child4]
@@ -731,6 +730,25 @@ describe('grid', () => {
 
         expect(child4.x).to.equal(75);
         expect(child4.y).to.equal(125);
+      });
+
+      it('should work for colSpan > 2', () => {
+        child1.colSpan = 4;
+        grid.numCols = 4;
+        grid._d = true;
+        grid.render();
+
+        expect(child1.x).to.equal(0);
+        expect(child1.y).to.equal(0);
+
+        expect(child2.x).to.equal(0);
+        expect(child2.y).to.equal(25);
+
+        expect(child3.x).to.equal(25);
+        expect(child3.y).to.equal(25);
+
+        expect(child4.x).to.equal(75);
+        expect(child4.y).to.equal(25);
       });
     });
 

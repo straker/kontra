@@ -184,6 +184,21 @@ describe('grid', () => {
         expect(child1.x).to.equal(100);
         expect(child1.y).to.equal(25);
       });
+
+      it('should take into account child world width and height', () => {
+        child1.world = {
+          width: 50,
+          height: 10
+        };
+        grid._d = true;
+        grid.render();
+
+        expect(child1.x).to.equal(0);
+        expect(child1.y).to.equal(0);
+
+        expect(child2.x).to.equal(0);
+        expect(child2.y).to.equal(10);
+      });
     });
 
     // --------------------------------------------------
@@ -304,6 +319,21 @@ describe('grid', () => {
 
         expect(child1.x).to.equal(100);
         expect(child1.y).to.equal(25);
+      });
+
+      it('should take into account child world width and height', () => {
+        child1.world = {
+          width: 50,
+          height: 10
+        };
+        grid._d = true;
+        grid.render();
+
+        expect(child1.x).to.equal(0);
+        expect(child1.y).to.equal(0);
+
+        expect(child2.x).to.equal(50);
+        expect(child2.y).to.equal(0);
       });
 
       it('should reverse the order when dir=rtl', () => {
@@ -460,6 +490,24 @@ describe('grid', () => {
 
         expect(child1.x).to.equal(100);
         expect(child1.y).to.equal(25);
+      });
+
+      it('should take into account child world width and height', () => {
+        child1.world = {
+          width: 50,
+          height: 200
+        };
+        grid._d = true;
+        grid.render();
+
+        expect(child1.x).to.equal(0);
+        expect(child1.y).to.equal(0);
+
+        expect(child2.x).to.equal(50);
+        expect(child2.y).to.equal(0);
+
+        expect(child3.x).to.equal(0);
+        expect(child3.y).to.equal(200);
       });
     });
 

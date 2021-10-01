@@ -17,6 +17,7 @@
     "test:watch": "karma start",
     "test:permutations": "node test/permutations",
     "test:ts": "tsc test/typings/*.ts",
+    "test:debug": "karma start karma.debug.js",
     "build": "gulp build",
     "build:docs": "gulp build:docs",
     "dist": "gulp dist",

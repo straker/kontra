@@ -42,7 +42,7 @@ describe('pointer', () => {
     // reset canvas offsets
     canvas = getCanvas();
     canvas.width = canvas.height = 600;
-    canvas.style.position = 'absolute';
+    canvas.style.position = 'fixed';
     canvas.style.top = 0;
     canvas.style.left = 0;
 
@@ -579,7 +579,7 @@ describe('pointer', () => {
         let canvas = document.createElement('canvas');
         document.body.appendChild(canvas);
         canvas.width = canvas.height = 600;
-        canvas.style.position = 'absolute';
+        canvas.style.position = 'fixed';
         canvas.style.top = 0;
         canvas.style.left = 0;
 
@@ -738,7 +738,7 @@ describe('pointer', () => {
           let canvas = document.createElement('canvas');
           document.body.appendChild(canvas);
           canvas.width = canvas.height = 600;
-          canvas.style.position = 'absolute';
+          canvas.style.position = 'fixed';
           canvas.style.top = 0;
           canvas.style.left = 0;
 

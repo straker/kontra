@@ -290,9 +290,11 @@ describe('tileEngine', () => {
       expect(tileEngine._d).to.equal(true);
       expect(tileEngine.layerMap.test._d).to.equal(true);
     });
-  }); // tileEngine.setLayer // --------------------------------------------------
+  });
 
-  // --------------------------------------------------
+  //--------------------------------------------------
+  // tileEngine.setLayer
+  // --------------------------------------------------
   describe('setLayer', () => {
     let tileEngine;
 
@@ -332,7 +334,7 @@ describe('tileEngine', () => {
       expect(fn).to.not.throw();
     });
 
-    it('should set the dirty flag', () => {
+    it('should set the dirty flag', () => {
       expect(tileEngine.layerMap.test._d).to.equal(false);
       tileEngine.setLayer('test', [1, 1, 0, 1]);
       expect(tileEngine._d).to.equal(true);

@@ -363,38 +363,38 @@ export default function TileEngine(properties) {
       },
 
       /**
-       * Set the data at the specified layer.
+       * Set the data at the specified layer.
        *
-       * ```js
-       * import { TileEngine } from 'kontra';
+       * ```js
+       * import { TileEngine } from 'kontra';
        *
-       * let tileEngine = TileEngine({
-       *   tilewidth: 32,
-       *   tileheight: 32,
-       *   width: 2,
-       *   height: 2,
-       *   tilesets: [{
-       *     // ...
-       *   }],
-       *   layers: [{
-       *     name: 'collision',
-       *     data: [ 0,1,
-       *             2,3 ]
-       *   }]
-       * });
+       * let tileEngine = TileEngine({
+       *   tilewidth: 32,
+       *   tileheight: 32,
+       *   width: 2,
+       *   height: 2,
+       *   tilesets: [{
+       *     // ...
+       *   }],
+       *   layers: [{
+       *     name: 'collision',
+       *     data: [ 0,1,
+       *             2,3 ]
+       *   }]
+       * });
        *
-       * tileEngine.setLayer('collision', [ 4,5,6,7]);
-       * tileEngine.tileAtLayer('collision', {row: 0, col: 0});  //=> 4
-       * tileEngine.tileAtLayer('collision', {row: 0, col: 1});  //=> 5
-       * tileEngine.tileAtLayer('collision', {row: 1, col: 0});  //=> 6
-       * tileEngine.tileAtLayer('collision', {row: 1, col: 1});  //=> 7
-       * ```
+       * tileEngine.setLayer('collision', [ 4,5,6,7]);
+       * tileEngine.tileAtLayer('collision', {row: 0, col: 0});  //=> 4
+       * tileEngine.tileAtLayer('collision', {row: 0, col: 1});  //=> 5
+       * tileEngine.tileAtLayer('collision', {row: 1, col: 0});  //=> 6
+       * tileEngine.tileAtLayer('collision', {row: 1, col: 1});  //=> 7
+       * ```
        *
-       * @memberof TileEngine
-       * @function setLayer
+       * @memberof TileEngine
+       * @function setLayer
        *
        * @param {String} name - Name of the layer.
-       * @param {Number[]} data - 1D array of tile indices.
+       * @param {Number[]} data - 1D array of tile indices.
        */
       setLayer(name, data) {
         if (layerMap[name]) {

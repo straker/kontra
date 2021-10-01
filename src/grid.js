@@ -227,13 +227,15 @@ class Grid extends GameObjectClass {
         child._p();
       }
 
-      rowHeights[row] = Math.max(rowHeights[row] || 0, child.height);
+      let { width, height } = child.world || child;
+
+      rowHeights[row] = Math.max(rowHeights[row] || 0, height);
 
       let spans = child.colSpan || 1;
       let colSpan = spans;
 
       do {
-        colWidths[col] = Math.max(colWidths[col] || 0, child.width / colSpan);
+        colWidths[col] = Math.max(colWidths[col] || 0, width / colSpan);
         grid[row][col] = child;
       } while (col++ <= numCols && --spans);
 
@@ -302,7 +304,7 @@ class Grid extends GameObjectClass {
           let pointY = rowHeights[row] * align;
           let anchorX = 0;
           let anchorY = 0;
-          let { width, height } = child;
+          let { width, height } = child.world || child;
 
           if (child.anchor) {
             anchorX = child.anchor.x;

@@ -6,7 +6,7 @@
  * import loggingPlugin from 'path/to/plugin/code.js'
  *
  * // register a plugin that adds logging to all Sprites
- * registerPlugin(Sprite, loggingPlugin);
+ * registerPlugin(Sprite.class, loggingPlugin);
  * ```
  * @sectionName Plugin
  */

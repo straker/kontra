@@ -8,6 +8,7 @@ kontra.*
 test/permutations/*.js
 test/typings/*.js
 test/playground.html
+tmp
 
 !test/permutations/index.js
 !test/permutations/karma.conf.template.js

@@ -21,7 +21,7 @@
     "build": "gulp build",
     "build:docs": "gulp build:docs",
     "dist": "gulp dist",
-    "release": "npm run dist && npm publish",
+    "release": "sh tasks/release.sh",
     "prepare": "husky install"
   },
   "repository": {

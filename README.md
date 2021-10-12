@@ -1,5 +1,5 @@
 [![Version](https://badge.fury.io/js/kontra.svg)](https://badge.fury.io/js/kontra)
-[![Build Status](https://travis-ci.org/straker/kontra.svg?branch=main)](https://travis-ci.org/straker/kontra)
+[![Build Status](https://app.travis-ci.com/straker/kontra.svg?branch=main)](https://app.travis-ci.com/straker/kontra)
 [![Coverage Status](https://coveralls.io/repos/straker/kontra/badge.svg?branch=main&service=github)](https://coveralls.io/github/straker/kontra?branch=main)
 
 # Kontra.js

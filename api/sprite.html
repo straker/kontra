@@ -867,7 +867,7 @@ sprite.render();
             </a>
           </h2>
 
-          <p>If you want to extend a Sprite, you can do so by extending the Sprite class. The one caveat is that <code>Sprite</code> is not the Sprite class, but actually is a factory function. To extend the Sprite class, import <code>SpriteClass</code> from kontra.</p>
+          <p>If you want to extend a Sprite, you can do so by extending the Sprite class. The one caveat is that <code>Sprite</code> is not the Sprite class, but actually is a factory function. To extend the Sprite class, use the <code>.class</code> property of the constructor.</p>
 <p>You should also override the <code>draw()</code> function instead of the <code>render()</code> function in your class. The <code>draw()</code> function determines how to draw the Sprite. It is called by the <code>render</code> function after transforms and rotations have been applied.</p>
 <p>Do note that the canvas has been rotated and translated to the objects position (taking into account anchor), so {0,0} will be the top-left corner of the game object when drawing.</p>
 <div class="tablist">
@@ -883,9 +883,9 @@ sprite.render();
     </li>
     <li role="presentation"></li>
   </ul>
-  <section role="tabpanel" aria-labelledby=extending-a-sprite-global-tab data-tabpanel="global"><pre><code class="language-js">let { Sprite, SpriteClass } = kontra;
+  <section role="tabpanel" aria-labelledby=extending-a-sprite-global-tab data-tabpanel="global"><pre><code class="language-js">let { Sprite } = kontra;
 
-class CustomSprite extends SpriteClass {
+class CustomSprite extends Sprite.class {
   constructor(properties) {
     super(properties);
     this.myProp = properties.myProp;
@@ -897,9 +897,9 @@ class CustomSprite extends SpriteClass {
     }
   }
 }</code></pre></section>
-  <section role="tabpanel" aria-labelledby=extending-a-sprite-es-tab data-tabpanel="es"><pre><code class="language-js">import { Sprite, SpriteClass } from 'path/to/kontra.mjs';
+  <section role="tabpanel" aria-labelledby=extending-a-sprite-es-tab data-tabpanel="es"><pre><code class="language-js">import { Sprite } from 'path/to/kontra.mjs';
 
-class CustomSprite extends SpriteClass {
+class CustomSprite extends Sprite.class {
   constructor(properties) {
     super(properties);
     this.myProp = properties.myProp;
@@ -911,9 +911,9 @@ class CustomSprite extends SpriteClass {
     }
   }
 }</code></pre></section>
-  <section role="tabpanel" aria-labelledby=extending-a-sprite-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { Sprite, SpriteClass } from &#39;kontra&#39;;
+  <section role="tabpanel" aria-labelledby=extending-a-sprite-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { Sprite } from &#39;kontra&#39;;
 
-class CustomSprite extends SpriteClass {
+class CustomSprite extends Sprite.class {
   constructor(properties) {
     super(properties);
     this.myProp = properties.myProp;

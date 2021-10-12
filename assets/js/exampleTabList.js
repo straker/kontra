@@ -1,4 +1,4 @@
-(function () {
+(function() {
   let type = localStorage.getItem('kontra-example-type') || 'global';
   document.body.setAttribute('data-examples', type);
 
@@ -11,6 +11,7 @@
     tab.setAttribute('tabindex', 0);
   });
 
+
   Array.from(document.querySelectorAll('[role=tablist]')).forEach(tablist => {
     let tabs = [];
 
@@ -20,7 +21,7 @@
       localStorage.setItem('kontra-example-type', type);
       document.body.setAttribute('data-examples', type);
 
-      let priorTab = tablist.querySelector('[aria-selected]');
+      let priorTab = tablist.querySelector('[aria-selected]')
       priorTab.removeAttribute('aria-selected');
       priorTab.setAttribute('tabindex', -1);
 
@@ -41,7 +42,8 @@
         if (e.which === 37) {
           tabIndex = index - 1 <= 0 ? 0 : index - 1;
           switchTab(tabIndex);
-        } else if (e.which === 39) {
+        }
+        else if (e.which === 39) {
           tabIndex = index + 1 >= tabs.length - 1 ? tabs.length - 1 : index + 1;
           switchTab(tabIndex);
         }

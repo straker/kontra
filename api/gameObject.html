@@ -549,7 +549,7 @@
           </h2>
 
           <p>A GameObject is just a base class and typically isn&#39;t used directly. Instead, it&#39;s main purpose is to be extended by other classes, such as <a href="/api/sprite">Sprite</a>.</p>
-<p>To extend the GameObject class, import the underlying class as import {GameObjectClass}.</p>
+<p>To extend the GameObject class, use the <code>.class</code> property of the constructor (since the GameObject is a factory function).</p>
 <p>You should also override the <code>draw()</code> function instead of the <code>render()</code> function in your class. The <code>draw()</code> function determines how to draw the GameObject. It is called by the <code>render</code> function after transforms and rotations have been applied.</p>
 <p>Do note that the canvas has been rotated and translated to the objects position (taking into account anchor), so {0,0} will be the top-left corner of the game object when drawing.</p>
 <canvas id="game-canvas-2"></canvas>
@@ -568,9 +568,9 @@
     <li role="presentation"></li>
   </ul>
   <section role="tabpanel" aria-labelledby=game-canvas-2-global-tab data-tabpanel="global">
-    <pre><code class="lang-js">let { GameObjectClass } &#x3D; kontra
+    <pre><code class="lang-js">let { GameObject } &#x3D; kontra
 
-class Triangle extends GameObject {
+class Triangle extends GameObject.class {
   constructor(properties) {
     super(properties);
   }
@@ -596,9 +596,9 @@ let triangle &#x3D; new Triangle({
 triangle.render();</code></pre>
   </section>
   <section role="tabpanel" aria-labelledby=game-canvas-2-es-tab data-tabpanel="es">
-    <pre><code class="lang-js">import { GameObjectClass } from &#x27;path/to/kontra.mjs&#x27;
+    <pre><code class="lang-js">import { GameObject } from &#x27;path/to/kontra.mjs&#x27;
 
-class Triangle extends GameObject {
+class Triangle extends GameObject.class {
   constructor(properties) {
     super(properties);
   }
@@ -624,9 +624,9 @@ let triangle &#x3D; new Triangle({
 triangle.render();</code></pre>
   </section>
   <section role="tabpanel" aria-labelledby=game-canvas-2-bundle-tab data-tabpanel="bundle">
-    <pre><code class="lang-js">import { GameObjectClass } from &#x27;kontra&#x27;;
+    <pre><code class="lang-js">import { GameObject } from &#x27;kontra&#x27;;
 
-class Triangle extends GameObject {
+class Triangle extends GameObject.class {
   constructor(properties) {
     super(properties);
   }
@@ -660,9 +660,9 @@ triangle.render();</code></pre>
   canvas.height = 200;
   var context = canvas.getContext("2d");
   // exclude-code:start
-let { GameObjectClass } = kontra;
+let { GameObject } = kontra;
 // exclude-code:end
-class Triangle extends GameObject {
+class Triangle extends GameObject.class {
   constructor(properties) {
     super(properties);
   }

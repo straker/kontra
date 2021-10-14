@@ -371,25 +371,25 @@ describe('gameObject with context: ' + JSON.stringify(testContext, null, 4), () 
       it('should set the globalAlpha', () => {
         gameObject.opacity = 0.5;
 
-        var spy = sinon.spy(gameObject.context, 'globalAlpha', ['set']);
+        let spy = sinon.spy(CanvasRenderingContext2D.prototype, 'globalAlpha', ['set']);
 
         gameObject.render();
 
         expect(spy.set.calledWith(0.5)).to.be.true;
 
-        spy.restore();
+        spy.set.restore();
       });
     } else {
       it('should not set the globalAlpha', () => {
         gameObject.opacity = 0.5;
 
-        var spy = sinon.spy(gameObject.context, 'globalAlpha', ['set']);
+        let spy = sinon.spy(CanvasRenderingContext2D.prototype, 'globalAlpha', ['set']);
 
         gameObject.render();
 
         expect(spy.set.called).to.be.false;
 
-        spy.restore();
+        spy.set.restore();
       });
     }
 

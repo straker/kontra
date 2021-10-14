@@ -1,4 +1,4 @@
-import Text from '../../src/text.js';
+import Text, { TextClass } from '../../src/text.js';
 import { getContext } from '../../src/core.js';
 import { noop } from '../../src/utils.js';
 
@@ -15,6 +15,10 @@ let testContext = {
 // text
 // --------------------------------------------------
 describe('text with context: ' + JSON.stringify(testContext, null, 4), () => {
+  it('should export class', () => {
+    expect(TextClass).to.be.a('function');
+  });
+
   // --------------------------------------------------
   // init
   // --------------------------------------------------
@@ -70,9 +74,9 @@ describe('text with context: ' + JSON.stringify(testContext, null, 4), () => {
 
       expect(text._d).to.be.true;
     });
-    
+
     it('should cast the value when setting text', () => {
-      let text = Text({text: ''});
+      let text = Text({ text: '' });
 
       text.text = 123;
 

@@ -14,12 +14,10 @@ declare namespace kontra {
     {{/each}}
   }
   interface {{class}}Constructor {
-    readonly class: {{class}}Constructor;
-    readonly prototype: {{class}};
     new({{{params}}}): {{class}};
-    ({{{params}}}): {{class}};
   }
-  var {{class}}: {{class}}Constructor
+  var {{class}}Class: {{class}}Constructor
+  function {{class}}({{{params}}}): {{class}};
     {{/if}}
     {{#unless memberof}}
       {{#if function}}

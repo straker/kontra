@@ -1,4 +1,4 @@
-import Pool from '../../src/pool.js';
+import Pool, { PoolClass } from '../../src/pool.js';
 import { noop } from '../../src/utils.js';
 
 // --------------------------------------------------
@@ -24,6 +24,10 @@ describe('pool', () => {
       ttl: 0
     };
   };
+
+  it('should export class', () => {
+    expect(PoolClass).to.be.a('function');
+  });
 
   // --------------------------------------------------
   // init

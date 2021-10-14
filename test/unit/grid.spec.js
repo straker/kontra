@@ -1,10 +1,14 @@
-import Grid from '../../src/grid.js';
+import Grid, { GridClass } from '../../src/grid.js';
 import { getCanvas } from '../../src/core.js';
 
 // --------------------------------------------------
 // grid
 // --------------------------------------------------
 describe('grid', () => {
+  it('should export class', () => {
+    expect(GridClass).to.be.a('function');
+  });
+
   // --------------------------------------------------
   // init
   // --------------------------------------------------

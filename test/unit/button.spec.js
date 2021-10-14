@@ -1,4 +1,4 @@
-import Button from '../../src/button.js';
+import Button, { ButtonClass } from '../../src/button.js';
 import Text, { TextClass } from '../../src/text.js';
 import { initPointer, resetPointers } from '../../src/pointer.js';
 import { srOnlyStyle } from '../../src/utils.js';
@@ -21,6 +21,10 @@ describe('button', () => {
   afterEach(() => {
     button.destroy();
     resetPointers();
+  });
+
+  it('should export class', () => {
+    expect(ButtonClass).to.be.a('function');
   });
 
   // --------------------------------------------------

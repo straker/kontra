@@ -35,3 +35,10 @@ kontra.Scene({
   id: 'game',
   foo: 'bar'
 });
+
+// extends
+class CustomScene extends kontra.SceneClass {}
+let myScene = new CustomScene({
+  id: 'game'
+});
+myScene.lookAt({x: 10, y: 20});

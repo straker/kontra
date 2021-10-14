@@ -39,3 +39,8 @@ kontra.Grid({
   colGap: [10],
   rowGap: [10],
 });
+
+// extends
+class CustomGrid extends kontra.GridClass {}
+let myGrid = new CustomGrid();
+myGrid.destroy();

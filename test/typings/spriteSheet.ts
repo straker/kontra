@@ -31,3 +31,17 @@ kontra.SpriteSheet({
     }
   }
 });
+
+// extends
+class CustomSpriteSheet extends kontra.SpriteSheetClass {}
+let mySpriteSheet = new CustomSpriteSheet({
+  image: new Image(),
+  frameWidth: 32,
+  frameHeight: 32
+});
+mySpriteSheet.createAnimations({
+  walk: {
+    frames: 1,
+    frameRate: 20
+  }
+});

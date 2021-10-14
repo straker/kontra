@@ -55,8 +55,8 @@ animSprite.playAnimation('walk');
 let anims = animSprite.animations;
 let currAnim = animSprite.currentAnimation;
 
-// class
-class CustomSprite extends kontra.Sprite.class {
+// extends
+class CustomSprite extends kontra.SpriteClass {
   constructor(properties?: object) {
     super(properties);
   }
@@ -66,6 +66,7 @@ let customSprite = new CustomSprite({
   x: 12,
   y: 10
 });
+customSprite.advance();
 
 // custom props
 let propSrpite = kontra.Sprite({

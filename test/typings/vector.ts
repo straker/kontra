@@ -23,3 +23,8 @@ vector.clamp(10, 20, 100, 100);
 // options
 kontra.Vector(10);
 kontra.Vector(10, 20);
+
+// extends
+class CustomVector extends kontra.VectorClass {}
+let myVec = new CustomVector();
+myVec.add(newVec);

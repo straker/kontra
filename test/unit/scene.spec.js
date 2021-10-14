@@ -1,4 +1,4 @@
-import Scene from '../../src/scene.js';
+import Scene, { SceneClass } from '../../src/scene.js';
 import { srOnlyStyle } from '../../src/utils.js';
 import { collides } from '../../src/helpers.js';
 
@@ -15,6 +15,10 @@ describe('scene', () => {
 
   afterEach(() => {
     scene.destroy();
+  });
+
+  it('should export class', () => {
+    expect(SceneClass).to.be.a('function');
   });
 
   // --------------------------------------------------

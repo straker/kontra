@@ -53,3 +53,8 @@ kontra.Button({
   onBlur() {},
   onUp() {}
 });
+
+// extends
+class CustomButton extends kontra.ButtonClass {}
+let myButton = new CustomButton();
+myButton.enable();

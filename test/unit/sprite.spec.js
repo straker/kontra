@@ -1,4 +1,4 @@
-import Sprite from '../../src/sprite.js';
+import Sprite, { SpriteClass } from '../../src/sprite.js';
 import { noop } from '../../src/utils.js';
 
 // test-context:start
@@ -12,6 +12,10 @@ let testContext = {
 // sprite
 // --------------------------------------------------
 describe('sprite with context: ' + JSON.stringify(testContext, null, 4), () => {
+  it('should export class', () => {
+    expect(SpriteClass).to.be.a('function');
+  });
+
   // --------------------------------------------------
   // init
   // --------------------------------------------------

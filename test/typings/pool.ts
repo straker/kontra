@@ -61,3 +61,12 @@ let customPoolOpts = kontra.Pool({
 let spriteCreate = kontra.Pool({
   create: kontra.Sprite
 });
+
+// extends
+class CustomPool extends kontra.PoolClass {}
+let myPool = new CustomPool({
+  create() {
+    return kontra.Sprite();
+  }
+});
+myPool.clear();

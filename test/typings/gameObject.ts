@@ -72,3 +72,8 @@ kontra.GameObject({
 kontra.GameObject({
   name: 'myObject'
 });
+
+// extends
+class CustomGameObject extends kontra.GameObjectClass {}
+let myGameObj = new CustomGameObject();
+myGameObj.render();

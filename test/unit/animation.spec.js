@@ -1,4 +1,4 @@
-import Animation from '../../src/animation.js';
+import Animation, { AnimationClass } from '../../src/animation.js';
 import { getContext } from '../../src/core.js';
 
 // --------------------------------------------------
@@ -21,6 +21,10 @@ describe('animation', () => {
         }
       }
     });
+  });
+
+  it('should export class', () => {
+    expect(AnimationClass).to.be.a('function');
   });
 
   // --------------------------------------------------

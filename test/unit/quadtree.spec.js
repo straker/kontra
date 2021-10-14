@@ -1,10 +1,14 @@
-import Quadtree from '../../src/quadtree.js';
+import Quadtree, { QuadtreeClass } from '../../src/quadtree.js';
 import { getCanvas } from '../../src/core.js';
 
 // --------------------------------------------------
 // quadtree
 // --------------------------------------------------
 describe('quadtree', () => {
+  it('should export class', () => {
+    expect(QuadtreeClass).to.be.a('function');
+  });
+
   // --------------------------------------------------
   // init
   // --------------------------------------------------

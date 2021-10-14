@@ -27,6 +27,10 @@ describe('gameObject with context: ' + JSON.stringify(testContext, null, 4), () 
     spy && spy.restore && spy.restore();
   });
 
+  it('should export class', () => {
+    expect(GameObjectClass).to.be.a('function');
+  });
+
   // --------------------------------------------------
   // init
   // --------------------------------------------------

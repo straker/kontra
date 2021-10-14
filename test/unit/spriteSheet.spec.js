@@ -5,6 +5,10 @@ import { noop } from '../../src/utils.js';
 // spriteSheet
 // --------------------------------------------------
 describe('spriteSheet', () => {
+  it('should export class', () => {
+    expect(SpriteSheetClass).to.be.a('function');
+  });
+
   // --------------------------------------------------
   // init
   // --------------------------------------------------

@@ -1,4 +1,4 @@
-import Vector from '../../src/vector.js';
+import Vector, { VectorClass } from '../../src/vector.js';
 
 // test-context:start
 let testContext = {
@@ -17,6 +17,10 @@ let testContext = {
 // vector
 // --------------------------------------------------
 describe('vector with context: ' + JSON.stringify(testContext, null, 4), () => {
+  it('should export class', () => {
+    expect(VectorClass).to.be.a('function');
+  });
+
   // --------------------------------------------------
   // init
   // --------------------------------------------------

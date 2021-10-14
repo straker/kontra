@@ -31,6 +31,8 @@ npm publish
 version=$(node -p "require('./package.json').version")
 
 printf "\n${Cyan}Releasing docs${NC}\n"
+# rebuild docs to generate download page with newest version
+npm run build:docs
 cd docs
 find . -name "*.html" | cpio -pvd ../tmp &>/dev/null
 cp -r assets ../tmp/assets

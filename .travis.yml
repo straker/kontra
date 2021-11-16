@@ -1,7 +1,7 @@
 language: node_js
 node_js:
-- '16'
-dist: trusty
+- '14'
+dist: xenial
 sudo: required
 addons:
   chrome: stable

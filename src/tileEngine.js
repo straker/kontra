@@ -27,6 +27,43 @@ function getCol(x, tilewidth) {
   return (x / tilewidth) | 0;
 }
 
+/**
+ * A tile engine for managing and drawing tilesets.
+ *
+ * <figure>
+ *   <a href="assets/imgs/mapPack_tilesheet.png">
+ *     <img src="assets/imgs/mapPack_tilesheet.png" width="1088" height="768" alt="Tileset to create an overworld map in various seasons.">
+ *   </a>
+ *   <figcaption>Tileset image courtesy of <a href="https://kenney.nl/assets">Kenney</a>.</figcaption>
+ * </figure>
+ * @class TileEngine
+ *
+ * @param {Object} properties - Properties of the tile engine.
+ * @param {Number} properties.width - Width of the tile map (in number of tiles).
+ * @param {Number} properties.height - Height of the tile map (in number of tiles).
+ * @param {Number} properties.tilewidth - Width of a single tile (in pixels).
+ * @param {Number} properties.tileheight - Height of a single tile (in pixels).
+ * @param {CanvasRenderingContext2D} [properties.context] - The context the tile engine should draw to. Defaults to [core.getContext()](api/core#getContext)
+ *
+ * @param {Object[]} properties.tilesets - Array of tileset objects.
+ * @param {Number} properties.tilesetN.firstgid - First tile index of the tileset. The first tileset will have a firstgid of 1 as 0 represents an empty tile.
+ * @param {String|HTMLImageElement} properties.tilesetN.image - Relative path to the HTMLImageElement or an HTMLImageElement. If passing a relative path, the image file must have been [loaded](api/assets#load) first.
+ * @param {Number} [properties.tilesetN.margin=0] - The amount of whitespace between each tile (in pixels).
+ * @param {Number} [properties.tilesetN.tilewidth] - Width of the tileset (in pixels). Defaults to properties.tilewidth.
+ * @param {Number} [properties.tilesetN.tileheight] - Height of the tileset (in pixels). Defaults to properties.tileheight.
+ * @param {String} [properties.tilesetN.source] - Relative path to the source JSON file. The source JSON file must have been [loaded](api/assets#load) first.
+ * @param {Number} [properties.tilesetN.columns] - Number of columns in the tileset image.
+ *
+ * @param {Object[]} properties.layers - Array of layer objects.
+ * @param {String} properties.layerN.name - Unique name of the layer.
+ * @param {Number[]} properties.layerN.data - 1D array of tile indices.
+ * @param {Boolean} [properties.layerN.visible=true] - If the layer should be drawn or not.
+ * @param {Number} [properties.layerN.opacity=1] - Percent opacity of the layer.
+ */
+
+/**
+ * @docs docs/api_docs/tileEngine.js
+ */
 class TileEngine {
   constructor({
     /**

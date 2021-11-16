@@ -110,6 +110,15 @@ __Note:__ Some of the more advance classes â€“ such as Button, Scene, and Grid â
 | `rtl`         | Support for RTL languages |
 | `textAlign`   | `textAlign` |
 
+#### `tileEngine` Options:
+
+| Name          | Functionality Enabled |
+| ------------- | ------------- |
+| `camera`      | `sx`, `sy`, `addObject`, `removeObject` |
+| `dynamic`     | `setLayer`, `setTileAtLayer` |
+| `query`       | `layerCollidesWith`, `tileAtLayer` |
+| `tiled`       | Support for resolving linked Tiled files (source, image)  |
+
 #### `vector` Options:
 
 | Name          | Functionality Enabled |

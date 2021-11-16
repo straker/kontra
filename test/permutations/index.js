@@ -18,6 +18,7 @@ let options = {
   ],
   sprite: ['SPRITE_IMAGE', 'SPRITE_ANIMATION'],
   text: ['TEXT_AUTONEWLINE', 'TEXT_NEWLINE', 'TEXT_RTL', 'TEXT_ALIGN'],
+  tileEngine: ['TILEENGINE_CAMERA', 'TILEENGINE_DYNAMIC', 'TILEENGINE_QUERY'],
   vector: [
     'VECTOR_ANGLE',
     'VECTOR_CLAMP',
@@ -28,6 +29,10 @@ let options = {
     'VECTOR_SCALE',
     'VECTOR_SUBTRACT'
   ]
+};
+
+let dependants = {
+  tileEngine: ['GAMEOBJECT_ANCHOR']
 };
 
 // run permutations in parallel by passing in which permutation suite to run
@@ -74,6 +79,12 @@ Object.keys(options).forEach(async option => {
     let numPermutations = 2 ** options[option].length;
     for (let i = 0; i < numPermutations; i++) {
       let context = {};
+
+      if (dependants[option]) {
+        dependants[option].forEach(contextName => {
+          context[contextName] = true;
+        });
+      }
 
       options[option].forEach((optionName, index) => {
         context[optionName] = !!((2 ** index) & i);

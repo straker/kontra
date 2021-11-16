@@ -32,6 +32,11 @@ jobs:
     script:
     - npm run build
     - npm run test:permutations text
+  - name: 'Permutation Tests: tileEngine'
+    if: type = pull_request
+    script:
+    - npm run build
+    - npm run test:permutations tileEngine
   - name: 'Permutation Tests: updatable'
     if: type = pull_request
     script:

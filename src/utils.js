@@ -2,7 +2,8 @@
 export let noop = () => {};
 
 // style used for DOM nodes needed for screen readers
-export let srOnlyStyle = 'position:absolute;width:1px;height:1px;overflow:hidden;';
+export let srOnlyStyle =
+  'position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);';
 
 // append a node directly after the canvas and as the last
 // element of other kontra nodes

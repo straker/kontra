@@ -131,10 +131,18 @@ describe('button', () => {
     });
 
     it('should hide the DOM node', () => {
-      srOnlyStyle.split(';').forEach(style => {
-        let parts = style.split(':');
-        expect(button._dn.style[parts[0]]).to.equal(parts[1]);
-      });
+      let styles = srOnlyStyle
+        .split(';')
+        .map(style => style.split(':')[0].trim())
+        .filter(style => !!style);
+      button._dn
+        .getAttribute('style')
+        .split(';')
+        .map(style => style.split(':')[0].trim())
+        .filter(style => !!style)
+        .forEach((prop, index) => {
+          expect(styles[index]).to.equal(prop);
+        });
     });
 
     it('should setup focus event listeners on the DOM node', () => {

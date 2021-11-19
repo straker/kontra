@@ -56,9 +56,19 @@ describe('scene', () => {
     });
 
     it('should hide the DOM node', () => {
-      srOnlyStyle.split(';').forEach(style => {
-        let parts = style.split(':');
-        expect(scene._dn.style[parts[0]]).to.equal(parts[1]);
+      it.only('should hide the DOM node', () => {
+        let styles = srOnlyStyle
+          .split(';')
+          .map(style => style.split(':')[0].trim())
+          .filter(style => !!style);
+        scene._dn
+          .getAttribute('style')
+          .split(';')
+          .map(style => style.split(':')[0].trim())
+          .filter(style => !!style)
+          .forEach((prop, index) => {
+            expect(styles[index]).to.equal(prop);
+          });
       });
     });
 

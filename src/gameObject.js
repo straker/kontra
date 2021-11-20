@@ -286,22 +286,20 @@ class GameObject extends Updatable {
       context.translate(this.x, this.y);
     }
 
+    // @ifdef GAMEOBJECT_CAMERA
+    // 2) translate to the camera position
+    if (this.sx || this.sy) {
+      context.translate(-this.sx, -this.sy);
+    }
+    // @endif
+
     // @ifdef GAMEOBJECT_ROTATION
-    // 2) rotate around the anchor
+    // 3) rotate around the anchor
     //
     // it's faster to only rotate when set rather than always rotating
     // @see https://jsperf.com/rotate-or-if-statement/2
     if (this.rotation) {
       context.rotate(this.rotation);
-    }
-    // @endif
-
-    // @ifdef GAMEOBJECT_CAMERA
-    // 3) translate to the camera position after rotation so camera
-    // values are in the direction of the rotation rather than always
-    // along the x/y axis
-    if (this.sx || this.sy) {
-      context.translate(-this.sx, -this.sy);
     }
     // @endif
 

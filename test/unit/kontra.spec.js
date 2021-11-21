@@ -43,6 +43,7 @@ describe('kontra', () => {
     expect(kontraExports.radToDeg).to.exist;
     expect(kontraExports.angleToTarget).to.exist;
     expect(kontraExports.rotatePoint).to.exist;
+    expect(kontraExports.movePoint).to.exist;
     expect(kontraExports.randInt).to.exist;
     expect(kontraExports.seedRand).to.exist;
     expect(kontraExports.lerp).to.exist;

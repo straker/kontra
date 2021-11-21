@@ -11,6 +11,7 @@ describe('helpers', () => {
     expect(helpers.radToDeg).to.be.an('function');
     expect(helpers.angleToTarget).to.be.an('function');
     expect(helpers.rotatePoint).to.be.an('function');
+    expect(helpers.movePoint).to.be.an('function');
     expect(helpers.randInt).to.be.an('function');
     expect(helpers.lerp).to.be.an('function');
     expect(helpers.inverseLerp).to.be.an('function');
@@ -48,6 +49,32 @@ describe('helpers', () => {
       let target = { x: 100, y: 100 };
       expect(helpers.angleToTarget(source, target).toFixed(2)).to.equal('-0.79');
       expect(helpers.angleToTarget(target, source).toFixed(2)).to.equal('2.36');
+    });
+  });
+
+  // --------------------------------------------------
+  // rotatePoint
+  // --------------------------------------------------
+  describe('rotatePoint', () => {
+    it('should return the new x and y after rotation', () => {
+      let point = { x: 300, y: 300 };
+      let angle = helpers.degToRad(35);
+      let newPoint = helpers.rotatePoint(point, angle);
+      expect(newPoint.x.toFixed(2)).to.equal('73.67');
+      expect(newPoint.y.toFixed(2)).to.equal('417.82');
+    });
+  });
+
+  // --------------------------------------------------
+  // movePoint
+  // --------------------------------------------------
+  describe('movePoint', () => {
+    it('should return the new x and y after move', () => {
+      let point = { x: 300, y: 300 };
+      let angle = helpers.degToRad(35);
+      let newPoint = helpers.movePoint(point, angle, 100);
+      expect(newPoint.x.toFixed(2)).to.equal('357.36');
+      expect(newPoint.y.toFixed(2)).to.equal('218.08');
     });
   });
 

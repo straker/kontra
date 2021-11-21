@@ -56,8 +56,8 @@ let gameScene = kontra.Scene({
   }
 });
 
-gameScene.addChild(snake);
 gameScene.addChild(apple);
+gameScene.addChild(snake);
 
 kontra.bindKeys('esc', () => {
   kontra.emit('navigate', 'Menu');

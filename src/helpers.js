@@ -86,10 +86,28 @@ export function angleToTarget(source, target) {
 export function rotatePoint(point, angle) {
   let sin = Math.sin(angle);
   let cos = Math.cos(angle);
-  let x = point.x * cos - point.y * sin;
-  let y = point.x * sin + point.y * cos;
 
-  return { x, y };
+  return {
+    x: point.x * cos - point.y * sin,
+    y: point.x * sin + point.y * cos
+  };
+}
+
+/**
+ * Move a point by an angle and distance.
+ * @function
+ *
+ * @param {{x: Number, y: Number}} point - The {x,y} point to move.
+ * @param {Number} angle - Angle (in radians) to move.
+ * @param {Number} distance - Distance to move.
+ *
+ * @returns {{x: Number, y: Number}} The new x and y coordinates after moving.
+ */
+export function movePoint(point, angle, distance) {
+  return {
+    x: point.x + Math.sin(angle) * distance,
+    y: point.y - Math.cos(angle) * distance
+  };
 }
 
 /**

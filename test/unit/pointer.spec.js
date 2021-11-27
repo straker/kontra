@@ -1,6 +1,6 @@
 import * as pointer from '../../src/pointer.js';
 import { getCanvas } from '../../src/core.js';
-import { emit } from '../../src/events.js';
+import { emit, on } from '../../src/events.js';
 import { noop } from '../../src/utils.js';
 
 // --------------------------------------------------
@@ -141,8 +141,8 @@ describe('pointer', () => {
 
     it('should return true for touchstart', () => {
       simulateEvent('touchstart', {
-        touches: [],
-        changedTouches: [{ clientX: 100, clientY: 50 }]
+        touches: [{ identifier: 0, clientX: 100, clientY: 50 }],
+        changedTouches: [{ identifier: 0, clientX: 100, clientY: 50 }]
       });
 
       expect(pointer.pointerPressed('left')).to.be.true;
@@ -150,12 +150,12 @@ describe('pointer', () => {
 
     it('should return false for a touchend', () => {
       simulateEvent('touchstart', {
-        touches: [],
-        changedTouches: [{ clientX: 100, clientY: 50 }]
+        touches: [{ identifier: 0, clientX: 100, clientY: 50 }],
+        changedTouches: [{ identifier: 0, clientX: 100, clientY: 50 }]
       });
       simulateEvent('touchend', {
-        touches: [],
-        changedTouches: [{ clientX: 100, clientY: 50 }]
+        touches: [{ identifier: 0, clientX: 100, clientY: 50 }],
+        changedTouches: [{ identifier: 0, clientX: 100, clientY: 50 }]
       });
 
       expect(pointer.pointerPressed('left')).to.be.false;
@@ -460,7 +460,7 @@ describe('pointer', () => {
     describe('mousemove', () => {
       it('should update the x and y pointer coordinates', () => {
         pntr.x = pntr.y = 0;
-        simulateEvent('mousemove', { clientX: 100, clientY: 50 });
+        simulateEvent('mousemove', { identifier: 0, clientX: 100, clientY: 50 });
 
         expect(pntr.x).to.equal(100);
         expect(pntr.y).to.equal(50);
@@ -474,7 +474,7 @@ describe('pointer', () => {
         canvas.style.padding = '32px';
         pntr = pointer.initPointer({ canvas });
 
-        simulateEvent('mousemove', { clientX: 100, clientY: 50 });
+        simulateEvent('mousemove', { identifier: 0, clientX: 100, clientY: 50 });
 
         expect(pntr.x).to.equal(36);
         expect(pntr.y).to.equal(-14);
@@ -488,7 +488,7 @@ describe('pointer', () => {
         canvas.style.transformOrigin = 'top left';
         pntr = pointer.initPointer({ canvas });
 
-        simulateEvent('mousemove', { clientX: 50, clientY: 25 });
+        simulateEvent('mousemove', { identifier: 0, clientX: 50, clientY: 25 });
 
         expect(pntr.x).to.equal(100);
         expect(pntr.y).to.equal(50);
@@ -501,7 +501,7 @@ describe('pointer', () => {
         canvas.style.width = canvas.width * 2 + 'px';
         pntr = pointer.initPointer({ canvas });
 
-        simulateEvent('mousemove', { clientX: 100, clientY: 50 });
+        simulateEvent('mousemove', { identifier: 0, clientX: 100, clientY: 50 });
 
         expect(pntr.x).to.equal(50);
         expect(pntr.y).to.equal(25);
@@ -518,7 +518,7 @@ describe('pointer', () => {
         canvas.style.width = canvas.width * 2 + 'px';
         pntr = pointer.initPointer({ canvas });
 
-        simulateEvent('mousemove', { clientX: 100, clientY: 50 });
+        simulateEvent('mousemove', { identifier: 0, clientX: 100, clientY: 50 });
 
         expect(pntr.x).to.equal(68);
         expect(pntr.y).to.equal(18);
@@ -526,15 +526,15 @@ describe('pointer', () => {
 
       it('should call the objects onOver function if it is the target', () => {
         object.onOver = sinon.spy();
-        simulateEvent('mousemove', { clientX: 105, clientY: 55 });
+        simulateEvent('mousemove', { identifier: 0, clientX: 105, clientY: 55 });
 
         expect(object.onOver.called).to.be.true;
       });
 
       it('should call the objects onOut function if it is no longer the target', () => {
         object.onOut = sinon.spy();
-        simulateEvent('mousemove', { clientX: 105, clientY: 55 });
-        simulateEvent('mousemove', { clientX: 150, clientY: 55 });
+        simulateEvent('mousemove', { identifier: 0, clientX: 105, clientY: 55 });
+        simulateEvent('mousemove', { identifier: 0, clientX: 150, clientY: 55 });
 
         expect(object.onOut.called).to.be.true;
       });
@@ -553,8 +553,8 @@ describe('pointer', () => {
         emit('tick');
 
         object.onOut = sinon.spy();
-        simulateEvent('mousemove', { clientX: 105, clientY: 55 });
-        simulateEvent('mousemove', { clientX: 155, clientY: 55 });
+        simulateEvent('mousemove', { identifier: 0, clientX: 105, clientY: 55 });
+        simulateEvent('mousemove', { identifier: 0, clientX: 155, clientY: 55 });
 
         expect(pointer.pointerOver(obj)).to.be.true;
         expect(object.onOut.called).to.be.true;
@@ -566,11 +566,11 @@ describe('pointer', () => {
           y: 0.5
         };
         object.onOver = sinon.spy();
-        simulateEvent('mousemove', { clientX: 110, clientY: 55 });
+        simulateEvent('mousemove', { identifier: 0, clientX: 110, clientY: 55 });
 
         expect(object.onOver.called).to.not.be.true;
 
-        simulateEvent('mousemove', { clientX: 95, clientY: 55 });
+        simulateEvent('mousemove', { identifier: 0, clientX: 95, clientY: 55 });
 
         expect(object.onOver.called).to.be.true;
       });
@@ -599,10 +599,10 @@ describe('pointer', () => {
         emit('tick');
 
         // wrong canvas
-        simulateEvent('mousemove', { clientX: 105, clientY: 55 });
+        simulateEvent('mousemove', { identifier: 0, clientX: 105, clientY: 55 });
         expect(obj.onOver.called).to.false;
 
-        simulateEvent('mousemove', { clientX: 105, clientY: 55 }, canvas);
+        simulateEvent('mousemove', { identifier: 0, clientX: 105, clientY: 55 }, canvas);
         expect(obj.onOver.called).to.be.true;
       });
     });
@@ -612,10 +612,10 @@ describe('pointer', () => {
     // --------------------------------------------------
     ['mousedown', 'mouseup', 'touchstart', 'touchend'].forEach(eventName => {
       describe(eventName, () => {
-        const event = { clientX: 0, clientY: 0 };
+        const event = { identifier: 0, clientX: 0, clientY: 0 };
         const config = eventName.startsWith('mouse')
           ? event
-          : { touches: [], changedTouches: [event] };
+          : { touches: [event], changedTouches: [event] };
         const eventHandler =
           eventName === 'mousedown' || eventName === 'touchstart' ? 'onDown' : 'onUp';
         const pointerHandler = eventHandler === 'onDown' ? 'onPointerDown' : 'onPointerUp';
@@ -766,6 +766,156 @@ describe('pointer', () => {
           simulateEvent(eventName, config, canvas);
           expect(obj[eventHandler].called).to.be.true;
         });
+
+        if (eventName === 'touchstart') {
+          it('should create a new touch in pointer.touches', () => {
+            pntr.x = pntr.y = 0;
+            event.clientX = 100;
+            event.clientY = 50;
+            simulateEvent(eventName, config);
+
+            expect(pntr.touches.length).to.equal(1);
+            expect(pntr.touches[0]).to.deep.equal({
+              start: {
+                x: 100,
+                y: 50
+              },
+              x: 100,
+              y: 50,
+              changed: true
+            });
+          });
+
+          it('should not create new touch for already existing touches', () => {
+            pntr.x = pntr.y = 0;
+            event.clientX = 100;
+            event.clientY = 50;
+            simulateEvent(eventName, config);
+
+            let touch = {
+              identifier: 1,
+              clientX: 10,
+              clientY: 20
+            };
+            event.clientX = 30;
+            event.clientY = 40;
+            simulateEvent(eventName, {
+              // don't modify the original config
+              ...config,
+              touches: config.touches.concat(touch),
+              changedTouches: config.changedTouches.concat(touch)
+            });
+
+            expect(pntr.touches.length).to.equal(2);
+            expect(pntr.touches[0]).to.deep.equal({
+              start: {
+                x: 100,
+                y: 50
+              },
+              x: 30,
+              y: 40,
+              changed: true
+            });
+            expect(pntr.touches[1]).to.deep.equal({
+              start: {
+                x: 10,
+                y: 20
+              },
+              x: 10,
+              y: 20,
+              changed: true
+            });
+          });
+
+          it('should emit touchChanged', () => {
+            let spy = sinon.spy();
+            on('touchChanged', spy);
+            simulateEvent(eventName, config);
+            expect(spy.calledWith(sinon.match.instanceOf(Event), pntr.touches)).to.be.true;
+          });
+
+          it('should emit touchChanged for each changed touch', () => {
+            let spy = sinon.spy();
+            on('touchChanged', spy);
+
+            let touch = {
+              identifier: 1,
+              clientX: 10,
+              clientY: 20
+            };
+            simulateEvent(eventName, {
+              ...config,
+              touches: config.touches.concat(touch),
+              changedTouches: config.changedTouches.concat(touch)
+            });
+
+            expect(spy.calledTwice).to.be.true;
+          });
+        }
+
+        if (eventName === 'touchend') {
+          it('should remove the touch', () => {
+            simulateEvent('touchstart', config);
+            expect(pntr.touches.length).to.equal(1);
+            expect(pntr.touches[0]).to.exist;
+
+            simulateEvent(eventName, config);
+            expect(pntr.touches.length).to.equal(0);
+            expect(pntr.touches[0]).to.not.exist;
+          });
+
+          it('should remove each changed touch', () => {
+            let touch = {
+              identifier: 1,
+              clientX: 10,
+              clientY: 20
+            };
+            simulateEvent('touchstart', {
+              ...config,
+              touches: config.touches.concat(touch),
+              changedTouches: config.changedTouches.concat(touch)
+            });
+            expect(pntr.touches.length).to.equal(2);
+
+            simulateEvent(eventName, config);
+            expect(pntr.touches.length).to.equal(1);
+            expect(pntr.touches[0]).to.not.exist;
+            expect(pntr.touches[1]).to.exist;
+
+            simulateEvent(eventName, {
+              ...config,
+              touches: [touch],
+              changedTouches: [touch]
+            });
+            expect(pntr.touches.length).to.equal(0);
+          });
+
+          it('should emit touchEnd when all touches are removed', () => {
+            let spy = sinon.spy();
+            on('touchEnd', spy);
+
+            let touch = {
+              identifier: 1,
+              clientX: 10,
+              clientY: 20
+            };
+            simulateEvent('touchstart', {
+              ...config,
+              touches: config.touches.concat(touch),
+              changedTouches: config.changedTouches.concat(touch)
+            });
+
+            simulateEvent(eventName, config);
+            expect(spy.called).to.be.false;
+
+            simulateEvent(eventName, {
+              ...config,
+              touches: [touch],
+              changedTouches: [touch]
+            });
+            expect(spy.called).to.be.true;
+          });
+        }
       });
     });
   });

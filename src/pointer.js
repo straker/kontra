@@ -1,5 +1,5 @@
 import { getCanvas } from './core.js';
-import { on } from './events.js';
+import { on, emit } from './events.js';
 import { getWorldRect } from './helpers.js';
 
 /**
@@ -240,6 +240,34 @@ function blurEventHandler(evt) {
 }
 
 /**
+ * Call a pointer callback function
+ *
+ * @param {Object} pointer
+ * @param {String} eventName
+ * @param {MouseEvent|TouchEvent} evt
+ */
+function callCallback(pointer, eventName, evt) {
+  // Trigger events
+  let object = getCurrentObject(pointer);
+  if (object && object[eventName]) {
+    object[eventName](evt);
+  }
+
+  if (callbacks[eventName]) {
+    callbacks[eventName](evt, object);
+  }
+
+  // handle onOut events
+  if (eventName == 'onOver') {
+    if (object != pointer._oo && pointer._oo && pointer._oo.onOut) {
+      pointer._oo.onOut(evt);
+    }
+
+    pointer._oo = object;
+  }
+}
+
+/**
  * Find the first object for the event and execute it's callback function
  *
  * @param {MouseEvent|TouchEvent} evt
@@ -251,66 +279,52 @@ function pointerHandler(evt, eventName) {
   let canvas = evt.target;
   let pointer = pointers.get(canvas);
   let { scaleX, scaleY, offsetX, offsetY } = getCanvasOffset(pointer);
-
-  let isTouchEvent = ['touchstart', 'touchmove', 'touchend'].indexOf(evt.type) !== -1;
+  let isTouchEvent = evt.type.includes('touch');
 
   if (isTouchEvent) {
-    // update pointer.touches
-    pointer.touches = {};
-    for (var i = 0; i < evt.touches.length; i++) {
-      pointer.touches[evt.touches[i].identifier] = {
-        id: evt.touches[i].identifier,
-        x: (evt.touches[i].clientX - offsetX) / scaleX,
-        y: (evt.touches[i].clientY - offsetY) / scaleY,
-        changed: false
-      };
-    }
-
-    // handle all touches
-    for (var i = evt.changedTouches.length; i--; ) {
-      const id = evt.changedTouches[i].identifier;
-      if (typeof pointer.touches[id] !== 'undefined') {
-        pointer.touches[id].changed = true;
+    // track new touches
+    Array.from(evt.touches).map(({ clientX, clientY, identifier }) => {
+      let touch = pointer.touches[identifier];
+      if (!touch) {
+        touch = pointer.touches[identifier] = {
+          start: {
+            x: (clientX - offsetX) / scaleX,
+            y: (clientY - offsetY) / scaleY
+          }
+        };
+        pointer.touches.length++;
       }
 
-      let clientX = evt.changedTouches[i].clientX;
-      let clientY = evt.changedTouches[i].clientY;
-      pointer.x = (clientX - offsetX) / scaleX;
-      pointer.y = (clientY - offsetY) / scaleY;
+      touch.changed = false;
+    });
 
-      // Trigger events
-      let object = getCurrentObject(pointer);
-      if (object && object[eventName]) {
-        object[eventName](evt);
-      }
+    // handle only changed touches
+    Array.from(evt.changedTouches).map(({ clientX, clientY, identifier }) => {
+      let touch = pointer.touches[identifier];
+      touch.changed = true;
+      touch.x = pointer.x = (clientX - offsetX) / scaleX;
+      touch.y = pointer.y = (clientY - offsetY) / scaleY;
 
-      if (callbacks[eventName]) {
-        callbacks[eventName](evt, object);
+      callCallback(pointer, eventName, evt);
+      emit('touchChanged', evt, pointer.touches);
+
+      // remove touches
+      if (eventName == 'onUp') {
+        delete pointer.touches[identifier];
+        pointer.touches.length--;
+
+        if (!pointer.touches.length) {
+          emit('touchEnd');
+        }
       }
-    }
+    });
   } else {
     // translate the scaled size back as if the canvas was at a
     // 1:1 scale
     pointer.x = (evt.clientX - offsetX) / scaleX;
     pointer.y = (evt.clientY - offsetY) / scaleY;
 
-    let object = getCurrentObject(pointer);
-    if (object && object[eventName]) {
-      object[eventName](evt);
-    }
-
-    if (callbacks[eventName]) {
-      callbacks[eventName](evt, object);
-    }
-
-    // handle onOut events
-    if (eventName == 'onOver') {
-      if (object != pointer._oo && pointer._oo && pointer._oo.onOut) {
-        pointer._oo.onOut(evt);
-      }
-
-      pointer._oo = object;
-    }
+    callCallback(pointer, eventName, evt);
   }
 }
 
@@ -335,7 +349,7 @@ export function initPointer({ radius = 5, canvas = getCanvas() } = {}) {
       x: 0,
       y: 0,
       radius,
-      touches: {},
+      touches: { length: 0 },
       canvas,
 
       // cf = current frame, lf = last frame, o = objects,

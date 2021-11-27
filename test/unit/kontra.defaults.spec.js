@@ -45,6 +45,12 @@ describe('kontra.defaults', () => {
     expect(kontra.GameObject).to.exist;
   });
 
+  it('should add gesture api', () => {
+    expect(kontra.gestureMap).to.exist;
+    expect(kontra.initGesture).to.exist;
+    expect(kontra.onGesture).to.exist;
+  });
+
   it('should add grid api', () => {
     expect(kontra.Grid).to.exist;
   });

@@ -63,6 +63,12 @@ describe('kontra', () => {
     expect(kontraExports.GameObject).to.exist;
   });
 
+  it('should add gesture api', () => {
+    expect(kontraExports.gestureMap).to.exist;
+    expect(kontraExports.initGesture).to.exist;
+    expect(kontraExports.onGesture).to.exist;
+  });
+
   it('should export grid api', () => {
     expect(kontraExports.Grid).to.exist;
   });

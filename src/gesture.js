@@ -34,9 +34,9 @@ let init = false;
 /**
  * A map of gesture objects to gesture names. Add to this object to expand the list of [available gestures](api/gesture#available-gestures).
  *
- * The gesture name should be the overall name of the gesture (e.g. switch, pinch) and not include any directional information (e.g. left, in).
+ * The gesture name should be the overall name of the gesture (e.g. swipe, pinch) and not include any directional information (e.g. left, in).
  *
- * A gesture object should have at least two properties: `touches` and at least one touch event function. The provided gestures also have a `threshold` property which is the minimum distance before the gesture is recognized.
+ * A gesture object should have a `touches` property and at least one touch event function. The provided gestures also have a `threshold` property which is the minimum distance before the gesture is recognized.
  *
  * The `touches` property is a number that indicates how many touch points are required for the gesture. A touch event function is a function whose name should match the touch event name it triggers on (e.g. touchstart, touchmove). A touch event function is passed a touch object.
  *

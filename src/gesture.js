@@ -36,7 +36,9 @@ let init = false;
  *
  * The gesture name should be the overall name of the gesture (e.g. switch, pinch) and not include any directional information (e.g. left, in).
  *
- * A gesture object should have at least two properties: `touches` and at least one touch event function. The `touches` property is a number that indicates how many touch points are required for the gesture. A touch event function is a function whose name should match the touch event name it triggers on (e.g. touchstart, touchmove). A touch event function is passed a touch object.
+ * A gesture object should have at least two properties: `touches` and at least one touch event function. The provided gestures also have a `threshold` property which is the minimum distance before the gesture is recognized.
+ *
+ * The `touches` property is a number that indicates how many touch points are required for the gesture. A touch event function is a function whose name should match the touch event name it triggers on (e.g. touchstart, touchmove). A touch event function is passed a touch object.
  *
  * A gesture can have multiple touch event functions, but one of them must return the direction of the gesture (e.g. left, in). The gesture name and the gesture direction are combined together as the callback name for [onGesture](api/gesture#onGesture) (e.g. swipeleft, pinchin).
  *

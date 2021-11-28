@@ -3,8 +3,8 @@ import * as kontra from '../../kontra.js';
 let grid = kontra.Grid();
 
 let flow: string = grid.flow;
-let align: string = grid.align;
-let justify: string = grid.justify;
+let align: string | string[] = grid.align;
+let justify: string | string[] = grid.justify;
 let colGap: number | number[] = grid.colGap;
 let rowGap: number | number[] = grid.rowGap;
 let numRows: number = grid.numRows;
@@ -38,6 +38,12 @@ kontra.Grid({
 kontra.Grid({
   colGap: [10],
   rowGap: [10],
+});
+
+// alignment arrays
+kontra.Grid({
+  align: ['end', 'center'],
+  justify: ['end', 'center'],
 });
 
 // extends

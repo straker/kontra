@@ -30,8 +30,8 @@ let alignment = {
  *
  * @param {Object} [properties] - Properties of the grid manager.
  * @param {String} [properties.flow='column'] - The flow of the grid.
- * @param {String} [properties.align='start'] - The vertical alignment of the grid.
- * @param {String} [properties.justify='start'] - The horizontal alignment of the grid.
+ * @param {String|String[]} [properties.align='start'] - The vertical alignment of the grid.
+ * @param {String|String[]} [properties.justify='start'] - The horizontal alignment of the grid.
  * @param {Number|Number[]} [properties.colGap=0] - The horizontal gap between each column in the grid.
  * @param {Number|Number[]} [properties.rowGap=0] - The vertical gap between each row in the grid.
  * @param {Number} [properties.numCols=1] - The number of columns in the grid. Only applies if the `flow` property is set to `grid`.
@@ -104,20 +104,6 @@ class Grid extends GameObjectClass {
      * @property {Number|Number[]} rowGap
      */
     rowGap = 0,
-
-    /**
-     * The default `justify` property for a particular row. For example, if the row align is set to `{ 0: 'start' }`, then all items of the first row will have a default alignment of `start`. An items `alignSelf` property will still override the value.
-     * @memberof Grid
-     * @property {{[rowIndex: Number]: String}} rowAlign
-     */
-    colJusitfy = [],
-
-    /**
-     * The default `align` property for a particular row. For example, if the row align is set to `{ 0: 'start' }`, then all items of the first row will have a default alignment of `start`. An items `alignSelf` property will still override the value.
-     * @memberof Grid
-     * @property {{[rowIndex: Number]: String}} rowAlign
-     */
-    rowAlign = {},
 
     /**
      * The number of columns in the grid. Only applies if the [flow](api/grid#flow) property is set to `grid`.

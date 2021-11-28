@@ -70,7 +70,7 @@ let init = false;
  *   // handle panleft gesture
  * });
  * ```
- * @property {{touches: number, touchstart?: Function, touchmove?: Function, touchend?: Function, [prop: string]: any}} gestureMap
+ * @property {{[name: string]: {touches: number, touchstart?: Function, touchmove?: Function, touchend?: Function, [prop: string]: any}}} gestureMap
  */
 export let gestureMap = {
   swipe: {

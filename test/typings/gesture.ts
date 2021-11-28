@@ -16,6 +16,24 @@ kontra.gestureMap.pan = {
     console.log('touchend');
   }
 };
+kontra.gestureMap.foo = {
+  touches: 2,
+  touchstart(touches: object) {
+    console.log('touchstart');
+  }
+}
+kontra.gestureMap.bar = {
+  touches: 2,
+  touchmove(touches: object) {
+    console.log('touchmove');
+  }
+}
+kontra.gestureMap.baz = {
+  touches: 2,
+  touchend(touches: object) {
+    console.log('touchend');
+  }
+}
 
 kontra.onGesture('panleft', (evt: TouchEvent, touches: object) => {
   console.log('panleft');

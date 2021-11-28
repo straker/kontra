@@ -751,6 +751,36 @@ describe('gameObject with context: ' + JSON.stringify(testContext, null, 4), () 
     });
 
     // --------------------------------------------------
+    // children
+    // --------------------------------------------------
+    describe('children', () => {
+      if (testContext.GAMEOBJECT_GROUP) {
+        it('should properly handle setting children', () => {
+          gameObject.addChild({ foo: 'bar' });
+          gameObject.addChild({ faz: 'baz' });
+          gameObject.addChild({ hello: 'world' });
+
+          let removeSpy = sinon.spy(gameObject, 'removeChild');
+          let addSpy = sinon.spy(gameObject, 'addChild');
+          let child = {
+            thing1: 'thing2'
+          };
+
+          gameObject.children = [child];
+
+          expect(removeSpy.calledThrice).to.be.true;
+          expect(addSpy.calledWith(child)).to.be.true;
+          expect(gameObject.children.length).to.equal(1);
+          expect(gameObject.children[0]).to.equal(child);
+        });
+      } else {
+        it('should not have children', () => {
+          expect(gameObject.children).to.not.exist;
+        });
+      }
+    });
+
+    // --------------------------------------------------
     // update
     // --------------------------------------------------
     describe('update', () => {

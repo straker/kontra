@@ -30,8 +30,8 @@ let alignment = {
  *
  * @param {Object} [properties] - Properties of the grid manager.
  * @param {String} [properties.flow='column'] - The flow of the grid.
- * @param {String} [properties.align='start'] - The vertical alignment of the grid.
- * @param {String} [properties.justify='start'] - The horizontal alignment of the grid.
+ * @param {String|String[]} [properties.align='start'] - The vertical alignment of the grid.
+ * @param {String|String[]} [properties.justify='start'] - The horizontal alignment of the grid.
  * @param {Number|Number[]} [properties.colGap=0] - The horizontal gap between each column in the grid.
  * @param {Number|Number[]} [properties.rowGap=0] - The vertical gap between each row in the grid.
  * @param {Number} [properties.numCols=1] - The number of columns in the grid. Only applies if the `flow` property is set to `grid`.
@@ -62,9 +62,11 @@ class Grid extends GameObjectClass {
      * - `center` - align to the center of the row
      * - `end` - align to the the bottom of the row
      *
+     * An array of strings means the grid will set the vertical alignment for each row using the order of the array. For example, if the alignment is set to be `[`end`, 'start']`, then every odd row will use 'end' and every even row will use 'start'.
+     *
      * Additionally, each child of the grid can use the `alignSelf` property to change it's alignment in the grid.
      * @memberof Grid
-     * @property {String} align
+     * @property {String|String[]} align
      */
     align = 'start',
 
@@ -75,18 +77,20 @@ class Grid extends GameObjectClass {
      * - `center` - align to the center of the column
      * - `end` - align to the the right of the column
      *
+     * An array of strings means the grid will set the horizontal alignment for each column using the order of the array. For example, if the alignment is set to be `[`end`, 'start']`, then every odd column will use 'end' and every even column will use 'start'.
+     *
      * If the [dir](api/grid#dir) property is set to `rtl`, then `start` and `end` are reversed.
      *
      * Additionally, each child of the grid can use the `justifySelf` property to change it's alignment in the grid.
      * @memberof Grid
-     * @property {String} justify
+     * @property {String|String[]} justify
      */
     justify = 'start',
 
     /**
      * The horizontal gap between each column in the grid.
      *
-     * An array of numbers means the grid will set the gap between columns using the order of the array. For example, if the gap is set to be `[10, 5]`, then every odd column gap with use 10 and every even column gap will use 5.
+     * An array of numbers means the grid will set the gap between columns using the order of the array. For example, if the gap is set to be `[10, 5]`, then every odd column gap will use 10 and every even column gap will use 5.
      * @memberof Grid
      * @property {Number|Number[]} colGap
      */
@@ -95,7 +99,7 @@ class Grid extends GameObjectClass {
     /**
      * The vertical gap between each row in the grid.
      *
-     * An array of numbers means the grid will set the gap between rows using the order of the array. For example, if the gap is set to be `[10, 5]`, then every odd row gap with use 10 and every even row gap will use 5.
+     * An array of numbers means the grid will set the gap between rows using the order of the array. For example, if the gap is set to be `[10, 5]`, then every odd row gap will use 10 and every even row gap will use 5.
      * @memberof Grid
      * @property {Number|Number[]} rowGap
      */
@@ -281,6 +285,9 @@ class Grid extends GameObjectClass {
     let topLeftY = -this.anchor.y * this.height;
     let rendered = [];
 
+    let justify = [].concat(this.justify);
+    let align = [].concat(this.align);
+
     this._g.map((gridRow, row) => {
       let topLeftX = -this.anchor.x * this.width;
 
@@ -289,8 +296,10 @@ class Grid extends GameObjectClass {
         if (child && !rendered.includes(child)) {
           rendered.push(child);
 
-          let justify = alignment[child.justifySelf || this.justify](this._rtl);
-          let align = alignment[child.alignSelf || this.align]();
+          let justifySelf = alignment[child.justifySelf || justify[col % justify.length]](
+            this._rtl
+          );
+          let alignSelf = alignment[child.alignSelf || align[row % align.length]]();
 
           let colSpan = child.colSpan || 1;
           let colWidth = colWidths[col];
@@ -300,8 +309,8 @@ class Grid extends GameObjectClass {
             }
           }
 
-          let pointX = colWidth * justify;
-          let pointY = rowHeights[row] * align;
+          let pointX = colWidth * justifySelf;
+          let pointY = rowHeights[row] * alignSelf;
           let anchorX = 0;
           let anchorY = 0;
           let { width, height } = child.world || child;
@@ -313,22 +322,22 @@ class Grid extends GameObjectClass {
 
           // calculate the x position based on the alignment and
           // anchor of the object
-          if (justify === 0) {
+          if (justifySelf === 0) {
             pointX = pointX + width * anchorX;
-          } else if (justify === 0.5) {
+          } else if (justifySelf === 0.5) {
             let sign = anchorX < 0.5 ? -1 : anchorX === 0.5 ? 0 : 1;
-            pointX = pointX + sign * width * justify;
+            pointX = pointX + sign * width * justifySelf;
           } else {
             pointX = pointX - width * (1 - anchorX);
           }
 
           // calculate the y position based on the justification and
           // anchor of the object
-          if (align === 0) {
+          if (alignSelf === 0) {
             pointY = pointY + height * anchorY;
-          } else if (align === 0.5) {
+          } else if (alignSelf === 0.5) {
             let sign = anchorY < 0.5 ? -1 : anchorY === 0.5 ? 0 : 1;
-            pointY = pointY + sign * height * align;
+            pointY = pointY + sign * height * alignSelf;
           } else {
             pointY = pointY - height * (1 - anchorY);
           }

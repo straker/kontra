@@ -579,6 +579,23 @@ describe('grid', () => {
         expect(child4.y).to.equal(100);
       });
 
+      it('should take into account align array', () => {
+        grid.align = ['center', 'end'];
+        grid.render();
+
+        expect(child1.x).to.equal(0);
+        expect(child1.y).to.equal(37.5);
+
+        expect(child2.x).to.equal(100);
+        expect(child2.y).to.equal(0);
+
+        expect(child3.x).to.equal(0);
+        expect(child3.y).to.equal(125);
+
+        expect(child4.x).to.equal(100);
+        expect(child4.y).to.equal(100);
+      });
+
       it('should take into account child with `alignSelf`', () => {
         child1.alignSelf = 'center';
         grid._d = true;
@@ -647,6 +664,23 @@ describe('grid', () => {
         expect(child2.y).to.equal(0);
 
         expect(child3.x).to.equal(50);
+        expect(child3.y).to.equal(100);
+
+        expect(child4.x).to.equal(100);
+        expect(child4.y).to.equal(100);
+      });
+
+      it('should take into account justify array', () => {
+        grid.justify = ['center', 'end'];
+        grid.render();
+
+        expect(child1.x).to.equal(0);
+        expect(child1.y).to.equal(0);
+
+        expect(child2.x).to.equal(100);
+        expect(child2.y).to.equal(0);
+
+        expect(child3.x).to.equal(25);
         expect(child3.y).to.equal(100);
 
         expect(child4.x).to.equal(100);

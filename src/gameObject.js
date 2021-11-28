@@ -202,7 +202,7 @@ class GameObject extends Updatable {
     ...props
   } = {}) {
     // @ifdef GAMEOBJECT_GROUP
-    this.children = [];
+    this._c = [];
     // @endif
 
     // by setting defaults to the parameters and passing them into
@@ -549,6 +549,17 @@ class GameObject extends Updatable {
   // --------------------------------------------------
 
   // @ifdef GAMEOBJECT_GROUP
+  set children(value) {
+    while (this._c.length) {
+      this.removeChild(this._c[0]);
+    }
+    value.map(value => this.addChild(value));
+  }
+
+  get children() {
+    return this._c;
+  }
+
   /**
    * Add an object as a child to this object. The childs [world](api/gameObject#world) property will be updated to take into account this object and all of its parents.
    * @memberof GameObject

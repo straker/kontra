@@ -1,3 +1,4 @@
+import { noop } from './utils.js';
 import { emit } from './events.js';
 
 /**
@@ -16,7 +17,20 @@ import { emit } from './events.js';
  * @sectionName Core
  */
 
-let canvasEl, context;
+let canvasEl;
+let context;
+
+// allow contextless environments, such as using ThreeJS as the main
+// canvas, by proxying all canvas context calls
+let handler = {
+  // by using noop we can proxy both property and function calls
+  // so neither will throw errors
+  get(target, key) {
+    // export for testing
+    if (key === '_proxy') return true;
+    return noop;
+  }
+};
 
 /**
  * Return the canvas element.
@@ -49,13 +63,19 @@ export function getContext() {
  * @function init
  *
  * @param {String|HTMLCanvasElement} [canvas] - The canvas for Kontra to use. Can either be the ID of the canvas element or the canvas element itself. Defaults to using the first canvas element on the page.
+ * @param {Object} [options] - Game options
+ * @param {Boolean} [options.contextless=false] - If the game will run in an contextless environment.
  *
  * @returns {{canvas: HTMLCanvasElement, context: CanvasRenderingContext2D}} An object with properties `canvas` and `context`. `canvas` it the canvas element for the game and `context` is the context object the game draws to.
  */
-export function init(canvas) {
-  // check if canvas is a string first, an element next, or default to getting
-  // first canvas on page
+export function init(canvas, { contextless = false } = {}) {
+  // check if canvas is a string first, an element next, or default to
+  // getting first canvas on page
   canvasEl = document.getElementById(canvas) || canvas || document.querySelector('canvas');
+
+  if (contextless) {
+    canvasEl = canvasEl || new Proxy({}, handler);
+  }
 
   // @ifdef DEBUG
   if (!canvasEl) {
@@ -63,7 +83,7 @@ export function init(canvas) {
   }
   // @endif
 
-  context = canvasEl.getContext('2d');
+  context = canvasEl.getContext('2d') || new Proxy({}, handler);
   context.imageSmoothingEnabled = false;
 
   emit('init');

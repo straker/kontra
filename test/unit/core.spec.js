@@ -100,5 +100,24 @@ describe('core', () => {
       expect(canvas).to.equal(c);
       expect(context).to.equal(c.getContext('2d'));
     });
+
+    it('should allow contextless option', () => {
+      let { canvas, context } = core.init(null, { contextless: true });
+
+      expect(canvas._proxy).to.be.true;
+      expect(context._proxy).to.be.true;
+
+      function fn() {
+        canvas.getContext('2d');
+        context.save();
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        context.translate(0, 0);
+        context.globalAlpha = 10;
+        context.restore();
+        context.doesNotExist();
+      }
+
+      expect(fn).to.not.throw();
+    });
   });
 });

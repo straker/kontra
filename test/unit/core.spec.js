@@ -114,6 +114,7 @@ describe('core', () => {
         context.translate(0, 0);
         context.globalAlpha = 10;
         context.restore();
+        context.doesNotExist();
       }
 
       expect(fn).to.not.throw();

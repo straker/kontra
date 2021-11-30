@@ -489,24 +489,24 @@ class GameObject extends Updatable {
     this._wo = _wo * this.opacity;
     // @endif
 
-    // @ifdef GAMEOBJECT_ROTATION
-    // wr = world rotation
-    this._wr = _wr + this.rotation;
-
-    let { x, y } = rotatePoint({ x: this.x, y: this.y }, _wr);
-    this._wx = x;
-    this._wy = y;
-    // @endif
-
     // @ifdef GAMEOBJECT_SCALE
     // wsx = world scale x, wsy = world scale y
     this._wsx = _wsx * this.scaleX;
     this._wsy = _wsy * this.scaleY;
 
-    this._wx = this.x * _wsx;
-    this._wy = this.y * _wsy;
+    this._wx = this._wx * _wsx;
+    this._wy = this._wy * _wsy;
     this._ww = this.width * this._wsx;
     this._wh = this.height * this._wsy;
+    // @endif
+
+    // @ifdef GAMEOBJECT_ROTATION
+    // wr = world rotation
+    this._wr = _wr + this.rotation;
+
+    let { x, y } = rotatePoint({ x: this._wx, y: this._wy }, _wr);
+    this._wx = x;
+    this._wy = y;
     // @endif
 
     // @ifdef GAMEOBJECT_GROUP

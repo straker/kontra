@@ -1,6 +1,7 @@
 import GameObject, { GameObjectClass } from '../../src/gameObject.js';
 import { getContext } from '../../src/core.js';
 import { noop } from '../../src/utils.js';
+import { degToRad } from '../../src/helpers.js';
 
 // test-context:start
 let testContext = {
@@ -642,6 +643,74 @@ describe('gameObject with context: ' + JSON.stringify(testContext, null, 4), () 
 
           expect(gameObject.world.width).to.equal(60);
           expect(gameObject.world.height).to.equal(120);
+        });
+      }
+
+      if (
+        testContext.GAMEOBJECT_ANCHOR &&
+        testContext.GAMEOBJECT_ROTATION &&
+        testContext.GAMEOBJECT_SCALE
+      ) {
+        it('should work with complex example', () => {
+          let parent = GameObject({
+            x: 100,
+            y: 100,
+            width: 20,
+            height: 20
+          });
+
+          let child = GameObject({
+            x: 0,
+            y: 0,
+            width: 20,
+            height: 20,
+            rotation: degToRad(45)
+          });
+
+          let grandchild = GameObject({
+            x: 25,
+            y: -50,
+            width: 20,
+            height: 20,
+            scaleX: 1.5,
+            scaleY: 9,
+            rotation: degToRad(25)
+          });
+
+          let greatGrandchild = GameObject({
+            x: 0,
+            y: -10,
+            width: 20,
+            height: 20
+          });
+
+          parent.children = [child];
+          child.children = [grandchild];
+          grandchild.children = [greatGrandchild];
+
+          expect(parent.world.x).to.equal(100);
+          expect(parent.world.y).to.equal(100);
+          expect(parent.world.width).to.equal(20);
+          expect(parent.world.height).to.equal(20);
+          expect(parent.world.rotation).to.equal(0);
+
+          expect(child.world.x).to.equal(100);
+          expect(child.world.y).to.equal(100);
+          expect(child.world.width).to.equal(20);
+          expect(child.world.height).to.equal(20);
+          expect(child.world.rotation).to.equal(degToRad(45));
+
+          expect(grandchild.world.x).to.equal(153.03300858899107);
+          expect(grandchild.world.y).to.equal(82.32233047033631);
+          expect(grandchild.world.width).to.equal(30);
+          expect(grandchild.world.height).to.equal(180);
+          expect(grandchild.world.rotation).to.equal(degToRad(70));
+
+          expect(greatGrandchild.world.x).to.equal(237.6053444597228);
+          expect(greatGrandchild.world.y).to.equal(51.540517571026115);
+          expect(greatGrandchild.world.width).to.equal(30);
+          expect(greatGrandchild.world.height).to.equal(180);
+          expect(greatGrandchild.world.rotation).to.equal(degToRad(70));
         });
       }
     }

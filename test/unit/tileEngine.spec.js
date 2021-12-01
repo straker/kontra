@@ -115,6 +115,98 @@ describe('tileEngine with context: ' + JSON.stringify(testContext, null, 4), () 
 
       tileEngine._p.restore();
     });
+
+    if (testContext.TILEENGINE_CAMERA) {
+      it('should call render on all objects', () => {
+        let context = getContext();
+        let tileEngine = TileEngine({
+          tilewidth: 10,
+          tileheight: 10,
+          width: 50,
+          height: 50,
+          tilesets: [
+            {
+              image: new Image()
+            }
+          ],
+          layers: [
+            {
+              name: 'test',
+              data: [0, 0, 1, 0, 0]
+            }
+          ]
+        });
+        let spy = sinon.spy();
+        let obj = {
+          render: spy
+        };
+
+        tileEngine.addObject(obj);
+        tileEngine.render();
+
+        expect(spy.called).to.be.true;
+      });
+
+      it('should translate by the camera before rendering objects', () => {
+        let context = getContext();
+        let tileEngine = TileEngine({
+          tilewidth: 10,
+          tileheight: 10,
+          width: 100,
+          height: 100,
+          sx: 50,
+          sy: 25,
+          tilesets: [
+            {
+              image: new Image()
+            }
+          ],
+          layers: [
+            {
+              name: 'test',
+              data: [0, 0, 1, 0, 0]
+            }
+          ]
+        });
+        let spy = sinon.spy(context, 'translate');
+
+        tileEngine.render();
+
+        expect(spy.calledWith(-50, -25)).to.be.true;
+
+        spy.restore();
+      });
+    } else {
+      it('should not translate by the camera', () => {
+        let context = getContext();
+        let tileEngine = TileEngine({
+          tilewidth: 10,
+          tileheight: 10,
+          width: 100,
+          height: 100,
+          sx: 50,
+          sy: 25,
+          tilesets: [
+            {
+              image: new Image()
+            }
+          ],
+          layers: [
+            {
+              name: 'test',
+              data: [0, 0, 1, 0, 0]
+            }
+          ]
+        });
+        let spy = sinon.spy(context, 'translate');
+
+        tileEngine.render();
+
+        expect(spy.called).to.be.false;
+
+        spy.restore();
+      });
+    }
   });
 
   // --------------------------------------------------
@@ -676,27 +768,10 @@ describe('tileEngine with context: ' + JSON.stringify(testContext, null, 4), () 
     });
 
     if (testContext.TILEENGINE_CAMERA) {
-      it('should set object sx and sy to tile engine camera', () => {
-        tileEngine.sx = 20;
-        tileEngine.sy = 30;
-
+      it('should add object', () => {
+        expect(tileEngine.objects.length).to.equal(0);
         tileEngine.addObject(obj);
-
-        expect(obj.sx).to.equal(20);
-        expect(obj.sy).to.equal(30);
-      });
-
-      it('should update objects sx property when tile engine camera changes', () => {
-        tileEngine.addObject(obj);
-
-        expect(obj.sx).to.equal(0);
-        expect(obj.sy).to.equal(0);
-
-        tileEngine.sx = 20;
-        tileEngine.sy = 30;
-
-        expect(obj.sx).to.equal(20);
-        expect(obj.sy).to.equal(30);
+        expect(tileEngine.objects.length).to.equal(1);
       });
     } else {
       it('should not exist', () => {
@@ -734,19 +809,10 @@ describe('tileEngine with context: ' + JSON.stringify(testContext, null, 4), () 
     });
 
     if (testContext.TILEENGINE_CAMERA) {
-      it('should not update objects sx property when tile engine camera changes', () => {
+      it('should remove object', () => {
         tileEngine.addObject(obj);
-
-        expect(obj.sx).to.equal(0);
-        expect(obj.sy).to.equal(0);
-
         tileEngine.removeObject(obj);
-
-        tileEngine.sx = 20;
-        tileEngine.sy = 30;
-
-        expect(obj.sx).to.equal(0);
-        expect(obj.sy).to.equal(0);
+        expect(tileEngine.objects.length).to.equal(0);
       });
 
       it('should not error if the object was not added before', () => {

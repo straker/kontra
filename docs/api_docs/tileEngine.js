@@ -128,7 +128,7 @@
  */
 
 /**
- * Managing the correct x and y position of sprites on a large tile map can be tricky. You can add objects to the tile map which will sync the camera position with the sprite. [Sprite](api/sprite) will automatically draw the sprite for you at the correct position on the tile map even while the camera moves.
+ * Managing the correct x and y position of sprites on a large tile map can be tricky. You can add objects to the tile map and the tile map will render each object with the correct camera position.
  *
  * @sectionName Adding Objects to the TileMap
  * @example
@@ -179,10 +179,8 @@
  *         }
  *       },
  *       render: function() {
- *         tileEngine.render();
- *
  *         // the alien will now draw to the correct spot even while the camera moves
- *         sprite.render();
+ *         tileEngine.render();
  *       }
  *     });
  *

@@ -86,7 +86,6 @@ __Note:__ Some of the more advance classes â€“ such as Button, Scene, and Grid â
 | --------------- | ------------- |
 | `acceleration`  | `acceleration`, `ddx`, `ddy` |
 | `anchor`        | `anchor` |
-| `camera`        | `sx`, `sy` |
 | `group`         | `children`, `parent`, `addChild`, `removeChild` |
 | `opacity`       | `opacity` |
 | `rotation`      | `rotation` |

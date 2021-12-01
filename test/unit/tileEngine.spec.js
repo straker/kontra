@@ -176,6 +176,36 @@ describe('tileEngine with context: ' + JSON.stringify(testContext, null, 4), () 
 
         spy.restore();
       });
+    } else {
+      it('should not translate by the camera', () => {
+        let context = getContext();
+        let tileEngine = TileEngine({
+          tilewidth: 10,
+          tileheight: 10,
+          width: 100,
+          height: 100,
+          sx: 50,
+          sy: 25,
+          tilesets: [
+            {
+              image: new Image()
+            }
+          ],
+          layers: [
+            {
+              name: 'test',
+              data: [0, 0, 1, 0, 0]
+            }
+          ]
+        });
+        let spy = sinon.spy(context, 'translate');
+
+        tileEngine.render();
+
+        expect(spy.called).to.be.false;
+
+        spy.restore();
+      });
     }
   });
 

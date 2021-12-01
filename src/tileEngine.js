@@ -65,51 +65,49 @@ function getCol(x, tilewidth) {
  * @docs docs/api_docs/tileEngine.js
  */
 class TileEngine {
-  constructor({
-    /**
-     * The width of tile map (in tiles).
-     * @memberof TileEngine
-     * @property {Number} width
-     */
-    width,
+  constructor(properties = {}) {
+    let {
+      /**
+       * The width of tile map (in tiles).
+       * @memberof TileEngine
+       * @property {Number} width
+       */
+      width,
 
-    /**
-     * The height of tile map (in tiles).
-     * @memberof TileEngine
-     * @property {Number} height
-     */
-    height,
+      /**
+       * The height of tile map (in tiles).
+       * @memberof TileEngine
+       * @property {Number} height
+       */
+      height,
 
-    /**
-     * The width a tile (in pixels).
-     * @memberof TileEngine
-     * @property {Number} tilewidth
-     */
-    tilewidth,
+      /**
+       * The width a tile (in pixels).
+       * @memberof TileEngine
+       * @property {Number} tilewidth
+       */
+      tilewidth,
 
-    /**
-     * The height of a tile (in pixels).
-     * @memberof TileEngine
-     * @property {Number} tileheight
-     */
-    tileheight,
+      /**
+       * The height of a tile (in pixels).
+       * @memberof TileEngine
+       * @property {Number} tileheight
+       */
+      tileheight,
 
-    /**
-     * Array of all tilesets of the tile engine.
-     * @memberof TileEngine
-     * @property {Object[]} tilesets
-     */
-    tilesets,
+      /**
+       * Array of all tilesets of the tile engine.
+       * @memberof TileEngine
+       * @property {Object[]} tilesets
+       */
+      tilesets
 
-    /**
-     * The context the tile engine will draw to.
-     * @memberof TileEngine
-     * @property {CanvasRenderingContext2D} context
-     */
-    context = getContext(),
-
-    ...props
-  } = {}) {
+      /**
+       * The context the tile engine will draw to.
+       * @memberof TileEngine
+       * @property {CanvasRenderingContext2D} context
+       */
+    } = properties;
     let mapwidth = width * tilewidth;
     let mapheight = height * tileheight;
 
@@ -128,7 +126,7 @@ class TileEngine {
     tilesets.map(tileset => {
       // get the url of the Tiled JSON object (in this case, the properties object)
       let { __k, location } = window;
-      let url = (__k ? __k.dm.get(props) : '') || location.href;
+      let url = (__k ? __k.dm.get(properties) : '') || location.href;
 
       let { source } = tileset;
       if (source) {
@@ -174,12 +172,7 @@ class TileEngine {
 
     // add all properties to the object, overriding any defaults
     Object.assign(this, {
-      width,
-      height,
-      tilewidth,
-      tileheight,
-      context,
-      tilesets,
+      context: getContext(),
       layerMap: {},
       layerCanvases: {},
 
@@ -208,7 +201,7 @@ class TileEngine {
        * @memberof TileEngine
        * @property {Object[]} layers
        */
-      ...props
+      ...properties
     });
 
     // p = prerender
@@ -240,13 +233,11 @@ class TileEngine {
   set sx(value) {
     let { mapwidth, objects } = this;
     this._sx = clamp(0, mapwidth - getCanvas().width, value);
-    objects.forEach(obj => (obj.sx = this._sx));
   }
 
   set sy(value) {
     let { mapheight, objects } = this;
     this._sy = clamp(0, mapheight - getCanvas().height, value);
-    objects.forEach(obj => (obj.sy = this._sy));
   }
 
   /**
@@ -259,8 +250,6 @@ class TileEngine {
   addObject(object) {
     let { objects, sx, sy } = this;
     objects.push(object);
-    object.sx = sx;
-    object.sy = sy;
   }
 
   /**
@@ -275,7 +264,6 @@ class TileEngine {
     let index = objects.indexOf(object);
     if (index !== -1) {
       objects.splice(index, 1);
-      object.sx = object.sy = 0;
     }
   }
   // @endif
@@ -506,6 +494,22 @@ class TileEngine {
     let sHeight = Math.min(canvas.height, height);
 
     context.drawImage(canvas, sx, sy, sWidth, sHeight, 0, 0, sWidth, sHeight);
+
+    // @ifdef TILEENGINE_CAMERA
+    // draw objects
+    context.save();
+
+    // it's faster to only translate if one of the values is non-zero
+    // rather than always translating
+    // @see https://jsperf.com/translate-or-if-statement/2
+    if (sx || sy) {
+      context.translate(-sx, -sy);
+    }
+
+    this.objects.map(obj => obj.render && obj.render());
+
+    context.restore();
+    // @endif
   }
 
   /**

@@ -54,6 +54,17 @@ describe('tileEngine integration', () => {
       .catch(done);
   });
 
+  it('should resolve tileset image from json data', done => {
+    // to make this property fail we need to return a nested path
+    load('/data/tileset/tileset.json', '/data/tileset/bullet.png')
+      .then(assets => {
+        let tileEngine = TileEngine(assets[0]);
+        expect(tileEngine.tilesets[0].image).to.equal(assets[1]);
+        done();
+      })
+      .catch(done);
+  });
+
   it('should resolve tileset source and the image of the source', done => {
     load('/data/source.json', '/imgs/bullet.png')
       .then(assets => {
@@ -129,81 +140,5 @@ describe('tileEngine integration', () => {
     }
 
     expect(func).to.throw();
-  });
-
-  it('should sync camera with sprite camera when added', () => {
-    let data = {
-      tilewidth: 10,
-      tileheight: 10,
-      width: 50,
-      height: 50,
-      tilesets: [
-        {
-          image: new Image()
-        }
-      ],
-      layers: [
-        {
-          name: 'test',
-          data: [0, 0, 1, 0, 0]
-        }
-      ]
-    };
-    let tileEngine = TileEngine(data);
-
-    let sprite = Sprite({
-      x: 10,
-      y: 10
-    });
-
-    tileEngine.sx = 100;
-    tileEngine.sy = 100;
-    tileEngine.addObject(sprite);
-
-    expect(sprite.x).to.equal(10);
-    expect(sprite.y).to.equal(10);
-    expect(sprite.sx).to.equal(-100);
-    expect(sprite.sy).to.equal(-100);
-  });
-
-  it('should sync camera with sprite camera when camera is changed', () => {
-    let data = {
-      tilewidth: 10,
-      tileheight: 10,
-      width: 50,
-      height: 50,
-      tilesets: [
-        {
-          image: new Image()
-        }
-      ],
-      layers: [
-        {
-          name: 'test',
-          data: [0, 0, 1, 0, 0]
-        }
-      ]
-    };
-    let tileEngine = TileEngine(data);
-
-    let sprite = Sprite({
-      x: 10,
-      y: 10
-    });
-
-    tileEngine.addObject(sprite);
-
-    expect(sprite.x).to.equal(10);
-    expect(sprite.y).to.equal(10);
-    expect(sprite.sx).to.equal(0);
-    expect(sprite.sy).to.equal(0);
-
-    tileEngine.sx = 100;
-    tileEngine.sy = 100;
-
-    expect(sprite.x).to.equal(10);
-    expect(sprite.y).to.equal(10);
-    expect(sprite.sx).to.equal(-100);
-    expect(sprite.sy).to.equal(-100);
   });
 });

@@ -10,13 +10,11 @@ import Vector from './vector.js';
  * ttl
  */
 class Updatable {
-
   constructor(properties) {
     return this.init(properties);
   }
 
   init(properties = {}) {
-
     // --------------------------------------------------
     // defaults
     // --------------------------------------------------
@@ -68,7 +66,7 @@ class Updatable {
   }
 
   /**
-   * Update the game objects position based on its velocity and acceleration. Calls the game objects [advance()](api/gameObject#advance) function.
+   * Update the position of the game object and all children using their velocity and acceleration. Calls the game objects [advance()](api/gameObject#advance) function.
    * @memberof GameObject
    * @function update
    * @page GameObject

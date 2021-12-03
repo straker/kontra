@@ -391,6 +391,15 @@ Have a game you want to add? [Let me know](https://github.com/straker/kontra/iss
     </a>
   </li>
 
+  <li>
+    <a href="https://js13kgames.com/entries/cat-goric-escape-from-the-warp-chamber">
+      <img src="assets/imgs/games/cat-goric-escape-from-the-warp-chamber.png" alt="" loading="lazy" width="400" height="250"/>
+      <span>Cat Goric: Escape from the Warp Chamber</span>
+      <span><span class="visually-hidden">. By </span><small>Felladrin
+</small></span>
+    </a>
+  </li>
+
 </ul>
 
 @section Games Made with Kontra.js

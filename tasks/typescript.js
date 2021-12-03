@@ -15,13 +15,7 @@ function addSection() {
   let fn = this.block.function;
   let clas = this.block.class;
 
-  let sectionName = property
-    ? property.name
-    : fn
-      ? fn
-      : clas
-        ? clas
-        : description;
+  let sectionName = property ? property.name : fn ? fn : clas ? clas : description;
 
   // TODO: temporary fix for `length` name (zero-width space added to end)
   if (sectionName === 'length') {
@@ -47,35 +41,36 @@ function addSection() {
  * @returns {String}
  */
 function parseType(type) {
-  type = type.split('|').map(t => {
+  type = type
+    .split('|')
+    .map(t => {
+      // lowercase types for TypeScript (except for Function which needs
+      // to be uppercase)
+      t = t.replace(baseTypesRegex, (match, p1) => p1.toLowerCase());
+      if (t === 'function') {
+        t = 'Function';
+      }
 
-    // lowercase types for TypeScript (except for Function which needs
-    // to be uppercase)
-    t = t.replace(baseTypesRegex, (match, p1) => p1.toLowerCase());
-    if (t === 'function') {
-      t = 'Function'
-    }
+      // parse any types
+      if (type === '*') {
+        t = 'any';
+      }
 
-    // parse any types
-    if (type === '*') {
-      t = 'any';
-    }
+      // parse Promise types
+      if (type === 'Promise') {
+        t = 'Promise<any>';
+      }
 
-    // parse Promise types
-    if (type === 'Promise') {
-      t = 'Promise<any>'
-    }
-
-    return t;
-  }).join(' | ');
+      return t;
+    })
+    .join(' | ');
 
   return type;
 }
 
 const tags = {
-
   // output information about the parameter
-  param: function() {
+  param: function () {
     let { name, type } = this.tag;
     let entity = {};
     let optional = false;
@@ -138,14 +133,13 @@ const tags = {
       }
 
       parentEntity.children.push(entity);
-    }
-    else {
+    } else {
       this.block.param.push(entity);
     }
   },
 
   // add property and functions of a class to the class declaration
-  memberof: function() {
+  memberof: function () {
     this.block.memberof = this.tag.description;
     let parent = this.sections.find(section => section.class === this.tag.description);
     if (!parent) {
@@ -158,22 +152,22 @@ const tags = {
   },
 
   // output information about the returns value
-  returns: function() {
+  returns: function () {
     this.block.returns = parseType(this.tag.type);
   },
 
   // automatically make @class, @function, @property, and @sectionName add
   // their own @section and @page tags for ease of use
-  class: function() {
+  class: function () {
     this.block.class = this.tag.description;
     addSection.call(this);
   },
-  function: function() {
+  function: function () {
     this.block.function = this.tag.description;
     this.block.returns = 'void';
     addSection.call(this);
   },
-  property: function() {
+  property: function () {
     let type = parseType(this.tag.type);
 
     this.block.property = {
@@ -182,7 +176,7 @@ const tags = {
     };
     addSection.call(this);
   },
-  sectionName: function() {
+  sectionName: function () {
     this.comment.tags.push({
       tag: 'section',
       description: this.tag.description,
@@ -191,7 +185,7 @@ const tags = {
       source: `@section ${this.tag.description}`
     });
   }
-}
+};
 
 /**
  * Create the type declaration string for output to the declaration file.
@@ -262,37 +256,35 @@ function livingcssPreprocess(context, template, Handlebars) {
 
     // normalize params
     if (section.param) {
-      section.params = section.param
-        .map(normalizeParams)
-        .join(', ');
+      section.params = section.param.map(normalizeParams).join(', ');
     }
 
     // normalize child params
     if (section.children) {
-      section.children = section.children
-        .map(child => {
-          if (child.param) {
-            child.params = child.param
-              .map(normalizeParams)
-              .join(', ');
-          }
+      section.children = section.children.map(child => {
+        if (child.param) {
+          child.params = child.param.map(normalizeParams).join(', ');
+        }
 
-          return child;
-        });
+        return child;
+      });
     }
   });
 }
 
 function buildDeclarationFile() {
-  return gulp.src('./kontra.js')
-    .pipe(livingcss('./', {
-      loadcss: false,
-      template: './tasks/ts-template.hbs',
-      tags: {...tags},
-      preprocess: livingcssPreprocess
-    }))
+  return gulp
+    .src('./kontra.js')
+    .pipe(
+      livingcss('./', {
+        loadcss: false,
+        template: './tasks/ts-template.hbs',
+        tags: { ...tags },
+        preprocess: livingcssPreprocess
+      })
+    )
     .pipe(rename('kontra.d.ts'))
-    .pipe(gulp.dest('./'))
+    .pipe(gulp.dest('./'));
 }
 
 gulp.task('build:ts', gulp.series(buildDeclarationFile));

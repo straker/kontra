@@ -1,5 +1,5 @@
-import Sprite from '../../src/sprite.js'
-import { noop } from '../../src/utils.js'
+import Sprite, { SpriteClass } from '../../src/sprite.js';
+import { noop } from '../../src/utils.js';
 
 // test-context:start
 let testContext = {
@@ -11,13 +11,15 @@ let testContext = {
 // --------------------------------------------------
 // sprite
 // --------------------------------------------------
-describe('sprite with context: ' + JSON.stringify(testContext,null,4), () => {
+describe('sprite with context: ' + JSON.stringify(testContext, null, 4), () => {
+  it('should export class', () => {
+    expect(SpriteClass).to.be.a('function');
+  });
 
   // --------------------------------------------------
   // init
   // --------------------------------------------------
   describe('init', () => {
-
     if (testContext.SPRITE_IMAGE) {
       it('should set the width and height of the sprite to an image if passed', () => {
         let img = new Image();
@@ -56,10 +58,10 @@ describe('sprite with context: ' + JSON.stringify(testContext,null,4), () => {
       it('should set the width and height of the sprite to an animation if passed', () => {
         // simple animation object from spriteSheet
         let animations = {
-          'walk': {
+          walk: {
             width: 10,
             height: 20,
-            clone: function() {
+            clone: function () {
               return this;
             }
           }
@@ -78,12 +80,11 @@ describe('sprite with context: ' + JSON.stringify(testContext,null,4), () => {
 
     if (testContext.SPRITE_ANIMATION) {
       it('should clone any animations to prevent frame corruption', () => {
-
         let animations = {
-          'walk': {
+          walk: {
             width: 10,
             height: 20,
-            clone: function() {
+            clone: function () {
               return this;
             }
           }
@@ -98,12 +99,7 @@ describe('sprite with context: ' + JSON.stringify(testContext,null,4), () => {
         expect(animations.walk.clone.called).to.be.true;
       });
     }
-
   });
-
-
-
-
 
   // --------------------------------------------------
   // update
@@ -113,11 +109,11 @@ describe('sprite with context: ' + JSON.stringify(testContext,null,4), () => {
       it('should update the animation', () => {
         // simple animation object from spriteSheet
         let animations = {
-          'walk': {
+          walk: {
             width: 10,
             height: 20,
             update: sinon.stub().callsFake(noop),
-            clone: function() {
+            clone: function () {
               return this;
             }
           }
@@ -132,15 +128,14 @@ describe('sprite with context: ' + JSON.stringify(testContext,null,4), () => {
 
         expect(sprite.currentAnimation.update.called).to.be.true;
       });
-    }
-    else {
+    } else {
       it('should not update the animation', () => {
         let animations = {
-          'walk': {
+          walk: {
             width: 10,
             height: 20,
             update: sinon.stub().callsFake(noop),
-            clone: function() {
+            clone: function () {
               return this;
             }
           }
@@ -159,15 +154,10 @@ describe('sprite with context: ' + JSON.stringify(testContext,null,4), () => {
     }
   });
 
-
-
-
-
   // --------------------------------------------------
   // render
   // --------------------------------------------------
   describe('render', () => {
-
     it('should draw a rect sprite', () => {
       let sprite = Sprite({
         x: 10,
@@ -210,12 +200,12 @@ describe('sprite with context: ' + JSON.stringify(testContext,null,4), () => {
       it('should draw an animation sprite', () => {
         // simple animation object from spriteSheet
         let animations = {
-          'walk': {
+          walk: {
             width: 10,
             height: 20,
             update: noop,
             render: noop,
-            clone: function() {
+            clone: function () {
               return this;
             }
           }
@@ -236,34 +226,28 @@ describe('sprite with context: ' + JSON.stringify(testContext,null,4), () => {
         sprite.currentAnimation.render.restore();
       });
     }
-
   });
-
-
-
-
 
   // --------------------------------------------------
   // playAnimation
   // --------------------------------------------------
   describe('playAnimation', () => {
-
     if (testContext.SPRITE_ANIMATION) {
       it('should set the animation to play', () => {
         let animations = {
-          'walk': {
+          walk: {
             width: 10,
             height: 20,
             reset: sinon.spy(),
-            clone: function() {
+            clone: function () {
               return this;
             }
           },
-          'idle': {
+          idle: {
             width: 10,
             height: 20,
             reset: sinon.spy(),
-            clone: function() {
+            clone: function () {
               return this;
             }
           }
@@ -280,14 +264,14 @@ describe('sprite with context: ' + JSON.stringify(testContext,null,4), () => {
         expect(sprite.currentAnimation).to.equal(animations.idle);
       });
 
-      it('should reset the animation if it doesn\'t loop', () => {
+      it("should reset the animation if it doesn't loop", () => {
         let animations = {
-          'walk': {
+          walk: {
             width: 10,
             height: 20,
             loop: false,
             reset: sinon.spy(),
-            clone: function() {
+            clone: function () {
               return this;
             }
           }
@@ -301,14 +285,11 @@ describe('sprite with context: ' + JSON.stringify(testContext,null,4), () => {
 
         expect(animations.walk.reset.called).to.be.true;
       });
-    }
-    else {
+    } else {
       it('should not have animation property', () => {
         let sprite = Sprite();
         expect(sprite.animations).to.not.exist;
       });
     }
-
   });
-
 });

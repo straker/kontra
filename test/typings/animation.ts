@@ -46,3 +46,12 @@ loopAnim.render({
   height: 100,
   context: context
 });
+
+// extends
+class CustomAnimation extends kontra.AnimationClass {}
+let myAnim = new CustomAnimation({
+  spriteSheet: spriteSheet,
+  frames: [1,2,3,4],
+  frameRate: 35
+});
+myAnim.update();

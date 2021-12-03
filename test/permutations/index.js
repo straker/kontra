@@ -7,30 +7,17 @@ const execSync = require('child_process').execSync;
 const rollup = require('rollup');
 
 let options = {
-  updatable: [
-    'GAMEOBJECT_VELOCITY',
-    'GAMEOBJECT_ACCELERATION',
-    'GAMEOBJECT_TTL',
-    'VECTOR_SCALE'
-  ],
+  updatable: ['GAMEOBJECT_VELOCITY', 'GAMEOBJECT_ACCELERATION', 'GAMEOBJECT_TTL', 'VECTOR_SCALE'],
   gameObject: [
     'GAMEOBJECT_ANCHOR',
-    'GAMEOBJECT_CAMERA',
     'GAMEOBJECT_GROUP',
     'GAMEOBJECT_OPACITY',
     'GAMEOBJECT_ROTATION',
     'GAMEOBJECT_SCALE'
   ],
-  sprite: [
-    'SPRITE_IMAGE',
-    'SPRITE_ANIMATION'
-  ],
-  text: [
-    'TEXT_AUTONEWLINE',
-    'TEXT_NEWLINE',
-    'TEXT_RTL',
-    'TEXT_ALIGN'
-  ],
+  sprite: ['SPRITE_IMAGE', 'SPRITE_ANIMATION'],
+  text: ['TEXT_AUTONEWLINE', 'TEXT_NEWLINE', 'TEXT_RTL', 'TEXT_ALIGN'],
+  tileEngine: ['TILEENGINE_CAMERA', 'TILEENGINE_DYNAMIC', 'TILEENGINE_QUERY'],
   vector: [
     'VECTOR_ANGLE',
     'VECTOR_CLAMP',
@@ -43,15 +30,19 @@ let options = {
   ]
 };
 
+let dependants = {
+  tileEngine: ['GAMEOBJECT_ANCHOR']
+};
+
 // run permutations in parallel by passing in which permutation suite to run
 const optionName = process.argv.slice(2)[0];
 if (optionName && options[optionName]) {
   options = {
     [optionName]: options[optionName]
-  }
+  };
 }
 
-Object.keys(options).forEach(async (option) => {
+Object.keys(options).forEach(async option => {
   try {
     // get the setup code
     let setup = fs.readFileSync(path.join(__dirname, '../setup.js'), 'utf-8');
@@ -84,29 +75,36 @@ Object.keys(options).forEach(async (option) => {
     fs.writeFileSync(path.join(__dirname, 'karma.conf.js'), karma, 'utf-8');
 
     // generate each option and run tests
-    let numPermutations = 2**(options[option].length);
+    let numPermutations = 2 ** options[option].length;
     for (let i = 0; i < numPermutations; i++) {
       let context = {};
 
+      if (dependants[option]) {
+        dependants[option].forEach(contextName => {
+          context[contextName] = true;
+        });
+      }
+
       options[option].forEach((optionName, index) => {
-        context[optionName] = !!(2**index & i);
+        context[optionName] = !!((2 ** index) & i);
       });
 
       // replace context in test suite
-      let testContents = output[0].code.replace(/\/\/ test-context([\s\S])*\/\/ test-context:end/, `let testContext = ${JSON.stringify(context)};`);
+      let testContents = output[0].code.replace(
+        /\/\/ test-context([\s\S])*\/\/ test-context:end/,
+        `let testContext = ${JSON.stringify(context)};`
+      );
 
       // console.log('testContents:', testContents);
 
-      let contents = pp.preprocess(
-        testContents,
-        context,
-        {type: 'js'}
-      );
+      let contents = pp.preprocess(testContents, context, { type: 'js' });
       fs.writeFileSync(path.join(__dirname, `${option}.spec.js`), contents, 'utf-8');
 
-      execSync('npx karma start ' + path.join(__dirname, 'karma.conf.js'), {stdio: 'inherit'});
+      execSync('npx karma start ' + path.join(__dirname, 'karma.conf.js'), {
+        stdio: 'inherit'
+      });
     }
-  } catch(e) {
+  } catch (e) {
     // for some reason a failing test/exec does not error the program
     console.log(e);
     return process.exit(1);

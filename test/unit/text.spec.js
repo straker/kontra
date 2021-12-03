@@ -1,6 +1,6 @@
-import Text from '../../src/text.js';
+import Text, { TextClass } from '../../src/text.js';
 import { getContext } from '../../src/core.js';
-import { noop } from '../../src/utils.js'
+import { noop } from '../../src/utils.js';
 
 // test-context:start
 let testContext = {
@@ -14,13 +14,15 @@ let testContext = {
 // --------------------------------------------------
 // text
 // --------------------------------------------------
-describe('text with context: ' + JSON.stringify(testContext,null,4), () => {
+describe('text with context: ' + JSON.stringify(testContext, null, 4), () => {
+  it('should export class', () => {
+    expect(TextClass).to.be.a('function');
+  });
 
   // --------------------------------------------------
   // init
   // --------------------------------------------------
   describe('init', () => {
-
     it('should set default properties', () => {
       let text = Text();
 
@@ -54,7 +56,7 @@ describe('text with context: ' + JSON.stringify(testContext,null,4), () => {
     });
 
     it('should set the text as dirty when setting font', () => {
-      let text = Text({text: ''});
+      let text = Text({ text: '' });
 
       expect(text._d).to.be.false;
 
@@ -64,7 +66,7 @@ describe('text with context: ' + JSON.stringify(testContext,null,4), () => {
     });
 
     it('should set the text as dirty when setting text', () => {
-      let text = Text({text: ''});
+      let text = Text({ text: '' });
 
       expect(text._d).to.be.false;
 
@@ -73,8 +75,16 @@ describe('text with context: ' + JSON.stringify(testContext,null,4), () => {
       expect(text._d).to.be.true;
     });
 
+    it('should cast the value when setting text', () => {
+      let text = Text({ text: '' });
+
+      text.text = 123;
+
+      expect(text.text).to.equal('123');
+    });
+
     it('should set the text as dirty when setting width', () => {
-      let text = Text({text: ''});
+      let text = Text({ text: '' });
 
       expect(text._d).to.be.false;
 
@@ -82,18 +92,12 @@ describe('text with context: ' + JSON.stringify(testContext,null,4), () => {
 
       expect(text._d).to.be.true;
     });
-
   });
-
-
-
-
 
   // --------------------------------------------------
   // prerender
   // --------------------------------------------------
   describe('prerender', () => {
-
     it('should be called if a property was changed since the last render', () => {
       let text = Text({
         text: 'Hello',
@@ -141,7 +145,7 @@ describe('text with context: ' + JSON.stringify(testContext,null,4), () => {
         text: 'Hello There\nWorld',
         font: '32px Arial',
         width: 1000,
-        color: 'black',
+        color: 'black'
       });
 
       expect(text.width).to.equal(1000);
@@ -176,7 +180,7 @@ describe('text with context: ' + JSON.stringify(testContext,null,4), () => {
           text: 'Hello There\nWorld',
           font: '32px Arial',
           width: 1000,
-          color: 'black',
+          color: 'black'
         });
 
         expect(text.width).to.equal(1000);
@@ -191,8 +195,7 @@ describe('text with context: ' + JSON.stringify(testContext,null,4), () => {
 
         expect(text.height).to.be.above(32);
       });
-    }
-    else {
+    } else {
       it('should not calculate new lines', () => {
         let text = Text({
           text: 'Hello\nWorld',
@@ -205,7 +208,7 @@ describe('text with context: ' + JSON.stringify(testContext,null,4), () => {
     }
 
     if (testContext.TEXT_AUTONEWLINE) {
-      it('should calculate new lines when the width is set', function() {
+      it('should calculate new lines when the width is set', function () {
         let text = Text({
           text: 'Hello World',
           font: '32px Arial',
@@ -227,8 +230,7 @@ describe('text with context: ' + JSON.stringify(testContext,null,4), () => {
 
         expect(text.height).to.be.above(32);
       });
-    }
-    else {
+    } else {
       it('should not calculate auto new lines', () => {
         let text = Text({
           text: 'Hello World',
@@ -240,23 +242,17 @@ describe('text with context: ' + JSON.stringify(testContext,null,4), () => {
         expect(text._s.length).to.equal(1);
       });
     }
-
   });
-
-
-
-
 
   // --------------------------------------------------
   // render
   // --------------------------------------------------
   describe('render', () => {
-
     it('should render the text', () => {
       let text = Text({
         text: 'Hello World',
         font: '32px Arial',
-        color: 'black',
+        color: 'black'
       });
 
       sinon.spy(text.context, 'fillText');
@@ -350,7 +346,7 @@ describe('text with context: ' + JSON.stringify(testContext,null,4), () => {
         let text = Text({
           text: 'Hello\nWorld',
           font: '32px Arial',
-          color: 'black',
+          color: 'black'
         });
 
         sinon.spy(text.context, 'fillText');
@@ -377,7 +373,5 @@ describe('text with context: ' + JSON.stringify(testContext,null,4), () => {
         text.context.fillText.restore();
       });
     }
-
   });
-
 });

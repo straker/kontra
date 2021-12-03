@@ -24,8 +24,6 @@ import { noop } from './utils.js';
  * @param {Number} [properties.ttl=Infinity] - How many frames the game object should be alive. Used by [Pool](api/pool).
  *
  * @param {{x: number, y: number}} [properties.anchor={x:0,y:0}] - The x and y origin of the game object. {x:0, y:0} is the top left corner of the game object, {x:1, y:1} is the bottom right corner.
- * @param {Number} [properties.sx=0] - The x camera position.
- * @param {Number} [properties.sy=0] - The y camera position.
  * @param {GameObject[]} [properties.children] - Children to add to the game object.
  * @param {Number} [properties.opacity=1] - The opacity of the game object.
  * @param {Number} [properties.rotation=0] - The rotation around the anchor in radians.
@@ -50,7 +48,6 @@ class GameObject extends Updatable {
    * @param {Object} properties - Properties of the game object.
    */
   init({
-
     // --------------------------------------------------
     // defaults
     // --------------------------------------------------
@@ -147,23 +144,7 @@ class GameObject extends Updatable {
      * gameObject.render();
      * drawOrigin(gameObject);
      */
-    anchor = {x: 0, y: 0},
-    // @endif
-
-    // @ifdef GAMEOBJECT_CAMERA
-    /**
-     * The X coordinate of the camera.
-     * @memberof GameObject
-     * @property {Number} sx
-     */
-    sx = 0,
-
-    /**
-     * The Y coordinate of the camera.
-     * @memberof GameObject
-     * @property {Number} sy
-     */
-    sy = 0,
+    anchor = { x: 0, y: 0 },
     // @endif
 
     // @ifdef GAMEOBJECT_OPACITY
@@ -202,9 +183,8 @@ class GameObject extends Updatable {
 
     ...props
   } = {}) {
-
     // @ifdef GAMEOBJECT_GROUP
-    this.children = [];
+    this._c = [];
     // @endif
 
     // by setting defaults to the parameters and passing them into
@@ -219,11 +199,6 @@ class GameObject extends Updatable {
 
       // @ifdef GAMEOBJECT_ANCHOR
       anchor,
-      // @endif
-
-      // @ifdef GAMEOBJECT_CAMERA
-      sx,
-      sy,
       // @endif
 
       // @ifdef GAMEOBJECT_OPACITY
@@ -269,7 +244,7 @@ class GameObject extends Updatable {
   }
 
   /**
-   * Render the game object. Calls the game objects [draw()](api/gameObject#draw) function.
+   * Render the game object and all children. Calls the game objects [draw()](api/gameObject#draw) function.
    * @memberof GameObject
    * @function render
    *
@@ -289,21 +264,12 @@ class GameObject extends Updatable {
     }
 
     // @ifdef GAMEOBJECT_ROTATION
-    // 2) rotate around the anchor
+    // 3) rotate around the anchor
     //
     // it's faster to only rotate when set rather than always rotating
     // @see https://jsperf.com/rotate-or-if-statement/2
     if (this.rotation) {
       context.rotate(this.rotation);
-    }
-    // @endif
-
-    // @ifdef GAMEOBJECT_CAMERA
-    // 3) translate to the camera position after rotation so camera
-    // values are in the direction of the rotation rather than always
-    // along the x/y axis
-    if (this.sx || this.sy) {
-      context.translate(-this.sx, -this.sy);
     }
     // @endif
 
@@ -477,7 +443,7 @@ class GameObject extends Updatable {
       _wsx = 1,
       _wsy = 1
       // @endif
-    } = (this.parent || {});
+    } = this.parent || {};
     // @endif
 
     // wx = world x, wy = world y
@@ -493,24 +459,24 @@ class GameObject extends Updatable {
     this._wo = _wo * this.opacity;
     // @endif
 
-    // @ifdef GAMEOBJECT_ROTATION
-    // wr = world rotation
-    this._wr = _wr + this.rotation;
-
-    let {x, y} = rotatePoint({x: this.x, y: this.y}, _wr);
-    this._wx = x;
-    this._wy = y;
-    // @endif
-
     // @ifdef GAMEOBJECT_SCALE
     // wsx = world scale x, wsy = world scale y
     this._wsx = _wsx * this.scaleX;
     this._wsy = _wsy * this.scaleY;
 
-    this._wx = this.x * _wsx;
-    this._wy = this.y * _wsy;
+    this._wx = this._wx * _wsx;
+    this._wy = this._wy * _wsy;
     this._ww = this.width * this._wsx;
     this._wh = this.height * this._wsy;
+    // @endif
+
+    // @ifdef GAMEOBJECT_ROTATION
+    // wr = world rotation
+    this._wr = _wr + this.rotation;
+
+    let { x, y } = rotatePoint({ x: this._wx, y: this._wy }, _wr);
+    this._wx = x;
+    this._wy = y;
     // @endif
 
     // @ifdef GAMEOBJECT_GROUP
@@ -545,7 +511,7 @@ class GameObject extends Updatable {
       scaleX: this._wsx,
       scaleY: this._wsy
       // @endif
-    }
+    };
   }
 
   // --------------------------------------------------
@@ -553,6 +519,17 @@ class GameObject extends Updatable {
   // --------------------------------------------------
 
   // @ifdef GAMEOBJECT_GROUP
+  set children(value) {
+    while (this._c.length) {
+      this.removeChild(this._c[0]);
+    }
+    value.map(value => this.addChild(value));
+  }
+
+  get children() {
+    return this._c;
+  }
+
   /**
    * Add an object as a child to this object. The childs [world](api/gameObject#world) property will be updated to take into account this object and all of its parents.
    * @memberof GameObject
@@ -688,5 +665,4 @@ class GameObject extends Updatable {
 export default function factory() {
   return new GameObject(...arguments);
 }
-factory.prototype = GameObject.prototype;
-factory.class = GameObject;
+export { GameObject as GameObjectClass };

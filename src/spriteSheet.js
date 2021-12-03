@@ -89,7 +89,7 @@ function parseFrames(consecutiveFrames) {
  * @param {Object} [properties.animations] - Animations to create from the sprite sheet using [Animation](api/animation). Passed directly into the sprite sheets [createAnimations()](api/spriteSheet#createAnimations) function.
  */
 class SpriteSheet {
-  constructor({image, frameWidth, frameHeight, frameMargin, animations} = {}) {
+  constructor({ image, frameWidth, frameHeight, frameMargin, animations } = {}) {
     // @ifdef DEBUG
     if (!image) {
       throw Error('You must provide an Image for the SpriteSheet');
@@ -124,7 +124,7 @@ class SpriteSheet {
     };
 
     // f = framesPerRow
-    this._f = image.width / frameWidth | 0;
+    this._f = (image.width / frameWidth) | 0;
 
     this.createAnimations(animations);
   }
@@ -224,5 +224,4 @@ class SpriteSheet {
 export default function factory() {
   return new SpriteSheet(...arguments);
 }
-factory.prototype = SpriteSheet.prototype;
-factory.class = SpriteSheet;
+export { SpriteSheet as SpriteSheetClass };

@@ -1,11 +1,10 @@
-import * as kontraExports from '../../src/kontra.js'
-import kontra from '../../src/kontra.defaults.js'
+import * as kontraExports from '../../src/kontra.js';
+import kontra from '../../src/kontra.defaults.js';
 
 // --------------------------------------------------
 // kontra
 // --------------------------------------------------
 describe('kontra', () => {
-
   it('should export animation api', () => {
     expect(kontraExports.Animation).to.exist;
   });
@@ -44,6 +43,7 @@ describe('kontra', () => {
     expect(kontraExports.radToDeg).to.exist;
     expect(kontraExports.angleToTarget).to.exist;
     expect(kontraExports.rotatePoint).to.exist;
+    expect(kontraExports.movePoint).to.exist;
     expect(kontraExports.randInt).to.exist;
     expect(kontraExports.seedRand).to.exist;
     expect(kontraExports.lerp).to.exist;
@@ -61,6 +61,12 @@ describe('kontra', () => {
 
   it('should export gameObject api', () => {
     expect(kontraExports.GameObject).to.exist;
+  });
+
+  it('should add gesture api', () => {
+    expect(kontraExports.gestureMap).to.exist;
+    expect(kontraExports.initGesture).to.exist;
+    expect(kontraExports.onGesture).to.exist;
   });
 
   it('should export grid api', () => {
@@ -128,5 +134,4 @@ describe('kontra', () => {
     expect(kontraExports.default).to.exist;
     expect(kontraExports.default).to.equal(kontra);
   });
-
 });

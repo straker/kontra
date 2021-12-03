@@ -1,4 +1,4 @@
-import Sprite from './sprite.js';
+import { SpriteClass } from './sprite.js';
 import Text from './text.js';
 import { track } from './pointer.js';
 import { srOnlyStyle, noop, addToDom } from './utils.js';
@@ -10,6 +10,7 @@ import { srOnlyStyle, noop, addToDom } from './utils.js';
  *
  * @param {Object} [properties] - Properties of the button (in addition to all Sprite properties).
  * @param {Object} [properties.text] - Properties of [Text](api/text) which are used to create the [textNode](api/button#textNode).
+ * @param {Boolean} [properties.disabled] - Whether the button is disabled when created.
  * @param {Number} [properties.padX=0] - The horizontal padding.
  * @param {Number} [properties.padY=0] - The vertical padding.
  * @param {Function} [properties.onEnable] - Function called when the button is enabled.
@@ -17,7 +18,7 @@ import { srOnlyStyle, noop, addToDom } from './utils.js';
  * @param {Function} [properties.onFocus] - Function called when the button is focused by the keyboard.
  * @param {Function} [properties.onBlur] - Function called when the button losses focus either by the pointer or keyboard.
  */
-class Button extends Sprite.class {
+class Button extends SpriteClass {
   /**
    * @docs docs/api_docs/button.js
    */
@@ -38,6 +39,7 @@ class Button extends Sprite.class {
     padY = 0,
 
     text,
+    disabled = false,
     onDown,
     onUp,
     ...props
@@ -78,15 +80,19 @@ class Button extends Sprite.class {
 
     // create an accessible DOM node for screen readers
     // dn = dom node
-    const button = this._dn = document.createElement('button');
+    const button = (this._dn = document.createElement('button'));
     button.style = srOnlyStyle;
     button.textContent = this.text;
+
+    if (disabled) {
+      this.disable();
+    }
 
     // sync events between the button element and the class
     button.addEventListener('focus', () => this.focus());
     button.addEventListener('blur', () => this.blur());
-    button.addEventListener('keydown', (evt) => this._kd(evt));
-    button.addEventListener('keyup', (evt) => this._ku(evt));
+    button.addEventListener('keydown', evt => this._kd(evt));
+    button.addEventListener('keyup', evt => this._ku(evt));
 
     addToDom(button, this.context.canvas);
 
@@ -150,7 +156,6 @@ class Button extends Sprite.class {
    * @function enable
    */
   enable() {
-
     /**
      * If the button is disabled.
      * @memberof Button
@@ -177,7 +182,6 @@ class Button extends Sprite.class {
    */
   focus() {
     if (!this.disabled) {
-
       /**
        * If the button is focused.
        * @memberof Button
@@ -206,7 +210,6 @@ class Button extends Sprite.class {
 
   onOver() {
     if (!this.disabled) {
-
       /**
        * If the button is hovered.
        * @memberof Button
@@ -250,7 +253,6 @@ class Button extends Sprite.class {
 
   onDown() {
     if (!this.disabled) {
-
       /**
        * If the button is pressed.
        * @memberof Button
@@ -288,5 +290,4 @@ class Button extends Sprite.class {
 export default function factory() {
   return new Button(...arguments);
 }
-factory.prototype = Button.prototype;
-factory.class = Button;
+export { Button as ButtonClass };

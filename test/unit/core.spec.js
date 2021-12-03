@@ -1,11 +1,10 @@
-import * as core from '../../src/core.js'
-import { on } from '../../src/events.js'
+import * as core from '../../src/core.js';
+import { on } from '../../src/events.js';
 
 // --------------------------------------------------
 // core
 // --------------------------------------------------
 describe('core', () => {
-
   // ensure no canvas exists since these tests set it up
   beforeEach(() => {
     document.querySelectorAll('canvas').forEach(canvas => canvas.remove());
@@ -102,6 +101,23 @@ describe('core', () => {
       expect(context).to.equal(c.getContext('2d'));
     });
 
-  });
+    it('should allow contextless option', () => {
+      let { canvas, context } = core.init(null, { contextless: true });
 
+      expect(canvas._proxy).to.be.true;
+      expect(context._proxy).to.be.true;
+
+      function fn() {
+        canvas.getContext('2d');
+        context.save();
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        context.translate(0, 0);
+        context.globalAlpha = 10;
+        context.restore();
+        context.doesNotExist();
+      }
+
+      expect(fn).to.not.throw();
+    });
+  });
 });

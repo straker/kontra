@@ -23,22 +23,26 @@ function getIndices(object, bounds) {
 
   // object intersects with the left quadrants
   if (object.x < verticalMidpoint) {
-    if (intersectsTopQuadrants) {  // top left
+    if (intersectsTopQuadrants) {
+      // top left
       indices.push(0);
     }
 
-    if (intersectsBottomQuadrants) {  // bottom left
+    if (intersectsBottomQuadrants) {
+      // bottom left
       indices.push(2);
     }
   }
 
   // object intersects with the right quadrants
   if (object.x + object.width >= verticalMidpoint) {
-    if (intersectsTopQuadrants) {  // top right
+    if (intersectsTopQuadrants) {
+      // top right
       indices.push(1);
     }
 
-    if (intersectsBottomQuadrants) {  // bottom right
+    if (intersectsBottomQuadrants) {
+      // bottom right
       indices.push(3);
     }
   }
@@ -57,7 +61,6 @@ The quadrant indices are numbered as follows (following a z-order curve):
      |
 */
 
-
 /**
  * A 2D [spatial partitioning](https://gameprogrammingpatterns.com/spatial-partition.html) data structure. Use it to quickly group objects by their position for faster access and collision checking.
  *
@@ -75,8 +78,7 @@ class Quadtree {
    * @docs docs/api_docs/quadtree.js
    */
 
-  constructor({maxDepth = 3, maxObjects = 25, bounds} = {}) {
-
+  constructor({ maxDepth = 3, maxObjects = 25, bounds } = {}) {
     /**
      * Maximum node depth of the quadtree.
      * @memberof Quadtree
@@ -109,7 +111,7 @@ class Quadtree {
     // b = branch, d = depth, o = objects, s = subnodes, p = parent
     this._b = false;
     this._d = 0;
-    this._o = []
+    this._o = [];
     this._s = [];
     this._p = null;
   }
@@ -120,7 +122,7 @@ class Quadtree {
    * @function clear
    */
   clear() {
-    this._s.map(function(subnode) {
+    this._s.map(function (subnode) {
       subnode.clear();
     });
 
@@ -264,23 +266,23 @@ class Quadtree {
       return;
     }
 
-    subWidth = this.bounds.width / 2 | 0;
-    subHeight = this.bounds.height / 2 | 0;
+    subWidth = (this.bounds.width / 2) | 0;
+    subHeight = (this.bounds.height / 2) | 0;
 
     for (i = 0; i < 4; i++) {
       this._s[i] = new Quadtree({
         bounds: {
-          x: this.bounds.x + (i % 2 === 1 ? subWidth : 0),  // nodes 1 and 3
-          y: this.bounds.y + (i >= 2 ? subHeight : 0),      // nodes 2 and 3
+          x: this.bounds.x + (i % 2 === 1 ? subWidth : 0), // nodes 1 and 3
+          y: this.bounds.y + (i >= 2 ? subHeight : 0), // nodes 2 and 3
           width: subWidth,
           height: subHeight
         },
         maxDepth: this.maxDepth,
-        maxObjects: this.maxObjects,
+        maxObjects: this.maxObjects
       });
 
       // d = depth, p = parent
-      this._s[i]._d = this._d+1;
+      this._s[i]._d = this._d + 1;
       /* @ifdef VISUAL_DEBUG */
       this._s[i]._p = this;
       /* @endif */
@@ -290,7 +292,7 @@ class Quadtree {
   /**
    * Draw the quadtree. Useful for visual debugging.
    */
-   /* @ifdef VISUAL_DEBUG **
+  /* @ifdef VISUAL_DEBUG **
    render() {
      // don't draw empty leaf nodes, always draw branch nodes and the first node
      if (this._o.length || this._d === 0 ||
@@ -312,5 +314,4 @@ class Quadtree {
 export default function factory() {
   return new Quadtree(...arguments);
 }
-factory.prototype = Quadtree.prototype;
-factory.class = Quadtree;
+export { Quadtree as QuadtreeClass };

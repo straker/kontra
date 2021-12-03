@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Gesture</title>
+  <script src="../../kontra.js"></script>
+</head>
+<body>
+  <canvas id="game" width="600" height="400" style="background: #333331"></canvas>
+  <script id="code">
+    // initialize the game and setup the canvas
+    let { canvas, context } = kontra.init();
+
+    // initial pointer and gesture
+    kontra.initPointer();
+    kontra.initGesture();
+
+    // create a basic sprite with a velocity
+    window.sprite = kontra.Sprite({
+      x: 290,
+      y: 180,
+      dx: 3,
+      width: 20,
+      height: 40,
+      color: 'red',
+      // pass a custom update function to the sprite
+      update: function() {
+        this.advance();
+
+        // reset the sprites position when it reaches the edge of the game
+        if (this.x > canvas.width) {
+          this.x = -this.width;
+        }
+        else if (this.x < -this.width) {
+          this.x = canvas.width;
+        }
+
+        if (this.y > canvas.height) {
+          this.y = -this.height;
+        }
+        else if (this.y < -this.height) {
+          this.y = canvas.height;
+        }
+      }
+    });
+
+    // change sprite velocity on swipe
+    kontra.onGesture('swipeleft', () => {
+      sprite.dy = 0;
+      sprite.dx = -3;
+    });
+    kontra.onGesture('swiperight', () => {
+      sprite.dy = 0;
+      sprite.dx = 3;
+    });
+    kontra.onGesture('swipeup', () => {
+      sprite.dx = 0;
+      sprite.dy = -3;
+    });
+    kontra.onGesture('swipedown', () => {
+      sprite.dx = 0;
+      sprite.dy = 3;
+    });
+
+    // create the game loop to update and render the sprite
+    window.loop = kontra.GameLoop({
+      update: function() {
+        sprite.update();
+      },
+      render: function() {
+        sprite.render();
+      }
+    });
+
+    // start the loop
+    loop.start();
+  </script>
+  <script src="../prism/codeOutput.js"></script>
+</body>
+</html>

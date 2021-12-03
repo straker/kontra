@@ -1,7 +1,7 @@
 language: node_js
 node_js:
 - '14'
-dist: trusty
+dist: xenial
 sudo: required
 addons:
   chrome: stable
@@ -32,6 +32,11 @@ jobs:
     script:
     - npm run build
     - npm run test:permutations text
+  - name: 'Permutation Tests: tileEngine'
+    if: type = pull_request
+    script:
+    - npm run build
+    - npm run test:permutations tileEngine
   - name: 'Permutation Tests: updatable'
     if: type = pull_request
     script:
@@ -42,20 +47,3 @@ jobs:
     script:
     - npm run build
     - npm run test:permutations sprite
-  - name: Deploy gh-pages
-    if: type = push
-    script: npm run build
-    deploy:
-      provider: pages
-      skip_cleanup: true
-      github_token: "$GITHUB_TOKEN"
-      keep_history: true
-      local_dir: docs
-      on:
-        branch: main
-before_install:
-- openssl aes-256-cbc -K $encrypted_3dbbb9ed4f10_key -iv $encrypted_3dbbb9ed4f10_iv
-  -in travis-key.enc -out ./travis-key -d
-- eval "$(ssh-agent -s)"
-- chmod 600 ./travis-key
-- ssh-add ./travis-key

@@ -32,3 +32,12 @@ kontra.Text({
   width: 200,
   lineHeight: 3
 });
+
+// extends
+class CustomText extends kontra.TextClass {}
+let myText = new CustomText({
+  text: 'Hello World!',
+  color: 'black',
+  font: '32px Arial'
+});
+myText.advance();

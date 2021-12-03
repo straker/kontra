@@ -18,7 +18,7 @@
  * @returns {Number} The value in radians.
  */
 export function degToRad(deg) {
-  return deg * Math.PI / 180;
+  return (deg * Math.PI) / 180;
 }
 
 /**
@@ -30,7 +30,7 @@ export function degToRad(deg) {
  * @returns {Number} The value in degrees.
  */
 export function radToDeg(rad) {
-  return rad * 180 / Math.PI;
+  return (rad * 180) / Math.PI;
 }
 
 /**
@@ -61,13 +61,12 @@ export function radToDeg(rad) {
  * ```
  * @function angleToTarget
  *
- * @param {{x: Number, y: Number}} source - The source point.
- * @param {{x: Number, y: Number}} target - The target point.
+ * @param {{x: Number, y: Number}} source - The {x,y} source point.
+ * @param {{x: Number, y: Number}} target - The {x,y} target point.
  *
  * @returns {Number} Angle (in radians) from the source point to the target point.
  */
 export function angleToTarget(source, target) {
-
   // atan2 returns the counter-clockwise angle in respect to the x-axis, but
   // the canvas rotation system is based on the y-axis (rotation of 0 = up).
   // so we need to add a quarter rotation to return a counter-clockwise
@@ -79,7 +78,7 @@ export function angleToTarget(source, target) {
  * Rotate a point by an angle.
  * @function rotatePoint
  *
- * @param {{x: Number, y: Number}} point - The point to rotate.
+ * @param {{x: Number, y: Number}} point - The {x,y} point to rotate.
  * @param {Number} angle - Angle (in radians) to rotate.
  *
  * @returns {{x: Number, y: Number}} The new x and y coordinates after rotation.
@@ -87,10 +86,28 @@ export function angleToTarget(source, target) {
 export function rotatePoint(point, angle) {
   let sin = Math.sin(angle);
   let cos = Math.cos(angle);
-  let x = point.x * cos - point.y * sin;
-  let y = point.x * sin + point.y * cos;
 
-  return {x, y};
+  return {
+    x: point.x * cos - point.y * sin,
+    y: point.x * sin + point.y * cos
+  };
+}
+
+/**
+ * Move a point by an angle and distance.
+ * @function
+ *
+ * @param {{x: Number, y: Number}} point - The {x,y} point to move.
+ * @param {Number} angle - Angle (in radians) to move.
+ * @param {Number} distance - Distance to move.
+ *
+ * @returns {{x: Number, y: Number}} The new x and y coordinates after moving.
+ */
+export function movePoint(point, angle, distance) {
+  return {
+    x: point.x + Math.sin(angle) * distance,
+    y: point.y - Math.cos(angle) * distance
+  };
 }
 
 /**
@@ -125,22 +142,24 @@ export function randInt(min, max) {
  *
  * @returns {() => Number} Seeded random number generator function.
  */
- export function seedRand(str) {
+export function seedRand(str) {
   // based on the above references, this was the smallest code yet decent
   // quality seed random function
 
   // first create a suitable hash of the seed string using xfnv1a
   // @see https://github.com/bryc/code/blob/master/jshash/PRNGs.md#addendum-a-seed-generating-functions
-  for(var i = 0, h = 2166136261 >>> 0; i < str.length; i++) {
+  for (var i = 0, h = 2166136261 >>> 0; i < str.length; i++) {
     h = Math.imul(h ^ str.charCodeAt(i), 16777619);
   }
-  h += h << 13; h ^= h >>> 7;
-  h += h << 3;  h ^= h >>> 17;
+  h += h << 13;
+  h ^= h >>> 7;
+  h += h << 3;
+  h ^= h >>> 17;
   let seed = (h += h << 5) >>> 0;
 
   // then return the seed function and discard the first result
   // @see https://github.com/bryc/code/blob/master/jshash/PRNGs.md#lcg-lehmer-rng
-  let rand = () => (2 ** 31 - 1 & (seed = Math.imul(48271, seed))) / 2 ** 31;
+  let rand = () => ((2 ** 31 - 1) & (seed = Math.imul(48271, seed))) / 2 ** 31;
   rand();
   return rand;
 }
@@ -198,7 +217,7 @@ export function inverseLerp(start, end, value) {
  * @returns {Number} Value clamped between min and max.
  */
 export function clamp(min, max, value) {
-  return Math.min( Math.max(min, value), max );
+  return Math.min(Math.max(min, value), max);
 }
 
 /**
@@ -211,8 +230,7 @@ export function clamp(min, max, value) {
 export function setStoreItem(key, value) {
   if (value === undefined) {
     localStorage.removeItem(key);
-  }
-  else {
+  } else {
     localStorage.setItem(key, JSON.stringify(value));
   }
 }
@@ -232,8 +250,7 @@ export function getStoreItem(key) {
 
   try {
     value = JSON.parse(value);
-  }
-  catch(e) {}
+  } catch (e) {}
 
   return value;
 }
@@ -282,10 +299,12 @@ export function collides(obj1, obj2) {
   [obj1, obj2] = [obj1, obj2].map(obj => getWorldRect(obj));
   // @endif
 
-  return obj1.x < obj2.x + obj2.width &&
-         obj1.x + obj1.width > obj2.x &&
-         obj1.y < obj2.y + obj2.height &&
-         obj1.y + obj1.height > obj2.y;
+  return (
+    obj1.x < obj2.x + obj2.width &&
+    obj1.x + obj1.width > obj2.x &&
+    obj1.y < obj2.y + obj2.height &&
+    obj1.y + obj1.height > obj2.y
+  );
 }
 
 /**
@@ -297,12 +316,7 @@ export function collides(obj1, obj2) {
  * @returns {{x: number, y: number, width: number, height: number}} The world `x`, `y`, `width`, and `height` of the object.
  */
 export function getWorldRect(obj) {
-  let {
-    x = 0,
-    y = 0,
-    width,
-    height
-  } = obj.world || obj;
+  let { x = 0, y = 0, width, height } = obj.world || obj;
 
   // take into account tileEngine
   if (obj.mapwidth) {
@@ -321,7 +335,7 @@ export function getWorldRect(obj) {
   // @ifdef GAMEOBJECT_SCALE
   // account for negative scales
   if (width < 0) {
-    x += width
+    x += width;
     width *= -1;
   }
   if (height < 0) {

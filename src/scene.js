@@ -1,4 +1,4 @@
-import GameObject from './gameObject.js';
+import GameObject, { GameObjectClass } from './gameObject.js';
 import { srOnlyStyle, addToDom } from './utils.js';
 import { collides } from './helpers.js';
 
@@ -7,8 +7,7 @@ function getAllNodes(object) {
 
   if (object._dn) {
     nodes.push(object._dn);
-  }
-  else if (object.children) {
+  } else if (object.children) {
     object.children.map(child => {
       nodes = nodes.concat(getAllNodes(child));
     });
@@ -50,8 +49,7 @@ function getAllNodes(object) {
  * @param {Function} [properties.onShow] - Function called when the scene is shown.
  * @param {Function} [properties.onHide] - Function called when the scene is hidden.
  */
-class Scene extends GameObject.class {
-
+class Scene extends GameObjectClass {
   init({
     /**
      * The id of the scene.
@@ -65,7 +63,7 @@ class Scene extends GameObject.class {
      * @memberof Scene
      * @property {String} name
      */
-     name = id,
+    name = id,
 
     /**
      * If the camera should cull objects outside the camera bounds. Not rendering objects which can't be seen greatly improves the performance.
@@ -74,7 +72,7 @@ class Scene extends GameObject.class {
      */
     cullObjects = true,
 
-     /**
+    /**
      * Camera culling function which prevents objects outside the camera screen from rendering. Is passed as the `filterFunction` to the [render](api/gameObject#render) function.
      * @memberof Scene
      * @property {Function} cullFunction
@@ -86,7 +84,7 @@ class Scene extends GameObject.class {
     // create an accessible DOM node for screen readers (do this first
     // so we can move DOM nodes in addChild)
     // dn = dom node
-    const section = this._dn = document.createElement('section');
+    const section = (this._dn = document.createElement('section'));
     section.tabIndex = -1;
     section.style = srOnlyStyle;
     section.id = id;
@@ -128,7 +126,7 @@ class Scene extends GameObject.class {
       let canvas = this.context.canvas;
       this.camera._wx = this.camera.x * this.scaleX;
       this.camera._wy = this.camera.y * this.scaleY;
-    }
+    };
   }
 
   /**
@@ -137,7 +135,6 @@ class Scene extends GameObject.class {
    * @function show
    */
   show() {
-
     /**
      * If the scene is hidden.
      * @memberof Scene
@@ -149,8 +146,7 @@ class Scene extends GameObject.class {
     let focusableChild = this.children.find(child => child.focus);
     if (focusableChild) {
       focusableChild.focus();
-    }
-    else {
+    } else {
       this._dn.focus();
     }
 
@@ -210,7 +206,6 @@ class Scene extends GameObject.class {
    * @param {{x: number, y: number}} object - Object with x/y properties.
    */
   lookAt(object) {
-
     // don't call getWorldRect so we can ignore the objects anchor
     object = object.world || object;
     let x = object.x;
@@ -241,7 +236,7 @@ class Scene extends GameObject.class {
     this.sy = y * this.scaleY - height / 2;
 
     if (!this.hidden) {
-      super.render(child => this.cullObjects ? this.cullFunction(child, this.camera) : true);
+      super.render(child => (this.cullObjects ? this.cullFunction(child, this.camera) : true));
     }
   }
 
@@ -263,5 +258,4 @@ class Scene extends GameObject.class {
 export default function factory() {
   return new Scene(...arguments);
 }
-factory.prototype = Scene.prototype;
-factory.class = Scene;
+export { Scene as SceneClass };

@@ -36,8 +36,7 @@ import { getContext } from './core.js';
  * @param {Boolean} [properties.loop=true] - If the animation should loop.
  */
 class Animation {
-  constructor({spriteSheet, frames, frameRate, loop = true}) {
-
+  constructor({ spriteSheet, frames, frameRate, loop = true }) {
     /**
      * The sprite sheet to use for the animation.
      * @memberof Animation
@@ -122,10 +121,9 @@ class Animation {
    *
    * @param {Number} [dt=1/60] - Time since last update.
    */
-  update(dt = 1/60) {
-
+  update(dt = 1 / 60) {
     // if the animation doesn't loop we stop at the last frame
-    if (!this.loop && this._f == this.frames.length-1) return;
+    if (!this.loop && this._f == this.frames.length - 1) return;
 
     this._a += dt;
 
@@ -148,19 +146,21 @@ class Animation {
    * @param {Number} [properties.height] - height of the sprite. Defaults to [Animation.height](api/animation#height).
    * @param {CanvasRenderingContext2D} [properties.context] - The context the animation should draw to. Defaults to [core.getContext()](api/core#getContext).
    */
-  render({x, y, width = this.width, height = this.height, context = getContext()}) {
-
+  render({ x, y, width = this.width, height = this.height, context = getContext() }) {
     // get the row and col of the frame
-    let row = this.frames[this._f] / this.spriteSheet._f | 0;
+    let row = (this.frames[this._f] / this.spriteSheet._f) | 0;
     let col = this.frames[this._f] % this.spriteSheet._f | 0;
 
     context.drawImage(
       this.spriteSheet.image,
       col * this.width + (col * 2 + 1) * this.margin,
       row * this.height + (row * 2 + 1) * this.margin,
-      this.width, this.height,
-      x, y,
-      width, height
+      this.width,
+      this.height,
+      x,
+      y,
+      width,
+      height
     );
   }
 }
@@ -168,5 +168,4 @@ class Animation {
 export default function factory() {
   return new Animation(...arguments);
 }
-factory.prototype = Animation.prototype;
-factory.class = Animation;
+export { Animation as AnimationClass };

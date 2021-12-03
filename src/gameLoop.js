@@ -48,18 +48,20 @@ function clear(context) {
  * @class GameLoop
  *
  * @param {Object} properties - Properties of the game loop.
- * @param {(dt?: Number) => void} [properties.update] - Function called every frame to update the game. Is passed the fixed `dt` as a parameter.
+ * @param {(dt: Number) => void} [properties.update] - Function called every frame to update the game. Is passed the fixed `dt` as a parameter.
  * @param {Function} properties.render - Function called every frame to render the game.
  * @param {Number}   [properties.fps=60] - Desired frame rate.
  * @param {Boolean}  [properties.clearCanvas=true] - Clear the canvas every frame before the `render()` function is called.
  * @param {CanvasRenderingContext2D} [properties.context] - The context that should be cleared each frame if `clearContext` is not set to `false`. Defaults to [core.getContext()](api/core#getContext).
+ * @param {Boolean} [properties.blur=false] - If the loop should still update and render if the page does not have focus.
  */
 export default function GameLoop({
   fps = 60,
   clearCanvas = true,
   update = noop,
   render,
-  context = getContext()
+  context = getContext(),
+  blur = false
 } = {}) {
   // check for required functions
   // @ifdef DEBUG
@@ -70,10 +72,20 @@ export default function GameLoop({
 
   // animation variables
   let accumulator = 0;
-  let delta = 1E3 / fps;  // delta between performance.now timings (in ms)
+  let delta = 1e3 / fps; // delta between performance.now timings (in ms)
   let step = 1 / fps;
-  let clearFn = clearCanvas ? clear : noop
+  let clearFn = clearCanvas ? clear : noop;
   let last, rAF, now, dt, loop;
+  let focused = true;
+
+  if (!blur) {
+    window.addEventListener('focus', () => {
+      focused = true;
+    });
+    window.addEventListener('blur', () => {
+      focused = false;
+    });
+  }
 
   /**
    * Called every frame of the game loop.
@@ -81,13 +93,16 @@ export default function GameLoop({
   function frame() {
     rAF = requestAnimationFrame(frame);
 
+    // don't update the frame if tab isn't focused
+    if (!focused) return;
+
     now = performance.now();
     dt = now - last;
     last = now;
 
     // prevent updating the game with a very large dt if the game were to lose focus
     // and then regain focus later
-    if (dt > 1E3) {
+    if (dt > 1e3) {
       return;
     }
 
@@ -175,4 +190,4 @@ export default function GameLoop({
   };
 
   return loop;
-};
+}

@@ -25,3 +25,8 @@ kontra.Quadtree({
     height: 100
   }
 });
+
+// extends
+class CustomQuadtree extends kontra.QuadtreeClass {}
+let myQuadtree = new CustomQuadtree();
+myQuadtree.get(kontra.Sprite());

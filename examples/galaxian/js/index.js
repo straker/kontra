@@ -10,8 +10,7 @@ let loop = kontra.GameLoop({
   update() {
     if (isGameOver) {
       gameOverScene.update();
-    }
-    else {
+    } else {
       activeScene.update();
     }
   },
@@ -25,12 +24,11 @@ let loop = kontra.GameLoop({
 });
 
 // pause/unpause game
-kontra.bindKeys('p', function() {
+kontra.bindKeys('p', function () {
   if (loop.isStopped) {
     loop.start();
     kontra.audioAssets.kick_shock.play();
-  }
-  else {
+  } else {
     loop.stop();
     kontra.audioAssets.kick_shock.pause();
   }

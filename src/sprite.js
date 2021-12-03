@@ -1,4 +1,4 @@
-import GameObject from './gameObject.js';
+import { GameObjectClass } from './gameObject.js';
 
 /**
  * A versatile way to update and draw your sprites. It can handle simple rectangles, images, and sprite sheet animations. It can be used for your main player object as well as tiny particles in a particle engine.
@@ -10,7 +10,7 @@ import GameObject from './gameObject.js';
  * @param {HTMLImageElement|HTMLCanvasElement} [properties.image] - Use an image to draw the sprite.
  * @param {{[name: string] : Animation}} [properties.animations] - An object of [Animations](api/animation) from a [Spritesheet](api/spriteSheet) to animate the sprite.
  */
-class Sprite extends GameObject.class {
+class Sprite extends GameObjectClass {
   /**
    * @docs docs/api_docs/sprite.js
    */
@@ -166,10 +166,7 @@ class Sprite extends GameObject.class {
   draw() {
     // @ifdef SPRITE_IMAGE
     if (this.image) {
-      this.context.drawImage(
-        this.image,
-        0, 0, this.image.width, this.image.height
-      );
+      this.context.drawImage(this.image, 0, 0, this.image.width, this.image.height);
     }
     // @endif
 
@@ -195,5 +192,4 @@ class Sprite extends GameObject.class {
 export default function factory() {
   return new Sprite(...arguments);
 }
-factory.prototype = Sprite.prototype;
-factory.class = Sprite;
+export { Sprite as SpriteClass };

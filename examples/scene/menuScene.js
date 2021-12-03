@@ -18,8 +18,7 @@ let startButton = kontra.Button({
 
     if (this.focused || this.hovered) {
       this.textNode.color = 'red';
-    }
-    else {
+    } else {
       this.textNode.color = 'white';
     }
   }

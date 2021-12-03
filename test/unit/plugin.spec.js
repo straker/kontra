@@ -1,10 +1,9 @@
-import * as plugin from '../../src/plugin.js'
+import * as plugin from '../../src/plugin.js';
 
 // --------------------------------------------------
 // plugin
 // --------------------------------------------------
 describe('plugin', () => {
-
   let add = (p1, p2) => p1 + p2;
   let myPlugin = {
     beforeAdd(foobar, p1, p2) {
@@ -13,8 +12,8 @@ describe('plugin', () => {
     afterAdd(foobar, result, p1, p2) {
       return result * 2;
     }
-  }
-  let root,classObject;
+  };
+  let root, classObject;
 
   beforeEach(() => {
     // fake a Class prototype chain
@@ -29,15 +28,10 @@ describe('plugin', () => {
     expect(plugin.extendObject).to.be.an('function');
   });
 
-
-
-
-
   // --------------------------------------------------
   // registerPlugin
   // --------------------------------------------------
   describe('registerPlugin', () => {
-
     beforeEach(() => {
       plugin.registerPlugin(classObject, myPlugin);
     });
@@ -83,7 +77,7 @@ describe('plugin', () => {
       expect(classObject.prototype._inc.add.after.length).to.equal(1);
     });
 
-    it('should ignore functions that don\'t match the before/after syntax', () => {
+    it("should ignore functions that don't match the before/after syntax", () => {
       plugin.registerPlugin(classObject, {
         doAdd() {}
       });
@@ -109,12 +103,7 @@ describe('plugin', () => {
       expect(classObject.prototype._inc.add.after.length).to.equal(2);
     });
 
-
-
-
-
     describe('intercepted method', () => {
-
       it('should call the original method', () => {
         let spy = sinon.spy(classObject.prototype, '_oadd');
         classObject.add(1, 2);
@@ -234,25 +223,20 @@ describe('plugin', () => {
         sinon.assert.callOrder(stub, stub1, stub2);
       });
 
-      it('should do nothing if kontra object doesn\'t exist', () => {
+      it("should do nothing if kontra object doesn't exist", () => {
         let fn = () => {
           plugin.registerPlugin('baz', myPlugin);
-        }
+        };
 
         expect(fn).to.not.throw();
       });
     });
   });
 
-
-
-
-
   // --------------------------------------------------
   // unregisterPlugin
   // --------------------------------------------------
   describe('unregisterPlugin', () => {
-
     beforeEach(() => {
       plugin.registerPlugin(classObject, myPlugin);
       plugin.unregisterPlugin(classObject, myPlugin);
@@ -266,10 +250,10 @@ describe('plugin', () => {
       expect(classObject.prototype._inc.add.after.length).to.equal(0);
     });
 
-    it('should do nothing if kontra object doesn\'t exist', () => {
+    it("should do nothing if kontra object doesn't exist", () => {
       let fn = () => {
         plugin.unregisterPlugin('baz', myPlugin);
-      }
+      };
 
       expect(fn).to.not.throw();
     });
@@ -279,17 +263,17 @@ describe('plugin', () => {
 
       let fn = () => {
         plugin.unregisterPlugin(classObject, myPlugin);
-      }
+      };
 
       expect(fn).to.not.throw();
     });
 
-    it('should ignore functions that don\'t match the before/after syntax', () => {
+    it("should ignore functions that don't match the before/after syntax", () => {
       let fn = () => {
         plugin.unregisterPlugin(classObject, {
           doAdd() {}
         });
-      }
+      };
 
       expect(fn).to.not.throw();
     });
@@ -300,7 +284,7 @@ describe('plugin', () => {
           afterAdd() {},
           beforeAdd() {}
         });
-      }
+      };
 
       plugin.registerPlugin(classObject, myPlugin);
       expect(fn).to.not.throw();
@@ -309,20 +293,15 @@ describe('plugin', () => {
     });
   });
 
-
-
-
-
   // --------------------------------------------------
   // extendObject
   // --------------------------------------------------
   describe('extendObject', () => {
-
     it('should add properties onto the object', () => {
       let properties = {
         number: 1,
         string: 'hello',
-        fn: function() {},
+        fn: function () {},
         object: {}
       };
 
@@ -338,7 +317,7 @@ describe('plugin', () => {
       let properties = {
         number: 1,
         string: 'hello',
-        fn: function() {},
+        fn: function () {},
         object: {}
       };
 
@@ -352,10 +331,10 @@ describe('plugin', () => {
       expect(classObject.number).to.equal(properties.number);
     });
 
-    it('should do nothing if kontra object doesn\'t exist', () => {
+    it("should do nothing if kontra object doesn't exist", () => {
       let fn = () => {
         plugin.extendObject({}, myPlugin);
-      }
+      };
 
       expect(fn).to.not.throw();
     });

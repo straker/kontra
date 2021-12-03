@@ -1,10 +1,9 @@
-import kontra from '../../src/kontra.defaults.js'
+import kontra from '../../src/kontra.defaults.js';
 
 // --------------------------------------------------
 // kontra.defaults
 // --------------------------------------------------
 describe('kontra.defaults', () => {
-
   it('should add animation api', () => {
     expect(kontra.Animation).to.exist;
   });
@@ -46,6 +45,12 @@ describe('kontra.defaults', () => {
     expect(kontra.GameObject).to.exist;
   });
 
+  it('should add gesture api', () => {
+    expect(kontra.gestureMap).to.exist;
+    expect(kontra.initGesture).to.exist;
+    expect(kontra.onGesture).to.exist;
+  });
+
   it('should add grid api', () => {
     expect(kontra.Grid).to.exist;
   });
@@ -55,6 +60,7 @@ describe('kontra.defaults', () => {
     expect(kontra.radToDeg).to.exist;
     expect(kontra.angleToTarget).to.exist;
     expect(kontra.rotatePoint).to.exist;
+    expect(kontra.movePoint).to.exist;
     expect(kontra.randInt).to.exist;
     expect(kontra.seedRand).to.exist;
     expect(kontra.lerp).to.exist;
@@ -122,5 +128,4 @@ describe('kontra.defaults', () => {
   it('should add vector api', () => {
     expect(kontra.Vector).to.exist;
   });
-
 });

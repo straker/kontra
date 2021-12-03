@@ -1,13 +1,33 @@
-import GameLoop from '../../src/gameLoop.js'
-import { getContext } from '../../src/core.js'
-import { on } from '../../src/events.js'
-import { noop } from '../../src/utils.js'
+import GameLoop from '../../src/gameLoop.js';
+import { getContext } from '../../src/core.js';
+import { on } from '../../src/events.js';
+import { noop } from '../../src/utils.js';
 
 // --------------------------------------------------
 // gameloop
 // --------------------------------------------------
 describe('gameLoop', () => {
   let loop;
+
+  /**
+   * Simulate an event.
+   * @param {string} type - Type of keyboard event.
+   */
+  function simulateEvent(type) {
+    let evt;
+
+    // PhantomJS <2.0.0 throws an error for the `new Event` call, so we need to supply an
+    // alternative form of creating an event just for PhantomJS
+    // @see https://github.com/ariya/phantomjs/issues/11289#issuecomment-38880333
+    try {
+      evt = new Event(type);
+    } catch (e) {
+      evt = document.createEvent('Event');
+      evt.initEvent(type, true, false);
+    }
+
+    window.dispatchEvent(evt);
+  }
 
   afterEach(() => {
     loop && loop.stop();
@@ -17,7 +37,6 @@ describe('gameLoop', () => {
   // init
   // --------------------------------------------------
   describe('init', () => {
-
     it('should log an error if not passed required functions', () => {
       function func() {
         GameLoop();
@@ -25,12 +44,7 @@ describe('gameLoop', () => {
 
       expect(func).to.throw();
     });
-
   });
-
-
-
-
 
   // --------------------------------------------------
   // start
@@ -57,12 +71,7 @@ describe('gameLoop', () => {
 
       expect(loop.isStopped).to.be.false;
     });
-
   });
-
-
-
-
 
   // --------------------------------------------------
   // stop
@@ -89,19 +98,13 @@ describe('gameLoop', () => {
 
       expect(loop.isStopped).to.be.true;
     });
-
   });
-
-
-
-
 
   // --------------------------------------------------
   // frame
   // --------------------------------------------------
   describe('frame', () => {
-
-    it('should call the update function and pass it dt', (done) => {
+    it('should call the update function and pass it dt', done => {
       loop = GameLoop({
         update: sinon.spy(),
         render: noop,
@@ -112,12 +115,12 @@ describe('gameLoop', () => {
 
       setTimeout(() => {
         expect(loop.update.called).to.be.true;
-        expect(loop.update.getCall(0).args[0]).to.equal(1/60);
+        expect(loop.update.getCall(0).args[0]).to.equal(1 / 60);
         done();
       }, 250);
     });
 
-    it('should call the render function', (done) => {
+    it('should call the render function', done => {
       loop = GameLoop({
         render: sinon.spy(),
         clearCanvas: false
@@ -135,7 +138,9 @@ describe('gameLoop', () => {
       let count = 0;
 
       loop = GameLoop({
-        update: function(time) { count++; },
+        update: function (time) {
+          count++;
+        },
         render: noop,
         clearCanvas: false
       });
@@ -150,28 +155,32 @@ describe('gameLoop', () => {
       let count = 0;
 
       loop = GameLoop({
-        update: function(time) { count++; },
+        update: function (time) {
+          count++;
+        },
         render: noop,
         clearCanvas: false
       });
 
-      loop._last = performance.now() - (1E3/60) * 2.5;
+      loop._last = performance.now() - (1e3 / 60) * 2.5;
       loop._frame();
 
       expect(count).to.equal(2);
     });
 
-    it('should change the frame rate if passed fps', function() {
+    it('should change the frame rate if passed fps', function () {
       let count = 0;
 
       loop = GameLoop({
-        update: function(time) { count++; },
+        update: function (time) {
+          count++;
+        },
         render: noop,
         clearCanvas: false,
         fps: 30
       });
 
-      loop._last = performance.now() - (1E3/60) * 2.5;
+      loop._last = performance.now() - (1e3 / 60) * 2.5;
       loop._frame();
 
       expect(count).to.equal(1);
@@ -185,7 +194,7 @@ describe('gameLoop', () => {
 
       sinon.stub(context, 'clearRect').callsFake(noop);
 
-      loop._last = performance.now() - (1E3/60);
+      loop._last = performance.now() - 1e3 / 60;
       loop._frame();
 
       expect(context.clearRect.called).to.be.true;
@@ -193,7 +202,7 @@ describe('gameLoop', () => {
       context.clearRect.restore();
     });
 
-    it('should not clear the canvas if clearCanvas is false', function() {
+    it('should not clear the canvas if clearCanvas is false', function () {
       loop = GameLoop({
         render: noop,
         clearCanvas: false
@@ -202,7 +211,7 @@ describe('gameLoop', () => {
 
       sinon.stub(context, 'clearRect').callsFake(noop);
 
-      loop._last = performance.now() - (1E3/60);
+      loop._last = performance.now() - 1e3 / 60;
       loop._frame();
 
       expect(context.clearRect.called).to.be.false;
@@ -214,7 +223,7 @@ describe('gameLoop', () => {
       let context = {
         canvas: {
           width: 0,
-          height: 0,
+          height: 0
         },
         clearRect: sinon.stub().callsFake(noop)
       };
@@ -224,7 +233,7 @@ describe('gameLoop', () => {
         context
       });
 
-      loop._last = performance.now() - (1E3/60);
+      loop._last = performance.now() - 1e3 / 60;
       loop._frame();
 
       expect(context.clearRect.called).to.be.true;
@@ -236,12 +245,39 @@ describe('gameLoop', () => {
       loop = GameLoop({
         render: noop
       });
-      loop._last = performance.now() - (1E3/60);
+      loop._last = performance.now() - 1e3 / 60;
       loop._frame();
 
       throw new Error('should not get here');
     });
 
-  });
+    it('should not update if page is blurred', done => {
+      loop = GameLoop({
+        update() {
+          throw new Error('should not get here');
+        },
+        render: noop
+      });
+      simulateEvent('blur');
+      loop._last = performance.now() - 1e3 / 60;
+      loop._frame();
 
+      setTimeout(done, 100);
+    });
+
+    it('should update if page is blurred when blur is true', done => {
+      loop = GameLoop({
+        blur: true,
+        update() {
+          done();
+        },
+        render: noop
+      });
+      simulateEvent('blur');
+      loop._last = performance.now() - 1e3 / 60;
+      loop._frame();
+
+      throw new Error('should not get here');
+    });
+  });
 });

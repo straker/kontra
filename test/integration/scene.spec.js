@@ -1,9 +1,8 @@
-import Scene from '../../src/scene.js'
-import TileEngine from '../../src/tileEngine.js'
-import { init, getCanvas } from '../../src/core.js'
+import Scene from '../../src/scene.js';
+import TileEngine from '../../src/tileEngine.js';
+import { init, getCanvas } from '../../src/core.js';
 
 describe('Scene integration', () => {
-
   before(() => {
     if (!getCanvas()) {
       let canvas = document.createElement('canvas');
@@ -32,5 +31,4 @@ describe('Scene integration', () => {
 
     expect(spy.called).to.be.true;
   });
-
 });

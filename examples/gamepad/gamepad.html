@@ -5,6 +5,7 @@
   <script src="../../kontra.js"></script>
 </head>
 <body>
+  <div><b>NOTE:</b>Gamepad support requires using a secure context (HTTPS).</div>
   <canvas id="game" width="600" height="400" style="background: #333331"></canvas>
   <script id="code">
     // initialize the game and setup the canvas
@@ -12,6 +13,13 @@
 
     // initialize gamepad events
     kontra.initGamepad();
+
+    kontra.onGamepad('south', () => {
+      console.log('generic callback');
+    }, { handler: 'gamepadup' });
+    kontra.onGamepad('south', () => {
+      console.log('gamepad callback');
+    }, { gamepad: 0, handler: 'gamepadup' });
 
     // create a basic sprite with a velocity
     window.sprite = kontra.Sprite({
@@ -26,17 +34,17 @@
       // pass a custom update function to the sprite
       update: function() {
         // move the sprite with the gamepad
-        if (kontra.gamepadPressed(0, 'up')) {
+        if (kontra.gamepadPressed('dpadup')) {
           this.y -= this.dy;
         }
-        else if (kontra.gamepadPressed(0, 'down')) {
+        else if (kontra.gamepadPressed('dpaddown')) {
           this.y += this.dy;
         }
 
-        if (kontra.gamepadPressed(0, 'left')) {
+        if (kontra.gamepadPressed('dpadleft')) {
           this.x -= this.dx;
         }
-        else if (kontra.gamepadPressed(0, 'right')) {
+        else if (kontra.gamepadPressed('dpadright')) {
           this.x += this.dx;
         }
 

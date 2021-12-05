@@ -1,7 +1,7 @@
 /**
  * A simple gamepad API. You can use it move the main sprite or respond to gamepad events.
  *
- * *NOTE:* Gamepad support requires using a secure context (HTTPS) and the [GameLoop](/api/gameLoop).
+ * *NOTE:* Gamepad support requires using a secure context (HTTPS) and the [GameLoop](/api/gameLoop) (since the gamepad state must be checked every frame as there are no global event listeners for gamepad button / axes events).
  *
  * ```js
  * import { initGamepad, GameLoop, gamepadPressed } from 'kontra';
@@ -114,6 +114,75 @@ function blurEventHandler() {
 }
 
 /**
+ * Update the gamepad state. Call this function every frame only if you are not using the [GameLoop](/api/gameLoop). Otherwise it is called automatically.
+ *
+ * ```js
+ * import { initGamepad, updateGamepad, gamepadPressed } from 'kontra';
+ *
+ * initGamepad();
+ *
+ * function update() {
+ *   // not using GameLoop so need to manually call update state
+ *   updateGamepad();
+ *
+ *   if (gamepadPressed('dpadleft')) {
+ *     // move left
+ *   }
+ * }
+ *
+ * ```
+ * @function updateGamepad
+ */
+export function updateGamepad() {
+  // in Chrome this a GamepadList but in Firefox it's an array
+  let pads = navigator.getGamepads
+    ? navigator.getGamepads()
+    : navigator.webkitGetGamepads
+    ? navigator.webkitGetGamepads
+    : [];
+
+  for (let i = 0; i < pads.length; i++) {
+    let gamepad = pads[i];
+
+    // a GamepadList will have a default length of 4 but use null for any index
+    // that doesn't have a gamepad connected
+    if (!gamepad) {
+      continue;
+    }
+
+    gamepad.buttons.forEach((button, index) => {
+      let buttonName = gamepadMap[index];
+      let { pressed } = button;
+      let { pressedButtons } = gamepads[gamepad.index];
+      let state = pressedButtons[buttonName];
+
+      // if the button was not pressed before and is now pressed that's a
+      // gamepaddown event
+      if (!state && pressed) {
+        [gamepaddownCallbacks[gamepad.index], gamepaddownCallbacks].map(callback => {
+          callback?.[buttonName]?.(gamepad, button);
+        });
+      }
+      // if the button was pressed before and is now not pressed that's a
+      // gamepadup event
+      else if (state && !pressed) {
+        [gamepadupCallbacks[gamepad.index], gamepadupCallbacks].map(callback => {
+          callback?.[buttonName]?.(gamepad, button);
+        });
+      }
+
+      pressedButtons[buttonName] = pressed;
+    });
+
+    let { axes } = gamepads[gamepad.index];
+    axes.leftstickx = gamepad.axes[0];
+    axes.leftsticky = gamepad.axes[1];
+    axes.rightstickx = gamepad.axes[2];
+    axes.rightsticky = gamepad.axes[3];
+  }
+}
+
+/**
  * Initialize gamepad event listeners. This function must be called before using other gamepad functions.
  * @function initGamepad
  */
@@ -123,54 +192,7 @@ export function initGamepad() {
   window.addEventListener('blur', blurEventHandler);
 
   // update gamepad state each frame
-  on('tick', () => {
-    // in Chrome this a GamepadList but in Firefox it's an array
-    let pads = navigator.getGamepads
-      ? navigator.getGamepads()
-      : navigator.webkitGetGamepads
-      ? navigator.webkitGetGamepads
-      : [];
-
-    for (let i = 0; i < pads.length; i++) {
-      let gamepad = pads[i];
-
-      // a GamepadList will have a default length of 4 but use null for any index
-      // that doesn't have a gamepad connected
-      if (!gamepad) {
-        continue;
-      }
-
-      gamepad.buttons.forEach((button, index) => {
-        let buttonName = gamepadMap[index];
-        let { pressed } = button;
-        let { pressedButtons } = gamepads[gamepad.index];
-        let state = pressedButtons[buttonName];
-
-        // if the button was not pressed before and is now pressed that's a
-        // gamepaddown event
-        if (!state && pressed) {
-          [gamepaddownCallbacks[gamepad.index], gamepaddownCallbacks].map(callback => {
-            callback?.[buttonName]?.(gamepad, button);
-          });
-        }
-        // if the button was pressed before and is now not pressed that's a
-        // gamepadup event
-        else if (state && !pressed) {
-          [gamepadupCallbacks[gamepad.index], gamepadupCallbacks].map(callback => {
-            callback?.[buttonName]?.(gamepad, button);
-          });
-        }
-
-        pressedButtons[buttonName] = pressed;
-      });
-
-      let { axes } = gamepads[gamepad.index];
-      axes.leftstickx = gamepad.axes[0];
-      axes.leftsticky = gamepad.axes[1];
-      axes.rightstickx = gamepad.axes[2];
-      axes.rightsticky = gamepad.axes[3];
-    }
-  });
+  on('tick', updateGamepad);
 }
 
 /**

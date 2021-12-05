@@ -18,6 +18,7 @@ export { default as GameLoop } from './gameLoop.js';
 export { default as GameObject, GameObjectClass } from './gameObject.js';
 export {
   gamepadMap,
+  updateGamepad,
   initGamepad,
   onGamepad,
   offGamepad,

@@ -14,13 +14,6 @@
     // initialize gamepad events
     kontra.initGamepad();
 
-    kontra.onGamepad('south', () => {
-      console.log('generic callback');
-    }, { handler: 'gamepadup' });
-    kontra.onGamepad('south', () => {
-      console.log('gamepad callback');
-    }, { gamepad: 0, handler: 'gamepadup' });
-
     // create a basic sprite with a velocity
     window.sprite = kontra.Sprite({
       x: 300,

@@ -18,6 +18,7 @@ import GameLoop from './gameLoop.js';
 import GameObject, { GameObjectClass } from './gameObject.js';
 import {
   gamepadMap,
+  updateGamepad,
   initGamepad,
   onGamepad,
   offGamepad,
@@ -94,6 +95,7 @@ let kontra = {
   GameObjectClass,
 
   gamepadMap,
+  updateGamepad,
   initGamepad,
   onGamepad,
   offGamepad,

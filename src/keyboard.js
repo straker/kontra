@@ -11,7 +11,7 @@ import { noop } from './utils.js';
  * initKeys();
  *
  * function update() {
- *   if (keyPressed('left')) {
+ *   if (keyPressed('arrowleft')) {
  *     // move left
  *   }
  * }
@@ -24,7 +24,7 @@ import { noop } from './utils.js';
  *
  * - a-z
  * - 0-9
- * - enter, esc, space, left, up, right, down
+ * - enter, esc, space, arrowleft, arrowup, arrowright, arrowdown
  * @sectionName Available Keys
  */
 
@@ -112,12 +112,12 @@ export function initKeys() {
   for (i = 0; i < 26; i++) {
     // rollupjs considers this a side-effect (for now), so we'll do it
     // in the initKeys function
-    keyMap[i + 65] = keyMap['Key' + String.fromCharCode(i + 65)] = String.fromCharCode(i + 97);
+    keyMap['Key' + String.fromCharCode(i + 65)] = String.fromCharCode(i + 97);
   }
 
   // numeric keys
   for (i = 0; i < 10; i++) {
-    keyMap[48 + i] = keyMap['Digit' + i] = '' + i;
+    keyMap['Digit' + i] = keyMap['Numpad' + i] = '' + i;
   }
 
   window.addEventListener('keydown', keydownEventHandler);
@@ -137,7 +137,7 @@ export function initKeys() {
  *
  * onKey('p', function(e) {
  *   // pause the game
- * }, 'keyup');
+ * });
  * onKey(['enter', 'space'], function(e) {
  *   // fire gun
  * });
@@ -175,8 +175,7 @@ export function onKey(keys, callback, { handler = 'keydown', preventDefault = tr
  */
 export function offKey(keys, { handler = 'keydown' } = {}) {
   let callbacks = handler == 'keydown' ? keydownCallbacks : keyupCallbacks;
-  // 0 is the smallest falsy value
-  [].concat(keys).map(key => (callbacks[key] = 0));
+  [].concat(keys).map(key => delete callbacks[key]);
 }
 
 /**

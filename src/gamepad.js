@@ -222,7 +222,7 @@ export function initGamepad() {
  * ```
  * @function onGamepad
  *
- * @param {String|String[]} buttons - Button or buttons to regsiter callback for.
+ * @param {String|String[]} buttons - Button or buttons to register callback for.
  * @param {(gamepad: Gamepad, button: GamepadButton) => void} callback - The function to be called when the button is pressed.
  * @param {Object} [options] - Register options.
  * @param {Number} [options.gamepad] - Gamepad index. Defaults to registerting for all gamepads.

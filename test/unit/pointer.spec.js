@@ -585,10 +585,10 @@ describe('pointer', () => {
         emit('tick');
 
         // wrong canvas
-        simulateEvent('mousemove', { identifier: 0, clientX: 105, clientY: 55 }, otherCanvas);
+        simulateEvent('mousemove', { identifier: 0, clientX: 105, clientY: 55 }, canvas);
         expect(obj.onOver.called).to.false;
 
-        simulateEvent('mousemove', { identifier: 0, clientX: 105, clientY: 55 }, canvas);
+        simulateEvent('mousemove', { identifier: 0, clientX: 105, clientY: 55 }, otherCanvas);
         expect(obj.onOver.called).to.be.true;
       });
     });
@@ -757,10 +757,10 @@ describe('pointer', () => {
           // wrong canvas
           event.clientX = 105;
           event.clientY = 55;
-          simulateEvent(eventName, config, otherCanvas);
+          simulateEvent(eventName, config, canvas);
           expect(obj[eventHandler].called).to.false;
 
-          simulateEvent(eventName, config, canvas);
+          simulateEvent(eventName, config, otherCanvas);
           expect(obj[eventHandler].called).to.be.true;
         });
 

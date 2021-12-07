@@ -305,7 +305,7 @@ export function loadImage(url) {
  * ```
  * @function loadAudio
  *
- * @param {String} url - The URL to the Audio file.
+ * @param {String|String[]} url - The URL to the Audio file.
  *
  * @returns {Promise<HTMLAudioElement>} A deferred promise. Promise resolves with the Audio.
  */
@@ -417,7 +417,7 @@ export function loadData(url) {
  * ```
  * @function load
  *
- * @param {...String[]} urls - Comma separated list of asset urls to load.
+ * @param {...(String|String[])[]} urls - Comma separated list of asset urls to load.
  *
  * @returns {Promise<any[]>} A deferred promise. Resolves with all the loaded assets.
  */

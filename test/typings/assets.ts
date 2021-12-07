@@ -17,6 +17,10 @@ kontra.loadAudio('./path/to/audio.mp3')
   .then(audio => {
     let song: HTMLAudioElement = audio;
   });
+kontra.loadAudio(['./path/to/audio.mp3', './path/to/audio.wav'])
+  .then(audio => {
+    let song: HTMLAudioElement = audio;
+  });
 kontra.loadData('./path/to/data.txt')
   .then(data => {
     let txt: string = data;
@@ -32,7 +36,7 @@ kontra.load('./path/to/img.png')
   });
 kontra.load(
   './path/to/img.png',
-  './path/to/audio.mp3',
+  ['./path/to/audio.mp3', './path/to/audio.wav'],
   './path/to/data.txt',
   './path/to/data.json'
 )

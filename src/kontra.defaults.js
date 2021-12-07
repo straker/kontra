@@ -51,8 +51,8 @@ import {
   track,
   untrack,
   pointerOver,
-  onPointerDown,
-  onPointerUp,
+  onPointer,
+  offPointer,
   pointerPressed
 } from './pointer.js';
 import Pool, { PoolClass } from './pool.js';
@@ -139,8 +139,8 @@ let kontra = {
   track,
   untrack,
   pointerOver,
-  onPointerDown,
-  onPointerUp,
+  onPointer,
+  offPointer,
   pointerPressed,
 
   Pool,

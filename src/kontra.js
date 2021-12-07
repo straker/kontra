@@ -51,8 +51,8 @@ export {
   track,
   untrack,
   pointerOver,
-  onPointerDown,
-  onPointerUp,
+  onPointer,
+  offPointer,
   pointerPressed
 } from './pointer.js';
 export { default as Pool, PoolClass } from './pool.js';

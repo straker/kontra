@@ -103,8 +103,8 @@ describe('kontra', () => {
     expect(kontraExports.track).to.exist;
     expect(kontraExports.untrack).to.exist;
     expect(kontraExports.pointerOver).to.exist;
-    expect(kontraExports.onPointerDown).to.exist;
-    expect(kontraExports.onPointerUp).to.exist;
+    expect(kontraExports.onPointer).to.exist;
+    expect(kontraExports.offPointer).to.exist;
     expect(kontraExports.pointerPressed).to.exist;
   });
 

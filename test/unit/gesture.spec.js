@@ -54,6 +54,22 @@ describe('gesture', () => {
   });
 
   // --------------------------------------------------
+  // offGesture
+  // --------------------------------------------------
+  describe('offGesture', () => {
+    before(() => {
+      gesture.initGesture();
+    });
+
+    it('should remove the listener', () => {
+      function foo() {}
+      gesture.onGesture('swipeleft', foo);
+      gesture.offGesture('swipeleft', foo);
+      expect(gesture.callbacks.swipeleft).to.equal(0);
+    });
+  });
+
+  // --------------------------------------------------
   // swipe
   // --------------------------------------------------
   describe('swipe', () => {

@@ -45,6 +45,16 @@ describe('kontra.defaults', () => {
     expect(kontra.GameObject).to.exist;
   });
 
+  it('should add gamepad api', () => {
+    expect(kontra.gamepadMap).to.exist;
+    expect(kontra.updateGamepad).to.exist;
+    expect(kontra.initGamepad).to.exist;
+    expect(kontra.onGamepad).to.exist;
+    expect(kontra.offGamepad).to.exist;
+    expect(kontra.gamepadPressed).to.exist;
+    expect(kontra.gamepadAxis).to.exist;
+  });
+
   it('should add gesture api', () => {
     expect(kontra.gestureMap).to.exist;
     expect(kontra.initGesture).to.exist;

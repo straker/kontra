@@ -16,6 +16,15 @@ import { init, getCanvas, getContext } from './core.js';
 import { on, off, emit } from './events.js';
 import GameLoop from './gameLoop.js';
 import GameObject, { GameObjectClass } from './gameObject.js';
+import {
+  gamepadMap,
+  updateGamepad,
+  initGamepad,
+  onGamepad,
+  offGamepad,
+  gamepadPressed,
+  gamepadAxis
+} from './gamepad.js';
 import { gestureMap, initGesture, onGesture } from './gesture.js';
 import Grid, { GridClass } from './grid.js';
 import {
@@ -84,6 +93,14 @@ let kontra = {
   GameLoop,
   GameObject,
   GameObjectClass,
+
+  gamepadMap,
+  updateGamepad,
+  initGamepad,
+  onGamepad,
+  offGamepad,
+  gamepadPressed,
+  gamepadAxis,
 
   gestureMap,
   initGesture,

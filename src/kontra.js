@@ -16,6 +16,15 @@ export { init, getCanvas, getContext } from './core.js';
 export { on, off, emit } from './events.js';
 export { default as GameLoop } from './gameLoop.js';
 export { default as GameObject, GameObjectClass } from './gameObject.js';
+export {
+  gamepadMap,
+  updateGamepad,
+  initGamepad,
+  onGamepad,
+  offGamepad,
+  gamepadPressed,
+  gamepadAxis
+} from './gamepad.js';
 export { gestureMap, initGesture, onGesture } from './gesture.js';
 export { default as Grid, GridClass } from './grid.js';
 export {

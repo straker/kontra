@@ -13,6 +13,7 @@
     "kontra.d.ts"
   ],
   "scripts": {
+    "start": "http-server -S -C cert.pem",
     "test": "karma start --single-run",
     "test:watch": "karma start",
     "test:permutations": "node test/permutations",
@@ -58,6 +59,7 @@
     "gulp-size": "^4.0.1",
     "gulp-terser": "^2.1.0",
     "husky": "^7.0.2",
+    "http-server": "^0.12.3",
     "karma": "^6.3.4",
     "karma-chai": "^0.1.0",
     "karma-chrome-launcher": "^3.1.0",

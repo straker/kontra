@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Gamepad</title>
+  <script src="../../kontra.js"></script>
+</head>
+<body>
+  <div><b>NOTE:</b>Gamepad support requires using a secure context (HTTPS).</div>
+  <canvas id="game" width="600" height="400" style="background: #333331"></canvas>
+  <script id="code">
+    // initialize the game and setup the canvas
+    let { canvas, context } = kontra.init();
+
+    // initialize gamepad events
+    kontra.initGamepad();
+
+    // create a basic sprite with a velocity
+    window.sprite = kontra.Sprite({
+      x: 300,
+      y: 200,
+      anchor: { x: 0.5, y: 0.5 },
+      dx: 3,
+      dy: 3,
+      width: 20,
+      height: 40,
+      color: 'red',
+      // pass a custom update function to the sprite
+      update: function() {
+        // move the sprite with the gamepad
+        if (kontra.gamepadPressed('dpadup')) {
+          this.y -= this.dy;
+        }
+        else if (kontra.gamepadPressed('dpaddown')) {
+          this.y += this.dy;
+        }
+
+        if (kontra.gamepadPressed('dpadleft')) {
+          this.x -= this.dx;
+        }
+        else if (kontra.gamepadPressed('dpadright')) {
+          this.x += this.dx;
+        }
+
+        // reset the sprites position when it reaches the edge of the game
+        if (this.x > canvas.width) {
+          this.x = -this.width;
+        }
+        else if (this.x < -this.width) {
+          this.x = canvas.width;
+        }
+
+        if (this.y > canvas.height) {
+          this.y = -this.height;
+        }
+        else if (this.y < -this.height) {
+          this.y = canvas.height;
+        }
+      }
+    });
+
+    // create the game loop to update and render the sprite
+    window.loop = kontra.GameLoop({
+      update: function() {
+        sprite.update();
+      },
+      render: function() {
+        sprite.render();
+      }
+    });
+
+    // start the loop
+    loop.start();
+  </script>
+  <script src="../prism/codeOutput.js"></script>
+</body>
+</html>

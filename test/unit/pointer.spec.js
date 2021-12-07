@@ -706,6 +706,17 @@ describe('pointer', () => {
           expect(spy.called).to.be.true;
         });
 
+        it(`should unregister the ${pointerHandler} function`, () => {
+          let spy = sinon.spy();
+          pointer.onPointer(pointerHandler, spy);
+          pointer.offPointer(pointerHandler);
+          event.clientX = 100;
+          event.clientY = 50;
+          simulateEvent(eventName, config);
+
+          expect(spy.called).to.be.false;
+        });
+
         it(`should call the objects ${eventHandler} function if it is the target`, () => {
           object[eventHandler] = sinon.spy();
           event.clientX = 105;

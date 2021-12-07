@@ -13,6 +13,7 @@ describe('gesture', () => {
     expect(gesture.gestureMap).to.be.an('object');
     expect(gesture.initGesture).to.be.an('function');
     expect(gesture.onGesture).to.be.an('function');
+    expect(gesture.offGesture).to.be.an('function');
   });
 
   // --------------------------------------------------

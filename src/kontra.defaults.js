@@ -25,7 +25,7 @@ import {
   gamepadPressed,
   gamepadAxis
 } from './gamepad.js';
-import { gestureMap, initGesture, onGesture } from './gesture.js';
+import { gestureMap, initGesture, onGesture, offGesture } from './gesture.js';
 import Grid, { GridClass } from './grid.js';
 import {
   radToDeg,
@@ -105,6 +105,7 @@ let kontra = {
   gestureMap,
   initGesture,
   onGesture,
+  offGesture,
 
   Grid,
   GridClass,

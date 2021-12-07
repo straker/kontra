@@ -77,6 +77,7 @@ describe('kontra', () => {
     expect(kontraExports.gestureMap).to.exist;
     expect(kontraExports.initGesture).to.exist;
     expect(kontraExports.onGesture).to.exist;
+    expect(kontraExports.offGesture).to.exist;
   });
 
   it('should export grid api', () => {

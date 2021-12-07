@@ -59,6 +59,7 @@ describe('kontra.defaults', () => {
     expect(kontra.gestureMap).to.exist;
     expect(kontra.initGesture).to.exist;
     expect(kontra.onGesture).to.exist;
+    expect(kontra.offGesture).to.exist;
   });
 
   it('should add grid api', () => {

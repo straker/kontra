@@ -65,7 +65,7 @@ let gamepadupCallbacks = {};
  *   // handle west face button
  * }
  * ```
- * @property {{[key: number]: String}} keyMap
+ * @property {{[key: number]: String}} gamepadMap
  */
 export let gamepadMap = {
   0: 'south',
@@ -144,8 +144,8 @@ export function updateGamepad() {
   for (let i = 0; i < pads.length; i++) {
     let gamepad = pads[i];
 
-    // a GamepadList will have a default length of 4 but use null for any index
-    // that doesn't have a gamepad connected
+    // a GamepadList will have a default length of 4 but use null for
+    // any index that doesn't have a gamepad connected
     if (!gamepad) {
       continue;
     }
@@ -156,15 +156,15 @@ export function updateGamepad() {
       let { pressedButtons } = gamepads[gamepad.index];
       let state = pressedButtons[buttonName];
 
-      // if the button was not pressed before and is now pressed that's a
-      // gamepaddown event
+      // if the button was not pressed before and is now pressed that's
+      // a gamepaddown event
       if (!state && pressed) {
         [gamepaddownCallbacks[gamepad.index], gamepaddownCallbacks].map(callback => {
           callback?.[buttonName]?.(gamepad, button);
         });
       }
-      // if the button was pressed before and is now not pressed that's a
-      // gamepadup event
+      // if the button was pressed before and is now not pressed that's
+      // a gamepadup event
       else if (state && !pressed) {
         [gamepadupCallbacks[gamepad.index], gamepadupCallbacks].map(callback => {
           callback?.[buttonName]?.(gamepad, button);
@@ -260,7 +260,7 @@ export function onGamepad(buttons, callback, { gamepad, handler = 'gamepaddown' 
  * @function offGamepad
  *
  * @param {String|String[]} buttons - Button or buttons to unregister callback for.
- * @param {Object} options - Unregister options.
+ * @param {Object} [options] - Unregister options.
  * @param {Number} [options.gamepad] - Gamepad index. Defaults to unregistering from all gamepads.
  * @param {'gamepaddown'|'gamepadup'} [options.handler='gamepaddown'] - Whether to unregister from gamepaddown or gamepadup event.
  */
@@ -270,11 +270,10 @@ export function offGamepad(buttons, { gamepad, handler = 'gamepaddown' } = {}) {
   // smaller than doing `Array.isArray(buttons) ? buttons : [buttons]`
   [].concat(buttons).map(button => {
     if (isNaN(gamepad)) {
-      // 0 is the smallest falsy value
-      callbacks[button] = 0;
+      delete callbacks[button];
     } else {
       callbacks[gamepad] = callbacks[gamepad] || {};
-      callbacks[gamepad][button] = 0;
+      delete callbacks[gamepad][button];
     }
   });
 }
@@ -310,7 +309,7 @@ export function offGamepad(buttons, { gamepad, handler = 'gamepaddown' } = {}) {
  * @function gamepadPressed
  *
  * @param {String} button - Button name to check for pressed state.
- * @param {Object} options - Pressed options.
+ * @param {Object} [options] - Pressed options.
  * @param {Number} [options.gamepad] - Index of the gamepad to check for pressed state.
  *
  * @returns {Boolean} `true` if the button is pressed, `false` otherwise.

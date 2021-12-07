@@ -6,22 +6,12 @@ import { callbacks as eventCallbacks } from '../../src/events.js';
 // --------------------------------------------------
 describe.only('gamepad', () => {
   /**
-   * Simulate a gamepad event.
-   * @param {string} type - Type of gamepad event.
+   * Simulate an event.
+   * @param {string} type - Type of event.
    * @param {object} [config] - Additional settings for the event.
    */
-  function simulateEvent(type, config) {
-    let evt;
-
-    // PhantomJS <2.0.0 throws an error for the `new Event` call, so we need to supply an
-    // alternative form of creating an event just for PhantomJS
-    // @see https://github.com/ariya/phantomjs/issues/11289#issuecomment-38880333
-    try {
-      evt = new Event(type);
-    } catch (e) {
-      evt = document.createEvent('Event');
-      evt.initEvent(type, true, false);
-    }
+  function simulateEvent(type, config, async = false) {
+    let evt = new Event(type);
 
     config = config || {};
     for (let prop in config) {
@@ -33,33 +23,63 @@ describe.only('gamepad', () => {
     return evt;
   }
 
-  // simulate gamepad object
-  let gamepads = [];
-  let gamepadStub = sinon.stub(navigator, 'getGamepads').returns(gamepads);
+  /**
+   * Simulate a gamepad event.
+   * @param {string} type - Type of gamepad event.
+   * @param {object} gamepad - Gamepad object.
+   * @param {number} gamepad.index - Index of the gamepad
+   * @param {Object[]} [gamepad.buttons] - GamepadButtons and their state
+   * @param {Number[]} [gamepad.axes] - Gamepad axes values
+   *
+   */
+  function simulateGamepadEvent(type, gamepad) {
+    let evt = new GamepadEvent(type);
 
-  function createGamepad(index) {
-    let gamepad = {
+    // evt.gamepad is read-only so we need to override it
+    Object.defineProperty(evt, 'gamepad', {
+      value: {
+        buttons: [],
+        axes: [],
+        ...gamepad
+      }
+    });
+
+    window.dispatchEvent(evt);
+
+    return evt;
+  }
+
+  // simulate gamepad object
+  let getGamepadsStub = [];
+  let gamepadStub;
+
+  function createGamepad(index = getGamepadsStub.length) {
+    let gamepadObj = {
+      index,
       connected: true,
       buttons: [],
       axes: [0, 0, 0, 0]
     };
     for (let i = 0; i < 16; i++) {
-      gamepad.buttons[i] = { pressed: false };
+      gamepadObj.buttons[i] = { pressed: false };
     }
 
-    if (index) {
-      gamepads[index] = gamepad;
-    } else {
-      gamepads.push(gamepad);
-    }
+    simulateGamepadEvent('gamepadconnected', gamepadObj);
+    getGamepadsStub[index] = gamepadObj;
   }
 
+  before(() => {
+    gamepadStub = sinon.stub(navigator, 'getGamepads').returns(getGamepadsStub);
+  });
+
   beforeEach(() => {
+    gamepad.initGamepad();
+
     // reset pressed buttons before each test
     simulateEvent('blur');
 
     // start with 1 gamepad connected
-    gamepads.length = 0;
+    getGamepadsStub.length = 0;
     createGamepad();
   });
 
@@ -68,13 +88,32 @@ describe.only('gamepad', () => {
   });
 
   it('should export api', () => {
-    expect(keyboard.gamepadMap).to.be.an('object');
-    expect(keyboard.updateGamepad).to.be.an('function');
-    expect(keyboard.initGamepad).to.be.an('function');
-    expect(keyboard.onGamepad).to.be.an('function');
-    expect(keyboard.offGamepad).to.be.an('function');
-    expect(keyboard.gamepadPressed).to.be.an('function');
-    expect(keyboard.gamepadAxis).to.be.an('function');
+    expect(gamepad.gamepadMap).to.be.an('object');
+    expect(gamepad.gamepadMap).to.deep.equal({
+      0: 'south',
+      1: 'east',
+      2: 'west',
+      3: 'north',
+      4: 'leftshoulder',
+      5: 'rightshoulder',
+      6: 'lefttrigger',
+      7: 'righttrigger',
+      8: 'select',
+      9: 'start',
+      10: 'leftstick',
+      11: 'rightstick',
+      12: 'dpadup',
+      13: 'dpaddown',
+      14: 'dpadleft',
+      15: 'dpadright'
+    });
+
+    expect(gamepad.updateGamepad).to.be.an('function');
+    expect(gamepad.initGamepad).to.be.an('function');
+    expect(gamepad.onGamepad).to.be.an('function');
+    expect(gamepad.offGamepad).to.be.an('function');
+    expect(gamepad.gamepadPressed).to.be.an('function');
+    expect(gamepad.gamepadAxis).to.be.an('function');
   });
 
   // --------------------------------------------------
@@ -82,188 +121,449 @@ describe.only('gamepad', () => {
   // --------------------------------------------------
   describe('initGamepad', () => {
     it('should add event listeners', () => {
+      let num = eventCallbacks.tick?.length || 0;
       let spy = sinon.spy(window, 'addEventListener');
 
-      keyboard.initGamepad();
+      gamepad.initGamepad();
 
       expect(spy.calledWith('gamepadconnected')).to.be.true;
       expect(spy.calledWith('gamepaddisconnected')).to.be.true;
       expect(spy.calledWith('blur')).to.be.true;
-      expect(eventCallbacks.tick.length).to.equal(1);
+      expect(eventCallbacks.tick.length).to.equal(num + 1);
 
       spy.restore();
     });
   });
 
   // --------------------------------------------------
-  // pressed
+  // onGamepad
   // --------------------------------------------------
-  //   describe('pressed', () => {
-  //     it('should return false when a key is not pressed', () => {
-  //       expect(keyboard.keyPressed('a')).to.be.false;
-  //       expect(keyboard.keyPressed('f1')).to.be.false;
-  //       expect(keyboard.keyPressed('numpad0')).to.be.false;
-  //     });
+  describe('onGamepad', () => {
+    describe('handler=gamepaddown', () => {
+      it('should call the callback when a button is pressed', () => {
+        let spy = sinon.spy();
+        gamepad.onGamepad('south', spy);
 
-  //     it('should return true for a single key', () => {
-  //       simulateEvent('keydown', { code: 'KeyA' });
+        getGamepadsStub[0].buttons[0].pressed = true;
+        gamepad.updateGamepad();
 
-  //       expect(keyboard.keyPressed('a')).to.be.true;
-  //     });
+        expect(spy.calledWith(getGamepadsStub[0], getGamepadsStub[0].buttons[0])).to.be.true;
+      });
 
-  //     it('should return false if the key is no longer pressed', () => {
-  //       simulateEvent('keydown', { code: 'KeyA' });
-  //       simulateEvent('keyup', { code: 'KeyA' });
+      it('should accept an array of buttons', () => {
+        let spy = sinon.spy();
+        gamepad.onGamepad(['south', 'north'], spy);
 
-  //       expect(keyboard.keyPressed('a')).to.be.false;
-  //     });
-  //   });
+        getGamepadsStub[0].buttons[0].pressed = true;
+        gamepad.updateGamepad();
 
-  //   // --------------------------------------------------
-  //   // bind
-  //   // --------------------------------------------------
-  //   describe('bind', () => {
-  //     // Defaults to keydown
-  //     describe('handler=keydown', () => {
-  //       it('should call the callback when a single key combination is pressed', done => {
-  //         keyboard.bindKeys('a', evt => {
-  //           done();
-  //         });
+        expect(spy.calledWith(getGamepadsStub[0], getGamepadsStub[0].buttons[0])).to.be.true;
+      });
 
-  //         simulateEvent('keydown', { code: 'KeyA' });
-  //       });
+      it('should accept a gamepad index', () => {
+        createGamepad();
 
-  //       it('should accept an array of key combinations to bind', done => {
-  //         keyboard.bindKeys(['a', 'b'], evt => {
-  //           done();
-  //         });
+        let spy = sinon.spy();
+        gamepad.onGamepad('south', spy, { gamepad: 1 });
 
-  //         simulateEvent('keydown', { code: 'KeyB' });
-  //       });
-  //     });
+        getGamepadsStub[1].buttons[0].pressed = true;
+        gamepad.updateGamepad();
 
-  //     describe('handler=keyup', () => {
-  //       const handler = 'keyup';
+        expect(spy.calledWith(getGamepadsStub[1], getGamepadsStub[1].buttons[0])).to.be.true;
+      });
 
-  //       it('should call the callback when a single key combination is pressed', done => {
-  //         keyboard.bindKeys(
-  //           'a',
-  //           evt => {
-  //             done();
-  //           },
-  //           { handler }
-  //         );
+      it('should allow global and specific callback', () => {
+        let globalSpy = sinon.spy();
+        let gamepadSpy = sinon.spy();
+        gamepad.onGamepad('south', globalSpy);
+        gamepad.onGamepad('south', gamepadSpy, { gamepad: 0 });
 
-  //         simulateEvent('keyup', { code: 'KeyA' });
-  //       });
+        getGamepadsStub[0].buttons[0].pressed = true;
+        gamepad.updateGamepad();
 
-  //       it('should accept an array of key combinations to bind', done => {
-  //         keyboard.bindKeys(
-  //           ['a', 'b'],
-  //           evt => {
-  //             done();
-  //           },
-  //           { handler }
-  //         );
+        expect(globalSpy.called).to.be.true;
+        expect(gamepadSpy.called).to.be.true;
+      });
 
-  //         simulateEvent('keyup', { code: 'KeyB' });
-  //       });
-  //     });
+      it('should not throw error if gamepad is not connected', () => {
+        function fn() {
+          gamepad.onGamepad('south', sinon.spy(), { gamepad: 1 });
+        }
 
-  //     describe('preventDefault=true', () => {
-  //       it('should call preventDefault on the event', done => {
-  //         keyboard.initGamepad();
-  //         let spy;
+        expect(fn).to.not.throw();
+      });
 
-  //         keyboard.bindKeys('a', evt => {
-  //           expect(spy.called).to.be.true;
-  //           done();
-  //         });
+      describe('multiple controllers', () => {
+        it('should call the global callback if any gamepad pressed the button', () => {
+          createGamepad();
+          createGamepad();
+          createGamepad();
 
-  //         let event = simulateEvent('keydown', { code: 'KeyA' }, true);
-  //         spy = sinon.spy(event, 'preventDefault');
-  //       });
-  //     });
+          let spy = sinon.spy();
+          gamepad.onGamepad('north', spy);
 
-  //     describe('preventDefault=false', () => {
-  //       it('should not call preventDefault on the event', done => {
-  //         keyboard.bindKeys(
-  //           'a',
-  //           evt => {
-  //             expect(evt.defaultPrevented).to.be.false;
-  //             done();
-  //           },
-  //           { preventDefault: false }
-  //         );
+          getGamepadsStub[3].buttons[3].pressed = true;
+          gamepad.updateGamepad();
 
-  //         simulateEvent('keydown', { code: 'KeyA' });
-  //       });
-  //     });
-  //   });
+          expect(spy.calledWith(getGamepadsStub[3], getGamepadsStub[3].buttons[3])).to.be.true;
+        });
 
-  //   // --------------------------------------------------
-  //   // unbind
-  //   // --------------------------------------------------
-  //   describe('unbind', () => {
-  //     // Defaults to keydown
-  //     describe('handler=keydown', () => {
-  //       it('should not call the callback when the combination has been unbound', () => {
-  //         keyboard.bindKeys('a', () => {
-  //           // this should never be called since the key combination was unbound
-  //           expect(false).to.be.true;
-  //         });
+        it('should not call gamepad callback if the gamepad did not press the button', () => {
+          createGamepad();
+          createGamepad();
+          createGamepad();
 
-  //         keyboard.unbindKeys('a');
+          let spy = sinon.spy();
+          gamepad.onGamepad('north', spy, { gamepad: 1 });
 
-  //         simulateEvent('keydown', { which: 65 });
-  //       });
+          getGamepadsStub[3].buttons[3].pressed = true;
+          gamepad.updateGamepad();
 
-  //       it('should accept an array of key combinations to unbind', () => {
-  //         keyboard.bindKeys(['a', 'b'], () => {
-  //           // this should never be called since the key combination was unbound
-  //           expect(false).to.be.true;
-  //         });
+          expect(spy.called).to.be.false;
+        });
+      });
+    });
 
-  //         keyboard.unbindKeys(['a', 'b']);
+    describe('handler=gamepadup', () => {
+      it('should call the callback when a button is released', () => {
+        let spy = sinon.spy();
+        gamepad.onGamepad('south', spy, { handler: 'gamepadup' });
 
-  //         simulateEvent('keydown', { which: 65 });
-  //         simulateEvent('keydown', { which: 66 });
-  //       });
-  //     });
+        getGamepadsStub[0].buttons[0].pressed = true;
+        gamepad.updateGamepad();
 
-  //     describe('handler=keyup', () => {
-  //       const handler = 'keyup';
+        expect(spy.called).to.be.false;
 
-  //       it('should not call the callback when the combination has been unbound', () => {
-  //         keyboard.bindKeys(
-  //           'a',
-  //           () => {
-  //             // this should never be called since the key combination was unbound
-  //             expect(false).to.be.true;
-  //           },
-  //           handler
-  //         );
+        getGamepadsStub[0].buttons[0].pressed = false;
+        gamepad.updateGamepad();
 
-  //         keyboard.unbindKeys('a');
+        expect(spy.calledWith(getGamepadsStub[0], getGamepadsStub[0].buttons[0])).to.be.true;
+      });
 
-  //         simulateEvent('keyup', { which: 65 });
-  //       });
+      it('should accept an array of buttons', () => {
+        let spy = sinon.spy();
+        gamepad.onGamepad(['south', 'north'], spy, { handler: 'gamepadup' });
 
-  //       it('should accept an array of key combinations to unbind', () => {
-  //         keyboard.bindKeys(
-  //           ['a', 'b'],
-  //           () => {
-  //             // this should never be called since the key combination was unbound
-  //             expect(false).to.be.true;
-  //           },
-  //           handler
-  //         );
+        getGamepadsStub[0].buttons[0].pressed = true;
+        gamepad.updateGamepad();
 
-  //         keyboard.unbindKeys(['a', 'b']);
+        expect(spy.called).to.be.false;
 
-  //         simulateEvent('keyup', { which: 65 });
-  //         simulateEvent('keyup', { which: 66 });
-  //       });
-  //     });
-  //   });
+        getGamepadsStub[0].buttons[0].pressed = false;
+        gamepad.updateGamepad();
+
+        expect(spy.calledWith(getGamepadsStub[0], getGamepadsStub[0].buttons[0])).to.be.true;
+      });
+
+      it('should accept a gamepad index', () => {
+        createGamepad();
+
+        let spy = sinon.spy();
+        gamepad.onGamepad('south', spy, { handler: 'gamepadup', gamepad: 1 });
+
+        getGamepadsStub[1].buttons[0].pressed = true;
+        gamepad.updateGamepad();
+        getGamepadsStub[1].buttons[0].pressed = false;
+        gamepad.updateGamepad();
+
+        expect(spy.calledWith(getGamepadsStub[1], getGamepadsStub[1].buttons[0])).to.be.true;
+      });
+
+      it('should allow global and specific callback', () => {
+        let globalSpy = sinon.spy();
+        let gamepadSpy = sinon.spy();
+        gamepad.onGamepad('south', globalSpy, { handler: 'gamepadup' });
+        gamepad.onGamepad('south', gamepadSpy, { handler: 'gamepadup', gamepad: 0 });
+
+        getGamepadsStub[0].buttons[0].pressed = true;
+        gamepad.updateGamepad();
+        getGamepadsStub[0].buttons[0].pressed = false;
+        gamepad.updateGamepad();
+
+        expect(globalSpy.called).to.be.true;
+        expect(gamepadSpy.called).to.be.true;
+      });
+
+      it('should not throw error if gamepad is not connected', () => {
+        function fn() {
+          gamepad.onGamepad('south', sinon.spy(), { handler: 'gamepadup', gamepad: 1 });
+        }
+
+        expect(fn).to.not.throw();
+      });
+    });
+  });
+
+  // --------------------------------------------------
+  // offGamepad
+  // --------------------------------------------------
+  describe('offGamepad', () => {
+    describe('handler=gamepaddown', () => {
+      it('should not call the callback when a button is pressed', () => {
+        let spy = sinon.spy();
+        gamepad.onGamepad('south', spy);
+        gamepad.offGamepad('south');
+
+        getGamepadsStub[0].buttons[0].pressed = true;
+        gamepad.updateGamepad();
+
+        expect(spy.called).to.be.false;
+      });
+
+      it('should accept an array of buttons', () => {
+        let spy = sinon.spy();
+        gamepad.onGamepad('south', spy);
+        gamepad.offGamepad(['south', 'north'], spy);
+
+        getGamepadsStub[0].buttons[0].pressed = true;
+        gamepad.updateGamepad();
+
+        expect(spy.called).to.be.false;
+      });
+
+      it('should accept a gamepad index', () => {
+        createGamepad();
+
+        let spy = sinon.spy();
+        gamepad.onGamepad('south', spy, { gamepad: 1 });
+        gamepad.offGamepad('south', { gamepad: 1 });
+
+        getGamepadsStub[1].buttons[0].pressed = true;
+        gamepad.updateGamepad();
+
+        expect(spy.called).to.be.false;
+      });
+
+      it('should allow global and specific callback', () => {
+        let globalSpy = sinon.spy();
+        let gamepadSpy = sinon.spy();
+        gamepad.onGamepad('south', globalSpy);
+        gamepad.onGamepad('south', gamepadSpy, { gamepad: 0 });
+
+        gamepad.offGamepad('south');
+        gamepad.offGamepad('south', { gamepad: 0 });
+
+        getGamepadsStub[0].buttons[0].pressed = true;
+        gamepad.updateGamepad();
+
+        expect(globalSpy.called).to.be.false;
+        expect(gamepadSpy.called).to.be.false;
+      });
+
+      it('should not throw error if gamepad is not connected', () => {
+        function fn() {
+          gamepad.offGamepad('south', { gamepad: 1 });
+        }
+
+        expect(fn).to.not.throw();
+      });
+    });
+
+    describe('handler=gamepadup', () => {
+      it('should not call the callback when a button is released', () => {
+        let spy = sinon.spy();
+        gamepad.onGamepad('south', spy, { handler: 'gamepadup' });
+        gamepad.offGamepad('south', { handler: 'gamepadup' });
+
+        getGamepadsStub[0].buttons[0].pressed = true;
+        gamepad.updateGamepad();
+        getGamepadsStub[0].buttons[0].pressed = false;
+        gamepad.updateGamepad();
+
+        expect(spy.called).to.be.false;
+      });
+
+      it('should accept an array of buttons', () => {
+        let spy = sinon.spy();
+        gamepad.onGamepad('south', spy, { handler: 'gamepadup' });
+        gamepad.offGamepad(['south', 'north'], { handler: 'gamepadup' });
+
+        getGamepadsStub[0].buttons[0].pressed = true;
+        gamepad.updateGamepad();
+        getGamepadsStub[0].buttons[0].pressed = false;
+        gamepad.updateGamepad();
+
+        expect(spy.called).to.be.false;
+      });
+
+      it('should accept a gamepad index', () => {
+        createGamepad();
+
+        let spy = sinon.spy();
+        gamepad.onGamepad('south', spy, { handler: 'gamepadup', gamepad: 1 });
+        gamepad.offGamepad('south', { handler: 'gamepadup', gamepad: 1 });
+
+        getGamepadsStub[1].buttons[0].pressed = true;
+        gamepad.updateGamepad();
+        getGamepadsStub[1].buttons[0].pressed = false;
+        gamepad.updateGamepad();
+
+        expect(spy.called).to.be.false;
+      });
+
+      it('should allow global and specific callback', () => {
+        let globalSpy = sinon.spy();
+        let gamepadSpy = sinon.spy();
+        gamepad.onGamepad('south', globalSpy, { handler: 'gamepadup' });
+        gamepad.onGamepad('south', gamepadSpy, { handler: 'gamepadup', gamepad: 0 });
+
+        gamepad.offGamepad('south', { handler: 'gamepadup' });
+        gamepad.offGamepad('south', { handler: 'gamepadup', gamepad: 0 });
+
+        getGamepadsStub[0].buttons[0].pressed = true;
+        gamepad.updateGamepad();
+        getGamepadsStub[0].buttons[0].pressed = false;
+        gamepad.updateGamepad();
+
+        expect(globalSpy.called).to.be.false;
+        expect(gamepadSpy.called).to.be.false;
+      });
+
+      it('should not throw error if gamepad is not connected', () => {
+        function fn() {
+          gamepad.offGamepad('south', { handler: 'gamepadup', gamepad: 1 });
+        }
+
+        expect(fn).to.not.throw();
+      });
+    });
+  });
+
+  // --------------------------------------------------
+  // gampadPressed
+  // --------------------------------------------------
+  describe('gamepadPressed', () => {
+    it('should return false if button is not pressed', () => {
+      expect(gamepad.gamepadPressed('south')).to.be.false;
+    });
+
+    it('should return true if button is pressed', () => {
+      getGamepadsStub[0].buttons[10].pressed = true;
+      gamepad.updateGamepad();
+
+      expect(gamepad.gamepadPressed('leftstick')).to.be.true;
+    });
+
+    it('should return false if button is released', () => {
+      getGamepadsStub[0].buttons[10].pressed = true;
+      gamepad.updateGamepad();
+      getGamepadsStub[0].buttons[10].pressed = false;
+      gamepad.updateGamepad();
+
+      expect(gamepad.gamepadPressed('leftstick')).to.be.false;
+    });
+
+    it('should allow gamepad index', () => {
+      createGamepad();
+
+      getGamepadsStub[1].buttons[0].pressed = true;
+      gamepad.updateGamepad();
+
+      expect(gamepad.gamepadPressed('south', { gamepad: 1 })).to.be.true;
+    });
+
+    it('should return true if any gamepad has button pressed', () => {
+      createGamepad();
+
+      getGamepadsStub[1].buttons[0].pressed = true;
+      gamepad.updateGamepad();
+
+      expect(gamepad.gamepadPressed('south')).to.be.true;
+    });
+
+    it('should return false if gamepad is not connected', () => {
+      expect(gamepad.gamepadPressed('south', { gamepad: 1 })).to.be.false;
+    });
+  });
+
+  // --------------------------------------------------
+  // gamepadAxis
+  // --------------------------------------------------
+  describe('gamepadAxis', () => {
+    it('should return the value of the gamepad axis', () => {
+      getGamepadsStub[0].axes[0] = 1;
+      gamepad.updateGamepad();
+
+      expect(gamepad.gamepadAxis('leftstickx', 0)).to.equal(1);
+    });
+
+    it('should return 0 by default', () => {
+      expect(gamepad.gamepadAxis('leftstickx', 0)).to.equal(0);
+    });
+
+    it('should not throw error if gamepad is not connected', () => {
+      function fn() {
+        gamepad.gamepadAxis('leftstickx', 1);
+      }
+
+      expect(fn).to.not.throw();
+    });
+  });
+
+  // --------------------------------------------------
+  // updateGamepad
+  // --------------------------------------------------
+  describe('updateGamepad', () => {
+    it('should fire gamepaddown if button was pressed', () => {
+      let spy = sinon.spy();
+      gamepad.onGamepad('south', spy);
+
+      getGamepadsStub[0].buttons[0].pressed = true;
+      gamepad.updateGamepad();
+
+      expect(spy.called).to.be.true;
+    });
+
+    it('should not fire gamepaddown if button was pressed already', () => {
+      getGamepadsStub[0].buttons[0].pressed = true;
+      gamepad.updateGamepad();
+
+      let spy = sinon.spy();
+      gamepad.onGamepad('south', spy);
+
+      getGamepadsStub[0].buttons[0].pressed = true;
+      gamepad.updateGamepad();
+
+      expect(spy.called).to.be.false;
+    });
+
+    it('should fire gamepadup if button was released', () => {
+      getGamepadsStub[0].buttons[0].pressed = true;
+      gamepad.updateGamepad();
+
+      let spy = sinon.spy();
+      gamepad.onGamepad('south', spy, { handler: 'gamepadup' });
+
+      getGamepadsStub[0].buttons[0].pressed = false;
+      gamepad.updateGamepad();
+
+      expect(spy.called).to.be.true;
+    });
+
+    it('should not fire gamepadup if button was released already', () => {
+      getGamepadsStub[0].buttons[0].pressed = false;
+      gamepad.updateGamepad();
+
+      let spy = sinon.spy();
+      gamepad.onGamepad('south', spy, { handler: 'gamepadup' });
+
+      getGamepadsStub[0].buttons[0].pressed = false;
+      gamepad.updateGamepad();
+
+      expect(spy.called).to.be.false;
+    });
+
+    it('should set gamepad axes state', () => {
+      getGamepadsStub[0].axes[0] = 1;
+      getGamepadsStub[0].axes[1] = 2;
+      getGamepadsStub[0].axes[2] = 3;
+      getGamepadsStub[0].axes[3] = 4;
+      gamepad.updateGamepad();
+
+      expect(gamepad.gamepadAxis('leftstickx', 0)).to.equal(1);
+      expect(gamepad.gamepadAxis('leftsticky', 0)).to.equal(2);
+      expect(gamepad.gamepadAxis('rightstickx', 0)).to.equal(3);
+      expect(gamepad.gamepadAxis('rightsticky', 0)).to.equal(4);
+    });
+  });
 });

@@ -52,8 +52,8 @@ describe('keyboard', () => {
   it('should export api', () => {
     expect(keyboard.keyMap).to.be.an('object');
     expect(keyboard.initKeys).to.be.an('function');
-    expect(keyboard.bindKeys).to.be.an('function');
-    expect(keyboard.unbindKeys).to.be.an('function');
+    expect(keyboard.onKey).to.be.an('function');
+    expect(keyboard.offKey).to.be.an('function');
     expect(keyboard.keyPressed).to.be.an('function');
   });
 
@@ -103,7 +103,7 @@ describe('keyboard', () => {
     // Defaults to keydown
     describe('handler=keydown', () => {
       it('should call the callback when a single key combination is pressed', done => {
-        keyboard.bindKeys('a', evt => {
+        keyboard.onKey('a', evt => {
           done();
         });
 
@@ -111,7 +111,7 @@ describe('keyboard', () => {
       });
 
       it('should accept an array of key combinations to bind', done => {
-        keyboard.bindKeys(['a', 'b'], evt => {
+        keyboard.onKey(['a', 'b'], evt => {
           done();
         });
 
@@ -123,7 +123,7 @@ describe('keyboard', () => {
       const handler = 'keyup';
 
       it('should call the callback when a single key combination is pressed', done => {
-        keyboard.bindKeys(
+        keyboard.onKey(
           'a',
           evt => {
             done();
@@ -135,7 +135,7 @@ describe('keyboard', () => {
       });
 
       it('should accept an array of key combinations to bind', done => {
-        keyboard.bindKeys(
+        keyboard.onKey(
           ['a', 'b'],
           evt => {
             done();
@@ -152,7 +152,7 @@ describe('keyboard', () => {
         keyboard.initKeys();
         let spy;
 
-        keyboard.bindKeys('a', evt => {
+        keyboard.onKey('a', evt => {
           expect(spy.called).to.be.true;
           done();
         });
@@ -164,7 +164,7 @@ describe('keyboard', () => {
 
     describe('preventDefault=false', () => {
       it('should not call preventDefault on the event', done => {
-        keyboard.bindKeys(
+        keyboard.onKey(
           'a',
           evt => {
             expect(evt.defaultPrevented).to.be.false;
@@ -185,23 +185,23 @@ describe('keyboard', () => {
     // Defaults to keydown
     describe('handler=keydown', () => {
       it('should not call the callback when the combination has been unbound', () => {
-        keyboard.bindKeys('a', () => {
+        keyboard.onKey('a', () => {
           // this should never be called since the key combination was unbound
           expect(false).to.be.true;
         });
 
-        keyboard.unbindKeys('a');
+        keyboard.offKey('a');
 
         simulateEvent('keydown', { which: 65 });
       });
 
       it('should accept an array of key combinations to unbind', () => {
-        keyboard.bindKeys(['a', 'b'], () => {
+        keyboard.onKey(['a', 'b'], () => {
           // this should never be called since the key combination was unbound
           expect(false).to.be.true;
         });
 
-        keyboard.unbindKeys(['a', 'b']);
+        keyboard.offKey(['a', 'b']);
 
         simulateEvent('keydown', { which: 65 });
         simulateEvent('keydown', { which: 66 });
@@ -212,7 +212,7 @@ describe('keyboard', () => {
       const handler = 'keyup';
 
       it('should not call the callback when the combination has been unbound', () => {
-        keyboard.bindKeys(
+        keyboard.onKey(
           'a',
           () => {
             // this should never be called since the key combination was unbound
@@ -221,13 +221,13 @@ describe('keyboard', () => {
           handler
         );
 
-        keyboard.unbindKeys('a');
+        keyboard.offKey('a');
 
         simulateEvent('keyup', { which: 65 });
       });
 
       it('should accept an array of key combinations to unbind', () => {
-        keyboard.bindKeys(
+        keyboard.onKey(
           ['a', 'b'],
           () => {
             // this should never be called since the key combination was unbound
@@ -236,7 +236,7 @@ describe('keyboard', () => {
           handler
         );
 
-        keyboard.unbindKeys(['a', 'b']);
+        keyboard.offKey(['a', 'b']);
 
         simulateEvent('keyup', { which: 65 });
         simulateEvent('keyup', { which: 66 });

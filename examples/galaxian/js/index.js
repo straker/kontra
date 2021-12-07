@@ -24,7 +24,7 @@ let loop = kontra.GameLoop({
 });
 
 // pause/unpause game
-kontra.bindKeys('p', function () {
+kontra.onKey('p', function () {
   if (loop.isStopped) {
     loop.start();
     kontra.audioAssets.kick_shock.play();

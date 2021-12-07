@@ -85,8 +85,8 @@ describe('kontra.defaults', () => {
   it('should add keyboard api', () => {
     expect(kontra.keyMap).to.exist;
     expect(kontra.initKeys).to.exist;
-    expect(kontra.bindKeys).to.exist;
-    expect(kontra.unbindKeys).to.exist;
+    expect(kontra.onKey).to.exist;
+    expect(kontra.offKey).to.exist;
     expect(kontra.keyPressed).to.exist;
   });
 

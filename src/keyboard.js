@@ -36,11 +36,11 @@ let pressedKeys = {};
  * A map of [KeyboardEvent code values](https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/code/code_values) to key names. Add to this object to expand the list of [available keys](api/keyboard#available-keys).
  *
  * ```js
- * import { keyMap, bindKeys } from 'kontra';
+ * import { keyMap, onKey } from 'kontra';
  *
  * keyMap['ControlRight'] = 'ctrl';
  *
- * bindKeys('ctrl', function(e) {
+ * onKey('ctrl', function(e) {
  *   // handle ctrl key
  * });
  * ```
@@ -126,23 +126,23 @@ export function initKeys() {
 }
 
 /**
- * Bind a set of keys that will call the callback function when they are pressed. Takes a single key or an array of keys. Is passed the original KeyboardEvent as a parameter.
+ * Register a function to be called when a key is pressed. Takes a single key or an array of keys. Is passed the original [KeyboardEvent](https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent) as a parameter.
  *
  * By default, the default action will be prevented for any bound key. To not do this, pass the `preventDefault` option.
  *
  * ```js
- * import { initKeys, bindKeys } from 'kontra';
+ * import { initKeys, onKey } from 'kontra';
  *
  * initKeys();
  *
- * bindKeys('p', function(e) {
+ * onKey('p', function(e) {
  *   // pause the game
  * }, 'keyup');
- * bindKeys(['enter', 'space'], function(e) {
+ * onKey(['enter', 'space'], function(e) {
  *   // fire gun
  * });
  * ```
- * @function bindKeys
+ * @function onKey
  *
  * @param {String|String[]} keys - Key or keys to bind.
  * @param {(evt: KeyboardEvent) => void} callback - The function to be called when the key is pressed.
@@ -150,7 +150,7 @@ export function initKeys() {
  * @param {'keydown'|'keyup'} [options.handler=keydown] - Whether to bind to keydown or keyup events.
  * @param {Boolean} [options.preventDefault=true] - Call `event. preventDefault()` when the key is activated.
  */
-export function bindKeys(keys, callback, { handler = 'keydown', preventDefault = true } = {}) {
+export function onKey(keys, callback, { handler = 'keydown', preventDefault = true } = {}) {
   const callbacks = handler == 'keydown' ? keydownCallbacks : keyupCallbacks;
   // pd = preventDefault
   callback._pd = preventDefault;
@@ -159,21 +159,21 @@ export function bindKeys(keys, callback, { handler = 'keydown', preventDefault =
 }
 
 /**
- * Remove the callback function for a bound set of keys. Takes a single key or an array of keys.
+ * Unregister the callback function for a key. Takes a single key or an array of keys.
  *
  * ```js
- * import { unbindKeys } from 'kontra';
+ * import { offKey } from 'kontra';
  *
- * unbindKeys('left');
- * unbindKeys(['enter', 'space']);
+ * offKey('left');
+ * offKey(['enter', 'space']);
  * ```
- * @function unbindKeys
+ * @function offKey
  *
- * @param {String|String[]} keys - Key or keys to unbind.
- * @param {Object} [options] - Unbind options.
- * @param {'keydown'|'keyup'} [options.handler=keydown] - Whether to unbind from keydown or keyup events.
+ * @param {String|String[]} keys - Key or keys to unregister.
+ * @param {Object} [options] - unregister options.
+ * @param {'keydown'|'keyup'} [options.handler=keydown] - Whether to unregister from keydown or keyup events.
  */
-export function unbindKeys(keys, { handler = 'keydown' } = {}) {
+export function offKey(keys, { handler = 'keydown' } = {}) {
   const callbacks = handler == 'keydown' ? keydownCallbacks : keyupCallbacks;
   // 0 is the smallest falsy value
   [].concat(keys).map(key => (callbacks[key] = 0));

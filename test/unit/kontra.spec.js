@@ -86,8 +86,8 @@ describe('kontra', () => {
   it('should export keyboard api', () => {
     expect(kontraExports.keyMap).to.exist;
     expect(kontraExports.initKeys).to.exist;
-    expect(kontraExports.bindKeys).to.exist;
-    expect(kontraExports.unbindKeys).to.exist;
+    expect(kontraExports.onKey).to.exist;
+    expect(kontraExports.offKey).to.exist;
     expect(kontraExports.keyPressed).to.exist;
   });
 

@@ -43,7 +43,7 @@ import {
   collides,
   getWorldRect
 } from './helpers.js';
-import { keyMap, initKeys, bindKeys, unbindKeys, keyPressed } from './keyboard.js';
+import { keyMap, initKeys, onKey, offKey, keyPressed } from './keyboard.js';
 import { registerPlugin, unregisterPlugin, extendObject } from './plugin.js';
 import {
   initPointer,
@@ -126,8 +126,8 @@ let kontra = {
 
   keyMap,
   initKeys,
-  bindKeys,
-  unbindKeys,
+  onKey,
+  offKey,
   keyPressed,
 
   registerPlugin,

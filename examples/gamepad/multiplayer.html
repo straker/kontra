@@ -115,7 +115,7 @@
         id: 'lobby',
         children: lobbyChildren,
         onShow() {
-          kontra.onGamepad('south', () => {
+          kontra.onGamepad('south', (gamepad) => {
             // show a player joined the game
             if (gamepad.index > 0) {
               players[gamepad.index].joined = true;

@@ -51,10 +51,10 @@ export let keyMap = {
   Enter: 'enter',
   Escape: 'esc',
   Space: 'space',
-  ArrowLeft: 'left',
-  ArrowUp: 'up',
-  ArrowRight: 'right',
-  ArrowDown: 'down'
+  ArrowLeft: 'arrowleft',
+  ArrowUp: 'arrowup',
+  ArrowRight: 'arrowright',
+  ArrowDown: 'arrowdown'
 };
 
 /**
@@ -110,8 +110,8 @@ export function initKeys() {
   // alpha keys
   // @see https://stackoverflow.com/a/43095772/2124254
   for (i = 0; i < 26; i++) {
-    // rollupjs considers this a side-effect (for now), so we'll do it in the
-    // initKeys function
+    // rollupjs considers this a side-effect (for now), so we'll do it
+    // in the initKeys function
     keyMap[i + 65] = keyMap['Key' + String.fromCharCode(i + 65)] = String.fromCharCode(i + 97);
   }
 

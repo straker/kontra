@@ -43,6 +43,7 @@ import {
   collides,
   getWorldRect
 } from './helpers.js';
+import { initInput, onInput, offInput } from './input.js';
 import { keyMap, initKeys, onKey, offKey, keyPressed } from './keyboard.js';
 import { registerPlugin, unregisterPlugin, extendObject } from './plugin.js';
 import {
@@ -124,6 +125,10 @@ let kontra = {
   getStoreItem,
   collides,
   getWorldRect,
+
+  initInput,
+  onInput,
+  offInput,
 
   keyMap,
   initKeys,

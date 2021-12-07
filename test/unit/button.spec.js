@@ -2,6 +2,7 @@ import Button, { ButtonClass } from '../../src/button.js';
 import Text, { TextClass } from '../../src/text.js';
 import { initPointer, resetPointers } from '../../src/pointer.js';
 import { srOnlyStyle } from '../../src/utils.js';
+import { simulateEvent } from '../utils.js';
 
 // --------------------------------------------------
 // button
@@ -165,48 +166,27 @@ describe('button', () => {
   // keyboard events
   // --------------------------------------------------
   describe('keyboard events', () => {
-    function simulateEvent(type, config) {
-      let evt;
-
-      // PhantomJS <2.0.0 throws an error for the `new Event` call, so we need to supply an
-      // alternative form of creating an event just for PhantomJS
-      // @see https://github.com/ariya/phantomjs/issues/11289#issuecomment-38880333
-      try {
-        evt = new Event(type);
-      } catch (e) {
-        evt = document.createEvent('Event');
-        evt.initEvent(type, true, false);
-      }
-
-      config = config || {};
-      for (let prop in config) {
-        evt[prop] = config[prop];
-      }
-
-      button._dn.dispatchEvent(evt);
-    }
-
     // --------------------------------------------------
     // onDown
     // --------------------------------------------------
     describe('onDown', () => {
       it('should call onDown if Enter is pressed', () => {
         sinon.spy(button, 'onDown');
-        simulateEvent('keydown', { code: 'Enter' });
+        simulateEvent('keydown', { code: 'Enter' }, button._dn);
 
         expect(button.onDown.called).to.be.true;
       });
 
       it('should call onDown if Space is pressed', () => {
         sinon.spy(button, 'onDown');
-        simulateEvent('keydown', { code: 'Space' });
+        simulateEvent('keydown', { code: 'Space' }, button._dn);
 
         expect(button.onDown.called).to.be.true;
       });
 
       it('should not call onDown if any other key is pressed', () => {
         sinon.spy(button, 'onDown');
-        simulateEvent('keydown', { code: 'KeyA' });
+        simulateEvent('keydown', { code: 'KeyA' }, button._dn);
 
         expect(button.onDown.called).to.be.false;
       });
@@ -218,21 +198,21 @@ describe('button', () => {
     describe('onUp', () => {
       it('should call onUp if Enter is pressed', () => {
         sinon.spy(button, 'onUp');
-        simulateEvent('keyup', { code: 'Enter' });
+        simulateEvent('keyup', { code: 'Enter' }, button._dn);
 
         expect(button.onUp.called).to.be.true;
       });
 
       it('should call onUp if Space is pressed', () => {
         sinon.spy(button, 'onUp');
-        simulateEvent('keyup', { code: 'Space' });
+        simulateEvent('keyup', { code: 'Space' }, button._dn);
 
         expect(button.onUp.called).to.be.true;
       });
 
       it('should not call onUp if any other key is pressed', () => {
         sinon.spy(button, 'onUp');
-        simulateEvent('keyup', { code: 'KeyA' });
+        simulateEvent('keyup', { code: 'KeyA' }, button._dn);
 
         expect(button.onUp.called).to.be.false;
       });

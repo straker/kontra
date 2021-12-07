@@ -107,7 +107,7 @@ export let gestureMap = {
  * Initialize gesture event listeners. This function must be called before using other gesture functions. Gestures depend on pointer events, so [initPointer](api/pointer#initPointer) must be called as well.
  * @function initGesture
  */
-export function initGesture(gestures) {
+export function initGesture() {
   // don't add the on call multiple times otherwise it will mess up
   // gesture events
   if (!init) {

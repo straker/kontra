@@ -127,26 +127,26 @@
 
   // we don't want the controls to update at 15fps so we'll update the movement
   // outside the game loop for more tight feeling controls
-  kontra.bindKeys('left', function () {
+  kontra.onKey('left', function () {
     // prevent snake from backtracking on itself
     if (snake.dx === 0) {
       snake.dx = -grid;
       snake.dy = 0;
     }
   });
-  kontra.bindKeys('up', function () {
+  kontra.onKey('up', function () {
     if (snake.dy === 0) {
       snake.dy = -grid;
       snake.dx = 0;
     }
   });
-  kontra.bindKeys('right', function () {
+  kontra.onKey('right', function () {
     if (snake.dx === 0) {
       snake.dx = grid;
       snake.dy = 0;
     }
   });
-  kontra.bindKeys('down', function () {
+  kontra.onKey('down', function () {
     if (snake.dy === 0) {
       snake.dy = grid;
       snake.dx = 0;

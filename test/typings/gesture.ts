@@ -38,3 +38,4 @@ kontra.gestureMap.baz = {
 kontra.onGesture('panleft', (evt: TouchEvent, touches: object) => {
   console.log('panleft');
 });
+kontra.offGamepad('panleft');

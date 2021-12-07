@@ -170,14 +170,14 @@ export function onGesture(name, callback) {
  * Unregister the callback function for a gesture.
  *
  * ```js
- * import { initPointer, initGesture, onGesture, offGesture } from 'kontra';
+ * import { initPointer, initGesture, offGesture } from 'kontra';
  *
  * initPointer();
  * initGesture();
  *
  * offGesture('swipeleft');
  * ```
- * @function onGesture
+ * @function offGesture
  *
  * @param {String} name - The name of the gesture.
  */

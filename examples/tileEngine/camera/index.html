@@ -77,7 +77,7 @@
           height: 22
         };
 
-        if (kontra.keyPressed('up')) {
+        if (kontra.keyPressed('arrowup')) {
           this.playAnimation('walk_up');
           collisionBox.y -= this.speed;
 
@@ -94,7 +94,7 @@
             tileEngine.sy -= this.speed;
           }
         }
-        else if (kontra.keyPressed('down')) {
+        else if (kontra.keyPressed('arrowdown')) {
           this.playAnimation('walk_down');
           collisionBox.y += this.speed;
 
@@ -111,7 +111,7 @@
             tileEngine.sy += this.speed;
           }
         }
-        else if (kontra.keyPressed('left')) {
+        else if (kontra.keyPressed('arrowleft')) {
           this.playAnimation('walk_left');
           collisionBox.x -= this.speed;
 
@@ -128,7 +128,7 @@
             tileEngine.sx -= this.speed;
           }
         }
-        else if (kontra.keyPressed('right')) {
+        else if (kontra.keyPressed('arrowright')) {
           this.playAnimation('walk_right');
           collisionBox.x += this.speed;
 

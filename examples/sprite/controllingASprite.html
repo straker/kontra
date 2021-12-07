@@ -24,17 +24,17 @@
       // pass a custom update function to the sprite
       update: function() {
         // move the sprite with the keyboard
-        if (kontra.keyPressed('up')) {
+        if (kontra.keyPressed('arrowup')) {
           this.y -= this.dy;
         }
-        else if (kontra.keyPressed('down')) {
+        else if (kontra.keyPressed('arrowdown')) {
           this.y += this.dy;
         }
 
-        if (kontra.keyPressed('left')) {
+        if (kontra.keyPressed('arrowleft')) {
           this.x -= this.dx;
         }
-        else if (kontra.keyPressed('right')) {
+        else if (kontra.keyPressed('arrowright')) {
           this.x += this.dx;
         }
 
@@ -56,11 +56,11 @@
     });
 
     // prevent default key behavior
-    kontra.onKey(['up', 'down', 'left', 'right'], function(e) {
+    kontra.onKey(['arrowup', 'arrowdown', 'arrowleft', 'arrowright'], function(e) {
       e.preventDefault();
     });
 
-    kontra.onKey(['up', 'down', 'left', 'right'], function(e) {
+    kontra.onKey(['arrowup', 'arrowdown', 'arrowleft', 'arrowright'], function(e) {
       console.log('key released: ', e)
     }, 'keyup');
 

@@ -43,6 +43,7 @@ export {
   collides,
   getWorldRect
 } from './helpers.js';
+export { initInput, onInput, offInput } from './input.js';
 export { keyMap, initKeys, onKey, offKey, keyPressed } from './keyboard.js';
 export { registerPlugin, unregisterPlugin, extendObject } from './plugin.js';
 export {

@@ -107,7 +107,7 @@ function gamepadDisconnectedHandler(event) {
  * Reset pressed buttons and axes information.
  */
 function blurEventHandler() {
-  gamepads.forEach(gamepad => {
+  gamepads.map(gamepad => {
     gamepad.pressedButtons = {};
     gamepad.axes = {};
   });
@@ -150,7 +150,7 @@ export function updateGamepad() {
       continue;
     }
 
-    gamepad.buttons.forEach((button, index) => {
+    gamepad.buttons.map((button, index) => {
       let buttonName = gamepadMap[index];
       let { pressed } = button;
       let { pressedButtons } = gamepads[gamepad.index];
@@ -222,7 +222,7 @@ export function initGamepad() {
  * ```
  * @function onGamepad
  *
- * @param {String|String[]} buttons - Button or buttons to regsiter callback for.
+ * @param {String|String[]} buttons - Button or buttons to register callback for.
  * @param {(gamepad: Gamepad, button: GamepadButton) => void} callback - The function to be called when the button is pressed.
  * @param {Object} [options] - Register options.
  * @param {Number} [options.gamepad] - Gamepad index. Defaults to registerting for all gamepads.

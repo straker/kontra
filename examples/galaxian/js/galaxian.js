@@ -134,15 +134,15 @@ function getGameScene() {
     update: function () {
       this.counter++;
 
-      if (kontra.keyPressed('left')) {
+      if (kontra.keyPressed('arrowleft')) {
         this.x -= 3;
-      } else if (kontra.keyPressed('right')) {
+      } else if (kontra.keyPressed('arrowright')) {
         this.x += 3;
       }
 
-      if (kontra.keyPressed('up')) {
+      if (kontra.keyPressed('arrowup')) {
         this.y -= 3;
-      } else if (kontra.keyPressed('down')) {
+      } else if (kontra.keyPressed('arrowdown')) {
         this.y += 3;
       }
 

@@ -2,32 +2,13 @@ import GameLoop from '../../src/gameLoop.js';
 import { getContext } from '../../src/core.js';
 import { on } from '../../src/events.js';
 import { noop } from '../../src/utils.js';
+import { simulateEvent } from '../utils.js';
 
 // --------------------------------------------------
 // gameloop
 // --------------------------------------------------
 describe('gameLoop', () => {
   let loop;
-
-  /**
-   * Simulate an event.
-   * @param {string} type - Type of keyboard event.
-   */
-  function simulateEvent(type) {
-    let evt;
-
-    // PhantomJS <2.0.0 throws an error for the `new Event` call, so we need to supply an
-    // alternative form of creating an event just for PhantomJS
-    // @see https://github.com/ariya/phantomjs/issues/11289#issuecomment-38880333
-    try {
-      evt = new Event(type);
-    } catch (e) {
-      evt = document.createEvent('Event');
-      evt.initEvent(type, true, false);
-    }
-
-    window.dispatchEvent(evt);
-  }
 
   afterEach(() => {
     loop && loop.stop();

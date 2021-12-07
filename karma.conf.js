@@ -18,6 +18,7 @@ module.exports = function (config) {
       { pattern: 'test/data/**/*.*', included: false, served: true },
 
       { pattern: 'src/*.js', type: 'module', included: false },
+      { pattern: 'test/utils.js', type: 'module', included: false },
       { pattern: 'test/unit/*.spec.js', type: 'module' },
       { pattern: 'test/integration/*.spec.js', type: 'module' }
     ],

@@ -1,49 +1,10 @@
 import * as keyboard from '../../src/keyboard.js';
+import { simulateEvent } from '../utils.js';
 
 // --------------------------------------------------
 // keyboard
 // --------------------------------------------------
 describe('keyboard', () => {
-  /**
-   * Simulate a keyboard event.
-   * @param {string} type - Type of keyboard event.
-   * @param {object} [config] - Additional settings for the event.
-   * @param {boolean} [config.ctrlKey=false]
-   * @param {boolean} [config.shiftKey=false]
-   * @param {boolean} [config.altKey=false]
-   * @param {boolean} [config.metaKey=false]
-   * @param {boolean} [config.keyCode=0]
-   * @param {boolean} [async=false] - If the event should fire async.
-   */
-  function simulateEvent(type, config, async = false) {
-    let evt;
-
-    // PhantomJS <2.0.0 throws an error for the `new Event` call, so we need to supply an
-    // alternative form of creating an event just for PhantomJS
-    // @see https://github.com/ariya/phantomjs/issues/11289#issuecomment-38880333
-    try {
-      evt = new Event(type);
-    } catch (e) {
-      evt = document.createEvent('Event');
-      evt.initEvent(type, true, false);
-    }
-
-    config = config || {};
-    for (let prop in config) {
-      evt[prop] = config[prop];
-    }
-
-    if (async) {
-      setTimeout(() => {
-        window.dispatchEvent(evt);
-      }, 100);
-    } else {
-      window.dispatchEvent(evt);
-    }
-
-    return evt;
-  }
-
   // reset pressed keys before each test
   beforeEach(() => {
     simulateEvent('blur');
@@ -97,9 +58,9 @@ describe('keyboard', () => {
   });
 
   // --------------------------------------------------
-  // bind
+  // onKey
   // --------------------------------------------------
-  describe('bind', () => {
+  describe('onKey', () => {
     // Defaults to keydown
     describe('handler=keydown', () => {
       it('should call the callback when a single key combination is pressed', done => {
@@ -110,7 +71,7 @@ describe('keyboard', () => {
         simulateEvent('keydown', { code: 'KeyA' });
       });
 
-      it('should accept an array of key combinations to bind', done => {
+      it('should accept an array of key combinations to register', done => {
         keyboard.onKey(['a', 'b'], evt => {
           done();
         });
@@ -134,7 +95,7 @@ describe('keyboard', () => {
         simulateEvent('keyup', { code: 'KeyA' });
       });
 
-      it('should accept an array of key combinations to bind', done => {
+      it('should accept an array of key combinations to register', done => {
         keyboard.onKey(
           ['a', 'b'],
           evt => {
@@ -157,7 +118,7 @@ describe('keyboard', () => {
           done();
         });
 
-        let event = simulateEvent('keydown', { code: 'KeyA' }, true);
+        let event = simulateEvent('keydown', { code: 'KeyA', async: true });
         spy = sinon.spy(event, 'preventDefault');
       });
     });
@@ -179,14 +140,14 @@ describe('keyboard', () => {
   });
 
   // --------------------------------------------------
-  // unbind
+  // offKey
   // --------------------------------------------------
-  describe('unbind', () => {
+  describe('offKey', () => {
     // Defaults to keydown
     describe('handler=keydown', () => {
-      it('should not call the callback when the combination has been unbound', () => {
+      it('should not call the callback when the combination has been unregistered', () => {
         keyboard.onKey('a', () => {
-          // this should never be called since the key combination was unbound
+          // this should never be called since the key combination was unregistered
           expect(false).to.be.true;
         });
 
@@ -195,9 +156,9 @@ describe('keyboard', () => {
         simulateEvent('keydown', { which: 65 });
       });
 
-      it('should accept an array of key combinations to unbind', () => {
+      it('should accept an array of key combinations to unregister', () => {
         keyboard.onKey(['a', 'b'], () => {
-          // this should never be called since the key combination was unbound
+          // this should never be called since the key combination was unregistered
           expect(false).to.be.true;
         });
 
@@ -211,11 +172,11 @@ describe('keyboard', () => {
     describe('handler=keyup', () => {
       const handler = 'keyup';
 
-      it('should not call the callback when the combination has been unbound', () => {
+      it('should not call the callback when the combination has been unregistered', () => {
         keyboard.onKey(
           'a',
           () => {
-            // this should never be called since the key combination was unbound
+            // this should never be called since the key combination was unregistered
             expect(false).to.be.true;
           },
           handler
@@ -226,11 +187,11 @@ describe('keyboard', () => {
         simulateEvent('keyup', { which: 65 });
       });
 
-      it('should accept an array of key combinations to unbind', () => {
+      it('should accept an array of key combinations to unregister', () => {
         keyboard.onKey(
           ['a', 'b'],
           () => {
-            // this should never be called since the key combination was unbound
+            // this should never be called since the key combination was unregistered
             expect(false).to.be.true;
           },
           handler

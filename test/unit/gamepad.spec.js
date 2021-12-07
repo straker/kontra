@@ -1,72 +1,13 @@
 import * as gamepad from '../../src/gamepad.js';
 import { callbacks as eventCallbacks } from '../../src/events.js';
+import { simulateEvent, simulateGamepadEvent, getGamepadsStub, createGamepad } from '../utils.js';
 
 // --------------------------------------------------
 // gamepad
 // --------------------------------------------------
 describe('gamepad', () => {
-  /**
-   * Simulate an event.
-   * @param {string} type - Type of event.
-   * @param {object} [config] - Additional settings for the event.
-   */
-  function simulateEvent(type, config, async = false) {
-    let evt = new Event(type);
-
-    config = config || {};
-    for (let prop in config) {
-      evt[prop] = config[prop];
-    }
-
-    window.dispatchEvent(evt);
-
-    return evt;
-  }
-
-  /**
-   * Simulate a gamepad event.
-   * @param {string} type - Type of gamepad event.
-   * @param {object} gamepad - Gamepad object.
-   * @param {number} gamepad.index - Index of the gamepad
-   * @param {Object[]} [gamepad.buttons] - GamepadButtons and their state
-   * @param {Number[]} [gamepad.axes] - Gamepad axes values
-   *
-   */
-  function simulateGamepadEvent(type, gamepad) {
-    let evt = new GamepadEvent(type);
-
-    // evt.gamepad is read-only so we need to override it
-    Object.defineProperty(evt, 'gamepad', {
-      value: {
-        buttons: [],
-        axes: [],
-        ...gamepad
-      }
-    });
-
-    window.dispatchEvent(evt);
-
-    return evt;
-  }
-
   // simulate gamepad object
-  let getGamepadsStub = [];
   let gamepadStub;
-
-  function createGamepad(index = getGamepadsStub.length) {
-    let gamepadObj = {
-      index,
-      connected: true,
-      buttons: [],
-      axes: [0, 0, 0, 0]
-    };
-    for (let i = 0; i < 16; i++) {
-      gamepadObj.buttons[i] = { pressed: false };
-    }
-
-    simulateGamepadEvent('gamepadconnected', gamepadObj);
-    getGamepadsStub[index] = gamepadObj;
-  }
 
   before(() => {
     gamepadStub = sinon.stub(navigator, 'getGamepads').returns(getGamepadsStub);

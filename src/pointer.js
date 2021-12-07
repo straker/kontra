@@ -548,7 +548,7 @@ export function onPointer(direction, callback) {
  * Unregister the callback for a pointer event.
  *
  * ```js
- * import { initPointer, onPointer } from 'kontra';
+ * import { initPointer, offPointer } from 'kontra';
  *
  * initPointer();
  *

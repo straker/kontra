@@ -193,6 +193,14 @@ describe('input', () => {
 
       expect(spy.called).to.be.true;
     });
+
+    it('should throw error if input name is invalid', () => {
+      function fn() {
+        input.onInput('foo', () => {});
+      }
+
+      expect(fn).to.throw();
+    });
   });
 
   // --------------------------------------------------

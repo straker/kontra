@@ -164,7 +164,7 @@ export function onKey(keys, callback, { handler = 'keydown', preventDefault = tr
  * ```js
  * import { offKey } from 'kontra';
  *
- * offKey('left');
+ * offKey('arrowleft');
  * offKey(['enter', 'space']);
  * ```
  * @function offKey
@@ -188,17 +188,17 @@ export function offKey(keys, { handler = 'keydown' } = {}) {
  *
  * let sprite = Sprite({
  *   update: function() {
- *     if (keyPressed('left')){
+ *     if (keyPressed('arrowleft')){
  *       // left arrow pressed
  *     }
- *     else if (keyPressed('right')) {
+ *     else if (keyPressed('arrowright')) {
  *       // right arrow pressed
  *     }
  *
- *     if (keyPressed('up')) {
+ *     if (keyPressed('arrowup')) {
  *       // up arrow pressed
  *     }
- *     else if (keyPressed('down')) {
+ *     else if (keyPressed('arrowdown')) {
  *       // down arrow pressed
  *     }
  *   }

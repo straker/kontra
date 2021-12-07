@@ -84,7 +84,7 @@ class Scene extends GameObjectClass {
     // create an accessible DOM node for screen readers (do this first
     // so we can move DOM nodes in addChild)
     // dn = dom node
-    const section = (this._dn = document.createElement('section'));
+    let section = (this._dn = document.createElement('section'));
     section.tabIndex = -1;
     section.style = srOnlyStyle;
     section.id = id;

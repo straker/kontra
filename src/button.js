@@ -80,7 +80,7 @@ class Button extends SpriteClass {
 
     // create an accessible DOM node for screen readers
     // dn = dom node
-    const button = (this._dn = document.createElement('button'));
+    let button = (this._dn = document.createElement('button'));
     button.style = srOnlyStyle;
     button.textContent = this.text;
 

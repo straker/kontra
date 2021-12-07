@@ -229,7 +229,7 @@ export function initGamepad() {
  * @param {'gamepaddown'|'gamepadup'} [options.handler='gamepaddown'] - Whether to register to the gamepaddown or gamepadup event.
  */
 export function onGamepad(buttons, callback, { gamepad, handler = 'gamepaddown' } = {}) {
-  const callbacks = handler == 'gamepaddown' ? gamepaddownCallbacks : gamepadupCallbacks;
+  let callbacks = handler == 'gamepaddown' ? gamepaddownCallbacks : gamepadupCallbacks;
 
   // smaller than doing `Array.isArray(buttons) ? buttons : [buttons]`
   [].concat(buttons).map(button => {
@@ -265,7 +265,7 @@ export function onGamepad(buttons, callback, { gamepad, handler = 'gamepaddown' 
  * @param {'gamepaddown'|'gamepadup'} [options.handler='gamepaddown'] - Whether to unregister from gamepaddown or gamepadup event.
  */
 export function offGamepad(buttons, { gamepad, handler = 'gamepaddown' } = {}) {
-  const callbacks = handler == 'gamepaddown' ? gamepaddownCallbacks : gamepadupCallbacks;
+  let callbacks = handler == 'gamepaddown' ? gamepaddownCallbacks : gamepadupCallbacks;
 
   // smaller than doing `Array.isArray(buttons) ? buttons : [buttons]`
   [].concat(buttons).map(button => {

@@ -65,7 +65,7 @@ let snake = kontra.Sprite({
 // not already moving on the same axis (pressing left while moving
 // left won't do anything, and pressing right while moving left
 // shouldn't let you collide with your own body)
-kontra.bindKeys('left', () => {
+kontra.onKey('left', () => {
   if (snake.dx === 0) {
     // queue the move so we also don't change directions before an
     // update and still can run into ourselves
@@ -75,7 +75,7 @@ kontra.bindKeys('left', () => {
     });
   }
 });
-kontra.bindKeys('up', () => {
+kontra.onKey('up', () => {
   if (snake.dy === 0) {
     snake.queue.push({
       dy: -gridSize,
@@ -83,13 +83,13 @@ kontra.bindKeys('up', () => {
     });
   }
 });
-kontra.bindKeys('right', () => {
+kontra.onKey('right', () => {
   snake.queue.push({
     dx: gridSize,
     dy: 0
   });
 });
-kontra.bindKeys('down', () => {
+kontra.onKey('down', () => {
   if (snake.dy === 0) {
     snake.queue.push({
       dy: gridSize,

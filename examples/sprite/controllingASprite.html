@@ -56,11 +56,11 @@
     });
 
     // prevent default key behavior
-    kontra.bindKeys(['up', 'down', 'left', 'right'], function(e) {
+    kontra.onKey(['up', 'down', 'left', 'right'], function(e) {
       e.preventDefault();
     });
 
-    kontra.bindKeys(['up', 'down', 'left', 'right'], function(e) {
+    kontra.onKey(['up', 'down', 'left', 'right'], function(e) {
       console.log('key released: ', e)
     }, 'keyup');
 

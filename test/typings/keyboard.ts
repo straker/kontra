@@ -5,26 +5,26 @@ kontra.keyMap.namedKey = 'namedKey';
 
 kontra.initKeys();
 
-kontra.bindKeys('a', (evt: KeyboardEvent) => {
+kontra.onKey('a', (evt: KeyboardEvent) => {
   console.log('a pressed');
 });
-kontra.bindKeys(['a', 'b', 'c'], () => {
+kontra.onKey(['a', 'b', 'c'], () => {
   console.log('a, b, or c pressed');
 });
-kontra.bindKeys(['a', 'b', 'c'], () => {
+kontra.onKey(['a', 'b', 'c'], () => {
   console.log('a, b, or c pressed');
 }, {
   preventDefault: true,
   handler: 'keydown'
 });
-kontra.bindKeys(['a', 'b', 'c'], () => {
+kontra.onKey(['a', 'b', 'c'], () => {
   console.log('a, b, or c pressed');
 }, {
   handler: 'keyup'
 });
 
 
-kontra.unbindKeys('a');
-kontra.unbindKeys(['a', 'b', 'c']);
+kontra.offKey('a');
+kontra.offKey(['a', 'b', 'c']);
 
 let pressed: boolean = kontra.keyPressed('a');

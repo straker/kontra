@@ -4,7 +4,7 @@ import { callbacks as eventCallbacks } from '../../src/events.js';
 // --------------------------------------------------
 // gamepad
 // --------------------------------------------------
-describe.only('gamepad', () => {
+describe('gamepad', () => {
   /**
    * Simulate an event.
    * @param {string} type - Type of event.

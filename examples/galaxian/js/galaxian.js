@@ -231,7 +231,7 @@ function getGameScene() {
     }
   }
 
-  kontra.bindKeys('m', function () {
+  kontra.onKey('m', function () {
     toggleMusic();
   });
 

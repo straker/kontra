@@ -14,28 +14,17 @@ kontra.untrack({one: 1}, {two: 2});
 
 let over: boolean = kontra.pointerOver({one: 1});
 
-kontra.onPointerDown((evt: MouseEvent, object: object) => {
+kontra.onPointer('down', (evt: MouseEvent, object: object) => {
   let target = evt.target;
   if (object) {
     console.log('over!');
   }
 });
-kontra.onPointerDown((evt: MouseEvent) => {
+kontra.onPointer('down', (evt: MouseEvent) => {
   let target = evt.target;
   console.log('no object');
 });
-kontra.onPointerDown(() => {});
+kontra.onPointer('up', () => {});
 
-kontra.onPointerUp((evt: MouseEvent, object: object) => {
-  let target = evt.target;
-  if (object) {
-    console.log('up!');
-  }
-});
-kontra.onPointerUp((evt: MouseEvent) => {
-  let target = evt.target;
-  console.log('no object');
-});
-kontra.onPointerUp(() => {});
-
-let pressed: boolean = kontra.pointerPressed('left');
+kontra.offPointer('down');
+kontra.offPointer('up');

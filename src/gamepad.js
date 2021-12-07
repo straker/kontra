@@ -224,12 +224,12 @@ export function initGamepad() {
  *
  * @param {String|String[]} buttons - Button or buttons to regsiter callback for.
  * @param {(gamepad: Gamepad, button: GamepadButton) => void} callback - The function to be called when the button is pressed.
- * @param {Object} [options] - Registration options.
+ * @param {Object} [options] - Register options.
  * @param {Number} [options.gamepad] - Gamepad index. Defaults to registerting for all gamepads.
  * @param {'gamepaddown'|'gamepadup'} [options.handler='gamepaddown'] - Whether to register to the gamepaddown or gamepadup event.
  */
 export function onGamepad(buttons, callback, { gamepad, handler = 'gamepaddown' } = {}) {
-  const callbacks = handler == 'gamepaddown' ? gamepaddownCallbacks : gamepadupCallbacks;
+  let callbacks = handler == 'gamepaddown' ? gamepaddownCallbacks : gamepadupCallbacks;
 
   // smaller than doing `Array.isArray(buttons) ? buttons : [buttons]`
   [].concat(buttons).map(button => {
@@ -243,7 +243,7 @@ export function onGamepad(buttons, callback, { gamepad, handler = 'gamepaddown' 
 }
 
 /**
- * Unregister the callback function for a set of buttons. Takes a single button or an array of buttons.
+ * Unregister the callback function for a button. Takes a single button or an array of buttons.
  *
  * When unregistering a button, you have the choice to unregister from a specific gamepad or from all gamepads. To unregister from a specific gamepad, pass the desired gamepad index as the `gamepad` option. If the `gamepad` option is ommited the callback is unregistered from all gamepads instead of a specific one.
  *
@@ -265,7 +265,7 @@ export function onGamepad(buttons, callback, { gamepad, handler = 'gamepaddown' 
  * @param {'gamepaddown'|'gamepadup'} [options.handler='gamepaddown'] - Whether to unregister from gamepaddown or gamepadup event.
  */
 export function offGamepad(buttons, { gamepad, handler = 'gamepaddown' } = {}) {
-  const callbacks = handler == 'gamepaddown' ? gamepaddownCallbacks : gamepadupCallbacks;
+  let callbacks = handler == 'gamepaddown' ? gamepaddownCallbacks : gamepadupCallbacks;
 
   // smaller than doing `Array.isArray(buttons) ? buttons : [buttons]`
   [].concat(buttons).map(button => {

@@ -155,7 +155,7 @@ export function initGesture(gestures) {
  *
  * onGesture('swipeleft', function(e, touches) {
  *   // handle swipeleft gesture
- * })
+ * });
  * ```
  * @function onGesture
  *
@@ -164,4 +164,23 @@ export function initGesture(gestures) {
  */
 export function onGesture(name, callback) {
   callbacks[name] = callback;
+}
+
+/**
+ * Unregister the callback function for a gesture.
+ *
+ * ```js
+ * import { initPointer, initGesture, offGesture } from 'kontra';
+ *
+ * initPointer();
+ * initGesture();
+ *
+ * offGesture('swipeleft');
+ * ```
+ * @function offGesture
+ *
+ * @param {String} name - The name of the gesture.
+ */
+export function offGesture(name) {
+  callbacks[name] = 0;
 }

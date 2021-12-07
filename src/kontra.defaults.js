@@ -25,7 +25,7 @@ import {
   gamepadPressed,
   gamepadAxis
 } from './gamepad.js';
-import { gestureMap, initGesture, onGesture } from './gesture.js';
+import { gestureMap, initGesture, onGesture, offGesture } from './gesture.js';
 import Grid, { GridClass } from './grid.js';
 import {
   radToDeg,
@@ -51,8 +51,8 @@ import {
   track,
   untrack,
   pointerOver,
-  onPointerDown,
-  onPointerUp,
+  onPointer,
+  offPointer,
   pointerPressed
 } from './pointer.js';
 import Pool, { PoolClass } from './pool.js';
@@ -105,6 +105,7 @@ let kontra = {
   gestureMap,
   initGesture,
   onGesture,
+  offGesture,
 
   Grid,
   GridClass,
@@ -139,8 +140,8 @@ let kontra = {
   track,
   untrack,
   pointerOver,
-  onPointerDown,
-  onPointerUp,
+  onPointer,
+  offPointer,
   pointerPressed,
 
   Pool,

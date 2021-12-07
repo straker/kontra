@@ -523,43 +523,44 @@ export function pointerOver(object) {
 }
 
 /**
- * Register a function to be called on all pointer down events. Is passed the original Event and the target object (if there is one).
+ * Register a function to be called on pointer events. Is passed the original Event and the target object (if there is one).
  *
  * ```js
- * import { initPointer, onPointerDown } from 'kontra';
+ * import { initPointer, onPointer } from 'kontra';
  *
  * initPointer();
  *
- * onPointerDown(function(e, object) {
+ * onPointer('down', function(e, object) {
  *   // handle pointer down
- * })
+ * });
  * ```
- * @function onPointerDown
+ * @function onPointer
  *
- * @param {(evt: MouseEvent|TouchEvent, object?: Object) => void} callback - Function to call on pointer down.
+ * @param {'down'|'up'} direction - Direction of the pointer event.
+ * @param {(evt: MouseEvent|TouchEvent, object?: Object) => void} callback - Function to call on pointer event.
  */
-export function onPointerDown(callback) {
-  callbacks.onDown = callback;
+export function onPointer(direction, callback) {
+  let eventName = direction[0].toUpperCase() + direction.substr(1);
+  callbacks['on' + eventName] = callback;
 }
 
 /**
- * Register a function to be called on all pointer up events. Is passed the original Event and the target object (if there is one).
+ * Unregister the callback for a pointer event.
  *
  * ```js
- * import { initPointer, onPointerUp } from 'kontra';
+ * import { initPointer, offPointer } from 'kontra';
  *
  * initPointer();
  *
- * onPointerUp(function(e, object) {
- *   // handle pointer up
- * })
+ * offPointer('down');
  * ```
- * @function onPointerUp
+ * @function offPointer
  *
- * @param {(evt: MouseEvent|TouchEvent, object?: Object) => void} callback - Function to call on pointer up.
+ * @param {'down'|'up'} direction - Direction of the pointer event.
  */
-export function onPointerUp(callback) {
-  callbacks.onUp = callback;
+export function offPointer(direction) {
+  let eventName = direction[0].toUpperCase() + direction.substr(1);
+  callbacks['on' + eventName] = 0;
 }
 
 /**

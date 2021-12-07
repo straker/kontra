@@ -13,6 +13,7 @@ describe('gesture', () => {
     expect(gesture.gestureMap).to.be.an('object');
     expect(gesture.initGesture).to.be.an('function');
     expect(gesture.onGesture).to.be.an('function');
+    expect(gesture.offGesture).to.be.an('function');
   });
 
   // --------------------------------------------------
@@ -50,6 +51,22 @@ describe('gesture', () => {
       function foo() {}
       gesture.onGesture('swipeleft', foo);
       expect(gesture.callbacks.swipeleft).to.equal(foo);
+    });
+  });
+
+  // --------------------------------------------------
+  // offGesture
+  // --------------------------------------------------
+  describe('offGesture', () => {
+    before(() => {
+      gesture.initGesture();
+    });
+
+    it('should remove the listener', () => {
+      function foo() {}
+      gesture.onGesture('swipeleft', foo);
+      gesture.offGesture('swipeleft', foo);
+      expect(gesture.callbacks.swipeleft).to.equal(0);
     });
   });
 

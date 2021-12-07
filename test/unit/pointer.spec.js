@@ -69,8 +69,8 @@ describe('pointer', () => {
     expect(pointer.track).to.be.an('function');
     expect(pointer.untrack).to.be.an('function');
     expect(pointer.pointerOver).to.be.an('function');
-    expect(pointer.onPointerDown).to.be.an('function');
-    expect(pointer.onPointerUp).to.be.an('function');
+    expect(pointer.onPointer).to.be.an('function');
+    expect(pointer.offPointer).to.be.an('function');
     expect(pointer.pointerPressed).to.be.an('function');
   });
 
@@ -618,7 +618,7 @@ describe('pointer', () => {
           : { touches: [event], changedTouches: [event] };
         const eventHandler =
           eventName === 'mousedown' || eventName === 'touchstart' ? 'onDown' : 'onUp';
-        const pointerHandler = eventHandler === 'onDown' ? 'onPointerDown' : 'onPointerUp';
+        const pointerHandler = eventHandler === 'onDown' ? 'down' : 'up';
 
         it('should update the x and y pointer coordinates', () => {
           pntr.x = pntr.y = 0;
@@ -698,12 +698,23 @@ describe('pointer', () => {
 
         it(`should call the ${pointerHandler} function`, () => {
           let spy = sinon.spy();
-          pointer[pointerHandler](spy);
+          pointer.onPointer(pointerHandler, spy);
           event.clientX = 100;
           event.clientY = 50;
           simulateEvent(eventName, config);
 
           expect(spy.called).to.be.true;
+        });
+
+        it(`should unregister the ${pointerHandler} function`, () => {
+          let spy = sinon.spy();
+          pointer.onPointer(pointerHandler, spy);
+          pointer.offPointer(pointerHandler);
+          event.clientX = 100;
+          event.clientY = 50;
+          simulateEvent(eventName, config);
+
+          expect(spy.called).to.be.false;
         });
 
         it(`should call the objects ${eventHandler} function if it is the target`, () => {

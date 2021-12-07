@@ -144,14 +144,14 @@ export function initKeys() {
  * ```
  * @function onKey
  *
- * @param {String|String[]} keys - Key or keys to bind.
+ * @param {String|String[]} keys - Key or keys to register.
  * @param {(evt: KeyboardEvent) => void} callback - The function to be called when the key is pressed.
- * @param {Object} [options] - Bind options.
- * @param {'keydown'|'keyup'} [options.handler=keydown] - Whether to bind to keydown or keyup events.
+ * @param {Object} [options] - Register options.
+ * @param {'keydown'|'keyup'} [options.handler=keydown] - Whether to register to keydown or keyup events.
  * @param {Boolean} [options.preventDefault=true] - Call `event. preventDefault()` when the key is activated.
  */
 export function onKey(keys, callback, { handler = 'keydown', preventDefault = true } = {}) {
-  const callbacks = handler == 'keydown' ? keydownCallbacks : keyupCallbacks;
+  let callbacks = handler == 'keydown' ? keydownCallbacks : keyupCallbacks;
   // pd = preventDefault
   callback._pd = preventDefault;
   // smaller than doing `Array.isArray(keys) ? keys : [keys]`
@@ -170,11 +170,11 @@ export function onKey(keys, callback, { handler = 'keydown', preventDefault = tr
  * @function offKey
  *
  * @param {String|String[]} keys - Key or keys to unregister.
- * @param {Object} [options] - unregister options.
+ * @param {Object} [options] - Unregister options.
  * @param {'keydown'|'keyup'} [options.handler=keydown] - Whether to unregister from keydown or keyup events.
  */
 export function offKey(keys, { handler = 'keydown' } = {}) {
-  const callbacks = handler == 'keydown' ? keydownCallbacks : keyupCallbacks;
+  let callbacks = handler == 'keydown' ? keydownCallbacks : keyupCallbacks;
   // 0 is the smallest falsy value
   [].concat(keys).map(key => (callbacks[key] = 0));
 }

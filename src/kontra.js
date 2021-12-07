@@ -25,7 +25,7 @@ export {
   gamepadPressed,
   gamepadAxis
 } from './gamepad.js';
-export { gestureMap, initGesture, onGesture } from './gesture.js';
+export { gestureMap, initGesture, onGesture, offGesture } from './gesture.js';
 export { default as Grid, GridClass } from './grid.js';
 export {
   degToRad,
@@ -51,8 +51,8 @@ export {
   track,
   untrack,
   pointerOver,
-  onPointerDown,
-  onPointerUp,
+  onPointer,
+  offPointer,
   pointerPressed
 } from './pointer.js';
 export { default as Pool, PoolClass } from './pool.js';

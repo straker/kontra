@@ -11,7 +11,7 @@
   <script id="code">
     // initialize the game and setup the canvas
     let { canvas, context } = kontra.init();
-    const { Pool, Sprite, getPointer, pointerPressed, onPointerDown } = kontra;
+    const { Pool, Sprite, getPointer, pointerPressed, onPointer } = kontra;
     canvas.width = window.innerWidth;
     canvas.height = window.innerWidth;
 
@@ -85,7 +85,7 @@
     });
 
     // create a sprites
-    onPointerDown(function(evt) {
+    onPointer('down', function(evt) {
       try {
         if (pointer.touches) {
           console.log(JSON.stringify(pointer.touches));

@@ -352,12 +352,12 @@ export function getWorldRect(obj) {
 }
 
 /**
- * Compare two objects to determine how to sort them. Is used as the `compareFunction` to [Array.prototype.sort](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort).
+ * Compare two objects world rects to determine how to sort them. Is used as the `compareFunction` to [Array.prototype.sort](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort).
  * @function depthSort
  *
  * @param {{x: number, y: number, width: number, height: number}|{world: {x: number, y: number, width: number, height: number}}} obj1 - First object to compare.
  * @param {{x: number, y: number, width: number, height: number}|{world: {x: number, y: number, width: number, height: number}}} obj2 - Second object to compare.
- * @param {String} [prop='y'] - Objects [getWorldRect](/api/helpers#getWorldRect) property to compare against.
+ * @param {String} [prop='y'] - Objects [getWorldRect](/api/helpers#getWorldRect) property to compare.
  *
  * @returns {Number}
  */

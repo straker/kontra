@@ -7,6 +7,7 @@ let scene: kontra.Scene = kontra.Scene({
 let id: string = scene.id;
 let name: string = scene.name;
 let hidden: boolean = scene.hidden;
+let canvas: HTMLCanvasElement = scene.canvas;
 let cullObjects: boolean = scene.cullObjects;
 let camera: kontra.GameObject = scene.camera;
 

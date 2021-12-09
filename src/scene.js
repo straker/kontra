@@ -46,7 +46,6 @@ function getAllNodes(object) {
  * ```
  *
  * @class Scene
- * @extends GameObject
  *
  * @param {Object} properties - Properties of the scene.
  * @param {String} properties.id - The id of the scene.
@@ -57,6 +56,8 @@ function getAllNodes(object) {
  * @param {Function} [properties.cullFunction] - The function used to filter objects to render. Defaults to [helpers.collides](api/helpers#collides).
  * @param {Function} [properties.onShow] - Function called when the scene is shown.
  * @param {Function} [properties.onHide] - Function called when the scene is hidden.
+ *
+ * @param {...*} properties.props - Any additional properties you need added to the scene.
  */
 class Scene {
   constructor({

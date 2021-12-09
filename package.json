@@ -19,7 +19,7 @@
     "test:permutations": "node test/permutations",
     "test:ts": "tsc test/typings/*.ts",
     "test:debug": "karma start --debug",
-    "eslint": "eslint {src,test}",
+    "eslint": "eslint ./{src,test}/",
     "build": "gulp build",
     "build:docs": "gulp build:docs",
     "watch": "gulp watch",

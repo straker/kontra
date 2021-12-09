@@ -173,7 +173,7 @@ describe('pointer', () => {
 
     it('should call the objects original render function', () => {
       let render = sinon.spy();
-      let obj = { render: render };
+      let obj = { render };
       pointer.track(obj);
       obj.render();
 

@@ -6,10 +6,10 @@ import * as plugin from '../../src/plugin.js';
 describe('plugin', () => {
   let add = (p1, p2) => p1 + p2;
   let myPlugin = {
-    beforeAdd(foobar, p1, p2) {
+    beforeAdd() {
       return;
     },
-    afterAdd(foobar, result, p1, p2) {
+    afterAdd(foobar, result) {
       return result * 2;
     }
   };
@@ -123,7 +123,7 @@ describe('plugin', () => {
 
       it('should pass the modified arguments from one before plugin to the next', () => {
         let spy = sinon.spy(classObject.prototype, '_oadd');
-        let stub = sinon.stub().callsFake(function fakeFn(context, p1, p2) {
+	let stub = sinon.stub().callsFake(() => {
           return [5, 6];
         });
         classObject.prototype._inc.add.before[0] = stub;
@@ -135,10 +135,10 @@ describe('plugin', () => {
 
       it('should pass the previous result if before plugin returns null', () => {
         let spy = sinon.spy(classObject.prototype, '_oadd');
-        let stub1 = sinon.stub().callsFake(function fakeFn(context, p1, p2) {
+	let stub1 = sinon.stub().callsFake(() => {
           return null;
         });
-        let stub2 = sinon.stub().callsFake(function fakeFn(context, p1, p2) {
+	let stub2 = sinon.stub().callsFake(() => {
           return [5, 6];
         });
         plugin.registerPlugin(classObject, {
@@ -170,7 +170,7 @@ describe('plugin', () => {
       });
 
       it('should pass the result from one after plugin to the next', () => {
-        let stub = sinon.stub().callsFake(function fakeFn(context, result, p1, p2) {
+	let stub = sinon.stub().callsFake((context, result, p1, p2) => {
           return result + p1 * p2;
         });
         plugin.registerPlugin(classObject, {
@@ -183,10 +183,10 @@ describe('plugin', () => {
       });
 
       it('should pass the previous result if after plugin returns null', () => {
-        let stub1 = sinon.stub().callsFake(function fakeFn(context, result, p1, p2) {
+	let stub1 = sinon.stub().callsFake(() => {
           return null;
         });
-        let stub2 = sinon.stub().callsFake(function fakeFn(context, result, p1, p2) {
+	let stub2 = sinon.stub().callsFake((context, result, p1, p2) => {
           return result + p1 * p2;
         });
         plugin.registerPlugin(classObject, {
@@ -204,10 +204,10 @@ describe('plugin', () => {
 
       it('should call plugins in the ordered they were registered', () => {
         let stub = sinon.stub();
-        let stub1 = sinon.stub().callsFake(function fakeFn(context, result, p1, p2) {
+	let stub1 = sinon.stub().callsFake(() => {
           return null;
         });
-        let stub2 = sinon.stub().callsFake(function fakeFn(context, result, p1, p2) {
+	let stub2 = sinon.stub().callsFake((context, result, p1, p2) => {
           return result + p1 * p2;
         });
         plugin.registerPlugin(classObject, {
@@ -301,7 +301,7 @@ describe('plugin', () => {
       let properties = {
         number: 1,
         string: 'hello',
-        fn: function () {},
+	fn() {},
         object: {}
       };
 
@@ -317,7 +317,7 @@ describe('plugin', () => {
       let properties = {
         number: 1,
         string: 'hello',
-        fn: function () {},
+	fn() {},
         object: {}
       };
 

@@ -1,3 +1,5 @@
+import { on } from './events.js';
+
 /**
  * A simple gamepad API. You can use it move the main sprite or respond to gamepad events.
  *
@@ -24,7 +26,6 @@
  * ```
  * @sectionName Gamepad
  */
-import { on } from './events.js';
 
 /**
  * Below is a list of button names that are provided by default. If you need to extend or modify this list, you can use the [gamepadMap](api/gamepad#gamepadMap) property.

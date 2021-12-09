@@ -61,15 +61,13 @@ describe('sprite with context: ' + JSON.stringify(testContext, null, 4), () => {
           walk: {
             width: 10,
             height: 20,
-            clone: function () {
+	    clone() {
               return this;
             }
           }
         };
 
-        let sprite = Sprite({
-          animations: animations
-        });
+	let sprite = Sprite({ animations });
 
         expect(sprite.animations).to.deep.equal(animations);
         expect(sprite.currentAnimation).to.equal(animations.walk);
@@ -84,7 +82,7 @@ describe('sprite with context: ' + JSON.stringify(testContext, null, 4), () => {
           walk: {
             width: 10,
             height: 20,
-            clone: function () {
+	    clone() {
               return this;
             }
           }
@@ -92,8 +90,8 @@ describe('sprite with context: ' + JSON.stringify(testContext, null, 4), () => {
 
         sinon.spy(animations.walk, 'clone');
 
-        let sprite = Sprite({
-          animations: animations
+	Sprite({
+	  animations
         });
 
         expect(animations.walk.clone.called).to.be.true;
@@ -113,7 +111,7 @@ describe('sprite with context: ' + JSON.stringify(testContext, null, 4), () => {
             width: 10,
             height: 20,
             update: sinon.stub().callsFake(noop),
-            clone: function () {
+	    clone() {
               return this;
             }
           }
@@ -122,7 +120,7 @@ describe('sprite with context: ' + JSON.stringify(testContext, null, 4), () => {
         let sprite = Sprite({
           x: 10,
           y: 20,
-          animations: animations
+	  animations
         });
         sprite.update();
 
@@ -135,7 +133,7 @@ describe('sprite with context: ' + JSON.stringify(testContext, null, 4), () => {
             width: 10,
             height: 20,
             update: sinon.stub().callsFake(noop),
-            clone: function () {
+	    clone() {
               return this;
             }
           }
@@ -144,7 +142,7 @@ describe('sprite with context: ' + JSON.stringify(testContext, null, 4), () => {
         let sprite = Sprite({
           x: 10,
           y: 20,
-          animations: animations,
+	  animations,
           currentAnimation: animations.walk
         });
         sprite.update();
@@ -205,7 +203,7 @@ describe('sprite with context: ' + JSON.stringify(testContext, null, 4), () => {
             height: 20,
             update: noop,
             render: noop,
-            clone: function () {
+	    clone() {
               return this;
             }
           }
@@ -214,7 +212,7 @@ describe('sprite with context: ' + JSON.stringify(testContext, null, 4), () => {
         let sprite = Sprite({
           x: 10,
           y: 20,
-          animations: animations
+	  animations
         });
 
         sinon.stub(sprite.currentAnimation, 'render').callsFake(noop);
@@ -239,7 +237,7 @@ describe('sprite with context: ' + JSON.stringify(testContext, null, 4), () => {
             width: 10,
             height: 20,
             reset: sinon.spy(),
-            clone: function () {
+	    clone() {
               return this;
             }
           },
@@ -247,14 +245,14 @@ describe('sprite with context: ' + JSON.stringify(testContext, null, 4), () => {
             width: 10,
             height: 20,
             reset: sinon.spy(),
-            clone: function () {
+	    clone() {
               return this;
             }
           }
         };
 
         let sprite = Sprite({
-          animations: animations
+	  animations
         });
 
         expect(sprite.currentAnimation).to.equal(animations.walk);
@@ -271,14 +269,14 @@ describe('sprite with context: ' + JSON.stringify(testContext, null, 4), () => {
             height: 20,
             loop: false,
             reset: sinon.spy(),
-            clone: function () {
+	    clone() {
               return this;
             }
           }
         };
 
         let sprite = Sprite({
-          animations: animations
+	  animations
         });
 
         sprite.playAnimation('walk');

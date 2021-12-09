@@ -150,7 +150,8 @@ class TileEngine {
       }
 
       let { image } = tileset;
-      if ('' + image == image) {
+      /* eslint-disable-next-line no-restricted-syntax */
+      if ('' + image === image) {
         // @ifdef DEBUG
         if (!__k) {
           throw Error(`You must use "load" or "loadImage" to resolve tileset.image`);

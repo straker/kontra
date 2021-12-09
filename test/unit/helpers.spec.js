@@ -268,7 +268,7 @@ describe('helpers', () => {
       expect(helpers.collides(sprite1, sprite2)).to.be.true;
     });
 
-    it('should take into account sprite.scale', function () {
+    it('should take into account sprite.scale', () => {
       let sprite1 = Sprite({
         x: 5,
         y: 20,

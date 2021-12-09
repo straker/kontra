@@ -51,7 +51,7 @@ describe('gameObject with context: ' + JSON.stringify(testContext, null, 4), () 
     it('should set context property', () => {
       let canvas = document.createElement('canvas');
       let context = canvas.getContext('2d');
-      gameObject = GameObject({ context: context });
+      gameObject = GameObject({ context });
 
       expect(gameObject.context).to.equal(context);
     });
@@ -506,7 +506,7 @@ describe('gameObject with context: ' + JSON.stringify(testContext, null, 4), () 
 
       if (testContext.GAMEOBJECT_OPACITY) {
         it('should update opacity based on parent', () => {
-          let parent = GameObject({
+	  GameObject({
             opacity: 0.5,
             children: [gameObject]
           });
@@ -519,7 +519,7 @@ describe('gameObject with context: ' + JSON.stringify(testContext, null, 4), () 
 
       if (testContext.GAMEOBJECT_ROTATION) {
         it('should update rotation based on parent', () => {
-          let parent = GameObject({
+	  GameObject({
             rotation: 10,
             children: [gameObject]
           });
@@ -532,7 +532,7 @@ describe('gameObject with context: ' + JSON.stringify(testContext, null, 4), () 
 
       if (testContext.GAMEOBJECT_SCALE) {
         it('should update scale based on parent', () => {
-          let parent = GameObject({
+	  GameObject({
             scaleX: 2,
             scaleY: 2,
             children: [gameObject]
@@ -546,7 +546,7 @@ describe('gameObject with context: ' + JSON.stringify(testContext, null, 4), () 
         });
 
         it('should update position based on parent scale', () => {
-          let parent = GameObject({
+	  GameObject({
             scaleX: 2,
             scaleY: 2,
             children: [gameObject]
@@ -560,7 +560,7 @@ describe('gameObject with context: ' + JSON.stringify(testContext, null, 4), () 
         });
 
         it('should update size based on all scales', () => {
-          let parent = GameObject({
+	   GameObject({
             scaleX: 2,
             scaleY: 2,
             children: [gameObject]

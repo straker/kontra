@@ -51,7 +51,7 @@ describe('vector with context: ' + JSON.stringify(testContext, null, 4), () => {
       let vector1 = Vector(10, 20);
       let vector2 = Vector(5, 10);
 
-      let vector = vector1.add(vector2);
+      vector1.add(vector2);
 
       expect(vector1.x).to.deep.equal(10);
       expect(vector1.y).to.deep.equal(20);
@@ -79,7 +79,7 @@ describe('vector with context: ' + JSON.stringify(testContext, null, 4), () => {
         let vector1 = Vector(10, 20);
         let vector2 = Vector(5, 10);
 
-        let vector = vector1.subtract(vector2);
+	vector1.subtract(vector2);
 
         expect(vector1.x).to.deep.equal(10);
         expect(vector1.y).to.deep.equal(20);
@@ -111,7 +111,7 @@ describe('vector with context: ' + JSON.stringify(testContext, null, 4), () => {
       it('should not modify the vector', () => {
         let vector1 = Vector(5, 10);
 
-        let vector = vector1.scale(2);
+	vector1.scale(2);
 
         expect(vector1.x).to.deep.equal(5);
         expect(vector1.y).to.deep.equal(10);

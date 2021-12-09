@@ -1,6 +1,5 @@
 import Text, { TextClass } from '../../src/text.js';
 import { getContext } from '../../src/core.js';
-import { noop } from '../../src/utils.js';
 
 // test-context:start
 let testContext = {
@@ -208,7 +207,7 @@ describe('text with context: ' + JSON.stringify(testContext, null, 4), () => {
     }
 
     if (testContext.TEXT_AUTONEWLINE) {
-      it('should calculate new lines when the width is set', function () {
+      it('should calculate new lines when the width is set', () => {
         let text = Text({
           text: 'Hello World',
           font: '32px Arial',

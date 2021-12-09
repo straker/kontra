@@ -1,6 +1,6 @@
 import * as gamepad from '../../src/gamepad.js';
 import { callbacks as eventCallbacks } from '../../src/events.js';
-import { simulateEvent, simulateGamepadEvent, getGamepadsStub, createGamepad } from '../utils.js';
+import { simulateEvent, getGamepadsStub, createGamepad } from '../utils.js';
 
 // --------------------------------------------------
 // gamepad

@@ -1,5 +1,5 @@
 import TileEngine from '../../src/tileEngine.js';
-import { getCanvas, getContext } from '../../src/core.js';
+import { getContext } from '../../src/core.js';
 import { noop } from '../../src/utils.js';
 
 // test-context:start
@@ -82,7 +82,6 @@ describe('tileEngine with context: ' + JSON.stringify(testContext, null, 4), () 
     });
 
     it('calls prerender if the tile engine is dirty', () => {
-      let context = getContext();
       let tileEngine = TileEngine({
         tilewidth: 10,
         tileheight: 10,
@@ -118,7 +117,6 @@ describe('tileEngine with context: ' + JSON.stringify(testContext, null, 4), () 
 
     if (testContext.TILEENGINE_CAMERA) {
       it('should call render on all objects', () => {
-        let context = getContext();
         let tileEngine = TileEngine({
           tilewidth: 10,
           tileheight: 10,
@@ -472,7 +470,6 @@ describe('tileEngine with context: ' + JSON.stringify(testContext, null, 4), () 
   describe('renderLayer', () => {
     it('should correctly render a layer', () => {
       let image = new Image(100, 100);
-      let canvas = getCanvas();
       let context = getContext();
       let tileEngine = TileEngine({
         tilewidth: 10,
@@ -481,7 +478,7 @@ describe('tileEngine with context: ' + JSON.stringify(testContext, null, 4), () 
         height: 10,
         tilesets: [
           {
-            image: image
+	    image
           }
         ],
         layers: [
@@ -516,7 +513,6 @@ describe('tileEngine with context: ' + JSON.stringify(testContext, null, 4), () 
     if (testContext.TILEENGINE_CAMERA) {
       it('should account for sx and sy', () => {
         let image = new Image(50, 50);
-        let canvas = getCanvas();
         let context = getContext();
         let tileEngine = TileEngine({
           tilewidth: 10,
@@ -525,7 +521,7 @@ describe('tileEngine with context: ' + JSON.stringify(testContext, null, 4), () 
           height: 10,
           tilesets: [
             {
-              image: image
+	      image
             }
           ],
           layers: [
@@ -575,7 +571,7 @@ describe('tileEngine with context: ' + JSON.stringify(testContext, null, 4), () 
         height: 10,
         tilesets: [
           {
-            image: image
+	    image
           }
         ],
         layers: [
@@ -609,18 +605,18 @@ describe('tileEngine with context: ' + JSON.stringify(testContext, null, 4), () 
         tilesets: [
           {
             firstgid: 1,
-            image: image
+	    image
           },
           {
             firstgid: 50,
-            image: image
+	    image
           },
           {
             get firstgid() {
               called = true;
               return 100;
             },
-            image: image
+	    image
           }
         ],
         layers: [

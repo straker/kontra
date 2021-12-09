@@ -5,7 +5,7 @@ import { keyMap } from '../../src/keyboard.js';
 import { gamepadMap, updateGamepad } from '../../src/gamepad.js';
 import { gestureMap } from '../../src/gesture.js';
 import { getPointer, resetPointers } from '../../src/pointer.js';
-import { simulateEvent, simulateGamepadEvent, createGamepad, getGamepadsStub } from '../utils.js';
+import { simulateEvent, createGamepad, getGamepadsStub } from '../utils.js';
 
 // --------------------------------------------------
 // input

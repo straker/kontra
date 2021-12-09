@@ -64,7 +64,7 @@ describe('keyboard', () => {
     // Defaults to keydown
     describe('handler=keydown', () => {
       it('should call the callback when a single key combination is pressed', done => {
-        keyboard.onKey('a', evt => {
+	keyboard.onKey('a', () => {
           done();
         });
 
@@ -72,7 +72,7 @@ describe('keyboard', () => {
       });
 
       it('should accept an array of key combinations to register', done => {
-        keyboard.onKey(['a', 'b'], evt => {
+	keyboard.onKey(['a', 'b'], () => {
           done();
         });
 
@@ -86,7 +86,7 @@ describe('keyboard', () => {
       it('should call the callback when a single key combination is pressed', done => {
         keyboard.onKey(
           'a',
-          evt => {
+	  () => {
             done();
           },
           { handler }
@@ -98,7 +98,7 @@ describe('keyboard', () => {
       it('should accept an array of key combinations to register', done => {
         keyboard.onKey(
           ['a', 'b'],
-          evt => {
+	  () => {
             done();
           },
           { handler }
@@ -113,7 +113,7 @@ describe('keyboard', () => {
         keyboard.initKeys();
         let spy;
 
-        keyboard.onKey('a', evt => {
+	keyboard.onKey('a', () => {
           expect(spy.called).to.be.true;
           done();
         });

@@ -129,7 +129,7 @@ describe('animation', () => {
       animation.render({
         x: 10,
         y: 10,
-        context: context
+	context
       });
 
       expect(context.drawImage.called).to.be.true;
@@ -159,7 +159,7 @@ describe('animation', () => {
       animation.render({
         x: 10,
         y: 10,
-        context: context
+	context
       });
 
       expect(context.drawImage.called).to.be.true;

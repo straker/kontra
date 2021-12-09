@@ -1,5 +1,4 @@
 import TileEngine from '../../src/tileEngine.js';
-import Sprite from '../../src/sprite.js';
 import { loadImage, loadData, load, _reset } from '../../src/assets.js';
 import { init, getCanvas } from '../../src/core.js';
 
@@ -39,7 +38,7 @@ describe('tileEngine integration', () => {
 
   it('should resolve tileset source', done => {
     loadData('/data/test.json')
-      .then(data => {
+      .then(() => {
         let tileEngine = TileEngine({
           tilesets: [
             {
@@ -84,7 +83,7 @@ describe('tileEngine integration', () => {
 
   it('should throw an error if trying to resolve a tileset image without using needed asset function', () => {
     function func() {
-      let tileEngine = TileEngine({
+      TileEngine({
         tilesets: [
           {
             image: '/imgs/bullet.png'
@@ -100,7 +99,7 @@ describe('tileEngine integration', () => {
     loadImage('/fake.png');
 
     function func() {
-      let tileEngine = TileEngine({
+      TileEngine({
         tilesets: [
           {
             image: '/imgs/bullet.png'
@@ -114,7 +113,7 @@ describe('tileEngine integration', () => {
 
   it('should throw an error if trying to resolve a tileset source without using needed asset function', () => {
     function func() {
-      let tileEngine = TileEngine({
+      TileEngine({
         tilesets: [
           {
             source: '/data/test.json'
@@ -130,7 +129,7 @@ describe('tileEngine integration', () => {
     loadData('/fake.json');
 
     function func() {
-      let tileEngine = TileEngine({
+      TileEngine({
         tilesets: [
           {
             source: '/data/test.json'

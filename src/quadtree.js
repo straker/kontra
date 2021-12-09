@@ -47,16 +47,17 @@ function getIndices(object, bounds) {
   return indices;
 }
 
-/*
-The quadtree acts like an object pool in that it will create subnodes as objects are needed but it won't clean up the subnodes when it collapses to avoid garbage collection.
-
-The quadrant indices are numbered as follows (following a z-order curve):
-     |
-  0  |  1
- ----+----
-  2  |  3
-     |
-*/
+// the quadtree acts like an object pool in that it will create
+// subnodes as objects are needed but it won't clean up the subnodes
+// when it collapses to avoid garbage collection.
+//
+// the quadrant indices are numbered as follows (following a z-order
+// curve):
+//     |
+//  0  |  1
+// ----+----
+//  2  |  3
+//     |
 
 /**
  * A 2D [spatial partitioning](https://gameprogrammingpatterns.com/spatial-partition.html) data structure. Use it to quickly group objects by their position for faster access and collision checking.
@@ -119,7 +120,7 @@ class Quadtree {
    * @function clear
    */
   clear() {
-    this._s.map(function (subnode) {
+    this._s.map((subnode) => {
       subnode.clear();
     });
 
@@ -285,27 +286,6 @@ class Quadtree {
       /* @endif */
     }
   }
-
-  /**
-   * Draw the quadtree. Useful for visual debugging.
-   */
-  /* @ifdef VISUAL_DEBUG **
-   render() {
-     // don't draw empty leaf nodes, always draw branch nodes and the first node
-     if (this._o.length || this._d == 0 ||
-         (this._p && this._p._b)) {
-
-       context.strokeStyle = 'red';
-       context.strokeRect(this.bounds.x, this.bounds.y, this.bounds.width, this.bounds.height);
-
-       if (this._s.length) {
-         for (let i = 0; i < 4; i++) {
-           this._s[i].render();
-         }
-       }
-     }
-   }
-   /* @endif */
 }
 
 export default function factory() {

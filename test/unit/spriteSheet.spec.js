@@ -38,7 +38,7 @@ describe('spriteSheet', () => {
     it('should create animations if passed an animation object', () => {
       sinon.stub(SpriteSheetClass.prototype, 'createAnimations').callsFake(noop);
 
-      let spriteSheet = SpriteSheet({
+      SpriteSheet({
         image: new Image(100, 200),
         frameWidth: 10,
         frameHeight: 10,

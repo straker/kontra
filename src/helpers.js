@@ -121,7 +121,7 @@ export function movePoint(point, angle, distance) {
  * @returns {Number} Random integer between min and max values.
  */
 export function randInt(min, max) {
-  return ((Math.random() * (max - min + 1)) | 0) + min;
+  return (Math.random() * (max - min + 1) | 0) + min;
 }
 
 /**

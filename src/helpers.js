@@ -296,10 +296,7 @@ export function getStoreItem(key) {
  * @returns {Boolean} `true` if the objects collide, `false` otherwise.
  */
 export function collides(obj1, obj2) {
-  // @ifdef GAMEOBJECT_SCALE||GAMEOBJECT_ANCHOR
-  // destructure results to obj1 and obj2
   [obj1, obj2] = [obj1, obj2].map(obj => getWorldRect(obj));
-  // @endif
 
   return (
     obj1.x < obj2.x + obj2.width &&
@@ -352,4 +349,19 @@ export function getWorldRect(obj) {
     width,
     height
   };
+}
+
+/**
+ * Compare two objects world rects to determine how to sort them. Is used as the `compareFunction` to [Array.prototype.sort](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort).
+ * @function depthSort
+ *
+ * @param {{x: number, y: number, width: number, height: number}|{world: {x: number, y: number, width: number, height: number}}} obj1 - First object to compare.
+ * @param {{x: number, y: number, width: number, height: number}|{world: {x: number, y: number, width: number, height: number}}} obj2 - Second object to compare.
+ * @param {String} [prop='y'] - Objects [getWorldRect](/api/helpers#getWorldRect) property to compare.
+ *
+ * @returns {Number} The difference between the objects compare property.
+ */
+export function depthSort(obj1, obj2, prop = 'y') {
+  [obj1, obj2] = [obj1, obj2].map(getWorldRect);
+  return obj1[prop] - obj2[prop];
 }

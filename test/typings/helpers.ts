@@ -72,3 +72,21 @@ let tileEngine = kontra.TileEngine({
   layers: []
 });
 rect = kontra.getWorldRect(tileEngine);
+
+let sortValue = kontra.depthSort({
+  x: 10,
+  y: 20,
+  width: 100,
+  height: 100
+}, {
+  x: 10,
+  y: 20,
+  width: 100,
+  height: 100
+});
+
+// sprites
+sortValue = kontra.depthSort(sprite1, sprite2);
+
+// options
+sortValue = kontra.depthSort(sprite1, sprite2, 'x');

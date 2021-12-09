@@ -528,5 +528,42 @@ describe('scene', () => {
 
       spy.restore();
     });
+
+    it('should sort children', () => {
+      scene.cullObjects = false;
+      scene.children = [{ y: 20 }, { y: 10 }];
+      scene.sortFunction = (a, b) => a.y - b.y;
+      scene.render();
+
+      expect(scene.children[0].y).to.equal(10);
+      expect(scene.children[1].y).to.equal(20);
+    });
+
+    it('should sort children after being culled', () => {
+      let cullSpy = sinon.stub().returns(true);
+      let sortSpy = sinon.spy();
+
+      let child1 = {
+        x: 0,
+        y: 0,
+        width: 10,
+        height: 10,
+        render: sinon.spy()
+      };
+      let child2 = {
+        x: 0,
+        y: 0,
+        width: 10,
+        height: 10,
+        render: sinon.spy()
+      };
+
+      scene.children = [child1, child2];
+      scene.cullFunction = cullSpy;
+      scene.sortFunction = sortSpy;
+      scene.render();
+
+      expect(sortSpy.calledAfter(cullSpy)).to.be.true;
+    });
   });
 });

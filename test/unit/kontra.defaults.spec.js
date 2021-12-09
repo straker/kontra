@@ -81,6 +81,7 @@ describe('kontra.defaults', () => {
     expect(kontra.setStoreItem).to.exist;
     expect(kontra.collides).to.exist;
     expect(kontra.getWorldRect).to.exist;
+    expect(kontra.depthSort).to.exist;
   });
 
   it('should add keyboard api', () => {

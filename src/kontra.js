@@ -49,7 +49,8 @@ export {
   setStoreItem,
   getStoreItem,
   collides,
-  getWorldRect
+  getWorldRect,
+  depthSort
 } from './helpers.js';
 export { initInput, onInput, offInput } from './input.js';
 export {

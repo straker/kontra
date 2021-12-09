@@ -87,3 +87,6 @@ let sortValue = kontra.depthSort({
 
 // sprites
 sortValue = kontra.depthSort(sprite1, sprite2);
+
+// options
+sortValue = kontra.depthSort(sprite1, sprite2, 'x');

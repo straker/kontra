@@ -17,12 +17,6 @@ jobs:
     script:
     - npm run build
     - npm run test:ts
-  - name: ESLint
-    if: type = pull_request
-    script:
-    - pwd
-    - ls
-    - npm run eslint
   - name: 'Permutation Tests: vector'
     if: type = pull_request
     script:

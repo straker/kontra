@@ -3,7 +3,7 @@ import { on, emit } from './events.js';
 import { getWorldRect } from './helpers.js';
 
 /**
- *  A simple pointer API. You can use it move the main sprite or respond to a pointer event. Works with both mouse and touch events.
+ * A simple pointer API. You can use it move the main sprite or respond to a pointer event. Works with both mouse and touch events.
  *
  * Pointer events can be added on a global level or on individual sprites or objects. Before an object can receive pointer events, you must tell the pointer which objects to track and the object must haven been rendered to the canvas using `object.render()`.
  *

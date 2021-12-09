@@ -46,7 +46,8 @@ import {
   setStoreItem,
   getStoreItem,
   collides,
-  getWorldRect
+  getWorldRect,
+  depthSort
 } from './helpers.js';
 import { initInput, onInput, offInput } from './input.js';
 import {
@@ -140,6 +141,7 @@ let kontra = {
   getStoreItem,
   collides,
   getWorldRect,
+  depthSort,
 
   initInput,
   onInput,

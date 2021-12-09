@@ -20,6 +20,7 @@ describe('helpers', () => {
     expect(helpers.setStoreItem).to.be.an('function');
     expect(helpers.collides).to.be.an('function');
     expect(helpers.getWorldRect).to.be.an('function');
+    expect(helpers.depthSort).to.be.an('function');
   });
 
   // --------------------------------------------------
@@ -380,6 +381,27 @@ describe('helpers', () => {
       expect(rect.y).to.equal(30);
     });
 
+    it('should use objects world x, y, width, and height', () => {
+      let sprite = {
+        x: 40,
+        y: 40,
+        width: 10,
+        height: 10,
+        world: {
+          x: 10,
+          y: 20,
+          width: 20,
+          height: 30
+        }
+      };
+      let rect = helpers.getWorldRect(sprite);
+
+      expect(rect.x).to.equal(10);
+      expect(rect.y).to.equal(20);
+      expect(rect.width).to.equal(20);
+      expect(rect.height).to.equal(30);
+    });
+
     it('should work for tileEngine', () => {
       let tileEngine = TileEngine({
         width: 10,
@@ -394,6 +416,99 @@ describe('helpers', () => {
       expect(rect.y).to.equal(0);
       expect(rect.width).to.equal(320);
       expect(rect.height).to.equal(384);
+    });
+  });
+
+  // --------------------------------------------------
+  // depthSort
+  // --------------------------------------------------
+  describe('depthSort', () => {
+    it('should return the difference between the y props', () => {
+      let sprite1 = Sprite({
+        x: 10,
+        y: 20,
+        width: 10,
+        height: 20
+      });
+
+      let sprite2 = Sprite({
+        x: 19,
+        y: 39,
+        width: 10,
+        height: 20
+      });
+
+      let value = helpers.depthSort(sprite1, sprite2);
+
+      expect(value).to.equal(-19);
+    });
+
+    it('should take into account anchor', () => {
+      let sprite1 = Sprite({
+        x: 40,
+        y: 40,
+        width: 10,
+        height: 10,
+        anchor: { x: 0.5, y: 0.5 }
+      });
+
+      let sprite2 = Sprite({
+        x: 40,
+        y: 40,
+        width: 10,
+        height: 10,
+        anchor: { x: 1, y: 1 }
+      });
+
+      let value = helpers.depthSort(sprite1, sprite2);
+
+      expect(value).to.equal(5);
+    });
+
+    it('should use objects world x, y, width, and height', () => {
+      let sprite1 = {
+        x: 40,
+        y: 40,
+        width: 10,
+        height: 10,
+        world: {
+          x: 10,
+          y: 20,
+          width: 20,
+          height: 30
+        }
+      };
+
+      let sprite2 = Sprite({
+        x: 19,
+        y: 39,
+        width: 10,
+        height: 20
+      });
+
+      let value = helpers.depthSort(sprite1, sprite2);
+
+      expect(value).to.equal(-19);
+    });
+
+    it('should accept different prop to compare', () => {
+      let sprite1 = Sprite({
+        x: 10,
+        y: 20,
+        width: 10,
+        height: 20
+      });
+
+      let sprite2 = Sprite({
+        x: 20,
+        y: 39,
+        width: 10,
+        height: 20
+      });
+
+      let value = helpers.depthSort(sprite1, sprite2, 'x');
+
+      expect(value).to.equal(-10);
     });
   });
 });

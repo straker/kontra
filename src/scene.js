@@ -53,7 +53,8 @@ function getAllNodes(object) {
  * @param {{render: Function, update: Function, x: number, y: number}[]} [properties.children] - Children to add to the scene.
  * @param {HTMLCanvasElement} [properties.canvas] - The canvas element used to determine the size of the camera. Defaults to [core.getCanvas()](api/core#getCanvas).
  * @param {Boolean} [properties.cullObjects=true] - If the scene should not render objects outside the camera bounds.
- * @param {Function} [properties.cullFunction] - The function used to filter objects to render. Defaults to [helpers.collides](api/helpers#collides).
+ * @param {(object1: Object, object2: Object) => Boolean} [properties.cullFunction] - The function used to filter objects to render. Defaults to [helpers.collides](api/helpers#collides).
+ * @param {(object1: Object, object2: Object) => Number} [properties.sortFunction] - The function used to sort the children of the scene.
  * @param {Function} [properties.onShow] - Function called when the scene is shown.
  * @param {Function} [properties.onHide] - Function called when the scene is hidden.
  *
@@ -97,11 +98,18 @@ class Scene {
     cullObjects = true,
 
     /**
-     * Camera culling function which prevents objects outside the camera screen from rendering. Is passed as the `filterFunction` to the [render](api/gameObject#render) function.
+     * Camera culling function which prevents objects outside the camera screen from rendering.
      * @memberof Scene
      * @property {Function} cullFunction
      */
     cullFunction = collides,
+
+    /**
+     * Function used to sort the children of the scene before rendering. Only direct children of the scene are sorted. Is used as the `compareFunction` to [Array.prototype.sort](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort).
+     * @memberof Scene
+     * @property {Function} sortFunction
+     */
+    sortFunction,
 
     ...props
   }) {
@@ -126,6 +134,7 @@ class Scene {
       canvas,
       cullObjects,
       cullFunction,
+      sortFunction,
       ...props
     });
 
@@ -280,8 +289,14 @@ class Scene {
    */
   render() {
     if (!this.hidden) {
-      let { _ctx, children, camera, cullObjects, cullFunction } =
-        this;
+      let {
+        _ctx,
+        children,
+        camera,
+        sortFunction,
+        cullObjects,
+        cullFunction
+      } = this;
       let { x, y, width, height, scaleX, scaleY } = camera;
 
       // translate the scene to the camera position
@@ -295,6 +310,9 @@ class Scene {
         children = children.filter(child =>
           cullFunction(camera, child)
         );
+      }
+      if (sortFunction) {
+        children.sort(sortFunction);
       }
       children.map(child => child.render && child.render());
 

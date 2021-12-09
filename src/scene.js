@@ -105,7 +105,26 @@ class Scene {
     cullFunction = collides,
 
     /**
-     * Function used to sort the children of the scene before rendering. Only direct children of the scene are sorted. Is used as the `compareFunction` to [Array.prototype.sort](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort).
+     * Function used to sort the children of the scene before rendering. Can be used in conjunction with [helpers.depthSort](/api/helpers#depthSort). Only direct children of the scene are sorted.
+     *
+     * ```js
+     * import { Scene, Sprite, depthSort } from 'kontra';
+     *
+     * let sprite1 = Sprite({
+     *   // ...
+     * });
+     * let sprite2 = Sprite({
+     *   // ...
+     * });
+     *
+     * let scene = Scene({
+     *   id: 'game',
+     *   children: [sprite1, sprite2],
+     *   sortFunction: depthSort
+     * });
+     *
+     * scene.render();
+     * ```
      * @memberof Scene
      * @property {Function} sortFunction
      */

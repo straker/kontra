@@ -359,7 +359,7 @@ export function getWorldRect(obj) {
  * @param {{x: number, y: number, width: number, height: number}|{world: {x: number, y: number, width: number, height: number}}} obj2 - Second object to compare.
  * @param {String} [prop='y'] - Objects [getWorldRect](/api/helpers#getWorldRect) property to compare.
  *
- * @returns {Number}
+ * @returns {Number} The difference between the objects compare property.
  */
 export function depthSort(obj1, obj2, prop = 'y') {
   [obj1, obj2] = [obj1, obj2].map(getWorldRect);

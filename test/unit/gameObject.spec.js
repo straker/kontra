@@ -375,24 +375,6 @@ describe('gameObject with context: ' + JSON.stringify(testContext, null, 4), () 
 
         expect(child.render.called).to.be.true;
       });
-
-      it('should filter objects by a function if passed', () => {
-        let child1 = {
-          foo: 'bar',
-          render: sinon.stub()
-        };
-        let child2 = {
-          foo: 'baz',
-          render: sinon.stub()
-        };
-
-        gameObject.children = [child1, child2];
-
-        gameObject.render(obj => obj.foo === 'baz');
-
-        expect(child1.render.called).to.be.false;
-        expect(child2.render.called).to.be.true;
-      });
     } else {
       it('should not call render on each child', () => {
         let child = {

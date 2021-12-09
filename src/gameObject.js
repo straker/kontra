@@ -247,10 +247,8 @@ class GameObject extends Updatable {
    * Render the game object and all children. Calls the game objects [draw()](api/gameObject#draw) function.
    * @memberof GameObject
    * @function render
-   *
-   * @param {Function} [filterObjects] - [Array.prototype.filter()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter) function which is used to filter which children to render.
    */
-  render(filterObjects) {
+  render() {
     let context = this.context;
     context.save();
 
@@ -315,9 +313,6 @@ class GameObject extends Updatable {
     // @ifdef GAMEOBJECT_GROUP
     // perform all transforms on the parent before rendering the children
     let children = this.children;
-    if (filterObjects) {
-      children = children.filter(filterObjects);
-    }
     children.map(child => child.render && child.render());
     // @endif
 

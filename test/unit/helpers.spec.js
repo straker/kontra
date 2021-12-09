@@ -298,30 +298,6 @@ describe('helpers', () => {
       expect(helpers.collides(sprite1, sprite2)).to.be.true;
     });
 
-    it('should return null if either sprite is rotated', () => {
-      let sprite1 = Sprite({
-        x: 10,
-        y: 20,
-        width: 10,
-        height: 20,
-        rotation: 1
-      });
-
-      let sprite2 = Sprite({
-        x: 19,
-        y: 39,
-        width: 10,
-        height: 20
-      });
-
-      expect(helpers.collides(sprite1, sprite2)).to.equal(null);
-
-      sprite1.rotation = 0;
-      sprite2.rotation = 1;
-
-      expect(helpers.collides(sprite1, sprite2)).to.equal(null);
-    });
-
     it('should work for non-sprite objects', () => {
       let sprite1 = Sprite({
         x: 10,

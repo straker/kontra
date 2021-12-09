@@ -10,7 +10,7 @@ import Animation from './animation.js';
 function parseFrames(consecutiveFrames) {
   // return a single number frame
   // @see https://github.com/jed/140bytes/wiki/Byte-saving-techniques#coercion-to-test-for-types
-  if (+consecutiveFrames === consecutiveFrames) {
+  if (+consecutiveFrames == consecutiveFrames) {
     return consecutiveFrames;
   }
 
@@ -201,7 +201,7 @@ class SpriteSheet {
       sequence = [];
 
       // @ifdef DEBUG
-      if (frames === undefined) {
+      if (frames == undefined) {
         throw Error('Animation ' + name + ' must provide a frames property');
       }
       // @endif

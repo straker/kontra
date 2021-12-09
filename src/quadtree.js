@@ -1,5 +1,4 @@
 import { getCanvas } from './core.js';
-import { getWorldRect } from './helpers.js';
 
 /**
  * Determine which subnodes the object intersects with
@@ -14,8 +13,6 @@ function getIndices(object, bounds) {
 
   let verticalMidpoint = bounds.x + bounds.width / 2;
   let horizontalMidpoint = bounds.y + bounds.height / 2;
-
-  let { x, y, width, height } = getWorldRect(object);
 
   // save off quadrant checks for reuse
   let intersectsTopQuadrants = object.y < horizontalMidpoint;
@@ -162,7 +159,6 @@ class Quadtree {
   get(object) {
     // since an object can belong to multiple nodes we should not add it multiple times
     let objects = new Set();
-    let indices, i;
 
     // traverse the tree until we get to a leaf node
     while (this._s.length && this._b) {
@@ -174,6 +170,7 @@ class Quadtree {
     }
 
     // don't add the object to the return list
+    /* eslint-disable-next-line no-restricted-syntax */
     return this._o.filter(obj => obj !== object);
   }
 
@@ -272,7 +269,7 @@ class Quadtree {
     for (i = 0; i < 4; i++) {
       this._s[i] = new Quadtree({
         bounds: {
-          x: this.bounds.x + (i % 2 === 1 ? subWidth : 0), // nodes 1 and 3
+          x: this.bounds.x + (i % 2 == 1 ? subWidth : 0), // nodes 1 and 3
           y: this.bounds.y + (i >= 2 ? subHeight : 0), // nodes 2 and 3
           width: subWidth,
           height: subHeight
@@ -295,7 +292,7 @@ class Quadtree {
   /* @ifdef VISUAL_DEBUG **
    render() {
      // don't draw empty leaf nodes, always draw branch nodes and the first node
-     if (this._o.length || this._d === 0 ||
+     if (this._o.length || this._d == 0 ||
          (this._p && this._p._b)) {
 
        context.strokeStyle = 'red';

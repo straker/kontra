@@ -1,6 +1,5 @@
 import { GameObjectClass } from './gameObject.js';
-import { on } from './events.js';
-import { getCanvas, getContext } from './core.js';
+import { getContext } from './core.js';
 
 let fontSizeRegex = /(\d+)(\w+)/;
 
@@ -247,11 +246,11 @@ class Text extends GameObjectClass {
     let context = this.context;
 
     // @ifdef TEXT_RTL
-    textAlign = this.textAlign || (context.canvas.dir === 'rtl' ? 'right' : 'left');
+    textAlign = this.textAlign || (context.canvas.dir == 'rtl' ? 'right' : 'left');
     // @endif
 
     // @ifdef TEXT_ALIGN||TEXT_RTL
-    alignX = textAlign === 'right' ? this.width : textAlign === 'center' ? (this.width / 2) | 0 : 0;
+    alignX = textAlign == 'right' ? this.width : textAlign == 'center' ? (this.width / 2) | 0 : 0;
     // @endif
 
     this._s.map((str, index) => {

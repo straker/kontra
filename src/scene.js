@@ -185,7 +185,7 @@ class Scene {
    */
   removeChild(child) {
     let index = this.children.indexOf(child);
-    if (index !== -1) {
+    if (index != -1) {
       this.children.splice(index, 1);
     }
 
@@ -269,7 +269,7 @@ class Scene {
    */
   update(dt) {
     if (!this.hidden) {
-      this.children.map(child => child.update && child.update());
+      this.children.map(child => child.update && child.update(dt));
     }
   }
 

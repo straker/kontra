@@ -389,7 +389,7 @@ export function loadData(url) {
     })
     .then(response => {
       fullUrl = getUrl(resolvedUrl, window.location.href);
-      if (typeof response === 'object') {
+      if (typeof response == 'object') {
         dataMap.set(response, fullUrl);
       }
 
@@ -448,6 +448,7 @@ export function _reset() {
   window.__k = undefined;
 
   if (getCanPlay._r) {
+    /* eslint-disable-next-line no-func-assign */
     getCanPlay = getCanPlay._r;
   }
 }
@@ -455,6 +456,7 @@ export function _reset() {
 // Override the getCanPlay function to provide a specific return type for tests
 export function _setCanPlayFn(fn) {
   let originalCanPlay = getCanPlay;
+  /* eslint-disable-next-line no-func-assign */
   getCanPlay = fn;
   getCanPlay._r = originalCanPlay;
 }

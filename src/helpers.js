@@ -121,7 +121,7 @@ export function movePoint(point, angle, distance) {
  * @returns {Number} Random integer between min and max values.
  */
 export function randInt(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
+  return ((Math.random() * (max - min + 1)) | 0) + min;
 }
 
 /**
@@ -228,7 +228,7 @@ export function clamp(min, max, value) {
  * @param {*} value - The value to store.
  */
 export function setStoreItem(key, value) {
-  if (value === undefined) {
+  if (value == undefined) {
     localStorage.removeItem(key);
   } else {
     localStorage.setItem(key, JSON.stringify(value));
@@ -250,7 +250,9 @@ export function getStoreItem(key) {
 
   try {
     value = JSON.parse(value);
-  } catch (e) {}
+  } catch (e) {
+    // do nothing
+  }
 
   return value;
 }

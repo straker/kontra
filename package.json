@@ -50,6 +50,8 @@
     "@rollup/stream": "^2.0.0",
     "chai": "^4.3.4",
     "coveralls": "^3.1.1",
+    "eslint": "^8.4.1",
+    "eslint-plugin-mocha-no-only": "^1.1.1",
     "glob": "^7.2.0",
     "gulp": "^4.0.2",
     "gulp-livingcss": "^4.1.2",
@@ -58,8 +60,8 @@
     "gulp-rename": "^2.0.0",
     "gulp-size": "^4.0.1",
     "gulp-terser": "^2.1.0",
-    "husky": "^7.0.2",
     "http-server": "^0.12.3",
+    "husky": "^7.0.2",
     "karma": "^6.3.4",
     "karma-chai": "^0.1.0",
     "karma-chrome-launcher": "^3.1.0",
@@ -80,6 +82,7 @@
     "vinyl-source-stream": "^2.0.0"
   },
   "lint-staged": {
-    "*.{js,css,md}": "prettier --write"
+    "*.{js,css,md}": "prettier --write",
+    "*.js": "eslint --fix"
   }
 }

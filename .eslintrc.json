@@ -1,0 +1,46 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+  "extends": "eslint:recommended",
+  "parserOptions": {
+    "ecmaVersion": 13,
+    "sourceType": "module"
+  },
+  "rules": {
+    "no-restricted-syntax": [
+      "error",
+      {
+        "selector": "BinaryExpression[operator='===']",
+        "message": "Prefer '==' over '===' to save bytes"
+      },
+      {
+        "selector": "BinaryExpression[operator='!==']",
+        "message": "Prefer '!=' over '!==' to save bytes"
+      },
+      {
+        "selector": "MemberExpression[object.name=Math][property.name=floor]",
+        "message": "Prefer '| 0' over 'Math.floor' to save bytes"
+      }
+    ]
+  },
+  "overrides": [
+    {
+      "files": ["test/**/*.js"],
+      "env": {
+        "browser": true,
+        "es2021": true,
+        "mocha": true
+      },
+      "globals": {
+        "expect": true,
+        "sinon": true
+      },
+      "plugins": ["mocha-no-only"],
+      "rules": {
+        "mocha-no-only/mocha-no-only": ["error"]
+      }
+    }
+  ]
+}

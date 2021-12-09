@@ -27,7 +27,7 @@ let handler = {
   // so neither will throw errors
   get(target, key) {
     // export for testing
-    if (key === '_proxy') return true;
+    if (key == '_proxy') return true;
     return noop;
   }
 };

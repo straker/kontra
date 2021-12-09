@@ -80,8 +80,8 @@ class Pool {
    */
   get(properties = {}) {
     // the pool is out of objects if the first object is in use and it can't grow
-    if (this.size === this.objects.length) {
-      if (this.size === this.maxSize) {
+    if (this.size == this.objects.length) {
+      if (this.size == this.maxSize) {
         return;
       }
       // double the size of the array by adding twice as many new objects to the end

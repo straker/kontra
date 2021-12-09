@@ -150,7 +150,7 @@ class TileEngine {
       }
 
       let { image } = tileset;
-      if ('' + image === image) {
+      if ('' + image == image) {
         // @ifdef DEBUG
         if (!__k) {
           throw Error(`You must use "load" or "loadImage" to resolve tileset.image`);
@@ -231,13 +231,11 @@ class TileEngine {
   // otherwise. Firefox and Safari won't draw it.
   // @see http://stackoverflow.com/questions/19338032/canvas-indexsizeerror-index-or-size-is-negative-or-greater-than-the-allowed-a
   set sx(value) {
-    let { mapwidth, objects } = this;
-    this._sx = clamp(0, mapwidth - getCanvas().width, value);
+    this._sx = clamp(0, this.mapwidth - getCanvas().width, value);
   }
 
   set sy(value) {
-    let { mapheight, objects } = this;
-    this._sy = clamp(0, mapheight - getCanvas().height, value);
+    this._sy = clamp(0, this.mapheight - getCanvas().height, value);
   }
 
   /**
@@ -248,8 +246,7 @@ class TileEngine {
    * @param {Object} object - Object to add to the tile engine.
    */
   addObject(object) {
-    let { objects, sx, sy } = this;
-    objects.push(object);
+    this.objects.push(object);
   }
 
   /**
@@ -262,7 +259,7 @@ class TileEngine {
   removeObject(object) {
     let { objects } = this;
     let index = objects.indexOf(object);
-    if (index !== -1) {
+    if (index != -1) {
       objects.splice(index, 1);
     }
   }
@@ -563,7 +560,7 @@ class TileEngine {
       layer._d = false;
       layerMap[name] = layer;
 
-      if (data && visible !== false) {
+      if (data && visible != false) {
         this._r(layer, _ctx);
       }
     });

@@ -205,6 +205,7 @@ class Grid extends GameObjectClass {
 
     this.breakpoints.map(breakpoint => {
       // b = breakpoint
+      /* eslint-disable-next-line no-restricted-syntax */
       if (breakpoint.metric.call(this) && this._b !== breakpoint) {
         this._b = breakpoint;
         breakpoint.callback.call(this);
@@ -219,7 +220,7 @@ class Grid extends GameObjectClass {
 
     // nc = numCols
     let numCols = (this._nc =
-      this.flow === 'column' ? 1 : this.flow === 'row' ? children.length : this.numCols);
+      this.flow == 'column' ? 1 : this.flow == 'row' ? children.length : this.numCols);
 
     let row = 0;
     let col = 0;
@@ -274,7 +275,7 @@ class Grid extends GameObjectClass {
 
     // reverse columns. direction property overrides canvas dir
     let dir = this.context.canvas.dir;
-    let rtl = (dir === 'rtl' && !this.dir) || this.dir === 'rtl';
+    let rtl = (dir == 'rtl' && !this.dir) || this.dir == 'rtl';
     this._rtl = rtl;
     if (rtl) {
       this._g = grid.map(row => row.reverse());
@@ -322,10 +323,10 @@ class Grid extends GameObjectClass {
 
           // calculate the x position based on the alignment and
           // anchor of the object
-          if (justifySelf === 0) {
+          if (justifySelf == 0) {
             pointX = pointX + width * anchorX;
-          } else if (justifySelf === 0.5) {
-            let sign = anchorX < 0.5 ? -1 : anchorX === 0.5 ? 0 : 1;
+          } else if (justifySelf == 0.5) {
+            let sign = anchorX < 0.5 ? -1 : anchorX == 0.5 ? 0 : 1;
             pointX = pointX + sign * width * justifySelf;
           } else {
             pointX = pointX - width * (1 - anchorX);
@@ -333,10 +334,10 @@ class Grid extends GameObjectClass {
 
           // calculate the y position based on the justification and
           // anchor of the object
-          if (alignSelf === 0) {
+          if (alignSelf == 0) {
             pointY = pointY + height * anchorY;
-          } else if (alignSelf === 0.5) {
-            let sign = anchorY < 0.5 ? -1 : anchorY === 0.5 ? 0 : 1;
+          } else if (alignSelf == 0.5) {
+            let sign = anchorY < 0.5 ? -1 : anchorY == 0.5 ? 0 : 1;
             pointY = pointY + sign * height * alignSelf;
           } else {
             pointY = pointY - height * (1 - anchorY);

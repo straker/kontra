@@ -167,7 +167,7 @@ function getCanvasOffset(pointer) {
 
   // @see https://stackoverflow.com/a/53405390/2124254
   let transform =
-    _s.transform !== 'none' ? _s.transform.replace('matrix(', '').split(',') : [1, 1, 1, 1];
+    _s.transform != 'none' ? _s.transform.replace('matrix(', '').split(',') : [1, 1, 1, 1];
   let transformScaleX = parseFloat(transform[0]);
   let transformScaleY = parseFloat(transform[3]);
 
@@ -203,7 +203,7 @@ function getCanvasOffset(pointer) {
  */
 function pointerDownHandler(evt) {
   // touchstart should be treated like a left mouse button
-  let button = evt.button !== undefined ? buttonMap[evt.button] : 'left';
+  let button = evt.button != null ? buttonMap[evt.button] : 'left';
   pressedButtons[button] = true;
   pointerHandler(evt, 'onDown');
 }
@@ -214,7 +214,7 @@ function pointerDownHandler(evt) {
  * @param {MouseEvent|TouchEvent} evt
  */
 function pointerUpHandler(evt) {
-  let button = evt.button !== undefined ? buttonMap[evt.button] : 'left';
+  let button = evt.button != null ? buttonMap[evt.button] : 'left';
   pressedButtons[button] = false;
   pointerHandler(evt, 'onUp');
 }
@@ -465,7 +465,7 @@ export function untrack(...objects) {
     object._r = 0; // 0 is the shortest falsy value
 
     let index = pointer._o.indexOf(object);
-    if (index !== -1) {
+    if (index != -1) {
       pointer._o.splice(index, 1);
     }
   });
@@ -519,6 +519,7 @@ export function pointerOver(object) {
   }
   // @endif
 
+  /* eslint-disable-next-line no-restricted-syntax */
   return pointer._o.includes(object) && getCurrentObject(pointer) === object;
 }
 

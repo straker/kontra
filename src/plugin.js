@@ -35,7 +35,7 @@ function getMethod(methodName) {
  */
 function removeInterceptor(interceptors, fn) {
   let index = interceptors.indexOf(fn);
-  if (index !== -1) {
+  if (index != -1) {
     interceptors.splice(index, 1);
   }
 }

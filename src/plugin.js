@@ -35,7 +35,7 @@ function getMethod(methodName) {
  */
 function removeInterceptor(interceptors, fn) {
   let index = interceptors.indexOf(fn);
-  if (index !== -1) {
+  if (index != -1) {
     interceptors.splice(index, 1);
   }
 }
@@ -55,13 +55,22 @@ export function registerPlugin(kontraObj, pluginObj) {
   // create interceptor list and functions
   if (!objectProto._inc) {
     objectProto._inc = {};
-    objectProto._bInc = function beforePlugins(context, method, ...args) {
+    objectProto._bInc = function beforePlugins(
+      context,
+      method,
+      ...args
+    ) {
       return this._inc[method].before.reduce((acc, fn) => {
         let newArgs = fn(context, ...acc);
         return newArgs ? newArgs : acc;
       }, args);
     };
-    objectProto._aInc = function afterPlugins(context, method, result, ...args) {
+    objectProto._aInc = function afterPlugins(
+      context,
+      method,
+      result,
+      ...args
+    ) {
       return this._inc[method].after.reduce((acc, fn) => {
         let newResult = fn(context, acc, ...args);
         return newResult ? newResult : acc;
@@ -83,7 +92,10 @@ export function registerPlugin(kontraObj, pluginObj) {
         // call before interceptors
         let alteredArgs = this._bInc(this, method, ...args);
 
-        let result = objectProto['_o' + method].call(this, ...alteredArgs);
+        let result = objectProto['_o' + method].call(
+          this,
+          ...alteredArgs
+        );
 
         // call after interceptors
         return this._aInc(this, method, result, ...args);
@@ -123,9 +135,15 @@ export function unregisterPlugin(kontraObj, pluginObj) {
     let method = getMethod(methodName);
 
     if (methodName.startsWith('before')) {
-      removeInterceptor(objectProto._inc[method].before, pluginObj[methodName]);
+      removeInterceptor(
+        objectProto._inc[method].before,
+        pluginObj[methodName]
+      );
     } else if (methodName.startsWith('after')) {
-      removeInterceptor(objectProto._inc[method].after, pluginObj[methodName]);
+      removeInterceptor(
+        objectProto._inc[method].after,
+        pluginObj[methodName]
+      );
     }
   });
 }

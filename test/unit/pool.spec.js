@@ -8,17 +8,17 @@ describe('pool', () => {
   let sprite = function () {
     return {
       render: noop,
-      update: function () {
+      update() {
         this.ttl--;
       },
-      init: function (properties) {
+      init(properties) {
         this.alive = properties.alive;
 
         for (let prop in properties) {
           this[prop] = properties[prop];
         }
       },
-      isAlive: function () {
+      isAlive() {
         return this.alive || this.ttl > 0;
       },
       ttl: 0
@@ -52,7 +52,7 @@ describe('pool', () => {
     it('should log an error if the create function returned an object with missing functions', () => {
       function func() {
         Pool({
-          create: function () {
+          create() {
             return {
               render: noop
             };
@@ -210,16 +210,16 @@ describe('pool', () => {
       let count = 0;
 
       let pool = Pool({
-        create: function () {
+        create() {
           return {
             render: noop,
-            update: function () {
+            update() {
               count++;
             },
-            init: function (properties) {
+            init(properties) {
               this.alive = properties.alive;
             },
-            isAlive: function () {
+            isAlive() {
               return this.alive;
             }
           };
@@ -262,7 +262,9 @@ describe('pool', () => {
       expect(pool.getAliveObjects().length).to.equal(4);
       expect(pool.objects[2].isAlive()).to.be.true;
       expect(pool.objects[4].isAlive()).to.be.false;
-      expect(pool.getAliveObjects().indexOf(pool.objects[4])).to.equal(-1);
+      expect(
+        pool.getAliveObjects().indexOf(pool.objects[4])
+      ).to.equal(-1);
 
       expect(pool.objects[0]).to.equal(expected[0]);
       expect(pool.objects[1]).to.equal(expected[1]);
@@ -280,16 +282,16 @@ describe('pool', () => {
       let count = 0;
 
       let pool = Pool({
-        create: function () {
+        create() {
           return {
             update: noop,
-            render: function () {
+            render() {
               count++;
             },
-            init: function (properties) {
+            init(properties) {
               this.alive = properties.alive;
             },
-            isAlive: function () {
+            isAlive() {
               return this.alive;
             }
           };

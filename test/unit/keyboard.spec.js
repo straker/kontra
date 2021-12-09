@@ -64,7 +64,7 @@ describe('keyboard', () => {
     // Defaults to keydown
     describe('handler=keydown', () => {
       it('should call the callback when a single key combination is pressed', done => {
-        keyboard.onKey('a', evt => {
+        keyboard.onKey('a', () => {
           done();
         });
 
@@ -72,7 +72,7 @@ describe('keyboard', () => {
       });
 
       it('should accept an array of key combinations to register', done => {
-        keyboard.onKey(['a', 'b'], evt => {
+        keyboard.onKey(['a', 'b'], () => {
           done();
         });
 
@@ -86,7 +86,7 @@ describe('keyboard', () => {
       it('should call the callback when a single key combination is pressed', done => {
         keyboard.onKey(
           'a',
-          evt => {
+          () => {
             done();
           },
           { handler }
@@ -98,7 +98,7 @@ describe('keyboard', () => {
       it('should accept an array of key combinations to register', done => {
         keyboard.onKey(
           ['a', 'b'],
-          evt => {
+          () => {
             done();
           },
           { handler }
@@ -113,12 +113,15 @@ describe('keyboard', () => {
         keyboard.initKeys();
         let spy;
 
-        keyboard.onKey('a', evt => {
+        keyboard.onKey('a', () => {
           expect(spy.called).to.be.true;
           done();
         });
 
-        let event = simulateEvent('keydown', { code: 'KeyA', async: true });
+        let event = simulateEvent('keydown', {
+          code: 'KeyA',
+          async: true
+        });
         spy = sinon.spy(event, 'preventDefault');
       });
     });
@@ -147,7 +150,8 @@ describe('keyboard', () => {
     describe('handler=keydown', () => {
       it('should not call the callback when the combination has been unregistered', () => {
         keyboard.onKey('a', () => {
-          // this should never be called since the key combination was unregistered
+          // this should never be called since the key combination
+          // was unregistered
           expect(false).to.be.true;
         });
 
@@ -158,7 +162,8 @@ describe('keyboard', () => {
 
       it('should accept an array of key combinations to unregister', () => {
         keyboard.onKey(['a', 'b'], () => {
-          // this should never be called since the key combination was unregistered
+          // this should never be called since the key combination
+          // was unregistered
           expect(false).to.be.true;
         });
 
@@ -176,7 +181,8 @@ describe('keyboard', () => {
         keyboard.onKey(
           'a',
           () => {
-            // this should never be called since the key combination was unregistered
+            // this should never be called since the key combination
+            // was unregistered
             expect(false).to.be.true;
           },
           handler
@@ -191,7 +197,8 @@ describe('keyboard', () => {
         keyboard.onKey(
           ['a', 'b'],
           () => {
-            // this should never be called since the key combination was unregistered
+            // this should never be called since the key combination
+            // was unregistered
             expect(false).to.be.true;
           },
           handler

@@ -119,7 +119,7 @@ describe('gameLoop', () => {
       let count = 0;
 
       loop = GameLoop({
-        update: function (time) {
+        update() {
           count++;
         },
         render: noop,
@@ -136,7 +136,7 @@ describe('gameLoop', () => {
       let count = 0;
 
       loop = GameLoop({
-        update: function (time) {
+        update() {
           count++;
         },
         render: noop,
@@ -149,11 +149,11 @@ describe('gameLoop', () => {
       expect(count).to.equal(2);
     });
 
-    it('should change the frame rate if passed fps', function () {
+    it('should change the frame rate if passed fps', () => {
       let count = 0;
 
       loop = GameLoop({
-        update: function (time) {
+        update() {
           count++;
         },
         render: noop,
@@ -183,7 +183,7 @@ describe('gameLoop', () => {
       context.clearRect.restore();
     });
 
-    it('should not clear the canvas if clearCanvas is false', function () {
+    it('should not clear the canvas if clearCanvas is false', () => {
       loop = GameLoop({
         render: noop,
         clearCanvas: false

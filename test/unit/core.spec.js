@@ -7,7 +7,9 @@ import { on } from '../../src/events.js';
 describe('core', () => {
   // ensure no canvas exists since these tests set it up
   beforeEach(() => {
-    document.querySelectorAll('canvas').forEach(canvas => canvas.remove());
+    document
+      .querySelectorAll('canvas')
+      .forEach(canvas => canvas.remove());
   });
 
   // --------------------------------------------------
@@ -102,7 +104,9 @@ describe('core', () => {
     });
 
     it('should allow contextless option', () => {
-      let { canvas, context } = core.init(null, { contextless: true });
+      let { canvas, context } = core.init(null, {
+        contextless: true
+      });
 
       expect(canvas._proxy).to.be.true;
       expect(context._proxy).to.be.true;

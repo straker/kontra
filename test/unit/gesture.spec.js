@@ -1,5 +1,8 @@
 import * as gesture from '../../src/gesture.js';
-import { emit, on, callbacks as eventCallbacks } from '../../src/events.js';
+import {
+  emit,
+  callbacks as eventCallbacks
+} from '../../src/events.js';
 
 // --------------------------------------------------
 // gesture

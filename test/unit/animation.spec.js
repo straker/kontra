@@ -129,12 +129,23 @@ describe('animation', () => {
       animation.render({
         x: 10,
         y: 10,
-        context: context
+        context
       });
 
       expect(context.drawImage.called).to.be.true;
-      expect(context.drawImage.calledWith(animation.spriteSheet.image, 5, 0, 5, 5, 10, 10, 5, 5)).to
-        .be.true;
+      expect(
+        context.drawImage.calledWith(
+          animation.spriteSheet.image,
+          5,
+          0,
+          5,
+          5,
+          10,
+          10,
+          5,
+          5
+        )
+      ).to.be.true;
     });
 
     it('should use the default context', () => {
@@ -159,12 +170,23 @@ describe('animation', () => {
       animation.render({
         x: 10,
         y: 10,
-        context: context
+        context
       });
 
       expect(context.drawImage.called).to.be.true;
-      expect(context.drawImage.calledWith(animation.spriteSheet.image, 5, 5, 5, 5, 10, 10, 5, 5)).to
-        .be.true;
+      expect(
+        context.drawImage.calledWith(
+          animation.spriteSheet.image,
+          5,
+          5,
+          5,
+          5,
+          10,
+          10,
+          5,
+          5
+        )
+      ).to.be.true;
     });
   });
 });

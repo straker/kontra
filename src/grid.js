@@ -205,6 +205,7 @@ class Grid extends GameObjectClass {
 
     this.breakpoints.map(breakpoint => {
       // b = breakpoint
+      /* eslint-disable-next-line no-restricted-syntax */
       if (breakpoint.metric.call(this) && this._b !== breakpoint) {
         this._b = breakpoint;
         breakpoint.callback.call(this);
@@ -219,7 +220,11 @@ class Grid extends GameObjectClass {
 
     // nc = numCols
     let numCols = (this._nc =
-      this.flow === 'column' ? 1 : this.flow === 'row' ? children.length : this.numCols);
+      this.flow == 'column'
+        ? 1
+        : this.flow == 'row'
+        ? children.length
+        : this.numCols);
 
     let row = 0;
     let col = 0;
@@ -239,7 +244,10 @@ class Grid extends GameObjectClass {
       let colSpan = spans;
 
       do {
-        colWidths[col] = Math.max(colWidths[col] || 0, width / colSpan);
+        colWidths[col] = Math.max(
+          colWidths[col] || 0,
+          width / colSpan
+        );
         grid[row][col] = child;
       } while (col++ <= numCols && --spans);
 
@@ -274,7 +282,7 @@ class Grid extends GameObjectClass {
 
     // reverse columns. direction property overrides canvas dir
     let dir = this.context.canvas.dir;
-    let rtl = (dir === 'rtl' && !this.dir) || this.dir === 'rtl';
+    let rtl = (dir == 'rtl' && !this.dir) || this.dir == 'rtl';
     this._rtl = rtl;
     if (rtl) {
       this._g = grid.map(row => row.reverse());
@@ -292,20 +300,24 @@ class Grid extends GameObjectClass {
       let topLeftX = -this.anchor.x * this.width;
 
       gridRow.map((child, col) => {
-        // don't render the same child multiple times if it uses colSpan
+        // don't render the same child multiple times if it uses
+        // colSpan
         if (child && !rendered.includes(child)) {
           rendered.push(child);
 
-          let justifySelf = alignment[child.justifySelf || justify[col % justify.length]](
-            this._rtl
-          );
-          let alignSelf = alignment[child.alignSelf || align[row % align.length]]();
+          let justifySelf = alignment[
+            child.justifySelf || justify[col % justify.length]
+          ](this._rtl);
+          let alignSelf =
+            alignment[child.alignSelf || align[row % align.length]]();
 
           let colSpan = child.colSpan || 1;
           let colWidth = colWidths[col];
           if (colSpan > 1 && col + colSpan <= this._nc) {
             for (let i = 1; i < colSpan; i++) {
-              colWidth += colWidths[col + i] + colGap[(col + i) % colGap.length];
+              colWidth +=
+                colWidths[col + i] +
+                colGap[(col + i) % colGap.length];
             }
           }
 
@@ -322,10 +334,10 @@ class Grid extends GameObjectClass {
 
           // calculate the x position based on the alignment and
           // anchor of the object
-          if (justifySelf === 0) {
+          if (justifySelf == 0) {
             pointX = pointX + width * anchorX;
-          } else if (justifySelf === 0.5) {
-            let sign = anchorX < 0.5 ? -1 : anchorX === 0.5 ? 0 : 1;
+          } else if (justifySelf == 0.5) {
+            let sign = anchorX < 0.5 ? -1 : anchorX == 0.5 ? 0 : 1;
             pointX = pointX + sign * width * justifySelf;
           } else {
             pointX = pointX - width * (1 - anchorX);
@@ -333,10 +345,10 @@ class Grid extends GameObjectClass {
 
           // calculate the y position based on the justification and
           // anchor of the object
-          if (alignSelf === 0) {
+          if (alignSelf == 0) {
             pointY = pointY + height * anchorY;
-          } else if (alignSelf === 0.5) {
-            let sign = anchorY < 0.5 ? -1 : anchorY === 0.5 ? 0 : 1;
+          } else if (alignSelf == 0.5) {
+            let sign = anchorY < 0.5 ? -1 : anchorY == 0.5 ? 0 : 1;
             pointY = pointY + sign * height * alignSelf;
           } else {
             pointY = pointY - height * (1 - anchorY);

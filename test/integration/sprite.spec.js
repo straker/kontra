@@ -24,9 +24,15 @@ describe('sprite integration', () => {
     let sprite3 = Sprite();
     sprite3.animations = spriteSheet.animations;
 
-    expect(sprite1.animations.walk).to.not.equal(sprite2.animations.walk);
-    expect(sprite1.animations.walk).to.not.equal(sprite3.animations.walk);
-    expect(sprite2.animations.walk).to.not.equal(sprite3.animations.walk);
+    expect(sprite1.animations.walk).to.not.equal(
+      sprite2.animations.walk
+    );
+    expect(sprite1.animations.walk).to.not.equal(
+      sprite3.animations.walk
+    );
+    expect(sprite2.animations.walk).to.not.equal(
+      sprite3.animations.walk
+    );
 
     for (let i = 0; i < 7; i++) {
       sprite1.update();

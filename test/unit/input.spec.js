@@ -1,11 +1,18 @@
 import * as input from '../../src/input.js';
 import { getCanvas } from '../../src/core.js';
-import { emit, callbacks as eventCallbacks } from '../../src/events.js';
+import {
+  emit,
+  callbacks as eventCallbacks
+} from '../../src/events.js';
 import { keyMap } from '../../src/keyboard.js';
 import { gamepadMap, updateGamepad } from '../../src/gamepad.js';
 import { gestureMap } from '../../src/gesture.js';
 import { getPointer, resetPointers } from '../../src/pointer.js';
-import { simulateEvent, simulateGamepadEvent, createGamepad, getGamepadsStub } from '../utils.js';
+import {
+  simulateEvent,
+  createGamepad,
+  getGamepadsStub
+} from '../utils.js';
 
 // --------------------------------------------------
 // input
@@ -14,7 +21,9 @@ describe('input', () => {
   let gamepadStub;
 
   before(() => {
-    gamepadStub = sinon.stub(navigator, 'getGamepads').returns(getGamepadsStub);
+    gamepadStub = sinon
+      .stub(navigator, 'getGamepads')
+      .returns(getGamepadsStub);
   });
 
   beforeEach(() => {

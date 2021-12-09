@@ -25,7 +25,12 @@ import {
   gamepadPressed,
   gamepadAxis
 } from './gamepad.js';
-import { gestureMap, initGesture, onGesture, offGesture } from './gesture.js';
+import {
+  gestureMap,
+  initGesture,
+  onGesture,
+  offGesture
+} from './gesture.js';
 import Grid, { GridClass } from './grid.js';
 import {
   radToDeg,
@@ -44,8 +49,18 @@ import {
   getWorldRect
 } from './helpers.js';
 import { initInput, onInput, offInput } from './input.js';
-import { keyMap, initKeys, onKey, offKey, keyPressed } from './keyboard.js';
-import { registerPlugin, unregisterPlugin, extendObject } from './plugin.js';
+import {
+  keyMap,
+  initKeys,
+  onKey,
+  offKey,
+  keyPressed
+} from './keyboard.js';
+import {
+  registerPlugin,
+  unregisterPlugin,
+  extendObject
+} from './plugin.js';
 import {
   initPointer,
   getPointer,

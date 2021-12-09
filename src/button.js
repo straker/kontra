@@ -126,7 +126,7 @@ class Button extends SpriteClass {
 
   _p() {
     // update DOM node text if it has changed
-    if (this.text !== this._dn.textContent) {
+    if (this.text != this._dn.textContent) {
       this._dn.textContent = this.text;
     }
 

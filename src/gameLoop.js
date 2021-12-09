@@ -100,8 +100,8 @@ export default function GameLoop({
     dt = now - last;
     last = now;
 
-    // prevent updating the game with a very large dt if the game were to lose focus
-    // and then regain focus later
+    // prevent updating the game with a very large dt if the game
+    // were to lose focus and then regain focus later
     if (dt > 1e3) {
       return;
     }

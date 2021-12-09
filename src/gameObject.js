@@ -311,7 +311,8 @@ class GameObject extends Updatable {
     // @endif
 
     // @ifdef GAMEOBJECT_GROUP
-    // perform all transforms on the parent before rendering the children
+    // perform all transforms on the parent before rendering the
+    // children
     let children = this.children;
     children.map(child => child.render && child.render());
     // @endif
@@ -356,7 +357,7 @@ class GameObject extends Updatable {
   /**
    * Sync property changes from the parent to the child
    */
-  _pc(prop, value) {
+  _pc() {
     this._uw();
 
     // @ifdef GAMEOBJECT_GROUP
@@ -565,7 +566,7 @@ class GameObject extends Updatable {
    *
    * parent.render();
    */
-  addChild(child, { absolute = false } = {}) {
+  addChild(child) {
     this.children.push(child);
     child.parent = this;
     child._pc = child._pc || noop;
@@ -581,7 +582,7 @@ class GameObject extends Updatable {
    */
   removeChild(child) {
     let index = this.children.indexOf(child);
-    if (index !== -1) {
+    if (index != -1) {
       this.children.splice(index, 1);
       child.parent = null;
       child._pc();

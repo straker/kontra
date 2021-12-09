@@ -1,0 +1,10 @@
+node_modules/*
+docs/*
+examples/*
+test/typings/*.js
+test/permutations/*
+
+gulpfile.js
+karma.conf.js
+kontra.*
+.eslintrc.js

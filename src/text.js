@@ -1,6 +1,5 @@
 import { GameObjectClass } from './gameObject.js';
-import { on } from './events.js';
-import { getCanvas, getContext } from './core.js';
+import { getContext } from './core.js';
 
 let fontSizeRegex = /(\d+)(\w+)/;
 
@@ -12,27 +11,6 @@ function parseFont(font) {
   let size = +match[1];
   let unit = match[2];
   let computed = size;
-
-  // compute font size
-  // switch(unit) {
-  //   // px defaults to the size
-
-  //   // em uses the size of the canvas when declared (but won't keep in sync with
-  //   // changes to the canvas font-size)
-  //   case 'em': {
-  //     let fontSize = window.getComputedStyle(getCanvas()).fontSize;
-  //     let parsedSize = parseFont(fontSize).size;
-  //     computed = size * parsedSize;
-  //   }
-
-  //   // rem uses the size of the HTML element when declared (but won't keep in
-  //   // sync with changes to the HTML element font-size)
-  //   case 'rem': {
-  //     let fontSize = window.getComputedStyle(document.documentElement).fontSize;
-  //     let parsedSize = parseFont(fontSize).size;
-  //     computed = size * parsedSize;
-  //   }
-  // }
 
   return {
     size,
@@ -136,8 +114,8 @@ class Text extends GameObjectClass {
     this._p();
   }
 
-  // keep width and height getters/settings so we can set _w and _h and not
-  // trigger infinite call loops
+  // keep width and height getters/settings so we can set _w and _h
+  // and not trigger infinite call loops
   get width() {
     // w = width
     return this._w;
@@ -205,7 +183,8 @@ class Text extends GameObjectClass {
       let start = 0;
       let i = 2;
 
-      // split the string into lines that all fit within the fixed width
+      // split the string into lines that all fit within the fixed
+      // width
       for (; i <= parts.length; i++) {
         let str = parts.slice(start, i).join(' ');
         let width = context.measureText(str).width;
@@ -237,7 +216,8 @@ class Text extends GameObjectClass {
       this._w = this._fw || context.measureText(this.text).width;
     }
 
-    this.height = this._fs + (this._s.length - 1) * this._fs * this.lineHeight;
+    this.height =
+      this._fs + (this._s.length - 1) * this._fs * this.lineHeight;
     this._uw();
   }
 
@@ -247,11 +227,18 @@ class Text extends GameObjectClass {
     let context = this.context;
 
     // @ifdef TEXT_RTL
-    textAlign = this.textAlign || (context.canvas.dir === 'rtl' ? 'right' : 'left');
+    textAlign =
+      this.textAlign ||
+      (context.canvas.dir == 'rtl' ? 'right' : 'left');
     // @endif
 
     // @ifdef TEXT_ALIGN||TEXT_RTL
-    alignX = textAlign === 'right' ? this.width : textAlign === 'center' ? (this.width / 2) | 0 : 0;
+    alignX =
+      textAlign == 'right'
+        ? this.width
+        : textAlign == 'center'
+        ? (this.width / 2) | 0
+        : 0;
     // @endif
 
     this._s.map((str, index) => {
@@ -259,7 +246,11 @@ class Text extends GameObjectClass {
       context.textAlign = textAlign;
       context.fillStyle = this.color;
       context.font = this.font;
-      context.fillText(str, alignX, this._fs * this.lineHeight * index);
+      context.fillText(
+        str,
+        alignX,
+        this._fs * this.lineHeight * index
+      );
     });
   }
 }

@@ -10,7 +10,7 @@ import Animation from './animation.js';
 function parseFrames(consecutiveFrames) {
   // return a single number frame
   // @see https://github.com/jed/140bytes/wiki/Byte-saving-techniques#coercion-to-test-for-types
-  if (+consecutiveFrames === consecutiveFrames) {
+  if (+consecutiveFrames == consecutiveFrames) {
     return consecutiveFrames;
   }
 
@@ -89,7 +89,13 @@ function parseFrames(consecutiveFrames) {
  * @param {Object} [properties.animations] - Animations to create from the sprite sheet using [Animation](api/animation). Passed directly into the sprite sheets [createAnimations()](api/spriteSheet#createAnimations) function.
  */
 class SpriteSheet {
-  constructor({ image, frameWidth, frameHeight, frameMargin, animations } = {}) {
+  constructor({
+    image,
+    frameWidth,
+    frameHeight,
+    frameMargin,
+    animations
+  } = {}) {
     // @ifdef DEBUG
     if (!image) {
       throw Error('You must provide an Image for the SpriteSheet');
@@ -201,8 +207,10 @@ class SpriteSheet {
       sequence = [];
 
       // @ifdef DEBUG
-      if (frames === undefined) {
-        throw Error('Animation ' + name + ' must provide a frames property');
+      if (frames == undefined) {
+        throw Error(
+          'Animation ' + name + ' must provide a frames property'
+        );
       }
       // @endif
 

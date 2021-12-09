@@ -203,8 +203,9 @@ describe('quadtree', () => {
         quadtree.add({ id: i });
       }
 
-      // since splitting overrides the subnodes with new values this should
-      // test that the subnodes were left alone after the 2nd split
+      // since splitting overrides the subnodes with new values this
+      // should test that the subnodes were left alone after the 2nd
+      // split
       expect(quadtree._s).to.equal(subnodes);
     });
 
@@ -264,7 +265,13 @@ describe('quadtree', () => {
 
     it('should clear all objects of the quadtree', () => {
       for (let i = 0; i < 4; i++) {
-        quadtree.add({ id: i, x: i * 15, y: i * 10, width: 10, height: 10 });
+        quadtree.add({
+          id: i,
+          x: i * 15,
+          y: i * 10,
+          width: 10,
+          height: 10
+        });
       }
 
       quadtree.clear();
@@ -274,7 +281,13 @@ describe('quadtree', () => {
 
     it('should clear all objects in subnodes of the quadtree', () => {
       for (let i = 0; i < 9; i++) {
-        quadtree.add({ id: i, x: i * 10, y: i * 10, width: 10, height: 10 });
+        quadtree.add({
+          id: i,
+          x: i * 10,
+          y: i * 10,
+          width: 10,
+          height: 10
+        });
       }
 
       quadtree.clear();
@@ -314,7 +327,12 @@ describe('quadtree', () => {
 
       quadtree.add(object);
 
-      let getObjects = quadtree.get({ x: 30, y: 30, width: 20, height: 20 });
+      let getObjects = quadtree.get({
+        x: 30,
+        y: 30,
+        width: 20,
+        height: 20
+      });
 
       expect(getObjects.length).to.equal(1);
       expect(getObjects[0]).to.equal(object);
@@ -328,7 +346,12 @@ describe('quadtree', () => {
 
       quadtree.add(objects);
 
-      let getObjects = quadtree.get({ x: 45, y: 25, width: 20, height: 20 });
+      let getObjects = quadtree.get({
+        x: 45,
+        y: 25,
+        width: 20,
+        height: 20
+      });
 
       expect(getObjects.length).to.equal(2);
       expect(getObjects[0]).to.equal(objects[0]);
@@ -348,7 +371,12 @@ describe('quadtree', () => {
 
       quadtree.add(objects);
 
-      let getObjects = quadtree.get({ x: 5, y: 25, width: 20, height: 20 });
+      let getObjects = quadtree.get({
+        x: 5,
+        y: 25,
+        width: 20,
+        height: 20
+      });
 
       expect(getObjects.length).to.equal(5);
       expect(getObjects[0]).to.equal(objects[0]);
@@ -385,7 +413,12 @@ describe('quadtree', () => {
 
       quadtree.add(objects);
 
-      let getObjects = quadtree.get({ x: 45, y: 45, width: 20, height: 20 });
+      let getObjects = quadtree.get({
+        x: 45,
+        y: 45,
+        width: 20,
+        height: 20
+      });
 
       expect(getObjects.length).to.equal(7);
     });

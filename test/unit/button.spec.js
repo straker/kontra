@@ -1,5 +1,5 @@
 import Button, { ButtonClass } from '../../src/button.js';
-import Text, { TextClass } from '../../src/text.js';
+import { TextClass } from '../../src/text.js';
 import { initPointer, resetPointers } from '../../src/pointer.js';
 import { srOnlyStyle } from '../../src/utils.js';
 import { simulateEvent } from '../utils.js';

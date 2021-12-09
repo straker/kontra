@@ -124,7 +124,8 @@ class TileEngine {
     // @ifdef TILEENGINE_TILED
     // resolve linked files (source, image)
     tilesets.map(tileset => {
-      // get the url of the Tiled JSON object (in this case, the properties object)
+      // get the url of the Tiled JSON object (in this case, the
+      // properties object)
       let { __k, location } = window;
       let url = (__k ? __k.dm.get(properties) : '') || location.href;
 
@@ -132,7 +133,9 @@ class TileEngine {
       if (source) {
         // @ifdef DEBUG
         if (!__k) {
-          throw Error(`You must use "load" or "loadData" to resolve tileset.source`);
+          throw Error(
+            `You must use "load" or "loadData" to resolve tileset.source`
+          );
         }
         // @endif
 
@@ -140,7 +143,9 @@ class TileEngine {
 
         // @ifdef DEBUG
         if (!resolvedSorce) {
-          throw Error(`You must load the tileset source "${source}" before loading the tileset`);
+          throw Error(
+            `You must load the tileset source "${source}" before loading the tileset`
+          );
         }
         // @endif
 
@@ -150,10 +155,13 @@ class TileEngine {
       }
 
       let { image } = tileset;
+      /* eslint-disable-next-line no-restricted-syntax */
       if ('' + image === image) {
         // @ifdef DEBUG
         if (!__k) {
-          throw Error(`You must use "load" or "loadImage" to resolve tileset.image`);
+          throw Error(
+            `You must use "load" or "loadImage" to resolve tileset.image`
+          );
         }
         // @endif
 
@@ -161,7 +169,9 @@ class TileEngine {
 
         // @ifdef DEBUG
         if (!resolvedImage) {
-          throw Error(`You must load the image "${image}" before loading the tileset`);
+          throw Error(
+            `You must load the image "${image}" before loading the tileset`
+          );
         }
         // @endif
 
@@ -227,17 +237,15 @@ class TileEngine {
     return this._sy;
   }
 
-  // when clipping an image, sx and sy must be within the image region,
-  // otherwise. Firefox and Safari won't draw it.
+  // when clipping an image, sx and sy must be within the image
+  // region, otherwise. Firefox and Safari won't draw it.
   // @see http://stackoverflow.com/questions/19338032/canvas-indexsizeerror-index-or-size-is-negative-or-greater-than-the-allowed-a
   set sx(value) {
-    let { mapwidth, objects } = this;
-    this._sx = clamp(0, mapwidth - getCanvas().width, value);
+    this._sx = clamp(0, this.mapwidth - getCanvas().width, value);
   }
 
   set sy(value) {
-    let { mapheight, objects } = this;
-    this._sy = clamp(0, mapheight - getCanvas().height, value);
+    this._sy = clamp(0, this.mapheight - getCanvas().height, value);
   }
 
   /**
@@ -248,8 +256,7 @@ class TileEngine {
    * @param {Object} object - Object to add to the tile engine.
    */
   addObject(object) {
-    let { objects, sx, sy } = this;
-    objects.push(object);
+    this.objects.push(object);
   }
 
   /**
@@ -262,7 +269,7 @@ class TileEngine {
   removeObject(object) {
     let { objects } = this;
     let index = objects.indexOf(object);
-    if (index !== -1) {
+    if (index != -1) {
       objects.splice(index, 1);
     }
   }
@@ -493,7 +500,17 @@ class TileEngine {
     let sWidth = Math.min(canvas.width, width);
     let sHeight = Math.min(canvas.height, height);
 
-    context.drawImage(canvas, sx, sy, sWidth, sHeight, 0, 0, sWidth, sHeight);
+    context.drawImage(
+      canvas,
+      sx,
+      sy,
+      sWidth,
+      sHeight,
+      0,
+      0,
+      sWidth,
+      sHeight
+    );
 
     // @ifdef TILEENGINE_CAMERA
     // draw objects
@@ -563,7 +580,7 @@ class TileEngine {
       layer._d = false;
       layerMap[name] = layer;
 
-      if (data && visible !== false) {
+      if (data && visible != false) {
         this._r(layer, _ctx);
       }
     });
@@ -606,7 +623,17 @@ class TileEngine {
       let sx = (offset % cols) * (tilewidth + margin);
       let sy = ((offset / cols) | 0) * (tileheight + margin);
 
-      context.drawImage(image, sx, sy, tilewidth, tileheight, x, y, tilewidth, tileheight);
+      context.drawImage(
+        image,
+        sx,
+        sy,
+        tilewidth,
+        tileheight,
+        x,
+        y,
+        tilewidth,
+        tileheight
+      );
     });
 
     context.restore();

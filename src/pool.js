@@ -15,11 +15,16 @@ class Pool {
    */
 
   constructor({ create, maxSize = 1024 } = {}) {
-    // check for the correct structure of the objects added to pools so we know that the
-    // rest of the pool code will work without errors
     // @ifdef DEBUG
+    // check for the correct structure of the objects added to pools
+    // so we know that the rest of the pool code will work without
+    // errors
     let obj;
-    if (!create || !(obj = create()) || !(obj.update && obj.init && obj.isAlive && obj.render)) {
+    if (
+      !create ||
+      !(obj = create()) ||
+      !(obj.update && obj.init && obj.isAlive && obj.render)
+    ) {
       throw Error(
         'Must provide create() function which returns an object with init(), update(), render(), and isAlive() functions'
       );
@@ -79,20 +84,26 @@ class Pool {
    * @returns {Object} The newly initialized object.
    */
   get(properties = {}) {
-    // the pool is out of objects if the first object is in use and it can't grow
-    if (this.size === this.objects.length) {
-      if (this.size === this.maxSize) {
+    // the pool is out of objects if the first object is in use and
+    // it can't grow
+    if (this.size == this.objects.length) {
+      if (this.size == this.maxSize) {
         return;
       }
-      // double the size of the array by adding twice as many new objects to the end
-      else {
-        for (let i = 0; i < this.size && this.objects.length < this.maxSize; i++) {
-          this.objects.push(this._c());
-        }
+
+      // double the size of the array by adding twice as many new
+      // objects to the end
+      for (
+        let i = 0;
+        i < this.size && this.objects.length < this.maxSize;
+        i++
+      ) {
+        this.objects.push(this._c());
       }
     }
 
-    // save off first object in pool to reassign to last object after unshift
+    // save off first object in pool to reassign to last object after
+    // unshift
     let obj = this.objects[this.size];
     this.size++;
     obj.init(properties);

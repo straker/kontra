@@ -1,5 +1,4 @@
 import { getCanvas } from './core.js';
-import { getWorldRect } from './helpers.js';
 
 /**
  * Determine which subnodes the object intersects with
@@ -15,11 +14,10 @@ function getIndices(object, bounds) {
   let verticalMidpoint = bounds.x + bounds.width / 2;
   let horizontalMidpoint = bounds.y + bounds.height / 2;
 
-  let { x, y, width, height } = getWorldRect(object);
-
   // save off quadrant checks for reuse
   let intersectsTopQuadrants = object.y < horizontalMidpoint;
-  let intersectsBottomQuadrants = object.y + object.height >= horizontalMidpoint;
+  let intersectsBottomQuadrants =
+    object.y + object.height >= horizontalMidpoint;
 
   // object intersects with the left quadrants
   if (object.x < verticalMidpoint) {
@@ -50,16 +48,17 @@ function getIndices(object, bounds) {
   return indices;
 }
 
-/*
-The quadtree acts like an object pool in that it will create subnodes as objects are needed but it won't clean up the subnodes when it collapses to avoid garbage collection.
-
-The quadrant indices are numbered as follows (following a z-order curve):
-     |
-  0  |  1
- ----+----
-  2  |  3
-     |
-*/
+// the quadtree acts like an object pool in that it will create
+// subnodes as objects are needed but it won't clean up the subnodes
+// when it collapses to avoid garbage collection.
+//
+// the quadrant indices are numbered as follows (following a z-order
+// curve):
+//     |
+//  0  |  1
+// ----+----
+//  2  |  3
+//     |
 
 /**
  * A 2D [spatial partitioning](https://gameprogrammingpatterns.com/spatial-partition.html) data structure. Use it to quickly group objects by their position for faster access and collision checking.
@@ -106,8 +105,9 @@ class Quadtree {
       height: canvas.height
     };
 
-    // since we won't clean up any subnodes, we need to keep track of which nodes are
-    // currently the leaf node so we know which nodes to add objects to
+    // since we won't clean up any subnodes, we need to keep track of
+    // which nodes are currently the leaf node so we know which nodes
+    // to add objects to
     // b = branch, d = depth, o = objects, s = subnodes, p = parent
     this._b = false;
     this._d = 0;
@@ -122,7 +122,7 @@ class Quadtree {
    * @function clear
    */
   clear() {
-    this._s.map(function (subnode) {
+    this._s.map(subnode => {
       subnode.clear();
     });
 
@@ -160,9 +160,9 @@ class Quadtree {
    * @returns {Object[]} A list of objects in the same node as the object, not including the object itself.
    */
   get(object) {
-    // since an object can belong to multiple nodes we should not add it multiple times
+    // since an object can belong to multiple nodes we should not add
+    // it multiple times
     let objects = new Set();
-    let indices, i;
 
     // traverse the tree until we get to a leaf node
     while (this._s.length && this._b) {
@@ -174,6 +174,7 @@ class Quadtree {
     }
 
     // don't add the object to the return list
+    /* eslint-disable-next-line no-restricted-syntax */
     return this._o.filter(obj => obj !== object);
   }
 
@@ -222,7 +223,8 @@ class Quadtree {
         return;
       }
 
-      // current node has subnodes, so we need to add this object into a subnode
+      // current node has subnodes, so we need to add this object
+      // into a subnode
       if (this._b) {
         this._a(object);
         return;
@@ -232,7 +234,10 @@ class Quadtree {
       this._o.push(object);
 
       // split the node if there are too many objects
-      if (this._o.length > this.maxObjects && this._d < this.maxDepth) {
+      if (
+        this._o.length > this.maxObjects &&
+        this._d < this.maxDepth
+      ) {
         this._sp();
 
         // move all objects to their corresponding subnodes
@@ -272,7 +277,7 @@ class Quadtree {
     for (i = 0; i < 4; i++) {
       this._s[i] = new Quadtree({
         bounds: {
-          x: this.bounds.x + (i % 2 === 1 ? subWidth : 0), // nodes 1 and 3
+          x: this.bounds.x + (i % 2 == 1 ? subWidth : 0), // nodes 1 and 3
           y: this.bounds.y + (i >= 2 ? subHeight : 0), // nodes 2 and 3
           width: subWidth,
           height: subHeight
@@ -288,27 +293,6 @@ class Quadtree {
       /* @endif */
     }
   }
-
-  /**
-   * Draw the quadtree. Useful for visual debugging.
-   */
-  /* @ifdef VISUAL_DEBUG **
-   render() {
-     // don't draw empty leaf nodes, always draw branch nodes and the first node
-     if (this._o.length || this._d === 0 ||
-         (this._p && this._p._b)) {
-
-       context.strokeStyle = 'red';
-       context.strokeRect(this.bounds.x, this.bounds.y, this.bounds.width, this.bounds.height);
-
-       if (this._s.length) {
-         for (let i = 0; i < 4; i++) {
-           this._s[i].render();
-         }
-       }
-     }
-   }
-   /* @endif */
 }
 
 export default function factory() {

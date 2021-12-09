@@ -17,8 +17,7 @@ import { emit } from './events.js';
  * @sectionName Core
  */
 
-let canvasEl;
-let context;
+let canvasEl, context;
 
 // allow contextless environments, such as using ThreeJS as the main
 // canvas, by proxying all canvas context calls
@@ -27,7 +26,7 @@ let handler = {
   // so neither will throw errors
   get(target, key) {
     // export for testing
-    if (key === '_proxy') return true;
+    if (key == '_proxy') return true;
     return noop;
   }
 };
@@ -71,7 +70,10 @@ export function getContext() {
 export function init(canvas, { contextless = false } = {}) {
   // check if canvas is a string first, an element next, or default to
   // getting first canvas on page
-  canvasEl = document.getElementById(canvas) || canvas || document.querySelector('canvas');
+  canvasEl =
+    document.getElementById(canvas) ||
+    canvas ||
+    document.querySelector('canvas');
 
   if (contextless) {
     canvasEl = canvasEl || new Proxy({}, handler);

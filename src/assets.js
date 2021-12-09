@@ -58,7 +58,10 @@ function getUrl(url, base) {
  * @returns {String}
  */
 function joinPath(base, url) {
-  return [base.replace(trailingSlash, ''), base ? url.replace(leadingSlash, '') : url]
+  return [
+    base.replace(trailingSlash, ''),
+    base ? url.replace(leadingSlash, '') : url
+  ]
     .filter(s => s)
     .join('/');
 }
@@ -86,7 +89,9 @@ function getName(url) {
 
   // remove leading slash if there is no folder in the path
   // @see https://stackoverflow.com/a/50592629/2124254
-  return name.split('/').length == 2 ? name.replace(leadingSlash, '') : name;
+  return name.split('/').length == 2
+    ? name.replace(leadingSlash, '')
+    : name;
 }
 
 /**
@@ -267,19 +272,26 @@ export function loadImage(url) {
     let resolvedUrl, image, fullUrl;
 
     resolvedUrl = joinPath(imagePath, url);
-    if (imageAssets[resolvedUrl]) return resolve(imageAssets[resolvedUrl]);
+    if (imageAssets[resolvedUrl])
+      return resolve(imageAssets[resolvedUrl]);
 
     image = new Image();
 
     image.onload = function loadImageOnLoad() {
       fullUrl = getUrl(resolvedUrl, window.location.href);
-      imageAssets[getName(url)] = imageAssets[resolvedUrl] = imageAssets[fullUrl] = this;
+      imageAssets[getName(url)] =
+        imageAssets[resolvedUrl] =
+        imageAssets[fullUrl] =
+          this;
       emit('assetLoaded', this, url);
       resolve(this);
     };
 
     image.onerror = function loadImageOnError() {
-      reject(/* @ifdef DEBUG */ 'Unable to load image ' + /* @endif */ resolvedUrl);
+      reject(
+        /* @ifdef DEBUG */ 'Unable to load image ' +
+          /* @endif */ resolvedUrl
+      );
     };
 
     image.src = resolvedUrl;
@@ -325,28 +337,40 @@ export function loadAudio(url) {
       .concat(url)
       .reduce(
         (playableSource, source) =>
-          playableSource ? playableSource : canPlay[getExtension(source)] ? source : null,
+          playableSource
+            ? playableSource
+            : canPlay[getExtension(source)]
+            ? source
+            : null,
         0
       ); // 0 is the shortest falsy value
 
     if (!url) {
       return reject(
-        /* @ifdef DEBUG */ 'cannot play any of the audio formats provided ' + /* @endif */ _url
+        /* @ifdef DEBUG */ 'cannot play any of the audio formats provided ' +
+          /* @endif */ _url
       );
     }
 
     resolvedUrl = joinPath(audioPath, url);
-    if (audioAssets[resolvedUrl]) return resolve(audioAssets[resolvedUrl]);
+    if (audioAssets[resolvedUrl])
+      return resolve(audioAssets[resolvedUrl]);
 
     audioEl.addEventListener('canplay', function loadAudioOnLoad() {
       fullUrl = getUrl(resolvedUrl, window.location.href);
-      audioAssets[getName(url)] = audioAssets[resolvedUrl] = audioAssets[fullUrl] = this;
+      audioAssets[getName(url)] =
+        audioAssets[resolvedUrl] =
+        audioAssets[fullUrl] =
+          this;
       emit('assetLoaded', this, url);
       resolve(this);
     });
 
     audioEl.onerror = function loadAudioOnError() {
-      reject(/* @ifdef DEBUG */ 'Unable to load audio ' + /* @endif */ resolvedUrl);
+      reject(
+        /* @ifdef DEBUG */ 'Unable to load audio ' +
+          /* @endif */ resolvedUrl
+      );
     };
 
     audioEl.src = resolvedUrl;
@@ -377,7 +401,8 @@ export function loadData(url) {
   let resolvedUrl, fullUrl;
 
   resolvedUrl = joinPath(dataPath, url);
-  if (dataAssets[resolvedUrl]) return Promise.resolve(dataAssets[resolvedUrl]);
+  if (dataAssets[resolvedUrl])
+    return Promise.resolve(dataAssets[resolvedUrl]);
 
   return fetch(resolvedUrl)
     .then(response => {
@@ -389,11 +414,14 @@ export function loadData(url) {
     })
     .then(response => {
       fullUrl = getUrl(resolvedUrl, window.location.href);
-      if (typeof response === 'object') {
+      if (typeof response == 'object') {
         dataMap.set(response, fullUrl);
       }
 
-      dataAssets[getName(url)] = dataAssets[resolvedUrl] = dataAssets[fullUrl] = response;
+      dataAssets[getName(url)] =
+        dataAssets[resolvedUrl] =
+        dataAssets[fullUrl] =
+          response;
       emit('assetLoaded', response, url);
       return response;
     });
@@ -448,13 +476,16 @@ export function _reset() {
   window.__k = undefined;
 
   if (getCanPlay._r) {
+    /* eslint-disable-next-line no-func-assign */
     getCanPlay = getCanPlay._r;
   }
 }
 
-// Override the getCanPlay function to provide a specific return type for tests
+// Override the getCanPlay function to provide a specific return
+// type for tests
 export function _setCanPlayFn(fn) {
   let originalCanPlay = getCanPlay;
+  /* eslint-disable-next-line no-func-assign */
   getCanPlay = fn;
   getCanPlay._r = originalCanPlay;
 }

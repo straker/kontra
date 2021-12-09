@@ -71,7 +71,9 @@ describe('scene', () => {
       expect(scene._dn).to.exist;
       expect(scene._dn.id).to.equal(scene.id);
       expect(scene._dn.tabIndex).to.equal(-1);
-      expect(scene._dn.getAttribute('aria-label')).to.equal(scene.name);
+      expect(scene._dn.getAttribute('aria-label')).to.equal(
+        scene.name
+      );
       expect(document.body.contains(scene._dn)).to.be.true;
     });
 

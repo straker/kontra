@@ -1,7 +1,14 @@
-import GameObject, { GameObjectClass } from './gameObject.js';
+import { getCanvas } from './core.js';
+import GameObject from './gameObject.js';
 import { srOnlyStyle, addToDom } from './utils.js';
 import { collides } from './helpers.js';
 
+/**
+ * Recursively get all childrens HTML nodes.
+ * @param {Object} object - Root object.
+ *
+ * @returns {Object[]} All nested children HTML nodes.
+ */
 function getAllNodes(object) {
   let nodes = [];
 
@@ -39,18 +46,21 @@ function getAllNodes(object) {
  * ```
  *
  * @class Scene
- * @extends GameObject
  *
  * @param {Object} properties - Properties of the scene.
  * @param {String} properties.id - The id of the scene.
  * @param {String} [properties.name=properties.id] - The name of the scene. Used by screen readers to identify each scene. Use this property to give the scene a human friendly name.
+ * @param {{render: Function, update: Function, x: number, y: number}[]} [properties.children] - Children to add to the scene.
+ * @param {HTMLCanvasElement} [properties.canvas] - The canvas element used to determine the size of the camera. Defaults to [core.getCanvas()](api/core#getCanvas).
  * @param {Boolean} [properties.cullObjects=true] - If the scene should not render objects outside the camera bounds.
  * @param {Function} [properties.cullFunction] - The function used to filter objects to render. Defaults to [helpers.collides](api/helpers#collides).
  * @param {Function} [properties.onShow] - Function called when the scene is shown.
  * @param {Function} [properties.onHide] - Function called when the scene is hidden.
+ *
+ * @param {...*} properties.props - Any additional properties you need added to the scene.
  */
-class Scene extends GameObjectClass {
-  init({
+class Scene {
+  constructor({
     /**
      * The id of the scene.
      * @memberof Scene
@@ -64,6 +74,20 @@ class Scene extends GameObjectClass {
      * @property {String} name
      */
     name = id,
+
+    /**
+     * The children of the scene.
+     * @memberof Scene
+     * @property {{render: Function, update: Function, x: number, y: number}[]} children
+     */
+    children = [],
+
+    /**
+     * The canvas element for the scenes camera. Used to set the width and height of the camera and determine the cameras bounds for culling objects.
+     * @memberof Scene
+     * @property {HTMLCanvasElement} canvas
+     */
+    canvas = getCanvas(),
 
     /**
      * If the camera should cull objects outside the camera bounds. Not rendering objects which can't be seen greatly improves the performance.
@@ -81,6 +105,9 @@ class Scene extends GameObjectClass {
 
     ...props
   }) {
+    this._c = [];
+    this._ctx = canvas.getContext('2d');
+
     // create an accessible DOM node for screen readers (do this first
     // so we can move DOM nodes in addChild)
     // dn = dom node
@@ -90,17 +117,19 @@ class Scene extends GameObjectClass {
     section.id = id;
     section.setAttribute('aria-label', name);
 
-    super.init({
+    addToDom(section, canvas);
+
+    // add all properties to the object, overriding any defaults
+    Object.assign(this, {
       id,
       name,
+      canvas,
       cullObjects,
       cullFunction,
       ...props
     });
 
-    addToDom(section, this.context.canvas);
-
-    let canvas = this.context.canvas;
+    children.map(child => this.addChild(child));
 
     /**
      * The camera object which is used as the focal point for the scene. The scene will not render objects that are outside the bounds of the camera.
@@ -116,17 +145,53 @@ class Scene extends GameObjectClass {
       height: canvas.height,
       anchor: { x: 0.5, y: 0.5 }
     });
+  }
 
-    // can call super here only by using lexical scope
-    this.camera._pc = () => {
-      super._pc.call(this.camera);
+  set children(value) {
+    while (this._c.length) {
+      this.removeChild(this._c[0]);
+    }
+    value.map(value => this.addChild(value));
+  }
 
-      // only set the cameras position based on scale
-      // but not the width/height
-      let canvas = this.context.canvas;
-      this.camera._wx = this.camera.x * this.scaleX;
-      this.camera._wy = this.camera.y * this.scaleY;
-    };
+  get children() {
+    return this._c;
+  }
+
+  /**
+   * Add an object as a child to the scene.
+   * @memberof Scene
+   * @function addChild
+   *
+   * @param {{render: Function, update: Function, x: number, y: number}} child - Object to add as a child.
+   */
+  addChild(child) {
+    this.children.push(child);
+
+    // move all children to be in the scenes DOM node so we can
+    // hide and show the DOM node and thus hide and show all the
+    // children
+    getAllNodes(child).map(node => {
+      this._dn.appendChild(node);
+    });
+  }
+
+  /**
+   * Remove an object as a child of the scene.
+   * @memberof Scene
+   * @function removeChild
+   *
+   * @param {Object} child - Object to remove as a child.
+   */
+  removeChild(child) {
+    let index = this.children.indexOf(child);
+    if (index !== -1) {
+      this.children.splice(index, 1);
+    }
+
+    getAllNodes(child).map(node => {
+      addToDom(node, this.canvas);
+    });
   }
 
   /**
@@ -163,25 +228,6 @@ class Scene extends GameObjectClass {
     this.onHide();
   }
 
-  addChild(object, options) {
-    super.addChild(object, options);
-
-    // move all children to be in the scenes DOM node so we can
-    // hide and show the DOM node and thus hide and show all the
-    // children
-    getAllNodes(object).map(node => {
-      this._dn.appendChild(node);
-    });
-  }
-
-  removeChild(object) {
-    super.removeChild(object);
-
-    getAllNodes(object).map(node => {
-      addToDom(node, this.context.canvas);
-    });
-  }
-
   /**
    * Clean up the scene and call `destroy()` on all children.
    * @memberof Scene
@@ -190,12 +236,6 @@ class Scene extends GameObjectClass {
   destroy() {
     this._dn.remove();
     this.children.map(child => child.destroy && child.destroy());
-  }
-
-  update(dt) {
-    if (!this.hidden) {
-      super.update(dt);
-    }
   }
 
   /**
@@ -218,25 +258,41 @@ class Scene extends GameObjectClass {
 
     this.camera.x = x;
     this.camera.y = y;
-    this._pc();
   }
 
-  _pc() {
-    super._pc();
-
-    // this can be called before the camera is initialized so we
-    // need to guard it
-    this.camera && this.camera._pc();
-  }
-
-  render() {
-    let { x, y, width, height } = this.camera;
-
-    this.sx = x * this.scaleX - width / 2;
-    this.sy = y * this.scaleY - height / 2;
-
+  /**
+   * Update all children of the scene by calling the objects `update()` function.
+   * @memberof Scene
+   * @function update
+   *
+   * @param {Number} [dt] - Time since last update.
+   */
+  update(dt) {
     if (!this.hidden) {
-      super.render(child => (this.cullObjects ? this.cullFunction(child, this.camera) : true));
+      this.children.map(child => child.update && child.update());
+    }
+  }
+
+  /**
+   * Render all children of the scene by calling the objects `render()` function. If [cullObjects](/api/scene#cullObjects) is set to true then only those objects where are inside the camera bounds will be rendered.
+   * @memberof Scene
+   * @function render
+   */
+  render() {
+    if (!this.hidden) {
+      let { _ctx, children, camera, cullObjects, cullFunction } = this;
+      let { x, y, width, height, scaleX, scaleY } = camera;
+
+      // translate the scene to the camera position
+      _ctx.save();
+      _ctx.translate(-(x * scaleX - width / 2), -(y * scaleY - height / 2));
+
+      if (cullObjects) {
+        children = children.filter(child => cullFunction(camera, child));
+      }
+      children.map(child => child.render && child.render());
+
+      _ctx.restore();
     }
   }
 

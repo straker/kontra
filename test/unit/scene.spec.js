@@ -1,5 +1,6 @@
 import Scene, { SceneClass } from '../../src/scene.js';
-import { srOnlyStyle } from '../../src/utils.js';
+import { getCanvas } from '../../src/core.js';
+import { noop, srOnlyStyle } from '../../src/utils.js';
 import { collides } from '../../src/helpers.js';
 
 // --------------------------------------------------
@@ -28,8 +29,31 @@ describe('scene', () => {
     it('should setup basic properties', () => {
       expect(scene.id).to.equal('myId');
       expect(scene.name).to.equal('myId');
+      expect(scene.children).to.deep.equal([]);
+      expect(scene.canvas).to.equal(getCanvas());
       expect(scene.cullObjects).to.equal(true);
       expect(scene.cullFunction).to.equal(collides);
+    });
+
+    it('should override basic properties', () => {
+      let canvas = {
+        getContext: noop
+      };
+
+      scene.destroy();
+      scene = Scene({
+        canvas,
+        cullObjects: false,
+        cullFunction: noop,
+        onShow: noop,
+        onHide: noop
+      });
+
+      expect(scene.canvas).to.equal(canvas);
+      expect(scene.cullObjects).to.be.false;
+      expect(scene.cullFunction).to.equal(noop);
+      expect(scene.onShow).to.equal(noop);
+      expect(scene.onHide).to.equal(noop);
     });
 
     it('should set all additional properties on the scene', () => {
@@ -51,25 +75,35 @@ describe('scene', () => {
       expect(document.body.contains(scene._dn)).to.be.true;
     });
 
+    it('should add children', () => {
+      let child = {};
+      scene.destroy();
+      scene = Scene({
+        children: [child]
+      });
+
+      expect(scene.children.length).to.equal(1);
+      expect(scene.children[0]).to.equal(child);
+    });
+
     it('should add the scene as an immediate sibling to the canvas', () => {
-      expect(scene.context.canvas.nextSibling).to.equal(scene._dn);
+      expect(scene.canvas.nextSibling).to.equal(scene._dn);
     });
 
     it('should hide the DOM node', () => {
-      it.only('should hide the DOM node', () => {
-        let styles = srOnlyStyle
-          .split(';')
-          .map(style => style.split(':')[0].trim())
-          .filter(style => !!style);
-        scene._dn
-          .getAttribute('style')
-          .split(';')
-          .map(style => style.split(':')[0].trim())
-          .filter(style => !!style)
-          .forEach((prop, index) => {
-            expect(styles[index]).to.equal(prop);
-          });
-      });
+      let styles = srOnlyStyle
+        .split(';')
+        .map(style => style.split(':')[0].trim())
+        .filter(style => !!style);
+
+      scene._dn
+        .getAttribute('style')
+        .split(';')
+        .map(style => style.split(':')[0].trim())
+        .filter(style => !!style)
+        .forEach((prop, index) => {
+          expect(styles[index]).to.equal(prop);
+        });
     });
 
     it('should allow children', () => {
@@ -85,7 +119,7 @@ describe('scene', () => {
     });
 
     it('should create the camera and center it', () => {
-      let canvas = scene.context.canvas;
+      let canvas = scene.canvas;
       expect(scene.camera).to.exist;
       expect(scene.camera.x).to.equal(canvas.width / 2);
       expect(scene.camera.y).to.equal(canvas.height / 2);
@@ -290,6 +324,30 @@ describe('scene', () => {
   });
 
   // --------------------------------------------------
+  // children
+  // --------------------------------------------------
+  describe('children', () => {
+    it('should properly handle setting children', () => {
+      scene.addChild({ foo: 'bar' });
+      scene.addChild({ faz: 'baz' });
+      scene.addChild({ hello: 'world' });
+
+      let removeSpy = sinon.spy(scene, 'removeChild');
+      let addSpy = sinon.spy(scene, 'addChild');
+      let child = {
+        thing1: 'thing2'
+      };
+
+      scene.children = [child];
+
+      expect(removeSpy.calledThrice).to.be.true;
+      expect(addSpy.calledWith(child)).to.be.true;
+      expect(scene.children.length).to.equal(1);
+      expect(scene.children[0]).to.equal(child);
+    });
+  });
+
+  // --------------------------------------------------
   // destroy
   // --------------------------------------------------
   describe('destroy', () => {
@@ -333,6 +391,17 @@ describe('scene', () => {
       scene.update();
 
       expect(child.update.called).to.be.false;
+    });
+
+    it('should not error on objects without update function', () => {
+      let child = {};
+      scene.addChild(child);
+
+      function fn() {
+        scene.update();
+      }
+
+      expect(fn).to.not.throw();
     });
   });
 
@@ -424,33 +493,38 @@ describe('scene', () => {
       expect(child.render.called).to.be.true;
     });
 
-    it('should update the sx and sy of the scene', () => {
+    it('should not error on objects without render function', () => {
+      let child = {};
+      scene.addChild(child);
+
+      function fn() {
+        scene.render();
+      }
+
+      expect(fn).to.not.throw();
+    });
+
+    it('should translate the canvas to the camera', () => {
+      let spy = sinon.spy(scene._ctx, 'translate');
+
       scene.lookAt({ x: 10, y: 10 });
       scene.render();
 
-      expect(scene.sx).to.equal(-290);
-      expect(scene.sy).to.equal(-290);
+      expect(spy.calledWith(290, 290)).to.be.true;
+
+      spy.restore();
     });
 
-    it('should take into account the scene scale', () => {
+    it('should take into account the camera scale', () => {
+      let spy = sinon.spy(scene._ctx, 'translate');
+
       scene.lookAt({ x: 10, y: 10 });
-      scene.setScale(2, 2);
+      scene.camera.setScale(2, 2);
       scene.render();
 
-      expect(scene.sx).to.equal(-280);
-      expect(scene.sy).to.equal(-280);
-    });
-  });
+      expect(spy.calledWith(280, 280)).to.be.true;
 
-  // --------------------------------------------------
-  // camera world
-  // --------------------------------------------------
-  describe('camera world', () => {
-    it('should not change width/height based on scale', () => {
-      scene.setScale(2, 2);
-
-      expect(scene.camera.world.width).to.equal(600);
-      expect(scene.camera.world.height).to.equal(600);
+      spy.restore();
     });
   });
 });

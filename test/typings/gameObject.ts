@@ -42,7 +42,6 @@ gameObject.update(1/60);
 gameObject.advance();
 gameObject.advance(1/60);
 gameObject.render();
-gameObject.render(() => true);
 gameObject.draw();
 gameObject.setScale(1);
 gameObject.setScale(1, 2);

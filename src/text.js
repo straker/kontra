@@ -3,7 +3,6 @@ import { on } from './events.js';
 import { getCanvas, getContext } from './core.js';
 
 let fontSizeRegex = /(\d+)(\w+)/;
-let dirtyValues = ['text', 'font', 'width'];
 
 function parseFont(font) {
   let match = font.match(fontSizeRegex);

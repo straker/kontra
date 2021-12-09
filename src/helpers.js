@@ -256,10 +256,9 @@ export function getStoreItem(key) {
 }
 
 /**
- * Check if a two objects collide. Uses a simple [Axis-Aligned Bounding Box (AABB) collision check](https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection#Axis-Aligned_Bounding_Box). Takes into account the sprites [anchor](api/gameObject#anchor) and [scale](api/gameObject#scale).
+ * Check if two objects collide. Uses a simple [Axis-Aligned Bounding Box (AABB) collision check](https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection#Axis-Aligned_Bounding_Box). Takes into account the objects [anchor](api/gameObject#anchor) and [scale](api/gameObject#scale).
  *
  * **NOTE:** Does not take into account object rotation. If you need collision detection between rotated objects you will need to implement your own `collides()` function. I suggest looking at the Separate Axis Theorem.
- *
  *
  * ```js
  * import { Sprite, collides } from 'kontra';
@@ -289,11 +288,9 @@ export function getStoreItem(key) {
  * @param {{x: number, y: number, width: number, height: number}|{world: {x: number, y: number, width: number, height: number}}} obj1 - Object reference.
  * @param {{x: number, y: number, width: number, height: number}|{world: {x: number, y: number, width: number, height: number}}} obj2 - Object to check collision against.
  *
- * @returns {Boolean|null} `true` if the objects collide, `false` otherwise. Will return `null` if the either of the two objects are rotated.
+ * @returns {Boolean} `true` if the objects collide, `false` otherwise.
  */
 export function collides(obj1, obj2) {
-  if (obj1.rotation || obj2.rotation) return null;
-
   // @ifdef GAMEOBJECT_SCALE||GAMEOBJECT_ANCHOR
   // destructure results to obj1 and obj2
   [obj1, obj2] = [obj1, obj2].map(obj => getWorldRect(obj));

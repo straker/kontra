@@ -112,7 +112,9 @@ export function initKeys() {
   for (i = 0; i < 26; i++) {
     // rollupjs considers this a side-effect (for now), so we'll do it
     // in the initKeys function
-    keyMap['Key' + String.fromCharCode(i + 65)] = String.fromCharCode(i + 97);
+    keyMap['Key' + String.fromCharCode(i + 65)] = String.fromCharCode(
+      i + 97
+    );
   }
 
   // numeric keys
@@ -150,8 +152,13 @@ export function initKeys() {
  * @param {'keydown'|'keyup'} [options.handler=keydown] - Whether to register to keydown or keyup events.
  * @param {Boolean} [options.preventDefault=true] - Call `event. preventDefault()` when the key is activated.
  */
-export function onKey(keys, callback, { handler = 'keydown', preventDefault = true } = {}) {
-  let callbacks = handler == 'keydown' ? keydownCallbacks : keyupCallbacks;
+export function onKey(
+  keys,
+  callback,
+  { handler = 'keydown', preventDefault = true } = {}
+) {
+  let callbacks =
+    handler == 'keydown' ? keydownCallbacks : keyupCallbacks;
   // pd = preventDefault
   callback._pd = preventDefault;
   // smaller than doing `Array.isArray(keys) ? keys : [keys]`
@@ -174,7 +181,8 @@ export function onKey(keys, callback, { handler = 'keydown', preventDefault = tr
  * @param {'keydown'|'keyup'} [options.handler=keydown] - Whether to unregister from keydown or keyup events.
  */
 export function offKey(keys, { handler = 'keydown' } = {}) {
-  let callbacks = handler == 'keydown' ? keydownCallbacks : keyupCallbacks;
+  let callbacks =
+    handler == 'keydown' ? keydownCallbacks : keyupCallbacks;
   [].concat(keys).map(key => delete callbacks[key]);
 }
 

@@ -157,19 +157,24 @@ export function updateGamepad() {
       let { pressedButtons } = gamepads[gamepad.index];
       let state = pressedButtons[buttonName];
 
-      // if the button was not pressed before and is now pressed that's
-      // a gamepaddown event
+      // if the button was not pressed before and is now pressed
+      // that's a gamepaddown event
       if (!state && pressed) {
-        [gamepaddownCallbacks[gamepad.index], gamepaddownCallbacks].map(callback => {
+        [
+          gamepaddownCallbacks[gamepad.index],
+          gamepaddownCallbacks
+        ].map(callback => {
           callback?.[buttonName]?.(gamepad, button);
         });
       }
-      // if the button was pressed before and is now not pressed that's
-      // a gamepadup event
+      // if the button was pressed before and is now not pressed
+      // that's a gamepadup event
       else if (state && !pressed) {
-        [gamepadupCallbacks[gamepad.index], gamepadupCallbacks].map(callback => {
-          callback?.[buttonName]?.(gamepad, button);
-        });
+        [gamepadupCallbacks[gamepad.index], gamepadupCallbacks].map(
+          callback => {
+            callback?.[buttonName]?.(gamepad, button);
+          }
+        );
       }
 
       pressedButtons[buttonName] = pressed;
@@ -188,8 +193,14 @@ export function updateGamepad() {
  * @function initGamepad
  */
 export function initGamepad() {
-  window.addEventListener('gamepadconnected', gamepadConnectedHandler);
-  window.addEventListener('gamepaddisconnected', gamepadDisconnectedHandler);
+  window.addEventListener(
+    'gamepadconnected',
+    gamepadConnectedHandler
+  );
+  window.addEventListener(
+    'gamepaddisconnected',
+    gamepadDisconnectedHandler
+  );
   window.addEventListener('blur', blurEventHandler);
 
   // update gamepad state each frame
@@ -229,8 +240,15 @@ export function initGamepad() {
  * @param {Number} [options.gamepad] - Gamepad index. Defaults to registerting for all gamepads.
  * @param {'gamepaddown'|'gamepadup'} [options.handler='gamepaddown'] - Whether to register to the gamepaddown or gamepadup event.
  */
-export function onGamepad(buttons, callback, { gamepad, handler = 'gamepaddown' } = {}) {
-  let callbacks = handler == 'gamepaddown' ? gamepaddownCallbacks : gamepadupCallbacks;
+export function onGamepad(
+  buttons,
+  callback,
+  { gamepad, handler = 'gamepaddown' } = {}
+) {
+  let callbacks =
+    handler == 'gamepaddown'
+      ? gamepaddownCallbacks
+      : gamepadupCallbacks;
 
   // smaller than doing `Array.isArray(buttons) ? buttons : [buttons]`
   [].concat(buttons).map(button => {
@@ -265,8 +283,14 @@ export function onGamepad(buttons, callback, { gamepad, handler = 'gamepaddown' 
  * @param {Number} [options.gamepad] - Gamepad index. Defaults to unregistering from all gamepads.
  * @param {'gamepaddown'|'gamepadup'} [options.handler='gamepaddown'] - Whether to unregister from gamepaddown or gamepadup event.
  */
-export function offGamepad(buttons, { gamepad, handler = 'gamepaddown' } = {}) {
-  let callbacks = handler == 'gamepaddown' ? gamepaddownCallbacks : gamepadupCallbacks;
+export function offGamepad(
+  buttons,
+  { gamepad, handler = 'gamepaddown' } = {}
+) {
+  let callbacks =
+    handler == 'gamepaddown'
+      ? gamepaddownCallbacks
+      : gamepadupCallbacks;
 
   // smaller than doing `Array.isArray(buttons) ? buttons : [buttons]`
   [].concat(buttons).map(button => {

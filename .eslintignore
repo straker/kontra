@@ -7,3 +7,4 @@ test/permutations/*
 gulpfile.js
 karma.conf.js
 kontra.*
+.eslintrc.js

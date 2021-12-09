@@ -311,7 +311,8 @@ class GameObject extends Updatable {
     // @endif
 
     // @ifdef GAMEOBJECT_GROUP
-    // perform all transforms on the parent before rendering the children
+    // perform all transforms on the parent before rendering the
+    // children
     let children = this.children;
     children.map(child => child.render && child.render());
     // @endif

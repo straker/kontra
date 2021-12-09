@@ -34,7 +34,9 @@ describe('assets', () => {
       assets
         .loadImage('/imgs/bullet.png')
         .then(image => {
-          expect(assets.imageAssets['/imgs/bullet.png']).to.equal(image);
+          expect(assets.imageAssets['/imgs/bullet.png']).to.equal(
+            image
+          );
           expect(assets.imageAssets['/imgs/bullet']).to.equal(image);
 
           done();
@@ -45,10 +47,10 @@ describe('assets', () => {
     it('should resolve with the image if it is already loaded', done => {
       assets
         .loadImage('/imgs/bullet.png')
-	.then(() => {
+        .then(() => {
           let spy = sinon.spy(window, 'Image');
 
-	  assets.loadImage('/imgs/bullet.png').then(() => {
+          assets.loadImage('/imgs/bullet.png').then(() => {
             try {
               expect(spy.called).to.equal(false);
             } catch (e) {
@@ -67,7 +69,9 @@ describe('assets', () => {
       assets
         .loadImage('bullet.png')
         .then(image => {
-          expect(assets.imageAssets['/imgs/bullet.png']).to.equal(image);
+          expect(assets.imageAssets['/imgs/bullet.png']).to.equal(
+            image
+          );
           expect(assets.imageAssets['bullet']).to.equal(image);
 
           done();
@@ -79,8 +83,12 @@ describe('assets', () => {
       assets
         .loadImage('../imgs/bullet.png')
         .then(image => {
-          expect(assets.imageAssets['../imgs/bullet.png']).to.equal(image);
-          expect(assets.imageAssets['../imgs/bullet']).to.equal(image);
+          expect(assets.imageAssets['../imgs/bullet.png']).to.equal(
+            image
+          );
+          expect(assets.imageAssets['../imgs/bullet']).to.equal(
+            image
+          );
 
           done();
         })
@@ -93,7 +101,9 @@ describe('assets', () => {
       assets
         .loadImage('/bullet.png')
         .then(image => {
-          expect(assets.imageAssets['/imgs/bullet.png']).to.equal(image);
+          expect(assets.imageAssets['/imgs/bullet.png']).to.equal(
+            image
+          );
           expect(assets.imageAssets['bullet']).to.equal(image);
 
           done();
@@ -104,23 +114,25 @@ describe('assets', () => {
     it('should throw an error if an image failed to load', done => {
       assets
         .loadImage('fake.png')
-	.then(() => {
+        .then(() => {
           // should not get here
           done('no error thrown');
         })
-	.catch(() => {
+        .catch(() => {
           done();
         });
     });
 
     it('should emit the assetLoaded event', done => {
       function loaded(asset, url) {
-        // this needs to be called first otherwise every load event will call this
-        // emitted function
+        // this needs to be called first otherwise every load event
+        // will call this emitted function
         off('assetLoaded', loaded);
 
         try {
-          expect(assets.imageAssets['/imgs/bullet.png']).to.equal(asset);
+          expect(assets.imageAssets['/imgs/bullet.png']).to.equal(
+            asset
+          );
           expect(url).to.equal('/imgs/bullet.png');
         } catch (e) {
           done(e);
@@ -153,10 +165,10 @@ describe('assets', () => {
     it('should resolve with the data if it is already loaded', done => {
       assets
         .loadData('/data/test.txt')
-	.then(() => {
+        .then(() => {
           let spy = sinon.spy(window, 'fetch');
 
-	  assets.loadData('/data/test.txt').then(() => {
+          assets.loadData('/data/test.txt').then(() => {
             try {
               expect(spy.called).to.equal(false);
             } catch (e) {
@@ -213,19 +225,19 @@ describe('assets', () => {
     it('should throw an error if the data failed to load', done => {
       assets
         .loadData('fake.txt')
-	.then(() => {
+        .then(() => {
           // should not get here
           done('no error thrown');
         })
-	.catch(() => {
+        .catch(() => {
           done();
         });
     });
 
     it('should emit the assetLoaded event', done => {
       function loaded(asset, url) {
-        // this needs to be called first otherwise every load event will call this
-        // emitted function
+        // this needs to be called first otherwise every load event
+        // will call this emitted function
         off('assetLoaded', loaded);
 
         try {
@@ -250,7 +262,9 @@ describe('assets', () => {
       assets
         .loadAudio('/audio/shoot.mp3')
         .then(audio => {
-          expect(assets.audioAssets['/audio/shoot.mp3']).to.equal(audio);
+          expect(assets.audioAssets['/audio/shoot.mp3']).to.equal(
+            audio
+          );
           expect(assets.audioAssets['/audio/shoot']).to.equal(audio);
 
           done();
@@ -261,10 +275,10 @@ describe('assets', () => {
     it('should resolve with the audio if it is already loaded', done => {
       assets
         .loadAudio('/audio/shoot.mp3')
-	.then(() => {
+        .then(() => {
           let spy = sinon.spy(Audio.prototype, 'addEventListener');
 
-	  assets.loadAudio('/audio/shoot.mp3').then(() => {
+          assets.loadAudio('/audio/shoot.mp3').then(() => {
             try {
               expect(spy.called).to.equal(false);
             } catch (e) {
@@ -288,7 +302,9 @@ describe('assets', () => {
       assets
         .loadAudio(['/audio/shoot.ogg', '/audio/shoot.mp3'])
         .then(audio => {
-          expect(assets.audioAssets['/audio/shoot.mp3']).to.equal(audio);
+          expect(assets.audioAssets['/audio/shoot.mp3']).to.equal(
+            audio
+          );
           expect(assets.audioAssets['/audio/shoot']).to.equal(audio);
 
           done();
@@ -307,7 +323,9 @@ describe('assets', () => {
       assets
         .loadAudio(['/audio/shoot.ogg', '/audio/shoot.mp3'])
         .then(audio => {
-          expect(assets.audioAssets['/audio/shoot.ogg']).to.equal(audio);
+          expect(assets.audioAssets['/audio/shoot.ogg']).to.equal(
+            audio
+          );
           expect(assets.audioAssets['/audio/shoot']).to.equal(audio);
 
           done();
@@ -326,7 +344,9 @@ describe('assets', () => {
       assets
         .loadAudio(['/audio/shoot.ogg', '/audio/shoot.mp3'])
         .then(audio => {
-          expect(audio.src.endsWith('/audio/shoot.ogg')).to.equal(true);
+          expect(audio.src.endsWith('/audio/shoot.ogg')).to.equal(
+            true
+          );
           done();
         })
         .catch(done);
@@ -338,7 +358,9 @@ describe('assets', () => {
       assets
         .loadAudio('shoot.mp3')
         .then(audio => {
-          expect(assets.audioAssets['/audio/shoot.mp3']).to.equal(audio);
+          expect(assets.audioAssets['/audio/shoot.mp3']).to.equal(
+            audio
+          );
           expect(assets.audioAssets['shoot']).to.equal(audio);
 
           done();
@@ -352,7 +374,9 @@ describe('assets', () => {
       assets
         .loadAudio('/shoot.mp3')
         .then(audio => {
-          expect(assets.audioAssets['/audio/shoot.mp3']).to.equal(audio);
+          expect(assets.audioAssets['/audio/shoot.mp3']).to.equal(
+            audio
+          );
           expect(assets.audioAssets['shoot']).to.equal(audio);
 
           done();
@@ -363,11 +387,11 @@ describe('assets', () => {
     it('should throw an error if the audio failed to load', done => {
       assets
         .loadAudio('fake.mp3')
-	.then(() => {
+        .then(() => {
           // should not get here
           done('no error thrown');
         })
-	.catch(() => {
+        .catch(() => {
           done();
         });
     });
@@ -375,23 +399,25 @@ describe('assets', () => {
     it('should throw an error if no audio source can be played', done => {
       assets
         .loadAudio('cantPlay.aaa')
-	.then(() => {
+        .then(() => {
           // should not get here
           done('no error thrown');
         })
-	.catch(() => {
+        .catch(() => {
           done();
         });
     });
 
     it('should emit the assetLoaded event', done => {
       function loaded(asset, url) {
-        // this needs to be called first otherwise every load event will call this
-        // emitted function
+        // this needs to be called first otherwise every load event
+        // will call this emitted function
         off('assetLoaded', loaded);
 
         try {
-          expect(assets.audioAssets['/audio/shoot.mp3']).to.equal(asset);
+          expect(assets.audioAssets['/audio/shoot.mp3']).to.equal(
+            asset
+          );
           expect(url).to.equal('/audio/shoot.mp3');
         } catch (e) {
           done(e);
@@ -412,7 +438,9 @@ describe('assets', () => {
       expect(assets.imageAssets).to.deep.equal({});
 
       assets.load('/imgs/bullet.png').then(loadedAssets => {
-        expect(assets.imageAssets['/imgs/bullet']).to.equal(loadedAssets[0]);
+        expect(assets.imageAssets['/imgs/bullet']).to.equal(
+          loadedAssets[0]
+        );
 
         done();
       });
@@ -421,18 +449,24 @@ describe('assets', () => {
     it('should load an audio asset', done => {
       expect(assets.audioAssets).to.deep.equal({});
 
-      assets.load(['/audio/shoot.mp3', '/audio/shoot.ogg']).then(loadedAssets => {
-        expect(assets.audioAssets['/audio/shoot']).to.equal(loadedAssets[0]);
+      assets
+        .load(['/audio/shoot.mp3', '/audio/shoot.ogg'])
+        .then(loadedAssets => {
+          expect(assets.audioAssets['/audio/shoot']).to.equal(
+            loadedAssets[0]
+          );
 
-        done();
-      });
+          done();
+        });
     });
 
     it('should load an data asset', done => {
       expect(assets.dataAssets).to.deep.equal({});
 
       assets.load('/data/test.json').then(loadedAssets => {
-        expect(assets.dataAssets['/data/test']).to.equal(loadedAssets[0]);
+        expect(assets.dataAssets['/data/test']).to.equal(
+          loadedAssets[0]
+        );
 
         done();
       });
@@ -440,7 +474,11 @@ describe('assets', () => {
 
     it('should load multiple assets', done => {
       assets
-        .load('/imgs/bullet.png', ['/audio/shoot.mp3', '/audio/shoot.ogg'], '/data/test.json')
+        .load(
+          '/imgs/bullet.png',
+          ['/audio/shoot.mp3', '/audio/shoot.ogg'],
+          '/data/test.json'
+        )
         .then(loadedAssets => {
           expect(loadedAssets).to.have.lengthOf(3);
 

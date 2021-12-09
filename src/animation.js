@@ -146,7 +146,13 @@ class Animation {
    * @param {Number} [properties.height] - height of the sprite. Defaults to [Animation.height](api/animation#height).
    * @param {CanvasRenderingContext2D} [properties.context] - The context the animation should draw to. Defaults to [core.getContext()](api/core#getContext).
    */
-  render({ x, y, width = this.width, height = this.height, context = getContext() }) {
+  render({
+    x,
+    y,
+    width = this.width,
+    height = this.height,
+    context = getContext()
+  }) {
     // get the row and col of the frame
     let row = (this.frames[this._f] / this.spriteSheet._f) | 0;
     let col = this.frames[this._f] % this.spriteSheet._f | 0;

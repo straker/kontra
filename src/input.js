@@ -1,5 +1,15 @@
-import { gamepadMap, initGamepad, onGamepad, offGamepad } from './gamepad.js';
-import { gestureMap, initGesture, onGesture, offGesture } from './gesture.js';
+import {
+  gamepadMap,
+  initGamepad,
+  onGamepad,
+  offGamepad
+} from './gamepad.js';
+import {
+  gestureMap,
+  initGesture,
+  onGesture,
+  offGesture
+} from './gesture.js';
 import { keyMap, initKeys, onKey, offKey } from './keyboard.js';
 import { initPointer, onPointer, offPointer } from './pointer.js';
 

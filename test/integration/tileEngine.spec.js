@@ -1,5 +1,10 @@
 import TileEngine from '../../src/tileEngine.js';
-import { loadImage, loadData, load, _reset } from '../../src/assets.js';
+import {
+  loadImage,
+  loadData,
+  load,
+  _reset
+} from '../../src/assets.js';
 import { init, getCanvas } from '../../src/core.js';
 
 describe('tileEngine integration', () => {

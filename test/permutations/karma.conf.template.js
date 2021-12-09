@@ -6,7 +6,12 @@ module.exports = function (config) {
     singleRun: true,
     autoWatch: true,
     frameworks: ['mocha', 'chai', 'sinon'],
-    files: [{ pattern: path.join(__dirname, '__option__.spec.js'), type: 'module' }],
+    files: [
+      {
+        pattern: path.join(__dirname, '__option__.spec.js'),
+        type: 'module'
+      }
+    ],
     proxies: {
       '/src': path.join('/absolute', __dirname, '../../src')
     },

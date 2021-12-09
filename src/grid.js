@@ -220,7 +220,11 @@ class Grid extends GameObjectClass {
 
     // nc = numCols
     let numCols = (this._nc =
-      this.flow == 'column' ? 1 : this.flow == 'row' ? children.length : this.numCols);
+      this.flow == 'column'
+        ? 1
+        : this.flow == 'row'
+        ? children.length
+        : this.numCols);
 
     let row = 0;
     let col = 0;
@@ -240,7 +244,10 @@ class Grid extends GameObjectClass {
       let colSpan = spans;
 
       do {
-        colWidths[col] = Math.max(colWidths[col] || 0, width / colSpan);
+        colWidths[col] = Math.max(
+          colWidths[col] || 0,
+          width / colSpan
+        );
         grid[row][col] = child;
       } while (col++ <= numCols && --spans);
 
@@ -293,20 +300,24 @@ class Grid extends GameObjectClass {
       let topLeftX = -this.anchor.x * this.width;
 
       gridRow.map((child, col) => {
-        // don't render the same child multiple times if it uses colSpan
+        // don't render the same child multiple times if it uses
+        // colSpan
         if (child && !rendered.includes(child)) {
           rendered.push(child);
 
-          let justifySelf = alignment[child.justifySelf || justify[col % justify.length]](
-            this._rtl
-          );
-          let alignSelf = alignment[child.alignSelf || align[row % align.length]]();
+          let justifySelf = alignment[
+            child.justifySelf || justify[col % justify.length]
+          ](this._rtl);
+          let alignSelf =
+            alignment[child.alignSelf || align[row % align.length]]();
 
           let colSpan = child.colSpan || 1;
           let colWidth = colWidths[col];
           if (colSpan > 1 && col + colSpan <= this._nc) {
             for (let i = 1; i < colSpan; i++) {
-              colWidth += colWidths[col + i] + colGap[(col + i) % colGap.length];
+              colWidth +=
+                colWidths[col + i] +
+                colGap[(col + i) % colGap.length];
             }
           }
 

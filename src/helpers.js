@@ -67,11 +67,13 @@ export function radToDeg(rad) {
  * @returns {Number} Angle (in radians) from the source point to the target point.
  */
 export function angleToTarget(source, target) {
-  // atan2 returns the counter-clockwise angle in respect to the x-axis, but
-  // the canvas rotation system is based on the y-axis (rotation of 0 = up).
-  // so we need to add a quarter rotation to return a counter-clockwise
-  // rotation in respect to the y-axis
-  return Math.atan2(target.y - source.y, target.x - source.x) + Math.PI / 2;
+  // atan2 returns the counter-clockwise angle in respect to the
+  // x-axis, but the canvas rotation system is based on the y-axis
+  // (rotation of 0 = up). so we need to add a quarter rotation to
+  // return a counter-clockwise rotation in respect to the y-axis
+  return (
+    Math.atan2(target.y - source.y, target.x - source.x) + Math.PI / 2
+  );
 }
 
 /**
@@ -121,7 +123,7 @@ export function movePoint(point, angle, distance) {
  * @returns {Number} Random integer between min and max values.
  */
 export function randInt(min, max) {
-  return (Math.random() * (max - min + 1) | 0) + min;
+  return ((Math.random() * (max - min + 1)) | 0) + min;
 }
 
 /**
@@ -143,8 +145,8 @@ export function randInt(min, max) {
  * @returns {() => Number} Seeded random number generator function.
  */
 export function seedRand(str) {
-  // based on the above references, this was the smallest code yet decent
-  // quality seed random function
+  // based on the above references, this was the smallest code yet
+  // decent quality seed random function
 
   // first create a suitable hash of the seed string using xfnv1a
   // @see https://github.com/bryc/code/blob/master/jshash/PRNGs.md#addendum-a-seed-generating-functions
@@ -159,7 +161,8 @@ export function seedRand(str) {
 
   // then return the seed function and discard the first result
   // @see https://github.com/bryc/code/blob/master/jshash/PRNGs.md#lcg-lehmer-rng
-  let rand = () => ((2 ** 31 - 1) & (seed = Math.imul(48271, seed))) / 2 ** 31;
+  let rand = () =>
+    ((2 ** 31 - 1) & (seed = Math.imul(48271, seed))) / 2 ** 31;
   rand();
   return rand;
 }

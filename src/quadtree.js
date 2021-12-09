@@ -16,7 +16,8 @@ function getIndices(object, bounds) {
 
   // save off quadrant checks for reuse
   let intersectsTopQuadrants = object.y < horizontalMidpoint;
-  let intersectsBottomQuadrants = object.y + object.height >= horizontalMidpoint;
+  let intersectsBottomQuadrants =
+    object.y + object.height >= horizontalMidpoint;
 
   // object intersects with the left quadrants
   if (object.x < verticalMidpoint) {
@@ -104,8 +105,9 @@ class Quadtree {
       height: canvas.height
     };
 
-    // since we won't clean up any subnodes, we need to keep track of which nodes are
-    // currently the leaf node so we know which nodes to add objects to
+    // since we won't clean up any subnodes, we need to keep track of
+    // which nodes are currently the leaf node so we know which nodes
+    // to add objects to
     // b = branch, d = depth, o = objects, s = subnodes, p = parent
     this._b = false;
     this._d = 0;
@@ -120,7 +122,7 @@ class Quadtree {
    * @function clear
    */
   clear() {
-    this._s.map((subnode) => {
+    this._s.map(subnode => {
       subnode.clear();
     });
 
@@ -158,7 +160,8 @@ class Quadtree {
    * @returns {Object[]} A list of objects in the same node as the object, not including the object itself.
    */
   get(object) {
-    // since an object can belong to multiple nodes we should not add it multiple times
+    // since an object can belong to multiple nodes we should not add
+    // it multiple times
     let objects = new Set();
 
     // traverse the tree until we get to a leaf node
@@ -220,7 +223,8 @@ class Quadtree {
         return;
       }
 
-      // current node has subnodes, so we need to add this object into a subnode
+      // current node has subnodes, so we need to add this object
+      // into a subnode
       if (this._b) {
         this._a(object);
         return;
@@ -230,7 +234,10 @@ class Quadtree {
       this._o.push(object);
 
       // split the node if there are too many objects
-      if (this._o.length > this.maxObjects && this._d < this.maxDepth) {
+      if (
+        this._o.length > this.maxObjects &&
+        this._d < this.maxDepth
+      ) {
         this._sp();
 
         // move all objects to their corresponding subnodes

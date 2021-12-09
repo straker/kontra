@@ -166,7 +166,13 @@ class Sprite extends GameObjectClass {
   draw() {
     // @ifdef SPRITE_IMAGE
     if (this.image) {
-      this.context.drawImage(this.image, 0, 0, this.image.width, this.image.height);
+      this.context.drawImage(
+        this.image,
+        0,
+        0,
+        this.image.width,
+        this.image.height
+      );
     }
     // @endif
 

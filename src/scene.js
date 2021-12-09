@@ -280,15 +280,21 @@ class Scene {
    */
   render() {
     if (!this.hidden) {
-      let { _ctx, children, camera, cullObjects, cullFunction } = this;
+      let { _ctx, children, camera, cullObjects, cullFunction } =
+        this;
       let { x, y, width, height, scaleX, scaleY } = camera;
 
       // translate the scene to the camera position
       _ctx.save();
-      _ctx.translate(-(x * scaleX - width / 2), -(y * scaleY - height / 2));
+      _ctx.translate(
+        -(x * scaleX - width / 2),
+        -(y * scaleY - height / 2)
+      );
 
       if (cullObjects) {
-        children = children.filter(child => cullFunction(camera, child));
+        children = children.filter(child =>
+          cullFunction(camera, child)
+        );
       }
       children.map(child => child.render && child.render());
 

@@ -15,7 +15,10 @@ export { default as Button, ButtonClass } from './button.js';
 export { init, getCanvas, getContext } from './core.js';
 export { on, off, emit } from './events.js';
 export { default as GameLoop } from './gameLoop.js';
-export { default as GameObject, GameObjectClass } from './gameObject.js';
+export {
+  default as GameObject,
+  GameObjectClass
+} from './gameObject.js';
 export {
   gamepadMap,
   updateGamepad,
@@ -25,7 +28,12 @@ export {
   gamepadPressed,
   gamepadAxis
 } from './gamepad.js';
-export { gestureMap, initGesture, onGesture, offGesture } from './gesture.js';
+export {
+  gestureMap,
+  initGesture,
+  onGesture,
+  offGesture
+} from './gesture.js';
 export { default as Grid, GridClass } from './grid.js';
 export {
   degToRad,
@@ -44,8 +52,18 @@ export {
   getWorldRect
 } from './helpers.js';
 export { initInput, onInput, offInput } from './input.js';
-export { keyMap, initKeys, onKey, offKey, keyPressed } from './keyboard.js';
-export { registerPlugin, unregisterPlugin, extendObject } from './plugin.js';
+export {
+  keyMap,
+  initKeys,
+  onKey,
+  offKey,
+  keyPressed
+} from './keyboard.js';
+export {
+  registerPlugin,
+  unregisterPlugin,
+  extendObject
+} from './plugin.js';
 export {
   initPointer,
   getPointer,
@@ -60,7 +78,10 @@ export { default as Pool, PoolClass } from './pool.js';
 export { default as Quadtree, QuadtreeClass } from './quadtree.js';
 export { default as Scene, SceneClass } from './scene.js';
 export { default as Sprite, SpriteClass } from './sprite.js';
-export { default as SpriteSheet, SpriteSheetClass } from './spriteSheet.js';
+export {
+  default as SpriteSheet,
+  SpriteSheetClass
+} from './spriteSheet.js';
 export { default as Text, TextClass } from './text.js';
 export { default as TileEngine } from './tileEngine.js';
 export { default as Vector, VectorClass } from './vector.js';

@@ -46,7 +46,9 @@ export function on(event, callback) {
  * @param {Function} callback - The function that was passed during registration.
  */
 export function off(event, callback) {
-  callbacks[event] = (callbacks[event] || []).filter(fn => fn != callback);
+  callbacks[event] = (callbacks[event] || []).filter(
+    fn => fn != callback
+  );
 }
 
 /**

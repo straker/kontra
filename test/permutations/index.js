@@ -7,7 +7,12 @@ const execSync = require('child_process').execSync;
 const rollup = require('rollup');
 
 let options = {
-  updatable: ['GAMEOBJECT_VELOCITY', 'GAMEOBJECT_ACCELERATION', 'GAMEOBJECT_TTL', 'VECTOR_SCALE'],
+  updatable: [
+    'GAMEOBJECT_VELOCITY',
+    'GAMEOBJECT_ACCELERATION',
+    'GAMEOBJECT_TTL',
+    'VECTOR_SCALE'
+  ],
   gameObject: [
     'GAMEOBJECT_ANCHOR',
     'GAMEOBJECT_GROUP',
@@ -16,8 +21,17 @@ let options = {
     'GAMEOBJECT_SCALE'
   ],
   sprite: ['SPRITE_IMAGE', 'SPRITE_ANIMATION'],
-  text: ['TEXT_AUTONEWLINE', 'TEXT_NEWLINE', 'TEXT_RTL', 'TEXT_ALIGN'],
-  tileEngine: ['TILEENGINE_CAMERA', 'TILEENGINE_DYNAMIC', 'TILEENGINE_QUERY'],
+  text: [
+    'TEXT_AUTONEWLINE',
+    'TEXT_NEWLINE',
+    'TEXT_RTL',
+    'TEXT_ALIGN'
+  ],
+  tileEngine: [
+    'TILEENGINE_CAMERA',
+    'TILEENGINE_DYNAMIC',
+    'TILEENGINE_QUERY'
+  ],
   vector: [
     'VECTOR_ANGLE',
     'VECTOR_CLAMP',
@@ -45,11 +59,17 @@ if (optionName && options[optionName]) {
 Object.keys(options).forEach(async option => {
   try {
     // get the setup code
-    let setup = fs.readFileSync(path.join(__dirname, '../setup.js'), 'utf-8');
+    let setup = fs.readFileSync(
+      path.join(__dirname, '../setup.js'),
+      'utf-8'
+    );
     setup = setup.replace('../src/core.js', '../../src/core.js');
 
     // copy test suite and change path
-    let test = fs.readFileSync(path.join(__dirname, `../unit/${option}.spec.js`), 'utf-8');
+    let test = fs.readFileSync(
+      path.join(__dirname, `../unit/${option}.spec.js`),
+      'utf-8'
+    );
 
     // since loading the setup code causes the core file to be loaded
     // twice (and destroying context references) we'll need to inject
@@ -58,7 +78,11 @@ Object.keys(options).forEach(async option => {
     let lastImport = matches[matches.length - 1];
     test = test.replace(lastImport, `${lastImport}${setup}`);
 
-    fs.writeFileSync(path.join(__dirname, `${option}.spec.js`), test, 'utf-8');
+    fs.writeFileSync(
+      path.join(__dirname, `${option}.spec.js`),
+      test,
+      'utf-8'
+    );
 
     // rollup test file
     let bundle = await rollup.rollup({
@@ -70,9 +94,16 @@ Object.keys(options).forEach(async option => {
     });
 
     // copy karma.conf and change path
-    let karma = fs.readFileSync(path.join(__dirname, `./karma.conf.template.js`), 'utf-8');
+    let karma = fs.readFileSync(
+      path.join(__dirname, `./karma.conf.template.js`),
+      'utf-8'
+    );
     karma = karma.replace(/__option__/g, option);
-    fs.writeFileSync(path.join(__dirname, 'karma.conf.js'), karma, 'utf-8');
+    fs.writeFileSync(
+      path.join(__dirname, 'karma.conf.js'),
+      karma,
+      'utf-8'
+    );
 
     // generate each option and run tests
     let numPermutations = 2 ** options[option].length;
@@ -97,12 +128,21 @@ Object.keys(options).forEach(async option => {
 
       // console.log('testContents:', testContents);
 
-      let contents = pp.preprocess(testContents, context, { type: 'js' });
-      fs.writeFileSync(path.join(__dirname, `${option}.spec.js`), contents, 'utf-8');
-
-      execSync('npx karma start ' + path.join(__dirname, 'karma.conf.js'), {
-        stdio: 'inherit'
+      let contents = pp.preprocess(testContents, context, {
+        type: 'js'
       });
+      fs.writeFileSync(
+        path.join(__dirname, `${option}.spec.js`),
+        contents,
+        'utf-8'
+      );
+
+      execSync(
+        'npx karma start ' + path.join(__dirname, 'karma.conf.js'),
+        {
+          stdio: 'inherit'
+        }
+      );
     }
   } catch (e) {
     // for some reason a failing test/exec does not error the program

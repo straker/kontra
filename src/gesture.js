@@ -83,14 +83,23 @@ export let gestureMap = {
       let absY = Math.abs(y);
       if (absX < this.threshold && absY < this.threshold) return;
 
-      return absX > absY ? (x < 0 ? 'left' : 'right') : y < 0 ? 'up' : 'down';
+      return absX > absY
+        ? x < 0
+          ? 'left'
+          : 'right'
+        : y < 0
+        ? 'up'
+        : 'down';
     }
   },
   pinch: {
     touches: 2,
     threshold: 2,
     touchstart({ 0: touch0, 1: touch1 }) {
-      this.prevDist = Math.hypot(touch0.x - touch1.x, touch0.y - touch1.y);
+      this.prevDist = Math.hypot(
+        touch0.x - touch1.x,
+        touch0.y - touch1.y
+      );
     },
     touchmove({ 0: touch0, 1: touch1 }) {
       let dist = Math.hypot(touch0.x - touch1.x, touch0.y - touch1.y);
@@ -123,11 +132,14 @@ export function initGesture() {
           // finger left touching
           (!currGesture || currGesture == name) &&
           touches.length == gesture.touches &&
-          // ensure that the indices of touches goes from 0..N. otherwise
-          // a length 1 touch could have an index of 2 which means there
-          // were two other touches that started a gesture
+          // ensure that the indices of touches goes from 0..N.
+          // otherwise a length 1 touch could have an index of 2
+          // which means there were two other touches that started
+          // a gesture
           // @see https://stackoverflow.com/a/33352604/2124254
-          [...Array(touches.length).keys()].every(key => touches[key]) &&
+          [...Array(touches.length).keys()].every(
+            key => touches[key]
+          ) &&
           (type = gesture[evt.type]?.(touches) ?? '') &&
           callbacks[name + type]
         ) {

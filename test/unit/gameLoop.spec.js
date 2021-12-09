@@ -119,7 +119,7 @@ describe('gameLoop', () => {
       let count = 0;
 
       loop = GameLoop({
-	update() {
+        update() {
           count++;
         },
         render: noop,
@@ -136,7 +136,7 @@ describe('gameLoop', () => {
       let count = 0;
 
       loop = GameLoop({
-	update() {
+        update() {
           count++;
         },
         render: noop,
@@ -153,7 +153,7 @@ describe('gameLoop', () => {
       let count = 0;
 
       loop = GameLoop({
-	update() {
+        update() {
           count++;
         },
         render: noop,

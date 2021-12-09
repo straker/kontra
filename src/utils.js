@@ -12,7 +12,8 @@ export function addToDom(node, canvas) {
 
   node.setAttribute('data-kontra', '');
   if (container) {
-    let target = container.querySelector('[data-kontra]:last-of-type') || canvas;
+    let target =
+      container.querySelector('[data-kontra]:last-of-type') || canvas;
     container.insertBefore(node, target.nextSibling);
   } else {
     document.body.appendChild(node);

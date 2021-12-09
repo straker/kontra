@@ -47,8 +47,12 @@ describe('helpers', () => {
     it('should return the angle to the target', () => {
       let source = { x: 300, y: 300 };
       let target = { x: 100, y: 100 };
-      expect(helpers.angleToTarget(source, target).toFixed(2)).to.equal('-0.79');
-      expect(helpers.angleToTarget(target, source).toFixed(2)).to.equal('2.36');
+      expect(
+        helpers.angleToTarget(source, target).toFixed(2)
+      ).to.equal('-0.79');
+      expect(
+        helpers.angleToTarget(target, source).toFixed(2)
+      ).to.equal('2.36');
     });
   });
 
@@ -188,7 +192,9 @@ describe('helpers', () => {
       expect(helpers.getStoreItem('boolean')).to.equal(true);
       expect(helpers.getStoreItem('number')).to.equal(1);
       expect(helpers.getStoreItem('string')).to.equal('hello');
-      expect(helpers.getStoreItem('object')).to.deep.equal({ foo: 'bar' });
+      expect(helpers.getStoreItem('object')).to.deep.equal({
+        foo: 'bar'
+      });
       expect(helpers.getStoreItem('array')).to.deep.equal([1, 2]);
     });
 

@@ -26,7 +26,7 @@ describe('Scene integration', () => {
 
     let scene = Scene({
       id: 'myId',
-      children: [tileEngine]
+      objects: [tileEngine]
     });
 
     scene.render();
@@ -35,12 +35,12 @@ describe('Scene integration', () => {
   });
 
   it('should work with helpers.depthSort', () => {
-    let children = [];
+    let objects = [];
     let spies = [];
     for (let i = 5; i > 0; i--) {
       let spy = sinon.spy();
       spies.push(spy);
-      children.push(
+      objects.push(
         Sprite({
           id: i,
           x: 5,
@@ -54,7 +54,7 @@ describe('Scene integration', () => {
 
     let scene = Scene({
       id: 'myId',
-      children,
+      objects,
       sortFunction: depthSort
     });
     scene.render();

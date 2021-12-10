@@ -1,5 +1,5 @@
 import Scene, { SceneClass } from '../../src/scene.js';
-import { getCanvas } from '../../src/core.js';
+import { getContext, getCanvas } from '../../src/core.js';
 import { noop, srOnlyStyle } from '../../src/utils.js';
 import { collides } from '../../src/helpers.js';
 
@@ -29,27 +29,27 @@ describe('scene', () => {
     it('should setup basic properties', () => {
       expect(scene.id).to.equal('myId');
       expect(scene.name).to.equal('myId');
-      expect(scene.children).to.deep.equal([]);
-      expect(scene.canvas).to.equal(getCanvas());
+      expect(scene.objects).to.deep.equal([]);
+      expect(scene.context).to.equal(getContext());
       expect(scene.cullObjects).to.equal(true);
       expect(scene.cullFunction).to.equal(collides);
     });
 
     it('should override basic properties', () => {
-      let canvas = {
-        getContext: noop
+      let context = {
+        canvas: getCanvas()
       };
 
       scene.destroy();
       scene = Scene({
-        canvas,
+        context,
         cullObjects: false,
         cullFunction: noop,
         onShow: noop,
         onHide: noop
       });
 
-      expect(scene.canvas).to.equal(canvas);
+      expect(scene.context).to.equal(context);
       expect(scene.cullObjects).to.be.false;
       expect(scene.cullFunction).to.equal(noop);
       expect(scene.onShow).to.equal(noop);
@@ -77,19 +77,19 @@ describe('scene', () => {
       expect(document.body.contains(scene._dn)).to.be.true;
     });
 
-    it('should add children', () => {
-      let child = {};
+    it('should add objects', () => {
+      let object = {};
       scene.destroy();
       scene = Scene({
-        children: [child]
+        objects: [object]
       });
 
-      expect(scene.children.length).to.equal(1);
-      expect(scene.children[0]).to.equal(child);
+      expect(scene.objects.length).to.equal(1);
+      expect(scene.objects[0]).to.equal(object);
     });
 
     it('should add the scene as an immediate sibling to the canvas', () => {
-      expect(scene.canvas.nextSibling).to.equal(scene._dn);
+      expect(scene.context.canvas.nextSibling).to.equal(scene._dn);
     });
 
     it('should hide the DOM node', () => {
@@ -108,20 +108,20 @@ describe('scene', () => {
         });
     });
 
-    it('should allow children', () => {
-      let child = {};
+    it('should allow objects', () => {
+      let object = {};
       scene.destroy();
       scene = Scene({
         id: 'myId',
-        children: [child]
+        objects: [object]
       });
 
-      expect(scene.children.length).to.equal(1);
-      expect(scene.children[0]).to.equal(child);
+      expect(scene.objects.length).to.equal(1);
+      expect(scene.objects[0]).to.equal(object);
     });
 
     it('should create the camera and center it', () => {
-      let canvas = scene.canvas;
+      let canvas = scene.context.canvas;
       expect(scene.camera).to.exist;
       expect(scene.camera.x).to.equal(canvas.width / 2);
       expect(scene.camera.y).to.equal(canvas.height / 2);
@@ -149,14 +149,14 @@ describe('scene', () => {
       expect(document.activeElement).to.equal(scene._dn);
     });
 
-    it('should focus the first focusable child', () => {
-      let child = {
+    it('should focus the first focusable object', () => {
+      let object = {
         focus: sinon.spy()
       };
-      scene.addChild(child);
+      scene.add(object);
       scene.show();
 
-      expect(child.focus.called).to.be.true;
+      expect(object.focus.called).to.be.true;
     });
 
     it('should call onShow', () => {
@@ -188,29 +188,45 @@ describe('scene', () => {
   });
 
   // --------------------------------------------------
-  // addChild
+  // add
   // --------------------------------------------------
-  describe('addChild', () => {
-    it('should add the child', () => {
-      let child = {};
-      scene.addChild(child);
+  describe('add', () => {
+    it('should add the object', () => {
+      let object = {};
+      scene.add(object);
 
-      expect(scene.children.length).to.equal(1);
+      expect(scene.objects.length).to.equal(1);
     });
 
-    it('should add any children with DOM nodes to the scenes DOM node', () => {
-      let child = {
+    it('should add multiple objects', () => {
+      let object1 = {};
+      let object2 = {};
+      scene.add(object1, object2);
+
+      expect(scene.objects.length).to.equal(2);
+    });
+
+    it('should add array of objects', () => {
+      let object1 = {};
+      let object2 = {};
+      scene.add([object1, object2]);
+
+      expect(scene.objects.length).to.equal(2);
+    });
+
+    it('should add any objects with DOM nodes to the scenes DOM node', () => {
+      let object = {
         _dn: document.createElement('div')
       };
-      scene.addChild(child);
+      scene.add(object);
 
-      expect(scene._dn.contains(child._dn)).to.be.true;
+      expect(scene._dn.contains(object._dn)).to.be.true;
     });
 
     it('should add DOM nodes of all descendants', () => {
       let node1 = document.createElement('div');
       let node2 = document.createElement('div');
-      let child = {
+      let object = {
         children: [
           {
             children: [
@@ -224,7 +240,7 @@ describe('scene', () => {
           }
         ]
       };
-      scene.addChild(child);
+      scene.add(object);
 
       expect(scene._dn.contains(node1)).to.be.true;
       expect(scene._dn.contains(node2)).to.be.true;
@@ -233,7 +249,7 @@ describe('scene', () => {
     it('should not take DOM nodes from descendants who have a DOM parent', () => {
       let node1 = document.createElement('div');
       let node2 = document.createElement('div');
-      let child = {
+      let object = {
         children: [
           {
             _dn: node1,
@@ -245,7 +261,7 @@ describe('scene', () => {
           }
         ]
       };
-      scene.addChild(child);
+      scene.add(object);
 
       expect(scene._dn.contains(node1)).to.be.true;
       expect(scene._dn.contains(node2)).to.be.false;
@@ -253,35 +269,53 @@ describe('scene', () => {
   });
 
   // --------------------------------------------------
-  // removeChild
+  // remove
   // --------------------------------------------------
-  describe('removeChild', () => {
-    it('should remove the child', () => {
-      let child = {};
-      scene.addChild(child);
-      scene.removeChild(child);
+  describe('remove', () => {
+    it('should remove the object', () => {
+      let object = {};
+      scene.add(object);
+      scene.remove(object);
 
-      expect(scene.children.length).to.equal(0);
+      expect(scene.objects.length).to.equal(0);
     });
 
-    it('should remove any children with DOM nodes', () => {
-      let child = {
+    it('should remove multiple objects', () => {
+      let object1 = {};
+      let object2 = {};
+      scene.add(object1, object2);
+      scene.remove(object1, object2);
+
+      expect(scene.objects.length).to.equal(0);
+    });
+
+    it('should remove array of objects', () => {
+      let object1 = {};
+      let object2 = {};
+      scene.add(object1, object2);
+      scene.remove([object1, object2]);
+
+      expect(scene.objects.length).to.equal(0);
+    });
+
+    it('should remove any objects with DOM nodes', () => {
+      let object = {
         _dn: document.createElement('div')
       };
-      scene.addChild(child);
-      scene.removeChild(child);
+      scene.add(object);
+      scene.remove(object);
 
-      expect(scene._dn.contains(child._dn)).to.be.false;
-      expect(document.body.contains(child._dn)).to.be.true;
+      expect(scene._dn.contains(object._dn)).to.be.false;
+      expect(document.body.contains(object._dn)).to.be.true;
     });
 
     it('should remove DOM nodes of all descendants', () => {
       let node1 = document.createElement('div');
       let node2 = document.createElement('div');
-      let child = {
-        children: [
+      let object = {
+        objects: [
           {
-            children: [
+            objects: [
               {
                 _dn: node1
               }
@@ -292,8 +326,8 @@ describe('scene', () => {
           }
         ]
       };
-      scene.addChild(child);
-      scene.removeChild(child);
+      scene.add(object);
+      scene.remove(object);
 
       expect(scene._dn.contains(node1)).to.be.false;
       expect(scene._dn.contains(node2)).to.be.false;
@@ -304,7 +338,7 @@ describe('scene', () => {
       let node2 = document.createElement('div');
       node1.appendChild(node2);
 
-      let child = {
+      let object = {
         children: [
           {
             _dn: node1,
@@ -316,8 +350,8 @@ describe('scene', () => {
           }
         ]
       };
-      scene.addChild(child);
-      scene.removeChild(child);
+      scene.add(object);
+      scene.remove(object);
 
       expect(scene._dn.contains(node1)).to.be.false;
       expect(scene._dn.contains(node2)).to.be.false;
@@ -326,26 +360,26 @@ describe('scene', () => {
   });
 
   // --------------------------------------------------
-  // children
+  // objects
   // --------------------------------------------------
-  describe('children', () => {
-    it('should properly handle setting children', () => {
-      scene.addChild({ foo: 'bar' });
-      scene.addChild({ faz: 'baz' });
-      scene.addChild({ hello: 'world' });
+  describe('objects', () => {
+    it('should properly handle setting objects', () => {
+      scene.add({ foo: 'bar' });
+      scene.add({ faz: 'baz' });
+      scene.add({ hello: 'world' });
 
-      let removeSpy = sinon.spy(scene, 'removeChild');
-      let addSpy = sinon.spy(scene, 'addChild');
-      let child = {
+      let removeSpy = sinon.spy(scene, 'remove');
+      let addSpy = sinon.spy(scene, 'add');
+      let object = {
         thing1: 'thing2'
       };
 
-      scene.children = [child];
+      scene.objects = [object];
 
       expect(removeSpy.calledThrice).to.be.true;
-      expect(addSpy.calledWith(child)).to.be.true;
-      expect(scene.children.length).to.equal(1);
-      expect(scene.children[0]).to.equal(child);
+      expect(addSpy.calledWith([object])).to.be.true;
+      expect(scene.objects.length).to.equal(1);
+      expect(scene.objects[0]).to.equal(object);
     });
   });
 
@@ -359,14 +393,14 @@ describe('scene', () => {
       expect(document.body.contains(scene._dn)).to.be.false;
     });
 
-    it('should call destroy on all children', () => {
-      let child = {
+    it('should call destroy on all objects', () => {
+      let object = {
         destroy: sinon.spy()
       };
-      scene.addChild(child);
+      scene.add(object);
       scene.destroy();
 
-      expect(child.destroy.called).to.be.true;
+      expect(object.destroy.called).to.be.true;
     });
   });
 
@@ -374,30 +408,30 @@ describe('scene', () => {
   // update
   // --------------------------------------------------
   describe('update', () => {
-    it('should call update on all children if scene is not hidden', () => {
-      let child = {
+    it('should call update on all objects if scene is not hidden', () => {
+      let object = {
         update: sinon.spy()
       };
-      scene.addChild(child);
+      scene.add(object);
       scene.update();
 
-      expect(child.update.called).to.be.true;
+      expect(object.update.called).to.be.true;
     });
 
-    it('should not call update on all children if scene is hidden', () => {
-      let child = {
+    it('should not call update on all objects if scene is hidden', () => {
+      let object = {
         update: sinon.spy()
       };
-      scene.addChild(child);
+      scene.add(object);
       scene.hide();
       scene.update();
 
-      expect(child.update.called).to.be.false;
+      expect(object.update.called).to.be.false;
     });
 
     it('should not error on objects without update function', () => {
-      let child = {};
-      scene.addChild(child);
+      let object = {};
+      scene.add(object);
 
       function fn() {
         scene.update();
@@ -418,18 +452,11 @@ describe('scene', () => {
       expect(scene.camera.y).to.equal(10);
     });
 
-    it('should take into account scale', () => {
-      scene.lookAt({ x: 10, y: 10, scaleX: 2, scaleY: 2 });
-
-      expect(scene.camera.x).to.equal(5);
-      expect(scene.camera.y).to.equal(5);
-    });
-
     it('should take into account world', () => {
-      scene.lookAt({ world: { x: 10, y: 10, scaleX: 2, scaleY: 2 } });
+      scene.lookAt({ x: 5, y: 5, world: { x: 10, y: 10 } });
 
-      expect(scene.camera.x).to.equal(5);
-      expect(scene.camera.y).to.equal(5);
+      expect(scene.camera.x).to.equal(10);
+      expect(scene.camera.y).to.equal(10);
     });
   });
 
@@ -437,51 +464,51 @@ describe('scene', () => {
   // render
   // --------------------------------------------------
   describe('render', () => {
-    it('should call render on all children', () => {
-      let child = {
+    it('should call render on all objects', () => {
+      let object = {
         x: 0,
         y: 0,
         width: 10,
         height: 10,
         render: sinon.spy()
       };
-      scene.addChild(child);
+      scene.add(object);
       scene.render();
 
-      expect(child.render.called).to.be.true;
+      expect(object.render.called).to.be.true;
     });
 
-    it('should not call render on all children if scene is hidden', () => {
-      let child = {
+    it('should not call render on all objects if scene is hidden', () => {
+      let object = {
         x: 0,
         y: 0,
         width: 10,
         height: 10,
         render: sinon.spy()
       };
-      scene.addChild(child);
+      scene.add(object);
       scene.hide();
       scene.render();
 
-      expect(child.render.called).to.be.false;
+      expect(object.render.called).to.be.false;
     });
 
     it('should cull objects outside camera bounds', () => {
-      let child = {
+      let object = {
         x: -20,
         y: 0,
         width: 10,
         height: 10,
         render: sinon.spy()
       };
-      scene.addChild(child);
+      scene.add(object);
       scene.render();
 
-      expect(child.render.called).to.be.false;
+      expect(object.render.called).to.be.false;
     });
 
     it('should not cull objects if cullObjects is false', () => {
-      let child = {
+      let object = {
         x: -20,
         y: 0,
         width: 10,
@@ -489,15 +516,15 @@ describe('scene', () => {
         render: sinon.spy()
       };
       scene.cullObjects = false;
-      scene.addChild(child);
+      scene.add(object);
       scene.render();
 
-      expect(child.render.called).to.be.true;
+      expect(object.render.called).to.be.true;
     });
 
     it('should not error on objects without render function', () => {
-      let child = {};
-      scene.addChild(child);
+      let object = {};
+      scene.add(object);
 
       function fn() {
         scene.render();
@@ -507,50 +534,40 @@ describe('scene', () => {
     });
 
     it('should translate the canvas to the camera', () => {
-      let spy = sinon.spy(scene._ctx, 'translate');
+      let spy = sinon.spy(scene.context, 'translate');
 
       scene.lookAt({ x: 10, y: 10 });
       scene.render();
 
-      expect(spy.calledWith(290, 290)).to.be.true;
+      expect(spy.firstCall.calledWith(290, 290)).to.be.true;
+      let calls = spy.getCalls();
+      expect(calls[calls.length - 2].calledWith(290, 290)).to.be.true;
 
       spy.restore();
     });
 
-    it('should take into account the camera scale', () => {
-      let spy = sinon.spy(scene._ctx, 'translate');
-
-      scene.lookAt({ x: 10, y: 10 });
-      scene.camera.setScale(2, 2);
-      scene.render();
-
-      expect(spy.calledWith(280, 280)).to.be.true;
-
-      spy.restore();
-    });
-
-    it('should sort children', () => {
+    it('should sort objects', () => {
       scene.cullObjects = false;
-      scene.children = [{ y: 20 }, { y: 10 }];
+      scene.objects = [{ y: 20 }, { y: 10 }];
       scene.sortFunction = (a, b) => a.y - b.y;
       scene.render();
 
-      expect(scene.children[0].y).to.equal(10);
-      expect(scene.children[1].y).to.equal(20);
+      expect(scene.objects[0].y).to.equal(10);
+      expect(scene.objects[1].y).to.equal(20);
     });
 
-    it('should sort children after being culled', () => {
+    it('should sort objects after being culled', () => {
       let cullSpy = sinon.stub().returns(true);
       let sortSpy = sinon.spy();
 
-      let child1 = {
+      let object1 = {
         x: 0,
         y: 0,
         width: 10,
         height: 10,
         render: sinon.spy()
       };
-      let child2 = {
+      let object2 = {
         x: 0,
         y: 0,
         width: 10,
@@ -558,7 +575,7 @@ describe('scene', () => {
         render: sinon.spy()
       };
 
-      scene.children = [child1, child2];
+      scene.objects = [object1, object2];
       scene.cullFunction = cullSpy;
       scene.sortFunction = sortSpy;
       scene.render();

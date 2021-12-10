@@ -39,6 +39,10 @@ module.exports = {
       {
         selector: 'VariableDeclaration[kind=const]',
         message: "Prefer 'let' over 'const' to save bytes"
+      },
+      {
+        selector: 'MemberExpression[property.name=forEach]',
+        message: "Prefer '.map()' over '.forEach()' to save bytes"
       }
     ],
 

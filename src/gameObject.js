@@ -1,7 +1,7 @@
 import { getContext } from './core.js';
 import Updatable from './updatable.js';
 import { rotatePoint } from './helpers.js';
-import { noop } from './utils.js';
+import { noop, removeFromArray } from './utils.js';
 
 /**
  * The base class of most renderable classes. Handles things such as position, rotation, anchor, and the update and render life cycle.
@@ -581,9 +581,7 @@ class GameObject extends Updatable {
    * @param {GameObject} child - Object to remove as a child.
    */
   removeChild(child) {
-    let index = this.children.indexOf(child);
-    if (index != -1) {
-      this.children.splice(index, 1);
+    if (removeFromArray(this.children, child)) {
       child.parent = null;
       child._pc();
     }

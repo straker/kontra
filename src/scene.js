@@ -77,7 +77,7 @@ class Scene {
     /**
      * The objects of the scene.
      * @memberof Scene
-     * @property {Objects[]} objects
+     * @property {Object[]} objects
      */
     objects = [],
 

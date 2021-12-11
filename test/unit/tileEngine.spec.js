@@ -773,11 +773,13 @@ describe(
     });
 
     // --------------------------------------------------
-    // tileEngine.children
+    // tileEngine.objects
     // --------------------------------------------------
-    describe('children', () => {
-      it('should properly handle setting children', () => {
-        let tileEngine = TileEngine({
+    describe('objects', () => {
+      let tileEngine = null;
+
+      beforeEach(() => {
+        tileEngine = TileEngine({
           tilewidth: 10,
           tileheight: 10,
           width: 100,
@@ -794,25 +796,33 @@ describe(
             }
           ]
         });
-
-        tileEngine.add({ foo: 'bar' });
-        tileEngine.add({ faz: 'baz' });
-        tileEngine.add({ hello: 'world' });
-
-        let removeSpy = sinon.spy(tileEngine, 'remove');
-        let addSpy = sinon.spy(tileEngine, 'add');
-        let child = {
-          thing1: 'thing2'
-        };
-
-        let oldObjects = tileEngine.objects;
-        tileEngine.objects = [child];
-
-        expect(removeSpy.calledWith(oldObjects)).to.be.true;
-        expect(addSpy.calledWith([child])).to.be.true;
-        expect(tileEngine.objects.length).to.equal(1);
-        expect(tileEngine.objects[0]).to.equal(child);
       });
+
+      if (testContext.TILEENGINE_CAMERA) {
+        it('should properly handle setting objects', () => {
+          tileEngine.add({ foo: 'bar' });
+          tileEngine.add({ faz: 'baz' });
+          tileEngine.add({ hello: 'world' });
+
+          let removeSpy = sinon.spy(tileEngine, 'remove');
+          let addSpy = sinon.spy(tileEngine, 'add');
+          let child = {
+            thing1: 'thing2'
+          };
+
+          let oldObjects = tileEngine.objects;
+          tileEngine.objects = [child];
+
+          expect(removeSpy.calledWith(oldObjects)).to.be.true;
+          expect(addSpy.calledWith([child])).to.be.true;
+          expect(tileEngine.objects.length).to.equal(1);
+          expect(tileEngine.objects[0]).to.equal(child);
+        });
+      } else {
+        it('should not have objects', () => {
+          expect(tileEngine.objects).to.not.exist;
+        });
+      }
     });
 
     // --------------------------------------------------

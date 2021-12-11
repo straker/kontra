@@ -87,7 +87,7 @@ let pressedButtons = {};
  *   // handle west face button
  * }
  * ```
- * @property {{[key: number]: String}} pointerMap
+ * @property {{[key: Number]: String}} pointerMap
  */
 export let pointerMap = {
   0: 'left',

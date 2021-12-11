@@ -105,7 +105,7 @@ class SpriteSheet {
     /**
      * An object of named [Animation](api/animation) objects. Typically you pass this object into [Sprite](api/sprite) to create an [animation sprites](api/spriteSheet#animation-sprite).
      * @memberof SpriteSheet
-     * @property {{[name: string] : Animation}} animations
+     * @property {{[name: String] : Animation}} animations
      */
     this.animations = {};
 
@@ -121,7 +121,7 @@ class SpriteSheet {
      *
      * `width` and `height` are the width of a single frame, while `margin` defines the amount of whitespace between each frame.
      * @memberof SpriteSheet
-     * @property {{width: number, height: number, margin: number}} frame
+     * @property {{width: Number, height: Number, margin: Number}} frame
      */
     this.frame = {
       width: frameWidth,

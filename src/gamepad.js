@@ -66,7 +66,7 @@ let gamepadupCallbacks = {};
  *   // handle west face button
  * }
  * ```
- * @property {{[key: number]: String}} gamepadMap
+ * @property {{[key: Number]: String}} gamepadMap
  */
 export let gamepadMap = {
   0: 'south',

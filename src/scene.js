@@ -278,7 +278,7 @@ class Scene {
    * @memberof Scene
    * @function lookAt
    *
-   * @param {{x: number, y: number}} object - Object to look at.
+   * @param {{x: Number, y: Number}} object - Object to look at.
    */
   lookAt(object) {
     // don't call getWorldRect so we can ignore the objects anchor

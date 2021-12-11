@@ -44,7 +44,7 @@ let pressedKeys = {};
  *   // handle ctrl key
  * });
  * ```
- * @property {{[key in (String|Number)]: string}} keyMap
+ * @property {{[key in (String|Number)]: String}} keyMap
  */
 export let keyMap = {
   // named keys

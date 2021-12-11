@@ -4,7 +4,7 @@ import { getCanvas } from './core.js';
  * Determine which subnodes the object intersects with
  *
  * @param {Object} object - Object to check.
- * @param {{x: number, y: number, width: number, height: number}} bounds - Bounds of the quadtree.
+ * @param {{x: Number, y: Number, width: Number, height: Number}} bounds - Bounds of the quadtree.
  *
  * @returns {Number[]} List of all subnodes object intersects.
  */

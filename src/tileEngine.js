@@ -421,7 +421,7 @@ class TileEngine {
    * @param {String} name - The name of the layer to check for collision.
    * @param {Object} object - Object to check collision against.
    *
-   * @returns {boolean} `true` if the object collides with a tile, `false` otherwise.
+   * @returns {Boolean} `true` if the object collides with a tile, `false` otherwise.
    */
   layerCollidesWith(name, object) {
     let { tilewidth, tileheight, layerMap } = this;

@@ -23,14 +23,14 @@ import { noop, removeFromArray } from './utils.js';
  * @param {Number} [properties.ddy] - Y coordinate of the acceleration vector.
  * @param {Number} [properties.ttl=Infinity] - How many frames the game object should be alive. Used by [Pool](api/pool).
  *
- * @param {{x: number, y: number}} [properties.anchor={x:0,y:0}] - The x and y origin of the game object. {x:0, y:0} is the top left corner of the game object, {x:1, y:1} is the bottom right corner.
+ * @param {{x: Number, y: Number}} [properties.anchor={x:0,y:0}] - The x and y origin of the game object. {x:0, y:0} is the top left corner of the game object, {x:1, y:1} is the bottom right corner.
  * @param {GameObject[]} [properties.children] - Children to add to the game object.
  * @param {Number} [properties.opacity=1] - The opacity of the game object.
  * @param {Number} [properties.rotation=0] - The rotation around the anchor in radians.
  * @param {Number} [properties.scaleX=1] - The x scale of the game object.
  * @param {Number} [properties.scaleY=1] - The y scale of the game object.
  *
- * @param {(dt?: number) => void} [properties.update] - Function called every frame to update the game object.
+ * @param {(dt?: Number) => void} [properties.update] - Function called every frame to update the game object.
  * @param {Function} [properties.render] - Function called every frame to render the game object.
  *
  * @param {...*} properties.props - Any additional properties you need added to the game object. For example, if you pass `gameObject({type: 'player'})` then the game object will also have a property of the same name and value. You can pass as many additional properties as you want.
@@ -99,7 +99,7 @@ class GameObject extends Updatable {
     /**
      * The x and y origin of the game object. {x:0, y:0} is the top left corner of the game object, {x:1, y:1} is the bottom right corner.
      * @memberof GameObject
-     * @property {{x: number, y: number}} anchor
+     * @property {{x: Number, y: Number}} anchor
      *
      * @example
      * // exclude-code:start
@@ -485,7 +485,7 @@ class GameObject extends Updatable {
    * The world position, width, height, opacity, rotation, and scale. The world property is the true position, width, height, etc. of the object, taking into account all parents.
    *
    * The world property does not adjust for anchor or scale, so if you set a negative scale the world width or height could be negative. Use [getWorldRect](/api/helpers#getWorldRect) to get the world position and size adjusted for anchor and scale.
-   * @property {{x: number, y: number, width: number, height: number, opacity: number, rotation: number, scaleX: number, scaleY: number}} world
+   * @property {{x: Number, y: Number, width: Number, height: Number, opacity: Number, rotation: Number, scaleX: Number, scaleY: Number}} world
    * @memberof GameObject
    */
   get world() {

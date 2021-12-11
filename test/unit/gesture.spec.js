@@ -13,7 +13,11 @@ describe('gesture', () => {
   });
 
   it('should export api', () => {
-    expect(gesture.gestureMap).to.be.an('object');
+    expect(Object.keys(gesture.gestureMap)).to.deep.equal([
+      'swipe',
+      'pinch'
+    ]);
+
     expect(gesture.initGesture).to.be.an('function');
     expect(gesture.onGesture).to.be.an('function');
     expect(gesture.offGesture).to.be.an('function');
@@ -55,6 +59,13 @@ describe('gesture', () => {
       gesture.onGesture('swipeleft', foo);
       expect(gesture.callbacks.swipeleft).to.equal(foo);
     });
+
+    it('should add an array of listeners', () => {
+      function foo() {}
+      gesture.onGesture(['swipeleft', 'swiperight'], foo);
+      expect(gesture.callbacks.swipeleft).to.equal(foo);
+      expect(gesture.callbacks.swiperight).to.equal(foo);
+    });
   });
 
   // --------------------------------------------------
@@ -70,6 +81,14 @@ describe('gesture', () => {
       gesture.onGesture('swipeleft', foo);
       gesture.offGesture('swipeleft', foo);
       expect(gesture.callbacks.swipeleft).to.equal(0);
+    });
+
+    it('should remove an array of listeners', () => {
+      function foo() {}
+      gesture.onGesture(['swipeleft', 'swiperight'], foo);
+      gesture.offGesture(['swipeleft', 'swiperight'], foo);
+      expect(gesture.callbacks.swipeleft).to.equal(0);
+      expect(gesture.callbacks.swiperight).to.equal(0);
     });
   });
 

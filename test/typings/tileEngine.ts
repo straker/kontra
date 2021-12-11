@@ -44,10 +44,14 @@ let tileRow: number = tileEngine.tileAtLayer('ground', {row: 5, col: 5});
 tileEngine.setTileAtLayer('ground', {x: 50, y: 50}, 2);
 tileEngine.setTileAtLayer('ground', {row: 5, col: 5}, 2);
 tileEngine.setLayer('ground', [1,2,0,0,0,5,6]);
-tileEngine.addObject({});
-tileEngine.addObject(kontra.GameObject());
-tileEngine.removeObject({});
-tileEngine.removeObject(kontra.GameObject());
+tileEngine.add({});
+tileEngine.add({}, {});
+tileEngine.add([{}, {}]);
+tileEngine.add(kontra.GameObject());
+tileEngine.remove({});
+tileEngine.remove({}, {});
+tileEngine.remove([{}, {}]);
+tileEngine.remove(kontra.GameObject());
 
 // options
 kontra.TileEngine({

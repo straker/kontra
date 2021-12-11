@@ -222,7 +222,7 @@ class GameObject extends Updatable {
     this._uw();
 
     // @ifdef GAMEOBJECT_GROUP
-    children.map(child => this.addChild(child));
+    this.addChild(children);
     // @endif
 
     // rf = render function
@@ -516,10 +516,8 @@ class GameObject extends Updatable {
 
   // @ifdef GAMEOBJECT_GROUP
   set children(value) {
-    while (this._c.length) {
-      this.removeChild(this._c[0]);
-    }
-    value.map(value => this.addChild(value));
+    this.removeChild(this._c);
+    this.addChild(value);
   }
 
   get children() {
@@ -531,7 +529,7 @@ class GameObject extends Updatable {
    * @memberof GameObject
    * @function addChild
    *
-   * @param {GameObject} child - Object to add as a child.
+   * @param {...(GameObject|GameObject[])[]} objects - Object to add as a child. Can be a single object, an array of objects, or a comma-separated list of objects.
    *
    * @example
    * // exclude-code:start
@@ -566,11 +564,13 @@ class GameObject extends Updatable {
    *
    * parent.render();
    */
-  addChild(child) {
-    this.children.push(child);
-    child.parent = this;
-    child._pc = child._pc || noop;
-    child._pc();
+  addChild(...objects) {
+    objects.flat().map(child => {
+      this.children.push(child);
+      child.parent = this;
+      child._pc = child._pc || noop;
+      child._pc();
+    });
   }
 
   /**
@@ -578,13 +578,15 @@ class GameObject extends Updatable {
    * @memberof GameObject
    * @function removeChild
    *
-   * @param {GameObject} child - Object to remove as a child.
+   * @param {...(GameObject|GameObject[])[]} objects - Object to remove as a child. Can be a single object, an array of objects, or a comma-separated list of objects.
    */
-  removeChild(child) {
-    if (removeFromArray(this.children, child)) {
-      child.parent = null;
-      child._pc();
-    }
+  removeChild(...objects) {
+    objects.flat().map(child => {
+      if (removeFromArray(this.children, child)) {
+        child.parent = null;
+        child._pc();
+      }
+    });
   }
   // @endif
 

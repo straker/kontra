@@ -37,6 +37,12 @@ describe('pointer', () => {
   });
 
   it('should export api', () => {
+    expect(pointer.pointerMap).to.deep.equal({
+      0: 'left',
+      1: 'middle',
+      2: 'right'
+    });
+
     expect(pointer.getPointer).to.be.an('function');
     expect(pointer.initPointer).to.be.an('function');
     expect(pointer.track).to.be.an('function');

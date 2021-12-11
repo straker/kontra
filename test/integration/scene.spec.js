@@ -4,7 +4,7 @@ import TileEngine from '../../src/tileEngine.js';
 import { init, getCanvas } from '../../src/core.js';
 import { depthSort } from '../../src/helpers.js';
 
-describe('Scene integration', () => {
+describe('scene integration', () => {
   before(() => {
     if (!getCanvas()) {
       let canvas = document.createElement('canvas');

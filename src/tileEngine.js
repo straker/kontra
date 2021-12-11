@@ -204,7 +204,8 @@ class TileEngine {
       // @ifdef TILEENGINE_CAMERA
       _sx: 0,
       _sy: 0,
-      objects: [],
+      // o = objects
+      _o: [],
       // @endif
 
       /**
@@ -249,26 +250,39 @@ class TileEngine {
     this._sy = clamp(0, this.mapheight - getCanvas().height, value);
   }
 
+  set objects(value) {
+    this.remove(this._o);
+    this.add(value);
+  }
+
+  get objects() {
+    return this._o;
+  }
+
   /**
    * Add an object to the tile engine.
    * @memberof TileEngine
-   * @function addObject
+   * @function add
    *
-   * @param {Object} object - Object to add to the tile engine.
+   * @param {...(Object|Object[])[]} objects - Object to add to the tile engine. Can be a single object, an array of objects, or a comma-separated list of objects.
    */
-  addObject(object) {
-    this.objects.push(object);
+  add(...objects) {
+    objects.flat().map(object => {
+      this._o.push(object);
+    });
   }
 
   /**
    * Remove an object from the tile engine.
    * @memberof TileEngine
-   * @function removeObject
+   * @function remove
    *
-   * @param {Object} object - Object to remove from the tile engine.
+   * @param {...(Object|Object[])[]} objects - Object to remove from the tile engine. Can be a single object, an array of objects, or a comma-separated list of objects.
    */
-  removeObject(object) {
-    removeFromArray(this.objects, object);
+  remove(...objects) {
+    objects.flat().map(object => {
+      removeFromArray(this._o, object);
+    });
   }
   // @endif
 

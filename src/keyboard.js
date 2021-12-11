@@ -1,7 +1,7 @@
 import { noop } from './utils.js';
 
 /**
- * A minimalistic keyboard API. You can use it move the main sprite or respond to a key press.
+ * A simple keyboard API. You can use it move the main sprite or respond to a key press.
  *
  * ```js
  * import { initKeys, keyPressed } from 'kontra';

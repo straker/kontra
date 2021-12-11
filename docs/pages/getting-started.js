@@ -1,12 +1,13 @@
 /**
 
-Kontra is written for modern ES6 capable browsers. If you need to run it in an ES5 browser, you will have to [transpile](https://babeljs.io/) and polyfill needed ES6 features (Assets requires `WeakMap` and `Promise`).
+Kontra is written for modern ES6 capable browsers. If you need to run it in an ES5 browser, you will have to [transpile](https://babeljs.io/) and polyfill needed ES6 features (Assets requires `WeakMap` and `Promise`, Quadtree requires `Set`).
 
 ## Download
 
 - Global object [production](https://unpkg.com/kontra@latest/kontra.min.js) and [development](https://unpkg.com/kontra@latest/kontra.js) versions
 - ES module [production](https://unpkg.com/kontra@latest/kontra.min.mjs) and [development](https://unpkg.com/kontra@latest/kontra.mjs) versions
-- `$ npm install kontra`
+- `npm install kontra`
+- `yarn add kontra`
 
 ## Load
 

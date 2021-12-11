@@ -525,7 +525,7 @@ class GameObject extends Updatable {
   }
 
   /**
-   * Add an object as a child to this object. The childs [world](api/gameObject#world) property will be updated to take into account this object and all of its parents.
+   * Add an object as a child to this object. The objects position, size, and rotation will be relative to the parents position, size, and rotation. The childs [world](api/gameObject#world) property will be updated to take into account this object and all of its parents.
    * @memberof GameObject
    * @function addChild
    *
@@ -558,6 +558,9 @@ class GameObject extends Updatable {
    * }
    *
    * let parent = createObject(300, 100, 'red');
+   *
+   * // create a child that is 25px to the right and
+   * // down from the parents position
    * let child = createObject(25, 25, 'yellow', 2);
    *
    * parent.addChild(child);

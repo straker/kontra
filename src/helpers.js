@@ -97,7 +97,7 @@ export function rotatePoint(point, angle) {
 
 /**
  * Move a point by an angle and distance.
- * @function
+ * @function movePoint
  *
  * @param {{x: Number, y: Number}} point - The {x,y} point to move.
  * @param {Number} angle - Angle (in radians) to move.

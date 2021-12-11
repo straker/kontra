@@ -13,8 +13,8 @@ Download the latest version of Kontra.
 
 ## Package mangers
 
-- `$ npm install kontra`
-- `$ yarn add kontra`
+- `npm install kontra`
+- `yarn add kontra`
 
 ## CDN
 

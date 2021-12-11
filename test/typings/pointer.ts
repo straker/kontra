@@ -8,9 +8,11 @@ let radius: number = pointer.radius;
 
 kontra.track({one: 1});
 kontra.track({one: 1}, {two: 2});
+kontra.track([{one: 1}, {two: 2}]);
 
 kontra.untrack({one: 1});
 kontra.untrack({one: 1}, {two: 2});
+kontra.untrack([{one: 1}, {two: 2}]);
 
 let over: boolean = kontra.pointerOver({one: 1});
 

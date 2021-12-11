@@ -182,6 +182,17 @@ describe('pointer', () => {
       expect(obj2._r).to.exist;
     });
 
+    it('should take an array of objects', () => {
+      let obj = { render: noop };
+      let obj2 = { render: noop };
+      pointer.track([obj, obj2]);
+
+      expect(obj.render).to.not.equal(noop);
+      expect(obj._r).to.exist;
+      expect(obj2.render).to.not.equal(noop);
+      expect(obj2._r).to.exist;
+    });
+
     it('should call the objects original render function', () => {
       let render = sinon.spy();
       let obj = { render };
@@ -253,6 +264,18 @@ describe('pointer', () => {
       let obj2 = { render: noop };
       pointer.track(obj, obj2);
       pointer.untrack(obj, obj2);
+
+      expect(obj.render).to.equal(noop);
+      expect(obj._r).to.not.be.true;
+      expect(obj2.render).to.equal(noop);
+      expect(obj2._r).to.not.be.true;
+    });
+
+    it('should take an array objects', () => {
+      let obj = { render: noop };
+      let obj2 = { render: noop };
+      pointer.track(obj, obj2);
+      pointer.untrack([obj, obj2]);
 
       expect(obj.render).to.equal(noop);
       expect(obj._r).to.not.be.true;

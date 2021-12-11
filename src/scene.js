@@ -159,7 +159,7 @@ class Scene {
     });
 
     /**
-     * The camera object which is used as the focal point for the scene. The scene will not render objects that are outside the bounds of the camera.
+     * The camera object which is used as the focal point for the scene. Defaults to to the size of the canvas with a focal point  at its center. The scene will not render objects that are outside the bounds of the camera.
      *
      * Additionally, the camera can be used to [lookAt](api/scene#lookAt) an object which will center the camera to that object. This allows you to zoom the scene in and out while the camera remains centered on the object.
      * @memberof Scene
@@ -193,7 +193,7 @@ class Scene {
   }
 
   /**
-   * Add an object to the scene scene.
+   * Add an object to the scene.
    * @memberof Scene
    * @function add
    *

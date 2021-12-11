@@ -3,6 +3,7 @@ docs/*
 examples/*
 test/typings/*.js
 test/permutations/*
+tasks/*
 
 gulpfile.js
 karma.conf.js

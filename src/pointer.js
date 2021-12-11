@@ -59,7 +59,7 @@ import { removeFromArray } from './utils.js';
  */
 
 /**
- * Below is a list of buttons that you can use. If you need to extend or modify this list, you can use the [pointer](api/gamepad#pointerMap) property.
+ * Below is a list of buttons that you can use. If you need to extend or modify this list, you can use the [pointerMap](api/gamepad#pointerMap) property.
  *
  * - left, middle, right
  * @sectionName Available Buttons
@@ -434,7 +434,7 @@ export function initPointer({
 }
 
 /**
- * Begin tracking pointer events for a set of objects. Takes a single object or an array of objects.
+ * Begin tracking pointer events for an object.
  *
  * ```js
  * import { initPointer, track } from 'kontra';
@@ -446,10 +446,10 @@ export function initPointer({
  * ```
  * @function track
  *
- * @param {...Object[]} objects - Objects to track.
+ * @param {...(Object|Object[])[]} objects - Object to track. Can be a single object, an array of objects, or a comma-separated list of objects.
  */
 export function track(...objects) {
-  objects.map(object => {
+  objects.flat().map(object => {
     let canvas = object.context ? object.context.canvas : getCanvas();
     let pointer = pointers.get(canvas);
 
@@ -477,7 +477,7 @@ export function track(...objects) {
 }
 
 /**
- * Remove the callback function for a bound set of objects.
+ * Stop tracking pointer events for an object.
  *
  * ```js
  * import { untrack } from 'kontra';
@@ -487,10 +487,10 @@ export function track(...objects) {
  * ```
  * @function untrack
  *
- * @param {...Object[]} objects - Object or objects to stop tracking.
+ * @param {...(Object|Object[])[]} objects - Object to untrack. Can be a single object, an array of objects, or a comma-separated list of objects.
  */
 export function untrack(...objects) {
-  objects.map(object => {
+  objects.flat().map(object => {
     let canvas = object.context ? object.context.canvas : getCanvas();
     let pointer = pointers.get(canvas);
 

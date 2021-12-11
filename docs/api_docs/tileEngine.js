@@ -167,7 +167,7 @@
  *     });
  *
  *     // sync the tile map camera and the sprite
- *     tileEngine.addObject(sprite);
+ *     tileEngine.add(sprite);
  *
  *     let sx = 1;
  *     let loop = GameLoop({

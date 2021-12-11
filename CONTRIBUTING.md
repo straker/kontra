@@ -14,13 +14,19 @@ Below is a list of features the library will not support or add:
 
 - Physics engine
 - Math helpers
+- Linear transformations
 
 ## Code Style
 
 To help keep the code small the library follows some unconventional code patterns. Take a look at these [byte-saving techniques](https://github.com/jed/140bytes/wiki/Byte-saving-techniques) and follow these recommendations:
 
-- Use `==` over `===` (save a byte)
-- Use `| 0` over `Math.floor()`
+- Prefer `==` over `===` (save a byte)
+- Prefer `!=` over `==` (save a byte)
+- Prefer `| 0` over `Math.floor()`
+- Prefer `let` over `const`  (save a byte)
+- Prefer `Array.map()` over `Array.forEach()`
+
+The library uses [eslint](.eslintrc.js) to help enforce these codes styles. To run eslint, run `npm run eslint`.
 
 ## Building
 
@@ -28,7 +34,7 @@ To build the development code, run `npm run build`. To build the distribution ve
 
 ## Testing
 
-Please add unit and/or integration tests for all new changes, as well as TypeScript tests found in [test/typings](test/typings). To run the tests, run `npm test`.
+Please add unit and/or integration tests for all new changes, as well as TypeScript tests found in [test/typings](test/typings). To run the tests, run `npm test`. To run the TypeScript tests, run `npm run test:ts`.
 
 The TypeScript tests just ensure that the TypeScript declaration file is correct and doesn't miss any obvious use cases with the various APIs.
 

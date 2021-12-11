@@ -11,7 +11,65 @@ describe('keyboard', () => {
   });
 
   it('should export api', () => {
-    expect(keyboard.keyMap).to.be.an('object');
+    // full keyMap api is only exported after initKeys
+    keyboard.initKeys();
+
+    expect(keyboard.keyMap).to.deep.equal({
+      Enter: 'enter',
+      Escape: 'esc',
+      Space: 'space',
+      ArrowLeft: 'arrowleft',
+      ArrowUp: 'arrowup',
+      ArrowRight: 'arrowright',
+      ArrowDown: 'arrowdown',
+      KeyA: 'a',
+      KeyB: 'b',
+      KeyC: 'c',
+      KeyD: 'd',
+      KeyE: 'e',
+      KeyF: 'f',
+      KeyG: 'g',
+      KeyH: 'h',
+      KeyI: 'i',
+      KeyJ: 'j',
+      KeyK: 'k',
+      KeyL: 'l',
+      KeyM: 'm',
+      KeyN: 'n',
+      KeyO: 'o',
+      KeyP: 'p',
+      KeyQ: 'q',
+      KeyR: 'r',
+      KeyS: 's',
+      KeyT: 't',
+      KeyU: 'u',
+      KeyV: 'v',
+      KeyW: 'w',
+      KeyX: 'x',
+      KeyY: 'y',
+      KeyZ: 'z',
+      Numpad0: '0',
+      Digit0: '0',
+      Numpad1: '1',
+      Digit1: '1',
+      Numpad2: '2',
+      Digit2: '2',
+      Numpad3: '3',
+      Digit3: '3',
+      Numpad4: '4',
+      Digit4: '4',
+      Numpad5: '5',
+      Digit5: '5',
+      Numpad6: '6',
+      Digit6: '6',
+      Numpad7: '7',
+      Digit7: '7',
+      Numpad8: '8',
+      Digit8: '8',
+      Numpad9: '9',
+      Digit9: '9'
+    });
+
     expect(keyboard.initKeys).to.be.an('function');
     expect(keyboard.onKey).to.be.an('function');
     expect(keyboard.offKey).to.be.an('function');

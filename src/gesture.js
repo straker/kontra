@@ -171,11 +171,13 @@ export function initGesture() {
  * ```
  * @function onGesture
  *
- * @param {String} name - The name of the gesture.
+ * @param {String|String[]} gestures - Gesture or gestures to register callback for.
  * @param {(evt: TouchEvent, touches: Object) => void} callback - Function to call on gesture events.
  */
-export function onGesture(name, callback) {
-  callbacks[name] = callback;
+export function onGesture(gestures, callback) {
+  [].concat(gestures).map(gesture => {
+    callbacks[gesture] = callback;
+  });
 }
 
 /**
@@ -191,8 +193,10 @@ export function onGesture(name, callback) {
  * ```
  * @function offGesture
  *
- * @param {String} name - The name of the gesture.
+ * @param {String|String[]} gestures - Gesture or gestures to unregister callback for.
  */
-export function offGesture(name) {
-  callbacks[name] = 0;
+export function offGesture(gestures) {
+  [].concat(gestures).map(gesture => {
+    callbacks[gesture] = 0;
+  });
 }

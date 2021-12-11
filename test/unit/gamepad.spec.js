@@ -35,7 +35,6 @@ describe('gamepad', () => {
   });
 
   it('should export api', () => {
-    expect(gamepad.gamepadMap).to.be.an('object');
     expect(gamepad.gamepadMap).to.deep.equal({
       0: 'south',
       1: 'east',

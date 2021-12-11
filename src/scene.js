@@ -184,9 +184,7 @@ class Scene {
   }
 
   set objects(value) {
-    while (this._o.length) {
-      this.remove(this._o[0]);
-    }
+    this.remove(this._o);
     this.add(value);
   }
 

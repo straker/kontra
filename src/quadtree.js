@@ -213,7 +213,7 @@ class Quadtree {
    * @memberof Quadtree
    * @function add
    *
-   * @param {...({x: Number, y: Number, width: Number, height: Number}|{x: Number, y: Number, width: Number, height: Number}[])[]} objects - Objects to add to the quadtree.
+   * @param {...({x: Number, y: Number, width: Number, height: Number}|{x: Number, y: Number, width: Number, height: Number}[])[]} objects - Objects to add to the quadtree. Can be a single object, an array of objects, or a comma-separated list of objects.
    */
   add(...objects) {
     objects.flat().map(object => {

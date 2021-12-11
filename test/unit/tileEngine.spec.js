@@ -141,7 +141,7 @@ describe(
             render: spy
           };
 
-          tileEngine.addObject(obj);
+          tileEngine.add(obj);
           tileEngine.render();
 
           expect(spy.called).to.be.true;
@@ -773,9 +773,62 @@ describe(
     });
 
     // --------------------------------------------------
-    // tileEngine.addObject
+    // tileEngine.objects
     // --------------------------------------------------
-    describe('addObject', () => {
+    describe('objects', () => {
+      let tileEngine = null;
+
+      beforeEach(() => {
+        tileEngine = TileEngine({
+          tilewidth: 10,
+          tileheight: 10,
+          width: 100,
+          height: 100,
+          tilesets: [
+            {
+              image: new Image()
+            }
+          ],
+          layers: [
+            {
+              name: 'test',
+              data: [0, 0, 1, 0, 0]
+            }
+          ]
+        });
+      });
+
+      if (testContext.TILEENGINE_CAMERA) {
+        it('should properly handle setting objects', () => {
+          tileEngine.add({ foo: 'bar' });
+          tileEngine.add({ faz: 'baz' });
+          tileEngine.add({ hello: 'world' });
+
+          let removeSpy = sinon.spy(tileEngine, 'remove');
+          let addSpy = sinon.spy(tileEngine, 'add');
+          let child = {
+            thing1: 'thing2'
+          };
+
+          let oldObjects = tileEngine.objects;
+          tileEngine.objects = [child];
+
+          expect(removeSpy.calledWith(oldObjects)).to.be.true;
+          expect(addSpy.calledWith([child])).to.be.true;
+          expect(tileEngine.objects.length).to.equal(1);
+          expect(tileEngine.objects[0]).to.equal(child);
+        });
+      } else {
+        it('should not have objects', () => {
+          expect(tileEngine.objects).to.not.exist;
+        });
+      }
+    });
+
+    // --------------------------------------------------
+    // tileEngine.add
+    // --------------------------------------------------
+    describe('add', () => {
       let tileEngine = null;
       let obj = null;
 
@@ -803,20 +856,30 @@ describe(
       if (testContext.TILEENGINE_CAMERA) {
         it('should add object', () => {
           expect(tileEngine.objects.length).to.equal(0);
-          tileEngine.addObject(obj);
+          tileEngine.add(obj);
           expect(tileEngine.objects.length).to.equal(1);
+        });
+
+        it('should add multiple objects', () => {
+          tileEngine.add(obj, {});
+          expect(tileEngine.objects.length).to.equal(2);
+        });
+
+        it('should add an array of objects', () => {
+          tileEngine.add([obj, {}]);
+          expect(tileEngine.objects.length).to.equal(2);
         });
       } else {
         it('should not exist', () => {
-          expect(tileEngine.addObject).to.not.exist;
+          expect(tileEngine.add).to.not.exist;
         });
       }
     });
 
     // --------------------------------------------------
-    // tileEngine.removeObject
+    // tileEngine.remove
     // --------------------------------------------------
-    describe('removeObject', () => {
+    describe('remove', () => {
       let tileEngine = null;
       let obj = null;
 
@@ -843,21 +906,35 @@ describe(
 
       if (testContext.TILEENGINE_CAMERA) {
         it('should remove object', () => {
-          tileEngine.addObject(obj);
-          tileEngine.removeObject(obj);
+          tileEngine.add(obj);
+          tileEngine.remove(obj);
+          expect(tileEngine.objects.length).to.equal(0);
+        });
+
+        it('should remove multiple objects', () => {
+          let obj2 = {};
+          tileEngine.add(obj, obj2);
+          tileEngine.remove(obj, obj2);
+          expect(tileEngine.objects.length).to.equal(0);
+        });
+
+        it('should remove an array of objects', () => {
+          let obj2 = {};
+          tileEngine.add(obj, obj2);
+          tileEngine.remove([obj, obj2]);
           expect(tileEngine.objects.length).to.equal(0);
         });
 
         it('should not error if the object was not added before', () => {
           function fn() {
-            tileEngine.removeObject(obj);
+            tileEngine.remove(obj);
           }
 
           expect(fn).to.not.throw();
         });
       } else {
         it('should not exist', () => {
-          expect(tileEngine.removeObject).to.not.exist;
+          expect(tileEngine.remove).to.not.exist;
         });
       }
     });

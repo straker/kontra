@@ -120,9 +120,7 @@ describe(
 
           gameObject = GameObject({ children: ['child1', 'child2'] });
 
-          expect(spy.calledTwice).to.be.true;
-          expect(spy.firstCall.calledWith('child1')).to.be.true;
-          expect(spy.secondCall.calledWith('child2')).to.be.true;
+          expect(spy.calledWith(['child1', 'child2'])).to.be.true;
         });
       } else {
         it('should not default children', () => {
@@ -693,6 +691,26 @@ describe(
             expect(gameObject.children).deep.equal([child]);
           });
 
+          it('should add multiple objects as a child', () => {
+            let child1 = {
+              foo: 'bar'
+            };
+            let child2 = {};
+            gameObject.addChild(child1, child2);
+
+            expect(gameObject.children).deep.equal([child1, child2]);
+          });
+
+          it('should add an array objects as a child', () => {
+            let child1 = {
+              foo: 'bar'
+            };
+            let child2 = {};
+            gameObject.addChild([child1, child2]);
+
+            expect(gameObject.children).deep.equal([child1, child2]);
+          });
+
           it('should set the childs parent to the game object', () => {
             let child = {
               foo: 'bar'
@@ -734,6 +752,28 @@ describe(
             gameObject.removeChild(child);
 
             expect(gameObject.children.length).to.equal(0);
+          });
+
+          it('should add multiple objects as a child', () => {
+            let child1 = {
+              foo: 'bar'
+            };
+            let child2 = {};
+            gameObject.addChild(child1, child2);
+            gameObject.removeChild(child1, child2);
+
+            expect(gameObject.children).deep.equal([]);
+          });
+
+          it('should add an array objects as a child', () => {
+            let child1 = {
+              foo: 'bar'
+            };
+            let child2 = {};
+            gameObject.addChild(child1, child2);
+            gameObject.removeChild([child1, child2]);
+
+            expect(gameObject.children).deep.equal([]);
           });
 
           it('should remove the childs parent', () => {
@@ -794,10 +834,11 @@ describe(
               thing1: 'thing2'
             };
 
+            let oldChildren = gameObject.children;
             gameObject.children = [child];
 
-            expect(removeSpy.calledThrice).to.be.true;
-            expect(addSpy.calledWith(child)).to.be.true;
+            expect(removeSpy.calledWith(oldChildren)).to.be.true;
+            expect(addSpy.calledWith([child])).to.be.true;
             expect(gameObject.children.length).to.equal(1);
             expect(gameObject.children[0]).to.equal(child);
           });

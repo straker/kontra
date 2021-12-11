@@ -374,9 +374,10 @@ describe('scene', () => {
         thing1: 'thing2'
       };
 
+      let oldObjects = scene.objects;
       scene.objects = [object];
 
-      expect(removeSpy.calledThrice).to.be.true;
+      expect(removeSpy.calledWith(oldObjects)).to.be.true;
       expect(addSpy.calledWith([object])).to.be.true;
       expect(scene.objects.length).to.equal(1);
       expect(scene.objects[0]).to.equal(object);

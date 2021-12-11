@@ -36,7 +36,11 @@ let world: {
 
 let alive: boolean = gameObject.isAlive();
 gameObject.addChild(kontra.GameObject());
+gameObject.addChild(kontra.GameObject(), kontra.GameObject());
+gameObject.addChild([kontra.GameObject(), kontra.GameObject()]);
 gameObject.removeChild(kontra.GameObject());
+gameObject.removeChild(kontra.GameObject(), kontra.GameObject());
+gameObject.removeChild([kontra.GameObject(), kontra.GameObject()]);
 gameObject.update();
 gameObject.update(1/60);
 gameObject.advance();

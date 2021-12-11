@@ -58,6 +58,13 @@ import { removeFromArray } from './utils.js';
  * @sectionName Pointer
  */
 
+/**
+ * Below is a list of buttons that you can use. If you need to extend or modify this list, you can use the [pointer](api/gamepad#pointerMap) property.
+ *
+ * - left, middle, right
+ * @sectionName Available Buttons
+ */
+
 // save each object as they are rendered to determine which object
 // is on top when multiple objects are the target of an event.
 // we'll always use the last frame's object order so we know
@@ -69,12 +76,20 @@ let callbacks = {};
 let pressedButtons = {};
 
 /**
- * Below is a list of buttons that you can use.
+ * A map of pointer button indices to button names. Modify this object to expand the list of [available buttons](api/pointer#available-buttons).
  *
- * - left, middle, right
- * @sectionName Available Buttons
+ * ```js
+ * import { pointerMap, pointerPressed } from 'kontra';
+ *
+ * pointerMap[2] = 'buttonWest';
+ *
+ * if (pointerPressed('buttonWest')) {
+ *   // handle west face button
+ * }
+ * ```
+ * @property {{[key: number]: String}} pointerMap
  */
-let buttonMap = {
+export let pointerMap = {
   0: 'left',
   1: 'middle',
   2: 'right'
@@ -219,7 +234,7 @@ function getCanvasOffset(pointer) {
  */
 function pointerDownHandler(evt) {
   // touchstart should be treated like a left mouse button
-  let button = evt.button != null ? buttonMap[evt.button] : 'left';
+  let button = evt.button != null ? pointerMap[evt.button] : 'left';
   pressedButtons[button] = true;
   pointerHandler(evt, 'onDown');
 }
@@ -230,7 +245,7 @@ function pointerDownHandler(evt) {
  * @param {MouseEvent|TouchEvent} evt
  */
 function pointerUpHandler(evt) {
-  let button = evt.button != null ? buttonMap[evt.button] : 'left';
+  let button = evt.button != null ? pointerMap[evt.button] : 'left';
   pressedButtons[button] = false;
   pointerHandler(evt, 'onUp');
 }

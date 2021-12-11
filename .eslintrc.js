@@ -92,16 +92,6 @@ module.exports = {
         'no-restricted-syntax': 0,
         'mocha-no-only/mocha-no-only': 2
       }
-    },
-    {
-      files: ['tasks/**/*.js'],
-      env: {
-        node: true,
-        es2021: true,
-      },
-      rules: {
-        'no-restricted-syntax': 0
-      }
     }
-  ],
+  ]
 };

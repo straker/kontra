@@ -78,7 +78,7 @@ class Updatable {
   }
 
   /**
-   * Move the game object by its acceleration and velocity. If you pass `dt` it will multiply the vector and acceleration by that number. This means the `dx`, `dy`, `ddx` and `ddy` should be the how far you want the object to move in 1 second rather than in 1 frame.
+   * Move the game object by its acceleration and velocity. If you pass `dt` it will multiply the vector and acceleration by that number. This means the `dx`, `dy`, `ddx` and `ddy` should be how far you want the object to move in 1 second rather than in 1 frame.
    *
    * If you override the game objects [update()](api/gameObject#update) function with your own update function, you can call this function to move the game object normally.
    *

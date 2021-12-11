@@ -70,7 +70,8 @@ module.exports = {
           '^\\s*(\\*|\\/\\/ @ifdef|\\/\\* @ifdef|`|describe\\(`)|it\\(`',
         ignoreTrailingComments: true,
         ignoreUrls: true,
-        ignoreStrings: true
+        ignoreStrings: true,
+        ignoreRegExpLiterals: true
       }
     ]
   },

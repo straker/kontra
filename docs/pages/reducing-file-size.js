@@ -68,9 +68,8 @@ Kontra supports even more granular control over the file size if tree shaking is
 
 ### Supported Plugins
 
-* [rollup-plugin-kontra](https://github.com/straker/rollup-plugin-kontra)
-* [esbuild-plugin-kontra](https://github.com/straker/esbuild-plugin-kontra)
-*
+- [rollup-plugin-kontra](https://github.com/straker/rollup-plugin-kontra)
+- [esbuild-plugin-kontra](https://github.com/straker/esbuild-plugin-kontra)
 
 ### Available Options
 
@@ -78,7 +77,7 @@ Options are passed by nesting the option with the parent source. For example, to
 
 All options default to `false`, so only pass the options you wish to enable. Passing no options will result in a Sprite with just `position`, `width,` `height`, and `color`.
 
-__Note:__ Some of the more advance classes – such as Button, Scene, and Grid – require some of the gameObject functionality to work properly. If you are using those, you will need to enable the `group` feature or they will not work.
+__Note:__ Some of the more advance classes – such as Button or Grid – require some of the gameObject functionality to work properly. If you are using those, you will need to enable the `group` feature or they will not work.
 
 #### `gameObject` Options:
 
@@ -89,7 +88,7 @@ __Note:__ Some of the more advance classes – such as Button, Scene, and Grid �
 | `group`         | `children`, `parent`, `addChild`, `removeChild` |
 | `opacity`       | `opacity` |
 | `rotation`      | `rotation` |
-| `scale`         | `scale`, `setScale()` |
+| `scale`         | `scaleX`, `scaleY`, `setScale()` |
 | `ttl`           | `ttl`, `isAlive` |
 | `velocity`      | `velocity`, `dx`, `dy` |
 
@@ -113,7 +112,7 @@ __Note:__ Some of the more advance classes – such as Button, Scene, and Grid �
 
 | Name          | Functionality Enabled |
 | ------------- | ------------- |
-| `camera`      | `sx`, `sy`, `addObject`, `removeObject` |
+| `camera`      | `sx`, `sy`, `add`, `remove` |
 | `dynamic`     | `setLayer`, `setTileAtLayer` |
 | `query`       | `layerCollidesWith`, `tileAtLayer` |
 | `tiled`       | Support for resolving linked Tiled files (source, image)  |

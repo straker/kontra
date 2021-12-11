@@ -3,7 +3,7 @@ import { on } from './events.js';
 /**
  * A simple gamepad API. You can use it move the main sprite or respond to gamepad events.
  *
- * *NOTE:* Gamepad support requires using a secure context (HTTPS) and the [GameLoop](/api/gameLoop) (since the gamepad state must be checked every frame as there are no global event listeners for gamepad button / axes events).
+ * **NOTE:** Gamepad support requires using a secure context (HTTPS) and the [GameLoop](/api/gameLoop) (since the gamepad state must be checked every frame as there are no global event listeners for gamepad button / axes events).
  *
  * ```js
  * import { initGamepad, GameLoop, gamepadPressed } from 'kontra';
@@ -368,6 +368,7 @@ export function gamepadPressed(button, { gamepad } = {}) {
  *
  * let sprite = Sprite({
  *   update: function() {
+ *     // check the axis of the gamepad connected to index 0
  *     let axisX = gamepadAxis('leftstickx', 0);
  *     let axisY = gamepadAxis('leftsticky', 0);
  *

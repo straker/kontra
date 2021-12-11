@@ -62,7 +62,7 @@ class Grid extends GameObjectClass {
      * - `center` - align to the center of the row
      * - `end` - align to the the bottom of the row
      *
-     * An array of strings means the grid will set the vertical alignment for each row using the order of the array. For example, if the alignment is set to be `[`end`, 'start']`, then every odd row will use 'end' and every even row will use 'start'.
+     * An array of strings means the grid will set the vertical alignment for each row using the order of the array. For example, if the alignment is set to be `['end', 'start']`, then every odd row will use 'end' and every even row will use 'start'.
      *
      * Additionally, each child of the grid can use the `alignSelf` property to change it's alignment in the grid.
      * @memberof Grid
@@ -77,7 +77,7 @@ class Grid extends GameObjectClass {
      * - `center` - align to the center of the column
      * - `end` - align to the the right of the column
      *
-     * An array of strings means the grid will set the horizontal alignment for each column using the order of the array. For example, if the alignment is set to be `[`end`, 'start']`, then every odd column will use 'end' and every even column will use 'start'.
+     * An array of strings means the grid will set the horizontal alignment for each column using the order of the array. For example, if the alignment is set to be `['end', 'start']`, then every odd column will use 'end' and every even column will use 'start'.
      *
      * If the [dir](api/grid#dir) property is set to `rtl`, then `start` and `end` are reversed.
      *

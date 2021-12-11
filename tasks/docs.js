@@ -138,18 +138,47 @@ function parseType(type) {
   // parse typescript specific typings
   if (type.startsWith('(')) {
     type = 'Function';
-  } else if (type.startsWith('{')) {
-    type = type.replace(/\{.*?\}/, 'Object');
   } else if (type.startsWith('...')) {
     type = type.replace('...', 'A list of ');
 
     // make the type plural instead of an array for reset parameters
-    type = type.replace('[]', 's');
+    type = type.replace(/(\w+)\[\]$/, '$1s');
+
+    // parse array types
+    type = type.replace(/(\w+)\[\]/g, function (match, p1, index) {
+      return `Array of ${p1}s`;
+    });
+
+    // remove ending array for rest parameters
+    type = type.replace(/\[\]$/, '');
+  }
+
+  if (type.includes('{')) {
+    type = type.replace(/\{[^}]*\}+/g, 'Object');
   }
 
   // parse OR types
   if (type.includes('|')) {
-    type = type.split('|').join(' or ');
+    let types = type.split('|');
+
+    // don't put a OR between two types that are the same
+    let equal = true;
+    let firstType = types[0].substr(types[0].indexOf('(') + 1);
+    for (let i = 1; i < types.length; i++) {
+      let nextType = types[i];
+      if (nextType.includes(')')) {
+        nextType = nextType.substring(0, nextType.lastIndexOf(')'));
+      }
+
+      equal = equal && (firstType === nextType);
+    }
+
+    if (equal) {
+      type = types[0];
+    }
+    else {
+      type = types.join(' or ');
+    }
   }
 
   // parse array types

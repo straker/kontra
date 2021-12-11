@@ -170,7 +170,7 @@ function parseType(type) {
         nextType = nextType.substring(0, nextType.lastIndexOf(')'));
       }
 
-      equal &&= firstType === nextType;
+      equal = equal && (firstType === nextType);
     }
 
     if (equal) {

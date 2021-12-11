@@ -57,6 +57,8 @@ function getAllNodes(object) {
  * @param {(object1: Object, object2: Object) => Number} [properties.sortFunction] - The function used to sort the objects of the scene.
  * @param {Function} [properties.onShow] - Function called when the scene is shown.
  * @param {Function} [properties.onHide] - Function called when the scene is hidden.
+ *
+ * @param {...*} properties.props - Any additional properties you need added to the scene.
  */
 class Scene {
   constructor({

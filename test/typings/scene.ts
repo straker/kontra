@@ -38,15 +38,14 @@ scene.remove([{x: 10, y: 20}, sprite]);
 kontra.Scene({
   id: 'options',
   name: 'Options Menu',
-  children: [kontra.GameObject()],
+  objects: [kontra.GameObject()],
   onShow() {},
   onHide() {}
 });
 
 // custom props
 kontra.Scene({
-  id: 'game',
-  foo: 'bar'
+  id: 'game'
 });
 
 // extends

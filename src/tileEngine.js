@@ -1,5 +1,6 @@
 import { getCanvas, getContext } from './core.js';
 import { clamp, getWorldRect } from './helpers.js';
+import { removeFromArray } from './utils.js';
 
 /**
  * Get the row from the y coordinate.
@@ -249,7 +250,7 @@ class TileEngine {
   }
 
   /**
-   * Add an object to the tile engine. The tile engine will set the objects camera position (`sx`, `sy`) to be in sync with the tile engine camera. [Sprite](api/sprite) uses this information to draw the sprite to the correct position on the canvas.
+   * Add an object to the tile engine.
    * @memberof TileEngine
    * @function addObject
    *
@@ -267,11 +268,7 @@ class TileEngine {
    * @param {Object} object - Object to remove from the tile engine.
    */
   removeObject(object) {
-    let { objects } = this;
-    let index = objects.indexOf(object);
-    if (index != -1) {
-      objects.splice(index, 1);
-    }
+    removeFromArray(this.objects, object);
   }
   // @endif
 

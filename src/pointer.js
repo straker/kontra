@@ -1,6 +1,7 @@
 import { getCanvas } from './core.js';
 import { on, emit } from './events.js';
 import { getWorldRect } from './helpers.js';
+import { removeFromArray } from './utils.js';
 
 /**
  * A simple pointer API. You can use it move the main sprite or respond to a pointer event. Works with both mouse and touch events.
@@ -491,10 +492,7 @@ export function untrack(...objects) {
     object.render = object._r;
     object._r = 0; // 0 is the shortest falsy value
 
-    let index = pointer._o.indexOf(object);
-    if (index != -1) {
-      pointer._o.splice(index, 1);
-    }
+    removeFromArray(pointer._o, object);
   });
 }
 

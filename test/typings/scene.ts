@@ -7,7 +7,7 @@ let scene: kontra.Scene = kontra.Scene({
 let id: string = scene.id;
 let name: string = scene.name;
 let hidden: boolean = scene.hidden;
-let canvas: HTMLCanvasElement = scene.canvas;
+let context: CanvasRenderingContext2D = scene.context;
 let cullObjects: boolean = scene.cullObjects;
 let camera: kontra.GameObject = scene.camera;
 
@@ -22,19 +22,30 @@ scene.lookAt({x: 10, y: 20});
 scene.onShow();
 scene.onHide();
 
+scene.add({x: 10, y: 20});
+
+let sprite = kontra.Sprite();
+scene.add(sprite);
+scene.add({x: 10, y: 20}, sprite);
+scene.add([{x: 10, y: 20}, sprite]);
+
+scene.remove({x: 10, y: 20});
+scene.remove(sprite);
+scene.remove({x: 10, y: 20}, sprite);
+scene.remove([{x: 10, y: 20}, sprite]);
+
 // options
 kontra.Scene({
   id: 'options',
   name: 'Options Menu',
-  children: [kontra.GameObject()],
+  objects: [kontra.GameObject()],
   onShow() {},
   onHide() {}
 });
 
 // custom props
 kontra.Scene({
-  id: 'game',
-  foo: 'bar'
+  id: 'game'
 });
 
 // extends

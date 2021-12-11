@@ -1,3 +1,5 @@
+import { removeFromArray } from './utils.js';
+
 /**
  * A plugin system based on the [interceptor pattern](https://en.wikipedia.org/wiki/Interceptor_pattern), designed to share reusable code such as more advance collision detection or a 2D physics engine.
  *
@@ -25,19 +27,6 @@
 function getMethod(methodName) {
   let methodTitle = methodName.substr(methodName.search(/[A-Z]/));
   return methodTitle[0].toLowerCase() + methodTitle.substr(1);
-}
-
-/**
- * Remove an interceptor.
- *
- * @param {function[]} interceptors - Before/After interceptor list
- * @param {function} fn - Interceptor function
- */
-function removeInterceptor(interceptors, fn) {
-  let index = interceptors.indexOf(fn);
-  if (index != -1) {
-    interceptors.splice(index, 1);
-  }
 }
 
 /**
@@ -79,7 +68,7 @@ export function registerPlugin(kontraObj, pluginObj) {
   }
 
   // add plugin to interceptors
-  Object.getOwnPropertyNames(pluginObj).forEach(methodName => {
+  Object.getOwnPropertyNames(pluginObj).map(methodName => {
     let method = getMethod(methodName);
 
     if (!objectProto[method]) return;
@@ -131,16 +120,16 @@ export function unregisterPlugin(kontraObj, pluginObj) {
   if (!objectProto || !objectProto._inc) return;
 
   // remove plugin from interceptors
-  Object.getOwnPropertyNames(pluginObj).forEach(methodName => {
+  Object.getOwnPropertyNames(pluginObj).map(methodName => {
     let method = getMethod(methodName);
 
     if (methodName.startsWith('before')) {
-      removeInterceptor(
+      removeFromArray(
         objectProto._inc[method].before,
         pluginObj[methodName]
       );
     } else if (methodName.startsWith('after')) {
-      removeInterceptor(
+      removeFromArray(
         objectProto._inc[method].after,
         pluginObj[methodName]
       );
@@ -171,7 +160,7 @@ export function extendObject(kontraObj, properties) {
 
   if (!objectProto) return;
 
-  Object.getOwnPropertyNames(properties).forEach(prop => {
+  Object.getOwnPropertyNames(properties).map(prop => {
     if (!objectProto[prop]) {
       objectProto[prop] = properties[prop];
     }

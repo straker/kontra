@@ -213,16 +213,10 @@ class Quadtree {
    * @memberof Quadtree
    * @function add
    *
-   * @param {...Object[]} objects - Objects to add to the quadtree.
+   * @param {...({x: Number, y: Number, width: Number, height: Number}|{x: Number, y: Number, width: Number, height: Number}[])[]} objects - Objects to add to the quadtree.
    */
   add(...objects) {
-    objects.map(object => {
-      // add a group of objects separately
-      if (Array.isArray(object)) {
-        this.add.apply(this, object);
-        return;
-      }
-
+    objects.flat().map(object => {
       // current node has subnodes, so we need to add this object
       // into a subnode
       if (this._b) {
@@ -288,9 +282,6 @@ class Quadtree {
 
       // d = depth, p = parent
       this._s[i]._d = this._d + 1;
-      /* @ifdef VISUAL_DEBUG */
-      this._s[i]._p = this;
-      /* @endif */
     }
   }
 }

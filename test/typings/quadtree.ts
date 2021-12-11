@@ -10,9 +10,11 @@ quadtree.clear();
 let objs: object[] = quadtree.get({x: 10, y: 20, width: 100, height: 100});
 quadtree.get(kontra.Sprite());
 
-quadtree.add({x: 1});
-quadtree.add({x: 1}, {x: 2});
-quadtree.add({x: 1}, [{x: 1}, {x: 2}]);
+let obj = { x: 1, y: 2, width: 3, height: 4 };
+
+quadtree.add(obj);
+quadtree.add(obj, kontra.Sprite());
+quadtree.add([obj, kontra.Sprite()]);
 
 // options
 kontra.Quadtree({

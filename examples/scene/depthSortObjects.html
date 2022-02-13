@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Rect Sprite</title>
+  <script src="../../kontra.js"></script>
+</head>
+<body>
+  <canvas id="game" width="600" height="400" style="background: #333331"></canvas>
+  <script id="code">
+    // initialize the game and setup the canvas
+    kontra.init();
+
+    // create the scene
+    let scene = kontra.Scene({
+      id: 'Game Scene',
+      sortFunction: kontra.depthSort
+    });
+
+    // create some sprites
+    let colors = ['red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'violet'];
+    for (let i = 0; i < colors.length; i++) {
+      scene.add(
+        kontra.Sprite({
+          x: 250 + i * 10,
+          y: 200 - i * 10,
+          width: 25,
+          height: 50,
+          color: colors[i]
+        })
+      );
+    }
+
+    // render the scene
+    scene.render();
+  </script>
+  <script src="../prism/codeOutput.js"></script>
+</body>
+</html>

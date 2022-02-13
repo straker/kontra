@@ -500,7 +500,7 @@ class TileEngine {
    * @memberof TileEngine
    * @function render
    */
-  render(canvas = this._c) {
+  render(_canvas = this._c, _renderObjects = true) {
     let { _d, context, sx = 0, sy = 0 } = this;
 
     if (_d) {
@@ -508,11 +508,11 @@ class TileEngine {
     }
 
     let { width, height } = getCanvas();
-    let sWidth = Math.min(canvas.width, width);
-    let sHeight = Math.min(canvas.height, height);
+    let sWidth = Math.min(_canvas.width, width);
+    let sHeight = Math.min(_canvas.height, height);
 
     context.drawImage(
-      canvas,
+      _canvas,
       sx,
       sy,
       sWidth,
@@ -525,18 +525,20 @@ class TileEngine {
 
     // @ifdef TILEENGINE_CAMERA
     // draw objects
-    context.save();
+    if (_renderObjects) {
+      context.save();
 
-    // it's faster to only translate if one of the values is non-zero
-    // rather than always translating
-    // @see https://jsperf.com/translate-or-if-statement/2
-    if (sx || sy) {
-      context.translate(-sx, -sy);
+      // it's faster to only translate if one of the values is
+      // non-zero rather than always translating
+      // @see https://jsperf.com/translate-or-if-statement/2
+      if (sx || sy) {
+        context.translate(-sx, -sy);
+      }
+
+      this.objects.map(obj => obj.render && obj.render());
+
+      context.restore();
     }
-
-    this.objects.map(obj => obj.render && obj.render());
-
-    context.restore();
     // @endif
   }
 
@@ -574,7 +576,7 @@ class TileEngine {
     }
     // @endif
 
-    this.render(canvas);
+    this.render(canvas, false);
   }
 
   /**

@@ -6,23 +6,6 @@
   canvas {
     background: black;
   }
-
-  body {
-    margin: 0;
-  }
-
-  body::after {
-    display: block;
-    content: '';
-    width: 64px;
-    height: 64px;
-    position: absolute;
-    left: 300px;
-    top: 300px;
-    /*background: red;
-    border-radius: 50%;*/
-    outline: 1px solid red;
-}
   </style>
   <script type="text/javascript" src="../../../kontra.js"></script>
 </head>
@@ -52,10 +35,8 @@
 
     // setup tile engine
     window.tileEngine = kontra.TileEngine(terrain);
-    // tileEngine.sx = worldWidth / 2 - canvas.width / 2,
-    // tileEngine.sy = worldHeight - canvas.height
-    tileEngine.sx = 0;
-    tileEngine.sy = 0;
+    tileEngine.sx = worldWidth / 2 - canvas.width / 2,
+    tileEngine.sy = worldHeight - canvas.height
 
     // create the walking man sprite sheet and animations
     var spritesheet = kontra.SpriteSheet({
@@ -82,38 +63,11 @@
       }
     });
 
-    // create the chicken eating sprite sheet and animations
-    var chickenSpritesheet = kontra.SpriteSheet({
-      image: kontra.imageAssets.chicken_eat,
-      frameWidth: 32,
-      frameHeight: 32,
-      animations: {
-        eat_right: {
-          frames: [12,12,12,12,12,'12..15',14,15,14,15,14,13,12],
-          frameRate: 6
-        }
-      }
-    });
-
-    // this sprite should move around with the tileEngine camera
-    window.chicken = kontra.Sprite({
-      x: tileEngine.sx + 400,
-      y: tileEngine.sy + 50,
-      count: 0,
-      animations: chickenSpritesheet.animations
-    });
-    chicken.playAnimation('eat_right');
-    // tileEngine.add(chicken);
-
     // create the player
     window.player = kontra.Sprite({
-      // x: tileEngine.sx + canvas.width / 2 - 32,
-      // y: tileEngine.sy + canvas.height / 2 - 32,
-      x: 300,
-      y: 300,
+      x: tileEngine.sx + canvas.width / 2 - 32,
+      y: tileEngine.sy + canvas.height / 2 - 32,
       speed: 3,
-      sx: 0,
-      sy: 0,
       animations: spritesheet.animations,
       update: function() {
         var collisionBox = {
@@ -136,9 +90,9 @@
           this.advance();
 
           // move the camera and the player together so long as he doesn't reach the edge
-          // if (this.y < worldHeight - canvas.height / 2) {
-          //   tileEngine.sy -= this.speed;
-          // }
+          if (this.y < worldHeight - canvas.height / 2) {
+            tileEngine.sy -= this.speed;
+          }
         }
         else if (kontra.keyPressed('arrowdown')) {
           this.playAnimation('walk_down');
@@ -153,9 +107,9 @@
           this.advance();
 
           // move the camera and the player together so long as he doesn't reach the edge
-          // if (this.y > canvas.height / 2) {
-          //   tileEngine.sy += this.speed;
-          // }
+          if (this.y > canvas.height / 2) {
+            tileEngine.sy += this.speed;
+          }
         }
         else if (kontra.keyPressed('arrowleft')) {
           this.playAnimation('walk_left');
@@ -170,9 +124,9 @@
           this.advance();
 
           // move the camera and the player together so long as he doesn't reach the edge
-          // if (this.x < worldWidth - canvas.width / 2) {
-          //   tileEngine.sx -= this.speed;
-          // }
+          if (this.x < worldWidth - canvas.width / 2) {
+            tileEngine.sx -= this.speed;
+          }
         }
         else if (kontra.keyPressed('arrowright')) {
           this.playAnimation('walk_right');
@@ -184,47 +138,53 @@
           }
 
           this.x += this.speed;
-          // this.sx += this.speed;
           this.advance();
 
           // move the camera and the player together so long as he doesn't reach the edge
-          // if (this.x > canvas.width / 2) {
-          //   tileEngine.sx += this.speed;
-          // }
+          if (this.x > canvas.width / 2) {
+            tileEngine.sx += this.speed;
+          }
         }
       }
     });
-    // tileEngine.add(player);
+    tileEngine.add(player);
 
     // clamp player position in the game world
     player.position.clamp(0, 0, worldWidth - player.width, worldHeight - player.height);
 
-    window.scene = kontra.Scene({
-      id: 'foo',
-      objects: [tileEngine, player],
-      render() {
-        tileEngine.renderLayer('decoration_edges');
+    // create the chicken eating sprite sheet and animations
+    var chickenSpritesheet = kontra.SpriteSheet({
+      image: kontra.imageAssets.chicken_eat,
+      frameWidth: 32,
+      frameHeight: 32,
+      animations: {
+        eat_right: {
+          frames: [12,12,12,12,12,'12..15',14,15,14,15,14,13,12],
+          frameRate: 6
+        }
       }
     });
 
+    // this sprite should move around with the tileEngine camera
+    window.chicken = kontra.Sprite({
+      x: tileEngine.sx + 400,
+      y: tileEngine.sy + 50,
+      count: 0,
+      animations: chickenSpritesheet.animations
+    });
+    chicken.playAnimation('eat_right');
+    tileEngine.add(chicken);
+
     var loop = kontra.GameLoop({
       update: function() {
-        scene.update();
-        scene.lookAt(player);
+        player.update();
+        chicken.update();
       },
       render: function() {
-        // tileEngine.render();
+        tileEngine.render();
 
-        // player.update();
-        // chicken.update();
-
-        scene.render();
-
-        // draw the topmost layer above the payer so he will go behind
-        // the trees
-
-        // (this isn't being done at the same place as the scene...)r
-
+        // draw the topmost layer above the payer so he will go behind the trees
+        tileEngine.renderLayer('decoration_edges');
       }
     });
 

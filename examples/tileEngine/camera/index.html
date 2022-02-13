@@ -88,10 +88,10 @@
       frameWidth: 32,
       frameHeight: 32,
       animations: {
-	eat_right: {
-	  frames: [12,12,12,12,12,'12..15',14,15,14,15,14,13,12],
-	  frameRate: 6
-	}
+        eat_right: {
+          frames: [12,12,12,12,12,'12..15',14,15,14,15,14,13,12],
+          frameRate: 6
+        }
       }
     });
 
@@ -136,9 +136,9 @@
           this.advance();
 
           // move the camera and the player together so long as he doesn't reach the edge
-	  // if (this.y < worldHeight - canvas.height / 2) {
-	  //   tileEngine.sy -= this.speed;
-	  // }
+          // if (this.y < worldHeight - canvas.height / 2) {
+          //   tileEngine.sy -= this.speed;
+          // }
         }
         else if (kontra.keyPressed('arrowdown')) {
           this.playAnimation('walk_down');
@@ -153,9 +153,9 @@
           this.advance();
 
           // move the camera and the player together so long as he doesn't reach the edge
-	  // if (this.y > canvas.height / 2) {
-	  //   tileEngine.sy += this.speed;
-	  // }
+          // if (this.y > canvas.height / 2) {
+          //   tileEngine.sy += this.speed;
+          // }
         }
         else if (kontra.keyPressed('arrowleft')) {
           this.playAnimation('walk_left');
@@ -170,9 +170,9 @@
           this.advance();
 
           // move the camera and the player together so long as he doesn't reach the edge
-	  // if (this.x < worldWidth - canvas.width / 2) {
-	  //   tileEngine.sx -= this.speed;
-	  // }
+          // if (this.x < worldWidth - canvas.width / 2) {
+          //   tileEngine.sx -= this.speed;
+          // }
         }
         else if (kontra.keyPressed('arrowright')) {
           this.playAnimation('walk_right');
@@ -184,13 +184,13 @@
           }
 
           this.x += this.speed;
-	  // this.sx += this.speed;
+          // this.sx += this.speed;
           this.advance();
 
           // move the camera and the player together so long as he doesn't reach the edge
-	  // if (this.x > canvas.width / 2) {
-	  //   tileEngine.sx += this.speed;
-	  // }
+          // if (this.x > canvas.width / 2) {
+          //   tileEngine.sx += this.speed;
+          // }
         }
       }
     });
@@ -203,27 +203,27 @@
       id: 'foo',
       objects: [tileEngine, player],
       render() {
-	tileEngine.renderLayer('decoration_edges');
+        tileEngine.renderLayer('decoration_edges');
       }
     });
 
     var loop = kontra.GameLoop({
       update: function() {
-	scene.update();
-	scene.lookAt(player);
+        scene.update();
+        scene.lookAt(player);
       },
       render: function() {
-	// tileEngine.render();
+        // tileEngine.render();
 
-	// player.update();
-	// chicken.update();
+        // player.update();
+        // chicken.update();
 
-	scene.render();
+        scene.render();
 
-	// draw the topmost layer above the payer so he will go behind
-	// the trees
+        // draw the topmost layer above the payer so he will go behind
+        // the trees
 
-	// (this isn't being done at the same place as the scene...)r
+        // (this isn't being done at the same place as the scene...)r
 
       }
     });

@@ -97,7 +97,7 @@
         // player 1 starts joined
         playerSquare.addChild(i === 0 ? playerSquare.readyText : playerSquare.joinText);
 
-	lobbyObjects.push(playerSquare, playerText);
+        lobbyObjects.push(playerSquare, playerText);
         players.push(playerSquare);
       }
 
@@ -113,7 +113,7 @@
       // create the lobby scene and begin gamepad event listeners
       let lobbyScene = kontra.Scene({
         id: 'lobby',
-	objects: lobbyObjects,
+        objects: lobbyObjects,
         onShow() {
           kontra.onGamepad('south', (gamepad) => {
             // show a player joined the game

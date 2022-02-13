@@ -61,6 +61,6 @@ let grid = kontra.Grid({
 
 let gameOverScene = kontra.Scene({
   id: 'gameOver',
-  children: [grid]
+  objects: [grid]
 });
 export default gameOverScene;

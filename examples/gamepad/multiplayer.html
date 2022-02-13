@@ -50,7 +50,7 @@
         }
       };
 
-      let lobbyChildren = [];
+      let lobbyObjects = [];
       let players = [];
 
       // create 4 player lobby seats
@@ -97,7 +97,7 @@
         // player 1 starts joined
         playerSquare.addChild(i === 0 ? playerSquare.readyText : playerSquare.joinText);
 
-        lobbyChildren.push(playerSquare, playerText);
+	lobbyObjects.push(playerSquare, playerText);
         players.push(playerSquare);
       }
 
@@ -108,12 +108,12 @@
         y: canvas.height - 25,
         text: 'Press Start to Play'
       });
-      lobbyChildren.push(startText);
+      lobbyObjects.push(startText);
 
       // create the lobby scene and begin gamepad event listeners
       let lobbyScene = kontra.Scene({
         id: 'lobby',
-        children: lobbyChildren,
+	objects: lobbyObjects,
         onShow() {
           kontra.onGamepad('south', (gamepad) => {
             // show a player joined the game

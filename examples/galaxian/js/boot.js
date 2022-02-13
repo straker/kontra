@@ -92,7 +92,7 @@ let grid = kontra.Grid({
 
 let bootScene = kontra.Scene({
   id: 'boot',
-  children: [grid]
+  objects: [grid]
 });
 
 // set default asset paths

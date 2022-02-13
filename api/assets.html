@@ -113,6 +113,18 @@
                 <a href="api/gameObject" >GameObject</a>
               </li>
               <li>
+                <div aria-hidden="true" class="cached-icon" id="link-gamepad">
+                  <span class="visually-hidden">Cached for offline viewing</span>
+                </div>
+                <a href="api/gamepad" >Gamepad</a>
+              </li>
+              <li>
+                <div aria-hidden="true" class="cached-icon" id="link-gesture">
+                  <span class="visually-hidden">Cached for offline viewing</span>
+                </div>
+                <a href="api/gesture" >Gesture</a>
+              </li>
+              <li>
                 <div aria-hidden="true" class="cached-icon" id="link-grid">
                   <span class="visually-hidden">Cached for offline viewing</span>
                 </div>
@@ -123,6 +135,12 @@
                   <span class="visually-hidden">Cached for offline viewing</span>
                 </div>
                 <a href="api/helpers" >Helpers</a>
+              </li>
+              <li>
+                <div aria-hidden="true" class="cached-icon" id="link-input">
+                  <span class="visually-hidden">Cached for offline viewing</span>
+                </div>
+                <a href="api/input" >Input</a>
               </li>
               <li>
                 <div aria-hidden="true" class="cached-icon" id="link-keyboard">
@@ -623,7 +641,7 @@ load(
               <code>...urls</code>
               
             </dt>
-            <dd><p><em>A list of Strings</em>. Comma separated list of asset urls to load.</p>
+            <dd><p><em>A list of (String or Array of Strings)</em>. Comma separated list of asset urls to load.</p>
           </dd>
           </dl>
           
@@ -691,7 +709,7 @@ loadAudio([
               <code>url</code>
               
             </dt>
-            <dd><p><em>String</em>. The URL to the Audio file.</p>
+            <dd><p><em>String or an Array of Strings</em>. The URL to the Audio file.</p>
           </dd>
           </dl>
           

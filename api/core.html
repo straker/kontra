@@ -113,6 +113,18 @@
                 <a href="api/gameObject" >GameObject</a>
               </li>
               <li>
+                <div aria-hidden="true" class="cached-icon" id="link-gamepad">
+                  <span class="visually-hidden">Cached for offline viewing</span>
+                </div>
+                <a href="api/gamepad" >Gamepad</a>
+              </li>
+              <li>
+                <div aria-hidden="true" class="cached-icon" id="link-gesture">
+                  <span class="visually-hidden">Cached for offline viewing</span>
+                </div>
+                <a href="api/gesture" >Gesture</a>
+              </li>
+              <li>
                 <div aria-hidden="true" class="cached-icon" id="link-grid">
                   <span class="visually-hidden">Cached for offline viewing</span>
                 </div>
@@ -123,6 +135,12 @@
                   <span class="visually-hidden">Cached for offline viewing</span>
                 </div>
                 <a href="api/helpers" >Helpers</a>
+              </li>
+              <li>
+                <div aria-hidden="true" class="cached-icon" id="link-input">
+                  <span class="visually-hidden">Cached for offline viewing</span>
+                </div>
+                <a href="api/input" >Input</a>
               </li>
               <li>
                 <div aria-hidden="true" class="cached-icon" id="link-keyboard">
@@ -276,7 +294,7 @@ context = getContext();</code></pre></section>
                 </li>
                 <li>
                   <a href="api/core#init">
-                    <span>init(&#8203;[canvas])</span>
+                    <span>init(&#8203;[canvas][, options])</span>
                   </a>
                 </li>
               </ul>
@@ -316,7 +334,7 @@ context = getContext();</code></pre></section>
         <section>
           <h2 id="init">
             <a href="api/core#init" class="section-link">
-              <span>init(&#8203;[canvas])</span>
+              <span>init(&#8203;[canvas][, options])</span>
               <span aria-hidden="true">#</span>
             </a>
           </h2>
@@ -352,6 +370,18 @@ let { canvas, context } = init(&#39;game&#39;);</code></pre></section>
               <span class="optional">Optional</span>
             </dt>
             <dd><p><em>String or HTMLCanvasElement</em>. The canvas for Kontra to use. Can either be the ID of the canvas element or the canvas element itself. Defaults to using the first canvas element on the page.</p>
+          </dd>
+            <dt>
+              <code>options</code>
+              <span class="optional">Optional</span>
+            </dt>
+            <dd><p><em>Object</em>. Game options.</p>
+          </dd>
+            <dt>
+              <code>options.contextless</code>
+              <span class="optional">Optional</span>
+            </dt>
+            <dd><p><em>Boolean</em>. If the game will run in an contextless environment. A contextless environment uses a <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy">Proxy</a> for the <code>canvas</code> and <code>context</code> so all property and function calls will noop. Defaults to <code>false</code>.</p>
           </dd>
           </dl>
           

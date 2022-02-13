@@ -113,6 +113,18 @@
                 <a href="api/gameObject" >GameObject</a>
               </li>
               <li>
+                <div aria-hidden="true" class="cached-icon" id="link-gamepad">
+                  <span class="visually-hidden">Cached for offline viewing</span>
+                </div>
+                <a href="api/gamepad" >Gamepad</a>
+              </li>
+              <li>
+                <div aria-hidden="true" class="cached-icon" id="link-gesture">
+                  <span class="visually-hidden">Cached for offline viewing</span>
+                </div>
+                <a href="api/gesture" >Gesture</a>
+              </li>
+              <li>
                 <div aria-hidden="true" class="cached-icon" id="link-grid">
                   <span class="visually-hidden">Cached for offline viewing</span>
                 </div>
@@ -123,6 +135,12 @@
                   <span class="visually-hidden">Cached for offline viewing</span>
                 </div>
                 <a href="api/helpers" >Helpers</a>
+              </li>
+              <li>
+                <div aria-hidden="true" class="cached-icon" id="link-input">
+                  <span class="visually-hidden">Cached for offline viewing</span>
+                </div>
+                <a href="api/input" >Input</a>
               </li>
               <li>
                 <div aria-hidden="true" class="cached-icon" id="link-keyboard">
@@ -369,6 +387,16 @@ let sprite = Srite({
               </ul>
             </li>
 
+            <li>
+              <h3 id="properties">Properties</h3>
+              <ul aria-labelledby="properties">
+                <li>
+                  <a href="api/pointer#pointerMap">
+                    <span>pointerMap</span>
+                  </a>
+                </li>
+              </ul>
+            </li>
 
             <li>
               <h3 id="methods">Methods</h3>
@@ -384,13 +412,13 @@ let sprite = Srite({
                   </a>
                 </li>
                 <li>
-                  <a href="api/pointer#onPointerDown">
-                    <span>onPointerDown(&#8203;callback)</span>
+                  <a href="api/pointer#offPointer">
+                    <span>offPointer(&#8203;direction)</span>
                   </a>
                 </li>
                 <li>
-                  <a href="api/pointer#onPointerUp">
-                    <span>onPointerUp(&#8203;callback)</span>
+                  <a href="api/pointer#onPointer">
+                    <span>onPointer(&#8203;direction, callback)</span>
                   </a>
                 </li>
                 <li>
@@ -426,7 +454,7 @@ let sprite = Srite({
             </a>
           </h2>
 
-          <p>Below is a list of buttons that you can use.</p>
+          <p>Below is a list of buttons that you can use. If you need to extend or modify this list, you can use the <a href="api/gamepad#pointerMap">pointerMap</a> property.</p>
 <ul>
 <li>left, middle, right</li>
 </ul>
@@ -521,113 +549,159 @@ console.log(getPointer());  //=&gt; { x: 100, y: 200, radius: 5, canvas: &lt;can
           </p>
         </section>
         <section>
-          <h2 id="onPointerDown">
-            <a href="api/pointer#onPointerDown" class="section-link">
-              <span>onPointerDown(&#8203;callback)</span>
+          <h2 id="offPointer">
+            <a href="api/pointer#offPointer" class="section-link">
+              <span>offPointer(&#8203;direction)</span>
               <span aria-hidden="true">#</span>
             </a>
           </h2>
 
-          <p>Register a function to be called on all pointer down events. Is passed the original Event and the target object (if there is one).</p>
+          <p>Unregister the callback for a pointer event.</p>
 <div class="tablist">
   <ul role="tablist">
     <li role="presentation" data-tab="global">
-      <button role="tab" id="onpointerdown-global-tab">Global Object</button>
+      <button role="tab" id="offpointer-global-tab">Global Object</button>
     </li>
     <li role="presentation" data-tab="es">
-      <button role="tab" id="onpointerdown-es-tab">ES Module Import</button>
+      <button role="tab" id="offpointer-es-tab">ES Module Import</button>
     </li>
     <li role="presentation" data-tab="bundle">
-      <button role="tab" id="onpointerdown-bundle-tab">Module Bundler</button>
+      <button role="tab" id="offpointer-bundle-tab">Module Bundler</button>
     </li>
     <li role="presentation"></li>
   </ul>
-  <section role="tabpanel" aria-labelledby=onpointerdown-global-tab data-tabpanel="global"><pre><code class="language-js">let { initPointer, onPointerDown } = kontra;
+  <section role="tabpanel" aria-labelledby=offpointer-global-tab data-tabpanel="global"><pre><code class="language-js">let { initPointer, offPointer } = kontra;
 
 initPointer();
 
-onPointerDown(function(e, object) {
-  // handle pointer down
-})</code></pre></section>
-  <section role="tabpanel" aria-labelledby=onpointerdown-es-tab data-tabpanel="es"><pre><code class="language-js">import { initPointer, onPointerDown } from 'path/to/kontra.mjs';
+offPointer(&#39;down&#39;);</code></pre></section>
+  <section role="tabpanel" aria-labelledby=offpointer-es-tab data-tabpanel="es"><pre><code class="language-js">import { initPointer, offPointer } from 'path/to/kontra.mjs';
 
 initPointer();
 
-onPointerDown(function(e, object) {
-  // handle pointer down
-})</code></pre></section>
-  <section role="tabpanel" aria-labelledby=onpointerdown-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { initPointer, onPointerDown } from &#39;kontra&#39;;
+offPointer(&#39;down&#39;);</code></pre></section>
+  <section role="tabpanel" aria-labelledby=offpointer-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { initPointer, offPointer } from &#39;kontra&#39;;
 
 initPointer();
 
-onPointerDown(function(e, object) {
-  // handle pointer down
-})</code></pre></section>
+offPointer(&#39;down&#39;);</code></pre></section>
 </div>
-          <h3 id="title-onPointerDown"><span class="visually-hidden">onPointerDown</span> Parameters</span></h3>
-          <dl aria-labelledby="title-onPointerDown">
+          <h3 id="title-offPointer"><span class="visually-hidden">offPointer</span> Parameters</span></h3>
+          <dl aria-labelledby="title-offPointer">
             <dt>
-              <code>callback</code>
+              <code>direction</code>
               
             </dt>
-            <dd><p><em>Function</em>. Function to call on pointer down.</p>
+            <dd><p><em>&#39;down&#39; or &#39;up&#39;</em>. Direction of the pointer event.</p>
           </dd>
           </dl>
           
         </section>
         <section>
-          <h2 id="onPointerUp">
-            <a href="api/pointer#onPointerUp" class="section-link">
-              <span>onPointerUp(&#8203;callback)</span>
+          <h2 id="onPointer">
+            <a href="api/pointer#onPointer" class="section-link">
+              <span>onPointer(&#8203;direction, callback)</span>
               <span aria-hidden="true">#</span>
             </a>
           </h2>
 
-          <p>Register a function to be called on all pointer up events. Is passed the original Event and the target object (if there is one).</p>
+          <p>Register a function to be called on pointer events. Is passed the original Event and the target object (if there is one).</p>
 <div class="tablist">
   <ul role="tablist">
     <li role="presentation" data-tab="global">
-      <button role="tab" id="onpointerup-global-tab">Global Object</button>
+      <button role="tab" id="onpointer-global-tab">Global Object</button>
     </li>
     <li role="presentation" data-tab="es">
-      <button role="tab" id="onpointerup-es-tab">ES Module Import</button>
+      <button role="tab" id="onpointer-es-tab">ES Module Import</button>
     </li>
     <li role="presentation" data-tab="bundle">
-      <button role="tab" id="onpointerup-bundle-tab">Module Bundler</button>
+      <button role="tab" id="onpointer-bundle-tab">Module Bundler</button>
     </li>
     <li role="presentation"></li>
   </ul>
-  <section role="tabpanel" aria-labelledby=onpointerup-global-tab data-tabpanel="global"><pre><code class="language-js">let { initPointer, onPointerUp } = kontra;
+  <section role="tabpanel" aria-labelledby=onpointer-global-tab data-tabpanel="global"><pre><code class="language-js">let { initPointer, onPointer } = kontra;
 
 initPointer();
 
-onPointerUp(function(e, object) {
-  // handle pointer up
-})</code></pre></section>
-  <section role="tabpanel" aria-labelledby=onpointerup-es-tab data-tabpanel="es"><pre><code class="language-js">import { initPointer, onPointerUp } from 'path/to/kontra.mjs';
+onPointer(&#39;down&#39;, function(e, object) {
+  // handle pointer down
+});</code></pre></section>
+  <section role="tabpanel" aria-labelledby=onpointer-es-tab data-tabpanel="es"><pre><code class="language-js">import { initPointer, onPointer } from 'path/to/kontra.mjs';
 
 initPointer();
 
-onPointerUp(function(e, object) {
-  // handle pointer up
-})</code></pre></section>
-  <section role="tabpanel" aria-labelledby=onpointerup-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { initPointer, onPointerUp } from &#39;kontra&#39;;
+onPointer(&#39;down&#39;, function(e, object) {
+  // handle pointer down
+});</code></pre></section>
+  <section role="tabpanel" aria-labelledby=onpointer-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { initPointer, onPointer } from &#39;kontra&#39;;
 
 initPointer();
 
-onPointerUp(function(e, object) {
-  // handle pointer up
-})</code></pre></section>
+onPointer(&#39;down&#39;, function(e, object) {
+  // handle pointer down
+});</code></pre></section>
 </div>
-          <h3 id="title-onPointerUp"><span class="visually-hidden">onPointerUp</span> Parameters</span></h3>
-          <dl aria-labelledby="title-onPointerUp">
+          <h3 id="title-onPointer"><span class="visually-hidden">onPointer</span> Parameters</span></h3>
+          <dl aria-labelledby="title-onPointer">
+            <dt>
+              <code>direction</code>
+              
+            </dt>
+            <dd><p><em>&#39;down&#39; or &#39;up&#39;</em>. Direction of the pointer event.</p>
+          </dd>
             <dt>
               <code>callback</code>
               
             </dt>
-            <dd><p><em>Function</em>. Function to call on pointer up.</p>
+            <dd><p><em>Function</em>. Function to call on pointer event.</p>
           </dd>
           </dl>
+          
+        </section>
+        <section>
+          <h2 id="pointerMap">
+            <a href="api/pointer#pointerMap" class="section-link">
+              <span>pointerMap</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
+
+          <p><em>Object</em>. A map of pointer button indices to button names. Modify this object to expand the list of <a href="api/pointer#available-buttons">available buttons</a>.</p>
+<div class="tablist">
+  <ul role="tablist">
+    <li role="presentation" data-tab="global">
+      <button role="tab" id="pointermap-global-tab">Global Object</button>
+    </li>
+    <li role="presentation" data-tab="es">
+      <button role="tab" id="pointermap-es-tab">ES Module Import</button>
+    </li>
+    <li role="presentation" data-tab="bundle">
+      <button role="tab" id="pointermap-bundle-tab">Module Bundler</button>
+    </li>
+    <li role="presentation"></li>
+  </ul>
+  <section role="tabpanel" aria-labelledby=pointermap-global-tab data-tabpanel="global"><pre><code class="language-js">let { pointerMap, pointerPressed } = kontra;
+
+pointerMap[2] = &#39;buttonWest&#39;;
+
+if (pointerPressed(&#39;buttonWest&#39;)) {
+  // handle west face button
+}</code></pre></section>
+  <section role="tabpanel" aria-labelledby=pointermap-es-tab data-tabpanel="es"><pre><code class="language-js">import { pointerMap, pointerPressed } from 'path/to/kontra.mjs';
+
+pointerMap[2] = &#39;buttonWest&#39;;
+
+if (pointerPressed(&#39;buttonWest&#39;)) {
+  // handle west face button
+}</code></pre></section>
+  <section role="tabpanel" aria-labelledby=pointermap-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { pointerMap, pointerPressed } from &#39;kontra&#39;;
+
+pointerMap[2] = &#39;buttonWest&#39;;
+
+if (pointerPressed(&#39;buttonWest&#39;)) {
+  // handle west face button
+}</code></pre></section>
+</div>
           
         </section>
         <section>
@@ -835,7 +909,7 @@ Sprite({
             </a>
           </h2>
 
-          <p>Begin tracking pointer events for a set of objects. Takes a single object or an array of objects.</p>
+          <p>Begin tracking pointer events for an object.</p>
 <div class="tablist">
   <ul role="tablist">
     <li role="presentation" data-tab="global">
@@ -874,7 +948,7 @@ track(obj1, obj2);</code></pre></section>
               <code>...objects</code>
               
             </dt>
-            <dd><p><em>A list of Objects</em>. Objects to track.</p>
+            <dd><p><em>A list of (Object or Array of Objects)</em>. Object to track. Can be a single object, an array of objects, or a comma-separated list of objects.</p>
           </dd>
           </dl>
           
@@ -887,7 +961,7 @@ track(obj1, obj2);</code></pre></section>
             </a>
           </h2>
 
-          <p>Remove the callback function for a bound set of objects.</p>
+          <p>Stop tracking pointer events for an object.</p>
 <div class="tablist">
   <ul role="tablist">
     <li role="presentation" data-tab="global">
@@ -920,7 +994,7 @@ untrack(obj1, obj2);</code></pre></section>
               <code>...objects</code>
               
             </dt>
-            <dd><p><em>A list of Objects</em>. Object or objects to stop tracking.</p>
+            <dd><p><em>A list of (Object or Array of Objects)</em>. Object to untrack. Can be a single object, an array of objects, or a comma-separated list of objects.</p>
           </dd>
           </dl>
           

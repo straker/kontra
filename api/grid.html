@@ -113,6 +113,18 @@
                 <a href="api/gameObject" >GameObject</a>
               </li>
               <li>
+                <div aria-hidden="true" class="cached-icon" id="link-gamepad">
+                  <span class="visually-hidden">Cached for offline viewing</span>
+                </div>
+                <a href="api/gamepad" >Gamepad</a>
+              </li>
+              <li>
+                <div aria-hidden="true" class="cached-icon" id="link-gesture">
+                  <span class="visually-hidden">Cached for offline viewing</span>
+                </div>
+                <a href="api/gesture" >Gesture</a>
+              </li>
+              <li>
                 <div aria-hidden="true" class="cached-icon" id="link-grid">
                   <span class="visually-hidden">Cached for offline viewing</span>
                 </div>
@@ -123,6 +135,12 @@
                   <span class="visually-hidden">Cached for offline viewing</span>
                 </div>
                 <a href="api/helpers" >Helpers</a>
+              </li>
+              <li>
+                <div aria-hidden="true" class="cached-icon" id="link-input">
+                  <span class="visually-hidden">Cached for offline viewing</span>
+                </div>
+                <a href="api/input" >Input</a>
               </li>
               <li>
                 <div aria-hidden="true" class="cached-icon" id="link-keyboard">
@@ -237,13 +255,13 @@
             <code>properties.align</code>
             <span class="optional">Optional</span>
           </dt>
-          <dd><p><em>String</em>. The vertical alignment of the grid. Defaults to <code>&#39;start&#39;</code>.</p>
+          <dd><p><em>String or an Array of Strings</em>. The vertical alignment of the grid. Defaults to <code>&#39;start&#39;</code>.</p>
         </dd>
           <dt>
             <code>properties.justify</code>
             <span class="optional">Optional</span>
           </dt>
-          <dd><p><em>String</em>. The horizontal alignment of the grid. Defaults to <code>&#39;start&#39;</code>.</p>
+          <dd><p><em>String or an Array of Strings</em>. The horizontal alignment of the grid. Defaults to <code>&#39;start&#39;</code>.</p>
         </dd>
           <dt>
             <code>properties.colGap</code>
@@ -563,12 +581,13 @@ menu.render();
             </a>
           </h2>
 
-          <p><em>String</em>. The vertical alignment of the grid. Valid values are:</p>
+          <p><em>String or an Array of Strings</em>. The vertical alignment of the grid. Valid values are:</p>
 <ul>
 <li><code>start</code> - align to the top of row</li>
 <li><code>center</code> - align to the center of the row</li>
 <li><code>end</code> - align to the the bottom of the row</li>
 </ul>
+<p>An array of strings means the grid will set the vertical alignment for each row using the order of the array. For example, if the alignment is set to be <code>[&#39;end&#39;, &#39;start&#39;]</code>, then every odd row will use &#39;end&#39; and every even row will use &#39;start&#39;.</p>
 <p>Additionally, each child of the grid can use the <code>alignSelf</code> property to change it&#39;s alignment in the grid.</p>
           
         </section>
@@ -667,7 +686,7 @@ let grid = Grid({
           </h2>
 
           <p><em>Number or an Array of Numbers</em>. The horizontal gap between each column in the grid.</p>
-<p>An array of numbers means the grid will set the gap between columns using the order of the array. For example, if the gap is set to be <code>[10, 5]</code>, then every odd column gap with use 10 and every even column gap will use 5.</p>
+<p>An array of numbers means the grid will set the gap between columns using the order of the array. For example, if the gap is set to be <code>[10, 5]</code>, then every odd column gap will use 10 and every even column gap will use 5.</p>
           
         </section>
         <section>
@@ -717,12 +736,13 @@ let grid = Grid({
             </a>
           </h2>
 
-          <p><em>String</em>. The horizontal alignment of the grid. Valid values are:</p>
+          <p><em>String or an Array of Strings</em>. The horizontal alignment of the grid. Valid values are:</p>
 <ul>
 <li><code>start</code> - align to the left of column</li>
 <li><code>center</code> - align to the center of the column</li>
 <li><code>end</code> - align to the the right of the column</li>
 </ul>
+<p>An array of strings means the grid will set the horizontal alignment for each column using the order of the array. For example, if the alignment is set to be <code>[&#39;end&#39;, &#39;start&#39;]</code>, then every odd column will use &#39;end&#39; and every even column will use &#39;start&#39;.</p>
 <p>If the <a href="api/grid#dir">dir</a> property is set to <code>rtl</code>, then <code>start</code> and <code>end</code> are reversed.</p>
 <p>Additionally, each child of the grid can use the <code>justifySelf</code> property to change it&#39;s alignment in the grid.</p>
           
@@ -747,7 +767,7 @@ let grid = Grid({
           </h2>
 
           <p><em>Number or an Array of Numbers</em>. The vertical gap between each row in the grid.</p>
-<p>An array of numbers means the grid will set the gap between rows using the order of the array. For example, if the gap is set to be <code>[10, 5]</code>, then every odd row gap with use 10 and every even row gap will use 5.</p>
+<p>An array of numbers means the grid will set the gap between rows using the order of the array. For example, if the gap is set to be <code>[10, 5]</code>, then every odd row gap will use 10 and every even row gap will use 5.</p>
           
         </section>
 

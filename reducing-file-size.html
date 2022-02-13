@@ -113,6 +113,18 @@
                 <a href="api/gameObject" >GameObject</a>
               </li>
               <li>
+                <div aria-hidden="true" class="cached-icon" id="link-gamepad">
+                  <span class="visually-hidden">Cached for offline viewing</span>
+                </div>
+                <a href="api/gamepad" >Gamepad</a>
+              </li>
+              <li>
+                <div aria-hidden="true" class="cached-icon" id="link-gesture">
+                  <span class="visually-hidden">Cached for offline viewing</span>
+                </div>
+                <a href="api/gesture" >Gesture</a>
+              </li>
+              <li>
                 <div aria-hidden="true" class="cached-icon" id="link-grid">
                   <span class="visually-hidden">Cached for offline viewing</span>
                 </div>
@@ -123,6 +135,12 @@
                   <span class="visually-hidden">Cached for offline viewing</span>
                 </div>
                 <a href="api/helpers" >Helpers</a>
+              </li>
+              <li>
+                <div aria-hidden="true" class="cached-icon" id="link-input">
+                  <span class="visually-hidden">Cached for offline viewing</span>
+                </div>
+                <a href="api/input" >Input</a>
               </li>
               <li>
                 <div aria-hidden="true" class="cached-icon" id="link-keyboard">
@@ -216,7 +234,7 @@
 
         <h1>Reducing File Size        </h1>
 
-        <p>By default, the <code>kontra</code> export is the entire library. This means that by default Kontra is a bit large. However, Kontra has been written using ES Modules which means you can use a module bundler such as <a href="https://rollupjs.org/">Rollup</a> or <a href="https://webpack.js.org/">webpack</a> to take advantage of <a href="https://rollupjs.org/guide/en#tree-shaking">tree-shaking</a>. This will reduce the file size by only bundling the code you need.</p>
+        <p>By default, the <code>kontra</code> export is the entire library. This means that by default Kontra is a bit large. However, Kontra has been written using ES Modules which means you can use a module bundler such as <a href="https://rollupjs.org/">Rollup</a> or <a href="https://esbuild.github.io/">esbuild</a> to take advantage of <a href="https://rollupjs.org/guide/en#tree-shaking">tree-shaking</a>. This will reduce the file size by only bundling the code you need.</p>
 <pre><code class="language-js">// game.js
 import { Sprite, GameLoop } from &#39;kontra&#39;;
 
@@ -239,11 +257,13 @@ let loop = GameLoop({
 });
 
 loop.start();</code></pre>
-<pre><code class="language-bash">$ rollup game.js --format iife --file game.bundle.js</code></pre>
-<h2 id="rollup-plugin-kontra">Rollup-plugin-kontra</h2>
-<p>Kontra supports even more granular control over the file size if tree shaking is not enough. If you&#39;re looking to remove unused parts of the Sprite class, such as <code>rotation</code> or <code>anchor</code>, you can use <a href="https://github.com/straker/rollup-plugin-kontra">rollup-plugin-kontra</a> to remove entire parts of the Sprite codebase. Just pass the functionality you want enabled and rollup-plugin-kontra will remove the rest.</p>
-<p><strong>Note:</strong> All options default to <code>false</code> when using rollup-plugin-kontra, so only pass the options you wish to enable. Passing no options will result in a Sprite with just <code>position</code>, <code>width,</code> <code>height</code>, and <code>color</code>.</p>
-<p><strong>Also Note:</strong> Some of the more advance classes – such as Button, Scene, and Grid – require some of the gameObject functionality to work properly. If you are using those, you will need to enable the <code>group</code> feature or they will not work.</p>
+<pre><code class="language-bash"># rollup
+rollup game.js --format iife --file game.bundle.js
+
+# esbuild
+esbuild game.js --bundle --format=iife --outfile=game.bundle.js</code></pre>
+<h2 id="kontra-bundler-plugins">Kontra Bundler Plugins</h2>
+<p>Kontra supports even more granular control over the file size if tree shaking is not enough. If you&#39;re looking to remove unused parts of the Sprite class, such as <code>rotation</code> or <code>anchor</code>, you can use a kontra bundler plugin to remove entire parts of the Sprite codebase. Just pass the functionality you want enabled and the bundler plugin will remove the rest.</p>
 <pre><code class="language-js">// rollup.config.js
 import kontra from &#39;rollup-plugin-kontra&#39;
 
@@ -266,8 +286,15 @@ export default {
     })
   ]
 }</code></pre>
+<h3 id="supported-plugins">Supported Plugins</h3>
+<ul>
+<li><a href="https://github.com/straker/rollup-plugin-kontra">rollup-plugin-kontra</a></li>
+<li><a href="https://github.com/straker/esbuild-plugin-kontra">esbuild-plugin-kontra</a></li>
+</ul>
 <h3 id="available-options">Available Options</h3>
 <p>Options are passed by nesting the option with the parent source. For example, to enable the <code>image</code> functionality of a sprite, you would pass <code>sprite: { image: true }</code>.</p>
+<p>All options default to <code>false</code>, so only pass the options you wish to enable. Passing no options will result in a Sprite with just <code>position</code>, <code>width,</code> <code>height</code>, and <code>color</code>.</p>
+<p><strong>Note:</strong> Some of the more advance classes – such as Button or Grid – require some of the gameObject functionality to work properly. If you are using those, you will need to enable the <code>group</code> feature or they will not work.</p>
 <h4 id="gameobject-options"><code>gameObject</code> Options:</h4>
 <table>
 <thead>
@@ -285,10 +312,6 @@ export default {
 <td><code>anchor</code></td>
 </tr>
 <tr>
-<td><code>camera</code></td>
-<td><code>sx</code>, <code>sy</code></td>
-</tr>
-<tr>
 <td><code>group</code></td>
 <td><code>children</code>, <code>parent</code>, <code>addChild</code>, <code>removeChild</code></td>
 </tr>
@@ -302,7 +325,7 @@ export default {
 </tr>
 <tr>
 <td><code>scale</code></td>
-<td><code>scale</code>, <code>setScale()</code></td>
+<td><code>scaleX</code>, <code>scaleY</code>, <code>setScale()</code></td>
 </tr>
 <tr>
 <td><code>ttl</code></td>
@@ -353,6 +376,31 @@ export default {
 <tr>
 <td><code>textAlign</code></td>
 <td><code>textAlign</code></td>
+</tr>
+</tbody></table>
+<h4 id="tileengine-options"><code>tileEngine</code> Options:</h4>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Functionality Enabled</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>camera</code></td>
+<td><code>sx</code>, <code>sy</code>, <code>add</code>, <code>remove</code></td>
+</tr>
+<tr>
+<td><code>dynamic</code></td>
+<td><code>setLayer</code>, <code>setTileAtLayer</code></td>
+</tr>
+<tr>
+<td><code>query</code></td>
+<td><code>layerCollidesWith</code>, <code>tileAtLayer</code></td>
+</tr>
+<tr>
+<td><code>tiled</code></td>
+<td>Support for resolving linked Tiled files (source, image)</td>
 </tr>
 </tbody></table>
 <h4 id="vector-options"><code>vector</code> Options:</h4>

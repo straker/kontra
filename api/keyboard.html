@@ -113,6 +113,18 @@
                 <a href="api/gameObject" >GameObject</a>
               </li>
               <li>
+                <div aria-hidden="true" class="cached-icon" id="link-gamepad">
+                  <span class="visually-hidden">Cached for offline viewing</span>
+                </div>
+                <a href="api/gamepad" >Gamepad</a>
+              </li>
+              <li>
+                <div aria-hidden="true" class="cached-icon" id="link-gesture">
+                  <span class="visually-hidden">Cached for offline viewing</span>
+                </div>
+                <a href="api/gesture" >Gesture</a>
+              </li>
+              <li>
                 <div aria-hidden="true" class="cached-icon" id="link-grid">
                   <span class="visually-hidden">Cached for offline viewing</span>
                 </div>
@@ -123,6 +135,12 @@
                   <span class="visually-hidden">Cached for offline viewing</span>
                 </div>
                 <a href="api/helpers" >Helpers</a>
+              </li>
+              <li>
+                <div aria-hidden="true" class="cached-icon" id="link-input">
+                  <span class="visually-hidden">Cached for offline viewing</span>
+                </div>
+                <a href="api/input" >Input</a>
               </li>
               <li>
                 <div aria-hidden="true" class="cached-icon" id="link-keyboard">
@@ -216,7 +234,7 @@
 
         <h1>Keyboard        </h1>
 
-        <p>A minimalistic keyboard API. You can use it move the main sprite or respond to a key press.</p>
+        <p>A simple keyboard API. You can use it move the main sprite or respond to a key press.</p>
 <div class="tablist">
   <ul role="tablist">
     <li role="presentation" data-tab="global">
@@ -237,7 +255,7 @@
 initKeys();
 
 function update() {
-  if (keyPressed(&#39;left&#39;)) {
+  if (keyPressed(&#39;arrowleft&#39;)) {
     // move left
   }
 }</code></pre></section>
@@ -248,7 +266,7 @@ function update() {
 initKeys();
 
 function update() {
-  if (keyPressed(&#39;left&#39;)) {
+  if (keyPressed(&#39;arrowleft&#39;)) {
     // move left
   }
 }</code></pre></section>
@@ -259,7 +277,7 @@ function update() {
 initKeys();
 
 function update() {
-  if (keyPressed(&#39;left&#39;)) {
+  if (keyPressed(&#39;arrowleft&#39;)) {
     // move left
   }
 }</code></pre></section>
@@ -291,11 +309,6 @@ function update() {
               <h3 id="methods">Methods</h3>
               <ul aria-labelledby="methods">
                 <li>
-                  <a href="api/keyboard#bindKeys">
-                    <span>bindKeys(&#8203;keys, callback[, options])</span>
-                  </a>
-                </li>
-                <li>
                   <a href="api/keyboard#initKeys">
                     <span>initKeys(&#8203;)</span>
                   </a>
@@ -306,8 +319,13 @@ function update() {
                   </a>
                 </li>
                 <li>
-                  <a href="api/keyboard#unbindKeys">
-                    <span>unbindKeys(&#8203;keys[, options])</span>
+                  <a href="api/keyboard#offKey">
+                    <span>offKey(&#8203;keys[, options])</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="api/keyboard#onKey">
+                    <span>onKey(&#8203;keys, callback[, options])</span>
                   </a>
                 </li>
               </ul>
@@ -327,99 +345,10 @@ function update() {
 <ul>
 <li>a-z</li>
 <li>0-9</li>
-<li>enter, esc, space, left, up, right, down</li>
+<li>enter, esc, space, arrowleft, arrowup, arrowright, arrowdown</li>
 </ul>
         </section>
 
-        <section>
-          <h2 id="bindKeys">
-            <a href="api/keyboard#bindKeys" class="section-link">
-              <span>bindKeys(&#8203;keys, callback[, options])</span>
-              <span aria-hidden="true">#</span>
-            </a>
-          </h2>
-
-          <p>Bind a set of keys that will call the callback function when they are pressed. Takes a single key or an array of keys. Is passed the original KeyboardEvent as a parameter.</p>
-<p>By default, the default action will be prevented for any bound key. To not do this, pass the <code>preventDefault</code> option.</p>
-<div class="tablist">
-  <ul role="tablist">
-    <li role="presentation" data-tab="global">
-      <button role="tab" id="bindkeys-global-tab">Global Object</button>
-    </li>
-    <li role="presentation" data-tab="es">
-      <button role="tab" id="bindkeys-es-tab">ES Module Import</button>
-    </li>
-    <li role="presentation" data-tab="bundle">
-      <button role="tab" id="bindkeys-bundle-tab">Module Bundler</button>
-    </li>
-    <li role="presentation"></li>
-  </ul>
-  <section role="tabpanel" aria-labelledby=bindkeys-global-tab data-tabpanel="global"><pre><code class="language-js">let { initKeys, bindKeys } = kontra;
-
-initKeys();
-
-bindKeys(&#39;p&#39;, function(e) {
-  // pause the game
-}, &#39;keyup&#39;);
-bindKeys([&#39;enter&#39;, &#39;space&#39;], function(e) {
-  // fire gun
-});</code></pre></section>
-  <section role="tabpanel" aria-labelledby=bindkeys-es-tab data-tabpanel="es"><pre><code class="language-js">import { initKeys, bindKeys } from 'path/to/kontra.mjs';
-
-initKeys();
-
-bindKeys(&#39;p&#39;, function(e) {
-  // pause the game
-}, &#39;keyup&#39;);
-bindKeys([&#39;enter&#39;, &#39;space&#39;], function(e) {
-  // fire gun
-});</code></pre></section>
-  <section role="tabpanel" aria-labelledby=bindkeys-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { initKeys, bindKeys } from &#39;kontra&#39;;
-
-initKeys();
-
-bindKeys(&#39;p&#39;, function(e) {
-  // pause the game
-}, &#39;keyup&#39;);
-bindKeys([&#39;enter&#39;, &#39;space&#39;], function(e) {
-  // fire gun
-});</code></pre></section>
-</div>
-          <h3 id="title-bindKeys"><span class="visually-hidden">bindKeys</span> Parameters</span></h3>
-          <dl aria-labelledby="title-bindKeys">
-            <dt>
-              <code>keys</code>
-              
-            </dt>
-            <dd><p><em>String or an Array of Strings</em>. Key or keys to bind.</p>
-          </dd>
-            <dt>
-              <code>callback</code>
-              
-            </dt>
-            <dd><p><em>Function</em>. The function to be called when the key is pressed.</p>
-          </dd>
-            <dt>
-              <code>options</code>
-              <span class="optional">Optional</span>
-            </dt>
-            <dd><p><em>Object</em>. Bind options.</p>
-          </dd>
-            <dt>
-              <code>options.handler</code>
-              <span class="optional">Optional</span>
-            </dt>
-            <dd><p><em>&#39;keydown&#39; or &#39;keyup&#39;</em>. Whether to bind to keydown or keyup events. Defaults to <code>keydown</code>.</p>
-          </dd>
-            <dt>
-              <code>options.preventDefault</code>
-              <span class="optional">Optional</span>
-            </dt>
-            <dd><p><em>Boolean</em>. Call <code>event. preventDefault()</code> when the key is activated. Defaults to <code>true</code>.</p>
-          </dd>
-          </dl>
-          
-        </section>
         <section>
           <h2 id="initKeys">
             <a href="api/keyboard#initKeys" class="section-link">
@@ -453,25 +382,25 @@ bindKeys([&#39;enter&#39;, &#39;space&#39;], function(e) {
     </li>
     <li role="presentation"></li>
   </ul>
-  <section role="tabpanel" aria-labelledby=keymap-global-tab data-tabpanel="global"><pre><code class="language-js">let { keyMap, bindKeys } = kontra;
+  <section role="tabpanel" aria-labelledby=keymap-global-tab data-tabpanel="global"><pre><code class="language-js">let { keyMap, onKey } = kontra;
 
 keyMap[&#39;ControlRight&#39;] = &#39;ctrl&#39;;
 
-bindKeys(&#39;ctrl&#39;, function(e) {
+onKey(&#39;ctrl&#39;, function(e) {
   // handle ctrl key
 });</code></pre></section>
-  <section role="tabpanel" aria-labelledby=keymap-es-tab data-tabpanel="es"><pre><code class="language-js">import { keyMap, bindKeys } from 'path/to/kontra.mjs';
+  <section role="tabpanel" aria-labelledby=keymap-es-tab data-tabpanel="es"><pre><code class="language-js">import { keyMap, onKey } from 'path/to/kontra.mjs';
 
 keyMap[&#39;ControlRight&#39;] = &#39;ctrl&#39;;
 
-bindKeys(&#39;ctrl&#39;, function(e) {
+onKey(&#39;ctrl&#39;, function(e) {
   // handle ctrl key
 });</code></pre></section>
-  <section role="tabpanel" aria-labelledby=keymap-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { keyMap, bindKeys } from &#39;kontra&#39;;
+  <section role="tabpanel" aria-labelledby=keymap-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { keyMap, onKey } from &#39;kontra&#39;;
 
 keyMap[&#39;ControlRight&#39;] = &#39;ctrl&#39;;
 
-bindKeys(&#39;ctrl&#39;, function(e) {
+onKey(&#39;ctrl&#39;, function(e) {
   // handle ctrl key
 });</code></pre></section>
 </div>
@@ -505,17 +434,17 @@ initKeys();
 
 let sprite = Sprite({
   update: function() {
-    if (keyPressed(&#39;left&#39;)){
+    if (keyPressed(&#39;arrowleft&#39;)){
       // left arrow pressed
     }
-    else if (keyPressed(&#39;right&#39;)) {
+    else if (keyPressed(&#39;arrowright&#39;)) {
       // right arrow pressed
     }
 
-    if (keyPressed(&#39;up&#39;)) {
+    if (keyPressed(&#39;arrowup&#39;)) {
       // up arrow pressed
     }
-    else if (keyPressed(&#39;down&#39;)) {
+    else if (keyPressed(&#39;arrowdown&#39;)) {
       // down arrow pressed
     }
   }
@@ -526,17 +455,17 @@ initKeys();
 
 let sprite = Sprite({
   update: function() {
-    if (keyPressed(&#39;left&#39;)){
+    if (keyPressed(&#39;arrowleft&#39;)){
       // left arrow pressed
     }
-    else if (keyPressed(&#39;right&#39;)) {
+    else if (keyPressed(&#39;arrowright&#39;)) {
       // right arrow pressed
     }
 
-    if (keyPressed(&#39;up&#39;)) {
+    if (keyPressed(&#39;arrowup&#39;)) {
       // up arrow pressed
     }
-    else if (keyPressed(&#39;down&#39;)) {
+    else if (keyPressed(&#39;arrowdown&#39;)) {
       // down arrow pressed
     }
   }
@@ -547,17 +476,17 @@ initKeys();
 
 let sprite = Sprite({
   update: function() {
-    if (keyPressed(&#39;left&#39;)){
+    if (keyPressed(&#39;arrowleft&#39;)){
       // left arrow pressed
     }
-    else if (keyPressed(&#39;right&#39;)) {
+    else if (keyPressed(&#39;arrowright&#39;)) {
       // right arrow pressed
     }
 
-    if (keyPressed(&#39;up&#39;)) {
+    if (keyPressed(&#39;arrowup&#39;)) {
       // up arrow pressed
     }
-    else if (keyPressed(&#39;down&#39;)) {
+    else if (keyPressed(&#39;arrowdown&#39;)) {
       // down arrow pressed
     }
   }
@@ -578,59 +507,148 @@ let sprite = Sprite({
           </p>
         </section>
         <section>
-          <h2 id="unbindKeys">
-            <a href="api/keyboard#unbindKeys" class="section-link">
-              <span>unbindKeys(&#8203;keys[, options])</span>
+          <h2 id="offKey">
+            <a href="api/keyboard#offKey" class="section-link">
+              <span>offKey(&#8203;keys[, options])</span>
               <span aria-hidden="true">#</span>
             </a>
           </h2>
 
-          <p>Remove the callback function for a bound set of keys. Takes a single key or an array of keys.</p>
+          <p>Unregister the callback function for a key. Takes a single key or an array of keys.</p>
 <div class="tablist">
   <ul role="tablist">
     <li role="presentation" data-tab="global">
-      <button role="tab" id="unbindkeys-global-tab">Global Object</button>
+      <button role="tab" id="offkey-global-tab">Global Object</button>
     </li>
     <li role="presentation" data-tab="es">
-      <button role="tab" id="unbindkeys-es-tab">ES Module Import</button>
+      <button role="tab" id="offkey-es-tab">ES Module Import</button>
     </li>
     <li role="presentation" data-tab="bundle">
-      <button role="tab" id="unbindkeys-bundle-tab">Module Bundler</button>
+      <button role="tab" id="offkey-bundle-tab">Module Bundler</button>
     </li>
     <li role="presentation"></li>
   </ul>
-  <section role="tabpanel" aria-labelledby=unbindkeys-global-tab data-tabpanel="global"><pre><code class="language-js">let { unbindKeys } = kontra;
+  <section role="tabpanel" aria-labelledby=offkey-global-tab data-tabpanel="global"><pre><code class="language-js">let { offKey } = kontra;
 
-unbindKeys(&#39;left&#39;);
-unbindKeys([&#39;enter&#39;, &#39;space&#39;]);</code></pre></section>
-  <section role="tabpanel" aria-labelledby=unbindkeys-es-tab data-tabpanel="es"><pre><code class="language-js">import { unbindKeys } from 'path/to/kontra.mjs';
+offKey(&#39;arrowleft&#39;);
+offKey([&#39;enter&#39;, &#39;space&#39;]);</code></pre></section>
+  <section role="tabpanel" aria-labelledby=offkey-es-tab data-tabpanel="es"><pre><code class="language-js">import { offKey } from 'path/to/kontra.mjs';
 
-unbindKeys(&#39;left&#39;);
-unbindKeys([&#39;enter&#39;, &#39;space&#39;]);</code></pre></section>
-  <section role="tabpanel" aria-labelledby=unbindkeys-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { unbindKeys } from &#39;kontra&#39;;
+offKey(&#39;arrowleft&#39;);
+offKey([&#39;enter&#39;, &#39;space&#39;]);</code></pre></section>
+  <section role="tabpanel" aria-labelledby=offkey-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { offKey } from &#39;kontra&#39;;
 
-unbindKeys(&#39;left&#39;);
-unbindKeys([&#39;enter&#39;, &#39;space&#39;]);</code></pre></section>
+offKey(&#39;arrowleft&#39;);
+offKey([&#39;enter&#39;, &#39;space&#39;]);</code></pre></section>
 </div>
-          <h3 id="title-unbindKeys"><span class="visually-hidden">unbindKeys</span> Parameters</span></h3>
-          <dl aria-labelledby="title-unbindKeys">
+          <h3 id="title-offKey"><span class="visually-hidden">offKey</span> Parameters</span></h3>
+          <dl aria-labelledby="title-offKey">
             <dt>
               <code>keys</code>
               
             </dt>
-            <dd><p><em>String or an Array of Strings</em>. Key or keys to unbind.</p>
+            <dd><p><em>String or an Array of Strings</em>. Key or keys to unregister.</p>
           </dd>
             <dt>
               <code>options</code>
               <span class="optional">Optional</span>
             </dt>
-            <dd><p><em>Object</em>. Unbind options.</p>
+            <dd><p><em>Object</em>. Unregister options.</p>
           </dd>
             <dt>
               <code>options.handler</code>
               <span class="optional">Optional</span>
             </dt>
-            <dd><p><em>&#39;keydown&#39; or &#39;keyup&#39;</em>. Whether to unbind from keydown or keyup events. Defaults to <code>keydown</code>.</p>
+            <dd><p><em>&#39;keydown&#39; or &#39;keyup&#39;</em>. Whether to unregister from keydown or keyup events. Defaults to <code>keydown</code>.</p>
+          </dd>
+          </dl>
+          
+        </section>
+        <section>
+          <h2 id="onKey">
+            <a href="api/keyboard#onKey" class="section-link">
+              <span>onKey(&#8203;keys, callback[, options])</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
+
+          <p>Register a function to be called when a key is pressed. Takes a single key or an array of keys. Is passed the original <a href="https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent">KeyboardEvent</a> as a parameter.</p>
+<p>By default, the default action will be prevented for any bound key. To not do this, pass the <code>preventDefault</code> option.</p>
+<div class="tablist">
+  <ul role="tablist">
+    <li role="presentation" data-tab="global">
+      <button role="tab" id="onkey-global-tab">Global Object</button>
+    </li>
+    <li role="presentation" data-tab="es">
+      <button role="tab" id="onkey-es-tab">ES Module Import</button>
+    </li>
+    <li role="presentation" data-tab="bundle">
+      <button role="tab" id="onkey-bundle-tab">Module Bundler</button>
+    </li>
+    <li role="presentation"></li>
+  </ul>
+  <section role="tabpanel" aria-labelledby=onkey-global-tab data-tabpanel="global"><pre><code class="language-js">let { initKeys, onKey } = kontra;
+
+initKeys();
+
+onKey(&#39;p&#39;, function(e) {
+  // pause the game
+});
+onKey([&#39;enter&#39;, &#39;space&#39;], function(e) {
+  // fire gun
+});</code></pre></section>
+  <section role="tabpanel" aria-labelledby=onkey-es-tab data-tabpanel="es"><pre><code class="language-js">import { initKeys, onKey } from 'path/to/kontra.mjs';
+
+initKeys();
+
+onKey(&#39;p&#39;, function(e) {
+  // pause the game
+});
+onKey([&#39;enter&#39;, &#39;space&#39;], function(e) {
+  // fire gun
+});</code></pre></section>
+  <section role="tabpanel" aria-labelledby=onkey-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { initKeys, onKey } from &#39;kontra&#39;;
+
+initKeys();
+
+onKey(&#39;p&#39;, function(e) {
+  // pause the game
+});
+onKey([&#39;enter&#39;, &#39;space&#39;], function(e) {
+  // fire gun
+});</code></pre></section>
+</div>
+          <h3 id="title-onKey"><span class="visually-hidden">onKey</span> Parameters</span></h3>
+          <dl aria-labelledby="title-onKey">
+            <dt>
+              <code>keys</code>
+              
+            </dt>
+            <dd><p><em>String or an Array of Strings</em>. Key or keys to register.</p>
+          </dd>
+            <dt>
+              <code>callback</code>
+              
+            </dt>
+            <dd><p><em>Function</em>. The function to be called when the key is pressed.</p>
+          </dd>
+            <dt>
+              <code>options</code>
+              <span class="optional">Optional</span>
+            </dt>
+            <dd><p><em>Object</em>. Register options.</p>
+          </dd>
+            <dt>
+              <code>options.handler</code>
+              <span class="optional">Optional</span>
+            </dt>
+            <dd><p><em>&#39;keydown&#39; or &#39;keyup&#39;</em>. Whether to register to keydown or keyup events. Defaults to <code>keydown</code>.</p>
+          </dd>
+            <dt>
+              <code>options.preventDefault</code>
+              <span class="optional">Optional</span>
+            </dt>
+            <dd><p><em>Boolean</em>. Call <code>event. preventDefault()</code> when the key is activated. Defaults to <code>true</code>.</p>
           </dd>
           </dl>
           

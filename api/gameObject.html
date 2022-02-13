@@ -113,6 +113,18 @@
                 <a href="api/gameObject" aria-current="page">GameObject</a>
               </li>
               <li>
+                <div aria-hidden="true" class="cached-icon" id="link-gamepad">
+                  <span class="visually-hidden">Cached for offline viewing</span>
+                </div>
+                <a href="api/gamepad" >Gamepad</a>
+              </li>
+              <li>
+                <div aria-hidden="true" class="cached-icon" id="link-gesture">
+                  <span class="visually-hidden">Cached for offline viewing</span>
+                </div>
+                <a href="api/gesture" >Gesture</a>
+              </li>
+              <li>
                 <div aria-hidden="true" class="cached-icon" id="link-grid">
                   <span class="visually-hidden">Cached for offline viewing</span>
                 </div>
@@ -123,6 +135,12 @@
                   <span class="visually-hidden">Cached for offline viewing</span>
                 </div>
                 <a href="api/helpers" >Helpers</a>
+              </li>
+              <li>
+                <div aria-hidden="true" class="cached-icon" id="link-input">
+                  <span class="visually-hidden">Cached for offline viewing</span>
+                </div>
+                <a href="api/input" >Input</a>
               </li>
               <li>
                 <div aria-hidden="true" class="cached-icon" id="link-keyboard">
@@ -294,18 +312,6 @@
           <dd><p><em>Object</em>. The x and y origin of the game object. {x:0, y:0} is the top left corner of the game object, {x:1, y:1} is the bottom right corner. Defaults to <code>{x:0,y:0}</code>.</p>
         </dd>
           <dt>
-            <code>properties.sx</code>
-            <span class="optional">Optional</span>
-          </dt>
-          <dd><p><em>Number</em>. The x camera position. Defaults to <code>0</code>.</p>
-        </dd>
-          <dt>
-            <code>properties.sy</code>
-            <span class="optional">Optional</span>
-          </dt>
-          <dd><p><em>Number</em>. The y camera position. Defaults to <code>0</code>.</p>
-        </dd>
-          <dt>
             <code>properties.children</code>
             <span class="optional">Optional</span>
           </dt>
@@ -445,16 +451,6 @@
                   </a>
                 </li>
                 <li>
-                  <a href="api/gameObject#sx">
-                    <span>GameObject&#8203;.sx</span>
-                  </a>
-                </li>
-                <li>
-                  <a href="api/gameObject#sy">
-                    <span>GameObject&#8203;.sy</span>
-                  </a>
-                </li>
-                <li>
                   <a href="api/gameObject#ttl">
                     <span>GameObject&#8203;.ttl</span>
                   </a>
@@ -492,7 +488,7 @@
               <ul aria-labelledby="methods">
                 <li>
                   <a href="api/gameObject#addChild">
-                    <span>GameObject&#8203;.addChild(&#8203;child)</span>
+                    <span>GameObject&#8203;.addChild(&#8203;...objects)</span>
                   </a>
                 </li>
                 <li>
@@ -517,12 +513,12 @@
                 </li>
                 <li>
                   <a href="api/gameObject#removeChild">
-                    <span>GameObject&#8203;.removeChild(&#8203;child)</span>
+                    <span>GameObject&#8203;.removeChild(&#8203;...objects)</span>
                   </a>
                 </li>
                 <li>
                   <a href="api/gameObject#render">
-                    <span>GameObject&#8203;.render(&#8203;[filterObjects])</span>
+                    <span>GameObject&#8203;.render(&#8203;)</span>
                   </a>
                 </li>
                 <li>
@@ -549,7 +545,7 @@
           </h2>
 
           <p>A GameObject is just a base class and typically isn&#39;t used directly. Instead, it&#39;s main purpose is to be extended by other classes, such as <a href="/api/sprite">Sprite</a>.</p>
-<p>To extend the GameObject class, use the <code>.class</code> property of the constructor (since the GameObject is a factory function).</p>
+<p>To extend the GameObject class, import the underlying class as <code>import { GameObjectClass }</code>.</p>
 <p>You should also override the <code>draw()</code> function instead of the <code>render()</code> function in your class. The <code>draw()</code> function determines how to draw the GameObject. It is called by the <code>render</code> function after transforms and rotations have been applied.</p>
 <p>Do note that the canvas has been rotated and translated to the objects position (taking into account anchor), so {0,0} will be the top-left corner of the game object when drawing.</p>
 <canvas id="game-canvas-2"></canvas>
@@ -568,9 +564,9 @@
     <li role="presentation"></li>
   </ul>
   <section role="tabpanel" aria-labelledby=game-canvas-2-global-tab data-tabpanel="global">
-    <pre><code class="lang-js">let { GameObject } &#x3D; kontra
+    <pre><code class="lang-js">let { GameObjectClass } &#x3D; kontra
 
-class Triangle extends GameObject.class {
+class Triangle extends GameObjectClass {
   constructor(properties) {
     super(properties);
   }
@@ -596,9 +592,9 @@ let triangle &#x3D; new Triangle({
 triangle.render();</code></pre>
   </section>
   <section role="tabpanel" aria-labelledby=game-canvas-2-es-tab data-tabpanel="es">
-    <pre><code class="lang-js">import { GameObject } from &#x27;path/to/kontra.mjs&#x27;
+    <pre><code class="lang-js">import { GameObjectClass } from &#x27;path/to/kontra.mjs&#x27;
 
-class Triangle extends GameObject.class {
+class Triangle extends GameObjectClass {
   constructor(properties) {
     super(properties);
   }
@@ -624,9 +620,9 @@ let triangle &#x3D; new Triangle({
 triangle.render();</code></pre>
   </section>
   <section role="tabpanel" aria-labelledby=game-canvas-2-bundle-tab data-tabpanel="bundle">
-    <pre><code class="lang-js">import { GameObject } from &#x27;kontra&#x27;;
+    <pre><code class="lang-js">import { GameObjectClass } from &#x27;kontra&#x27;;
 
-class Triangle extends GameObject.class {
+class Triangle extends GameObjectClass {
   constructor(properties) {
     super(properties);
   }
@@ -660,9 +656,9 @@ triangle.render();</code></pre>
   canvas.height = 200;
   var context = canvas.getContext("2d");
   // exclude-code:start
-let { GameObject } = kontra;
+let { GameObjectClass } = kontra;
 // exclude-code:end
-class Triangle extends GameObject.class {
+class Triangle extends GameObjectClass {
   constructor(properties) {
     super(properties);
   }
@@ -705,12 +701,12 @@ triangle.render();
         <section>
           <h2 id="addChild">
             <a href="api/gameObject#addChild" class="section-link">
-              <span>GameObject&#8203;.addChild(&#8203;child)</span>
+              <span>GameObject&#8203;.addChild(&#8203;...objects)</span>
               <span aria-hidden="true">#</span>
             </a>
           </h2>
 
-          <p>Add an object as a child to this object. The childs <a href="api/gameObject#world">world</a> property will be updated to take into account this object and all of its parents.</p>
+          <p>Add an object as a child to this object. The objects position, size, and rotation will be relative to the parents position, size, and rotation. The childs <a href="api/gameObject#world">world</a> property will be updated to take into account this object and all of its parents.</p>
 <canvas id="game-canvas-4"></canvas>
 
 <div class="tablist">
@@ -745,6 +741,9 @@ function createObject(x, y, color, size &#x3D; 1) {
 }
 
 let parent &#x3D; createObject(300, 100, &#x27;red&#x27;);
+
+// create a child that is 25px to the right and
+// down from the parents position
 let child &#x3D; createObject(25, 25, &#x27;yellow&#x27;, 2);
 
 parent.addChild(child);
@@ -770,6 +769,9 @@ function createObject(x, y, color, size &#x3D; 1) {
 }
 
 let parent &#x3D; createObject(300, 100, &#x27;red&#x27;);
+
+// create a child that is 25px to the right and
+// down from the parents position
 let child &#x3D; createObject(25, 25, &#x27;yellow&#x27;, 2);
 
 parent.addChild(child);
@@ -795,6 +797,9 @@ function createObject(x, y, color, size &#x3D; 1) {
 }
 
 let parent &#x3D; createObject(300, 100, &#x27;red&#x27;);
+
+// create a child that is 25px to the right and
+// down from the parents position
 let child &#x3D; createObject(25, 25, &#x27;yellow&#x27;, 2);
 
 parent.addChild(child);
@@ -831,6 +836,9 @@ function createObject(x, y, color, size = 1) {
 }
 
 let parent = createObject(300, 100, 'red');
+
+// create a child that is 25px to the right and
+// down from the parents position
 let child = createObject(25, 25, 'yellow', 2);
 
 parent.addChild(child);
@@ -839,10 +847,10 @@ parent.render();
 })();</script>          <h3 id="title-addChild"><span class="visually-hidden">addChild</span> Parameters</span></h3>
           <dl aria-labelledby="title-addChild">
             <dt>
-              <code>child</code>
+              <code>...objects</code>
               
             </dt>
-            <dd><p><em><a href="api/gameObject">GameObject</a></em>. Object to add as a child.</p>
+            <dd><p><em>A list of (<a href="api/gameObject">GameObject</a> or Array of <a href="api/gameObject">GameObject</a>s)</em>. Object to add as a child. Can be a single object, an array of objects, or a comma-separated list of objects.</p>
           </dd>
           </dl>
           
@@ -855,7 +863,7 @@ parent.render();
             </a>
           </h2>
 
-          <p>Move the game object by its acceleration and velocity. If you pass <code>dt</code> it will multiply the vector and acceleration by that number. This means the <code>dx</code>, <code>dy</code>, <code>ddx</code> and <code>ddy</code> should be the how far you want the object to move in 1 second rather than in 1 frame.</p>
+          <p>Move the game object by its acceleration and velocity. If you pass <code>dt</code> it will multiply the vector and acceleration by that number. This means the <code>dx</code>, <code>dy</code>, <code>ddx</code> and <code>ddy</code> should be how far you want the object to move in 1 second rather than in 1 frame.</p>
 <p>If you override the game objects <a href="api/gameObject#update">update()</a> function with your own update function, you can call this function to move the game object normally.</p>
 <div class="tablist">
   <ul role="tablist">
@@ -1364,7 +1372,7 @@ gameObject.render();</code></pre></section>
         <section>
           <h2 id="removeChild">
             <a href="api/gameObject#removeChild" class="section-link">
-              <span>GameObject&#8203;.removeChild(&#8203;child)</span>
+              <span>GameObject&#8203;.removeChild(&#8203;...objects)</span>
               <span aria-hidden="true">#</span>
             </a>
           </h2>
@@ -1373,10 +1381,10 @@ gameObject.render();</code></pre></section>
           <h3 id="title-removeChild"><span class="visually-hidden">removeChild</span> Parameters</span></h3>
           <dl aria-labelledby="title-removeChild">
             <dt>
-              <code>child</code>
+              <code>...objects</code>
               
             </dt>
-            <dd><p><em><a href="api/gameObject">GameObject</a></em>. Object to remove as a child.</p>
+            <dd><p><em>A list of (<a href="api/gameObject">GameObject</a> or Array of <a href="api/gameObject">GameObject</a>s)</em>. Object to remove as a child. Can be a single object, an array of objects, or a comma-separated list of objects.</p>
           </dd>
           </dl>
           
@@ -1384,21 +1392,12 @@ gameObject.render();</code></pre></section>
         <section>
           <h2 id="render">
             <a href="api/gameObject#render" class="section-link">
-              <span>GameObject&#8203;.render(&#8203;[filterObjects])</span>
+              <span>GameObject&#8203;.render(&#8203;)</span>
               <span aria-hidden="true">#</span>
             </a>
           </h2>
 
           <p>Render the game object and all children. Calls the game objects <a href="api/gameObject#draw">draw()</a> function.</p>
-          <h3 id="title-render"><span class="visually-hidden">render</span> Parameters</span></h3>
-          <dl aria-labelledby="title-render">
-            <dt>
-              <code>filterObjects</code>
-              <span class="optional">Optional</span>
-            </dt>
-            <dd><p><em>Function</em>. <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter">Array.prototype.filter()</a> function which is used to filter which children to render.</p>
-          </dd>
-          </dl>
           
         </section>
         <section>
@@ -1458,28 +1457,6 @@ gameObject.render();</code></pre></section>
             <dd><p><em>Number</em>. Y scale value. Defaults to <code>x</code>.</p>
           </dd>
           </dl>
-          
-        </section>
-        <section>
-          <h2 id="sx">
-            <a href="api/gameObject#sx" class="section-link">
-              <span>GameObject&#8203;.sx</span>
-              <span aria-hidden="true">#</span>
-            </a>
-          </h2>
-
-          <p><em>Number</em>. The X coordinate of the camera.</p>
-          
-        </section>
-        <section>
-          <h2 id="sy">
-            <a href="api/gameObject#sy" class="section-link">
-              <span>GameObject&#8203;.sy</span>
-              <span aria-hidden="true">#</span>
-            </a>
-          </h2>
-
-          <p><em>Number</em>. The Y coordinate of the camera.</p>
           
         </section>
         <section>

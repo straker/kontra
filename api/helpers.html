@@ -113,6 +113,18 @@
                 <a href="api/gameObject" >GameObject</a>
               </li>
               <li>
+                <div aria-hidden="true" class="cached-icon" id="link-gamepad">
+                  <span class="visually-hidden">Cached for offline viewing</span>
+                </div>
+                <a href="api/gamepad" >Gamepad</a>
+              </li>
+              <li>
+                <div aria-hidden="true" class="cached-icon" id="link-gesture">
+                  <span class="visually-hidden">Cached for offline viewing</span>
+                </div>
+                <a href="api/gesture" >Gesture</a>
+              </li>
+              <li>
                 <div aria-hidden="true" class="cached-icon" id="link-grid">
                   <span class="visually-hidden">Cached for offline viewing</span>
                 </div>
@@ -123,6 +135,12 @@
                   <span class="visually-hidden">Cached for offline viewing</span>
                 </div>
                 <a href="api/helpers" aria-current="page">Helpers</a>
+              </li>
+              <li>
+                <div aria-hidden="true" class="cached-icon" id="link-input">
+                  <span class="visually-hidden">Cached for offline viewing</span>
+                </div>
+                <a href="api/input" >Input</a>
               </li>
               <li>
                 <div aria-hidden="true" class="cached-icon" id="link-keyboard">
@@ -272,6 +290,11 @@ let radians = degToRad(180);  // =&gt; 3.14</code></pre></section>
                   </a>
                 </li>
                 <li>
+                  <a href="api/helpers#depthSort">
+                    <span>depthSort(&#8203;obj1, obj2[, prop])</span>
+                  </a>
+                </li>
+                <li>
                   <a href="api/helpers#getStoreItem">
                     <span>getStoreItem(&#8203;key)</span>
                   </a>
@@ -289,6 +312,11 @@ let radians = degToRad(180);  // =&gt; 3.14</code></pre></section>
                 <li>
                   <a href="api/helpers#lerp">
                     <span>lerp(&#8203;start, end, percent)</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="api/helpers#movePoint">
+                    <span>movePoint(&#8203;point, angle, distance)</span>
                   </a>
                 </li>
                 <li>
@@ -471,7 +499,7 @@ sprite2.rotation = angleToTarget(sprite2, sprite);</code></pre></section>
             </a>
           </h2>
 
-          <p>Check if a two objects collide. Uses a simple <a href="https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection#Axis-Aligned_Bounding_Box">Axis-Aligned Bounding Box (AABB) collision check</a>. Takes into account the sprites <a href="api/gameObject#anchor">anchor</a> and <a href="api/gameObject#scale">scale</a>.</p>
+          <p>Check if two objects collide. Uses a simple <a href="https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection#Axis-Aligned_Bounding_Box">Axis-Aligned Bounding Box (AABB) collision check</a>. Takes into account the objects <a href="api/gameObject#anchor">anchor</a> and <a href="api/gameObject#scale">scale</a>.</p>
 <p><strong>NOTE:</strong> Does not take into account object rotation. If you need collision detection between rotated objects you will need to implement your own <code>collides()</code> function. I suggest looking at the Separate Axis Theorem.</p>
 <div class="tablist">
   <ul role="tablist">
@@ -556,18 +584,18 @@ collides(sprite, sprite2);  //=&gt; true</code></pre></section>
               <code>obj1</code>
               
             </dt>
-            <dd><p><em>Object or {world: {x: number, y: number, width: number, height: number}}</em>. Object reference.</p>
+            <dd><p><em>Object</em>. Object reference.</p>
           </dd>
             <dt>
               <code>obj2</code>
               
             </dt>
-            <dd><p><em>Object or {world: {x: number, y: number, width: number, height: number}}</em>. Object to check collision against.</p>
+            <dd><p><em>Object</em>. Object to check collision against.</p>
           </dd>
           </dl>
           
           <h3><span class="visually-hidden">collides</span> Return value</h3>
-          <p><p><em>Boolean or null</em>. <code>true</code> if the objects collide, <code>false</code> otherwise. Will return <code>null</code> if the either of the two objects are rotated.</p>
+          <p><p><em>Boolean</em>. <code>true</code> if the objects collide, <code>false</code> otherwise.</p>
           </p>
         </section>
         <section>
@@ -591,6 +619,41 @@ collides(sprite, sprite2);  //=&gt; true</code></pre></section>
           
           <h3><span class="visually-hidden">degToRad</span> Return value</h3>
           <p><p><em>Number</em>. The value in radians.</p>
+          </p>
+        </section>
+        <section>
+          <h2 id="depthSort">
+            <a href="api/helpers#depthSort" class="section-link">
+              <span>depthSort(&#8203;obj1, obj2[, prop])</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
+
+          <p>Compare two objects world rects to determine how to sort them. Is used as the <code>compareFunction</code> to <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort">Array.prototype.sort</a>.</p>
+          <h3 id="title-depthSort"><span class="visually-hidden">depthSort</span> Parameters</span></h3>
+          <dl aria-labelledby="title-depthSort">
+            <dt>
+              <code>obj1</code>
+              
+            </dt>
+            <dd><p><em>Object</em>. First object to compare.</p>
+          </dd>
+            <dt>
+              <code>obj2</code>
+              
+            </dt>
+            <dd><p><em>Object</em>. Second object to compare.</p>
+          </dd>
+            <dt>
+              <code>prop</code>
+              <span class="optional">Optional</span>
+            </dt>
+            <dd><p><em>String</em>. Objects <a href="/api/helpers#getWorldRect">getWorldRect</a> property to compare. Defaults to <code>&#39;y&#39;</code>.</p>
+          </dd>
+          </dl>
+          
+          <h3><span class="visually-hidden">depthSort</span> Return value</h3>
+          <p><p><em>Number</em>. The difference between the objects compare property.</p>
           </p>
         </section>
         <section>
@@ -632,7 +695,7 @@ collides(sprite, sprite2);  //=&gt; true</code></pre></section>
               <code>obj</code>
               
             </dt>
-            <dd><p><em>Object or {world: {x: number, y: number, width: number, height: number}} or {mapwidth: number, mapheight: number}</em>. Object to get world rect of.</p>
+            <dd><p><em>Object</em>. Object to get world rect of.</p>
           </dd>
           </dl>
           
@@ -760,6 +823,41 @@ console.log( lerp(10, 20, 2) );  // =&gt; 30</code></pre></section>
           
           <h3><span class="visually-hidden">lerp</span> Return value</h3>
           <p><p><em>Number</em>. Interpolated number between the start and end values</p>
+          </p>
+        </section>
+        <section>
+          <h2 id="movePoint">
+            <a href="api/helpers#movePoint" class="section-link">
+              <span>movePoint(&#8203;point, angle, distance)</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
+
+          <p>Move a point by an angle and distance.</p>
+          <h3 id="title-movePoint"><span class="visually-hidden">movePoint</span> Parameters</span></h3>
+          <dl aria-labelledby="title-movePoint">
+            <dt>
+              <code>point</code>
+              
+            </dt>
+            <dd><p><em>Object</em>. The {x,y} point to move.</p>
+          </dd>
+            <dt>
+              <code>angle</code>
+              
+            </dt>
+            <dd><p><em>Number</em>. Angle (in radians) to move.</p>
+          </dd>
+            <dt>
+              <code>distance</code>
+              
+            </dt>
+            <dd><p><em>Number</em>. Distance to move.</p>
+          </dd>
+          </dl>
+          
+          <h3><span class="visually-hidden">movePoint</span> Return value</h3>
+          <p><p><em>Object</em>. The new x and y coordinates after moving.</p>
           </p>
         </section>
         <section>

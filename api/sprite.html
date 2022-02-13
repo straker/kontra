@@ -113,6 +113,18 @@
                 <a href="api/gameObject" >GameObject</a>
               </li>
               <li>
+                <div aria-hidden="true" class="cached-icon" id="link-gamepad">
+                  <span class="visually-hidden">Cached for offline viewing</span>
+                </div>
+                <a href="api/gamepad" >Gamepad</a>
+              </li>
+              <li>
+                <div aria-hidden="true" class="cached-icon" id="link-gesture">
+                  <span class="visually-hidden">Cached for offline viewing</span>
+                </div>
+                <a href="api/gesture" >Gesture</a>
+              </li>
+              <li>
                 <div aria-hidden="true" class="cached-icon" id="link-grid">
                   <span class="visually-hidden">Cached for offline viewing</span>
                 </div>
@@ -123,6 +135,12 @@
                   <span class="visually-hidden">Cached for offline viewing</span>
                 </div>
                 <a href="api/helpers" >Helpers</a>
+              </li>
+              <li>
+                <div aria-hidden="true" class="cached-icon" id="link-input">
+                  <span class="visually-hidden">Cached for offline viewing</span>
+                </div>
+                <a href="api/input" >Input</a>
               </li>
               <li>
                 <div aria-hidden="true" class="cached-icon" id="link-keyboard">
@@ -867,7 +885,7 @@ sprite.render();
             </a>
           </h2>
 
-          <p>If you want to extend a Sprite, you can do so by extending the Sprite class. The one caveat is that <code>Sprite</code> is not the Sprite class, but actually is a factory function. To extend the Sprite class, use the <code>.class</code> property of the constructor.</p>
+          <p>If you want to extend a Sprite, you can do so by extending the Sprite class. The one caveat is that <code>Sprite</code> is not the Sprite class, but actually is a factory function. To extend the Sprite class, import <code>SpriteClass</code> from kontra.</p>
 <p>You should also override the <code>draw()</code> function instead of the <code>render()</code> function in your class. The <code>draw()</code> function determines how to draw the Sprite. It is called by the <code>render</code> function after transforms and rotations have been applied.</p>
 <p>Do note that the canvas has been rotated and translated to the objects position (taking into account anchor), so {0,0} will be the top-left corner of the game object when drawing.</p>
 <div class="tablist">
@@ -883,9 +901,9 @@ sprite.render();
     </li>
     <li role="presentation"></li>
   </ul>
-  <section role="tabpanel" aria-labelledby=extending-a-sprite-global-tab data-tabpanel="global"><pre><code class="language-js">let { Sprite } = kontra;
+  <section role="tabpanel" aria-labelledby=extending-a-sprite-global-tab data-tabpanel="global"><pre><code class="language-js">let { Sprite, SpriteClass } = kontra;
 
-class CustomSprite extends Sprite.class {
+class CustomSprite extends SpriteClass {
   constructor(properties) {
     super(properties);
     this.myProp = properties.myProp;
@@ -897,9 +915,9 @@ class CustomSprite extends Sprite.class {
     }
   }
 }</code></pre></section>
-  <section role="tabpanel" aria-labelledby=extending-a-sprite-es-tab data-tabpanel="es"><pre><code class="language-js">import { Sprite } from 'path/to/kontra.mjs';
+  <section role="tabpanel" aria-labelledby=extending-a-sprite-es-tab data-tabpanel="es"><pre><code class="language-js">import { Sprite, SpriteClass } from 'path/to/kontra.mjs';
 
-class CustomSprite extends Sprite.class {
+class CustomSprite extends SpriteClass {
   constructor(properties) {
     super(properties);
     this.myProp = properties.myProp;
@@ -911,9 +929,9 @@ class CustomSprite extends Sprite.class {
     }
   }
 }</code></pre></section>
-  <section role="tabpanel" aria-labelledby=extending-a-sprite-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { Sprite } from &#39;kontra&#39;;
+  <section role="tabpanel" aria-labelledby=extending-a-sprite-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { Sprite, SpriteClass } from &#39;kontra&#39;;
 
-class CustomSprite extends Sprite.class {
+class CustomSprite extends SpriteClass {
   constructor(properties) {
     super(properties);
     this.myProp = properties.myProp;

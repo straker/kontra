@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Kontra.js – Gamepad</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <base href="https://straker.github.io/kontra/">
+
+  <script>
+  // adjust path based on location (github pages required kontra url)
+  if (['localhost', '127.0.0.1'].includes(window.location.hostname)) {
+    let base = document.querySelector('base');
+    base.setAttribute('href', '/');
+  }
+  </script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/themes/prism.min.css">
+  <link rel="stylesheet" href="assets/styles.css">
+  <script src="assets/js/kontra.js"></script>
+</head>
+<body>
+  <div class="content">
+    <header class="main-nav">
+      <div id="kontra-heading" class="nav-heading">Kontra</div>
+      <a href="#main">Skip navigation</a>
+
+      <nav>
+        <button class="menu-button" aria-expanded="false" aria-controls="menu"><span aria-hidden="true">☰</span> Menu</button>
+
+        <!-- add role=list back to list so screen readers still read it as list when
+             css list-style: none is set
+             @see https://web-a11y.slack.com/archives/C042TSFGN/p1501699529181172 -->
+        <ul id="menu" role="list">
+          <li>
+            <div aria-hidden="true" class="cached-icon" id="link-intro">
+              <span class="visually-hidden">Cached for offline viewing</span>
+            </div>
+            <a href="." id="root-link" >Introduction</a>
+          </li>
+          <li>
+             <div aria-hidden="true" class="cached-icon" id="link-getting-started">
+              <span class="visually-hidden">Cached for offline viewing</span>
+            </div>
+            <a href="getting-started" >Getting Started</a>
+          </li>
+          <li>
+             <div aria-hidden="true" class="cached-icon" id="link-download">
+              <span class="visually-hidden">Cached for offline viewing</span>
+            </div>
+            <a href="download" >Download</a>
+          </li>
+          <li>
+             <div aria-hidden="true" class="cached-icon" id="link-file-size">
+              <span class="visually-hidden">Cached for offline viewing</span>
+            </div>
+            <a href="reducing-file-size" >Reducing File Size</a>
+          </li>
+          <li>
+             <div aria-hidden="true" class="cached-icon" id="link-tutorials">
+              <span class="visually-hidden">Cached for offline viewing</span>
+            </div>
+            <a href="tutorials" >Tutorials</a>
+          </li>
+          <li>
+             <div aria-hidden="true" class="cached-icon" id="link-made-with">
+              <span class="visually-hidden">Cached for offline viewing</span>
+            </div>
+            <a href="made-with-kontra" >Made With Kontra</a>
+          </li>
+
+          <li>
+            <span id="api" class="nav-api-heading">API</span>
+            <ul aria-labelledby="api">
+              <li>
+                <div aria-hidden="true" class="cached-icon" id="link-animation">
+                  <span class="visually-hidden">Cached for offline viewing</span>
+                </div>
+                <a href="api/animation" >Animation</a>
+              </li>
+              <li>
+                <div aria-hidden="true" class="cached-icon" id="link-assets">
+                  <span class="visually-hidden">Cached for offline viewing</span>
+                </div>
+                <a href="api/assets" >Assets</a>
+              </li>
+              <li>
+                <div aria-hidden="true" class="cached-icon" id="link-button">
+                  <span class="visually-hidden">Cached for offline viewing</span>
+                </div>
+                <a href="api/button" >Button</a>
+              </li>
+              <li>
+                <div aria-hidden="true" class="cached-icon" id="link-core">
+                  <span class="visually-hidden">Cached for offline viewing</span>
+                </div>
+                <a href="api/core" >Core</a>
+              </li>
+              <li>
+                <div aria-hidden="true" class="cached-icon" id="link-events">
+                  <span class="visually-hidden">Cached for offline viewing</span>
+                </div>
+                <a href="api/events" >Events</a>
+              </li>
+              <li>
+                <div aria-hidden="true" class="cached-icon" id="link-gameLoop">
+                  <span class="visually-hidden">Cached for offline viewing</span>
+                </div>
+                <a href="api/gameLoop" >GameLoop</a>
+              </li>
+              <li>
+                <div aria-hidden="true" class="cached-icon" id="link-gameObject">
+                  <span class="visually-hidden">Cached for offline viewing</span>
+                </div>
+                <a href="api/gameObject" >GameObject</a>
+              </li>
+              <li>
+                <div aria-hidden="true" class="cached-icon" id="link-gamepad">
+                  <span class="visually-hidden">Cached for offline viewing</span>
+                </div>
+                <a href="api/gamepad" aria-current="page">Gamepad</a>
+              </li>
+              <li>
+                <div aria-hidden="true" class="cached-icon" id="link-gesture">
+                  <span class="visually-hidden">Cached for offline viewing</span>
+                </div>
+                <a href="api/gesture" >Gesture</a>
+              </li>
+              <li>
+                <div aria-hidden="true" class="cached-icon" id="link-grid">
+                  <span class="visually-hidden">Cached for offline viewing</span>
+                </div>
+                <a href="api/grid" >Grid</a>
+              </li>
+              <li>
+                <div aria-hidden="true" class="cached-icon" id="link-helpers">
+                  <span class="visually-hidden">Cached for offline viewing</span>
+                </div>
+                <a href="api/helpers" >Helpers</a>
+              </li>
+              <li>
+                <div aria-hidden="true" class="cached-icon" id="link-input">
+                  <span class="visually-hidden">Cached for offline viewing</span>
+                </div>
+                <a href="api/input" >Input</a>
+              </li>
+              <li>
+                <div aria-hidden="true" class="cached-icon" id="link-keyboard">
+                  <span class="visually-hidden">Cached for offline viewing</span>
+                </div>
+                <a href="api/keyboard" >Keyboard</a>
+              </li>
+              <li>
+                <div aria-hidden="true" class="cached-icon" id="link-plugin">
+                  <span class="visually-hidden">Cached for offline viewing</span>
+                </div>
+                <a href="api/plugin" >Plugin</a>
+              </li>
+              <li>
+                <div aria-hidden="true" class="cached-icon" id="link-pointer">
+                  <span class="visually-hidden">Cached for offline viewing</span>
+                </div>
+                <a href="api/pointer" >Pointer</a>
+              </li>
+              <li>
+                <div aria-hidden="true" class="cached-icon" id="link-pool">
+                  <span class="visually-hidden">Cached for offline viewing</span>
+                </div>
+                <a href="api/pool" >Pool</a>
+              </li>
+              <li>
+                <div aria-hidden="true" class="cached-icon" id="link-quadtree">
+                  <span class="visually-hidden">Cached for offline viewing</span>
+                </div>
+                <a href="api/quadtree" >Quadtree</a>
+              </li>
+              <li>
+                <div aria-hidden="true" class="cached-icon" id="link-scene">
+                  <span class="visually-hidden">Cached for offline viewing</span>
+                </div>
+                <a href="api/scene" >Scene</a>
+              </li>
+              <li>
+                <div aria-hidden="true" class="cached-icon" id="link-sprite">
+                  <span class="visually-hidden">Cached for offline viewing</span>
+                </div>
+                <a href="api/sprite" >Sprite</a>
+              </li>
+              <li>
+                <div aria-hidden="true" class="cached-icon" id="link-spriteSheet">
+                  <span class="visually-hidden">Cached for offline viewing</span>
+                </div>
+                <a href="api/spriteSheet" >SpriteSheet</a>
+              </li>
+              <li>
+                <div aria-hidden="true" class="cached-icon" id="link-text">
+                  <span class="visually-hidden">Cached for offline viewing</span>
+                </div>
+                <a href="api/text" >Text</a>
+              </li>
+              <li>
+                <div aria-hidden="true" class="cached-icon" id="link-tileEngine">
+                  <span class="visually-hidden">Cached for offline viewing</span>
+                </div>
+                <a href="api/tileEngine" >TileEngine</a>
+              </li>
+              <li>
+                <div aria-hidden="true" class="cached-icon" id="link-vector">
+                  <span class="visually-hidden">Cached for offline viewing</span>
+                </div>
+                <a href="api/vector" >Vector</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <div class="scroll-indicator" aria-hidden="true"><span>^</span></div>
+    </header>
+
+    <script>
+      // restore scroll position on page load (do it here so there is no flash
+      // of unscrolled content)
+      let nav = document.querySelector('.main-nav');
+      if (sessionStorage.getItem('kontra-nav-scroll')) {
+        nav.scrollTop = parseInt(sessionStorage.getItem('kontra-nav-scroll'));
+
+        if (nav.offsetHeight + nav.scrollTop < nav.scrollHeight) {
+          nav.classList.add('showScroll');
+        }
+      }
+    </script>
+
+    <main id="main">
+      <div>
+        <a href="https://github.com/straker/kontra" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+        <h1>Gamepad        </h1>
+
+        <p>A simple gamepad API. You can use it move the main sprite or respond to gamepad events.</p>
+<p><strong>NOTE:</strong> Gamepad support requires using a secure context (HTTPS) and the <a href="/api/gameLoop">GameLoop</a> (since the gamepad state must be checked every frame as there are no global event listeners for gamepad button / axes events).</p>
+<div class="tablist">
+  <ul role="tablist">
+    <li role="presentation" data-tab="global">
+      <button role="tab" id="gamepad-global-tab">Global Object</button>
+    </li>
+    <li role="presentation" data-tab="es">
+      <button role="tab" id="gamepad-es-tab">ES Module Import</button>
+    </li>
+    <li role="presentation" data-tab="bundle">
+      <button role="tab" id="gamepad-bundle-tab">Module Bundler</button>
+    </li>
+    <li role="presentation"></li>
+  </ul>
+  <section role="tabpanel" aria-labelledby=gamepad-global-tab data-tabpanel="global"><pre><code class="language-js">let { initGamepad, GameLoop, gamepadPressed } = kontra;
+
+// this function must be called first before gamepad
+// functions will work
+initGamepad();
+
+function update() {
+  if (gamepadPressed(&#39;dpadleft&#39;)) {
+    // move left
+  }
+}
+
+// using the GameLoop is required
+let loop = kontra.GameLoop({
+  // ...
+})
+loop.start();</code></pre></section>
+  <section role="tabpanel" aria-labelledby=gamepad-es-tab data-tabpanel="es"><pre><code class="language-js">import { initGamepad, GameLoop, gamepadPressed } from 'path/to/kontra.mjs';
+
+// this function must be called first before gamepad
+// functions will work
+initGamepad();
+
+function update() {
+  if (gamepadPressed(&#39;dpadleft&#39;)) {
+    // move left
+  }
+}
+
+// using the GameLoop is required
+let loop = kontra.GameLoop({
+  // ...
+})
+loop.start();</code></pre></section>
+  <section role="tabpanel" aria-labelledby=gamepad-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { initGamepad, GameLoop, gamepadPressed } from &#39;kontra&#39;;
+
+// this function must be called first before gamepad
+// functions will work
+initGamepad();
+
+function update() {
+  if (gamepadPressed(&#39;dpadleft&#39;)) {
+    // move left
+  }
+}
+
+// using the GameLoop is required
+let loop = kontra.GameLoop({
+  // ...
+})
+loop.start();</code></pre></section>
+</div>
+        
+
+        <section class="toc">
+          <h2 id="toc"><a href="#toc" class="section-link">Table of Contents<span aria-hidden="true">#</span></a></h2>
+
+          <ul aria-labelledby="toc">
+            <li>
+              <ul>
+                <li><a href="api/gamepad#available-buttons">Available Buttons</a></li>
+              </ul>
+            </li>
+
+            <li>
+              <h3 id="properties">Properties</h3>
+              <ul aria-labelledby="properties">
+                <li>
+                  <a href="api/gamepad#gamepadMap">
+                    <span>gamepadMap</span>
+                  </a>
+                </li>
+              </ul>
+            </li>
+
+            <li>
+              <h3 id="methods">Methods</h3>
+              <ul aria-labelledby="methods">
+                <li>
+                  <a href="api/gamepad#gamepadAxis">
+                    <span>gamepadAxis(&#8203;name, gamepad)</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="api/gamepad#gamepadPressed">
+                    <span>gamepadPressed(&#8203;button[, options])</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="api/gamepad#initGamepad">
+                    <span>initGamepad(&#8203;)</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="api/gamepad#offGamepad">
+                    <span>offGamepad(&#8203;buttons[, options])</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="api/gamepad#onGamepad">
+                    <span>onGamepad(&#8203;buttons, callback[, options])</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="api/gamepad#updateGamepad">
+                    <span>updateGamepad(&#8203;)</span>
+                  </a>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </section>
+
+        <section>
+          <h2 id="available-buttons">
+            <a href="api/gamepad#available-buttons" class="section-link">
+              <span>Available Buttons</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
+
+          <p>Below is a list of button names that are provided by default. If you need to extend or modify this list, you can use the <a href="api/gamepad#gamepadMap">gamepadMap</a> property.</p>
+<ul>
+<li>south <em>(Xbox controller: A; PS4 controller: cross)</em></li>
+<li>east <em>(Xbox controller: B; PS4 controller: circle)</em></li>
+<li>west <em>(Xbox controller: X; PS4 controller: square)</em></li>
+<li>north <em>(Xbox controller: Y; PS4 controller: triangle)</em></li>
+<li>leftshoulder <em>(Xbox controller: LB; PS4 controller: L1)</em></li>
+<li>rightshoulder <em>(Xbox controller: RB; PS4 controller: R1)</em></li>
+<li>lefttrigger <em>(Xbox controller: LT; PS4 controller: L2)</em></li>
+<li>righttrigger <em>(Xbox controller: RT; PS4 controller: R2)</em></li>
+<li>select <em>(Xbox controller: back/view; PS4 controller: share)</em></li>
+<li>start <em>(Xbox controller: start/menu; PS4 controller: options)</em></li>
+<li>leftstick</li>
+<li>rightstick</li>
+<li>dpadup</li>
+<li>dpaddown</li>
+<li>dpadleft</li>
+<li>dpadright</li>
+</ul>
+        </section>
+
+        <section>
+          <h2 id="gamepadAxis">
+            <a href="api/gamepad#gamepadAxis" class="section-link">
+              <span>gamepadAxis(&#8203;name, gamepad)</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
+
+          <p>Get the value of a specific gamepad axis.</p>
+<p>Available axes are:</p>
+<ul>
+<li>leftstickx</li>
+<li>leftsticky</li>
+<li>rightstickx</li>
+<li>rightsticky</li>
+</ul>
+<div class="tablist">
+  <ul role="tablist">
+    <li role="presentation" data-tab="global">
+      <button role="tab" id="gamepadaxis-global-tab">Global Object</button>
+    </li>
+    <li role="presentation" data-tab="es">
+      <button role="tab" id="gamepadaxis-es-tab">ES Module Import</button>
+    </li>
+    <li role="presentation" data-tab="bundle">
+      <button role="tab" id="gamepadaxis-bundle-tab">Module Bundler</button>
+    </li>
+    <li role="presentation"></li>
+  </ul>
+  <section role="tabpanel" aria-labelledby=gamepadaxis-global-tab data-tabpanel="global"><pre><code class="language-js">let { Sprite, initGamepad, gamepadAxis } = kontra;
+
+initGamepad();
+
+let sprite = Sprite({
+  update: function() {
+    // check the axis of the gamepad connected to index 0
+    let axisX = gamepadAxis(&#39;leftstickx&#39;, 0);
+    let axisY = gamepadAxis(&#39;leftsticky&#39;, 0);
+
+    if (axisX &lt; -0.4) {
+      // move left
+    }
+    else if (axisX &gt; 0.4) {
+      // move right
+    }
+
+    if (axisY &lt; -0.4) {
+      // move up
+    }
+    else if (axisY &gt; 0.4) {
+      // move down
+    }
+  }
+});</code></pre></section>
+  <section role="tabpanel" aria-labelledby=gamepadaxis-es-tab data-tabpanel="es"><pre><code class="language-js">import { Sprite, initGamepad, gamepadAxis } from 'path/to/kontra.mjs';
+
+initGamepad();
+
+let sprite = Sprite({
+  update: function() {
+    // check the axis of the gamepad connected to index 0
+    let axisX = gamepadAxis(&#39;leftstickx&#39;, 0);
+    let axisY = gamepadAxis(&#39;leftsticky&#39;, 0);
+
+    if (axisX &lt; -0.4) {
+      // move left
+    }
+    else if (axisX &gt; 0.4) {
+      // move right
+    }
+
+    if (axisY &lt; -0.4) {
+      // move up
+    }
+    else if (axisY &gt; 0.4) {
+      // move down
+    }
+  }
+});</code></pre></section>
+  <section role="tabpanel" aria-labelledby=gamepadaxis-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { Sprite, initGamepad, gamepadAxis } from &#39;kontra&#39;;
+
+initGamepad();
+
+let sprite = Sprite({
+  update: function() {
+    // check the axis of the gamepad connected to index 0
+    let axisX = gamepadAxis(&#39;leftstickx&#39;, 0);
+    let axisY = gamepadAxis(&#39;leftsticky&#39;, 0);
+
+    if (axisX &lt; -0.4) {
+      // move left
+    }
+    else if (axisX &gt; 0.4) {
+      // move right
+    }
+
+    if (axisY &lt; -0.4) {
+      // move up
+    }
+    else if (axisY &gt; 0.4) {
+      // move down
+    }
+  }
+});</code></pre></section>
+</div>
+          <h3 id="title-gamepadAxis"><span class="visually-hidden">gamepadAxis</span> Parameters</span></h3>
+          <dl aria-labelledby="title-gamepadAxis">
+            <dt>
+              <code>name</code>
+              
+            </dt>
+            <dd><p><em>String</em>. Name of the axis.</p>
+          </dd>
+            <dt>
+              <code>gamepad</code>
+              
+            </dt>
+            <dd><p><em>Number</em>. Index of the gamepad to check.</p>
+          </dd>
+          </dl>
+          
+          <h3><span class="visually-hidden">gamepadAxis</span> Return value</h3>
+          <p><p><em>Number</em>. The value of the axis between -1.0 and 1.0.</p>
+          </p>
+        </section>
+        <section>
+          <h2 id="gamepadMap">
+            <a href="api/gamepad#gamepadMap" class="section-link">
+              <span>gamepadMap</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
+
+          <p><em>Object</em>. A map of Gamepad button indices to button names. Modify this object to expand the list of <a href="api/gamepad#available-buttons">available buttons</a>. By default, the map uses the Xbox and PS4 controller button indicies.</p>
+<div class="tablist">
+  <ul role="tablist">
+    <li role="presentation" data-tab="global">
+      <button role="tab" id="gamepadmap-global-tab">Global Object</button>
+    </li>
+    <li role="presentation" data-tab="es">
+      <button role="tab" id="gamepadmap-es-tab">ES Module Import</button>
+    </li>
+    <li role="presentation" data-tab="bundle">
+      <button role="tab" id="gamepadmap-bundle-tab">Module Bundler</button>
+    </li>
+    <li role="presentation"></li>
+  </ul>
+  <section role="tabpanel" aria-labelledby=gamepadmap-global-tab data-tabpanel="global"><pre><code class="language-js">let { gamepadMap, gamepadPressed } = kontra;
+
+gamepadMap[2] = &#39;buttonWest&#39;;
+
+if (gamepadPressed(&#39;buttonWest&#39;)) {
+  // handle west face button
+}</code></pre></section>
+  <section role="tabpanel" aria-labelledby=gamepadmap-es-tab data-tabpanel="es"><pre><code class="language-js">import { gamepadMap, gamepadPressed } from 'path/to/kontra.mjs';
+
+gamepadMap[2] = &#39;buttonWest&#39;;
+
+if (gamepadPressed(&#39;buttonWest&#39;)) {
+  // handle west face button
+}</code></pre></section>
+  <section role="tabpanel" aria-labelledby=gamepadmap-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { gamepadMap, gamepadPressed } from &#39;kontra&#39;;
+
+gamepadMap[2] = &#39;buttonWest&#39;;
+
+if (gamepadPressed(&#39;buttonWest&#39;)) {
+  // handle west face button
+}</code></pre></section>
+</div>
+          
+        </section>
+        <section>
+          <h2 id="gamepadPressed">
+            <a href="api/gamepad#gamepadPressed" class="section-link">
+              <span>gamepadPressed(&#8203;button[, options])</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
+
+          <p>Check if a button is currently pressed. Use during an <code>update()</code> function to perform actions each frame.</p>
+<p>You can check if the button is pressed on all gamepads or just a specific gamepad. To check a specific gamepad, pass the desired gamepad index as the <code>gamepad</code> option. If the <code>gamepad</code> option is ommited all gamepads will be checked and if at least one is pressing the button the function will return <code>true</code>.</p>
+<div class="tablist">
+  <ul role="tablist">
+    <li role="presentation" data-tab="global">
+      <button role="tab" id="gamepadpressed-global-tab">Global Object</button>
+    </li>
+    <li role="presentation" data-tab="es">
+      <button role="tab" id="gamepadpressed-es-tab">ES Module Import</button>
+    </li>
+    <li role="presentation" data-tab="bundle">
+      <button role="tab" id="gamepadpressed-bundle-tab">Module Bundler</button>
+    </li>
+    <li role="presentation"></li>
+  </ul>
+  <section role="tabpanel" aria-labelledby=gamepadpressed-global-tab data-tabpanel="global"><pre><code class="language-js">let { Sprite, initGamepad, gamepadPressed } = kontra;
+
+initGamepad();
+
+let sprite = Sprite({
+  update: function() {
+    if (gamepadPressed(&#39;dpadleft&#39;)){
+      // left dpad pressed
+    }
+    else if (gamepadPressed(&#39;dpadright&#39;)) {
+      // right dpad pressed
+    }
+
+    if (gamepadPressed(&#39;dpadup&#39;)) {
+      // up dpad pressed
+    }
+    else if (gamepadPressed(&#39;dpaddown&#39;)) {
+      // down dpad pressed
+    }
+  }
+});</code></pre></section>
+  <section role="tabpanel" aria-labelledby=gamepadpressed-es-tab data-tabpanel="es"><pre><code class="language-js">import { Sprite, initGamepad, gamepadPressed } from 'path/to/kontra.mjs';
+
+initGamepad();
+
+let sprite = Sprite({
+  update: function() {
+    if (gamepadPressed(&#39;dpadleft&#39;)){
+      // left dpad pressed
+    }
+    else if (gamepadPressed(&#39;dpadright&#39;)) {
+      // right dpad pressed
+    }
+
+    if (gamepadPressed(&#39;dpadup&#39;)) {
+      // up dpad pressed
+    }
+    else if (gamepadPressed(&#39;dpaddown&#39;)) {
+      // down dpad pressed
+    }
+  }
+});</code></pre></section>
+  <section role="tabpanel" aria-labelledby=gamepadpressed-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { Sprite, initGamepad, gamepadPressed } from &#39;kontra&#39;;
+
+initGamepad();
+
+let sprite = Sprite({
+  update: function() {
+    if (gamepadPressed(&#39;dpadleft&#39;)){
+      // left dpad pressed
+    }
+    else if (gamepadPressed(&#39;dpadright&#39;)) {
+      // right dpad pressed
+    }
+
+    if (gamepadPressed(&#39;dpadup&#39;)) {
+      // up dpad pressed
+    }
+    else if (gamepadPressed(&#39;dpaddown&#39;)) {
+      // down dpad pressed
+    }
+  }
+});</code></pre></section>
+</div>
+          <h3 id="title-gamepadPressed"><span class="visually-hidden">gamepadPressed</span> Parameters</span></h3>
+          <dl aria-labelledby="title-gamepadPressed">
+            <dt>
+              <code>button</code>
+              
+            </dt>
+            <dd><p><em>String</em>. Button name to check for pressed state.</p>
+          </dd>
+            <dt>
+              <code>options</code>
+              <span class="optional">Optional</span>
+            </dt>
+            <dd><p><em>Object</em>. Pressed options.</p>
+          </dd>
+            <dt>
+              <code>options.gamepad</code>
+              <span class="optional">Optional</span>
+            </dt>
+            <dd><p><em>Number</em>. Index of the gamepad to check for pressed state.</p>
+          </dd>
+          </dl>
+          
+          <h3><span class="visually-hidden">gamepadPressed</span> Return value</h3>
+          <p><p><em>Boolean</em>. <code>true</code> if the button is pressed, <code>false</code> otherwise.</p>
+          </p>
+        </section>
+        <section>
+          <h2 id="initGamepad">
+            <a href="api/gamepad#initGamepad" class="section-link">
+              <span>initGamepad(&#8203;)</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
+
+          <p>Initialize gamepad event listeners. This function must be called before using other gamepad functions.</p>
+          
+        </section>
+        <section>
+          <h2 id="offGamepad">
+            <a href="api/gamepad#offGamepad" class="section-link">
+              <span>offGamepad(&#8203;buttons[, options])</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
+
+          <p>Unregister the callback function for a button. Takes a single button or an array of buttons.</p>
+<p>When unregistering a button, you have the choice to unregister from a specific gamepad or from all gamepads. To unregister from a specific gamepad, pass the desired gamepad index as the <code>gamepad</code> option. If the <code>gamepad</code> option is ommited the callback is unregistered from all gamepads instead of a specific one.</p>
+<div class="tablist">
+  <ul role="tablist">
+    <li role="presentation" data-tab="global">
+      <button role="tab" id="offgamepad-global-tab">Global Object</button>
+    </li>
+    <li role="presentation" data-tab="es">
+      <button role="tab" id="offgamepad-es-tab">ES Module Import</button>
+    </li>
+    <li role="presentation" data-tab="bundle">
+      <button role="tab" id="offgamepad-bundle-tab">Module Bundler</button>
+    </li>
+    <li role="presentation"></li>
+  </ul>
+  <section role="tabpanel" aria-labelledby=offgamepad-global-tab data-tabpanel="global"><pre><code class="language-js">let { offGamepad } = kontra;
+
+offGamepad(&#39;start&#39;);
+offGamepad([&#39;south&#39;, &#39;rightstick&#39;]);
+
+offGamepad(&#39;south&#39;, {
+  gamepad: 0  // unregister from just the gamepad at index 0
+});</code></pre></section>
+  <section role="tabpanel" aria-labelledby=offgamepad-es-tab data-tabpanel="es"><pre><code class="language-js">import { offGamepad } from 'path/to/kontra.mjs';
+
+offGamepad(&#39;start&#39;);
+offGamepad([&#39;south&#39;, &#39;rightstick&#39;]);
+
+offGamepad(&#39;south&#39;, {
+  gamepad: 0  // unregister from just the gamepad at index 0
+});</code></pre></section>
+  <section role="tabpanel" aria-labelledby=offgamepad-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { offGamepad } from &#39;kontra&#39;;
+
+offGamepad(&#39;start&#39;);
+offGamepad([&#39;south&#39;, &#39;rightstick&#39;]);
+
+offGamepad(&#39;south&#39;, {
+  gamepad: 0  // unregister from just the gamepad at index 0
+});</code></pre></section>
+</div>
+          <h3 id="title-offGamepad"><span class="visually-hidden">offGamepad</span> Parameters</span></h3>
+          <dl aria-labelledby="title-offGamepad">
+            <dt>
+              <code>buttons</code>
+              
+            </dt>
+            <dd><p><em>String or an Array of Strings</em>. Button or buttons to unregister callback for.</p>
+          </dd>
+            <dt>
+              <code>options</code>
+              <span class="optional">Optional</span>
+            </dt>
+            <dd><p><em>Object</em>. Unregister options.</p>
+          </dd>
+            <dt>
+              <code>options.gamepad</code>
+              <span class="optional">Optional</span>
+            </dt>
+            <dd><p><em>Number</em>. Gamepad index. Defaults to unregistering from all gamepads.</p>
+          </dd>
+            <dt>
+              <code>options.handler</code>
+              <span class="optional">Optional</span>
+            </dt>
+            <dd><p><em>&#39;gamepaddown&#39; or &#39;gamepadup&#39;</em>. Whether to unregister from gamepaddown or gamepadup event. Defaults to <code>&#39;gamepaddown&#39;</code>.</p>
+          </dd>
+          </dl>
+          
+        </section>
+        <section>
+          <h2 id="onGamepad">
+            <a href="api/gamepad#onGamepad" class="section-link">
+              <span>onGamepad(&#8203;buttons, callback[, options])</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
+
+          <p>Register a function to be called when a gamepad button is pressed. Takes a single button or an array of buttons. Is passed the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Gamepad">Gamepad</a> and the <a href="https://developer.mozilla.org/en-US/docs/Web/API/GamepadButton">GamepadButton</a> that was pressed as parameters.</p>
+<p>When registering the function, you have the choice of registering to a specific gamepad or to all gamepads. To register to a specific gamepad, pass the desired gamepad index as the <code>gamepad</code> option. If the <code>gamepad</code> option is ommited the callback is bound to all gamepads instead of a specific one.</p>
+<p>You can register a callback for both a specific gamepad and for all gamepads in two different calls. When this happens, the specific gamepad callback will be called first and then the global one.</p>
+<div class="tablist">
+  <ul role="tablist">
+    <li role="presentation" data-tab="global">
+      <button role="tab" id="ongamepad-global-tab">Global Object</button>
+    </li>
+    <li role="presentation" data-tab="es">
+      <button role="tab" id="ongamepad-es-tab">ES Module Import</button>
+    </li>
+    <li role="presentation" data-tab="bundle">
+      <button role="tab" id="ongamepad-bundle-tab">Module Bundler</button>
+    </li>
+    <li role="presentation"></li>
+  </ul>
+  <section role="tabpanel" aria-labelledby=ongamepad-global-tab data-tabpanel="global"><pre><code class="language-js">let { initGamepad, onGamepad } = kontra;
+
+initGamepad();
+
+onGamepad(&#39;start&#39;, function(gamepad, button) {
+  // pause the game
+});
+onGamepad([&#39;south&#39;, &#39;rightstick&#39;], function(gamepad, button) {
+  // fire gun
+});
+
+onGamepad(&#39;south&#39;, function() {
+  // handle south button
+}, {
+  gamepad: 0  // register just for the gamepad at index 0
+});</code></pre></section>
+  <section role="tabpanel" aria-labelledby=ongamepad-es-tab data-tabpanel="es"><pre><code class="language-js">import { initGamepad, onGamepad } from 'path/to/kontra.mjs';
+
+initGamepad();
+
+onGamepad(&#39;start&#39;, function(gamepad, button) {
+  // pause the game
+});
+onGamepad([&#39;south&#39;, &#39;rightstick&#39;], function(gamepad, button) {
+  // fire gun
+});
+
+onGamepad(&#39;south&#39;, function() {
+  // handle south button
+}, {
+  gamepad: 0  // register just for the gamepad at index 0
+});</code></pre></section>
+  <section role="tabpanel" aria-labelledby=ongamepad-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { initGamepad, onGamepad } from &#39;kontra&#39;;
+
+initGamepad();
+
+onGamepad(&#39;start&#39;, function(gamepad, button) {
+  // pause the game
+});
+onGamepad([&#39;south&#39;, &#39;rightstick&#39;], function(gamepad, button) {
+  // fire gun
+});
+
+onGamepad(&#39;south&#39;, function() {
+  // handle south button
+}, {
+  gamepad: 0  // register just for the gamepad at index 0
+});</code></pre></section>
+</div>
+          <h3 id="title-onGamepad"><span class="visually-hidden">onGamepad</span> Parameters</span></h3>
+          <dl aria-labelledby="title-onGamepad">
+            <dt>
+              <code>buttons</code>
+              
+            </dt>
+            <dd><p><em>String or an Array of Strings</em>. Button or buttons to register callback for.</p>
+          </dd>
+            <dt>
+              <code>callback</code>
+              
+            </dt>
+            <dd><p><em>Function</em>. The function to be called when the button is pressed.</p>
+          </dd>
+            <dt>
+              <code>options</code>
+              <span class="optional">Optional</span>
+            </dt>
+            <dd><p><em>Object</em>. Register options.</p>
+          </dd>
+            <dt>
+              <code>options.gamepad</code>
+              <span class="optional">Optional</span>
+            </dt>
+            <dd><p><em>Number</em>. Gamepad index. Defaults to registerting for all gamepads.</p>
+          </dd>
+            <dt>
+              <code>options.handler</code>
+              <span class="optional">Optional</span>
+            </dt>
+            <dd><p><em>&#39;gamepaddown&#39; or &#39;gamepadup&#39;</em>. Whether to register to the gamepaddown or gamepadup event. Defaults to <code>&#39;gamepaddown&#39;</code>.</p>
+          </dd>
+          </dl>
+          
+        </section>
+        <section>
+          <h2 id="updateGamepad">
+            <a href="api/gamepad#updateGamepad" class="section-link">
+              <span>updateGamepad(&#8203;)</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
+
+          <p>Update the gamepad state. Call this function every frame only if you are not using the <a href="/api/gameLoop">GameLoop</a>. Otherwise it is called automatically.</p>
+<div class="tablist">
+  <ul role="tablist">
+    <li role="presentation" data-tab="global">
+      <button role="tab" id="updategamepad-global-tab">Global Object</button>
+    </li>
+    <li role="presentation" data-tab="es">
+      <button role="tab" id="updategamepad-es-tab">ES Module Import</button>
+    </li>
+    <li role="presentation" data-tab="bundle">
+      <button role="tab" id="updategamepad-bundle-tab">Module Bundler</button>
+    </li>
+    <li role="presentation"></li>
+  </ul>
+  <section role="tabpanel" aria-labelledby=updategamepad-global-tab data-tabpanel="global"><pre><code class="language-js">let { initGamepad, updateGamepad, gamepadPressed } = kontra;
+
+initGamepad();
+
+function update() {
+  // not using GameLoop so need to manually call update state
+  updateGamepad();
+
+  if (gamepadPressed(&#39;dpadleft&#39;)) {
+    // move left
+  }
+}
+</code></pre></section>
+  <section role="tabpanel" aria-labelledby=updategamepad-es-tab data-tabpanel="es"><pre><code class="language-js">import { initGamepad, updateGamepad, gamepadPressed } from 'path/to/kontra.mjs';
+
+initGamepad();
+
+function update() {
+  // not using GameLoop so need to manually call update state
+  updateGamepad();
+
+  if (gamepadPressed(&#39;dpadleft&#39;)) {
+    // move left
+  }
+}
+</code></pre></section>
+  <section role="tabpanel" aria-labelledby=updategamepad-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { initGamepad, updateGamepad, gamepadPressed } from &#39;kontra&#39;;
+
+initGamepad();
+
+function update() {
+  // not using GameLoop so need to manually call update state
+  updateGamepad();
+
+  if (gamepadPressed(&#39;dpadleft&#39;)) {
+    // move left
+  }
+}
+</code></pre></section>
+</div>
+          
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/components/prism-javascript.min.js"></script>
+  <script>
+  // only service worker off localhost
+  if (
+    'serviceWorker' in navigator &&
+    !['localhost', '127.0.0.1'].includes(window.location.hostname)
+  ) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('service-worker.js')
+      .then(registration => {
+        console.log('Service Worker is registered', registration);
+
+        // cache this page
+        let cachedPages = JSON.parse(localStorage.getItem('kontra-docs-pages') || "{}");
+        cachedPages[window.location.href] = true;
+
+        // always cache the index
+        cachedPages[document.querySelector('#root-link').href] = true;
+
+        localStorage.setItem('kontra-docs-pages', JSON.stringify(cachedPages));
+
+        // show user cached pages
+        document.querySelectorAll('#menu a').forEach(anchor => {
+          if (cachedPages[anchor.href]) {
+            let id = anchor.previousElementSibling.getAttribute('id');
+
+            anchor.parentNode.classList.add('cached');
+            anchor.setAttribute('aria-describedby', id);
+          }
+        });
+      })
+      .catch(err => {
+        console.error('Registration failed:', err);
+      });
+    });
+  }
+  </script>
+  <script src="assets/js/navbar.js"></script>
+  <script src="assets/js/exampleTabList.js"></script>
+</body>
+</html>

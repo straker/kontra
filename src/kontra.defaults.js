@@ -78,7 +78,7 @@ import Scene, { SceneClass } from './scene.js';
 import Sprite, { SpriteClass } from './sprite.js';
 import SpriteSheet, { SpriteSheetClass } from './spriteSheet.js';
 import Text, { TextClass } from './text.js';
-import TileEngine from './tileEngine.js';
+import TileEngine, { TileEngineClass } from './tileEngine.js';
 import Vector, { VectorClass } from './vector.js';
 
 let kontra = {
@@ -185,6 +185,7 @@ let kontra = {
   TextClass,
 
   TileEngine,
+  TileEngineClass,
 
   Vector,
   VectorClass

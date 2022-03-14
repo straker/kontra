@@ -255,7 +255,7 @@ describe('gameLoop', () => {
         render: noop
       });
       simulateEvent('blur');
-      loop._last = performance.now() - 1e3 / 60;
+      loop._last = performance.now() - Math.ceil(1e3 / 60);
       loop._frame();
 
       throw new Error('should not get here');

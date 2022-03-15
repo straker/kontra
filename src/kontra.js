@@ -84,6 +84,6 @@ export {
   SpriteSheetClass
 } from './spriteSheet.js';
 export { default as Text, TextClass } from './text.js';
-export { default as TileEngine } from './tileEngine.js';
+export { default as TileEngine, TileEngineClass } from './tileEngine.js';
 export { default as Vector, VectorClass } from './vector.js';
 export { default } from './kontra.defaults.js';

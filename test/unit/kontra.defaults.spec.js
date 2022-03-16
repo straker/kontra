@@ -43,7 +43,7 @@ describe('kontra.defaults', () => {
     expect(kontra.GameLoop).to.exist;
   });
 
-  it('should add gameObject api class', () => {
+  it('should add gameObject api and class', () => {
     expect(kontra.GameObject).to.exist;
     expect(kontra.GameObjectClass).to.exist;
   });

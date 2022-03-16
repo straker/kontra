@@ -40,24 +40,6 @@ describe('kontra', () => {
     expect(kontraExports.emit).to.exist;
   });
 
-  it('should export helpers api', () => {
-    expect(kontraExports.degToRad).to.exist;
-    expect(kontraExports.radToDeg).to.exist;
-    expect(kontraExports.angleToTarget).to.exist;
-    expect(kontraExports.rotatePoint).to.exist;
-    expect(kontraExports.movePoint).to.exist;
-    expect(kontraExports.randInt).to.exist;
-    expect(kontraExports.seedRand).to.exist;
-    expect(kontraExports.lerp).to.exist;
-    expect(kontraExports.inverseLerp).to.exist;
-    expect(kontraExports.clamp).to.exist;
-    expect(kontraExports.getStoreItem).to.exist;
-    expect(kontraExports.setStoreItem).to.exist;
-    expect(kontraExports.collides).to.exist;
-    expect(kontraExports.getWorldRect).to.exist;
-    expect(kontraExports.depthSort).to.exist;
-  });
-
   it('should export gameLoop api', () => {
     expect(kontraExports.GameLoop).to.exist;
   });
@@ -87,6 +69,24 @@ describe('kontra', () => {
   it('should export grid api and class', () => {
     expect(kontraExports.Grid).to.exist;
     expect(kontraExports.GridClass).to.exist;
+  });
+
+  it('should export helpers api', () => {
+    expect(kontraExports.degToRad).to.exist;
+    expect(kontraExports.radToDeg).to.exist;
+    expect(kontraExports.angleToTarget).to.exist;
+    expect(kontraExports.rotatePoint).to.exist;
+    expect(kontraExports.movePoint).to.exist;
+    expect(kontraExports.randInt).to.exist;
+    expect(kontraExports.seedRand).to.exist;
+    expect(kontraExports.lerp).to.exist;
+    expect(kontraExports.inverseLerp).to.exist;
+    expect(kontraExports.clamp).to.exist;
+    expect(kontraExports.getStoreItem).to.exist;
+    expect(kontraExports.setStoreItem).to.exist;
+    expect(kontraExports.collides).to.exist;
+    expect(kontraExports.getWorldRect).to.exist;
+    expect(kontraExports.depthSort).to.exist;
   });
 
   it('should export keyboard api', () => {

@@ -5,8 +5,9 @@ import kontra from '../../src/kontra.defaults.js';
 // kontra
 // --------------------------------------------------
 describe('kontra', () => {
-  it('should export animation api', () => {
+  it('should export animation api and class', () => {
     expect(kontraExports.Animation).to.exist;
+    expect(kontraExports.AnimationClass).to.exist;
   });
 
   it('should export assets api', () => {
@@ -22,8 +23,9 @@ describe('kontra', () => {
     expect(kontraExports.load).to.exist;
   });
 
-  it('should export button api', () => {
+  it('should export button api and class', () => {
     expect(kontraExports.Button).to.exist;
+    expect(kontraExports.ButtonClass).to.exist;
   });
 
   it('should export core api', () => {
@@ -36,6 +38,37 @@ describe('kontra', () => {
     expect(kontraExports.on).to.exist;
     expect(kontraExports.off).to.exist;
     expect(kontraExports.emit).to.exist;
+  });
+
+  it('should export gameLoop api', () => {
+    expect(kontraExports.GameLoop).to.exist;
+  });
+
+  it('should export gameObject api and class', () => {
+    expect(kontraExports.GameObject).to.exist;
+    expect(kontraExports.GameObjectClass).to.exist;
+  });
+
+  it('should export gamepad api', () => {
+    expect(kontraExports.gamepadMap).to.exist;
+    expect(kontraExports.updateGamepad).to.exist;
+    expect(kontraExports.initGamepad).to.exist;
+    expect(kontraExports.onGamepad).to.exist;
+    expect(kontraExports.offGamepad).to.exist;
+    expect(kontraExports.gamepadPressed).to.exist;
+    expect(kontraExports.gamepadAxis).to.exist;
+  });
+
+  it('should export gesture api', () => {
+    expect(kontraExports.gestureMap).to.exist;
+    expect(kontraExports.initGesture).to.exist;
+    expect(kontraExports.onGesture).to.exist;
+    expect(kontraExports.offGesture).to.exist;
+  });
+
+  it('should export grid api and class', () => {
+    expect(kontraExports.Grid).to.exist;
+    expect(kontraExports.GridClass).to.exist;
   });
 
   it('should export helpers api', () => {
@@ -54,35 +87,6 @@ describe('kontra', () => {
     expect(kontraExports.collides).to.exist;
     expect(kontraExports.getWorldRect).to.exist;
     expect(kontraExports.depthSort).to.exist;
-  });
-
-  it('should export gameLoop api', () => {
-    expect(kontraExports.GameLoop).to.exist;
-  });
-
-  it('should export gameObject api', () => {
-    expect(kontraExports.GameObject).to.exist;
-  });
-
-  it('should add gamepad api', () => {
-    expect(kontraExports.gamepadMap).to.exist;
-    expect(kontraExports.updateGamepad).to.exist;
-    expect(kontraExports.initGamepad).to.exist;
-    expect(kontraExports.onGamepad).to.exist;
-    expect(kontraExports.offGamepad).to.exist;
-    expect(kontraExports.gamepadPressed).to.exist;
-    expect(kontraExports.gamepadAxis).to.exist;
-  });
-
-  it('should add gesture api', () => {
-    expect(kontraExports.gestureMap).to.exist;
-    expect(kontraExports.initGesture).to.exist;
-    expect(kontraExports.onGesture).to.exist;
-    expect(kontraExports.offGesture).to.exist;
-  });
-
-  it('should export grid api', () => {
-    expect(kontraExports.Grid).to.exist;
   });
 
   it('should export keyboard api', () => {
@@ -110,36 +114,44 @@ describe('kontra', () => {
     expect(kontraExports.pointerPressed).to.exist;
   });
 
-  it('should export pool api', () => {
+  it('should export pool api and class', () => {
     expect(kontraExports.Pool).to.exist;
+    expect(kontraExports.PoolClass).to.exist;
   });
 
-  it('should export quadtree api', () => {
+  it('should export quadtree api and class', () => {
     expect(kontraExports.Quadtree).to.exist;
+    expect(kontraExports.QuadtreeClass).to.exist;
   });
 
-  it('should add scene api', () => {
+  it('should export scene api and class', () => {
     expect(kontraExports.Scene).to.exist;
+    expect(kontraExports.SceneClass).to.exist;
   });
 
-  it('should export sprite api', () => {
+  it('should export sprite api and class', () => {
     expect(kontraExports.Sprite).to.exist;
+    expect(kontraExports.SpriteClass).to.exist;
   });
 
-  it('should export spriteSheet api', () => {
+  it('should export spriteSheet api and class', () => {
     expect(kontraExports.SpriteSheet).to.exist;
+    expect(kontraExports.SpriteSheetClass).to.exist;
   });
 
-  it('should export text api', () => {
+  it('should export text api and class', () => {
     expect(kontraExports.Text).to.exist;
+    expect(kontraExports.TextClass).to.exist;
   });
 
-  it('should export tileEngine api', () => {
+  it('should export tileEngine api and class', () => {
     expect(kontraExports.TileEngine).to.exist;
+    expect(kontraExports.TileEngineClass).to.exist;
   });
 
-  it('should export vector api', () => {
+  it('should export vector api and class', () => {
     expect(kontraExports.Vector).to.exist;
+    expect(kontraExports.VectorClass).to.exist;
   });
 
   it('should export kontra object', () => {

@@ -1,4 +1,4 @@
-import TileEngine from '../../src/tileEngine.js';
+import TileEngine, { TileEngineClass } from '../../src/tileEngine.js';
 import { getContext } from '../../src/core.js';
 import { noop } from '../../src/utils.js';
 
@@ -16,6 +16,10 @@ let testContext = {
 describe(
   'tileEngine with context: ' + JSON.stringify(testContext, null, 4),
   () => {
+    it('should export class', () => {
+      expect(TileEngineClass).to.be.a('function');
+    });
+
     // --------------------------------------------------
     // tileEngine.init
     // --------------------------------------------------

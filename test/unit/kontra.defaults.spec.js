@@ -4,8 +4,9 @@ import kontra from '../../src/kontra.defaults.js';
 // kontra.defaults
 // --------------------------------------------------
 describe('kontra.defaults', () => {
-  it('should add animation api', () => {
+  it('should add animation api and class', () => {
     expect(kontra.Animation).to.exist;
+    expect(kontra.AnimationClass).to.exist;
   });
 
   it('should add assets api', () => {
@@ -21,8 +22,9 @@ describe('kontra.defaults', () => {
     expect(kontra.load).to.exist;
   });
 
-  it('should add button api', () => {
+  it('should add button api and class', () => {
     expect(kontra.Button).to.exist;
+    expect(kontra.ButtonClass).to.exist;
   });
 
   it('should add core api', () => {
@@ -41,8 +43,9 @@ describe('kontra.defaults', () => {
     expect(kontra.GameLoop).to.exist;
   });
 
-  it('should add gameObject api', () => {
+  it('should add gameObject api and class', () => {
     expect(kontra.GameObject).to.exist;
+    expect(kontra.GameObjectClass).to.exist;
   });
 
   it('should add gamepad api', () => {
@@ -62,8 +65,9 @@ describe('kontra.defaults', () => {
     expect(kontra.offGesture).to.exist;
   });
 
-  it('should add grid api', () => {
+  it('should add grid api and class', () => {
     expect(kontra.Grid).to.exist;
+    expect(kontra.GridClass).to.exist;
   });
 
   it('should add helpers api', () => {
@@ -109,35 +113,43 @@ describe('kontra.defaults', () => {
     expect(kontra.pointerPressed).to.exist;
   });
 
-  it('should add pool api', () => {
+  it('should add pool api and class', () => {
     expect(kontra.Pool).to.exist;
+    expect(kontra.PoolClass).to.exist;
   });
 
-  it('should add quadtree api', () => {
+  it('should add quadtree api and class', () => {
     expect(kontra.Quadtree).to.exist;
+    expect(kontra.QuadtreeClass).to.exist;
   });
 
-  it('should add scene api', () => {
+  it('should add scene api and class', () => {
     expect(kontra.Scene).to.exist;
+    expect(kontra.SceneClass).to.exist;
   });
 
-  it('should add sprite api', () => {
+  it('should add sprite api and class', () => {
     expect(kontra.Sprite).to.exist;
+    expect(kontra.SpriteClass).to.exist;
   });
 
-  it('should add spriteSheet api', () => {
+  it('should add spriteSheet api and class', () => {
     expect(kontra.SpriteSheet).to.exist;
+    expect(kontra.SpriteSheetClass).to.exist;
   });
 
-  it('should add text api', () => {
+  it('should add text api and class', () => {
     expect(kontra.Text).to.exist;
+    expect(kontra.TextClass).to.exist;
   });
 
-  it('should add tileEngine api', () => {
+  it('should add tileEngine api and class', () => {
     expect(kontra.TileEngine).to.exist;
+    expect(kontra.TileEngineClass).to.exist;
   });
 
-  it('should add vector api', () => {
+  it('should add vector api and class', () => {
     expect(kontra.Vector).to.exist;
+    expect(kontra.VectorClass).to.exist;
   });
 });

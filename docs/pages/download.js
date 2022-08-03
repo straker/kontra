@@ -11,7 +11,7 @@ Download the latest version of Kontra.
 - [TGZ file](https://registry.npmjs.org/kontra/-/kontra-__packageVersion__.tgz)
 - [Github repo](https://github.com/straker/kontra)
 
-## Package mangers
+## Package managers
 
 - `npm install kontra`
 - `yarn add kontra`

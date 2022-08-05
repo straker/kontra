@@ -106,7 +106,7 @@ __Note:__ Some of the more advance classes – such as Button or Grid – requir
 | `autoNewline` | Setting a fixed with that automatically adds new lines to the text |
 | `newline`     | Support for new line characters (`\n`) in the text |
 | `rtl`         | Support for RTL languages |
-| `textAlign`   | `textAlign` |
+| `align`       | `textAlign` |
 
 #### `tileEngine` Options:
 

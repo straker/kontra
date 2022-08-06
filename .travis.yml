@@ -5,6 +5,7 @@ dist: xenial
 sudo: required
 addons:
   chrome: stable
+before_install: if [[ `npm -v` != 8* ]]; then npm i -g npm@8; fi
 jobs:
   include:
   - name: Unit Tests

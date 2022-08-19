@@ -138,6 +138,16 @@ describe(
 
           expect(gameObject.opacity).to.equal(0.5);
         });
+
+        it('should clamp opacity between 0 and 1', () => {
+          gameObject = GameObject({ opacity: -10 });
+
+          expect(gameObject.opacity).to.equal(0);
+
+          gameObject.opacity = 10;
+
+          expect(gameObject.opacity).to.equal(1);
+        });
       } else {
         it('should not default opacity', () => {
           expect(gameObject.opacity).to.not.exist;

@@ -1,6 +1,6 @@
 import { getContext } from './core.js';
 import Updatable from './updatable.js';
-import { rotatePoint } from './helpers.js';
+import { rotatePoint, clamp } from './helpers.js';
 import { noop, removeFromArray } from './utils.js';
 
 /**
@@ -603,7 +603,7 @@ class GameObject extends Updatable {
   }
 
   set opacity(value) {
-    this._opa = value;
+    this._opa = clamp(0, 1, value);
     this._pc();
   }
   // @endif

@@ -28,3 +28,4 @@ kontra.offKey('a');
 kontra.offKey(['a', 'b', 'c']);
 
 let pressed: boolean = kontra.keyPressed('a');
+kontra.keyPressed(['a', 'b', 'c']);

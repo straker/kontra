@@ -113,6 +113,12 @@ describe('keyboard', () => {
 
       expect(keyboard.keyPressed('a')).to.be.false;
     });
+
+    it('should accept an array of key combinations', () => {
+      simulateEvent('keydown', { code: 'KeyC' });
+
+      expect(keyboard.keyPressed(['a','b','c'])).to.be.true;
+    });
   });
 
   // --------------------------------------------------

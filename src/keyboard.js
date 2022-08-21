@@ -214,10 +214,10 @@ export function offKey(keys, { handler = 'keydown' } = {}) {
  * ```
  * @function keyPressed
  *
- * @param {String} key - Key to check for pressed state.
+ * @param {String|String[]} keys - Key or keys to check for pressed state.
  *
  * @returns {Boolean} `true` if the key is pressed, `false` otherwise.
  */
-export function keyPressed(key) {
-  return !!pressedKeys[key];
+export function keyPressed(keys) {
+  return !![].concat(keys).some(key => pressedKeys[key]);
 }

@@ -82,7 +82,7 @@ class Vector {
    * @returns {Vector} A new Vector instance whose value is the normalized vector.
    */
   // @see https://github.com/jed/140bytes/wiki/Byte-saving-techniques#use-placeholder-arguments-instead-of-var
-  normalize(length = this.length()) {
+  normalize(length = this.length() || 1) {
     return new Vector(this.x / length, this.y / length);
   }
   // @endif

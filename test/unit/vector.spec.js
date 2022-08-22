@@ -139,6 +139,15 @@ describe(
           expect(normalize.x).to.deep.equal(4 / 5);
           expect(normalize.y).to.deep.equal(3 / 5);
         });
+
+        it('should return 0 for zero vector', () => {
+          let vector1 = Vector();
+
+          let normalize = vector1.normalize();
+
+          expect(normalize.x).to.equal(0);
+          expect(normalize.y).to.equal(0);
+        })
       } else {
         it('should not have normalize', () => {
           let vector = Vector();

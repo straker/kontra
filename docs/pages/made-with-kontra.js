@@ -409,6 +409,14 @@ Have a game you want to add? [Let me know](https://github.com/straker/kontra/iss
     </a>
   </li>
 
+  <li>
+    <a href="https://js13kgames.com/entries/hang-by-a-thread">
+      <img src="assets/imgs/games/hang-by-a-thread.jpeg" alt="" loading="lazy" width="400" height="250"/>
+      <span>Hang by a thread</span>
+      <span><span class="visually-hidden">. By </span><small>johnedvard
+</small></span>
+    </a>
+  </li>  
 </ul>
 
 @section Games Made with Kontra.js

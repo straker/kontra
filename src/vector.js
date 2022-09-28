@@ -145,6 +145,19 @@ class Vector {
   }
   // @endif
 
+  // @ifdef VECTOR_DIRECTION
+  /**
+   * Calculate the angle (in radians) of the current vector.
+   * @memberof Vector
+   * @function direction
+   *
+   * @returns {Number} The angle (in radians) of the vector.
+   */
+  direction() {
+    return Math.atan2(this.y, this.x);
+  }
+  // @endif
+
   // @ifdef VECTOR_CLAMP
   /**
    * Clamp the Vector between two points, preventing `x` and `y` from going below or above the minimum and maximum values. Perfect for keeping a sprite from going outside the game boundaries.

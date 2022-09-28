@@ -35,6 +35,7 @@ let options = {
   vector: [
     'VECTOR_ANGLE',
     'VECTOR_CLAMP',
+    'VECTOR_DIRECTION',
     'VECTOR_DISTANCE',
     'VECTOR_DOT',
     'VECTOR_LENGTH',

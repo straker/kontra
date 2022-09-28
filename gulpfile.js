@@ -35,6 +35,7 @@ const context = {
   VECTOR_LENGTH: true,
   VECTOR_DISTANCE: true,
   VECTOR_ANGLE: true,
+  VECTOR_DIRECTION: true,
   VECTOR_CLAMP: true
   // DEBUG and VISUAL_DEBUG are turned off
 };

@@ -4,6 +4,7 @@ import Vector, { VectorClass } from '../../src/vector.js';
 let testContext = {
   VECTOR_ANGLE: true,
   VECTOR_CLAMP: true,
+  VECTOR_DIRECTION: true,
   VECTOR_DISTANCE: true,
   VECTOR_DOT: true,
   VECTOR_LENGTH: true,
@@ -239,6 +240,29 @@ describe(
         it('should not have angle', () => {
           let vector = Vector();
           expect(vector.angle).to.not.exist;
+        });
+      }
+    });
+
+    // --------------------------------------------------
+    // direction
+    // --------------------------------------------------
+    describe('direction', () => {
+      if (testContext.VECTOR_DIRECTION) {
+        it('should calculate the angle between two vectors', () => {
+          let vector1 = Vector(0, 3);
+          let vector2 = Vector(-4, -4);
+
+          let angle1 = vector1.direction();
+          let angle2 = vector2.direction();
+
+          expect(angle1).to.deep.equal(Math.PI/2);
+          expect(angle2).to.deep.equal(-Math.PI + Math.PI/4);
+        });
+      } else {
+        it('should not have direction', () => {
+          let vector = Vector();
+          expect(vector.direction).to.not.exist;
         });
       }
     });

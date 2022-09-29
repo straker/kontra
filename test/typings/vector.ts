@@ -5,6 +5,7 @@ let vector: kontra.Vector = kontra.Vector();
 let x: number = vector.x;
 let y: number = vector.y;
 
+vector.set({x: 10, y: 10});
 let newVec: kontra.Vector = vector.add({x: 1, y: 2});
 vector.add(newVec);
 vector.add({x: 10, y: 10});
@@ -23,6 +24,7 @@ vector.clamp(10, 20, 100, 100);
 // options
 kontra.Vector(10);
 kontra.Vector(10, 20);
+kontra.Vector({x: 10, y: 20});
 
 // extends
 class CustomVector extends kontra.VectorClass {}

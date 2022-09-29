@@ -1,22 +1,29 @@
 import { clamp } from './helpers.js';
 
 /**
- * A simple 2d vector object.
+ * A simple 2d vector object. Takes either separate `x` and `y` coordinates or a Vector-like object.
  *
  * ```js
  * import { Vector } from 'kontra';
  *
  * let vector = Vector(100, 200);
+ * let vector2 = Vector({x: 100, y: 200});
  * ```
  * @class Vector
  *
- * @param {Number} [x=0] - X coordinate of the vector.
+ * @param {Number|{x: number, y: number}} [x=0] - X coordinate of the vector or a Vector-like object. If passing an object, the `y` param is ignored.
  * @param {Number} [y=0] - Y coordinate of the vector.
  */
 class Vector {
   constructor(x = 0, y = 0, vec = {}) {
-    this.x = x;
-    this.y = y;
+    if (x.x != undefined) {
+      this.x = x.x;
+      this.y = x.y;
+    }
+    else {
+      this.x = x;
+      this.y = y;
+    }
 
     // @ifdef VECTOR_CLAMP
     // preserve vector clamping when creating new vectors
@@ -28,6 +35,18 @@ class Vector {
       this.y = y;
     }
     // @endif
+  }
+
+  /**
+   * Set the x and y coordinate of the vector.
+   * @memberof Vector
+   * @function set
+   *
+   * @param {Vector|{x: number, y: number}} vector - Vector to set coordinates from.
+   */
+  set(vec) {
+    this.x = vec.x;
+    this.y = vec.y;
   }
 
   /**

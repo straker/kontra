@@ -34,6 +34,26 @@ describe(
         expect(vector.x).to.equal(10);
         expect(vector.y).to.equal(20);
       });
+
+      it('should take an object', () => {
+        let vector = Vector({ x: 10, y: 20 });
+
+        expect(vector.x).to.equal(10);
+        expect(vector.y).to.equal(20);
+      });
+    });
+
+    // --------------------------------------------------
+    // set
+    // --------------------------------------------------
+    describe('set', () => {
+      it('should set x and y', () => {
+        let vector = Vector(10, 20);
+        vector.set({ x: 20, y: 10 });
+
+        expect(vector.x).to.equal(20);
+        expect(vector.y).to.equal(10);
+      });
     });
 
     // --------------------------------------------------
@@ -46,8 +66,8 @@ describe(
 
         let vector = vector1.add(vector2);
 
-        expect(vector.x).to.deep.equal(15);
-        expect(vector.y).to.deep.equal(30);
+        expect(vector.x).to.equal(15);
+        expect(vector.y).to.equal(30);
       });
 
       it('should not modify either vectors', () => {
@@ -56,10 +76,10 @@ describe(
 
         vector1.add(vector2);
 
-        expect(vector1.x).to.deep.equal(10);
-        expect(vector1.y).to.deep.equal(20);
-        expect(vector2.x).to.deep.equal(5);
-        expect(vector2.y).to.deep.equal(10);
+        expect(vector1.x).to.equal(10);
+        expect(vector1.y).to.equal(20);
+        expect(vector2.x).to.equal(5);
+        expect(vector2.y).to.equal(10);
       });
     });
 
@@ -74,8 +94,8 @@ describe(
 
           let vector = vector1.subtract(vector2);
 
-          expect(vector.x).to.deep.equal(5);
-          expect(vector.y).to.deep.equal(10);
+          expect(vector.x).to.equal(5);
+          expect(vector.y).to.equal(10);
         });
 
         it('should not modify either vectors', () => {
@@ -84,10 +104,10 @@ describe(
 
           vector1.subtract(vector2);
 
-          expect(vector1.x).to.deep.equal(10);
-          expect(vector1.y).to.deep.equal(20);
-          expect(vector2.x).to.deep.equal(5);
-          expect(vector2.y).to.deep.equal(10);
+          expect(vector1.x).to.equal(10);
+          expect(vector1.y).to.equal(20);
+          expect(vector2.x).to.equal(5);
+          expect(vector2.y).to.equal(10);
         });
       } else {
         it('should not have subtract', () => {
@@ -107,8 +127,8 @@ describe(
 
           let vector = vector1.scale(2);
 
-          expect(vector.x).to.deep.equal(10);
-          expect(vector.y).to.deep.equal(20);
+          expect(vector.x).to.equal(10);
+          expect(vector.y).to.equal(20);
         });
 
         it('should not modify the vector', () => {
@@ -116,8 +136,8 @@ describe(
 
           vector1.scale(2);
 
-          expect(vector1.x).to.deep.equal(5);
-          expect(vector1.y).to.deep.equal(10);
+          expect(vector1.x).to.equal(5);
+          expect(vector1.y).to.equal(10);
         });
       } else {
         it('should not have scale', () => {
@@ -137,8 +157,8 @@ describe(
 
           let normalize = vector1.normalize();
 
-          expect(normalize.x).to.deep.equal(4 / 5);
-          expect(normalize.y).to.deep.equal(3 / 5);
+          expect(normalize.x).to.equal(4 / 5);
+          expect(normalize.y).to.equal(3 / 5);
         });
 
         it('should return 0 for zero vector', () => {
@@ -168,7 +188,7 @@ describe(
 
           let dot = vector1.dot(vector2);
 
-          expect(dot).to.deep.equal(250);
+          expect(dot).to.equal(250);
         });
       } else {
         it('should not have dot', () => {
@@ -192,7 +212,7 @@ describe(
 
           let length = vector1.length();
 
-          expect(length).to.deep.equal(5);
+          expect(length).to.equal(5);
         });
       } else {
         it('should not have length', () => {
@@ -213,7 +233,7 @@ describe(
 
           let distance = vector1.distance(vector2);
 
-          expect(distance).to.deep.equal(5);
+          expect(distance).to.equal(5);
         });
       } else {
         it('should not have distance', () => {
@@ -234,7 +254,7 @@ describe(
 
           let angle = vector1.angle(vector2);
 
-          expect(angle.toFixed(2)).to.deep.equal('0.39');
+          expect(angle.toFixed(2)).to.equal('0.39');
         });
       } else {
         it('should not have angle', () => {
@@ -256,8 +276,8 @@ describe(
           let angle1 = vector1.direction();
           let angle2 = vector2.direction();
 
-          expect(angle1).to.deep.equal(Math.PI/2);
-          expect(angle2).to.deep.equal(-Math.PI + Math.PI/4);
+          expect(angle1).to.equal(Math.PI/2);
+          expect(angle2).to.equal(-Math.PI + Math.PI/4);
         });
       } else {
         it('should not have direction', () => {

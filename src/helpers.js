@@ -298,12 +298,76 @@ export function getStoreItem(key) {
 export function collides(obj1, obj2) {
   [obj1, obj2] = [obj1, obj2].map(obj => getWorldRect(obj));
 
+  if (obj1.radius && obj2.radius) {
+    return circleCircleCollision(obj1, obj2);
+  }
+
+  if (obj1.radius) {
+    return circleRectCollision(obj1, obj2);
+  }
+
+  if (obj2.radius) {
+    return circleRectCollision(obj2, obj1);
+  }
+
+  return rectRectCollision(obj1, obj2);
+}
+
+function rectRectCollision(rect1, rect2) {
   return (
-    obj1.x < obj2.x + obj2.width &&
-    obj1.x + obj1.width > obj2.x &&
-    obj1.y < obj2.y + obj2.height &&
-    obj1.y + obj1.height > obj2.y
+    rect1.x < rect2.x + rect2.width &&
+    rect1.x + rect1.width > rect2.x &&
+    rect1.y < rect2.y + rect2.height &&
+    rect1.y + rect1.height > rect2.y
   );
+}
+
+function circleCircleCollision(c1, c2) {
+  // get distance between the circle’s centers
+  // use the Pythagorean Theorem to compute the distance
+  let distX = c1.x - c2.x;
+  let distY = c1.y - c2.y;
+  return (distX ** 2 + distY ** 2) <= (c1.radius + c2.radius) ** 2;
+}
+
+// CIRCLE/RECTANGLE
+function circleRectCollision(circle, rect) {
+  let centerX = circle.x + circle.radius;
+  let centerY = circle.y + circle.radius;
+
+  // temporary variables to set edges for testing
+  var testX = centerX;
+  var testY = centerY;
+
+  // which edge is closest?
+  if (centerX < rect.x) {
+    // test left edge
+    testX = rect.x;
+  } else if (centerX > rect.x + rect.width) {
+    // right edge
+    testX = rect.x+rect.width;
+  }
+
+  if (centerY < rect.y) {
+    // top edge
+    testY = rect.y;
+  } else if (centerY > rect.y + rect.height) {
+    // bottom edge
+    testY = rect.y + rect.height;
+  }
+
+  // If unchanged, we've passed a center inside rectangle test
+  if (testX == centerX && testY == centerY) {
+    return true;
+  }
+
+  // get distance from closest edges
+  var distX = centerX - testX;
+  var distY = centerY - testY;
+  var distance = distX * distX + distY * distY;
+
+  // if the distance is less than the radius, collision!
+  return distance <= circle.radius ** 2;
 }
 
 /**
@@ -316,6 +380,13 @@ export function collides(obj1, obj2) {
  */
 export function getWorldRect(obj) {
   let { x = 0, y = 0, width, height } = obj.world || obj;
+  let radius = obj.world.radius || obj.radius;
+
+  // circles
+  if (radius) {
+    width = radius;
+    height = radius;
+  }
 
   // take into account tileEngine
   if (obj.mapwidth) {
@@ -343,12 +414,18 @@ export function getWorldRect(obj) {
   }
   // @endif
 
-  return {
+  let worldObj = {
     x,
     y,
     width,
     height
   };
+
+  if (radius) {
+    worldObj.radius = radius;
+  }
+
+  return worldObj;
 }
 
 /**

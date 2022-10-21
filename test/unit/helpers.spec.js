@@ -323,6 +323,55 @@ describe('helpers', () => {
       expect(helpers.collides(sprite1, obj)).to.be.true;
       expect(helpers.collides(obj, sprite1)).to.be.true;
     });
+
+    it('should work with circles', () => {
+      let circle = Sprite({
+        x: 10,
+        y: 20,
+        radius: 10
+      });
+
+      let obj = Sprite({
+        x: 15,
+        y: 25,
+        width: 10,
+        height: 10
+      });
+
+      expect(helpers.collides(circle, obj)).to.be.true;
+      expect(helpers.collides(obj, circle)).to.be.true;
+
+      // Corner miss
+
+      obj.x = 22;
+      obj.y = 32;
+
+      expect(helpers.collides(circle, obj)).to.be.false;
+      expect(helpers.collides(obj, circle)).to.be.false;
+
+      // two circles
+
+      let egg = Sprite({
+        x: 25,
+        y: 20,
+        radius: 5
+      });
+
+      // just touching
+      expect(helpers.collides(circle, egg)).to.be.true;
+      expect(helpers.collides(egg, circle)).to.be.true;
+
+
+      // miss
+      egg.x = 30;
+      expect(helpers.collides(circle, egg)).to.be.false;
+      expect(helpers.collides(egg, circle)).to.be.false;
+
+      // inside
+      egg.x = 10;
+      expect(helpers.collides(circle, egg)).to.be.true;
+      expect(helpers.collides(egg, circle)).to.be.true;
+    });
   });
 
   // --------------------------------------------------

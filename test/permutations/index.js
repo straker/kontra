@@ -25,7 +25,8 @@ let options = {
     'TEXT_AUTONEWLINE',
     'TEXT_NEWLINE',
     'TEXT_RTL',
-    'TEXT_ALIGN'
+    'TEXT_ALIGN',
+    'TEXT_STROKE'
   ],
   tileEngine: [
     'TILEENGINE_CAMERA',

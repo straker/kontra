@@ -6,7 +6,8 @@ let testContext = {
   TEXT_AUTONEWLINE: true,
   TEXT_NEWLINE: true,
   TEXT_RTL: true,
-  TEXT_ALIGN: true
+  TEXT_ALIGN: true,
+  TEXT_STROKE: true
 };
 // test-context:end
 
@@ -403,6 +404,58 @@ describe(
             )
           ).to.be.true;
           text.context.fillText.restore();
+        });
+      }
+
+      if (testContext.TEXT_STROKE) {
+        it('should call strokeText', () => {
+          let text = Text({
+            text: 'Hello World',
+            font: '32px Arial',
+            color: 'black',
+            strokeColor: 'white'
+          });
+
+          sinon.spy(text.context, 'strokeText');
+
+          text.render(0, 0);
+
+          expect(text.context.strokeText.called).to.be.true;
+          text.context.strokeText.restore();
+        });
+
+        it('should use lineWidth', () => {
+          let text = Text({
+            text: 'Hello World',
+            font: '32px Arial',
+            color: 'black',
+            strokeColor: 'white',
+            lineWidth: 2
+          });
+
+          let spy = sinon.spy(text.context, 'lineWidth', ['set']);
+
+          text.render(0, 0);
+
+          expect(spy.set.calledWith(2)).to.be.true;
+          spy.set.restore();
+        });
+      }
+      else {
+        it('should not call strokeText', () => {
+          let text = Text({
+            text: 'Hello World',
+            font: '32px Arial',
+            color: 'black',
+            strokeColor: 'white'
+          });
+
+          sinon.spy(text.context, 'strokeText');
+
+          text.render(0, 0);
+
+          expect(text.context.strokeText.called).to.be.false;
+          text.context.strokeText.restore();
         });
       }
     });

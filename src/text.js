@@ -56,6 +56,8 @@ function parseFont(font) {
  * @param {Number} [properties.width] - Set a fixed width for the text. If set, the text will automatically be split into new lines that will fit the size when possible.
  * @param {String} [properties.textAlign='left'] - The [textAlign](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/textAlign) for the context. If the `dir` attribute is set to `rtl` on the main canvas, the text will automatically be aligned to the right, but you can override that by setting this property.
  * @param {Number} [properties.lineHeight=1] - The distance between two lines of text.
+ * @param {String} [properties.strokeColor] - Stroke color for the text.
+ * @param {number} [properties.lineWidth] - Stroke line width for the text.
  */
 class Text extends GameObjectClass {
   init({
@@ -246,6 +248,20 @@ class Text extends GameObjectClass {
       context.textAlign = textAlign;
       context.fillStyle = this.color;
       context.font = this.font;
+
+
+      // @ifdef TEXT_STROKE
+      if (this.strokeColor) {
+        context.strokeStyle = this.strokeColor;
+        context.lineWidth = this.lineWidth ?? 1;
+        context.strokeText(
+          str,
+          alignX,
+          this._fs * this.lineHeight * index
+        );
+      }
+      // @endif
+
       context.fillText(
         str,
         alignX,

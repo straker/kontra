@@ -30,7 +30,9 @@ kontra.Text({
   font: '32px Arial',
   textAlign: 'right',
   width: 200,
-  lineHeight: 3
+  lineHeight: 3,
+  lineWidth: 3,
+  strokeColor: 'white'
 });
 
 // extends

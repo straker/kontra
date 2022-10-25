@@ -107,6 +107,7 @@ __Note:__ Some of the more advance classes – such as Button or Grid – requir
 | `newline`     | Support for new line characters (`\n`) in the text |
 | `rtl`         | Support for RTL languages |
 | `align`       | `textAlign` |
+| `stroke`      | `strokeColor`, `lineWidth` |
 
 #### `tileEngine` Options:
 

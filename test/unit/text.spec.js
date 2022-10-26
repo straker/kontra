@@ -232,6 +232,43 @@ describe(
 
           expect(text.height).to.be.above(32);
         });
+
+        if (testContext.TEXT_NEWLINE) {
+          it('should calculate new lines and auto new lines', () => {
+            let text = Text({
+              text: 'Hello\nWorld,\nI must be going to see the\nsights',
+              font: '32px Arial',
+              color: 'black',
+              width: 200
+            });
+
+            expect(text._s).to.deep.equal([
+              'Hello',
+              'World,',
+              'I must be',
+              'going to see',
+              'the',
+              'sights'
+            ]);
+          });
+        }
+        else {
+          it('should not calculate new lines and auto new lines', () => {
+            let text = Text({
+              text: 'Hello\nWorld,\nI must be going to see the\nsights',
+              font: '32px Arial',
+              color: 'black',
+              width: 200
+            });
+
+            expect(text._s).to.deep.equal([
+              'Hello\nWorld,\nI',
+              'must be',
+              'going to see',
+              'the\nsights'
+            ]);
+          });
+        }
       } else {
         it('should not calculate auto new lines', () => {
           let text = Text({

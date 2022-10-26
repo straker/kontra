@@ -207,6 +207,7 @@ class Text extends GameObjectClass {
         this._s.push(nextStr);
       });
     }
+    // @endif
 
     // @ifdef TEXT_NEWLINE
     if (!this._s.length && this.text.includes('\n')) {

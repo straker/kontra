@@ -176,35 +176,43 @@ class Text extends GameObjectClass {
     this._s = [];
     this._d = false;
     let context = this.context;
+    let text = [this.text];
 
     context.font = this.font;
 
+    // @ifdef TEXT_NEWLINE
+    text = this.text.split('\n');
+    // @endif
+
     // @ifdef TEXT_AUTONEWLINE
-    if (!this._s.length && this._fw) {
-      let parts = this.text.split(' ');
-      let start = 0;
-      let i = 2;
+    if (this._fw) {
+      text.map(t => {
+        let parts = t.split(' ');
+        let str = parts.shift();
+        let nextStr = str;
 
-      // split the string into lines that all fit within the fixed
-      // width
-      for (; i <= parts.length; i++) {
-        let str = parts.slice(start, i).join(' ');
-        let width = context.measureText(str).width;
+        // split the string into lines that all fit within the fixed
+        // width
+        parts.map(part => {
+          nextStr += ' ' + part;
 
-        if (width > this._fw) {
-          this._s.push(parts.slice(start, i - 1).join(' '));
-          start = i - 1;
-        }
-      }
+          if (context.measureText(nextStr).width > this._fw) {
+            this._s.push(str);
+            nextStr = part;
+          }
 
-      this._s.push(parts.slice(start, i).join(' '));
+          str = nextStr;
+        });
+
+        this._s.push(nextStr);
+      });
     }
     // @endif
 
     // @ifdef TEXT_NEWLINE
     if (!this._s.length && this.text.includes('\n')) {
       let width = 0;
-      this.text.split('\n').map(str => {
+      text.map(str => {
         this._s.push(str);
         width = Math.max(width, context.measureText(str).width);
       });

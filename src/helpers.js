@@ -67,13 +67,7 @@ export function radToDeg(rad) {
  * @returns {Number} Angle (in radians) from the source point to the target point.
  */
 export function angleToTarget(source, target) {
-  // atan2 returns the counter-clockwise angle in respect to the
-  // x-axis, but the canvas rotation system is based on the y-axis
-  // (rotation of 0 = up). so we need to add a quarter rotation to
-  // return a counter-clockwise rotation in respect to the y-axis
-  return (
-    Math.atan2(target.y - source.y, target.x - source.x) + Math.PI / 2
-  );
+  return Math.atan2(target.y - source.y, target.x - source.x);
 }
 
 /**
@@ -107,8 +101,8 @@ export function rotatePoint(point, angle) {
  */
 export function movePoint(point, angle, distance) {
   return {
-    x: point.x + Math.sin(angle) * distance,
-    y: point.y - Math.cos(angle) * distance
+    x: point.x + Math.cos(angle) * distance,
+    y: point.y + Math.sin(angle) * distance
   };
 }
 

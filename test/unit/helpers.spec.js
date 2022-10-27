@@ -48,12 +48,8 @@ describe('helpers', () => {
     it('should return the angle to the target', () => {
       let source = { x: 300, y: 300 };
       let target = { x: 100, y: 100 };
-      expect(
-        helpers.angleToTarget(source, target).toFixed(2)
-      ).to.equal('-0.79');
-      expect(
-        helpers.angleToTarget(target, source).toFixed(2)
-      ).to.equal('2.36');
+      expect(helpers.angleToTarget(source, target)).to.equal(-Math.PI * 3/4);
+      expect(helpers.angleToTarget(target, source)).to.equal(Math.PI / 4);
     });
   });
 
@@ -76,10 +72,17 @@ describe('helpers', () => {
   describe('movePoint', () => {
     it('should return the new x and y after move', () => {
       let point = { x: 300, y: 300 };
-      let angle = helpers.degToRad(35);
-      let newPoint = helpers.movePoint(point, angle, 100);
-      expect(newPoint.x.toFixed(2)).to.equal('357.36');
-      expect(newPoint.y.toFixed(2)).to.equal('218.08');
+      let newPoint = helpers.movePoint(point, -Math.PI * 3/4, 141.421);
+      expect(newPoint.x).to.be.closeTo(200, 0.1);
+      expect(newPoint.y).to.be.closeTo(200, 0.1);
+
+      newPoint = helpers.movePoint(point, Math.PI / 4, 141.421);
+      expect(newPoint.x).to.be.closeTo(400, 0.1);
+      expect(newPoint.y).to.be.closeTo(400, 0.1);
+
+      newPoint = helpers.movePoint(point, Math.PI, 100);
+      expect(newPoint.x).to.be.closeTo(200, 0.1);
+      expect(newPoint.y).to.be.closeTo(300, 0.1);
     });
   });
 

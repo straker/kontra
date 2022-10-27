@@ -21,7 +21,7 @@ describe('vector integration', () => {
   it('should set from movePoint', () => {
     let vector = Vector(movePoint({ x: 10, y: 10 }, 0, 10));
 
-    expect(vector.x).to.equal(10);
-    expect(vector.y).to.equal(0);
+    expect(vector.x).to.equal(20);
+    expect(vector.y).to.equal(10);
   });
 });

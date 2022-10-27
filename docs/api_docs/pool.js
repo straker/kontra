@@ -1,5 +1,5 @@
 /**
- * To use the pool, you must pass the `create()` function argument, which should return a new [Sprite](api/sprite) or object. This object will be added to the pool every time there are no more alive objects.
+ * To use the pool, you must pass the `create()` function argument. The create function should return a new instance of an object or [Sprite](api/sprite). This object will be added to the pool every time there are no more alive objects.
  *
  * The object must implement the functions `update()`, `render()`, `init()`, and `isAlive()`. If one of these functions is missing the pool will throw an error. [Sprite](api/sprite) defines these functions for you.
  *
@@ -11,7 +11,8 @@
  * import { Pool, Sprite } from 'kontra';
  *
  * let pool = Pool({
- *   // create a new sprite every time the pool needs a new object
+ *   // create a new sprite every time the pool needs a new object.
+ *   // equivalent to `create(props) { return Sprite(props) }`
  *   create: Sprite
  * });
  *

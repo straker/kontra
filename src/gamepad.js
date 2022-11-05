@@ -164,7 +164,7 @@ export function updateGamepad() {
           gamepaddownCallbacks[gamepad.index],
           gamepaddownCallbacks
         ].map(callback => {
-          callback?.[buttonName]?.(gamepad, button);
+          callback?.[buttonName]?.(gamepad, button, { buttonName });
         });
       }
       // if the button was pressed before and is now not pressed
@@ -172,7 +172,7 @@ export function updateGamepad() {
       else if (state && !pressed) {
         [gamepadupCallbacks[gamepad.index], gamepadupCallbacks].map(
           callback => {
-            callback?.[buttonName]?.(gamepad, button);
+            callback?.[buttonName]?.(gamepad, button, { buttonName });
           }
         );
       }
@@ -208,7 +208,7 @@ export function initGamepad() {
 }
 
 /**
- * Register a function to be called when a gamepad button is pressed. Takes a single button or an array of buttons. Is passed the [Gamepad](https://developer.mozilla.org/en-US/docs/Web/API/Gamepad) and the [GamepadButton](https://developer.mozilla.org/en-US/docs/Web/API/GamepadButton) that was pressed as parameters.
+ * Register a function to be called when a gamepad button is pressed. Takes a single button or an array of buttons. Is passed the [Gamepad](https://developer.mozilla.org/en-US/docs/Web/API/Gamepad) and the [GamepadButton](https://developer.mozilla.org/en-US/docs/Web/API/GamepadButton), and the buttonName that was pressed as parameters.
  *
  * When registering the function, you have the choice of registering to a specific gamepad or to all gamepads. To register to a specific gamepad, pass the desired gamepad index as the `gamepad` option. If the `gamepad` option is ommited the callback is bound to all gamepads instead of a specific one.
  *

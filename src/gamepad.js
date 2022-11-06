@@ -219,10 +219,10 @@ export function initGamepad() {
  *
  * initGamepad();
  *
- * onGamepad('start', function(gamepad, button) {
+ * onGamepad('start', function(gamepad, button, {buttonName}) {
  *   // pause the game
  * });
- * onGamepad(['south', 'rightstick'], function(gamepad, button) {
+ * onGamepad(['south', 'rightstick'], function(gamepad, button, {buttonName}) {
  *   // fire gun
  * });
  *
@@ -235,7 +235,7 @@ export function initGamepad() {
  * @function onGamepad
  *
  * @param {String|String[]} buttons - Button or buttons to register callback for.
- * @param {(gamepad: Gamepad, button: GamepadButton) => void} callback - The function to be called when the button is pressed.
+ * @param {(gamepad: Gamepad, button: GamepadButton, {buttonName}: {buttonName: string}) => void} callback - The function to be called when the button is pressed.
  * @param {Object} [options] - Register options.
  * @param {Number} [options.gamepad] - Gamepad index. Defaults to registerting for all gamepads.
  * @param {'gamepaddown'|'gamepadup'} [options.handler='gamepaddown'] - Whether to register to the gamepaddown or gamepadup event.

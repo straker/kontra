@@ -164,7 +164,7 @@ export function updateGamepad() {
           gamepaddownCallbacks[gamepad.index],
           gamepaddownCallbacks
         ].map(callback => {
-          callback?.[buttonName]?.(gamepad, button);
+          callback?.[buttonName]?.(gamepad, button, buttonName);
         });
       }
       // if the button was pressed before and is now not pressed
@@ -172,7 +172,7 @@ export function updateGamepad() {
       else if (state && !pressed) {
         [gamepadupCallbacks[gamepad.index], gamepadupCallbacks].map(
           callback => {
-            callback?.[buttonName]?.(gamepad, button);
+            callback?.[buttonName]?.(gamepad, button, buttonName);
           }
         );
       }
@@ -208,7 +208,7 @@ export function initGamepad() {
 }
 
 /**
- * Register a function to be called when a gamepad button is pressed. Takes a single button or an array of buttons. Is passed the [Gamepad](https://developer.mozilla.org/en-US/docs/Web/API/Gamepad) and the [GamepadButton](https://developer.mozilla.org/en-US/docs/Web/API/GamepadButton) that was pressed as parameters.
+ * Register a function to be called when a gamepad button is pressed. Takes a single button or an array of buttons. Is passed the [Gamepad](https://developer.mozilla.org/en-US/docs/Web/API/Gamepad) and the [GamepadButton](https://developer.mozilla.org/en-US/docs/Web/API/GamepadButton), and the buttonName that was pressed as parameters.
  *
  * When registering the function, you have the choice of registering to a specific gamepad or to all gamepads. To register to a specific gamepad, pass the desired gamepad index as the `gamepad` option. If the `gamepad` option is ommited the callback is bound to all gamepads instead of a specific one.
  *
@@ -219,10 +219,10 @@ export function initGamepad() {
  *
  * initGamepad();
  *
- * onGamepad('start', function(gamepad, button) {
+ * onGamepad('start', function(gamepad, button, buttonName) {
  *   // pause the game
  * });
- * onGamepad(['south', 'rightstick'], function(gamepad, button) {
+ * onGamepad(['south', 'rightstick'], function(gamepad, button, buttonName) {
  *   // fire gun
  * });
  *
@@ -235,7 +235,7 @@ export function initGamepad() {
  * @function onGamepad
  *
  * @param {String|String[]} buttons - Button or buttons to register callback for.
- * @param {(gamepad: Gamepad, button: GamepadButton) => void} callback - The function to be called when the button is pressed.
+ * @param {(gamepad: Gamepad, button: GamepadButton, buttonName: string) => void} callback - The function to be called when the button is pressed.
  * @param {Object} [options] - Register options.
  * @param {Number} [options.gamepad] - Gamepad index. Defaults to registerting for all gamepads.
  * @param {'gamepaddown'|'gamepadup'} [options.handler='gamepaddown'] - Whether to register to the gamepaddown or gamepadup event.

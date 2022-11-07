@@ -96,7 +96,8 @@ describe('gamepad', () => {
         expect(
           spy.calledWith(
             getGamepadsStub[0],
-            getGamepadsStub[0].buttons[0]
+            getGamepadsStub[0].buttons[0],
+            'south'
           )
         ).to.be.true;
       });
@@ -111,7 +112,8 @@ describe('gamepad', () => {
         expect(
           spy.calledWith(
             getGamepadsStub[0],
-            getGamepadsStub[0].buttons[0]
+            getGamepadsStub[0].buttons[0],
+            'south'
           )
         ).to.be.true;
       });
@@ -128,7 +130,8 @@ describe('gamepad', () => {
         expect(
           spy.calledWith(
             getGamepadsStub[1],
-            getGamepadsStub[1].buttons[0]
+            getGamepadsStub[1].buttons[0],
+            'south'
           )
         ).to.be.true;
       });
@@ -169,7 +172,8 @@ describe('gamepad', () => {
           expect(
             spy.calledWith(
               getGamepadsStub[3],
-              getGamepadsStub[3].buttons[3]
+              getGamepadsStub[3].buttons[3],
+              'north'
             )
           ).to.be.true;
         });
@@ -206,7 +210,8 @@ describe('gamepad', () => {
         expect(
           spy.calledWith(
             getGamepadsStub[0],
-            getGamepadsStub[0].buttons[0]
+            getGamepadsStub[0].buttons[0],
+            'south'
           )
         ).to.be.true;
       });
@@ -228,7 +233,8 @@ describe('gamepad', () => {
         expect(
           spy.calledWith(
             getGamepadsStub[0],
-            getGamepadsStub[0].buttons[0]
+            getGamepadsStub[0].buttons[0],
+            'south'
           )
         ).to.be.true;
       });
@@ -250,7 +256,8 @@ describe('gamepad', () => {
         expect(
           spy.calledWith(
             getGamepadsStub[1],
-            getGamepadsStub[1].buttons[0]
+            getGamepadsStub[1].buttons[0],
+            'south'
           )
         ).to.be.true;
       });

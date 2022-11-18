@@ -149,6 +149,13 @@ class Scene {
 
     this.add(objects);
 
+    /**
+     * The camera object which is used as the focal point for the scene. Defaults to to the size of the canvas with a focal point  at its center. The scene will not render objects that are outside the bounds of the camera.
+     *
+     * Additionally, the camera can be used to [lookAt](api/scene#lookAt) an object which will center the camera to that object. This allows you to zoom the scene in and out while the camera remains centered on the object.
+     * @memberof Scene
+     * @property {GameObject} camera
+     */
     this.camera = GameObject({
       context,
       anchor: { x: 0.5, y: 0.5 },
@@ -169,13 +176,6 @@ class Scene {
 
       addToDom(section, canvas);
 
-      /**
-       * The camera object which is used as the focal point for the scene. Defaults to to the size of the canvas with a focal point  at its center. The scene will not render objects that are outside the bounds of the camera.
-       *
-       * Additionally, the camera can be used to [lookAt](api/scene#lookAt) an object which will center the camera to that object. This allows you to zoom the scene in and out while the camera remains centered on the object.
-       * @memberof Scene
-       * @property {GameObject} camera
-       */
       let { width, height } = canvas;
       let x = width / 2;
       let y = height / 2;

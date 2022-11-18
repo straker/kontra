@@ -1,5 +1,5 @@
 import TileEngine, { TileEngineClass } from '../../src/tileEngine.js';
-import { getContext } from '../../src/core.js';
+import { _reset, init, getContext } from '../../src/core.js';
 import { noop } from '../../src/utils.js';
 
 // test-context:start
@@ -52,6 +52,121 @@ describe(
         expect(tileEngine.layers).to.equal(data.layers);
         expect(tileEngine.mapwidth).to.equal(500);
         expect(tileEngine.mapheight).to.equal(500);
+      });
+
+      it('should not error if context is not set', () => {
+        _reset();
+
+        function fn() {
+          TileEngine({
+            tilewidth: 10,
+            tileheight: 10,
+            width: 50,
+            height: 50,
+            tilesets: [
+              {
+                image: new Image()
+              }
+            ],
+            layers: [
+              {
+                name: 'test',
+                data: [0, 0, 1, 0, 0]
+              }
+            ]
+          });
+        }
+
+        expect(fn).to.not.throw();
+      });
+
+      it('should set context if kontra.init is called after created', () => {
+        _reset();
+
+        let tileEngine = TileEngine({
+          tilewidth: 10,
+          tileheight: 10,
+          width: 50,
+          height: 50,
+          tilesets: [
+            {
+              image: new Image()
+            }
+          ],
+          layers: [
+            {
+              name: 'test',
+              data: [0, 0, 1, 0, 0]
+            }
+          ]
+        });
+
+        expect(tileEngine.context).to.be.undefined;
+
+        let canvas = document.createElement('canvas');
+        canvas.width = canvas.height = 600;
+        init(canvas);
+
+        expect(tileEngine.context).to.equal(canvas.getContext('2d'));
+      });
+
+      it('should not override context when set if kontra.init is called after created', () => {
+        _reset();
+
+        let tileEngine = TileEngine({
+          tilewidth: 10,
+          tileheight: 10,
+          width: 50,
+          height: 50,
+          tilesets: [
+            {
+              image: new Image()
+            }
+          ],
+          layers: [
+            {
+              name: 'test',
+              data: [0, 0, 1, 0, 0]
+            }
+          ]
+        });
+        tileEngine.context = true;
+
+        let canvas = document.createElement('canvas');
+        canvas.width = canvas.height = 600;
+        init(canvas);
+
+        expect(tileEngine.context).to.equal(true);
+      });
+
+      it('should call prerender if kontra.init is called after created', () => {
+        _reset();
+
+        let tileEngine = TileEngine({
+          tilewidth: 10,
+          tileheight: 10,
+          width: 50,
+          height: 50,
+          tilesets: [
+            {
+              image: new Image()
+            }
+          ],
+          layers: [
+            {
+              name: 'test',
+              data: [0, 0, 1, 0, 0]
+            }
+          ]
+        });
+
+        sinon.stub(tileEngine, '_p').callsFake(noop);
+
+        let canvas = document.createElement('canvas');
+        canvas.width = canvas.height = 600;
+        init(canvas);
+
+        expect(tileEngine._p.called).to.be.true;
       });
     });
 

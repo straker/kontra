@@ -1,5 +1,5 @@
 import Scene, { SceneClass } from '../../src/scene.js';
-import { getContext, getCanvas } from '../../src/core.js';
+import { _reset, init, getContext, getCanvas } from '../../src/core.js';
 import { noop, srOnlyStyle } from '../../src/utils.js';
 import { collides } from '../../src/helpers.js';
 
@@ -128,6 +128,65 @@ describe('scene', () => {
       expect(scene.camera.width).to.equal(canvas.width);
       expect(scene.camera.height).to.equal(canvas.height);
       expect(scene.camera.anchor).to.deep.equal({ x: 0.5, y: 0.5 });
+    });
+
+    it('should not set dom node or camera if context is not set', () => {
+      _reset();
+
+      scene = Scene({
+        id: 'myId'
+      });
+
+      expect(scene._dn).to.not.exist;
+      expect(scene.camera.centerX).to.not.exist;
+    });
+
+    it('should set context if kontra.init is called after created', () => {
+      _reset();
+
+      scene = Scene({
+        id: 'myId'
+      });
+
+      expect(scene.context).to.be.undefined;
+
+      let canvas = document.createElement('canvas');
+      canvas.width = canvas.height = 600;
+      init(canvas);
+
+      expect(scene.context).to.equal(canvas.getContext('2d'));
+    });
+
+    it('should not override context when set if kontra.init is called after created', () => {
+      let context = getContext();
+
+      _reset();
+
+      scene = Scene({
+        id: 'myId',
+        context
+      });
+
+      let canvas = document.createElement('canvas');
+      canvas.width = canvas.height = 600;
+      init(canvas);
+
+      expect(scene.context).to.equal(context);
+    });
+
+    it('should set dom node and camera if kontra.init is called after created', () => {
+      _reset();
+
+      scene = Scene({
+        id: 'myId'
+      });
+
+      let canvas = document.createElement('canvas');
+      canvas.width = canvas.height = 600;
+      init(canvas);
+
+      expect(scene._dn).to.exist;
+      expect(scene.camera.centerX).to.exist;
     });
   });
 

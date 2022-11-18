@@ -1,5 +1,5 @@
 import GameLoop from '../../src/gameLoop.js';
-import { getContext } from '../../src/core.js';
+import { _reset, init, getContext } from '../../src/core.js';
 import { on } from '../../src/events.js';
 import { noop } from '../../src/utils.js';
 import { simulateEvent } from '../utils.js';
@@ -24,6 +24,37 @@ describe('gameLoop', () => {
       }
 
       expect(func).to.throw();
+    });
+
+    it('should set context if kontra.init is called after created', () => {
+      _reset();
+
+      let loop = GameLoop({
+        render: noop
+      });
+
+      expect(loop.context).to.be.undefined;
+
+      let canvas = document.createElement('canvas');
+      canvas.width = canvas.height = 600;
+      init(canvas);
+
+      expect(loop.context).to.equal(canvas.getContext('2d'));
+    });
+
+    it('should not override context when set if kontra.init is called after created', () => {
+      _reset();
+
+      let loop = GameLoop({
+        render: noop,
+        context: true
+      });
+
+      let canvas = document.createElement('canvas');
+      canvas.width = canvas.height = 600;
+      init(canvas);
+
+      expect(loop.context).to.equal(true);
     });
   });
 

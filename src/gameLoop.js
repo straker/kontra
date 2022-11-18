@@ -1,5 +1,5 @@
 import { noop } from './utils.js';
-import { emit } from './events.js';
+import { emit, on } from './events.js';
 import { getContext } from './core.js';
 
 /**
@@ -87,6 +87,10 @@ export default function GameLoop({
     });
   }
 
+  on('init', () => {
+    loop.context ??= getContext();
+  });
+
   /**
    * Called every frame of the game loop.
    */
@@ -115,7 +119,7 @@ export default function GameLoop({
       accumulator -= delta;
     }
 
-    clearFn(context);
+    clearFn(loop.context);
     loop.render();
   }
 
@@ -158,6 +162,14 @@ export default function GameLoop({
      * @property {Boolean} isStopped
      */
     isStopped: true,
+
+    /**
+     * The context the game loop will clear. Defaults to [core.getContext()](api/core#getCcontext).
+     *
+     * @memberof GameLoop
+     * @property {CanvasRenderingContext2D} context
+     */
+    context,
 
     /**
      * Start the game loop.

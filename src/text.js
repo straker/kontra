@@ -1,9 +1,12 @@
 import { GameObjectClass } from './gameObject.js';
+import { on } from './events.js';
 import { getContext } from './core.js';
 
 let fontSizeRegex = /(\d+)(\w+)/;
 
 function parseFont(font) {
+  if (!font) return { computed: 0 };
+
   let match = font.match(fontSizeRegex);
 
   // coerce string to number
@@ -91,7 +94,7 @@ class Text extends GameObjectClass {
      * @memberof Text
      * @property {String} font
      */
-    font = getContext().font,
+    font = getContext()?.font,
 
     /**
      * The color of the text.
@@ -113,7 +116,14 @@ class Text extends GameObjectClass {
     });
 
     // p = prerender
-    this._p();
+    if (this.context) {
+      this._p();
+    }
+
+    on('init', () => {
+      this.font ??= getContext().font;
+      this._p();
+    });
   }
 
   // keep width and height getters/settings so we can set _w and _h

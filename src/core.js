@@ -92,3 +92,8 @@ export function init(canvas, { contextless = false } = {}) {
 
   return { canvas: canvasEl, context };
 }
+
+// expose for testing
+export function _reset() {
+  canvasEl = context = undefined;
+}

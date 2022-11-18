@@ -1,5 +1,5 @@
 import GameObject, { GameObjectClass } from '../../src/gameObject.js';
-import { getContext } from '../../src/core.js';
+import { _reset, init, getContext } from '../../src/core.js';
 import { noop } from '../../src/utils.js';
 import { degToRad } from '../../src/helpers.js';
 
@@ -82,6 +82,32 @@ describe(
         let obj = new MyClass();
         expect(obj.width).to.equal(20);
         expect(obj.height).to.equal(30);
+      });
+
+      it('should set context if kontra.init is called after created', () => {
+        _reset();
+
+        gameObject = GameObject();
+
+        expect(gameObject.context).to.be.undefined;
+
+        let canvas = document.createElement('canvas');
+        canvas.width = canvas.height = 600;
+        init(canvas);
+
+        expect(gameObject.context).to.equal(canvas.getContext('2d'));
+      });
+
+      it('should not override context when set if kontra.init is called after created', () => {
+        _reset();
+
+        gameObject = GameObject({ context: true });
+
+        let canvas = document.createElement('canvas');
+        canvas.width = canvas.height = 600;
+        init(canvas);
+
+        expect(gameObject.context).to.equal(true);
       });
 
       if (testContext.GAMEOBJECT_ANCHOR) {

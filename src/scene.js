@@ -1,5 +1,6 @@
 import { getContext } from './core.js';
 import GameObject from './gameObject.js';
+import { on } from './events.js';
 import { srOnlyStyle, addToDom, removeFromArray } from './utils.js';
 import { collides } from './helpers.js';
 
@@ -134,18 +135,6 @@ class Scene {
   }) {
     // o = objects
     this._o = [];
-    let canvas = context.canvas;
-
-    // create an accessible DOM node for screen readers (do this first
-    // so we can move DOM nodes in add())
-    // dn = dom node
-    let section = (this._dn = document.createElement('section'));
-    section.tabIndex = -1;
-    section.style = srOnlyStyle;
-    section.id = id;
-    section.setAttribute('aria-label', name);
-
-    addToDom(section, canvas);
 
     // add all properties to the object, overriding any defaults
     Object.assign(this, {
@@ -158,6 +147,8 @@ class Scene {
       ...props
     });
 
+    this.add(objects);
+
     /**
      * The camera object which is used as the focal point for the scene. Defaults to to the size of the canvas with a focal point  at its center. The scene will not render objects that are outside the bounds of the camera.
      *
@@ -165,22 +156,49 @@ class Scene {
      * @memberof Scene
      * @property {GameObject} camera
      */
-    let { width, height } = canvas;
-    let x = width / 2;
-    let y = height / 2;
     this.camera = GameObject({
-      x,
-      y,
-      width,
-      height,
       context,
-      centerX: x,
-      centerY: y,
       anchor: { x: 0.5, y: 0.5 },
       render: this._rf.bind(this)
     });
 
-    this.add(objects);
+    let init = () => {
+      let canvas = this.context.canvas;
+
+      // create an accessible DOM node for screen readers
+      // (do this first so we can move DOM nodes in add())
+      // dn = dom node
+      let section = (this._dn = document.createElement('section'));
+      section.tabIndex = -1;
+      section.style = srOnlyStyle;
+      section.id = id;
+      section.setAttribute('aria-label', name);
+
+      addToDom(section, canvas);
+
+      let { width, height } = canvas;
+      let x = width / 2;
+      let y = height / 2;
+      Object.assign(this.camera, {
+        x,
+        y,
+        width,
+        height,
+        centerX: x,
+        centerY: y,
+      });
+    }
+
+    if (this.context) {
+      init();
+    }
+
+    on('init', () => {
+      this.context ??= getContext();
+      if (!this._dn) {
+        init();
+      }
+    });
   }
 
   set objects(value) {
@@ -269,7 +287,7 @@ class Scene {
    * @function destroy
    */
   destroy() {
-    this._dn.remove();
+    this._dn?.remove();
     this._o.map(object => object.destroy && object.destroy());
   }
 

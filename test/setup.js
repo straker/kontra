@@ -1,4 +1,7 @@
-import { init } from '../src/core.js';
+// permutations script prepends this file with the test file
+// so we need to rename this import so other files that import
+// it don't import by the same name
+import { init as initCore } from '../src/core.js';
 
 // ensure canvas exists before each test
 function setup() {
@@ -6,7 +9,7 @@ function setup() {
   canvas.id = 'mainCanvas';
   canvas.width = canvas.height = 600;
   document.body.appendChild(canvas);
-  init(canvas);
+  initCore(canvas);
 }
 
 beforeEach(() => {

@@ -1,5 +1,5 @@
 import Text, { TextClass } from '../../src/text.js';
-import { getContext } from '../../src/core.js';
+import { _reset, init, getContext } from '../../src/core.js';
 
 // test-context:start
 let testContext = {
@@ -93,6 +93,56 @@ describe(
         text.width = 100;
 
         expect(text._d).to.be.true;
+      });
+
+      it('should not call prerender if context is not set', () => {
+        _reset();
+
+        let text = Text({ text: '' });
+
+        expect(text._s).to.not.exist;
+      });
+
+      it('should set font if kontra.init is called after created', () => {
+        _reset();
+
+        let text = Text({ text: '' });
+
+        expect(text.font).to.be.undefined;
+
+        let canvas = document.createElement('canvas');
+        canvas.width = canvas.height = 600;
+        let context = canvas.getContext('2d');
+        context.font = '32px Arial';
+        init(canvas);
+
+        expect(text.font).to.equal('32px Arial');
+      });
+
+      it('should not override font when set if kontra.init is called after created', () => {
+        _reset();
+
+        let text = Text({ text: '', font: '42px Arial' });
+
+        let canvas = document.createElement('canvas');
+        canvas.width = canvas.height = 600;
+        let context = canvas.getContext('2d');
+        context.font = '32px Arial';
+        init(canvas);
+
+        expect(text.font).to.equal('42px Arial');
+      });
+
+      it('should call prerender if kontra.init is called after created', () => {
+        _reset();
+
+        let text = Text({ text: '' });
+
+        let canvas = document.createElement('canvas');
+        canvas.width = canvas.height = 600;
+        init(canvas);
+
+        expect(text._s).to.exist;
       });
     });
 

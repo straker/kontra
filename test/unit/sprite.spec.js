@@ -243,7 +243,9 @@ describe(
               reset: sinon.spy(),
               clone() {
                 return this;
-              }
+              },
+              stop: noop,
+              start: noop
             },
             idle: {
               width: 10,
@@ -251,7 +253,9 @@ describe(
               reset: sinon.spy(),
               clone() {
                 return this;
-              }
+              },
+              stop: noop,
+              start: noop
             }
           };
 
@@ -264,28 +268,6 @@ describe(
           sprite.playAnimation('idle');
 
           expect(sprite.currentAnimation).to.equal(animations.idle);
-        });
-
-        it("should reset the animation if it doesn't loop", () => {
-          let animations = {
-            walk: {
-              width: 10,
-              height: 20,
-              loop: false,
-              reset: sinon.spy(),
-              clone() {
-                return this;
-              }
-            }
-          };
-
-          let sprite = Sprite({
-            animations
-          });
-
-          sprite.playAnimation('walk');
-
-          expect(animations.walk.reset.called).to.be.true;
         });
       } else {
         it('should not have animation property', () => {

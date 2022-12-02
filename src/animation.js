@@ -98,7 +98,7 @@ class Animation {
       margin,
 
       /**
-       * If the animation is currently playing.
+       * If the animation is currently stopped.
        *
        * ```js
        * import { Animation } from 'kontra';
@@ -106,18 +106,18 @@ class Animation {
        * let animation = Animation({
        *   // ...
        * });
-       * console.log(animation.isPlaying);  //=> false
+       * console.log(animation.isStopped);  //=> true
        *
        * animation.start();
-       * console.log(animation.isPlaying);  //=> true
+       * console.log(animation.isStopped);  //=> false
        *
        * animation.stop();
-       * console.log(animation.isPlaying);  //=> false
+       * console.log(animation.isStopped);  //=> true
        * ```
        * @memberof Animation
-       * @property {Boolean} isPlaying
+       * @property {Boolean} isStopped
        */
-      isPlaying: false,
+      isStopped: true,
 
       // f = frame, a = accumulator
       _f: 0,
@@ -142,7 +142,7 @@ class Animation {
    * @function start
    */
   start() {
-    this.isPlaying = true;
+    this.isStopped = false;
 
     if (!this.loop) {
       this.reset();
@@ -155,7 +155,7 @@ class Animation {
    * @function stop
    */
   stop() {
-    this.isPlaying = false;
+    this.isStopped = true;
   }
 
   /**
@@ -178,7 +178,7 @@ class Animation {
   update(dt = 1 / 60) {
     // if the animation doesn't loop we stop at the last frame
     if (!this.loop && this._f == this.frames.length - 1) {
-      this.isPlaying = false;
+      this.isStopped = false;
       return;
     }
 

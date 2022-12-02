@@ -40,7 +40,7 @@ describe('animation', () => {
       expect(animation.height).to.equal(5);
       expect(animation.loop).to.equal(true);
       expect(animation.margin).to.equal(0);
-      expect(animation.isPlaying).to.equal(false);
+      expect(animation.isStopped).to.equal(true);
     });
   });
 
@@ -78,7 +78,7 @@ describe('animation', () => {
     it('should start the animation', () => {
       animation.start();
 
-      expect(animation.isPlaying).to.equal(true);
+      expect(animation.isStopped).to.equal(false);
     });
 
     it("should reset if the animation doesn't loop", () => {
@@ -106,7 +106,7 @@ describe('animation', () => {
       animation.start();
       animation.stop();
 
-      expect(animation.isPlaying).to.equal(false);
+      expect(animation.isStopped).to.equal(true);
     });
   });
 

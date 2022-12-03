@@ -158,6 +158,7 @@ describe('animation', () => {
       animation.update();
 
       expect(animation._f).to.equal(3);
+      expect(animation.isStopped).to.be.true;
     });
   });
 

@@ -178,7 +178,7 @@ class Animation {
   update(dt = 1 / 60) {
     // if the animation doesn't loop we stop at the last frame
     if (!this.loop && this._f == this.frames.length - 1) {
-      this.isStopped = false;
+      this.isStopped = true;
       return;
     }
 

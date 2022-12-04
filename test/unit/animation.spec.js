@@ -9,6 +9,7 @@ describe('animation', () => {
 
   beforeEach(() => {
     animation = Animation({
+      name: 'walk',
       frames: [1, 2, 3, 4],
       frameRate: 30,
       spriteSheet: {
@@ -32,12 +33,14 @@ describe('animation', () => {
   // --------------------------------------------------
   describe('init', () => {
     it('should set properties on the animation', () => {
+      expect(animation.name).to.equal('walk');
       expect(animation.frames).to.deep.equal([1, 2, 3, 4]);
       expect(animation.frameRate).to.equal(30);
       expect(animation.width).to.equal(5);
       expect(animation.height).to.equal(5);
       expect(animation.loop).to.equal(true);
       expect(animation.margin).to.equal(0);
+      expect(animation.isStopped).to.equal(false);
     });
   });
 
@@ -65,6 +68,45 @@ describe('animation', () => {
 
       expect(animation._f).to.equal(0);
       expect(animation._a).to.equal(0);
+    });
+  });
+
+  // --------------------------------------------------
+  // start
+  // --------------------------------------------------
+  describe('start', () => {
+    it('should start the animation', () => {
+      animation.start();
+
+      expect(animation.isStopped).to.equal(false);
+    });
+
+    it("should reset if the animation doesn't loop", () => {
+      animation.loop = false;
+      sinon.spy(animation, 'reset');
+      animation.start();
+
+      expect(animation.reset.called).to.be.true;
+    });
+
+    it('should not reset if the animation loops', () => {
+      animation.loop = true;
+      sinon.spy(animation, 'reset');
+      animation.start();
+
+      expect(animation.reset.called).to.be.false;
+    });
+  });
+
+  // --------------------------------------------------
+  // stop
+  // --------------------------------------------------
+  describe('stop', () => {
+    it('should stop the animation', () => {
+      animation.start();
+      animation.stop();
+
+      expect(animation.isStopped).to.equal(true);
     });
   });
 
@@ -116,6 +158,17 @@ describe('animation', () => {
       animation.update();
 
       expect(animation._f).to.equal(3);
+      expect(animation.isStopped).to.be.true;
+    });
+
+    it('should not update the animation if is stopped', () => {
+      animation.stop();
+
+      for (let i = 0; i < 10; i++) {
+        animation.update();
+      }
+
+      expect(animation._f).to.equal(0);
     });
   });
 

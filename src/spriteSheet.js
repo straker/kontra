@@ -223,7 +223,8 @@ class SpriteSheet {
         spriteSheet: this,
         frames: sequence,
         frameRate,
-        loop
+        loop,
+        name
       });
     }
   }

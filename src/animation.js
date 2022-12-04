@@ -34,63 +34,97 @@ import { getContext } from './core.js';
  * @param {Number[]} properties.frames - List of frames of the animation.
  * @param {Number}  properties.frameRate - Number of frames to display in one second.
  * @param {Boolean} [properties.loop=true] - If the animation should loop.
+ * @param {String} [properties.name] - The name of the animation.
  */
 class Animation {
-  constructor({ spriteSheet, frames, frameRate, loop = true }) {
-    /**
-     * The sprite sheet to use for the animation.
-     * @memberof Animation
-     * @property {SpriteSheet} spriteSheet
-     */
-    this.spriteSheet = spriteSheet;
-
-    /**
-     * Sequence of frames to use from the sprite sheet.
-     * @memberof Animation
-     * @property {Number[]} frames
-     */
-    this.frames = frames;
-
-    /**
-     * Number of frames to display per second. Adjusting this value will change the speed of the animation.
-     * @memberof Animation
-     * @property {Number} frameRate
-     */
-    this.frameRate = frameRate;
-
-    /**
-     * If the animation should loop back to the beginning once completed.
-     * @memberof Animation
-     * @property {Boolean} loop
-     */
-    this.loop = loop;
-
+  constructor({ spriteSheet, frames, frameRate, loop = true, name }) {
     let { width, height, margin = 0 } = spriteSheet.frame;
 
-    /**
-     * The width of an individual frame. Taken from the [frame width value](api/spriteSheet#frame) of the sprite sheet.
-     * @memberof Animation
-     * @property {Number} width
-     */
-    this.width = width;
+    Object.assign(this, {
+      /**
+       * The sprite sheet to use for the animation.
+       * @memberof Animation
+       * @property {SpriteSheet} spriteSheet
+       */
+      spriteSheet,
 
-    /**
-     * The height of an individual frame. Taken from the [frame height value](api/spriteSheet#frame) of the sprite sheet.
-     * @memberof Animation
-     * @property {Number} height
-     */
-    this.height = height;
+      /**
+       * Sequence of frames to use from the sprite sheet.
+       * @memberof Animation
+       * @property {Number[]} frames
+       */
+      frames,
 
-    /**
-     * The space between each frame. Taken from the [frame margin value](api/spriteSheet#frame) of the sprite sheet.
-     * @memberof Animation
-     * @property {Number} margin
-     */
-    this.margin = margin;
+      /**
+       * Number of frames to display per second. Adjusting this value will change the speed of the animation.
+       * @memberof Animation
+       * @property {Number} frameRate
+       */
+      frameRate,
 
-    // f = frame, a = accumulator
-    this._f = 0;
-    this._a = 0;
+      /**
+       * If the animation should loop back to the beginning once completed.
+       * @memberof Animation
+       * @property {Boolean} loop
+       */
+      loop,
+
+      /**
+       * The name of the animation.
+       * @memberof Animation
+       * @property {String} name
+       */
+      name,
+
+      /**
+       * The width of an individual frame. Taken from the [frame width value](api/spriteSheet#frame) of the sprite sheet.
+       * @memberof Animation
+       * @property {Number} width
+       */
+      width,
+
+      /**
+       * The height of an individual frame. Taken from the [frame height value](api/spriteSheet#frame) of the sprite sheet.
+       * @memberof Animation
+       * @property {Number} height
+       */
+      height,
+
+      /**
+       * The space between each frame. Taken from the [frame margin value](api/spriteSheet#frame) of the sprite sheet.
+       * @memberof Animation
+       * @property {Number} margin
+       */
+      margin,
+
+      /**
+       * If the animation is currently stopped. Stopped animations will not update when the [update()](api/animation#update) function is called.
+       *
+       * Animations are not considered stopped until either the [stop()](api/animation#stop) function is called or the animation gets to the last frame and does not loop.
+       *
+       * ```js
+       * import { Animation } from 'kontra';
+       *
+       * let animation = Animation({
+       *   // ...
+       * });
+       * console.log(animation.isStopped);  //=> false
+       *
+       * animation.start();
+       * console.log(animation.isStopped);  //=> false
+       *
+       * animation.stop();
+       * console.log(animation.isStopped);  //=> true
+       * ```
+       * @memberof Animation
+       * @property {Boolean} isStopped
+       */
+      isStopped: false,
+
+      // f = frame, a = accumulator
+      _f: 0,
+      _a: 0
+    });
   }
 
   /**
@@ -102,6 +136,28 @@ class Animation {
    */
   clone() {
     return new Animation(this);
+  }
+
+  /**
+   * Start the animation.
+   * @memberof Animation
+   * @function start
+   */
+  start() {
+    this.isStopped = false;
+
+    if (!this.loop) {
+      this.reset();
+    }
+  }
+
+  /**
+   * Stop the animation.
+   * @memberof Animation
+   * @function stop
+   */
+  stop() {
+    this.isStopped = true;
   }
 
   /**
@@ -122,8 +178,15 @@ class Animation {
    * @param {Number} [dt=1/60] - Time since last update.
    */
   update(dt = 1 / 60) {
+    if (this.isStopped) {
+      return;
+    }
+
     // if the animation doesn't loop we stop at the last frame
-    if (!this.loop && this._f == this.frames.length - 1) return;
+    if (!this.loop && this._f == this.frames.length - 1) {
+      this.stop();
+      return;
+    }
 
     this._a += dt;
 

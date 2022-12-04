@@ -100,6 +100,8 @@ class Animation {
       /**
        * If the animation is currently stopped. Animations are not considered stopped until the [stop()](api/animation#stop) function is called.
        *
+       * Stopped animations will not update when the [update()](api/animation#update) function is called.
+       *
        * ```js
        * import { Animation } from 'kontra';
        *

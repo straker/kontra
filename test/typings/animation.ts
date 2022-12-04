@@ -8,6 +8,7 @@ let spriteSheet: kontra.SpriteSheet = kontra.SpriteSheet({
 });
 
 let animation: kontra.Animation = kontra.Animation({
+  name: 'anim',
   spriteSheet: spriteSheet,
   frames: [1,2,3,4],
   frameRate: 35
@@ -17,6 +18,8 @@ animation.update();
 animation.update(1/60);
 animation.render({x: 10, y: 20});
 animation.reset();
+animation.stop();
+animation.start();
 
 let spriteSheetAnim: kontra.SpriteSheet = animation.spriteSheet;
 let frames: number[] = animation.frames;
@@ -25,6 +28,8 @@ let loop: boolean = animation.loop;
 let width: number = animation.width;
 let height: number = animation.height;
 let margin: number = animation.margin;
+let stopped: boolean = animation.isStopped;
+let name: string = animation.name;
 
 // clone
 let clone: kontra.Animation = animation.clone();

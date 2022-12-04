@@ -147,19 +147,14 @@ class Sprite extends GameObjectClass {
    * @param {String} name - Name of the animation to play.
    */
   playAnimation(name) {
+    this.currentAnimation?.stop();
     this.currentAnimation = this.animations[name];
-
-    if (!this.currentAnimation.loop) {
-      this.currentAnimation.reset();
-    }
+    this.currentAnimation.start();
   }
 
   advance(dt) {
     super.advance(dt);
-
-    if (this.currentAnimation) {
-      this.currentAnimation.update(dt);
-    }
+    this.currentAnimation?.update(dt);
   }
   // @endif
 

@@ -98,7 +98,7 @@ class Animation {
       margin,
 
       /**
-       * If the animation is currently stopped.
+       * If the animation is currently stopped. Animations are not considered stopped until the [stop()](api/animation#stop) function is called.
        *
        * ```js
        * import { Animation } from 'kontra';
@@ -106,7 +106,7 @@ class Animation {
        * let animation = Animation({
        *   // ...
        * });
-       * console.log(animation.isStopped);  //=> true
+       * console.log(animation.isStopped);  //=> false
        *
        * animation.start();
        * console.log(animation.isStopped);  //=> false

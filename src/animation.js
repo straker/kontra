@@ -98,9 +98,9 @@ class Animation {
       margin,
 
       /**
-       * If the animation is currently stopped. Animations are not considered stopped until the [stop()](api/animation#stop) function is called.
+       * If the animation is currently stopped. Stopped animations will not update when the [update()](api/animation#update) function is called.
        *
-       * Stopped animations will not update when the [update()](api/animation#update) function is called.
+       * Animations are not considered stopped until either the [stop()](api/animation#stop) function is called or the animation gets to the last frame and does not loop.
        *
        * ```js
        * import { Animation } from 'kontra';
@@ -184,7 +184,7 @@ class Animation {
 
     // if the animation doesn't loop we stop at the last frame
     if (!this.loop && this._f == this.frames.length - 1) {
-      this.isStopped = true;
+      this.stop();
       return;
     }
 

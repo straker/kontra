@@ -117,7 +117,7 @@ class Animation {
        * @memberof Animation
        * @property {Boolean} isStopped
        */
-      isStopped: true,
+      isStopped: false,
 
       // f = frame, a = accumulator
       _f: 0,
@@ -176,6 +176,10 @@ class Animation {
    * @param {Number} [dt=1/60] - Time since last update.
    */
   update(dt = 1 / 60) {
+    if (this.isStopped) {
+      return;
+    }
+
     // if the animation doesn't loop we stop at the last frame
     if (!this.loop && this._f == this.frames.length - 1) {
       this.isStopped = true;

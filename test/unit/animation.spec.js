@@ -40,7 +40,7 @@ describe('animation', () => {
       expect(animation.height).to.equal(5);
       expect(animation.loop).to.equal(true);
       expect(animation.margin).to.equal(0);
-      expect(animation.isStopped).to.equal(true);
+      expect(animation.isStopped).to.equal(false);
     });
   });
 
@@ -159,6 +159,16 @@ describe('animation', () => {
 
       expect(animation._f).to.equal(3);
       expect(animation.isStopped).to.be.true;
+    });
+
+    it('should not update the animation if is stopped', () => {
+      animation.stop();
+
+      for (let i = 0; i < 10; i++) {
+        animation.update();
+      }
+
+      expect(animation._f).to.equal(0);
     });
   });
 

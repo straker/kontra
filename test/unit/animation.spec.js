@@ -89,7 +89,7 @@ describe('animation', () => {
       expect(animation.reset.called).to.be.true;
     });
 
-    it('should not reset if the animation loop', () => {
+    it('should not reset if the animation loops', () => {
       animation.loop = true;
       sinon.spy(animation, 'reset');
       animation.start();

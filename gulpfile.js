@@ -6,7 +6,7 @@ const plumber = require('gulp-plumber');
 const preprocess = require('gulp-preprocess');
 const rollup = require('@rollup/stream');
 const source = require('vinyl-source-stream');
-const packageJson = require('./package.json');
+const pkg = require('./package.json');
 require('./tasks/docs.js');
 require('./tasks/typescript.js');
 
@@ -44,7 +44,7 @@ const context = {
 
 const headerComment = `/**
  * @preserve
- * Kontra.js v${packageJson.version}
+ * Kontra.js v${pkg.version}
  */`;
 
 function buildIife() {

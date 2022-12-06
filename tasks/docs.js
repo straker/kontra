@@ -1,8 +1,9 @@
 const gulp = require('gulp');
 const livingcss = require('gulp-livingcss');
+const replace = require('gulp-replace');
 const path = require('path');
 const marked = require('marked');
-const packageJson = require('../package.json');
+const pkg = require('../package.json');
 const fs = require('fs');
 const glob = require('glob');
 
@@ -359,7 +360,7 @@ let tags = {
   packageVersion: function () {
     this.block.description = this.block.description.replace(
       packageVersionRegex,
-      packageJson.version
+      pkg.version
     );
   },
 
@@ -498,7 +499,18 @@ function buildApi() {
     .pipe(gulp.dest('docs/api'));
 }
 
-gulp.task('build:docs', gulp.series(buildApi, buildPages));
+function buildServiceWorker() {
+  const staticCacheName = /kontra-docs-v([\d.]+)/;
+
+  return gulp
+    .src('docs/service-worker.js')
+    .pipe(replace(staticCacheName, (match, p1) => {
+      return match.replace(p1, pkg.version);
+    }))
+    .pipe(gulp.dest('docs'));
+}
+
+gulp.task('build:docs', gulp.series(buildApi, buildPages, buildServiceWorker));
 
 gulp.task('watch:docs', function () {
   gulp.watch(

@@ -24,8 +24,8 @@ if (( $# == 0 )) || ( ! containsElement $1 "${versions[@]}" ); then
 fi
 
 printf "\n${Cyan}Releasing lib${NC}\n"
-npm run dist
 npm version $1
+npm run dist
 npm publish
 
 version=$(node -p "require('./package.json').version")

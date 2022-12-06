@@ -6,6 +6,7 @@ const plumber = require('gulp-plumber');
 const preprocess = require('gulp-preprocess');
 const rollup = require('@rollup/stream');
 const source = require('vinyl-source-stream');
+const packageJson = require('./package.json');
 require('./tasks/docs.js');
 require('./tasks/typescript.js');
 
@@ -41,13 +42,19 @@ const context = {
   // DEBUG and VISUAL_DEBUG are turned off
 };
 
+const headerComment = `/**
+ * @preserve
+ * Kontra.js v${packageJson.version}
+ */`;
+
 function buildIife() {
   return rollup({
     input: './src/kontra.defaults.js',
     output: {
       format: 'iife',
       name: 'kontra',
-      strict: false
+      strict: false,
+      banner: headerComment
     }
   })
     .pipe(source('kontra.js'))
@@ -60,7 +67,8 @@ function buildModule() {
     input: './src/kontra.js',
     output: {
       format: 'es',
-      strict: false
+      strict: false,
+      banner: headerComment
     }
   })
     .pipe(source('kontra.mjs'))

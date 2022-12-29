@@ -1,5 +1,6 @@
 import Scene, { SceneClass } from '../../src/scene.js';
 import { _reset, init, getContext, getCanvas } from '../../src/core.js';
+import { emit } from '../../src/events.js';
 import { noop, srOnlyStyle } from '../../src/utils.js';
 import { collides } from '../../src/helpers.js';
 
@@ -130,20 +131,33 @@ describe('scene', () => {
       expect(scene.camera.anchor).to.deep.equal({ x: 0.5, y: 0.5 });
     });
 
-    it('should not set dom node or camera if context is not set', () => {
+    it('should create a dom node', () => {
       _reset();
 
+      scene.destroy();
       scene = Scene({
         id: 'myId'
       });
 
-      expect(scene._dn).to.not.exist;
+      expect(scene._dn).to.exist;
+    });
+
+    it('should not add dom node to body and not set camera if context is not set', () => {
+      _reset();
+
+      scene.destroy();
+      scene = Scene({
+        id: 'myId'
+      });
+
+      expect(scene._dn.isConnected).to.be.false;
       expect(scene.camera.centerX).to.not.exist;
     });
 
     it('should set context if kontra.init is called after created', () => {
       _reset();
 
+      scene.destroy();
       scene = Scene({
         id: 'myId'
       });
@@ -162,6 +176,7 @@ describe('scene', () => {
 
       _reset();
 
+      scene.destroy();
       scene = Scene({
         id: 'myId',
         context
@@ -174,9 +189,10 @@ describe('scene', () => {
       expect(scene.context).to.equal(context);
     });
 
-    it('should set dom node and camera if kontra.init is called after created', () => {
+    it('should add dom node to body and set camera if kontra.init is called after created', () => {
       _reset();
 
+      scene.destroy();
       scene = Scene({
         id: 'myId'
       });
@@ -185,7 +201,7 @@ describe('scene', () => {
       canvas.width = canvas.height = 600;
       init(canvas);
 
-      expect(scene._dn).to.exist;
+      expect(scene._dn.isConnected).to.be.true;
       expect(scene.camera.centerX).to.exist;
     });
   });
@@ -461,6 +477,14 @@ describe('scene', () => {
       scene.destroy();
 
       expect(object.destroy.called).to.be.true;
+    });
+
+    it('should not re-add DOM node on init', () => {
+      let section = scene._dn;
+      scene.destroy();
+      emit('init');
+
+      expect(section.isConnected).to.be.false;
     });
   });
 

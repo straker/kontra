@@ -1,6 +1,6 @@
 import { getContext } from './core.js';
 import GameObject from './gameObject.js';
-import { on } from './events.js';
+import { on, off } from './events.js';
 import { srOnlyStyle, addToDom, removeFromArray } from './utils.js';
 import { collides } from './helpers.js';
 
@@ -147,6 +147,15 @@ class Scene {
       ...props
     });
 
+    // create an accessible DOM node for screen readers
+    // (do this first so we can move DOM nodes in add())
+    // dn = dom node
+    let section = (this._dn = document.createElement('section'));
+    section.tabIndex = -1;
+    section.style = srOnlyStyle;
+    section.id = id;
+    section.setAttribute('aria-label', name);
+
     this.add(objects);
 
     /**
@@ -162,20 +171,10 @@ class Scene {
       render: this._rf.bind(this)
     });
 
-    let init = () => {
+    // i = init
+    this._i = () => {
+      this.context ??= getContext();
       let canvas = this.context.canvas;
-
-      // create an accessible DOM node for screen readers
-      // (do this first so we can move DOM nodes in add())
-      // dn = dom node
-      let section = (this._dn = document.createElement('section'));
-      section.tabIndex = -1;
-      section.style = srOnlyStyle;
-      section.id = id;
-      section.setAttribute('aria-label', name);
-
-      addToDom(section, canvas);
-
       let { width, height } = canvas;
       let x = width / 2;
       let y = height / 2;
@@ -187,18 +186,17 @@ class Scene {
         centerX: x,
         centerY: y,
       });
+
+      if (!this._dn.isConnected) {
+        addToDom(this._dn, canvas);
+      }
     }
 
     if (this.context) {
-      init();
+      this._i();
     }
 
-    on('init', () => {
-      this.context ??= getContext();
-      if (!this._dn) {
-        init();
-      }
-    });
+    on('init', this._i);
   }
 
   set objects(value) {
@@ -287,7 +285,8 @@ class Scene {
    * @function destroy
    */
   destroy() {
-    this._dn?.remove();
+    off('init', this._i);
+    this._dn.remove();
     this._o.map(object => object.destroy && object.destroy());
   }
 

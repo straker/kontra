@@ -251,11 +251,13 @@ class TileEngine {
   // region, otherwise. Firefox and Safari won't draw it.
   // @see http://stackoverflow.com/questions/19338032/canvas-indexsizeerror-index-or-size-is-negative-or-greater-than-the-allowed-a
   set sx(value) {
-    this._sx = clamp(0, this.mapwidth - getCanvas().width, value);
+    let max = Math.max(0, this.mapwidth - getCanvas().width);
+    this._sx = clamp(0, max, value);
   }
 
   set sy(value) {
-    this._sy = clamp(0, this.mapheight - getCanvas().height, value);
+    let max = Math.max(0, this.mapheight - getCanvas().height);
+    this._sy = clamp(0, max, value);
   }
 
   set objects(value) {

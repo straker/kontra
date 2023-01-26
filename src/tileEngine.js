@@ -277,6 +277,7 @@ class TileEngine {
   add(...objects) {
     objects.flat().map(object => {
       this._o.push(object);
+      object.parent = this;
     });
   }
 
@@ -290,6 +291,7 @@ class TileEngine {
   remove(...objects) {
     objects.flat().map(object => {
       removeFromArray(this._o, object);
+      object.parent = null;
     });
   }
   // @endif

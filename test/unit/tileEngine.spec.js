@@ -988,6 +988,11 @@ describe(
           tileEngine.add([obj, {}]);
           expect(tileEngine.objects.length).to.equal(2);
         });
+
+        it('should set the objects parent to the tileEngine', () => {
+          tileEngine.add(obj);
+          expect(obj.parent).to.equal(tileEngine);
+        });
       } else {
         it('should not exist', () => {
           expect(tileEngine.add).to.not.exist;
@@ -1042,6 +1047,12 @@ describe(
           tileEngine.add(obj, obj2);
           tileEngine.remove([obj, obj2]);
           expect(tileEngine.objects.length).to.equal(0);
+        });
+
+        it('should remove the objects parent', () => {
+          tileEngine.add(obj);
+          tileEngine.remove(obj);
+          expect(obj.parent).to.equal(null);
         });
 
         it('should not error if the object was not added before', () => {

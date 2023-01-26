@@ -5,6 +5,9 @@ import {
   load,
   _reset
 } from '../../src/assets.js';
+import * as pointer from '../../src/pointer.js';
+import { noop } from '../../src/utils.js';
+import { emit } from '../../src/events.js';
 import { init, getCanvas } from '../../src/core.js';
 
 describe('tileEngine integration', () => {
@@ -144,5 +147,39 @@ describe('tileEngine integration', () => {
     }
 
     expect(func).to.throw();
+  });
+
+  it('should correctly track objects with pointer when camera is moved', done => {
+    load('/data/tileset/tileset.json', '/data/tileset/bullet.png')
+      .then(assets => {
+        let tileEngine = TileEngine(assets[0]);
+        let pntr = pointer.initPointer({ radius: 1 });
+        let object = {
+          x: 100,
+          y: 50,
+          width: 10,
+          height: 20,
+          render: noop
+        };
+
+        tileEngine.add(object);
+        pointer.track(object);
+        object.render();
+        emit('tick');
+
+        tileEngine.mapwidth = 900;
+
+        pntr.x = 105;
+        pntr.y = 55;
+        expect(pointer.pointerOver(object)).to.equal(true);
+
+        tileEngine.sx = 100;
+        expect(pointer.pointerOver(object)).to.equal(false);
+
+        pntr.x = 5;
+        expect(pointer.pointerOver(object)).to.equal(true);
+        done();
+      })
+      .catch(done);
   });
 });

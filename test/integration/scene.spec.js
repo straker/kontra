@@ -3,6 +3,9 @@ import Sprite from '../../src/sprite.js';
 import TileEngine from '../../src/tileEngine.js';
 import { init, getCanvas } from '../../src/core.js';
 import { depthSort } from '../../src/helpers.js';
+import * as pointer from '../../src/pointer.js';
+import { noop } from '../../src/utils.js';
+import { emit } from '../../src/events.js';
 
 describe('scene integration', () => {
   before(() => {
@@ -63,5 +66,33 @@ describe('scene integration', () => {
     expect(spies[3].calledBefore(spies[2])).to.be.true;
     expect(spies[2].calledBefore(spies[1])).to.be.true;
     expect(spies[1].calledBefore(spies[0])).to.be.true;
+  });
+
+  it('should correctly track objects with pointer when camera is moved', () => {
+    let pntr = pointer.initPointer({ radius: 1 });
+    let object = {
+      x: 100,
+      y: 50,
+      width: 10,
+      height: 20,
+      render: noop
+    };
+    let scene = Scene({
+      id: 'myId',
+      objects: [object]
+    });
+    pointer.track(object);
+    object.render();
+    emit('tick');
+
+    pntr.x = 105;
+    pntr.y = 55;
+    expect(pointer.pointerOver(object)).to.equal(true);
+
+    scene.camera.x += 100;
+    expect(pointer.pointerOver(object)).to.equal(false);
+
+    pntr.x = 5;
+    expect(pointer.pointerOver(object)).to.equal(true);
   });
 });

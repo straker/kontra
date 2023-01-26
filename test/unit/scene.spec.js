@@ -289,6 +289,12 @@ describe('scene', () => {
       expect(scene.objects.length).to.equal(2);
     });
 
+    it('should set the objects parent to the scene', () => {
+      let object = {};
+      scene.add(object);
+      expect(object.parent).to.equal(scene);
+    });
+
     it('should add any objects with DOM nodes to the scenes DOM node', () => {
       let object = {
         _dn: document.createElement('div')
@@ -373,6 +379,13 @@ describe('scene', () => {
       expect(scene.objects.length).to.equal(0);
     });
 
+    it('should remove the objects parent', () => {
+      let object = {};
+      scene.add(object);
+      scene.remove(object);
+      expect(object.parent).to.equal(null);
+    });
+
     it('should remove any objects with DOM nodes', () => {
       let object = {
         _dn: document.createElement('div')
@@ -431,6 +444,15 @@ describe('scene', () => {
       expect(scene._dn.contains(node1)).to.be.false;
       expect(scene._dn.contains(node2)).to.be.false;
       expect(node1.contains(node2)).to.be.true;
+    });
+
+    it('moving the camera should set the scenes sx and sy properties', () => {
+      let canvas = scene.context.canvas;
+      scene.camera.x = 10;
+      scene.camera.y = 20;
+
+      expect(scene.sx).to.equal(10 - canvas.width / 2);
+      expect(scene.sy).to.equal(20 - canvas.height / 2);
     });
   });
 
@@ -541,6 +563,14 @@ describe('scene', () => {
 
       expect(scene.camera.x).to.equal(10);
       expect(scene.camera.y).to.equal(10);
+    });
+
+    it('should set the scenes sx and sy properties', () => {
+      let canvas = scene.context.canvas;
+      scene.lookAt({ x: 10, y: 20 });
+
+      expect(scene.sx).to.equal(10 - canvas.width / 2);
+      expect(scene.sy).to.equal(20 - canvas.height / 2);
     });
   });
 

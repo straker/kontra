@@ -195,39 +195,47 @@ describe(
         });
       });
 
-      it('should set sx and sy', () => {
-        tileEngine.sx = 10;
-        tileEngine.sy = 20;
+      if (testContext.TILEENGINE_CAMERA) {
+        it('should set sx and sy', () => {
+          tileEngine.sx = 10;
+          tileEngine.sy = 20;
 
-        expect(tileEngine.sx).to.equal(10);
-        expect(tileEngine.sy).to.equal(20);
-      });
+          expect(tileEngine.sx).to.equal(10);
+          expect(tileEngine.sy).to.equal(20);
+        });
 
-      it('should clamp to min of 0', () => {
-        tileEngine.sx = -10;
-        tileEngine.sy = -20;
+        it('should clamp to min of 0', () => {
+          tileEngine.sx = -10;
+          tileEngine.sy = -20;
 
-        expect(tileEngine.sx).to.equal(0);
-        expect(tileEngine.sy).to.equal(0);
-      });
+          expect(tileEngine.sx).to.equal(0);
+          expect(tileEngine.sy).to.equal(0);
+        });
 
-      it('should clamp to max of canvas', () => {
-        tileEngine.sx = 1000;
-        tileEngine.sy = 2000;
+        it('should clamp to max of canvas', () => {
+          tileEngine.sx = 1000;
+          tileEngine.sy = 2000;
 
-        expect(tileEngine.sx).to.equal(100);
-        expect(tileEngine.sy).to.equal(100);
-      });
+          expect(tileEngine.sx).to.equal(100);
+          expect(tileEngine.sy).to.equal(100);
+        });
 
-      it('should clamp to 0 if map size is smaller than canvas', () => {
-        tileEngine.mapwidth = 500;
-        tileEngine.mapheight = 400;
-        tileEngine.sx = 10;
-        tileEngine.sy = 20;
+        it('should clamp to 0 if map size is smaller than canvas', () => {
+          tileEngine.mapwidth = 500;
+          tileEngine.mapheight = 400;
+          tileEngine.sx = 10;
+          tileEngine.sy = 20;
 
-        expect(tileEngine.sx).to.equal(0);
-        expect(tileEngine.sy).to.equal(0);
-      });
+          expect(tileEngine.sx).to.equal(0);
+          expect(tileEngine.sy).to.equal(0);
+        });
+      }
+      else {
+        it('should not have sx and sy properties', () => {
+          expect(tileEngine.sx).to.not.exist;
+          expect(tileEngine.sy).to.not.exist;
+        });
+      }
     });
 
     // --------------------------------------------------

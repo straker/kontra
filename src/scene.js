@@ -1,5 +1,5 @@
 import { getContext } from './core.js';
-import GameObject from './gameObject.js';
+import { GameObjectClass } from './gameObject.js';
 import { on, off } from './events.js';
 import { srOnlyStyle, addToDom, removeFromArray } from './utils.js';
 import { collides } from './helpers.js';
@@ -156,8 +156,6 @@ class Scene {
     section.id = id;
     section.setAttribute('aria-label', name);
 
-    this.add(objects);
-
     /**
      * The camera object which is used as the focal point for the scene. Defaults to to the size of the canvas with a focal point  at its center. The scene will not render objects that are outside the bounds of the camera.
      *
@@ -165,11 +163,30 @@ class Scene {
      * @memberof Scene
      * @property {GameObject} camera
      */
-    this.camera = GameObject({
+    let _this = this;
+    class Camera extends GameObjectClass {
+      set x(value) {
+        _this.sx = value - this.centerX;
+        super.x = value;
+      }
+      get x() {
+        return super.x;
+      }
+      set y(value) {
+        _this.sy = value - this.centerY;
+        super.y = value;
+      }
+      get y() {
+        return super.y;
+      }
+    }
+    this.camera = new Camera({
       context,
       anchor: { x: 0.5, y: 0.5 },
       render: this._rf.bind(this)
     });
+
+    this.add(objects);
 
     // i = init
     this._i = () => {
@@ -179,12 +196,12 @@ class Scene {
       let x = width / 2;
       let y = height / 2;
       Object.assign(this.camera, {
+        centerX: x,
+        centerY: y,
         x,
         y,
         width,
         height,
-        centerX: x,
-        centerY: y,
       });
 
       if (!this._dn.isConnected) {
@@ -218,6 +235,7 @@ class Scene {
   add(...objects) {
     objects.flat().map(object => {
       this._o.push(object);
+      object.parent = this;
 
       // move all objects to be in the scenes DOM node so we can
       // hide and show the DOM node and thus hide and show all the
@@ -238,6 +256,7 @@ class Scene {
   remove(...objects) {
     objects.flat().map(object => {
       removeFromArray(this._o, object);
+      object.parent = null;
 
       getAllNodes(object).map(node => {
         addToDom(node, this.context);

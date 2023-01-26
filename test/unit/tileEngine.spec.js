@@ -171,6 +171,66 @@ describe(
     });
 
     // --------------------------------------------------
+    // tileEngine.sx/sy
+    // --------------------------------------------------
+    describe('sx/sy', () => {
+      let tileEngine;
+      beforeEach(() => {
+        tileEngine = TileEngine({
+          tilewidth: 10,
+          tileheight: 10,
+          width: 70,
+          height: 70,
+          tilesets: [
+            {
+              image: new Image()
+            }
+          ],
+          layers: [
+            {
+              name: 'test',
+              data: [0, 0, 1, 0, 0]
+            }
+          ]
+        });
+      });
+
+      it('should set sx and sy', () => {
+        tileEngine.sx = 10;
+        tileEngine.sy = 20;
+
+        expect(tileEngine.sx).to.equal(10);
+        expect(tileEngine.sy).to.equal(20);
+      });
+
+      it('should clamp to min of 0', () => {
+        tileEngine.sx = -10;
+        tileEngine.sy = -20;
+
+        expect(tileEngine.sx).to.equal(0);
+        expect(tileEngine.sy).to.equal(0);
+      });
+
+      it('should clamp to max of canvas', () => {
+        tileEngine.sx = 1000;
+        tileEngine.sy = 2000;
+
+        expect(tileEngine.sx).to.equal(100);
+        expect(tileEngine.sy).to.equal(100);
+      });
+
+      it('should clamp to 0 if maps size is smaller than canvas', () => {
+        tileEngine.mapwidth = 500;
+        tileEngine.mapheight = 400;
+        tileEngine.sx = 10;
+        tileEngine.sy = 20;
+
+        expect(tileEngine.sx).to.equal(0);
+        expect(tileEngine.sy).to.equal(0);
+      });
+    });
+
+    // --------------------------------------------------
     // tileEngine.render
     // --------------------------------------------------
     describe('render', () => {

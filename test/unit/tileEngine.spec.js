@@ -219,7 +219,7 @@ describe(
         expect(tileEngine.sy).to.equal(100);
       });
 
-      it('should clamp to 0 if maps size is smaller than canvas', () => {
+      it('should clamp to 0 if map size is smaller than canvas', () => {
         tileEngine.mapwidth = 500;
         tileEngine.mapheight = 400;
         tileEngine.sx = 10;

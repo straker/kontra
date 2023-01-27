@@ -250,13 +250,16 @@
   </ul>
   <section role="tabpanel" aria-labelledby=helpers-global-tab data-tabpanel="global"><pre><code class="language-js">let { degToRad } = kontra;
 
-let radians = degToRad(180);  // =&gt; 3.14</code></pre></section>
+let radians = degToRad(180);  // =&gt; 3.14
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=helpers-es-tab data-tabpanel="es"><pre><code class="language-js">import { degToRad } from 'path/to/kontra.mjs';
 
-let radians = degToRad(180);  // =&gt; 3.14</code></pre></section>
+let radians = degToRad(180);  // =&gt; 3.14
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=helpers-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { degToRad } from &#39;kontra&#39;;
 
-let radians = degToRad(180);  // =&gt; 3.14</code></pre></section>
+let radians = degToRad(180);  // =&gt; 3.14
+</code></pre></section>
 </div>
         
 
@@ -392,7 +395,8 @@ let sprite2 = Sprite({
   color: &#39;red&#39;,
 });
 
-sprite2.rotation = angleToTarget(sprite2, sprite);</code></pre></section>
+sprite2.rotation = angleToTarget(sprite2, sprite);
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=angletotarget-es-tab data-tabpanel="es"><pre><code class="language-js">import { angleToTarget, Sprite } from 'path/to/kontra.mjs';
 
 let sprite = Sprite({
@@ -413,7 +417,8 @@ let sprite2 = Sprite({
   color: &#39;red&#39;,
 });
 
-sprite2.rotation = angleToTarget(sprite2, sprite);</code></pre></section>
+sprite2.rotation = angleToTarget(sprite2, sprite);
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=angletotarget-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { angleToTarget, Sprite } from &#39;kontra&#39;;
 
 let sprite = Sprite({
@@ -434,7 +439,8 @@ let sprite2 = Sprite({
   color: &#39;red&#39;,
 });
 
-sprite2.rotation = angleToTarget(sprite2, sprite);</code></pre></section>
+sprite2.rotation = angleToTarget(sprite2, sprite);
+</code></pre></section>
 </div>
           <h3 id="title-angleToTarget"><span class="visually-hidden">angleToTarget</span> Parameters</span></h3>
           <dl aria-labelledby="title-angleToTarget">
@@ -534,7 +540,8 @@ collides(sprite, sprite2);  //=&gt; false
 
 sprite2.x = 115;
 
-collides(sprite, sprite2);  //=&gt; true</code></pre></section>
+collides(sprite, sprite2);  //=&gt; true
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=collides-es-tab data-tabpanel="es"><pre><code class="language-js">import { Sprite, collides } from 'path/to/kontra.mjs';
 
 let sprite = Sprite({
@@ -555,7 +562,8 @@ collides(sprite, sprite2);  //=&gt; false
 
 sprite2.x = 115;
 
-collides(sprite, sprite2);  //=&gt; true</code></pre></section>
+collides(sprite, sprite2);  //=&gt; true
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=collides-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { Sprite, collides } from &#39;kontra&#39;;
 
 let sprite = Sprite({
@@ -576,7 +584,8 @@ collides(sprite, sprite2);  //=&gt; false
 
 sprite2.x = 115;
 
-collides(sprite, sprite2);  //=&gt; true</code></pre></section>
+collides(sprite, sprite2);  //=&gt; true
+</code></pre></section>
 </div>
           <h3 id="title-collides"><span class="visually-hidden">collides</span> Parameters</span></h3>
           <dl aria-labelledby="title-collides">
@@ -728,15 +737,18 @@ collides(sprite, sprite2);  //=&gt; true</code></pre></section>
   <section role="tabpanel" aria-labelledby=inverselerp-global-tab data-tabpanel="global"><pre><code class="language-js">let { inverseLerp } = kontra;
 
 console.log( inverseLerp(10, 20, 15) );  // =&gt; 0.5
-console.log( inverseLerp(10, 20, 30) );  // =&gt; 2</code></pre></section>
+console.log( inverseLerp(10, 20, 30) );  // =&gt; 2
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=inverselerp-es-tab data-tabpanel="es"><pre><code class="language-js">import { inverseLerp } from 'path/to/kontra.mjs';
 
 console.log( inverseLerp(10, 20, 15) );  // =&gt; 0.5
-console.log( inverseLerp(10, 20, 30) );  // =&gt; 2</code></pre></section>
+console.log( inverseLerp(10, 20, 30) );  // =&gt; 2
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=inverselerp-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { inverseLerp } from &#39;kontra&#39;;
 
 console.log( inverseLerp(10, 20, 15) );  // =&gt; 0.5
-console.log( inverseLerp(10, 20, 30) );  // =&gt; 2</code></pre></section>
+console.log( inverseLerp(10, 20, 30) );  // =&gt; 2
+</code></pre></section>
 </div>
           <h3 id="title-inverseLerp"><span class="visually-hidden">inverseLerp</span> Parameters</span></h3>
           <dl aria-labelledby="title-inverseLerp">
@@ -789,15 +801,18 @@ console.log( inverseLerp(10, 20, 30) );  // =&gt; 2</code></pre></section>
   <section role="tabpanel" aria-labelledby=lerp-global-tab data-tabpanel="global"><pre><code class="language-js">let { lerp } = kontra;
 
 console.log( lerp(10, 20, 0.5) );  // =&gt; 15
-console.log( lerp(10, 20, 2) );  // =&gt; 30</code></pre></section>
+console.log( lerp(10, 20, 2) );  // =&gt; 30
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=lerp-es-tab data-tabpanel="es"><pre><code class="language-js">import { lerp } from 'path/to/kontra.mjs';
 
 console.log( lerp(10, 20, 0.5) );  // =&gt; 15
-console.log( lerp(10, 20, 2) );  // =&gt; 30</code></pre></section>
+console.log( lerp(10, 20, 2) );  // =&gt; 30
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=lerp-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { lerp } from &#39;kontra&#39;;
 
 console.log( lerp(10, 20, 0.5) );  // =&gt; 15
-console.log( lerp(10, 20, 2) );  // =&gt; 30</code></pre></section>
+console.log( lerp(10, 20, 2) );  // =&gt; 30
+</code></pre></section>
 </div>
           <h3 id="title-lerp"><span class="visually-hidden">lerp</span> Parameters</span></h3>
           <dl aria-labelledby="title-lerp">
@@ -966,15 +981,18 @@ console.log( lerp(10, 20, 2) );  // =&gt; 30</code></pre></section>
   <section role="tabpanel" aria-labelledby=seedrand-global-tab data-tabpanel="global"><pre><code class="language-js">let { seedRand } = kontra;
 
 let rand = seedRand(&#39;kontra&#39;);
-console.log(rand());  // =&gt; always 0.33761959057301283</code></pre></section>
+console.log(rand());  // =&gt; always 0.33761959057301283
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=seedrand-es-tab data-tabpanel="es"><pre><code class="language-js">import { seedRand } from 'path/to/kontra.mjs';
 
 let rand = seedRand(&#39;kontra&#39;);
-console.log(rand());  // =&gt; always 0.33761959057301283</code></pre></section>
+console.log(rand());  // =&gt; always 0.33761959057301283
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=seedrand-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { seedRand } from &#39;kontra&#39;;
 
 let rand = seedRand(&#39;kontra&#39;);
-console.log(rand());  // =&gt; always 0.33761959057301283</code></pre></section>
+console.log(rand());  // =&gt; always 0.33761959057301283
+</code></pre></section>
 </div>
           <h3 id="title-seedRand"><span class="visually-hidden">seedRand</span> Parameters</span></h3>
           <dl aria-labelledby="title-seedRand">

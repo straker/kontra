@@ -276,7 +276,8 @@ let loop = GameLoop({
   }
 });
 
-loop.start();</code></pre></section>
+loop.start();
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=gameloop-es-tab data-tabpanel="es"><pre><code class="language-js">import { Sprite, GameLoop } from 'path/to/kontra.mjs';
 
 let sprite = Sprite({
@@ -302,7 +303,8 @@ let loop = GameLoop({
   }
 });
 
-loop.start();</code></pre></section>
+loop.start();
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=gameloop-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { Sprite, GameLoop } from &#39;kontra&#39;;
 
 let sprite = Sprite({
@@ -328,7 +330,8 @@ let loop = GameLoop({
   }
 });
 
-loop.start();</code></pre></section>
+loop.start();
+</code></pre></section>
 </div>
         <h3 id="title-GameLoop"><span class="visually-hidden">GameLoop</span> Parameters</span></h3>
         <dl aria-labelledby="title-GameLoop">
@@ -386,6 +389,11 @@ loop.start();</code></pre></section>
               <h3 id="properties">Properties</h3>
               <ul aria-labelledby="properties">
                 <li>
+                  <a href="api/gameLoop#context">
+                    <span>GameLoop&#8203;.context</span>
+                  </a>
+                </li>
+                <li>
                   <a href="api/gameLoop#isStopped">
                     <span>GameLoop&#8203;.isStopped</span>
                   </a>
@@ -423,6 +431,17 @@ loop.start();</code></pre></section>
 
 
         <section>
+          <h2 id="context">
+            <a href="api/gameLoop#context" class="section-link">
+              <span>GameLoop&#8203;.context</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
+
+          <p><em>CanvasRenderingContext2D</em>. he context the game loop will clear. Defaults to <a href="api/core#getCcontext">core.getContext()</a>.</p>
+          
+        </section>
+        <section>
           <h2 id="isStopped">
             <a href="api/gameLoop#isStopped" class="section-link">
               <span>GameLoop&#8203;.isStopped</span>
@@ -430,7 +449,7 @@ loop.start();</code></pre></section>
             </a>
           </h2>
 
-          <p><em>Boolean</em>. If the game loop is currently stopped.</p>
+          <p><em>Boolean</em>. f the game loop is currently stopped.</p>
 <div class="tablist">
   <ul role="tablist">
     <li role="presentation" data-tab="global">
@@ -455,7 +474,8 @@ loop.start();
 console.log(loop.isStopped);  //=&gt; false
 
 loop.stop();
-console.log(loop.isStopped);  //=&gt; true</code></pre></section>
+console.log(loop.isStopped);  //=&gt; true
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=isstopped-es-tab data-tabpanel="es"><pre><code class="language-js">import { GameLoop } from 'path/to/kontra.mjs';
 
 let loop = GameLoop({
@@ -467,7 +487,8 @@ loop.start();
 console.log(loop.isStopped);  //=&gt; false
 
 loop.stop();
-console.log(loop.isStopped);  //=&gt; true</code></pre></section>
+console.log(loop.isStopped);  //=&gt; true
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=isstopped-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { GameLoop } from &#39;kontra&#39;;
 
 let loop = GameLoop({
@@ -479,7 +500,8 @@ loop.start();
 console.log(loop.isStopped);  //=&gt; false
 
 loop.stop();
-console.log(loop.isStopped);  //=&gt; true</code></pre></section>
+console.log(loop.isStopped);  //=&gt; true
+</code></pre></section>
 </div>
           
         </section>

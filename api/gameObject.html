@@ -695,7 +695,7 @@ triangle.render();
             </a>
           </h2>
 
-          <p><em><a href="api/vector">Vector</a></em>. The game objects acceleration vector.</p>
+          <p><em><a href="api/vector">Vector</a></em>. he game objects acceleration vector.</p>
           
         </section>
         <section>
@@ -901,7 +901,8 @@ let gameObject = GameObject({
       this.dy = -this.dy;
     }
   }
-});</code></pre></section>
+});
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=advance-es-tab data-tabpanel="es"><pre><code class="language-js">import { GameObject } from 'path/to/kontra.mjs';
 
 let gameObject = GameObject({
@@ -925,7 +926,8 @@ let gameObject = GameObject({
       this.dy = -this.dy;
     }
   }
-});</code></pre></section>
+});
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=advance-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { GameObject } from &#39;kontra&#39;;
 
 let gameObject = GameObject({
@@ -949,7 +951,8 @@ let gameObject = GameObject({
       this.dy = -this.dy;
     }
   }
-});</code></pre></section>
+});
+</code></pre></section>
 </div>
           <h3 id="title-advance"><span class="visually-hidden">advance</span> Parameters</span></h3>
           <dl aria-labelledby="title-advance">
@@ -970,7 +973,7 @@ let gameObject = GameObject({
             </a>
           </h2>
 
-          <p><em>Object</em>. The x and y origin of the game object. {x:0, y:0} is the top left corner of the game object, {x:1, y:1} is the bottom right corner.</p>
+          <p><em>Object</em>. he x and y origin of the game object. {x:0, y:0} is the top left corner of the game object, {x:1, y:1} is the bottom right corner.</p>
 <canvas id="game-canvas-3"></canvas>
 
 <div class="tablist">
@@ -1146,7 +1149,7 @@ drawOrigin(gameObject);
             </a>
           </h2>
 
-          <p><em>An Array of <a href="api/gameObject">GameObject</a>s</em>. The game objects children objects.</p>
+          <p><em>An Array of <a href="api/gameObject">GameObject</a>s</em>. he game objects children objects.</p>
           
         </section>
         <section>
@@ -1157,7 +1160,7 @@ drawOrigin(gameObject);
             </a>
           </h2>
 
-          <p><em>CanvasRenderingContext2D</em>. The context the game object will draw to.</p>
+          <p><em>CanvasRenderingContext2D</em>. he context the game object will draw to.</p>
           
         </section>
         <section>
@@ -1168,7 +1171,7 @@ drawOrigin(gameObject);
             </a>
           </h2>
 
-          <p><em>Number</em>. X coordinate of the acceleration vector.</p>
+          <p><em>Number</em>.  coordinate of the acceleration vector.</p>
           
         </section>
         <section>
@@ -1179,7 +1182,7 @@ drawOrigin(gameObject);
             </a>
           </h2>
 
-          <p><em>Number</em>. Y coordinate of the acceleration vector.</p>
+          <p><em>Number</em>.  coordinate of the acceleration vector.</p>
           
         </section>
         <section>
@@ -1225,7 +1228,8 @@ let gameObject = GameObject({
  }
 });
 
-gameObject.render();</code></pre></section>
+gameObject.render();
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=draw-es-tab data-tabpanel="es"><pre><code class="language-js">let { GameObject } = kontra;
 
 let gameObject = GameObject({
@@ -1245,7 +1249,8 @@ let gameObject = GameObject({
  }
 });
 
-gameObject.render();</code></pre></section>
+gameObject.render();
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=draw-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">let { GameObject } = kontra;
 
 let gameObject = GameObject({
@@ -1265,7 +1270,8 @@ let gameObject = GameObject({
  }
 });
 
-gameObject.render();</code></pre></section>
+gameObject.render();
+</code></pre></section>
 </div>
           
         </section>
@@ -1277,7 +1283,7 @@ gameObject.render();</code></pre></section>
             </a>
           </h2>
 
-          <p><em>Number</em>. X coordinate of the velocity vector.</p>
+          <p><em>Number</em>.  coordinate of the velocity vector.</p>
           
         </section>
         <section>
@@ -1288,7 +1294,7 @@ gameObject.render();</code></pre></section>
             </a>
           </h2>
 
-          <p><em>Number</em>. Y coordinate of the velocity vector.</p>
+          <p><em>Number</em>.  coordinate of the velocity vector.</p>
           
         </section>
         <section>
@@ -1299,7 +1305,7 @@ gameObject.render();</code></pre></section>
             </a>
           </h2>
 
-          <p><em>Number</em>. The height of the game object. Represents the local height of the object as opposed to the <a href="api/gameObject#world">world</a> height.</p>
+          <p><em>Number</em>. he height of the game object. Represents the local height of the object as opposed to the <a href="api/gameObject#world">world</a> height.</p>
           
         </section>
         <section>
@@ -1344,7 +1350,7 @@ gameObject.render();</code></pre></section>
             </a>
           </h2>
 
-          <p><em>Number</em>. The opacity of the object. Represents the local opacity of the object as opposed to the <a href="api/gameObject#world">world</a> opacity.</p>
+          <p><em>Number</em>. he opacity of the object. Represents the local opacity of the object as opposed to the <a href="api/gameObject#world">world</a> opacity.</p>
           
         </section>
         <section>
@@ -1355,7 +1361,7 @@ gameObject.render();</code></pre></section>
             </a>
           </h2>
 
-          <p><em><a href="api/gameObject">GameObject</a> or null</em>. The game objects parent object.</p>
+          <p><em><a href="api/gameObject">GameObject</a> or null</em>. he game objects parent object.</p>
           
         </section>
         <section>
@@ -1366,7 +1372,7 @@ gameObject.render();</code></pre></section>
             </a>
           </h2>
 
-          <p><em><a href="api/vector">Vector</a></em>. The game objects position vector. Represents the local position of the object as opposed to the <a href="api/gameObject#world">world</a> position.</p>
+          <p><em><a href="api/vector">Vector</a></em>. he game objects position vector. Represents the local position of the object as opposed to the <a href="api/gameObject#world">world</a> position.</p>
           
         </section>
         <section>
@@ -1408,7 +1414,7 @@ gameObject.render();</code></pre></section>
             </a>
           </h2>
 
-          <p><em>Number</em>. The rotation of the game object around the anchor in radians. Represents the local rotation of the object as opposed to the <a href="api/gameObject#world">world</a> rotation.</p>
+          <p><em>Number</em>. he rotation of the game object around the anchor in radians. Represents the local rotation of the object as opposed to the <a href="api/gameObject#world">world</a> rotation.</p>
           
         </section>
         <section>
@@ -1419,7 +1425,7 @@ gameObject.render();</code></pre></section>
             </a>
           </h2>
 
-          <p><em>Number</em>. The x scale of the object. Represents the local x scale of the object as opposed to the <a href="api/gameObject#world">world</a> x scale.</p>
+          <p><em>Number</em>. he x scale of the object. Represents the local x scale of the object as opposed to the <a href="api/gameObject#world">world</a> x scale.</p>
           
         </section>
         <section>
@@ -1430,7 +1436,7 @@ gameObject.render();</code></pre></section>
             </a>
           </h2>
 
-          <p><em>Number</em>. The y scale of the object. Represents the local y scale of the object as opposed to the <a href="api/gameObject#world">world</a> y scale.</p>
+          <p><em>Number</em>. he y scale of the object. Represents the local y scale of the object as opposed to the <a href="api/gameObject#world">world</a> y scale.</p>
           
         </section>
         <section>
@@ -1467,7 +1473,7 @@ gameObject.render();</code></pre></section>
             </a>
           </h2>
 
-          <p><em>Number</em>. How may frames the game object should be alive.</p>
+          <p><em>Number</em>. ow may frames the game object should be alive.</p>
           
         </section>
         <section>
@@ -1498,7 +1504,7 @@ gameObject.render();</code></pre></section>
             </a>
           </h2>
 
-          <p><em><a href="api/vector">Vector</a></em>. The game objects velocity vector.</p>
+          <p><em><a href="api/vector">Vector</a></em>. he game objects velocity vector.</p>
           
         </section>
         <section>
@@ -1509,7 +1515,7 @@ gameObject.render();</code></pre></section>
             </a>
           </h2>
 
-          <p><em>Number</em>. The width of the game object. Represents the local width of the object as opposed to the <a href="api/gameObject#world">world</a> width.</p>
+          <p><em>Number</em>. he width of the game object. Represents the local width of the object as opposed to the <a href="api/gameObject#world">world</a> width.</p>
           
         </section>
         <section>
@@ -1520,7 +1526,7 @@ gameObject.render();</code></pre></section>
             </a>
           </h2>
 
-          <p><em>Object</em>. The world position, width, height, opacity, rotation, and scale. The world property is the true position, width, height, etc. of the object, taking into account all parents.</p>
+          <p><em>Object</em>. he world position, width, height, opacity, rotation, and scale. The world property is the true position, width, height, etc. of the object, taking into account all parents.</p>
 <p>The world property does not adjust for anchor or scale, so if you set a negative scale the world width or height could be negative. Use <a href="/api/helpers#getWorldRect">getWorldRect</a> to get the world position and size adjusted for anchor and scale.</p>
           
         </section>
@@ -1532,7 +1538,7 @@ gameObject.render();</code></pre></section>
             </a>
           </h2>
 
-          <p><em>Number</em>. X coordinate of the position vector.</p>
+          <p><em>Number</em>.  coordinate of the position vector.</p>
           
         </section>
         <section>
@@ -1543,7 +1549,7 @@ gameObject.render();</code></pre></section>
             </a>
           </h2>
 
-          <p><em>Number</em>. Y coordinate of the position vector.</p>
+          <p><em>Number</em>.  coordinate of the position vector.</p>
           
         </section>
 

@@ -264,7 +264,8 @@ scene = Scene({
   objects: [sprite]
 });
 
-scene.render();</code></pre></section>
+scene.render();
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=scene-es-tab data-tabpanel="es"><pre><code class="language-js">import { Scene, Sprite } from 'path/to/kontra.mjs';
 
 sprite = Sprite({
@@ -280,7 +281,8 @@ scene = Scene({
   objects: [sprite]
 });
 
-scene.render();</code></pre></section>
+scene.render();
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=scene-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { Scene, Sprite } from &#39;kontra&#39;;
 
 sprite = Sprite({
@@ -296,7 +298,8 @@ scene = Scene({
   objects: [sprite]
 });
 
-scene.render();</code></pre></section>
+scene.render();
+</code></pre></section>
 </div>
         <h3 id="title-Scene"><span class="visually-hidden">Scene</span> Parameters</span></h3>
         <dl aria-labelledby="title-Scene">
@@ -512,7 +515,7 @@ scene.render();</code></pre></section>
             </a>
           </h2>
 
-          <p><em><a href="api/gameObject">GameObject</a></em>. The camera object which is used as the focal point for the scene. Defaults to to the size of the canvas with a focal point  at its center. The scene will not render objects that are outside the bounds of the camera.</p>
+          <p><em><a href="api/gameObject">GameObject</a></em>. he camera object which is used as the focal point for the scene. Defaults to to the size of the canvas with a focal point  at its center. The scene will not render objects that are outside the bounds of the camera.</p>
 <p>Additionally, the camera can be used to <a href="api/scene#lookAt">lookAt</a> an object which will center the camera to that object. This allows you to zoom the scene in and out while the camera remains centered on the object.</p>
           
         </section>
@@ -524,7 +527,7 @@ scene.render();</code></pre></section>
             </a>
           </h2>
 
-          <p><em>CanvasRenderingContext2D</em>. The context the scene will draw to.</p>
+          <p><em>CanvasRenderingContext2D</em>. he context the scene will draw to.</p>
           
         </section>
         <section>
@@ -535,7 +538,7 @@ scene.render();</code></pre></section>
             </a>
           </h2>
 
-          <p><em>Function</em>. Camera culling function which prevents objects outside the camera screen from rendering.</p>
+          <p><em>Function</em>. amera culling function which prevents objects outside the camera screen from rendering.</p>
           
         </section>
         <section>
@@ -546,7 +549,7 @@ scene.render();</code></pre></section>
             </a>
           </h2>
 
-          <p><em>Boolean</em>. If the camera should cull objects outside the camera bounds. Not rendering objects which can&#39;t be seen greatly improves the performance.</p>
+          <p><em>Boolean</em>. f the camera should cull objects outside the camera bounds. Not rendering objects which can&#39;t be seen greatly improves the performance.</p>
           
         </section>
         <section>
@@ -568,7 +571,7 @@ scene.render();</code></pre></section>
             </a>
           </h2>
 
-          <p><em>Boolean</em>. If the scene is hidden.</p>
+          <p><em>Boolean</em>. f the scene is hidden.</p>
           
         </section>
         <section>
@@ -590,7 +593,7 @@ scene.render();</code></pre></section>
             </a>
           </h2>
 
-          <p><em>String</em>. The id of the scene.</p>
+          <p><em>String</em>. he id of the scene.</p>
           
         </section>
         <section>
@@ -621,7 +624,7 @@ scene.render();</code></pre></section>
             </a>
           </h2>
 
-          <p><em>String</em>. The name of the scene. Used by screen readers to identify each scene. Use this property to give the scene a human friendly name.</p>
+          <p><em>String</em>. he name of the scene. Used by screen readers to identify each scene. Use this property to give the scene a human friendly name.</p>
           
         </section>
         <section>
@@ -632,7 +635,7 @@ scene.render();</code></pre></section>
             </a>
           </h2>
 
-          <p><em>An Array of Objects</em>. The objects of the scene.</p>
+          <p><em>An Array of Objects</em>. he objects of the scene.</p>
           
         </section>
         <section>
@@ -663,21 +666,24 @@ let scene = Scene({
   onHide() {
     offKey(&#39;arrowup&#39;);
   }
-});</code></pre></section>
+});
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=onhide-es-tab data-tabpanel="es"><pre><code class="language-js">let { Scene, offKey } = &#39;kontra&#39;;
 
 let scene = Scene({
   onHide() {
     offKey(&#39;arrowup&#39;);
   }
-});</code></pre></section>
+});
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=onhide-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">let { Scene, offKey } = &#39;kontra&#39;;
 
 let scene = Scene({
   onHide() {
     offKey(&#39;arrowup&#39;);
   }
-});</code></pre></section>
+});
+</code></pre></section>
 </div>
           
         </section>
@@ -711,7 +717,8 @@ let scene = Scene({
       // ...
     })
   }
-});</code></pre></section>
+});
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=onshow-es-tab data-tabpanel="es"><pre><code class="language-js">let { Scene, onKey } = &#39;kontra&#39;;
 
 let scene = Scene({
@@ -720,7 +727,8 @@ let scene = Scene({
       // ...
     })
   }
-});</code></pre></section>
+});
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=onshow-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">let { Scene, onKey } = &#39;kontra&#39;;
 
 let scene = Scene({
@@ -729,7 +737,8 @@ let scene = Scene({
       // ...
     })
   }
-});</code></pre></section>
+});
+</code></pre></section>
 </div>
           
         </section>
@@ -783,7 +792,7 @@ let scene = Scene({
             </a>
           </h2>
 
-          <p><em>Function</em>. Function used to sort the objects of the scene before rendering. Can be used in conjunction with <a href="/api/helpers#depthSort">helpers.depthSort</a>. Only direct objects of the scene are sorted.</p>
+          <p><em>Function</em>. unction used to sort the objects of the scene before rendering. Can be used in conjunction with <a href="/api/helpers#depthSort">helpers.depthSort</a>. Only direct objects of the scene are sorted.</p>
 <div class="tablist">
   <ul role="tablist">
     <li role="presentation" data-tab="global">
@@ -812,7 +821,8 @@ let scene = Scene({
   sortFunction: depthSort
 });
 
-scene.render();</code></pre></section>
+scene.render();
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=sortfunction-es-tab data-tabpanel="es"><pre><code class="language-js">import { Scene, Sprite, depthSort } from 'path/to/kontra.mjs';
 
 let sprite1 = Sprite({
@@ -828,7 +838,8 @@ let scene = Scene({
   sortFunction: depthSort
 });
 
-scene.render();</code></pre></section>
+scene.render();
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=sortfunction-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { Scene, Sprite, depthSort } from &#39;kontra&#39;;
 
 let sprite1 = Sprite({
@@ -844,7 +855,8 @@ let scene = Scene({
   sortFunction: depthSort
 });
 
-scene.render();</code></pre></section>
+scene.render();
+</code></pre></section>
 </div>
           
         </section>

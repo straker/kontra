@@ -265,7 +265,8 @@ function update() {
 let loop = kontra.GameLoop({
   // ...
 })
-loop.start();</code></pre></section>
+loop.start();
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=gamepad-es-tab data-tabpanel="es"><pre><code class="language-js">import { initGamepad, GameLoop, gamepadPressed } from 'path/to/kontra.mjs';
 
 // this function must be called first before gamepad
@@ -282,7 +283,8 @@ function update() {
 let loop = kontra.GameLoop({
   // ...
 })
-loop.start();</code></pre></section>
+loop.start();
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=gamepad-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { initGamepad, GameLoop, gamepadPressed } from &#39;kontra&#39;;
 
 // this function must be called first before gamepad
@@ -299,7 +301,8 @@ function update() {
 let loop = kontra.GameLoop({
   // ...
 })
-loop.start();</code></pre></section>
+loop.start();
+</code></pre></section>
 </div>
         
 
@@ -444,7 +447,8 @@ let sprite = Sprite({
       // move down
     }
   }
-});</code></pre></section>
+});
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=gamepadaxis-es-tab data-tabpanel="es"><pre><code class="language-js">import { Sprite, initGamepad, gamepadAxis } from 'path/to/kontra.mjs';
 
 initGamepad();
@@ -469,7 +473,8 @@ let sprite = Sprite({
       // move down
     }
   }
-});</code></pre></section>
+});
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=gamepadaxis-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { Sprite, initGamepad, gamepadAxis } from &#39;kontra&#39;;
 
 initGamepad();
@@ -494,7 +499,8 @@ let sprite = Sprite({
       // move down
     }
   }
-});</code></pre></section>
+});
+</code></pre></section>
 </div>
           <h3 id="title-gamepadAxis"><span class="visually-hidden">gamepadAxis</span> Parameters</span></h3>
           <dl aria-labelledby="title-gamepadAxis">
@@ -524,7 +530,7 @@ let sprite = Sprite({
             </a>
           </h2>
 
-          <p><em>Object</em>. A map of Gamepad button indices to button names. Modify this object to expand the list of <a href="api/gamepad#available-buttons">available buttons</a>. By default, the map uses the Xbox and PS4 controller button indicies.</p>
+          <p><em>Object</em>.  map of Gamepad button indices to button names. Modify this object to expand the list of <a href="api/gamepad#available-buttons">available buttons</a>. By default, the map uses the Xbox and PS4 controller button indicies.</p>
 <div class="tablist">
   <ul role="tablist">
     <li role="presentation" data-tab="global">
@@ -544,21 +550,24 @@ gamepadMap[2] = &#39;buttonWest&#39;;
 
 if (gamepadPressed(&#39;buttonWest&#39;)) {
   // handle west face button
-}</code></pre></section>
+}
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=gamepadmap-es-tab data-tabpanel="es"><pre><code class="language-js">import { gamepadMap, gamepadPressed } from 'path/to/kontra.mjs';
 
 gamepadMap[2] = &#39;buttonWest&#39;;
 
 if (gamepadPressed(&#39;buttonWest&#39;)) {
   // handle west face button
-}</code></pre></section>
+}
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=gamepadmap-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { gamepadMap, gamepadPressed } from &#39;kontra&#39;;
 
 gamepadMap[2] = &#39;buttonWest&#39;;
 
 if (gamepadPressed(&#39;buttonWest&#39;)) {
   // handle west face button
-}</code></pre></section>
+}
+</code></pre></section>
 </div>
           
         </section>
@@ -605,7 +614,8 @@ let sprite = Sprite({
       // down dpad pressed
     }
   }
-});</code></pre></section>
+});
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=gamepadpressed-es-tab data-tabpanel="es"><pre><code class="language-js">import { Sprite, initGamepad, gamepadPressed } from 'path/to/kontra.mjs';
 
 initGamepad();
@@ -626,7 +636,8 @@ let sprite = Sprite({
       // down dpad pressed
     }
   }
-});</code></pre></section>
+});
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=gamepadpressed-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { Sprite, initGamepad, gamepadPressed } from &#39;kontra&#39;;
 
 initGamepad();
@@ -647,7 +658,8 @@ let sprite = Sprite({
       // down dpad pressed
     }
   }
-});</code></pre></section>
+});
+</code></pre></section>
 </div>
           <h3 id="title-gamepadPressed"><span class="visually-hidden">gamepadPressed</span> Parameters</span></h3>
           <dl aria-labelledby="title-gamepadPressed">
@@ -716,7 +728,8 @@ offGamepad([&#39;south&#39;, &#39;rightstick&#39;]);
 
 offGamepad(&#39;south&#39;, {
   gamepad: 0  // unregister from just the gamepad at index 0
-});</code></pre></section>
+});
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=offgamepad-es-tab data-tabpanel="es"><pre><code class="language-js">import { offGamepad } from 'path/to/kontra.mjs';
 
 offGamepad(&#39;start&#39;);
@@ -724,7 +737,8 @@ offGamepad([&#39;south&#39;, &#39;rightstick&#39;]);
 
 offGamepad(&#39;south&#39;, {
   gamepad: 0  // unregister from just the gamepad at index 0
-});</code></pre></section>
+});
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=offgamepad-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { offGamepad } from &#39;kontra&#39;;
 
 offGamepad(&#39;start&#39;);
@@ -732,7 +746,8 @@ offGamepad([&#39;south&#39;, &#39;rightstick&#39;]);
 
 offGamepad(&#39;south&#39;, {
   gamepad: 0  // unregister from just the gamepad at index 0
-});</code></pre></section>
+});
+</code></pre></section>
 </div>
           <h3 id="title-offGamepad"><span class="visually-hidden">offGamepad</span> Parameters</span></h3>
           <dl aria-labelledby="title-offGamepad">
@@ -771,7 +786,7 @@ offGamepad(&#39;south&#39;, {
             </a>
           </h2>
 
-          <p>Register a function to be called when a gamepad button is pressed. Takes a single button or an array of buttons. Is passed the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Gamepad">Gamepad</a> and the <a href="https://developer.mozilla.org/en-US/docs/Web/API/GamepadButton">GamepadButton</a> that was pressed as parameters.</p>
+          <p>Register a function to be called when a gamepad button is pressed. Takes a single button or an array of buttons. Is passed the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Gamepad">Gamepad</a> and the <a href="https://developer.mozilla.org/en-US/docs/Web/API/GamepadButton">GamepadButton</a>, and the buttonName that was pressed as parameters.</p>
 <p>When registering the function, you have the choice of registering to a specific gamepad or to all gamepads. To register to a specific gamepad, pass the desired gamepad index as the <code>gamepad</code> option. If the <code>gamepad</code> option is ommited the callback is bound to all gamepads instead of a specific one.</p>
 <p>You can register a callback for both a specific gamepad and for all gamepads in two different calls. When this happens, the specific gamepad callback will be called first and then the global one.</p>
 <div class="tablist">
@@ -791,10 +806,10 @@ offGamepad(&#39;south&#39;, {
 
 initGamepad();
 
-onGamepad(&#39;start&#39;, function(gamepad, button) {
+onGamepad(&#39;start&#39;, function(gamepad, button, buttonName) {
   // pause the game
 });
-onGamepad([&#39;south&#39;, &#39;rightstick&#39;], function(gamepad, button) {
+onGamepad([&#39;south&#39;, &#39;rightstick&#39;], function(gamepad, button, buttonName) {
   // fire gun
 });
 
@@ -802,15 +817,16 @@ onGamepad(&#39;south&#39;, function() {
   // handle south button
 }, {
   gamepad: 0  // register just for the gamepad at index 0
-});</code></pre></section>
+});
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=ongamepad-es-tab data-tabpanel="es"><pre><code class="language-js">import { initGamepad, onGamepad } from 'path/to/kontra.mjs';
 
 initGamepad();
 
-onGamepad(&#39;start&#39;, function(gamepad, button) {
+onGamepad(&#39;start&#39;, function(gamepad, button, buttonName) {
   // pause the game
 });
-onGamepad([&#39;south&#39;, &#39;rightstick&#39;], function(gamepad, button) {
+onGamepad([&#39;south&#39;, &#39;rightstick&#39;], function(gamepad, button, buttonName) {
   // fire gun
 });
 
@@ -818,15 +834,16 @@ onGamepad(&#39;south&#39;, function() {
   // handle south button
 }, {
   gamepad: 0  // register just for the gamepad at index 0
-});</code></pre></section>
+});
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=ongamepad-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { initGamepad, onGamepad } from &#39;kontra&#39;;
 
 initGamepad();
 
-onGamepad(&#39;start&#39;, function(gamepad, button) {
+onGamepad(&#39;start&#39;, function(gamepad, button, buttonName) {
   // pause the game
 });
-onGamepad([&#39;south&#39;, &#39;rightstick&#39;], function(gamepad, button) {
+onGamepad([&#39;south&#39;, &#39;rightstick&#39;], function(gamepad, button, buttonName) {
   // fire gun
 });
 
@@ -834,7 +851,8 @@ onGamepad(&#39;south&#39;, function() {
   // handle south button
 }, {
   gamepad: 0  // register just for the gamepad at index 0
-});</code></pre></section>
+});
+</code></pre></section>
 </div>
           <h3 id="title-onGamepad"><span class="visually-hidden">onGamepad</span> Parameters</span></h3>
           <dl aria-labelledby="title-onGamepad">

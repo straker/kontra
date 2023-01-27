@@ -252,17 +252,20 @@
 import loggingPlugin from &#39;path/to/plugin/code.js&#39;
 
 // register a plugin that adds logging to all Sprites
-registerPlugin(Sprite, loggingPlugin);</code></pre></section>
+registerPlugin(Sprite, loggingPlugin);
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=plugin-es-tab data-tabpanel="es"><pre><code class="language-js">import { registerPlugin, Sprite } from 'path/to/kontra.mjs';
 import loggingPlugin from &#39;path/to/plugin/code.js&#39;
 
 // register a plugin that adds logging to all Sprites
-registerPlugin(Sprite, loggingPlugin);</code></pre></section>
+registerPlugin(Sprite, loggingPlugin);
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=plugin-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { registerPlugin, Sprite } from &#39;kontra&#39;;
 import loggingPlugin from &#39;path/to/plugin/code.js&#39;
 
 // register a plugin that adds logging to all Sprites
-registerPlugin(Sprite, loggingPlugin);</code></pre></section>
+registerPlugin(Sprite, loggingPlugin);
+</code></pre></section>
 </div>
         
 
@@ -321,7 +324,8 @@ const loggingPlugin = {
     console.log(&#39;collision between sprites!&#39;);
   }
 };
-export default loggingPlugin;</code></pre>
+export default loggingPlugin;
+</code></pre>
 <div class="tablist">
   <ul role="tablist">
     <li role="presentation" data-tab="global">
@@ -366,7 +370,8 @@ let sprite2 = Sprite({
   height: 10
 });
 
-sprite1.collidesWith(sprite2);  //=&gt; &#39;collision between sprites!&#39;; true</code></pre></section>
+sprite1.collidesWith(sprite2);  //=&gt; &#39;collision between sprites!&#39;; true
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=how-to-create-a-plugin-es-tab data-tabpanel="es"><pre><code class="language-js">// consumerCode.js
 import { registerPlugin, Sprite, SpriteClass, collides } from 'path/to/kontra.mjs';
 import loggingPlugin from pluginCode.js;
@@ -398,7 +403,8 @@ let sprite2 = Sprite({
   height: 10
 });
 
-sprite1.collidesWith(sprite2);  //=&gt; &#39;collision between sprites!&#39;; true</code></pre></section>
+sprite1.collidesWith(sprite2);  //=&gt; &#39;collision between sprites!&#39;; true
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=how-to-create-a-plugin-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">// consumerCode.js
 import { registerPlugin, Sprite, SpriteClass, collides } from &#39;kontra&#39;;
 import loggingPlugin from pluginCode.js;
@@ -430,7 +436,8 @@ let sprite2 = Sprite({
   height: 10
 });
 
-sprite1.collidesWith(sprite2);  //=&gt; &#39;collision between sprites!&#39;; true</code></pre></section>
+sprite1.collidesWith(sprite2);  //=&gt; &#39;collision between sprites!&#39;; true
+</code></pre></section>
 </div>
         </section>
         <section>
@@ -458,7 +465,8 @@ registerPlugin(MyObj, {
 });
 
 const obj = new MyObj();
-obj.add(1, 2);  //=&gt; 6</code></pre>
+obj.add(1, 2);  //=&gt; 6
+</code></pre>
 <p>Multiple before intercept functions can be registered for the same function. All functions will be run in the order they were registered. The functions return value will be passed to the next function. If the function doesn&#39;t modify the arguments (returned <code>null</code> or nothing) then the functions parameters will be passed to the next function instead.</p>
 <pre><code class="language-js">class MyObj {
   add(a, b) {
@@ -481,7 +489,8 @@ registerPlugin(MyObj, {
 });
 
 const obj = new MyObj();
-obj.add(1, 2);  //=&gt; &#39;add passed: 1, 2&#39;; 6</code></pre>
+obj.add(1, 2);  //=&gt; &#39;add passed: 1, 2&#39;; 6
+</code></pre>
         </section>
         <section>
           <h2 id="after-intercept-functions">
@@ -507,7 +516,8 @@ registerPlugin(MyObj, {
 });
 
 const obj = new MyObj();
-obj.add(1, 2);  //=&gt; 6</code></pre>
+obj.add(1, 2);  //=&gt; 6
+</code></pre>
 <p>Multiple after intercept functions can be registered for the same function. All functions will be run in the order they were registered. Each functions return value will be passed to the next function. If the function doesn&#39;t modify the result (returned <code>null</code> or nothing) then the functions parameters will be passed to the next function instead.</p>
 <pre><code class="language-js">class MyObj {
   add(a, b) {
@@ -530,7 +540,8 @@ registerPlugin(MyObj, {
 });
 
 const obj = new MyObj();
-obj.add(1, 2);  //=&gt; &#39;add passed: 1, 2 and returned 3&#39;; 6</code></pre>
+obj.add(1, 2);  //=&gt; &#39;add passed: 1, 2 and returned 3&#39;; 6
+</code></pre>
         </section>
 
         <section>
@@ -562,7 +573,8 @@ extendObject(VectorClass, {
   subtract(vec) {
     return Vector(this.x - vec.x, this.y - vec.y);
   }
-});</code></pre></section>
+});
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=extendobject-es-tab data-tabpanel="es"><pre><code class="language-js">import { extendObject, Vector, VectorClass } from 'path/to/kontra.mjs';
 
 // add a subtract function to all Vectors
@@ -570,7 +582,8 @@ extendObject(VectorClass, {
   subtract(vec) {
     return Vector(this.x - vec.x, this.y - vec.y);
   }
-});</code></pre></section>
+});
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=extendobject-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { extendObject, Vector, VectorClass } from &#39;kontra&#39;;
 
 // add a subtract function to all Vectors
@@ -578,7 +591,8 @@ extendObject(VectorClass, {
   subtract(vec) {
     return Vector(this.x - vec.x, this.y - vec.y);
   }
-});</code></pre></section>
+});
+</code></pre></section>
 </div>
           <h3 id="title-extendObject"><span class="visually-hidden">extendObject</span> Parameters</span></h3>
           <dl aria-labelledby="title-extendObject">

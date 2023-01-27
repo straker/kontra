@@ -266,7 +266,8 @@ load(
   // all assets have loaded
 }).catch(function(err) {
   // error loading an asset
-});</code></pre></section>
+});
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=assets-es-tab data-tabpanel="es"><pre><code class="language-js">import { load, on } from 'path/to/kontra.mjs';
 
 let numAssets = 3;
@@ -285,7 +286,8 @@ load(
   // all assets have loaded
 }).catch(function(err) {
   // error loading an asset
-});</code></pre></section>
+});
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=assets-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { load, on } from &#39;kontra&#39;;
 
 let numAssets = 3;
@@ -304,7 +306,8 @@ load(
   // all assets have loaded
 }).catch(function(err) {
   // error loading an asset
-});</code></pre></section>
+});
+</code></pre></section>
 </div>
         
 
@@ -386,7 +389,7 @@ load(
             </a>
           </h2>
 
-          <p><em>Object</em>. Object of all loaded audio assets by both file name and path. If the base <a href="api/assets#setAudioPath">audio path</a> was set before the audio was loaded, the file name and path will not include the base audio path.</p>
+          <p><em>Object</em>. bject of all loaded audio assets by both file name and path. If the base <a href="api/assets#setAudioPath">audio path</a> was set before the audio was loaded, the file name and path will not include the base audio path.</p>
 <div class="tablist">
   <ul role="tablist">
     <li role="presentation" data-tab="global">
@@ -413,7 +416,8 @@ load(&#39;sound.ogg&#39;).then(function() {
   // Audio asset can be accessed by both
   // name: audioAssets[&#39;sound&#39;]
   // path: audioAssets[&#39;sound.ogg&#39;]
-});</code></pre></section>
+});
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=audioassets-es-tab data-tabpanel="es"><pre><code class="language-js">import { load, setAudioPath, audioAssets } from 'path/to/kontra.mjs';
 
 load(&#39;/audio/music.ogg&#39;).then(function() {
@@ -427,7 +431,8 @@ load(&#39;sound.ogg&#39;).then(function() {
   // Audio asset can be accessed by both
   // name: audioAssets[&#39;sound&#39;]
   // path: audioAssets[&#39;sound.ogg&#39;]
-});</code></pre></section>
+});
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=audioassets-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { load, setAudioPath, audioAssets } from &#39;kontra&#39;;
 
 load(&#39;/audio/music.ogg&#39;).then(function() {
@@ -441,7 +446,8 @@ load(&#39;sound.ogg&#39;).then(function() {
   // Audio asset can be accessed by both
   // name: audioAssets[&#39;sound&#39;]
   // path: audioAssets[&#39;sound.ogg&#39;]
-});</code></pre></section>
+});
+</code></pre></section>
 </div>
           
         </section>
@@ -453,7 +459,7 @@ load(&#39;sound.ogg&#39;).then(function() {
             </a>
           </h2>
 
-          <p><em>Object</em>. Object of all loaded data assets by both file name and path. If the base <a href="api/assets#setDataPath">data path</a> was set before the data was loaded, the file name and path will not include the base data path.</p>
+          <p><em>Object</em>. bject of all loaded data assets by both file name and path. If the base <a href="api/assets#setDataPath">data path</a> was set before the data was loaded, the file name and path will not include the base data path.</p>
 <div class="tablist">
   <ul role="tablist">
     <li role="presentation" data-tab="global">
@@ -480,7 +486,8 @@ load(&#39;info.json&#39;).then(function() {
   // Audio asset can be accessed by both
   // name: dataAssets[&#39;info&#39;]
   // path: dataAssets[&#39;info.json&#39;]
-});</code></pre></section>
+});
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=dataassets-es-tab data-tabpanel="es"><pre><code class="language-js">import { load, setDataPath, dataAssets } from 'path/to/kontra.mjs';
 
 load(&#39;assets/data/file.txt&#39;).then(function() {
@@ -494,7 +501,8 @@ load(&#39;info.json&#39;).then(function() {
   // Audio asset can be accessed by both
   // name: dataAssets[&#39;info&#39;]
   // path: dataAssets[&#39;info.json&#39;]
-});</code></pre></section>
+});
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=dataassets-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { load, setDataPath, dataAssets } from &#39;kontra&#39;;
 
 load(&#39;assets/data/file.txt&#39;).then(function() {
@@ -508,7 +516,8 @@ load(&#39;info.json&#39;).then(function() {
   // Audio asset can be accessed by both
   // name: dataAssets[&#39;info&#39;]
   // path: dataAssets[&#39;info.json&#39;]
-});</code></pre></section>
+});
+</code></pre></section>
 </div>
           
         </section>
@@ -520,7 +529,7 @@ load(&#39;info.json&#39;).then(function() {
             </a>
           </h2>
 
-          <p><em>Object</em>. Object of all loaded image assets by both file name and path. If the base <a href="api/assets#setImagePath">image path</a> was set before the image was loaded, the file name and path will not include the base image path.</p>
+          <p><em>Object</em>. bject of all loaded image assets by both file name and path. If the base <a href="api/assets#setImagePath">image path</a> was set before the image was loaded, the file name and path will not include the base image path.</p>
 <div class="tablist">
   <ul role="tablist">
     <li role="presentation" data-tab="global">
@@ -547,7 +556,8 @@ load(&#39;character_walk_sheet.png&#39;).then(function() {
   // Image asset can be accessed by both
   // name: imageAssets[&#39;character_walk_sheet&#39;]
   // path: imageAssets[&#39;character_walk_sheet.png&#39;]
-});</code></pre></section>
+});
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=imageassets-es-tab data-tabpanel="es"><pre><code class="language-js">import { load, setImagePath, imageAssets } from 'path/to/kontra.mjs';
 
 load(&#39;assets/imgs/character.png&#39;).then(function() {
@@ -561,7 +571,8 @@ load(&#39;character_walk_sheet.png&#39;).then(function() {
   // Image asset can be accessed by both
   // name: imageAssets[&#39;character_walk_sheet&#39;]
   // path: imageAssets[&#39;character_walk_sheet.png&#39;]
-});</code></pre></section>
+});
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=imageassets-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { load, setImagePath, imageAssets } from &#39;kontra&#39;;
 
 load(&#39;assets/imgs/character.png&#39;).then(function() {
@@ -575,7 +586,8 @@ load(&#39;character_walk_sheet.png&#39;).then(function() {
   // Image asset can be accessed by both
   // name: imageAssets[&#39;character_walk_sheet&#39;]
   // path: imageAssets[&#39;character_walk_sheet.png&#39;]
-});</code></pre></section>
+});
+</code></pre></section>
 </div>
           
         </section>
@@ -611,7 +623,8 @@ load(
   // all assets have loaded
 }).catch(function(err) {
   // error loading an asset
-});</code></pre></section>
+});
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=load-es-tab data-tabpanel="es"><pre><code class="language-js">import { load } from 'path/to/kontra.mjs';
 
 load(
@@ -622,7 +635,8 @@ load(
   // all assets have loaded
 }).catch(function(err) {
   // error loading an asset
-});</code></pre></section>
+});
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=load-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { load } from &#39;kontra&#39;;
 
 load(
@@ -633,7 +647,8 @@ load(
   // all assets have loaded
 }).catch(function(err) {
   // error loading an asset
-});</code></pre></section>
+});
+</code></pre></section>
 </div>
           <h3 id="title-load"><span class="visually-hidden">load</span> Parameters</span></h3>
           <dl aria-labelledby="title-load">
@@ -681,7 +696,8 @@ loadAudio([
 
   // access audio by its name only (not by its .mp3 or .ogg path)
   audioAssets[&#39;/audio/music&#39;].play();
-})</code></pre></section>
+})
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=loadaudio-es-tab data-tabpanel="es"><pre><code class="language-js">import { loadAudio, audioAssets } from 'path/to/kontra.mjs';
 
 loadAudio([
@@ -691,7 +707,8 @@ loadAudio([
 
   // access audio by its name only (not by its .mp3 or .ogg path)
   audioAssets[&#39;/audio/music&#39;].play();
-})</code></pre></section>
+})
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=loadaudio-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { loadAudio, audioAssets } from &#39;kontra&#39;;
 
 loadAudio([
@@ -701,7 +718,8 @@ loadAudio([
 
   // access audio by its name only (not by its .mp3 or .ogg path)
   audioAssets[&#39;/audio/music&#39;].play();
-})</code></pre></section>
+})
+</code></pre></section>
 </div>
           <h3 id="title-loadAudio"><span class="visually-hidden">loadAudio</span> Parameters</span></h3>
           <dl aria-labelledby="title-loadAudio">
@@ -744,17 +762,20 @@ loadAudio([
 
 loadData(&#39;assets/data/tile_engine_basic.json&#39;).then(function(data) {
   // data contains the parsed JSON data
-})</code></pre></section>
+})
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=loaddata-es-tab data-tabpanel="es"><pre><code class="language-js">import { loadData } from 'path/to/kontra.mjs';
 
 loadData(&#39;assets/data/tile_engine_basic.json&#39;).then(function(data) {
   // data contains the parsed JSON data
-})</code></pre></section>
+})
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=loaddata-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { loadData } from &#39;kontra&#39;;
 
 loadData(&#39;assets/data/tile_engine_basic.json&#39;).then(function(data) {
   // data contains the parsed JSON data
-})</code></pre></section>
+})
+</code></pre></section>
 </div>
           <h3 id="title-loadData"><span class="visually-hidden">loadData</span> Parameters</span></h3>
           <dl aria-labelledby="title-loadData">
@@ -797,17 +818,20 @@ loadData(&#39;assets/data/tile_engine_basic.json&#39;).then(function(data) {
 
 loadImage(&#39;car.png&#39;).then(function(image) {
   console.log(image.src);  //=&gt; &#39;car.png&#39;
-})</code></pre></section>
+})
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=loadimage-es-tab data-tabpanel="es"><pre><code class="language-js">import { loadImage } from 'path/to/kontra.mjs';
 
 loadImage(&#39;car.png&#39;).then(function(image) {
   console.log(image.src);  //=&gt; &#39;car.png&#39;
-})</code></pre></section>
+})
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=loadimage-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { loadImage } from &#39;kontra&#39;;
 
 loadImage(&#39;car.png&#39;).then(function(image) {
   console.log(image.src);  //=&gt; &#39;car.png&#39;
-})</code></pre></section>
+})
+</code></pre></section>
 </div>
           <h3 id="title-loadImage"><span class="visually-hidden">loadImage</span> Parameters</span></h3>
           <dl aria-labelledby="title-loadImage">
@@ -848,15 +872,18 @@ loadImage(&#39;car.png&#39;).then(function(image) {
   <section role="tabpanel" aria-labelledby=setaudiopath-global-tab data-tabpanel="global"><pre><code class="language-js">let { setAudioPath, load } = kontra;
 
 setAudioPath(&#39;/audio&#39;);
-load(&#39;music.ogg&#39;);  // loads &#39;/audio/music.ogg&#39;</code></pre></section>
+load(&#39;music.ogg&#39;);  // loads &#39;/audio/music.ogg&#39;
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=setaudiopath-es-tab data-tabpanel="es"><pre><code class="language-js">import { setAudioPath, load } from 'path/to/kontra.mjs';
 
 setAudioPath(&#39;/audio&#39;);
-load(&#39;music.ogg&#39;);  // loads &#39;/audio/music.ogg&#39;</code></pre></section>
+load(&#39;music.ogg&#39;);  // loads &#39;/audio/music.ogg&#39;
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=setaudiopath-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { setAudioPath, load } from &#39;kontra&#39;;
 
 setAudioPath(&#39;/audio&#39;);
-load(&#39;music.ogg&#39;);  // loads &#39;/audio/music.ogg&#39;</code></pre></section>
+load(&#39;music.ogg&#39;);  // loads &#39;/audio/music.ogg&#39;
+</code></pre></section>
 </div>
           <h3 id="title-setAudioPath"><span class="visually-hidden">setAudioPath</span> Parameters</span></h3>
           <dl aria-labelledby="title-setAudioPath">
@@ -894,15 +921,18 @@ load(&#39;music.ogg&#39;);  // loads &#39;/audio/music.ogg&#39;</code></pre></se
   <section role="tabpanel" aria-labelledby=setdatapath-global-tab data-tabpanel="global"><pre><code class="language-js">let { setDataPath, load } = kontra;
 
 setDataPath(&#39;/data&#39;);
-load(&#39;file.json&#39;);  // loads &#39;/data/file.json&#39;</code></pre></section>
+load(&#39;file.json&#39;);  // loads &#39;/data/file.json&#39;
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=setdatapath-es-tab data-tabpanel="es"><pre><code class="language-js">import { setDataPath, load } from 'path/to/kontra.mjs';
 
 setDataPath(&#39;/data&#39;);
-load(&#39;file.json&#39;);  // loads &#39;/data/file.json&#39;</code></pre></section>
+load(&#39;file.json&#39;);  // loads &#39;/data/file.json&#39;
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=setdatapath-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { setDataPath, load } from &#39;kontra&#39;;
 
 setDataPath(&#39;/data&#39;);
-load(&#39;file.json&#39;);  // loads &#39;/data/file.json&#39;</code></pre></section>
+load(&#39;file.json&#39;);  // loads &#39;/data/file.json&#39;
+</code></pre></section>
 </div>
           <h3 id="title-setDataPath"><span class="visually-hidden">setDataPath</span> Parameters</span></h3>
           <dl aria-labelledby="title-setDataPath">
@@ -940,15 +970,18 @@ load(&#39;file.json&#39;);  // loads &#39;/data/file.json&#39;</code></pre></sec
   <section role="tabpanel" aria-labelledby=setimagepath-global-tab data-tabpanel="global"><pre><code class="language-js">let { setImagePath, load } = kontra;
 
 setImagePath(&#39;/imgs&#39;);
-load(&#39;character.png&#39;);  // loads &#39;/imgs/character.png&#39;</code></pre></section>
+load(&#39;character.png&#39;);  // loads &#39;/imgs/character.png&#39;
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=setimagepath-es-tab data-tabpanel="es"><pre><code class="language-js">import { setImagePath, load } from 'path/to/kontra.mjs';
 
 setImagePath(&#39;/imgs&#39;);
-load(&#39;character.png&#39;);  // loads &#39;/imgs/character.png&#39;</code></pre></section>
+load(&#39;character.png&#39;);  // loads &#39;/imgs/character.png&#39;
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=setimagepath-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { setImagePath, load } from &#39;kontra&#39;;
 
 setImagePath(&#39;/imgs&#39;);
-load(&#39;character.png&#39;);  // loads &#39;/imgs/character.png&#39;</code></pre></section>
+load(&#39;character.png&#39;);  // loads &#39;/imgs/character.png&#39;
+</code></pre></section>
 </div>
           <h3 id="title-setImagePath"><span class="visually-hidden">setImagePath</span> Parameters</span></h3>
           <dl aria-labelledby="title-setImagePath">

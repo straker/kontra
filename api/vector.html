@@ -235,7 +235,7 @@
         <h1>Vector(&#8203;[x][, y])
         </h1>
 
-        <p>A simple 2d vector object.</p>
+        <p>A simple 2d vector object. Takes either separate <code>x</code> and <code>y</code> coordinates or a Vector-like object.</p>
 <div class="tablist">
   <ul role="tablist">
     <li role="presentation" data-tab="global">
@@ -251,13 +251,19 @@
   </ul>
   <section role="tabpanel" aria-labelledby=vector-global-tab data-tabpanel="global"><pre><code class="language-js">let { Vector } = kontra;
 
-let vector = Vector(100, 200);</code></pre></section>
+let vector = Vector(100, 200);
+let vector2 = Vector({x: 100, y: 200});
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=vector-es-tab data-tabpanel="es"><pre><code class="language-js">import { Vector } from 'path/to/kontra.mjs';
 
-let vector = Vector(100, 200);</code></pre></section>
+let vector = Vector(100, 200);
+let vector2 = Vector({x: 100, y: 200});
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=vector-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { Vector } from &#39;kontra&#39;;
 
-let vector = Vector(100, 200);</code></pre></section>
+let vector = Vector(100, 200);
+let vector2 = Vector({x: 100, y: 200});
+</code></pre></section>
 </div>
         <h3 id="title-Vector"><span class="visually-hidden">Vector</span> Parameters</span></h3>
         <dl aria-labelledby="title-Vector">
@@ -265,7 +271,7 @@ let vector = Vector(100, 200);</code></pre></section>
             <code>x</code>
             <span class="optional">Optional</span>
           </dt>
-          <dd><p><em>Number</em>. X coordinate of the vector. Defaults to <code>0</code>.</p>
+          <dd><p><em>Number or Object</em>. X coordinate of the vector or a Vector-like object. If passing an object, the <code>y</code> param is ignored. Defaults to <code>0</code>.</p>
         </dd>
           <dt>
             <code>y</code>
@@ -316,6 +322,11 @@ let vector = Vector(100, 200);</code></pre></section>
                   </a>
                 </li>
                 <li>
+                  <a href="api/vector#direction">
+                    <span>Vector&#8203;.direction(&#8203;)</span>
+                  </a>
+                </li>
+                <li>
                   <a href="api/vector#distance">
                     <span>Vector&#8203;.distance(&#8203;vector)</span>
                   </a>
@@ -338,6 +349,11 @@ let vector = Vector(100, 200);</code></pre></section>
                 <li>
                   <a href="api/vector#scale">
                     <span>Vector&#8203;.scale(&#8203;value)</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="api/vector#set">
+                    <span>Vector&#8203;.set(&#8203;vector)</span>
                   </a>
                 </li>
                 <li>
@@ -431,7 +447,8 @@ vector.y -= 300;
 console.log(vector.y);  //=&gt; 0
 
 vector.add({x: -500, y: 500});
-console.log(vector);    //=&gt; {x: 0, y: 300}</code></pre></section>
+console.log(vector);    //=&gt; {x: 0, y: 300}
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=clamp-es-tab data-tabpanel="es"><pre><code class="language-js">import { Vector } from 'path/to/kontra.mjs';
 
 let vector = Vector(100, 200);
@@ -444,7 +461,8 @@ vector.y -= 300;
 console.log(vector.y);  //=&gt; 0
 
 vector.add({x: -500, y: 500});
-console.log(vector);    //=&gt; {x: 0, y: 300}</code></pre></section>
+console.log(vector);    //=&gt; {x: 0, y: 300}
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=clamp-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { Vector } from &#39;kontra&#39;;
 
 let vector = Vector(100, 200);
@@ -457,7 +475,8 @@ vector.y -= 300;
 console.log(vector.y);  //=&gt; 0
 
 vector.add({x: -500, y: 500});
-console.log(vector);    //=&gt; {x: 0, y: 300}</code></pre></section>
+console.log(vector);    //=&gt; {x: 0, y: 300}
+</code></pre></section>
 </div>
           <h3 id="title-clamp"><span class="visually-hidden">clamp</span> Parameters</span></h3>
           <dl aria-labelledby="title-clamp">
@@ -487,6 +506,20 @@ console.log(vector);    //=&gt; {x: 0, y: 300}</code></pre></section>
           </dd>
           </dl>
           
+        </section>
+        <section>
+          <h2 id="direction">
+            <a href="api/vector#direction" class="section-link">
+              <span>Vector&#8203;.direction(&#8203;)</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
+
+          <p>Calculate the angle (in radians) of the current vector.</p>
+          
+          <h3><span class="visually-hidden">direction</span> Return value</h3>
+          <p><p><em>Number</em>. The angle (in radians) of the vector.</p>
+          </p>
         </section>
         <section>
           <h2 id="distance">
@@ -586,6 +619,26 @@ console.log(vector);    //=&gt; {x: 0, y: 300}</code></pre></section>
           </p>
         </section>
         <section>
+          <h2 id="set">
+            <a href="api/vector#set" class="section-link">
+              <span>Vector&#8203;.set(&#8203;vector)</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
+
+          <p>Set the x and y coordinate of the vector.</p>
+          <h3 id="title-set"><span class="visually-hidden">set</span> Parameters</span></h3>
+          <dl aria-labelledby="title-set">
+            <dt>
+              <code>vector</code>
+              
+            </dt>
+            <dd><p><em><a href="api/vector">Vector</a> or Object</em>. Vector to set coordinates from.</p>
+          </dd>
+          </dl>
+          
+        </section>
+        <section>
           <h2 id="subtract">
             <a href="api/vector#subtract" class="section-link">
               <span>Vector&#8203;.subtract(&#8203;vector)</span>
@@ -616,7 +669,7 @@ console.log(vector);    //=&gt; {x: 0, y: 300}</code></pre></section>
             </a>
           </h2>
 
-          <p><em>Number</em>. X coordinate of the vector.</p>
+          <p><em>Number</em>.  coordinate of the vector.</p>
           
         </section>
         <section>
@@ -627,7 +680,7 @@ console.log(vector);    //=&gt; {x: 0, y: 300}</code></pre></section>
             </a>
           </h2>
 
-          <p><em>Number</em>. Y coordinate of the vector.</p>
+          <p><em>Number</em>.  coordinate of the vector.</p>
           
         </section>
 

@@ -333,7 +333,7 @@
             </a>
           </h2>
 
-          <p>To use the pool, you must pass the <code>create()</code> function argument, which should return a new <a href="api/sprite">Sprite</a> or object. This object will be added to the pool every time there are no more alive objects.</p>
+          <p>To use the pool, you must pass the <code>create()</code> function argument. The create function should return a new instance of an object or <a href="api/sprite">Sprite</a>. This object will be added to the pool every time there are no more alive objects.</p>
 <p>The object must implement the functions <code>update()</code>, <code>render()</code>, <code>init()</code>, and <code>isAlive()</code>. If one of these functions is missing the pool will throw an error. <a href="api/sprite">Sprite</a> defines these functions for you.</p>
 <p>An object is available for reuse when its <code>isAlive()</code> function returns <code>false</code>. For a sprite, this is typically when its ttl is <code>0</code>.</p>
 <p>When you want an object from the pool, use the pools <a href="api/pool/#get">get()</a> function and pass it any properties you want the newly initialized object to have.</p>
@@ -353,7 +353,8 @@
   <section role="tabpanel" aria-labelledby=basic-use-global-tab data-tabpanel="global"><pre><code class="language-js">let { Pool, Sprite } = kontra;
 
 let pool = Pool({
-  // create a new sprite every time the pool needs a new object
+  // create a new sprite every time the pool needs a new object.
+  // equivalent to `create(props) { return Sprite(props) }`
   create: Sprite
 });
 
@@ -365,11 +366,13 @@ pool.get({
   height: 40,
   color: &#39;red&#39;,
   ttl: 60
-});</code></pre></section>
+});
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=basic-use-es-tab data-tabpanel="es"><pre><code class="language-js">import { Pool, Sprite } from 'path/to/kontra.mjs';
 
 let pool = Pool({
-  // create a new sprite every time the pool needs a new object
+  // create a new sprite every time the pool needs a new object.
+  // equivalent to `create(props) { return Sprite(props) }`
   create: Sprite
 });
 
@@ -381,11 +384,13 @@ pool.get({
   height: 40,
   color: &#39;red&#39;,
   ttl: 60
-});</code></pre></section>
+});
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=basic-use-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { Pool, Sprite } from &#39;kontra&#39;;
 
 let pool = Pool({
-  // create a new sprite every time the pool needs a new object
+  // create a new sprite every time the pool needs a new object.
+  // equivalent to `create(props) { return Sprite(props) }`
   create: Sprite
 });
 
@@ -397,7 +402,8 @@ pool.get({
   height: 40,
   color: &#39;red&#39;,
   ttl: 60
-});</code></pre></section>
+});
+</code></pre></section>
 </div>
 <p>When you want to update or render all alive objects in the pool, use the pools <a href="api/pool/#update">update()</a> and <a href="api/pool/#render">render()</a> functions.</p>
 <div class="tablist">
@@ -422,7 +428,8 @@ let loop = GameLoop({
   render: function() {
     pool.render();
   }
-});</code></pre></section>
+});
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=basic-use-es-tab data-tabpanel="es"><pre><code class="language-js">import { GameLoop } from 'path/to/kontra.mjs';
 
 let loop = GameLoop({
@@ -432,7 +439,8 @@ let loop = GameLoop({
   render: function() {
     pool.render();
   }
-});</code></pre></section>
+});
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=basic-use-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { GameLoop } from &#39;kontra&#39;;
 
 let loop = GameLoop({
@@ -442,7 +450,8 @@ let loop = GameLoop({
   render: function() {
     pool.render();
   }
-});</code></pre></section>
+});
+</code></pre></section>
 </div>
         </section>
 
@@ -478,7 +487,8 @@ let loop = GameLoop({
   // pass Infinity for ttl to prevent the object from being reused
   // until you set it back to 0
   ttl: Infinity
-});</code></pre>
+});
+</code></pre>
           <h3 id="title-get"><span class="visually-hidden">get</span> Parameters</span></h3>
           <dl aria-labelledby="title-get">
             <dt>
@@ -515,7 +525,7 @@ let loop = GameLoop({
             </a>
           </h2>
 
-          <p><em>Number</em>. The maximum number of objects allowed in the pool. The pool will never grow beyond this size.</p>
+          <p><em>Number</em>. he maximum number of objects allowed in the pool. The pool will never grow beyond this size.</p>
           
         </section>
         <section>
@@ -526,7 +536,7 @@ let loop = GameLoop({
             </a>
           </h2>
 
-          <p><em>An Array of Objects</em>. All objects currently in the pool, both alive and not alive.</p>
+          <p><em>An Array of Objects</em>. ll objects currently in the pool, both alive and not alive.</p>
           
         </section>
         <section>
@@ -548,7 +558,7 @@ let loop = GameLoop({
             </a>
           </h2>
 
-          <p><em>Number</em>. The number of alive objects.</p>
+          <p><em>Number</em>. he number of alive objects.</p>
           
         </section>
         <section>

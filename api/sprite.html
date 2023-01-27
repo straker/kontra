@@ -914,7 +914,8 @@ class CustomSprite extends SpriteClass {
       super.draw();
     }
   }
-}</code></pre></section>
+}
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=extending-a-sprite-es-tab data-tabpanel="es"><pre><code class="language-js">import { Sprite, SpriteClass } from 'path/to/kontra.mjs';
 
 class CustomSprite extends SpriteClass {
@@ -928,7 +929,8 @@ class CustomSprite extends SpriteClass {
       super.draw();
     }
   }
-}</code></pre></section>
+}
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=extending-a-sprite-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { Sprite, SpriteClass } from &#39;kontra&#39;;
 
 class CustomSprite extends SpriteClass {
@@ -942,7 +944,8 @@ class CustomSprite extends SpriteClass {
       super.draw();
     }
   }
-}</code></pre></section>
+}
+</code></pre></section>
 </div>
         </section>
 
@@ -954,7 +957,7 @@ class CustomSprite extends SpriteClass {
             </a>
           </h2>
 
-          <p><em>Object</em>. An object of <a href="api/animation">Animations</a> from a <a href="api/spriteSheet">SpriteSheet</a> to animate the sprite. Each animation is named so that it can can be used by name for the sprites <a href="api/sprite#playAnimation">playAnimation()</a> function.</p>
+          <p><em>Object</em>. n object of <a href="api/animation">Animations</a> from a <a href="api/spriteSheet">SpriteSheet</a> to animate the sprite. Each animation is named so that it can can be used by name for the sprites <a href="api/sprite#playAnimation">playAnimation()</a> function.</p>
 <div class="tablist">
   <ul role="tablist">
     <li role="presentation" data-tab="global">
@@ -989,7 +992,8 @@ let sprite = Sprite({
   animations: spriteSheet.animations
 });
 
-sprite.playAnimation(&#39;idle&#39;);</code></pre></section>
+sprite.playAnimation(&#39;idle&#39;);
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=animations-es-tab data-tabpanel="es"><pre><code class="language-js">import { Sprite, SpriteSheet } from 'path/to/kontra.mjs';
 
 let spriteSheet = SpriteSheet({
@@ -1011,7 +1015,8 @@ let sprite = Sprite({
   animations: spriteSheet.animations
 });
 
-sprite.playAnimation(&#39;idle&#39;);</code></pre></section>
+sprite.playAnimation(&#39;idle&#39;);
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=animations-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { Sprite, SpriteSheet } from &#39;kontra&#39;;
 
 let spriteSheet = SpriteSheet({
@@ -1033,7 +1038,8 @@ let sprite = Sprite({
   animations: spriteSheet.animations
 });
 
-sprite.playAnimation(&#39;idle&#39;);</code></pre></section>
+sprite.playAnimation(&#39;idle&#39;);
+</code></pre></section>
 </div>
           
         </section>
@@ -1045,7 +1051,7 @@ sprite.playAnimation(&#39;idle&#39;);</code></pre></section>
             </a>
           </h2>
 
-          <p><em>String</em>. The color of the game object if it was passed as an argument.</p>
+          <p><em>String</em>. he color of the game object if it was passed as an argument.</p>
           
         </section>
         <section>
@@ -1056,7 +1062,7 @@ sprite.playAnimation(&#39;idle&#39;);</code></pre></section>
             </a>
           </h2>
 
-          <p><em><a href="api/animation">Animation</a></em>. The currently playing Animation object if <code>animations</code> was passed as an argument.</p>
+          <p><em><a href="api/animation">Animation</a></em>. he currently playing Animation object if <code>animations</code> was passed as an argument.</p>
           
         </section>
         <section>
@@ -1067,7 +1073,7 @@ sprite.playAnimation(&#39;idle&#39;);</code></pre></section>
             </a>
           </h2>
 
-          <p><em>Number</em>. The height of the sprite. If the sprite is a <a href="api/sprite#rectangle-sprite">rectangle sprite</a>, it uses the passed in value. For an <a href="api/sprite#image-sprite">image sprite</a> it is the height of the image. And for an <a href="api/sprite#animation-sprite">animation sprite</a> it is the height of a single frame of the animation.</p>
+          <p><em>Number</em>. he height of the sprite. If the sprite is a <a href="api/sprite#rectangle-sprite">rectangle sprite</a>, it uses the passed in value. For an <a href="api/sprite#image-sprite">image sprite</a> it is the height of the image. And for an <a href="api/sprite#animation-sprite">animation sprite</a> it is the height of a single frame of the animation.</p>
           
         </section>
         <section>
@@ -1078,7 +1084,7 @@ sprite.playAnimation(&#39;idle&#39;);</code></pre></section>
             </a>
           </h2>
 
-          <p><em>HTMLImageElement or HTMLCanvasElement</em>. The image the sprite will use when drawn if passed as an argument.</p>
+          <p><em>HTMLImageElement or HTMLCanvasElement</em>. he image the sprite will use when drawn if passed as an argument.</p>
           
         </section>
         <section>
@@ -1123,7 +1129,8 @@ let sprite = Sprite({
   animations: spriteSheet.animations
 });
 
-sprite.playAnimation(&#39;idle&#39;);</code></pre></section>
+sprite.playAnimation(&#39;idle&#39;);
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=playanimation-es-tab data-tabpanel="es"><pre><code class="language-js">import { Sprite, SpriteSheet } from 'path/to/kontra.mjs';
 
 let spriteSheet = SpriteSheet({
@@ -1144,7 +1151,8 @@ let sprite = Sprite({
   animations: spriteSheet.animations
 });
 
-sprite.playAnimation(&#39;idle&#39;);</code></pre></section>
+sprite.playAnimation(&#39;idle&#39;);
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=playanimation-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { Sprite, SpriteSheet } from &#39;kontra&#39;;
 
 let spriteSheet = SpriteSheet({
@@ -1165,7 +1173,8 @@ let sprite = Sprite({
   animations: spriteSheet.animations
 });
 
-sprite.playAnimation(&#39;idle&#39;);</code></pre></section>
+sprite.playAnimation(&#39;idle&#39;);
+</code></pre></section>
 </div>
           <h3 id="title-playAnimation"><span class="visually-hidden">playAnimation</span> Parameters</span></h3>
           <dl aria-labelledby="title-playAnimation">
@@ -1186,7 +1195,7 @@ sprite.playAnimation(&#39;idle&#39;);</code></pre></section>
             </a>
           </h2>
 
-          <p><em>Number</em>. The width of the sprite. If the sprite is a <a href="api/sprite#rectangle-sprite">rectangle sprite</a>, it uses the passed in value. For an <a href="api/sprite#image-sprite">image sprite</a> it is the width of the image. And for an <a href="api/sprite#animation-sprite">animation sprite</a> it is the width of a single frame of the animation.</p>
+          <p><em>Number</em>. he width of the sprite. If the sprite is a <a href="api/sprite#rectangle-sprite">rectangle sprite</a>, it uses the passed in value. For an <a href="api/sprite#image-sprite">image sprite</a> it is the width of the image. And for an <a href="api/sprite#animation-sprite">animation sprite</a> it is the width of a single frame of the animation.</p>
           
         </section>
 

@@ -256,12 +256,14 @@ let loop = GameLoop({
   }
 });
 
-loop.start();</code></pre>
+loop.start();
+</code></pre>
 <pre><code class="language-bash"># rollup
 rollup game.js --format iife --file game.bundle.js
 
 # esbuild
-esbuild game.js --bundle --format=iife --outfile=game.bundle.js</code></pre>
+esbuild game.js --bundle --format=iife --outfile=game.bundle.js
+</code></pre>
 <h2 id="kontra-bundler-plugins">Kontra Bundler Plugins</h2>
 <p>Kontra supports even more granular control over the file size if tree shaking is not enough. If you&#39;re looking to remove unused parts of the Sprite class, such as <code>rotation</code> or <code>anchor</code>, you can use a kontra bundler plugin to remove entire parts of the Sprite codebase. Just pass the functionality you want enabled and the bundler plugin will remove the rest.</p>
 <pre><code class="language-js">// rollup.config.js
@@ -285,7 +287,8 @@ export default {
       debug: true
     })
   ]
-}</code></pre>
+}
+</code></pre>
 <h3 id="supported-plugins">Supported Plugins</h3>
 <ul>
 <li><a href="https://github.com/straker/rollup-plugin-kontra">rollup-plugin-kontra</a></li>
@@ -374,8 +377,12 @@ export default {
 <td>Support for RTL languages</td>
 </tr>
 <tr>
+<td><code>align</code></td>
 <td><code>textAlign</code></td>
-<td><code>textAlign</code></td>
+</tr>
+<tr>
+<td><code>stroke</code></td>
+<td><code>strokeColor</code>, <code>lineWidth</code></td>
 </tr>
 </tbody></table>
 <h4 id="tileengine-options"><code>tileEngine</code> Options:</h4>

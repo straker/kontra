@@ -258,7 +258,8 @@ function update() {
   if (keyPressed(&#39;arrowleft&#39;)) {
     // move left
   }
-}</code></pre></section>
+}
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=keyboard-es-tab data-tabpanel="es"><pre><code class="language-js">import { initKeys, keyPressed } from 'path/to/kontra.mjs';
 
 // this function must be called first before keyboard
@@ -269,7 +270,8 @@ function update() {
   if (keyPressed(&#39;arrowleft&#39;)) {
     // move left
   }
-}</code></pre></section>
+}
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=keyboard-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { initKeys, keyPressed } from &#39;kontra&#39;;
 
 // this function must be called first before keyboard
@@ -280,7 +282,8 @@ function update() {
   if (keyPressed(&#39;arrowleft&#39;)) {
     // move left
   }
-}</code></pre></section>
+}
+</code></pre></section>
 </div>
         
 
@@ -315,7 +318,7 @@ function update() {
                 </li>
                 <li>
                   <a href="api/keyboard#keyPressed">
-                    <span>keyPressed(&#8203;key)</span>
+                    <span>keyPressed(&#8203;keys)</span>
                   </a>
                 </li>
                 <li>
@@ -368,7 +371,7 @@ function update() {
             </a>
           </h2>
 
-          <p><em>Object</em>. A map of <a href="https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/code/code_values">KeyboardEvent code values</a> to key names. Add to this object to expand the list of <a href="api/keyboard#available-keys">available keys</a>.</p>
+          <p><em>Object</em>.  map of <a href="https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/code/code_values">KeyboardEvent code values</a> to key names. Add to this object to expand the list of <a href="api/keyboard#available-keys">available keys</a>.</p>
 <div class="tablist">
   <ul role="tablist">
     <li role="presentation" data-tab="global">
@@ -388,28 +391,31 @@ keyMap[&#39;ControlRight&#39;] = &#39;ctrl&#39;;
 
 onKey(&#39;ctrl&#39;, function(e) {
   // handle ctrl key
-});</code></pre></section>
+});
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=keymap-es-tab data-tabpanel="es"><pre><code class="language-js">import { keyMap, onKey } from 'path/to/kontra.mjs';
 
 keyMap[&#39;ControlRight&#39;] = &#39;ctrl&#39;;
 
 onKey(&#39;ctrl&#39;, function(e) {
   // handle ctrl key
-});</code></pre></section>
+});
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=keymap-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { keyMap, onKey } from &#39;kontra&#39;;
 
 keyMap[&#39;ControlRight&#39;] = &#39;ctrl&#39;;
 
 onKey(&#39;ctrl&#39;, function(e) {
   // handle ctrl key
-});</code></pre></section>
+});
+</code></pre></section>
 </div>
           
         </section>
         <section>
           <h2 id="keyPressed">
             <a href="api/keyboard#keyPressed" class="section-link">
-              <span>keyPressed(&#8203;key)</span>
+              <span>keyPressed(&#8203;keys)</span>
               <span aria-hidden="true">#</span>
             </a>
           </h2>
@@ -448,7 +454,8 @@ let sprite = Sprite({
       // down arrow pressed
     }
   }
-});</code></pre></section>
+});
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=keypressed-es-tab data-tabpanel="es"><pre><code class="language-js">import { Sprite, initKeys, keyPressed } from 'path/to/kontra.mjs';
 
 initKeys();
@@ -469,7 +476,8 @@ let sprite = Sprite({
       // down arrow pressed
     }
   }
-});</code></pre></section>
+});
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=keypressed-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { Sprite, initKeys, keyPressed } from &#39;kontra&#39;;
 
 initKeys();
@@ -490,15 +498,16 @@ let sprite = Sprite({
       // down arrow pressed
     }
   }
-});</code></pre></section>
+});
+</code></pre></section>
 </div>
           <h3 id="title-keyPressed"><span class="visually-hidden">keyPressed</span> Parameters</span></h3>
           <dl aria-labelledby="title-keyPressed">
             <dt>
-              <code>key</code>
+              <code>keys</code>
               
             </dt>
-            <dd><p><em>String</em>. Key to check for pressed state.</p>
+            <dd><p><em>String or an Array of Strings</em>. Key or keys to check for pressed state.</p>
           </dd>
           </dl>
           
@@ -531,15 +540,18 @@ let sprite = Sprite({
   <section role="tabpanel" aria-labelledby=offkey-global-tab data-tabpanel="global"><pre><code class="language-js">let { offKey } = kontra;
 
 offKey(&#39;arrowleft&#39;);
-offKey([&#39;enter&#39;, &#39;space&#39;]);</code></pre></section>
+offKey([&#39;enter&#39;, &#39;space&#39;]);
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=offkey-es-tab data-tabpanel="es"><pre><code class="language-js">import { offKey } from 'path/to/kontra.mjs';
 
 offKey(&#39;arrowleft&#39;);
-offKey([&#39;enter&#39;, &#39;space&#39;]);</code></pre></section>
+offKey([&#39;enter&#39;, &#39;space&#39;]);
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=offkey-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { offKey } from &#39;kontra&#39;;
 
 offKey(&#39;arrowleft&#39;);
-offKey([&#39;enter&#39;, &#39;space&#39;]);</code></pre></section>
+offKey([&#39;enter&#39;, &#39;space&#39;]);
+</code></pre></section>
 </div>
           <h3 id="title-offKey"><span class="visually-hidden">offKey</span> Parameters</span></h3>
           <dl aria-labelledby="title-offKey">
@@ -596,7 +608,8 @@ onKey(&#39;p&#39;, function(e) {
 });
 onKey([&#39;enter&#39;, &#39;space&#39;], function(e) {
   // fire gun
-});</code></pre></section>
+});
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=onkey-es-tab data-tabpanel="es"><pre><code class="language-js">import { initKeys, onKey } from 'path/to/kontra.mjs';
 
 initKeys();
@@ -606,7 +619,8 @@ onKey(&#39;p&#39;, function(e) {
 });
 onKey([&#39;enter&#39;, &#39;space&#39;], function(e) {
   // fire gun
-});</code></pre></section>
+});
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=onkey-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { initKeys, onKey } from &#39;kontra&#39;;
 
 initKeys();
@@ -616,7 +630,8 @@ onKey(&#39;p&#39;, function(e) {
 });
 onKey([&#39;enter&#39;, &#39;space&#39;], function(e) {
   // fire gun
-});</code></pre></section>
+});
+</code></pre></section>
 </div>
           <h3 id="title-onKey"><span class="visually-hidden">onKey</span> Parameters</span></h3>
           <dl aria-labelledby="title-onKey">

@@ -1140,7 +1140,7 @@ load('assets/imgs/mapPack_tilesheet.png', 'assets/data/tile_engine_add.json')
             </a>
           </h2>
 
-          <p><em>CanvasRenderingContext2D</em>. The context the tile engine will draw to.</p>
+          <p><em>CanvasRenderingContext2D</em>. he context the tile engine will draw to.</p>
           
         </section>
         <section>
@@ -1151,7 +1151,7 @@ load('assets/imgs/mapPack_tilesheet.png', 'assets/data/tile_engine_add.json')
             </a>
           </h2>
 
-          <p><em>Number</em>. The height of tile map (in tiles).</p>
+          <p><em>Number</em>. he height of tile map (in tiles).</p>
           
         </section>
         <section>
@@ -1206,7 +1206,8 @@ tileEngine.layerCollidesWith(&#39;collision&#39;, sprite);  //=&gt; false
 
 sprite.y = 28;
 
-tileEngine.layerCollidesWith(&#39;collision&#39;, sprite);  //=&gt; true</code></pre></section>
+tileEngine.layerCollidesWith(&#39;collision&#39;, sprite);  //=&gt; true
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=layercollideswith-es-tab data-tabpanel="es"><pre><code class="language-js">import { TileEngine, Sprite } from 'path/to/kontra.mjs';
 
 let tileEngine = TileEngine({
@@ -1237,7 +1238,8 @@ tileEngine.layerCollidesWith(&#39;collision&#39;, sprite);  //=&gt; false
 
 sprite.y = 28;
 
-tileEngine.layerCollidesWith(&#39;collision&#39;, sprite);  //=&gt; true</code></pre></section>
+tileEngine.layerCollidesWith(&#39;collision&#39;, sprite);  //=&gt; true
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=layercollideswith-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { TileEngine, Sprite } from &#39;kontra&#39;;
 
 let tileEngine = TileEngine({
@@ -1268,7 +1270,8 @@ tileEngine.layerCollidesWith(&#39;collision&#39;, sprite);  //=&gt; false
 
 sprite.y = 28;
 
-tileEngine.layerCollidesWith(&#39;collision&#39;, sprite);  //=&gt; true</code></pre></section>
+tileEngine.layerCollidesWith(&#39;collision&#39;, sprite);  //=&gt; true
+</code></pre></section>
 </div>
           <h3 id="title-layerCollidesWith"><span class="visually-hidden">layerCollidesWith</span> Parameters</span></h3>
           <dl aria-labelledby="title-layerCollidesWith">
@@ -1298,7 +1301,7 @@ tileEngine.layerCollidesWith(&#39;collision&#39;, sprite);  //=&gt; true</code><
             </a>
           </h2>
 
-          <p><em>An Array of Objects</em>. Array of all layers of the tile engine.</p>
+          <p><em>An Array of Objects</em>. rray of all layers of the tile engine.</p>
           
         </section>
         <section>
@@ -1309,7 +1312,7 @@ tileEngine.layerCollidesWith(&#39;collision&#39;, sprite);  //=&gt; true</code><
             </a>
           </h2>
 
-          <p><em>Number</em>. The height of the tile map (in pixels).</p>
+          <p><em>Number</em>. he height of the tile map (in pixels).</p>
           
         </section>
         <section>
@@ -1320,7 +1323,7 @@ tileEngine.layerCollidesWith(&#39;collision&#39;, sprite);  //=&gt; true</code><
             </a>
           </h2>
 
-          <p><em>Number</em>. The width of the tile map (in pixels).</p>
+          <p><em>Number</em>. he width of the tile map (in pixels).</p>
           
         </section>
         <section>
@@ -1417,7 +1420,8 @@ tileEngine.setLayer(&#39;collision&#39;, [ 4,5,6,7]);
 tileEngine.tileAtLayer(&#39;collision&#39;, {row: 0, col: 0});  //=&gt; 4
 tileEngine.tileAtLayer(&#39;collision&#39;, {row: 0, col: 1});  //=&gt; 5
 tileEngine.tileAtLayer(&#39;collision&#39;, {row: 1, col: 0});  //=&gt; 6
-tileEngine.tileAtLayer(&#39;collision&#39;, {row: 1, col: 1});  //=&gt; 7</code></pre></section>
+tileEngine.tileAtLayer(&#39;collision&#39;, {row: 1, col: 1});  //=&gt; 7
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=setlayer-es-tab data-tabpanel="es"><pre><code class="language-js">import { TileEngine } from 'path/to/kontra.mjs';
 
 let tileEngine = TileEngine({
@@ -1439,7 +1443,8 @@ tileEngine.setLayer(&#39;collision&#39;, [ 4,5,6,7]);
 tileEngine.tileAtLayer(&#39;collision&#39;, {row: 0, col: 0});  //=&gt; 4
 tileEngine.tileAtLayer(&#39;collision&#39;, {row: 0, col: 1});  //=&gt; 5
 tileEngine.tileAtLayer(&#39;collision&#39;, {row: 1, col: 0});  //=&gt; 6
-tileEngine.tileAtLayer(&#39;collision&#39;, {row: 1, col: 1});  //=&gt; 7</code></pre></section>
+tileEngine.tileAtLayer(&#39;collision&#39;, {row: 1, col: 1});  //=&gt; 7
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=setlayer-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { TileEngine } from &#39;kontra&#39;;
 
 let tileEngine = TileEngine({
@@ -1461,7 +1466,8 @@ tileEngine.setLayer(&#39;collision&#39;, [ 4,5,6,7]);
 tileEngine.tileAtLayer(&#39;collision&#39;, {row: 0, col: 0});  //=&gt; 4
 tileEngine.tileAtLayer(&#39;collision&#39;, {row: 0, col: 1});  //=&gt; 5
 tileEngine.tileAtLayer(&#39;collision&#39;, {row: 1, col: 0});  //=&gt; 6
-tileEngine.tileAtLayer(&#39;collision&#39;, {row: 1, col: 1});  //=&gt; 7</code></pre></section>
+tileEngine.tileAtLayer(&#39;collision&#39;, {row: 1, col: 1});  //=&gt; 7
+</code></pre></section>
 </div>
           <h3 id="title-setLayer"><span class="visually-hidden">setLayer</span> Parameters</span></h3>
           <dl aria-labelledby="title-setLayer">
@@ -1522,7 +1528,8 @@ let tileEngine = TileEngine({
 });
 
 tileEngine.setTileAtLayer(&#39;collision&#39;, {row: 2, col: 1}, 10);
-tileEngine.tileAtLayer(&#39;collision&#39;, {row: 2, col: 1});  //=&gt; 10</code></pre></section>
+tileEngine.tileAtLayer(&#39;collision&#39;, {row: 2, col: 1});  //=&gt; 10
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=settileatlayer-es-tab data-tabpanel="es"><pre><code class="language-js">import { TileEngine } from 'path/to/kontra.mjs';
 
 let tileEngine = TileEngine({
@@ -1543,7 +1550,8 @@ let tileEngine = TileEngine({
 });
 
 tileEngine.setTileAtLayer(&#39;collision&#39;, {row: 2, col: 1}, 10);
-tileEngine.tileAtLayer(&#39;collision&#39;, {row: 2, col: 1});  //=&gt; 10</code></pre></section>
+tileEngine.tileAtLayer(&#39;collision&#39;, {row: 2, col: 1});  //=&gt; 10
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=settileatlayer-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { TileEngine } from &#39;kontra&#39;;
 
 let tileEngine = TileEngine({
@@ -1564,7 +1572,8 @@ let tileEngine = TileEngine({
 });
 
 tileEngine.setTileAtLayer(&#39;collision&#39;, {row: 2, col: 1}, 10);
-tileEngine.tileAtLayer(&#39;collision&#39;, {row: 2, col: 1});  //=&gt; 10</code></pre></section>
+tileEngine.tileAtLayer(&#39;collision&#39;, {row: 2, col: 1});  //=&gt; 10
+</code></pre></section>
 </div>
           <h3 id="title-setTileAtLayer"><span class="visually-hidden">setTileAtLayer</span> Parameters</span></h3>
           <dl aria-labelledby="title-setTileAtLayer">
@@ -1597,7 +1606,7 @@ tileEngine.tileAtLayer(&#39;collision&#39;, {row: 2, col: 1});  //=&gt; 10</code
             </a>
           </h2>
 
-          <p><em>Number</em>. X coordinate of the tile map camera.</p>
+          <p><em>Number</em>.  coordinate of the tile map camera.</p>
           
         </section>
         <section>
@@ -1608,7 +1617,7 @@ tileEngine.tileAtLayer(&#39;collision&#39;, {row: 2, col: 1});  //=&gt; 10</code
             </a>
           </h2>
 
-          <p><em>Number</em>. Y coordinate of the tile map camera.</p>
+          <p><em>Number</em>.  coordinate of the tile map camera.</p>
           
         </section>
         <section>
@@ -1653,7 +1662,8 @@ let tileEngine = TileEngine({
 });
 
 tileEngine.tileAtLayer(&#39;collision&#39;, {x: 50, y: 50});  //=&gt; 1
-tileEngine.tileAtLayer(&#39;collision&#39;, {row: 2, col: 1});  //=&gt; 2</code></pre></section>
+tileEngine.tileAtLayer(&#39;collision&#39;, {row: 2, col: 1});  //=&gt; 2
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=tileatlayer-es-tab data-tabpanel="es"><pre><code class="language-js">import { TileEngine } from 'path/to/kontra.mjs';
 
 let tileEngine = TileEngine({
@@ -1674,7 +1684,8 @@ let tileEngine = TileEngine({
 });
 
 tileEngine.tileAtLayer(&#39;collision&#39;, {x: 50, y: 50});  //=&gt; 1
-tileEngine.tileAtLayer(&#39;collision&#39;, {row: 2, col: 1});  //=&gt; 2</code></pre></section>
+tileEngine.tileAtLayer(&#39;collision&#39;, {row: 2, col: 1});  //=&gt; 2
+</code></pre></section>
   <section role="tabpanel" aria-labelledby=tileatlayer-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { TileEngine } from &#39;kontra&#39;;
 
 let tileEngine = TileEngine({
@@ -1695,7 +1706,8 @@ let tileEngine = TileEngine({
 });
 
 tileEngine.tileAtLayer(&#39;collision&#39;, {x: 50, y: 50});  //=&gt; 1
-tileEngine.tileAtLayer(&#39;collision&#39;, {row: 2, col: 1});  //=&gt; 2</code></pre></section>
+tileEngine.tileAtLayer(&#39;collision&#39;, {row: 2, col: 1});  //=&gt; 2
+</code></pre></section>
 </div>
           <h3 id="title-tileAtLayer"><span class="visually-hidden">tileAtLayer</span> Parameters</span></h3>
           <dl aria-labelledby="title-tileAtLayer">
@@ -1725,7 +1737,7 @@ tileEngine.tileAtLayer(&#39;collision&#39;, {row: 2, col: 1});  //=&gt; 2</code>
             </a>
           </h2>
 
-          <p><em>Number</em>. The height of a tile (in pixels).</p>
+          <p><em>Number</em>. he height of a tile (in pixels).</p>
           
         </section>
         <section>
@@ -1736,7 +1748,7 @@ tileEngine.tileAtLayer(&#39;collision&#39;, {row: 2, col: 1});  //=&gt; 2</code>
             </a>
           </h2>
 
-          <p><em>An Array of Objects</em>. Array of all tilesets of the tile engine.</p>
+          <p><em>An Array of Objects</em>. rray of all tilesets of the tile engine.</p>
           
         </section>
         <section>
@@ -1747,7 +1759,7 @@ tileEngine.tileAtLayer(&#39;collision&#39;, {row: 2, col: 1});  //=&gt; 2</code>
             </a>
           </h2>
 
-          <p><em>Number</em>. The width a tile (in pixels).</p>
+          <p><em>Number</em>. he width a tile (in pixels).</p>
           
         </section>
         <section>
@@ -1758,7 +1770,7 @@ tileEngine.tileAtLayer(&#39;collision&#39;, {row: 2, col: 1});  //=&gt; 2</code>
             </a>
           </h2>
 
-          <p><em>Number</em>. The width of tile map (in tiles).</p>
+          <p><em>Number</em>. he width of tile map (in tiles).</p>
           
         </section>
 

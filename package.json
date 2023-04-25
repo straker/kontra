@@ -72,7 +72,7 @@
     "karma-mocha": "^2.0.1",
     "karma-mocha-reporter": "^2.2.5",
     "karma-sinon": "^1.0.5",
-    "lint-staged": "^11.2.3",
+    "lint-staged": "^13.2.1",
     "livingcss": "^7.0.1",
     "marked": "^3.0.7",
     "mocha": "^9.2.0",

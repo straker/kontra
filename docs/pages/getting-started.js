@@ -41,7 +41,7 @@ import kontra from 'kontra';
 
 ### Web Maker
 
-Want to get started without all the hassle? [Web Maker](https://webmakerapp.com/) has you covered! When you start a new project, select the Kontra Game Engine from the list of predefined templates and you're good to go. Learn more by reading the [Web Maker and JS13k tutorial](https://medium.com/web-maker/js13kgames-jam-with-web-maker-a3389cf2cbb).
+Want to get started without all the hassle? [Web Maker](https://webmaker.app/) has you covered! When you start a new project, select the Kontra Game Engine from the list of predefined templates and you're good to go. Learn more by reading the [Web Maker and JS13k tutorial](https://medium.com/web-maker/js13kgames-jam-with-web-maker-a3389cf2cbb).
 
 ## Initialize
 

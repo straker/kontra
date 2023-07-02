@@ -1,0 +1,27 @@
+name: Tests
+
+on:
+  # Allow triggering the workflow manually from UI
+  workflow_dispatch:
+  pull_request:
+
+# Allow a subsequently queued workflow run to interrupt previous runs
+concurrency:
+  group: '${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}'
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/cache@v3
+        with:
+          path: ./node_modules
+          key: cache-v1-${{ hashFiles('./package-lock.json') }}
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - run: |
+          npm run test

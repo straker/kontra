@@ -14,14 +14,26 @@ jobs:
   test:
     name: Unit Tests
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/cache@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Cache dependencies
+        id: cache-deps
+        uses: actions/cache@v3
         with:
           path: ./node_modules
-          key: cache-v1-${{ hashFiles('./package-lock.json') }}
-      - uses: actions/setup-node@v3
+          key: ${{ runner.os }}-${{ hashFiles('./package-lock.json') }}
+
+      - name: Install dependencies
+        if: steps.cache-deps.outputs.cache-hit != 'true'
+        run: npm ci
+
+      - name: Setup node
+        uses: actions/setup-node@v3
         with:
           node-version: 18
-      - run: |
-          npm run test
+
+      - name: Run unit tests
+        run: npm run test

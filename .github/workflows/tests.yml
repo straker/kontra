@@ -93,7 +93,7 @@ jobs:
 
   permutation-vector-test:
     name: "Permutation Tests: Vector"
-    needs: changes
+    needs: change-detection
     if: ${{ needs.changes.outputs.vector == 'true' }}
     runs-on: ubuntu-latest
 
@@ -124,7 +124,7 @@ jobs:
 
   permutation-gameObject-test:
     name: "Permutation Tests: gameObject"
-    needs: changes
+    needs: change-detection
     if: ${{ needs.changes.outputs.gameObject == 'true' }}
     runs-on: ubuntu-latest
 

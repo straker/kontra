@@ -13,6 +13,7 @@ concurrency:
 jobs:
   # Detect file changes to conditionally run permutation tests
   change-detection:
+    name: Detect Changes
     runs-on: ubuntu-latest
 
     # Required permissions
@@ -103,39 +104,8 @@ jobs:
           npm run build
           npm run test:ts
 
-  permutation-vector-test:
-    name: "Permutation Tests: Vector"
-    needs: change-detection
-    if: needs.change-detection.outputs.vector == 'true'
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Cache dependencies
-        id: cache-deps
-        uses: actions/cache@v3
-        with:
-          path: ./node_modules
-          key: ${{ runner.os }}-${{ hashFiles('./package-lock.json') }}
-
-      - name: Install dependencies
-        if: steps.cache-deps.outputs.cache-hit != 'true'
-        run: npm ci
-
-      - name: Setup node
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-
-      - name: Run permutation:vector tests
-        run: |
-          npm run build
-          npm run test:permutations vector
-
   permutation-gameObject-test:
-    name: "Permutation Tests: gameObject"
+    name: "Permutation Tests: GameObject"
     needs: change-detection
     if: needs.change-detection.outputs.gameObject == 'true'
     runs-on: ubuntu-latest
@@ -165,8 +135,39 @@ jobs:
           npm run build
           npm run test:permutations gameObject
 
+  permutation-sprite-test:
+    name: "Permutation Tests: Sprite"
+    needs: change-detection
+    if: needs.change-detection.outputs.sprite == 'true'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Cache dependencies
+        id: cache-deps
+        uses: actions/cache@v3
+        with:
+          path: ./node_modules
+          key: ${{ runner.os }}-${{ hashFiles('./package-lock.json') }}
+
+      - name: Install dependencies
+        if: steps.cache-deps.outputs.cache-hit != 'true'
+        run: npm ci
+
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Run permutation:sprite tests
+        run: |
+          npm run build
+          npm run test:permutations sprite
+
   permutation-text-test:
-    name: "Permutation Tests: text"
+    name: "Permutation Tests: Text"
     needs: change-detection
     if: needs.change-detection.outputs.text == 'true'
     runs-on: ubuntu-latest
@@ -197,7 +198,7 @@ jobs:
           npm run test:permutations text
 
   permutation-tileEngine-test:
-    name: "Permutation Tests: tileEngine"
+    name: "Permutation Tests: TileEngine"
     needs: change-detection
     if: needs.change-detection.outputs.tileEngine == 'true'
     runs-on: ubuntu-latest
@@ -227,9 +228,8 @@ jobs:
           npm run build
           npm run test:permutations tileEngine
 
-
   permutation-updatable-test:
-    name: "Permutation Tests: updatable"
+    name: "Permutation Tests: Updatable"
     needs: change-detection
     if: needs.change-detection.outputs.updatable == 'true'
     runs-on: ubuntu-latest
@@ -259,10 +259,10 @@ jobs:
           npm run build
           npm run test:permutations updatable
 
-  permutation-sprite-test:
-    name: "Permutation Tests: sprite"
+  permutation-vector-test:
+    name: "Permutation Tests: Vector"
     needs: change-detection
-    if: needs.change-detection.outputs.sprite == 'true'
+    if: needs.change-detection.outputs.vector == 'true'
     runs-on: ubuntu-latest
 
     steps:
@@ -285,7 +285,7 @@ jobs:
         with:
           node-version: 18
 
-      - name: Run permutation:sprite tests
+      - name: Run permutation:vector tests
         run: |
           npm run build
-          npm run test:permutations sprite
+          npm run test:permutations vector

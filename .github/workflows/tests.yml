@@ -11,6 +11,30 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # Detect file changes in order to run certain jobs only
+  change-detection:
+    runs-on: ubuntu-latest
+
+    # Required permissions
+    permissions:
+      pull-requests: read
+
+    # Set job outputs to values from filter step
+    outputs:
+      vector: ${{ steps.filter.outputs.vector }}
+      gameObject: ${{ steps.filter.outputs.gameObject }}
+
+    steps:
+    # For pull requests it's not necessary to checkout the code
+    - uses: dorny/paths-filter@v2
+      id: filter
+      with:
+        filters: |
+          vector:
+            - 'src/vector.js'
+          gameObject:
+            - 'src/gameObject.js'
+
   unit-test:
     name: Unit Tests
     runs-on: ubuntu-latest
@@ -69,6 +93,8 @@ jobs:
 
   permutation-vector-test:
     name: "Permutation Tests: Vector"
+    needs: changes
+    if: ${{ needs.changes.outputs.vector == 'true' }}
     runs-on: ubuntu-latest
 
     steps:
@@ -95,3 +121,34 @@ jobs:
         run: |
           npm run build
           npm run test:permutations vector
+
+  permutation-gameObject-test:
+    name: "Permutation Tests: gameObject"
+    needs: changes
+    if: ${{ needs.changes.outputs.gameObject == 'true' }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Cache dependencies
+        id: cache-deps
+        uses: actions/cache@v3
+        with:
+          path: ./node_modules
+          key: ${{ runner.os }}-${{ hashFiles('./package-lock.json') }}
+
+      - name: Install dependencies
+        if: steps.cache-deps.outputs.cache-hit != 'true'
+        run: npm ci
+
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Run permutation:gameObject tests
+        run: |
+          npm run build
+          npm run test:permutations gameObject

@@ -68,7 +68,7 @@ jobs:
           npm run test:ts
 
   permutation-vector-test:
-    name: Permutation Tests: Vector
+    name: "Permutation Tests: Vector"
     runs-on: ubuntu-latest
 
     steps:

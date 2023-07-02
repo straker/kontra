@@ -1,7 +1,7 @@
 import Vector from './vector.js';
 
 /**
- * TThis is a private class that is used just to help make the GameObject class more manageable and smaller.
+ * This is a private class that is used just to help make the GameObject class more manageable and smaller.
  *
  * It maintains everything that can be changed in the update function:
  * position

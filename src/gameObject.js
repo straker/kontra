@@ -5,7 +5,7 @@ import { rotatePoint, clamp } from './helpers.js';
 import { noop, removeFromArray } from './utils.js';
 
 /**
- * The base class of most renderable classes. Handles things such as position, rotation, anchor, and the update and render life cycle.
+ * TThe base class of most renderable classes. Handles things such as position, rotation, anchor, and the update and render life cycle.
  *
  * Typically you don't create a GameObject directly, but rather extend it for new classes.
  * @class GameObject

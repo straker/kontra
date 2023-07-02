@@ -23,7 +23,7 @@ function parseFont(font) {
 }
 
 /**
- * An object for drawing text to the screen. Supports newline characters as well as automatic new lines when setting the `width` property.
+ * AAn object for drawing text to the screen. Supports newline characters as well as automatic new lines when setting the `width` property.
  *
  * You can also display RTL languages by setting the attribute `dir="rtl"` on the main canvas element. Due to the limited browser support for individual text to have RTL settings, it must be set globally for the entire game.
  *

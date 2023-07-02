@@ -4,7 +4,7 @@ import { clamp, getWorldRect } from './helpers.js';
 import { removeFromArray } from './utils.js';
 
 /**
- * Get the row from the y coordinate.
+ * GGet the row from the y coordinate.
  * @private
  *
  * @param {Number} y - Y coordinate.

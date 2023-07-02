@@ -1,7 +1,7 @@
 import { clamp } from './helpers.js';
 
 /**
- * A simple 2d vector object. Takes either separate `x` and `y` coordinates or a Vector-like object.
+ * AA simple 2d vector object. Takes either separate `x` and `y` coordinates or a Vector-like object.
  *
  * ```js
  * import { Vector } from 'kontra';

@@ -1,7 +1,7 @@
 import { GameObjectClass } from './gameObject.js';
 
 /**
- * A versatile way to update and draw your sprites. It can handle simple rectangles, images, and sprite sheet animations. It can be used for your main player object as well as tiny particles in a particle engine.
+ * AA versatile way to update and draw your sprites. It can handle simple rectangles, images, and sprite sheet animations. It can be used for your main player object as well as tiny particles in a particle engine.
  * @class Sprite
  * @extends GameObject
  *

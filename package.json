@@ -68,7 +68,6 @@
     "karma-chai": "^0.1.0",
     "karma-chrome-launcher": "^3.1.0",
     "karma-coverage": "^2.2.1",
-    "karma-coverage-istanbul-instrumenter": "^1.0.3",
     "karma-mocha": "^2.0.1",
     "karma-mocha-reporter": "^2.2.5",
     "karma-sinon": "^1.0.5",

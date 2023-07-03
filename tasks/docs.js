@@ -340,7 +340,7 @@ let tags = {
     };
 
     // add type to the front of the description
-    this.comment.description = `<em>${type}</em>. ${this.comment.description.substr(1)}`;
+    this.comment.description = `<em>${type}</em>. ${this.comment.description[0].toUpperCase()}${this.comment.description.substr(1)}`;
     addSectionAndPage.call(this);
   },
   sectionName: function () {

@@ -22,24 +22,28 @@ module.exports = function (config) {
       { pattern: 'test/unit/*.spec.js', type: 'module' },
       { pattern: 'test/integration/*.spec.js', type: 'module' }
     ],
-    preprocessors: DEBUG
-      ? {}
-      : {
-          'src/*.js': ['karma-coverage-istanbul-instrumenter']
-        },
     browsers: [DEBUG ? 'Chrome' : 'ChromeHeadless'],
     proxies: {
       '/imgs': '/base/test/imgs',
       '/audio': '/base/test/audio',
       '/data': '/base/test/data'
     },
-    coverageIstanbulInstrumenter: {
-      esModules: true
+    reporters: ['mocha', 'coverage'],
+    preprocessors: {
+      'src/**/*.js': ['coverage']
     },
-    reporters: DEBUG ? ['mocha'] : ['mocha', 'coverage-istanbul'],
-    coverageIstanbulReporter: {
-      reports: ['html', 'lcovonly', 'text-summary'],
-      dir: 'coverage/'
+    coverageReporter: {
+      check: {
+        emitWarning: false,
+        global: {
+          statements: 95,
+          branches: 95,
+          functions: 95,
+          lines: 95
+        }
+      },
+      type: 'html',
+      dir : 'coverage/'
     },
     client: {
       mocha: {

@@ -73,7 +73,6 @@ jobs:
           node-version: 18
 
       - name: Run unit tests
-        id: unit-tests
         run: npm run test
 
   typescript-test:

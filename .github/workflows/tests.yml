@@ -76,10 +76,6 @@ jobs:
         id: unit-tests
         run: npm run test
 
-      - name: Run coverage
-        if: steps.unit-tests.outcome == 'success'
-        run: cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
-
   typescript-test:
     name: Typescript Tests
     runs-on: ubuntu-latest

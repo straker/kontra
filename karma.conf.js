@@ -22,7 +22,7 @@ module.exports = function (config) {
       { pattern: 'test/unit/*.spec.js', type: 'module' },
       { pattern: 'test/integration/*.spec.js', type: 'module' }
     ],
-    browsers: ['ChromeHeadless'],
+    browsers: [DEBUG ? 'Chrome' : 'ChromeHeadless'],
     proxies: {
       '/imgs': '/base/test/imgs',
       '/audio': '/base/test/audio',

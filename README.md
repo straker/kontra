@@ -9,6 +9,10 @@ A lightweight JavaScript gaming micro-library, optimized for js13kGames.
 
 All the documentation can be found on the [github page](https://straker.github.io/kontra/).
 
+## Community
+
+If you'd like to chat about Kontra, check out the `#kontra` channel of either [the js13kGames Slack](https://slack.js13kgames.com/) or [the Gamedev.js Discord](https://discord.gg/URWvCwv)!
+
 ## Contributing
 
 See the [Contributing file](CONTRIBUTING.md).

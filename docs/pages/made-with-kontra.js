@@ -423,7 +423,7 @@ Have a game you want to add? [Let me know](https://github.com/straker/kontra/iss
     <a href="https://js13kgames.com/entries/trench-fisher">
       <img src="assets/imgs/games/trench-fisher.jpeg" alt="" loading="lazy" width="400" height="250"/>
       <span>Trench fisher</span>
-      <span><span class="visually-hidden">. By </span><small>john Swana
+      <span><span class="visually-hidden">. By </span><small>John Swana
 </small></span>
     </a>
   </li>  

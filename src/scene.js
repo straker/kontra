@@ -106,7 +106,7 @@ class Scene {
     cullFunction = collides,
 
     /**
-     * Function used to sort the objects of the scene before rendering. Can be used in conjunction with [helpers.depthSort](/api/helpers#depthSort). Only direct objects of the scene are sorted.
+     * Function used to sort the objects of the scene before rendering. Can be used in conjunction with [helpers.depthSort](api/helpers#depthSort). Only direct objects of the scene are sorted.
      *
      * ```js
      * import { Scene, Sprite, depthSort } from 'kontra';
@@ -369,7 +369,7 @@ class Scene {
   }
 
   /**
-   * Render all objects of the scene by calling the objects `render()` function. If [cullObjects](/api/scene#cullObjects) is set to true then only those objects which are inside the camera bounds will be rendered.
+   * Render all objects of the scene by calling the objects `render()` function. If [cullObjects](api/scene#cullObjects) is set to true then only those objects which are inside the camera bounds will be rendered.
    * @memberof Scene
    * @function render
    */

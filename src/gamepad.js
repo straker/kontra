@@ -3,7 +3,7 @@ import { on } from './events.js';
 /**
  * A simple gamepad API. You can use it move the main sprite or respond to gamepad events.
  *
- * **NOTE:** Gamepad support requires using a secure context (HTTPS) and the [GameLoop](/api/gameLoop) (since the gamepad state must be checked every frame as there are no global event listeners for gamepad button / axes events).
+ * **NOTE:** Gamepad support requires using a secure context (HTTPS) and the [GameLoop](api/gameLoop) (since the gamepad state must be checked every frame as there are no global event listeners for gamepad button / axes events).
  *
  * ```js
  * import { initGamepad, GameLoop, gamepadPressed } from 'kontra';
@@ -115,7 +115,7 @@ function blurEventHandler() {
 }
 
 /**
- * Update the gamepad state. Call this function every frame only if you are not using the [GameLoop](/api/gameLoop). Otherwise it is called automatically.
+ * Update the gamepad state. Call this function every frame only if you are not using the [GameLoop](api/gameLoop). Otherwise it is called automatically.
  *
  * ```js
  * import { initGamepad, updateGamepad, gamepadPressed } from 'kontra';

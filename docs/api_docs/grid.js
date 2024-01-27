@@ -1,5 +1,5 @@
 /**
- * The grid automatically positions each object based on the grids [flow](/api/grid#flow). This means you do not need to set the x/y position of any of the objects and can let the grid handle that for you. This makes it extremely easy to set up UI elements such as menus without having to hand place each one.
+ * The grid automatically positions each object based on the grids [flow](api/grid#flow). This means you do not need to set the x/y position of any of the objects and can let the grid handle that for you. This makes it extremely easy to set up UI elements such as menus without having to hand place each one.
  *
  * @sectionName Basic Use
  * @example
@@ -53,8 +53,8 @@
 /**
  * The grid supports properties on the child objects that change how the child is positioned within the grid.
  *
- * - `alignSelf` - *String*. Align this item individually in the grid, overriding the grids [align](/api/grid#align) setting.
- * - `justifySelf` - *String*. Justify this item individually in the grid, overriding the grids [justify](/api/grid#justify) setting.
+ * - `alignSelf` - *String*. Align this item individually in the grid, overriding the grids [align](api/grid#align) setting.
+ * - `justifySelf` - *String*. Justify this item individually in the grid, overriding the grids [justify](api/grid#justify) setting.
  * - `colSpan` - *Number*. Have the item take up more than 1 column. Great for menu titles.
  *
  * @sectionName Child Properties

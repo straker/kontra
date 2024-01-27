@@ -351,7 +351,7 @@ export function getWorldRect(obj) {
  *
  * @param {{x: Number, y: Number, width: Number, height: Number}|{world: {x: Number, y: Number, width: Number, height: Number}}} obj1 - First object to compare.
  * @param {{x: Number, y: Number, width: Number, height: Number}|{world: {x: Number, y: Number, width: Number, height: Number}}} obj2 - Second object to compare.
- * @param {String} [prop='y'] - Objects [getWorldRect](/api/helpers#getWorldRect) property to compare.
+ * @param {String} [prop='y'] - Objects [getWorldRect](api/helpers#getWorldRect) property to compare.
  *
  * @returns {Number} The difference between the objects compare property.
  */

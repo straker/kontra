@@ -1,5 +1,5 @@
 /**
- * A GameObject is just a base class and typically isn't used directly. Instead, it's main purpose is to be extended by other classes, such as [Sprite](/api/sprite).
+ * A GameObject is just a base class and typically isn't used directly. Instead, it's main purpose is to be extended by other classes, such as [Sprite](api/sprite).
  *
  * To extend the GameObject class, import the underlying class as `import { GameObjectClass }`.
  *

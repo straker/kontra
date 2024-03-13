@@ -56,7 +56,7 @@ function isGesture(value) {
  * @function initInput
  *
  * @param {Object} [options] - Input options.
- * @param {Object} [options.pointer] - [Pointer options](/api/pointer#initPointer).
+ * @param {Object} [options.pointer] - [Pointer options](api/pointer#initPointer).
  *
  * @returns {{pointer: {x: Number, y: Number, radius: Number, canvas: HTMLCanvasElement, touches: Object}}} Object with `pointer` property which is the pointer object for the canvas.
  */
@@ -70,7 +70,7 @@ export function initInput(options = {}) {
 }
 
 /**
- * Register a function to be called on an input event. Takes a single input or an array of inputs. See the [keyboard](api/keyboard#available-keys), [gamepad](api/gamepad#available-buttons), [gesture](api/gesture#available-gestures), and [pointer](/api/pointer#onPointer) docs for the lists of available input names.
+ * Register a function to be called on an input event. Takes a single input or an array of inputs. See the [keyboard](api/keyboard#available-keys), [gamepad](api/gamepad#available-buttons), [gesture](api/gesture#available-gestures), and [pointer](api/pointer#onPointer) docs for the lists of available input names.
  *
  * ```js
  * import { initInput, onInput } from 'kontra';
@@ -89,8 +89,8 @@ export function initInput(options = {}) {
  * @param {String|String[]} inputs - Inputs or inputs to register callback for.
  * @param {Function} callback -  The function to be called on the input event.
  * @param {Object} [options] - Input options.
- * @param {Object} [options.gamepad] - [onGamepad options](/api/gamepad#onGamepad).
- * @param {Object} [options.key] - [onKey options](/api/keyboard#onKey).
+ * @param {Object} [options.gamepad] - [onGamepad options](api/gamepad#onGamepad).
+ * @param {Object} [options.key] - [onKey options](api/keyboard#onKey).
  */
 export function onInput(inputs, callback, { gamepad, key } = {}) {
   [].concat(inputs).map(input => {
@@ -124,8 +124,8 @@ export function onInput(inputs, callback, { gamepad, key } = {}) {
  *
  * @param {String|String[]} inputs - Inputs or inputs to unregister callback for.
  * @param {Object} [options] - Input options.
- * @param {Object} [options.gamepad] - [offGamepad options](/api/gamepad#offGamepad).
- * @param {Object} [options.key] - [offKey options](/api/keyboard#offKey).
+ * @param {Object} [options.gamepad] - [offGamepad options](api/gamepad#offGamepad).
+ * @param {Object} [options.key] - [offKey options](api/keyboard#offKey).
  */
 export function offInput(inputs, { gamepad, key } = {}) {
   [].concat(inputs).map(input => {

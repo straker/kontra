@@ -1,5 +1,5 @@
 /**
- * A button is essentially a [Sprite](/api/sprite) with a [Text](/api/text) child and added functionality to support keyboard interaction. To create a button, pass properties as you would with a Sprite and use the `text` property to pass any Text properties. You can also pass any [pointer](/api/pointer) event functions.
+ * A button is essentially a [Sprite](api/sprite) with a [Text](api/text) child and added functionality to support keyboard interaction. To create a button, pass properties as you would with a Sprite and use the `text` property to pass any Text properties. You can also pass any [pointer](api/pointer) event functions.
  *
  * The size of the button will automatically be set as the width and height of the text or image, whichever is greater.
  *
@@ -68,11 +68,11 @@
  */
 
 /**
- * A button has four possible states. You should use these states in the [render()](/api/gameObject#render) to have the button draw differently based on user input.
+ * A button has four possible states. You should use these states in the [render()](api/gameObject#render) to have the button draw differently based on user input.
  *
- * - `focused` - The button is focused by the keyboard or by calling the [focus](/api/button#focus) function.
- * - `hovered` - The button is hovered by the mouse or by calling the [onOver](/api/button#onOver) function.
- * - `pressed` - The button is pressed with a mouse, touch, or keyboard event (such as <kbd>Enter</kbd> or <kbd>Spacebar</kbd> keys) or by calling the [onDown](/api/button#onDown) function.
+ * - `focused` - The button is focused by the keyboard or by calling the [focus](api/button#focus) function.
+ * - `hovered` - The button is hovered by the mouse or by calling the [onOver](api/button#onOver) function.
+ * - `pressed` - The button is pressed with a mouse, touch, or keyboard event (such as <kbd>Enter</kbd> or <kbd>Spacebar</kbd> keys) or by calling the [onDown](api/button#onDown) function.
  * - `disabled` - The button no longer accepts mouse or keyboard events.
  *
  * @sectionName Button States

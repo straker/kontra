@@ -427,6 +427,14 @@ Have a game you want to add? [Let me know](https://github.com/straker/kontra/iss
 </small></span>
     </a>
   </li>  
+
+  <li>
+    <a href="https://js13kgames.com/entries/mongol-march">
+      <img src="assets/imgs/games/mongol-march.png" alt="" loading="lazy" width="400" height="250"/>
+      <span>Mongol March</span>
+      <span><span class="visually-hidden">. By </span><small>Leo Kuo</small></span>
+    </a>
+  </li>
 </ul>
 
 @section Games Made with Kontra.js

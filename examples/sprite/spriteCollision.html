@@ -10,6 +10,8 @@
     // initialize the game and setup the canvas
     let { canvas, context } = kontra.init();
 
+    let pointer = kontra.initPointer();
+
     // create a basic sprite with a velocity
     window.sprite1 = kontra.Sprite({
       x: 100,
@@ -32,12 +34,22 @@
       color: 'blue'
     });
 
+    // create a second basic sprite
+    window.mouseCircle = kontra.Sprite({
+      x: canvas.width - 100 - 60,
+      y: 180,
+      radius: 20,
+      color: 'gray'
+    });
 
     // create the game loop to update and render the sprite
     window.loop = kontra.GameLoop({
       update: function() {
         sprite1.update();
         sprite2.update();
+
+        mouseCircle.x = pointer.x - mouseCircle.radius;
+        mouseCircle.y = pointer.y - mouseCircle.radius;
 
         // check for collision
         if (kontra.collides(sprite1, sprite2)) {
@@ -47,6 +59,14 @@
         else {
           sprite1.color = 'red';
           sprite2.color = 'blue';
+        }
+
+        if (kontra.collides(sprite1, mouseCircle)) {
+          mouseCircle.color = sprite1.color;
+        } else if (kontra.collides(sprite2, mouseCircle)) {
+          mouseCircle.color = sprite2.color;
+        } else {
+          mouseCircle.color = 'gray';
         }
 
         // reset the sprites position when it reaches the edge of the game
@@ -60,6 +80,7 @@
       render: function() {
         sprite1.render();
         sprite2.render();
+        mouseCircle.render();
       }
     });
 

@@ -245,9 +245,7 @@ class Scene {
       // move all objects to be in the scenes DOM node so we can
       // hide and show the DOM node and thus hide and show all the
       // objects
-      getAllNodes(object).map(node => {
-        this._dn.appendChild(node);
-      });
+      this._dn.append(...getAllNodes(object));
     });
   }
 
@@ -264,7 +262,7 @@ class Scene {
       object.parent = null;
 
       getAllNodes(object).map(node => {
-        addToDom(node, this.context);
+        addToDom(node, this.context.canvas);
       });
     });
   }

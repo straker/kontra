@@ -61,3 +61,10 @@ export function off(event, callback) {
 export function emit(event, ...args) {
   (callbacks[event] || []).map(fn => fn(...args));
 }
+
+// expose for testing
+export function _reset() {
+  Object.keys(callbacks).map(key => {
+    delete callbacks[key];
+  });
+}

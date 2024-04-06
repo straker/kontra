@@ -200,3 +200,8 @@ export function offGesture(gestures) {
     callbacks[gesture] = 0;
   });
 }
+
+// expose for testing
+export function _reset() {
+  init = false;
+}

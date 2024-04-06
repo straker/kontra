@@ -50,7 +50,7 @@ describe('gesture', () => {
   // onGesture
   // --------------------------------------------------
   describe('onGesture', () => {
-    before(() => {
+    beforeEach(() => {
       gesture.initGesture();
     });
 
@@ -72,7 +72,7 @@ describe('gesture', () => {
   // offGesture
   // --------------------------------------------------
   describe('offGesture', () => {
-    before(() => {
+    beforeEach(() => {
       gesture.initGesture();
     });
 
@@ -96,7 +96,7 @@ describe('gesture', () => {
   // swipe
   // --------------------------------------------------
   describe('swipe', () => {
-    before(() => {
+    beforeEach(() => {
       gesture.initGesture();
     });
 
@@ -289,7 +289,7 @@ describe('gesture', () => {
   // pinch
   // --------------------------------------------------
   describe('pinch', () => {
-    before(() => {
+    beforeEach(() => {
       gesture.initGesture();
     });
 

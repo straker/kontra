@@ -18,9 +18,9 @@ export function addToDom(node, canvas) {
   node.setAttribute('data-kontra', '');
   if (container) {
     let target =
-      container.querySelector(
-        ':scope > [data-kontra]:last-of-type'
-      ) || canvas;
+      [
+        ...container.querySelectorAll(':scope > [data-kontra]')
+      ].pop() || canvas;
     target.after(node);
   } else {
     document.body.append(node);

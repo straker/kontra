@@ -83,6 +83,9 @@
     "vinyl-source-stream": "^2.0.0"
   },
   "lint-staged": {
-    "*.js": "eslint --fix"
+    "*.js": [
+      "prettier --write",
+      "eslint --fix"
+    ]
   }
 }

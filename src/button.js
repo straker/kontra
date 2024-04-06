@@ -1,7 +1,12 @@
 import { SpriteClass } from './sprite.js';
 import Text from './text.js';
 import { track } from './pointer.js';
-import { srOnlyStyle, noop, addToDom } from './utils.js';
+import {
+  srOnlyStyle,
+  scrollParams,
+  noop,
+  addToDom
+} from './utils.js';
 
 /**
  * An accessible button. Supports screen readers and keyboard navigation using the <kbd>Tab</kbd> key. The button is automatically [tracked](api/pointer#track) by the pointer and accepts all pointer functions, but you will still need to call [initPointer](api/pointer#initPointer) to have pointer events enabled.
@@ -189,7 +194,8 @@ class Button extends SpriteClass {
        */
       this.focused = true;
       // prevent infinite loop
-      if (document.activeElement != this._dn) this._dn.focus();
+      if (document.activeElement != this._dn)
+        this._dn.focus(scrollParams);
 
       this.onFocus();
     }

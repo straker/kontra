@@ -1,5 +1,10 @@
 import Scene, { SceneClass } from '../../src/scene.js';
-import { _reset, init, getContext, getCanvas } from '../../src/core.js';
+import {
+  _reset,
+  init,
+  getContext,
+  getCanvas
+} from '../../src/core.js';
 import { emit } from '../../src/events.js';
 import { noop, srOnlyStyle } from '../../src/utils.js';
 import { collides } from '../../src/helpers.js';
@@ -219,9 +224,15 @@ describe('scene', () => {
     });
 
     it('should focus the DOM node', () => {
+      sinon.spy(scene._dn, 'focus');
       scene.show();
 
       expect(document.activeElement).to.equal(scene._dn);
+      expect(
+        scene._dn.focus.calledWith(
+          sinon.match({ preventScroll: true })
+        )
+      ).to.be.true;
     });
 
     it('should focus the first focusable object', () => {
@@ -231,7 +242,9 @@ describe('scene', () => {
       scene.add(object);
       scene.show();
 
-      expect(object.focus.called).to.be.true;
+      expect(
+        object.focus.calledWith(sinon.match({ preventScroll: true }))
+      ).to.be.true;
     });
 
     it('should call onShow', () => {

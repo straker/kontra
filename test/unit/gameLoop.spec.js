@@ -270,6 +270,19 @@ describe('gameLoop', () => {
       expect(spy.called).to.be.true;
     });
 
+    it('should emit the tick event for each loop update', () => {
+      let spy = sinon.spy();
+      on('tick', spy);
+
+      loop = GameLoop({
+        render: noop
+      });
+      loop._last = performance.now() - 2001 / 60;
+      loop._frame();
+
+      expect(spy.calledTwice).to.be.true;
+    });
+
     it('should not update if page is blurred', done => {
       loop = GameLoop({
         update() {

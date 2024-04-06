@@ -110,10 +110,10 @@ export default function GameLoop({
       return;
     }
 
-    emit('tick');
     accumulator += dt;
 
     while (accumulator >= delta) {
+      emit('tick');
       loop.update(step);
 
       accumulator -= delta;

@@ -93,7 +93,6 @@ describe('helpers', () => {
     it('should get random integer between range', () => {
       sinon.stub(Math, 'random').returns(0.25);
       expect(helpers.randInt(2, 10)).to.equal(4);
-      Math.random.restore();
     });
   });
 

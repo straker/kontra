@@ -18,24 +18,15 @@ import {
 // input
 // --------------------------------------------------
 describe('input', () => {
-  let gamepadStub;
-
-  before(() => {
-    gamepadStub = sinon
+  beforeEach(() => {
+    sinon
       .stub(navigator, 'getGamepads')
       .returns(getGamepadsStub);
-  });
-
-  beforeEach(() => {
     input.initInput();
   });
 
   afterEach(() => {
     resetPointers();
-  });
-
-  after(() => {
-    gamepadStub.restore();
   });
 
   it('should export api', () => {
@@ -81,9 +72,6 @@ describe('input', () => {
       expect(eventCallbacks.touchChanged).to.exist;
       // pointer
       expect(canvasSpy.calledWith('mousedown')).to.be.true;
-
-      windowSpy.restore();
-      canvasSpy.restore();
     });
 
     it('should pass pointer options', () => {

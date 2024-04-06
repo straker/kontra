@@ -656,8 +656,6 @@ describe('scene', () => {
       expect(spy.firstCall.calledWith(290, 290)).to.be.true;
       let calls = spy.getCalls();
       expect(calls[calls.length - 2].calledWith(290, 290)).to.be.true;
-
-      spy.restore();
     });
 
     it('should sort objects', () => {

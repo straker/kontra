@@ -73,8 +73,6 @@ describe('gameLoop', () => {
       loop.start();
 
       expect(window.requestAnimationFrame.called).to.be.true;
-
-      window.requestAnimationFrame.restore();
     });
 
     it('should unset isStopped', () => {
@@ -100,8 +98,6 @@ describe('gameLoop', () => {
       loop.stop();
 
       expect(window.cancelAnimationFrame.called).to.be.true;
-
-      window.cancelAnimationFrame.restore();
     });
 
     it('should set isStopped', () => {
@@ -210,8 +206,6 @@ describe('gameLoop', () => {
       loop._frame();
 
       expect(context.clearRect.called).to.be.true;
-
-      context.clearRect.restore();
     });
 
     it('should not clear the canvas if clearCanvas is false', () => {
@@ -227,8 +221,6 @@ describe('gameLoop', () => {
       loop._frame();
 
       expect(context.clearRect.called).to.be.false;
-
-      context.clearRect.restore();
     });
 
     it('should call clearCanvas on the passed in context', () => {

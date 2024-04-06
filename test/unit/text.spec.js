@@ -349,7 +349,6 @@ describe(
         text.render(0, 0);
 
         expect(text.context.fillText.called).to.be.true;
-        text.context.fillText.restore();
       });
 
       if (testContext.TEXT_ALIGN) {
@@ -374,7 +373,6 @@ describe(
 
           expect(text.context.fillText.calledWith(text.text, 1000, 0))
             .to.be.true;
-          text.context.fillText.restore();
         });
       }
 
@@ -394,7 +392,6 @@ describe(
 
           expect(text.context.fillText.calledWith(text.text, 1000, 0))
             .to.be.true;
-          text.context.fillText.restore();
         });
       }
 
@@ -421,7 +418,6 @@ describe(
               32
             )
           ).to.be.true;
-          text.context.fillText.restore();
         });
 
         it('should account for lineHeight', () => {
@@ -443,7 +439,6 @@ describe(
               64
             )
           ).to.be.true;
-          text.context.fillText.restore();
         });
       }
 
@@ -469,7 +464,6 @@ describe(
               32
             )
           ).to.be.true;
-          text.context.fillText.restore();
         });
 
         it('should account for lineHeight', () => {
@@ -490,7 +484,6 @@ describe(
               64
             )
           ).to.be.true;
-          text.context.fillText.restore();
         });
       }
 
@@ -508,7 +501,6 @@ describe(
           text.render(0, 0);
 
           expect(text.context.strokeText.called).to.be.true;
-          text.context.strokeText.restore();
         });
 
         it('should use lineWidth', () => {
@@ -525,7 +517,6 @@ describe(
           text.render(0, 0);
 
           expect(spy.set.calledWith(2)).to.be.true;
-          spy.set.restore();
         });
       }
       else {
@@ -542,7 +533,6 @@ describe(
           text.render(0, 0);
 
           expect(text.context.strokeText.called).to.be.false;
-          text.context.strokeText.restore();
         });
       }
     });

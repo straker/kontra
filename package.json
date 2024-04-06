@@ -13,7 +13,7 @@
     "kontra.d.ts"
   ],
   "scripts": {
-    "start": "http-server -S -C cert.pem",
+    "start": "http-server --silent -S -C cert.pem",
     "test": "karma start --single-run",
     "test:watch": "karma start",
     "test:permutations": "node test/permutations",

@@ -257,16 +257,17 @@ describe('gameLoop', () => {
       expect(context.clearRect.called).to.be.true;
     });
 
-    it('should emit the tick event', done => {
-      on('tick', done);
+    it('should emit the tick event', () => {
+      let spy = sinon.spy();
+      on('tick', spy);
 
       loop = GameLoop({
         render: noop
       });
-      loop._last = performance.now() - 1e3 / 60;
+      loop._last = performance.now() - 1001 / 60;
       loop._frame();
 
-      throw new Error('should not get here');
+      expect(spy.called).to.be.true;
     });
 
     it('should not update if page is blurred', done => {

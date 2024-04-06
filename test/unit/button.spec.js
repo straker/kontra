@@ -316,7 +316,11 @@ describe('button', () => {
       sinon.spy(button._dn, 'focus');
       button.focus();
 
-      expect(button._dn.focus.called).to.be.true;
+      expect(
+        button._dn.focus.calledWith(
+          sinon.match({ preventScroll: true })
+        )
+      ).to.be.true;
     });
 
     it('should not focus the DOM node if it is already focused', () => {

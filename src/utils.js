@@ -3,6 +3,8 @@ export let noop = () => {};
 // style used for DOM nodes needed for screen readers
 export let srOnlyStyle =
   'position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);';
+// prevent focus from scrolling the page
+export let scrollParams = { preventScroll: true };
 
 /**
  * Append a node directly after the canvas and as the last element of other kontra nodes.

@@ -1,7 +1,12 @@
 import { getContext } from './core.js';
 import { GameObjectClass } from './gameObject.js';
 import { on, off } from './events.js';
-import { srOnlyStyle, addToDom, removeFromArray } from './utils.js';
+import {
+  srOnlyStyle,
+  scrollParams,
+  addToDom,
+  removeFromArray
+} from './utils.js';
 import { collides } from './helpers.js';
 
 /**
@@ -201,13 +206,13 @@ class Scene {
         x,
         y,
         width,
-        height,
+        height
       });
 
       if (!this._dn.isConnected) {
         addToDom(this._dn, canvas);
       }
-    }
+    };
 
     if (this.context) {
       this._i();
@@ -280,9 +285,9 @@ class Scene {
     // find first focusable object
     let focusableObject = this._o.find(object => object.focus);
     if (focusableObject) {
-      focusableObject.focus();
+      focusableObject.focus(scrollParams);
     } else {
-      this._dn.focus();
+      this._dn.focus(scrollParams);
     }
 
     this.onShow();

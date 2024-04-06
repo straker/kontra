@@ -3,7 +3,7 @@ import { GameObjectClass } from './gameObject.js';
 import { on, off } from './events.js';
 import {
   srOnlyStyle,
-  scrollParams,
+  focusParams,
   addToDom,
   removeFromArray
 } from './utils.js';
@@ -283,9 +283,9 @@ class Scene {
     // find first focusable object
     let focusableObject = this._o.find(object => object.focus);
     if (focusableObject) {
-      focusableObject.focus(scrollParams);
+      focusableObject.focus(focusParams);
     } else {
-      this._dn.focus(scrollParams);
+      this._dn.focus(focusParams);
     }
 
     this.onShow();

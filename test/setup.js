@@ -23,4 +23,5 @@ afterEach(() => {
   document
     .querySelectorAll('[data-kontra]')
     .forEach(node => node.remove());
+  sinon.restore();
 });

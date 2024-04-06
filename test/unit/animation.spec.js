@@ -211,8 +211,6 @@ describe('animation', () => {
       });
 
       expect(context.drawImage.called).to.be.true;
-
-      context.drawImage.restore();
     });
 
     it('should render the spriteSheet in the middle of the animation', () => {

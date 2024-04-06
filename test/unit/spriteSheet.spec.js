@@ -51,8 +51,6 @@ describe('spriteSheet', () => {
 
       expect(SpriteSheetClass.prototype.createAnimations.called).to.be
         .true;
-
-      SpriteSheetClass.prototype.createAnimations.restore();
     });
   });
 

@@ -26,9 +26,6 @@ describe(
     // --------------------------------------------------
     describe('constructor', () => {
       let spy;
-      afterEach(() => {
-        spy.restore();
-      });
 
       it('should call init', () => {
         spy = sinon.spy(Updatable.prototype, 'init');

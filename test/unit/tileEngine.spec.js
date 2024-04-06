@@ -266,8 +266,6 @@ describe(
         tileEngine.render();
 
         expect(context.drawImage.called).to.be.true;
-
-        context.drawImage.restore();
       });
 
       it('calls prerender if the tile engine is dirty', () => {
@@ -300,8 +298,6 @@ describe(
         tileEngine.render();
 
         expect(tileEngine._p.called).to.be.true;
-
-        tileEngine._p.restore();
       });
 
       if (testContext.TILEENGINE_CAMERA) {
@@ -360,8 +356,6 @@ describe(
           tileEngine.render();
 
           expect(spy.calledWith(-50, -25)).to.be.true;
-
-          spy.restore();
         });
       } else {
         it('should not translate by the camera', () => {
@@ -390,8 +384,6 @@ describe(
           tileEngine.render();
 
           expect(spy.called).to.be.false;
-
-          spy.restore();
         });
       }
     });
@@ -719,8 +711,6 @@ describe(
             tileEngine.layerCanvases.test.height
           )
         ).to.be.true;
-
-        context.drawImage.restore();
       });
 
       if (testContext.TILEENGINE_CAMERA) {
@@ -780,8 +770,6 @@ describe(
               tileEngine.layerCanvases.test.height
             )
           ).to.be.true;
-
-          context.drawImage.restore();
         });
       }
 
@@ -813,8 +801,6 @@ describe(
         tileEngine.renderLayer('test');
 
         expect(tileEngine._r.calledOnce).to.be.true;
-
-        tileEngine._r.restore();
       });
 
       it('uses the correct tileset', () => {
@@ -890,8 +876,6 @@ describe(
           tileEngine.renderLayer('test');
 
           expect(tileEngine._r.called).to.be.true;
-
-          tileEngine._r.restore();
         });
       } else {
         it('doe snot call render if the layer is dirty', () => {
@@ -927,8 +911,6 @@ describe(
           tileEngine.renderLayer('test');
 
           expect(tileEngine._r.called).to.be.false;
-
-          tileEngine._r.restore();
         });
       }
 

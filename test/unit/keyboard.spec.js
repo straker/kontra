@@ -86,8 +86,6 @@ describe('keyboard', () => {
       keyboard.initKeys();
 
       expect(spy.called).to.be.true;
-
-      spy.restore();
     });
   });
 

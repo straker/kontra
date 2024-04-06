@@ -10,16 +10,10 @@ import {
 // gamepad
 // --------------------------------------------------
 describe('gamepad', () => {
-  // simulate gamepad object
-  let gamepadStub;
-
-  before(() => {
-    gamepadStub = sinon
+  beforeEach(() => {
+    sinon
       .stub(navigator, 'getGamepads')
       .returns(getGamepadsStub);
-  });
-
-  beforeEach(() => {
     gamepad.initGamepad();
 
     // reset pressed buttons before each test
@@ -28,10 +22,6 @@ describe('gamepad', () => {
     // start with 1 gamepad connected
     getGamepadsStub.length = 0;
     createGamepad();
-  });
-
-  after(() => {
-    gamepadStub.restore();
   });
 
   it('should export api', () => {
@@ -76,8 +66,6 @@ describe('gamepad', () => {
       expect(spy.calledWith('gamepaddisconnected')).to.be.true;
       expect(spy.calledWith('blur')).to.be.true;
       expect(eventCallbacks.tick.length).to.equal(num + 1);
-
-      spy.restore();
     });
   });
 

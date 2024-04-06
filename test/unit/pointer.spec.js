@@ -63,8 +63,6 @@ describe('pointer', () => {
       pointer.initPointer();
 
       expect(spy.called).to.equal(true);
-
-      spy.restore();
     });
 
     it('should return the pointer object', () => {

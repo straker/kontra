@@ -170,8 +170,6 @@ describe(
         sprite.render();
 
         expect(sprite.context.fillRect.called).to.be.true;
-
-        sprite.context.fillRect.restore();
       });
 
       if (testContext.SPRITE_IMAGE) {
@@ -191,8 +189,6 @@ describe(
           sprite.render();
 
           expect(sprite.context.drawImage.called).to.be.true;
-
-          sprite.context.drawImage.restore();
         });
       }
 
@@ -224,8 +220,6 @@ describe(
           sprite.render();
 
           expect(sprite.currentAnimation.render.called).to.be.true;
-
-          sprite.currentAnimation.render.restore();
         });
       }
     });

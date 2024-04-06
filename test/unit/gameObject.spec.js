@@ -24,10 +24,6 @@ describe(
       gameObject = GameObject();
     });
 
-    afterEach(() => {
-      spy && spy.restore && spy.restore();
-    });
-
     it('should export class', () => {
       expect(GameObjectClass).to.be.a('function');
     });
@@ -220,15 +216,6 @@ describe(
     // render
     // --------------------------------------------------
     describe('render', () => {
-      afterEach(() => {
-        gameObject.context.translate.restore &&
-          gameObject.context.translate.restore();
-        gameObject.context.rotate.restore &&
-          gameObject.context.rotate.restore();
-        gameObject.context.scale.restore &&
-          gameObject.context.scale.restore();
-      });
-
       it('should translate to the x and y position', () => {
         gameObject.x = 10;
         gameObject.y = 20;
@@ -378,8 +365,6 @@ describe(
           gameObject.render();
 
           expect(spy.set.calledWith(0.5)).to.be.true;
-
-          spy.set.restore();
         });
       } else {
         it('should not set the globalAlpha', () => {
@@ -394,8 +379,6 @@ describe(
           gameObject.render();
 
           expect(spy.set.called).to.be.false;
-
-          spy.set.restore();
         });
       }
 

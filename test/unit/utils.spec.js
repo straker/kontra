@@ -80,4 +80,31 @@ describe('utils', () => {
       expect(canvas.nextSibling).to.equal(node2);
     });
   });
+
+  // --------------------------------------------------
+  // removeFromArray
+  // --------------------------------------------------
+  describe('removeFromArray', () => {
+    it('removes item from array', () => {
+      const array = [1, 2, 3, 4];
+      utils.removeFromArray(array, 3);
+
+      expect(array).to.deep.equal([1, 2, 4]);
+    });
+
+    it('returns true when item is removed', () => {
+      const array = [1, 2, 3, 4];
+      const result = utils.removeFromArray(array, 3);
+
+      expect(result).to.be.true;
+    });
+
+    it('does not remove item if not found', () => {
+      const array = [1, 2, 3, 4];
+      const result = utils.removeFromArray(array, 5);
+
+      expect(array).to.deep.equal([1, 2, 3, 4]);
+      expect(result).to.be.undefined;
+    });
+  });
 });

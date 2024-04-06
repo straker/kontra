@@ -177,9 +177,11 @@ export default function GameLoop({
      * @function start
      */
     start() {
-      last = performance.now();
-      this.isStopped = false;
-      requestAnimationFrame(frame);
+      if (this.isStopped) {
+        last = performance.now();
+        this.isStopped = false;
+        requestAnimationFrame(frame);
+      }
     },
 
     /**

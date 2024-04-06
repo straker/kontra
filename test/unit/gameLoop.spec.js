@@ -81,6 +81,20 @@ describe('gameLoop', () => {
 
       expect(loop.isStopped).to.be.false;
     });
+
+    it('should call requestAnimationFrame only once if called twice', () => {
+      sinon.stub(window, 'requestAnimationFrame').callsFake(noop);
+
+      loop = GameLoop({
+        render: noop,
+        clearCanvas: false
+      });
+
+      loop.start();
+      loop.start();
+
+      expect(window.requestAnimationFrame.calledOnce).to.be.true;
+    });
   });
 
   // --------------------------------------------------

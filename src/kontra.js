@@ -41,8 +41,6 @@ export {
   angleToTarget,
   rotatePoint,
   movePoint,
-  randInt,
-  seedRand,
   lerp,
   inverseLerp,
   clamp,
@@ -77,6 +75,7 @@ export {
 } from './pointer.js';
 export { default as Pool, PoolClass } from './pool.js';
 export { default as Quadtree, QuadtreeClass } from './quadtree.js';
+export { rand, randInt, getSeed, seedRand } from './random.js';
 export { default as Scene, SceneClass } from './scene.js';
 export { default as Sprite, SpriteClass } from './sprite.js';
 export {
@@ -84,6 +83,9 @@ export {
   SpriteSheetClass
 } from './spriteSheet.js';
 export { default as Text, TextClass } from './text.js';
-export { default as TileEngine, TileEngineClass } from './tileEngine.js';
+export {
+  default as TileEngine,
+  TileEngineClass
+} from './tileEngine.js';
 export { default as Vector, VectorClass } from './vector.js';
 export { default } from './kontra.defaults.js';

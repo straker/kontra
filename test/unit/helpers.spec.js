@@ -12,7 +12,6 @@ describe('helpers', () => {
     expect(helpers.angleToTarget).to.be.an('function');
     expect(helpers.rotatePoint).to.be.an('function');
     expect(helpers.movePoint).to.be.an('function');
-    expect(helpers.randInt).to.be.an('function');
     expect(helpers.lerp).to.be.an('function');
     expect(helpers.inverseLerp).to.be.an('function');
     expect(helpers.clamp).to.be.an('function');
@@ -48,8 +47,12 @@ describe('helpers', () => {
     it('should return the angle to the target', () => {
       let source = { x: 300, y: 300 };
       let target = { x: 100, y: 100 };
-      expect(helpers.angleToTarget(source, target)).to.equal(-Math.PI * 3/4);
-      expect(helpers.angleToTarget(target, source)).to.equal(Math.PI / 4);
+      expect(helpers.angleToTarget(source, target)).to.equal(
+        (-Math.PI * 3) / 4
+      );
+      expect(helpers.angleToTarget(target, source)).to.equal(
+        Math.PI / 4
+      );
     });
   });
 
@@ -72,7 +75,11 @@ describe('helpers', () => {
   describe('movePoint', () => {
     it('should return the new x and y after move', () => {
       let point = { x: 300, y: 300 };
-      let newPoint = helpers.movePoint(point, -Math.PI * 3/4, 141.421);
+      let newPoint = helpers.movePoint(
+        point,
+        (-Math.PI * 3) / 4,
+        141.421
+      );
       expect(newPoint.x).to.be.closeTo(200, 0.1);
       expect(newPoint.y).to.be.closeTo(200, 0.1);
 
@@ -83,32 +90,6 @@ describe('helpers', () => {
       newPoint = helpers.movePoint(point, Math.PI, 100);
       expect(newPoint.x).to.be.closeTo(200, 0.1);
       expect(newPoint.y).to.be.closeTo(300, 0.1);
-    });
-  });
-
-  // --------------------------------------------------
-  // randInt
-  // --------------------------------------------------
-  describe('randInt', () => {
-    it('should get random integer between range', () => {
-      sinon.stub(Math, 'random').returns(0.25);
-      expect(helpers.randInt(2, 10)).to.equal(4);
-    });
-  });
-
-  // --------------------------------------------------
-  // seedRand
-  // --------------------------------------------------
-  describe('seedRand', () => {
-    it('should seed a random number generator', () => {
-      let rand = helpers.seedRand('kontra');
-      expect(rand()).to.equal(0.33761959057301283);
-
-      for (let i = 0; i < 20; i++) {
-        rand();
-      }
-
-      expect(rand()).to.equal(0.5485938163474202);
     });
   });
 

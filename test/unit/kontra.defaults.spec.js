@@ -76,8 +76,6 @@ describe('kontra.defaults', () => {
     expect(kontra.angleToTarget).to.exist;
     expect(kontra.rotatePoint).to.exist;
     expect(kontra.movePoint).to.exist;
-    expect(kontra.randInt).to.exist;
-    expect(kontra.seedRand).to.exist;
     expect(kontra.lerp).to.exist;
     expect(kontra.inverseLerp).to.exist;
     expect(kontra.clamp).to.exist;
@@ -121,6 +119,13 @@ describe('kontra.defaults', () => {
   it('should add quadtree api and class', () => {
     expect(kontra.Quadtree).to.exist;
     expect(kontra.QuadtreeClass).to.exist;
+  });
+
+  it('should add random api', () => {
+    expect(kontra.rand).to.exist;
+    expect(kontra.randInt).to.exist;
+    expect(kontra.getSeed).to.exist;
+    expect(kontra.seedRand).to.exist;
   });
 
   it('should add scene api and class', () => {

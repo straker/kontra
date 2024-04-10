@@ -10,11 +10,6 @@ let angleToTargetSprite = kontra.angleToTarget(sourceSprite, targetSprite);
 
 let point: {x: number, y: number} = kontra.rotatePoint({x: 0, y: 0}, Math.PI);
 
-let randInt: number = kontra.randInt(10, 20);
-
-let seed: Function = kontra.seedRand('kontra');
-let rand: number = seed();
-
 let lerp: number = kontra.lerp(10, 20, 0.5);
 let inverseLerp: number = kontra.inverseLerp(10, 20, 15);
 let clamp: number = kontra.clamp(10, 20, 30);

@@ -107,61 +107,6 @@ export function movePoint(point, angle, distance) {
 }
 
 /**
- * Return a random integer between a minimum (inclusive) and maximum (inclusive) integer.
- * @see https://stackoverflow.com/a/1527820/2124254
- * @function randInt
- *
- * @param {Number} min - Min integer.
- * @param {Number} max - Max integer.
- *
- * @returns {Number} Random integer between min and max values.
- */
-export function randInt(min, max) {
-  return ((Math.random() * (max - min + 1)) | 0) + min;
-}
-
-/**
- * Create a seeded random number generator.
- *
- * ```js
- * import { seedRand } from 'kontra';
- *
- * let rand = seedRand('kontra');
- * console.log(rand());  // => always 0.33761959057301283
- * ```
- * @see https://stackoverflow.com/a/47593316/2124254
- * @see https://github.com/bryc/code/blob/master/jshash/PRNGs.md
- *
- * @function seedRand
- *
- * @param {String} str - String to seed the random number generator.
- *
- * @returns {() => Number} Seeded random number generator function.
- */
-export function seedRand(str) {
-  // based on the above references, this was the smallest code yet
-  // decent quality seed random function
-
-  // first create a suitable hash of the seed string using xfnv1a
-  // @see https://github.com/bryc/code/blob/master/jshash/PRNGs.md#addendum-a-seed-generating-functions
-  for (var i = 0, h = 2166136261 >>> 0; i < str.length; i++) {
-    h = Math.imul(h ^ str.charCodeAt(i), 16777619);
-  }
-  h += h << 13;
-  h ^= h >>> 7;
-  h += h << 3;
-  h ^= h >>> 17;
-  let seed = (h += h << 5) >>> 0;
-
-  // then return the seed function and discard the first result
-  // @see https://github.com/bryc/code/blob/master/jshash/PRNGs.md#lcg-lehmer-rng
-  let rand = () =>
-    ((2 ** 31 - 1) & (seed = Math.imul(48271, seed))) / 2 ** 31;
-  rand();
-  return rand;
-}
-
-/**
  * Linearly interpolate between two values. The function calculates the number between two values based on a percent. Great for smooth transitions.
  *
  * ```js

@@ -38,8 +38,6 @@ import {
   angleToTarget,
   rotatePoint,
   movePoint,
-  randInt,
-  seedRand,
   lerp,
   inverseLerp,
   clamp,
@@ -74,6 +72,7 @@ import {
 } from './pointer.js';
 import Pool, { PoolClass } from './pool.js';
 import Quadtree, { QuadtreeClass } from './quadtree.js';
+import { rand, randInt, getSeed, seedRand } from './random.js';
 import Scene, { SceneClass } from './scene.js';
 import Sprite, { SpriteClass } from './sprite.js';
 import SpriteSheet, { SpriteSheetClass } from './spriteSheet.js';
@@ -132,8 +131,6 @@ let kontra = {
   angleToTarget,
   rotatePoint,
   movePoint,
-  randInt,
-  seedRand,
   lerp,
   inverseLerp,
   clamp,
@@ -171,6 +168,11 @@ let kontra = {
 
   Quadtree,
   QuadtreeClass,
+
+  rand,
+  randInt,
+  getSeed,
+  seedRand,
 
   Scene,
   SceneClass,

@@ -124,7 +124,7 @@ describe('kontra', () => {
     expect(kontraExports.QuadtreeClass).to.exist;
   });
 
-  it('should add random api', () => {
+  it('should export random api', () => {
     expect(kontraExports.rand).to.exist;
     expect(kontraExports.randInt).to.exist;
     expect(kontraExports.getSeed).to.exist;

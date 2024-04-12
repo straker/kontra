@@ -15,8 +15,13 @@ describe('random', () => {
   // rand
   // --------------------------------------------------
   describe('rand', () => {
-    it('should get random integer between range', () => {
+    it('should get random value between 0 and <1', () => {
       expect(random.rand()).to.be.within(0, 1);
+    });
+
+    it('should work if seed has not been seeded', () => {
+      random._reset();
+      expect(random.rand).to.not.throw();
     });
   });
 
@@ -33,8 +38,7 @@ describe('random', () => {
   // seedRand
   // --------------------------------------------------
   describe('seedRand', () => {
-    it('should seed with value', () => {
-      random.seedRand(2859059487);
+    function testSeededRandom() {
       expect(random.rand()).to.equal(0.26133555523119867);
 
       for (let i = 0; i < 20; i++) {
@@ -42,30 +46,26 @@ describe('random', () => {
       }
 
       expect(random.rand()).to.equal(0.08834491996094584);
+    }
+
+    // all seed values = 2859059487
+    it('should seed with value', () => {
+      random.seedRand(2859059487);
+
+      testSeededRandom();
     });
 
     it('should seed with string', () => {
       random.seedRand('kontra');
-      expect(random.rand()).to.equal(0.26133555523119867);
 
-      for (let i = 0; i < 20; i++) {
-        random.rand();
-      }
-
-      expect(random.rand()).to.equal(0.08834491996094584);
+      testSeededRandom();
     });
 
     it('should seed with time by default', () => {
       sinon.stub(Date, 'now').returns(2859059487);
       random.seedRand();
 
-      expect(random.rand()).to.equal(0.26133555523119867);
-
-      for (let i = 0; i < 20; i++) {
-        random.rand();
-      }
-
-      expect(random.rand()).to.equal(0.08834491996094584);
+      testSeededRandom();
     });
   });
 

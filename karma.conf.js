@@ -42,8 +42,8 @@ module.exports = function (config) {
           lines: 95
         }
       },
-      type: 'html',
-      dir : 'coverage/'
+      dir: 'coverage/',
+      reporters: [{ type: 'html' }, { type: 'text-summary' }]
     },
     client: {
       mocha: {

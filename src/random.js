@@ -3,16 +3,17 @@
  *
  * @sectionName Random
  */
-let seed = Date.now();
+let seed;
 
 /**
  * Return a random number between 0 (inclusive) and 1 (exclusive).
- * @see https://github.com/bryc/code/blob/master/jshash/PRNGs.md#splitmix32s
+ * @see https://github.com/bryc/code/blob/master/jshash/PRNGs.md#splitmix32
  * @function rand
  *
  * @returns {Number} Random number between 0 and <1.
  */
 export function rand() {
+  seed ??= Date.now();
   seed |= 0;
   seed = (seed + 0x9e3779b9) | 0;
   let t = seed ^ (seed >>> 16);
@@ -92,4 +93,9 @@ export function seedRand(value = Date.now()) {
     h = Math.imul(h ^ (h >>> 13), 3266489909);
     seed = (h ^= h >>> 16) >>> 0;
   }
+}
+
+// export just for testing
+export function _reset() {
+  seed = null;
 }

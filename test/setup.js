@@ -8,6 +8,7 @@ import {
 import { _reset as resetAssets } from '../src/assets.js';
 import { _reset as resetEvents } from '../src/events.js';
 import { _reset as resetGesture } from '../src/gesture.js';
+import { _reset as seedReset } from '../src/random.js';
 
 // ensure canvas exists before each test
 function setup() {
@@ -36,4 +37,5 @@ afterEach(() => {
   resetCore();
   resetEvents();
   resetGesture();
+  seedReset();
 });

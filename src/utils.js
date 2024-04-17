@@ -42,3 +42,23 @@ export function removeFromArray(array, item) {
     return true;
   }
 }
+
+/**
+ * Recursively get all objects HTML nodes.
+ * @param {Object} object - Root object.
+ *
+ * @returns {Object[]} All nested HTML nodes.
+ */
+export function getAllNodes(object) {
+  let nodes = [];
+
+  if (object._dn) {
+    nodes.push(object._dn);
+  } else if (object.children) {
+    object.children.map(child => {
+      nodes = nodes.concat(getAllNodes(child));
+    });
+  }
+
+  return nodes;
+}

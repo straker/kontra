@@ -751,6 +751,40 @@ describe(
             expect(child.world.x).to.equal(40);
             expect(child.world.y).to.equal(60);
           });
+
+          it('should move dom nodes', () => {
+            let child = GameObject({
+              x: 10,
+              y: 20,
+              _dn: document.createElement('button')
+            });
+            gameObject._dn = document.createElement('div');
+            document.body.appendChild(gameObject._dn);
+            gameObject.addChild(child);
+
+            expect(child._dn.parentNode).to.equal(gameObject._dn);
+          });
+
+          it('should move nested dom nodes', () => {
+            let child = GameObject({
+              x: 10,
+              y: 20
+            });
+            let grandchild = GameObject({
+              x: 10,
+              y: 20,
+              _dn: document.createElement('button')
+            });
+            child.addChild(grandchild);
+
+            gameObject._dn = document.createElement('div');
+            document.body.appendChild(gameObject._dn);
+            gameObject.addChild(child);
+
+            expect(grandchild._dn.parentNode).to.equal(
+              gameObject._dn
+            );
+          });
         } else {
           it('should not have addChild', () => {
             expect(gameObject.addChild).to.not.exist;
@@ -829,6 +863,43 @@ describe(
 
             expect(child.world.x).to.equal(10);
             expect(child.world.y).to.equal(20);
+          });
+
+          it('should remove dom nodes', () => {
+            let child = GameObject({
+              x: 10,
+              y: 20,
+              _dn: document.createElement('button')
+            });
+            gameObject._dn = document.createElement('div');
+            document.body.appendChild(gameObject._dn);
+            gameObject.addChild(child);
+            gameObject.removeChild(child);
+
+            expect(child._dn.parentNode).to.not.equal(gameObject._dn);
+          });
+
+          it('should remove nested dom nodes', () => {
+            let child = GameObject({
+              x: 10,
+              y: 20
+            });
+            let grandchild = GameObject({
+              x: 10,
+              y: 20,
+              _dn: document.createElement('button')
+            });
+            child.addChild(grandchild);
+            gameObject.removeChild(child);
+
+            gameObject._dn = document.createElement('div');
+            document.body.appendChild(gameObject._dn);
+            gameObject.addChild(child);
+            gameObject.removeChild(child);
+
+            expect(grandchild._dn.parentNode).to.not.equal(
+              gameObject._dn
+            );
           });
         } else {
           it('should not have removeChild', () => {

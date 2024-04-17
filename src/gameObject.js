@@ -2,7 +2,12 @@ import { getContext } from './core.js';
 import Updatable from './updatable.js';
 import { on } from './events.js';
 import { rotatePoint, clamp } from './helpers.js';
-import { noop, removeFromArray } from './utils.js';
+import {
+  noop,
+  removeFromArray,
+  addToDom,
+  getAllNodes
+} from './utils.js';
 
 /**
  * The base class of most renderable classes. Handles things such as position, rotation, anchor, and the update and render life cycle.
@@ -578,6 +583,11 @@ class GameObject extends Updatable {
       child.parent = this;
       child._pc = child._pc || noop;
       child._pc();
+
+      // dn = dom node
+      if (this._dn) {
+        this._dn.append(...getAllNodes(child));
+      }
     });
   }
 
@@ -593,6 +603,12 @@ class GameObject extends Updatable {
       if (removeFromArray(this.children, child)) {
         child.parent = null;
         child._pc();
+
+        if (this._dn) {
+          getAllNodes(child).map(node => {
+            addToDom(node, this.context.canvas);
+          });
+        }
       }
     });
   }

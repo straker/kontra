@@ -5,29 +5,10 @@ import {
   srOnlyStyle,
   focusParams,
   addToDom,
-  removeFromArray
+  removeFromArray,
+  getAllNodes
 } from './utils.js';
 import { collides } from './helpers.js';
-
-/**
- * Recursively get all objects HTML nodes.
- * @param {Object} object - Root object.
- *
- * @returns {Object[]} All nested HTML nodes.
- */
-function getAllNodes(object) {
-  let nodes = [];
-
-  if (object._dn) {
-    nodes.push(object._dn);
-  } else if (object.children) {
-    object.children.map(child => {
-      nodes = nodes.concat(getAllNodes(child));
-    });
-  }
-
-  return nodes;
-}
 
 /**
  * A scene object for organizing a group of objects that will update and render together.

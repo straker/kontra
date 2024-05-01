@@ -639,8 +639,8 @@ class TileEngine {
 
       let flipped = 0;
 
-      // read flags
       // @ifdef TILEENGINE_TILED
+      // read flags
       let flippedHorizontal = tile & FLIPPED_HORIZONTALLY;
       let flippedVertical = tile & FLIPPED_VERTICALLY;
       flipped = flippedHorizontal || flippedVertical;
@@ -665,7 +665,7 @@ class TileEngine {
 
       let x = (index % width) * tilewidth;
       let y = ((index / width) | 0) * tileheight;
-      let sx = (offset % cols | 0) * (tilewidth + margin);
+      let sx = (offset % cols) * (tilewidth + margin);
       let sy = ((offset / cols) | 0) * (tileheight + margin);
 
       // @ifdef TILEENGINE_TILED

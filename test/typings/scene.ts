@@ -10,6 +10,7 @@ let hidden: boolean = scene.hidden;
 let context: CanvasRenderingContext2D = scene.context;
 let cullObjects: boolean = scene.cullObjects;
 let camera: kontra.GameObject = scene.camera;
+let node: HTMLElement = scene.node;
 
 scene.cullFunction();
 scene.show();

@@ -19,6 +19,7 @@ let disabled: boolean = button.disabled;
 let focused: boolean = button.focused;
 let hovered: boolean = button.hovered;
 let pressed: boolean = button.pressed;
+let node: HTMLButtonElement = button.node;
 
 button.enable();
 button.disable();

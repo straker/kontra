@@ -116,6 +116,16 @@ class Button extends SpriteClass {
   }
 
   /**
+   * The HTML button element associated with the button (used for accessibility). Typically you won't need to interact with the `node` directly, but it can be useful to move its position in the DOM to better support accessible component design.
+   * @memberof Button
+   * @property {HTMLButtonElement} node
+   */
+  get node() {
+    return this._dn;
+  }
+  // do not allow setting the node value by not having a setter
+
+  /**
    * Clean up the button by removing the HTMLButtonElement from the DOM.
    * @memberof Button
    * @function destroy

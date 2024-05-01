@@ -74,13 +74,18 @@ describe('scene', () => {
     });
 
     it('should create a DOM node and add it to the page', () => {
-      expect(scene._dn).to.exist;
-      expect(scene._dn.id).to.equal(scene.id);
-      expect(scene._dn.tabIndex).to.equal(-1);
-      expect(scene._dn.getAttribute('aria-label')).to.equal(
+      expect(scene.node).to.exist;
+      expect(scene.node.id).to.equal(scene.id);
+      expect(scene.node.tabIndex).to.equal(-1);
+      expect(scene.node.getAttribute('aria-label')).to.equal(
         scene.name
       );
-      expect(document.body.contains(scene._dn)).to.be.true;
+      expect(document.body.contains(scene.node)).to.be.true;
+    });
+
+    it('should not allow setting the node', () => {
+      expect(() => (scene.node = 1)).to.not.throw;
+      expect(scene.node instanceof HTMLElement).to.be.true;
     });
 
     it('should add objects', () => {

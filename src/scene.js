@@ -209,8 +209,8 @@ class Scene {
         height
       });
 
-      if (!this._dn.isConnected) {
-        addToDom(this._dn, canvas);
+      if (!section.isConnected) {
+        addToDom(section, canvas);
       }
     };
 
@@ -229,6 +229,16 @@ class Scene {
   get objects() {
     return this._o;
   }
+
+  /**
+   * The HTML section element associated with the scene (used for accessibility). Typically you won't need to interact with the `node` directly, but it can be useful to move its position in the DOM to better support accessible component design.
+   * @memberof Button
+   * @property {HTMLElement} node
+   */
+  get node() {
+    return this._dn;
+  }
+  // do not allow setting the node value by not having a setter
 
   /**
    * Add an object to the scene.

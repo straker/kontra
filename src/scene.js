@@ -232,7 +232,7 @@ class Scene {
 
   /**
    * The HTML section element associated with the scene (used for accessibility). Typically you won't need to interact with the `node` directly, but it can be useful to move its position in the DOM to better support accessible component design.
-   * @memberof Button
+   * @memberof Scene
    * @property {HTMLElement} node
    */
   get node() {

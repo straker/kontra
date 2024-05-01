@@ -2,6 +2,7 @@ import GameObject, { GameObjectClass } from '../../src/gameObject.js';
 import { _reset, init, getContext } from '../../src/core.js';
 import { noop } from '../../src/utils.js';
 import { degToRad } from '../../src/helpers.js';
+import Vector from '../../src/vector.js';
 
 // test-context:start
 let testContext = {
@@ -9,7 +10,9 @@ let testContext = {
   GAMEOBJECT_GROUP: true,
   GAMEOBJECT_OPACITY: true,
   GAMEOBJECT_ROTATION: true,
-  GAMEOBJECT_SCALE: true
+  GAMEOBJECT_SCALE: true,
+  GAMEOBJECT_VELOCITY: true,
+  GAMEOBJECT_ACCELERATION: true
 };
 // test-context:end
 
@@ -177,7 +180,7 @@ describe(
       }
 
       if (testContext.GAMEOBJECT_ROTATION) {
-        it('should set default camera', () => {
+        it('should set default rotation', () => {
           expect(gameObject.rotation).to.equal(0);
         });
 
@@ -187,13 +190,51 @@ describe(
           expect(gameObject.rotation).to.equal(0.5);
         });
       } else {
-        it('should not default camera', () => {
+        it('should not default rotation', () => {
           expect(gameObject.rotation).to.not.exist;
         });
       }
 
+      if (
+        testContext.GAMEOBJECT_ROTATION &&
+        testContext.GAMEOBJECT_VELOCITY
+      ) {
+        it('should set default drotation', () => {
+          expect(gameObject.drotation).to.equal(0);
+        });
+
+        it('should set drotation property', () => {
+          gameObject = GameObject({ drotation: 0.5 });
+
+          expect(gameObject.drotation).to.equal(0.5);
+        });
+      } else {
+        it('should not default drotation', () => {
+          expect(gameObject.drotation).to.not.exist;
+        });
+      }
+
+      if (
+        testContext.GAMEOBJECT_ROTATION &&
+        testContext.GAMEOBJECT_ACCELERATION
+      ) {
+        it('should set default ddrotation', () => {
+          expect(gameObject.ddrotation).to.equal(0);
+        });
+
+        it('should set ddrotation property', () => {
+          gameObject = GameObject({ ddrotation: 0.5 });
+
+          expect(gameObject.ddrotation).to.equal(0.5);
+        });
+      } else {
+        it('should not default ddrotation', () => {
+          expect(gameObject.ddrotation).to.not.exist;
+        });
+      }
+
       if (testContext.GAMEOBJECT_SCALE) {
-        it('should set default camera', () => {
+        it('should set default scale', () => {
           expect(gameObject.scaleX).to.equal(1);
           expect(gameObject.scaleY).to.equal(1);
         });
@@ -205,7 +246,7 @@ describe(
           expect(gameObject.scaleY).to.equal(20);
         });
       } else {
-        it('should not default camera', () => {
+        it('should not default scale', () => {
           expect(gameObject.scaleY).to.not.exist;
           expect(gameObject.scaleY).to.not.exist;
         });
@@ -689,6 +730,66 @@ describe(
             );
           });
         }
+      }
+    });
+
+    // --------------------------------------------------
+    // advance
+    // --------------------------------------------------
+    describe('advance', () => {
+      if (
+        (testContext.GAMEOBJECT_ROTATION &&
+          testContext.GAMEOBJECT_VELOCITY) ||
+        testContext.GAMEOBJECT_ACCELERATION
+      ) {
+        it('should call parent advance', () => {
+          gameObject.position = Vector(5, 10);
+          gameObject.velocity = Vector(15, 20);
+
+          gameObject.advance();
+
+          expect(gameObject.position.x).to.equal(20);
+          expect(gameObject.position.y).to.equal(30);
+        });
+      }
+
+      if (
+        testContext.GAMEOBJECT_ROTATION &&
+        testContext.GAMEOBJECT_VELOCITY &&
+        testContext.GAMEOBJECT_ACCELERATION
+      ) {
+        it('should add the angular acceleration to the angular velocity', () => {
+          gameObject.drotation = 0.5;
+          gameObject.ddrotation = 0.5;
+
+          gameObject.advance();
+
+          expect(gameObject.drotation).to.equal(1);
+        });
+      }
+
+      if (
+        testContext.GAMEOBJECT_ROTATION &&
+        testContext.GAMEOBJECT_VELOCITY
+      ) {
+        it('should add the angular velocity to the rotation', () => {
+          gameObject.rotation = 0.5;
+          gameObject.drotation = 0.5;
+
+          gameObject.advance();
+
+          expect(gameObject.rotation).to.equal(1);
+        });
+      } else {
+        it('should not modify the rotation', () => {
+          gameObject.rotation = 0;
+          gameObject.drotation = 0.5;
+          gameObject.ddrotation = 0.5;
+
+          gameObject.advance();
+
+          expect(gameObject.rotation).to.equal(0);
+        });
       }
     });
 

@@ -10,6 +10,8 @@ let height: number = gameObject.height;
 let context: CanvasRenderingContext2D = gameObject.context;
 let children: kontra.GameObject[] = gameObject.children;
 let rotation: number = gameObject.rotation;
+let drotation: number = gameObject.drotation;
+let ddrotation: number = gameObject.ddrotation;
 let ttl: number = gameObject.ttl;
 let anchor: {x: number, y: number} = gameObject.anchor;
 let sx: number = gameObject.sx;
@@ -62,6 +64,8 @@ kontra.GameObject({
   ddy: 2,
   ttl: 10,
   rotation: 10,
+  drotation: 10,
+  ddrotation: 12,
   anchor: {x: 2, y: 2},
   scaleX: 2,
   scaleY: 2,

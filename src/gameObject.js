@@ -28,6 +28,8 @@ import { noop, removeFromArray } from './utils.js';
  * @param {GameObject[]} [properties.children] - Children to add to the game object.
  * @param {Number} [properties.opacity=1] - The opacity of the game object.
  * @param {Number} [properties.rotation=0] - The rotation around the anchor in radians.
+ * @param {Number} [properties.drotation=0] - The angular velocity of the rotation in radians.
+ * @param {Number} [properties.ddrotation=0] - The angular acceleration of the rotation in radians.
  * @param {Number} [properties.scaleX=1] - The x scale of the game object.
  * @param {Number} [properties.scaleY=1] - The y scale of the game object.
  *
@@ -164,6 +166,24 @@ class GameObject extends Updatable {
      * @property {Number} rotation
      */
     rotation = 0,
+
+    // @ifdef GAMEOBJECT_VELOCITY
+    /**
+     * Angular velocity of the rotation in radians.
+     * @memberof GameObject
+     * @property {Number} drotation
+     */
+    drotation = 0,
+    // @endif
+
+    // @ifdef GAMEOBJECT_ACCELERATION
+    /**
+     * Angular acceleration of the rotation in radians.
+     * @memberof GameObject
+     * @property {Number} ddrotation
+     */
+    ddrotation = 0,
+    // @endif
     // @endif
 
     // @ifdef GAMEOBJECT_SCALE
@@ -208,6 +228,14 @@ class GameObject extends Updatable {
 
       // @ifdef GAMEOBJECT_ROTATION
       rotation,
+
+      // @ifdef GAMEOBJECT_VELOCITY
+      drotation,
+      // @endif
+
+      // @ifdef GAMEOBJECT_ACCELERATION
+      ddrotation,
+      // @endif
       // @endif
 
       // @ifdef GAMEOBJECT_SCALE
@@ -626,6 +654,21 @@ class GameObject extends Updatable {
     this._rot = value;
     this._pc();
   }
+
+  // @ifdef GAMEOBJECT_VELOCITY||GAMEOBJECT_ACCELERATION
+  advance(dt) {
+    super.advance(dt);
+
+    // @ifdef GAMEOBJECT_VELOCITY
+    // @ifdef GAMEOBJECT_ACCELERATION
+    this.drotation += this.ddrotation;
+    // @endif
+
+    this.rotation += this.drotation;
+    // @endif
+  }
+  // @endif
+
   // @endif
 
   // --------------------------------------------------

@@ -126,13 +126,11 @@ class Updatable {
     }
     // @endif
 
-    this.velocity = this.velocity.add(acceleration);
+    let velocity = (this.velocity = this.velocity.add(acceleration));
     // @endif
     // @endif
 
     // @ifdef GAMEOBJECT_VELOCITY
-    let velocity = this.velocity;
-
     // @ifdef VECTOR_SCALE
     if (dt) {
       velocity = velocity.scale(dt);

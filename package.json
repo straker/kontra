@@ -17,7 +17,7 @@
     "test": "karma start --single-run",
     "test:watch": "karma start",
     "test:permutations": "node test/permutations",
-    "test:ts": "tsc test/typings/*.ts",
+    "test:ts": "tsc test/typings/*.ts --noEmit",
     "test:debug": "karma start --debug",
     "eslint": "eslint ./{src,test}/",
     "build": "gulp build",

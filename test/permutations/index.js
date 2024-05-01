@@ -65,7 +65,7 @@ Object.keys(options).forEach(async option => {
       path.join(__dirname, '../setup.js'),
       'utf-8'
     );
-    setup = setup.replace('../src/core.js', '../../src/core.js');
+    setup = setup.replaceAll('../src/', '../../src/');
 
     // copy test suite and change path
     let test = fs.readFileSync(

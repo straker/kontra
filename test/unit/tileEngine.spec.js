@@ -6,7 +6,8 @@ import { noop } from '../../src/utils.js';
 let testContext = {
   TILEENGINE_CAMERA: true,
   TILEENGINE_DYNAMIC: true,
-  TILEENGINE_QUERY: true
+  TILEENGINE_QUERY: true,
+  TILEENGINE_TILED: true
 };
 // test-context:end
 
@@ -229,8 +230,7 @@ describe(
           expect(tileEngine.sx).to.equal(0);
           expect(tileEngine.sy).to.equal(0);
         });
-      }
-      else {
+      } else {
         it('should not have sx and sy properties', () => {
           expect(tileEngine.sx).to.not.exist;
           expect(tileEngine.sy).to.not.exist;
@@ -753,9 +753,6 @@ describe(
 
           tileEngine.renderLayer('test');
 
-          const img = new Image();
-          img.src = tileEngine.layerCanvases.test.toDataURL();
-
           expect(context.drawImage.called).to.be.true;
           expect(
             context.drawImage.calledWith(
@@ -878,7 +875,7 @@ describe(
           expect(tileEngine._r.called).to.be.true;
         });
       } else {
-        it('doe snot call render if the layer is dirty', () => {
+        it('does not call render if the layer is dirty', () => {
           let tileEngine = TileEngine({
             tilewidth: 10,
             tileheight: 10,
@@ -939,6 +936,195 @@ describe(
 
         expect(fn).to.not.throw();
       });
+
+      if (testContext.TILEENGINE_TILED) {
+        it('rotates a tile horizontally', () => {
+          let tileEngine = TileEngine({
+            tilewidth: 10,
+            tileheight: 10,
+            width: 1,
+            height: 1,
+            tilesets: [
+              {
+                firstgid: 1,
+                image: new Image(),
+                columns: 10
+              }
+            ],
+            layers: [
+              {
+                name: 'test',
+                data: [3 + 0x80000000]
+              }
+            ]
+          });
+
+          let r = tileEngine._r.bind(tileEngine);
+          let ctx;
+          tileEngine._r = function overrideR(layer, context) {
+            ctx = context;
+            sinon.stub(context, 'drawImage').callsFake(noop);
+            sinon.stub(context, 'translate').callsFake(noop);
+            sinon.stub(context, 'scale').callsFake(noop);
+            r(layer, context);
+          };
+
+          tileEngine.renderLayer('test');
+
+          expect(ctx.translate.calledWith(10, 0)).to.be.true;
+          expect(ctx.scale.calledWith(-1, 1)).to.be.true;
+          expect(
+            ctx.drawImage.calledWith(
+              tileEngine.tilesets[0].image,
+              20,
+              0,
+              10,
+              10,
+              0,
+              0,
+              10,
+              10
+            )
+          ).to.be.true;
+        });
+
+        it('rotates a tile vertically', () => {
+          let tileEngine = TileEngine({
+            tilewidth: 10,
+            tileheight: 10,
+            width: 1,
+            height: 1,
+            tilesets: [
+              {
+                firstgid: 1,
+                image: new Image(),
+                columns: 10
+              }
+            ],
+            layers: [
+              {
+                name: 'test',
+                data: [3 + 0x40000000]
+              }
+            ]
+          });
+
+          let r = tileEngine._r.bind(tileEngine);
+          let ctx;
+          tileEngine._r = function overrideR(layer, context) {
+            ctx = context;
+            sinon.stub(context, 'drawImage').callsFake(noop);
+            sinon.stub(context, 'translate').callsFake(noop);
+            sinon.stub(context, 'scale').callsFake(noop);
+            r(layer, context);
+          };
+
+          tileEngine.renderLayer('test');
+
+          expect(ctx.translate.calledWith(0, 10)).to.be.true;
+          expect(ctx.scale.calledWith(1, -1)).to.be.true;
+          expect(
+            ctx.drawImage.calledWith(
+              tileEngine.tilesets[0].image,
+              20,
+              0,
+              10,
+              10,
+              0,
+              0,
+              10,
+              10
+            )
+          ).to.be.true;
+        });
+
+        it('rotates a tile horizontally and vertically', () => {
+          let tileEngine = TileEngine({
+            tilewidth: 10,
+            tileheight: 10,
+            width: 1,
+            height: 1,
+            tilesets: [
+              {
+                firstgid: 1,
+                image: new Image(),
+                columns: 10
+              }
+            ],
+            layers: [
+              {
+                name: 'test',
+                data: [3 + 0x80000000 + 0x40000000]
+              }
+            ]
+          });
+
+          let r = tileEngine._r.bind(tileEngine);
+          let ctx;
+          tileEngine._r = function overrideR(layer, context) {
+            ctx = context;
+            sinon.stub(context, 'drawImage').callsFake(noop);
+            sinon.stub(context, 'translate').callsFake(noop);
+            sinon.stub(context, 'scale').callsFake(noop);
+            r(layer, context);
+          };
+
+          tileEngine.renderLayer('test');
+
+          expect(ctx.translate.calledWith(10, 10)).to.be.true;
+          expect(ctx.scale.calledWith(-1, -1)).to.be.true;
+          expect(
+            ctx.drawImage.calledWith(
+              tileEngine.tilesets[0].image,
+              20,
+              0,
+              10,
+              10,
+              0,
+              0,
+              10,
+              10
+            )
+          ).to.be.true;
+        });
+      } else {
+        it('does not rotate tile', () => {
+          let tileEngine = TileEngine({
+            tilewidth: 10,
+            tileheight: 10,
+            width: 1,
+            height: 1,
+            tilesets: [
+              {
+                firstgid: 1,
+                image: new Image(),
+                columns: 10
+              }
+            ],
+            layers: [
+              {
+                name: 'test',
+                data: [3 + 0x80000000]
+              }
+            ]
+          });
+
+          let r = tileEngine._r.bind(tileEngine);
+          let ctx;
+          tileEngine._r = function overrideR(layer, context) {
+            ctx = context;
+            sinon.stub(context, 'drawImage').callsFake(noop);
+            sinon.stub(context, 'translate').callsFake(noop);
+            sinon.stub(context, 'scale').callsFake(noop);
+            r(layer, context);
+          };
+
+          tileEngine.renderLayer('test');
+
+          expect(ctx.translate.called).to.be.false;
+          expect(ctx.scale.called).to.be.false;
+        });
+      }
     });
 
     // --------------------------------------------------

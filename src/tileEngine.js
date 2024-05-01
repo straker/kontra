@@ -3,6 +3,15 @@ import { on } from './events.js';
 import { clamp, getWorldRect } from './helpers.js';
 import { removeFromArray } from './utils.js';
 
+// @ifdef TILEENGINE_TILED
+
+// Tiled uses the bits 32 and 31 to denote that a tile is
+// flipped horizontally or vertically (respectively)
+// @see https://doc.mapeditor.org/en/stable/reference/global-tile-ids/
+let FLIPPED_HORIZONTALLY = 0x80000000;
+let FLIPPED_VERTICALLY = 0x40000000;
+// @endif
+
 /**
  * Get the row from the y coordinate.
  * @private
@@ -628,6 +637,17 @@ class TileEngine {
       // skip empty tiles (0)
       if (!tile) return;
 
+      let flipped = 0;
+
+      // @ifdef TILEENGINE_TILED
+      // read flags
+      let flippedHorizontal = tile & FLIPPED_HORIZONTALLY;
+      let flippedVertical = tile & FLIPPED_VERTICALLY;
+      flipped = flippedHorizontal || flippedVertical;
+
+      tile &= ~(FLIPPED_HORIZONTALLY | FLIPPED_VERTICALLY);
+      // @endif
+
       // find the tileset the tile belongs to
       // assume tilesets are ordered by firstgid
       let tileset;
@@ -648,17 +668,37 @@ class TileEngine {
       let sx = (offset % cols) * (tilewidth + margin);
       let sy = ((offset / cols) | 0) * (tileheight + margin);
 
+      // @ifdef TILEENGINE_TILED
+      if (flipped) {
+        context.save();
+        context.translate(
+          x + (flippedHorizontal ? tilewidth : 0),
+          y + (flippedVertical ? tileheight : 0)
+        );
+        context.scale(
+          flippedHorizontal ? -1 : 1,
+          flippedVertical ? -1 : 1
+        );
+      }
+      // @endif
+
       context.drawImage(
         image,
         sx,
         sy,
         tilewidth,
         tileheight,
-        x,
-        y,
+        flipped ? 0 : x,
+        flipped ? 0 : y,
         tilewidth,
         tileheight
       );
+
+      // @ifdef TILEENGINE_TILED
+      if (flipped) {
+        context.restore();
+      }
+      // @endif
     });
 
     context.restore();

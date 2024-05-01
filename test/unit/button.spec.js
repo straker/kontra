@@ -121,10 +121,15 @@ describe('button', () => {
     });
 
     it('should create a DOM node and add it to the page', () => {
-      expect(button._dn).to.exist;
-      expect(button._dn instanceof HTMLButtonElement).to.be.true;
-      expect(button._dn.textContent).to.equal('Hello');
-      expect(document.body.contains(button._dn)).to.be.true;
+      expect(button.node).to.exist;
+      expect(button.node instanceof HTMLButtonElement).to.be.true;
+      expect(button.node.textContent).to.equal('Hello');
+      expect(document.body.contains(button.node)).to.be.true;
+    });
+
+    it('should not allow setting the node', () => {
+      expect(() => (button.node = 1)).to.not.throw;
+      expect(button.node instanceof HTMLButtonElement).to.be.true;
     });
 
     it('should add the button as an immediate sibling to the canvas', () => {

@@ -10,6 +10,8 @@ import { removeFromArray } from './utils.js';
 // @see https://doc.mapeditor.org/en/stable/reference/global-tile-ids/
 let FLIPPED_HORIZONTALLY = 0x80000000;
 let FLIPPED_VERTICALLY = 0x40000000;
+// tile can be rotated also and use the bit 30 in conjunction with bit 32 or 31 to denote that
+let FLIPPED_DIAGONALLY = 0x20000000;
 // @endif
 
 /**
@@ -643,9 +645,24 @@ class TileEngine {
       // read flags
       let flippedHorizontal = tile & FLIPPED_HORIZONTALLY;
       let flippedVertical = tile & FLIPPED_VERTICALLY;
+      let turnedClockwise = 0;
+      let turnedAntiClockwise = 0;
+      let flippedDiagonally = 0;
       flipped = flippedHorizontal || flippedVertical;
 
       tile &= ~(FLIPPED_HORIZONTALLY | FLIPPED_VERTICALLY);
+
+      if (flippedHorizontal) {
+        turnedClockwise = 1;
+      } else if (flippedVertical) {
+        turnedAntiClockwise = 1;
+      }
+      
+      flippedDiagonally = tile & FLIPPED_DIAGONALLY;
+      
+      if (flippedDiagonally) {
+        tile &= ~(FLIPPED_DIAGONALLY);
+      }
       // @endif
 
       // find the tileset the tile belongs to

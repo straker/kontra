@@ -15,6 +15,7 @@ import { noop, removeFromArray } from './utils.js';
  * @param {Number} [properties.y] - Y coordinate of the position vector.
  * @param {Number} [properties.width] - Width of the game object.
  * @param {Number} [properties.height] - Height of the game object.
+ * @param {Number} [properties.radius] - Radius of the game object.
  *
  * @param {CanvasRenderingContext2D} [properties.context] - The context the game object should draw to. Defaults to [core.getContext()](api/core#getContext).
  *
@@ -68,6 +69,13 @@ class GameObject extends Updatable {
      * @property {Number} height
      */
     height = 0,
+
+    /**
+     * The radius of the game object. Represents the local radius of the object as opposed to the [world](api/gameObject#world) radius.
+     * @memberof GameObject
+     * @property {Number} radius
+     */
+    radius = 0,
 
     /**
      * The context the game object will draw to.
@@ -216,6 +224,7 @@ class GameObject extends Updatable {
     super.init({
       width,
       height,
+      radius,
       context,
 
       // @ifdef GAMEOBJECT_ANCHOR
@@ -319,8 +328,9 @@ class GameObject extends Updatable {
     // @ifdef GAMEOBJECT_ANCHOR
     // 5) translate to the anchor so (0,0) is the top left corner
     // for the render function
-    let anchorX = -this.width * this.anchor.x;
-    let anchorY = -this.height * this.anchor.y;
+    let diameter = this.radius * 2;
+    let anchorX = -(this.width || diameter) * this.anchor.x;
+    let anchorY = -(this.height || diameter) * this.anchor.y;
 
     if (anchorX || anchorY) {
       context.translate(anchorX, anchorY);
@@ -448,6 +458,16 @@ class GameObject extends Updatable {
     this._pc();
   }
 
+  get radius() {
+    // r = radius
+    return this._r;
+  }
+
+  set radius(value) {
+    this._r = value;
+    this._pc();
+  }
+
   /**
    * Update world properties
    */
@@ -465,7 +485,7 @@ class GameObject extends Updatable {
       // @endif
 
       // @ifdef GAMEOBJECT_ROTATION
-      _wr = 0,
+      _wrot = 0,
       // @endif
 
       // @ifdef GAMEOBJECT_SCALE
@@ -482,6 +502,9 @@ class GameObject extends Updatable {
     // ww = world width, wh = world height
     this._ww = this.width;
     this._wh = this.height;
+    // wrx = world radius x, wry = world radius y
+    this._wrx = this.radius;
+    this._wry = this.radius;
 
     // @ifdef GAMEOBJECT_OPACITY
     // wo = world opacity
@@ -497,13 +520,15 @@ class GameObject extends Updatable {
     this._wy = this._wy * _wsy;
     this._ww = this.width * this._wsx;
     this._wh = this.height * this._wsy;
+    this._wrx = this.radius * this._wsx;
+    this._wry = this.radius * this._wsy;
     // @endif
 
     // @ifdef GAMEOBJECT_ROTATION
-    // wr = world rotation
-    this._wr = _wr + this.rotation;
+    // wrot = world rotation
+    this._wrot = _wrot + this.rotation;
 
-    let { x, y } = rotatePoint({ x: this._wx, y: this._wy }, _wr);
+    let { x, y } = rotatePoint({ x: this._wx, y: this._wy }, _wrot);
     this._wx = x;
     this._wy = y;
     // @endif
@@ -527,13 +552,14 @@ class GameObject extends Updatable {
       y: this._wy,
       width: this._ww,
       height: this._wh,
+      radius: { x: this._wrx, y: this._wry },
 
       // @ifdef GAMEOBJECT_OPACITY
       opacity: this._wo,
       // @endif
 
       // @ifdef GAMEOBJECT_ROTATION
-      rotation: this._wr,
+      rotation: this._wrot,
       // @endif
 
       // @ifdef GAMEOBJECT_SCALE

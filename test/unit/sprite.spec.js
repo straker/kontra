@@ -172,6 +172,21 @@ describe(
         expect(sprite.context.fillRect.called).to.be.true;
       });
 
+      it('should draw a circle sprite', () => {
+        let sprite = Sprite({
+          x: 10,
+          y: 20,
+          radius: 10,
+          color: true
+        });
+
+        sinon.stub(sprite.context, 'arc').callsFake(noop);
+
+        sprite.render();
+
+        expect(sprite.context.arc.called).to.be.true;
+      });
+
       if (testContext.SPRITE_IMAGE) {
         it('should draw an image sprite', () => {
           let img = new Image();

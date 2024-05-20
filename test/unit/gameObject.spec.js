@@ -9,6 +9,7 @@ let testContext = {
   GAMEOBJECT_ANCHOR: true,
   GAMEOBJECT_GROUP: true,
   GAMEOBJECT_OPACITY: true,
+  GAMEOBJECT_RADIUS: true,
   GAMEOBJECT_ROTATION: true,
   GAMEOBJECT_SCALE: true,
   GAMEOBJECT_VELOCITY: true,
@@ -39,7 +40,6 @@ describe(
         expect(gameObject.context).to.equal(getContext());
         expect(gameObject.width).to.equal(0);
         expect(gameObject.height).to.equal(0);
-        expect(gameObject.radius).to.equal(0);
       });
 
       it('should set width and height properties', () => {
@@ -47,12 +47,6 @@ describe(
 
         expect(gameObject.width).to.equal(10);
         expect(gameObject.height).to.equal(20);
-      });
-
-      it('should set radius properties', () => {
-        gameObject = GameObject({ radius: 10 });
-
-        expect(gameObject.radius).to.equal(10);
       });
 
       it('should set context property', () => {
@@ -80,8 +74,7 @@ describe(
           init() {
             super.init({
               width: 20,
-              height: 30,
-              radius: 40
+              height: 30
             });
           }
         }
@@ -89,7 +82,6 @@ describe(
         let obj = new MyClass();
         expect(obj.width).to.equal(20);
         expect(obj.height).to.equal(30);
-        expect(obj.radius).to.equal(40);
       });
 
       it('should set context if kontra.init is called after created', () => {
@@ -185,6 +177,22 @@ describe(
       } else {
         it('should not default opacity', () => {
           expect(gameObject.opacity).to.not.exist;
+        });
+      }
+
+      if (testContext.GAMEOBJECT_RADIUS) {
+        it('should set default radius', () => {
+          expect(gameObject.radius).to.equal(0);
+        });
+
+        it('should set radius property', () => {
+          gameObject = GameObject({ radius: 0.5 });
+
+          expect(gameObject.radius).to.equal(0.5);
+        });
+      } else {
+        it('should not default radius', () => {
+          expect(gameObject.radius).to.not.exist;
         });
       }
 
@@ -367,21 +375,36 @@ describe(
           ).to.be.true;
         });
 
-        it('should translate to the anchor position (circle)', () => {
-          gameObject.anchor = { x: 0.5, y: 0.5 };
-          gameObject.radius = 10;
+        if (testContext.GAMEOBJECT_RADIUS) {
+          it('should translate to the anchor position (circle)', () => {
+            gameObject.anchor = { x: 0.5, y: 0.5 };
+            gameObject.radius = 10;
 
-          sinon.stub(gameObject.context, 'translate');
+            sinon.stub(gameObject.context, 'translate');
 
-          gameObject.render();
+            gameObject.render();
 
-          expect(
-            gameObject.context.translate.firstCall.calledWith(
-              -10,
-              -10
-            )
-          ).to.be.true;
-        });
+            expect(
+              gameObject.context.translate.firstCall.calledWith(
+                -10,
+                -10
+              )
+            ).to.be.true;
+          });
+        } else {
+          it('should not translate to the anchor position (circle)', () => {
+            gameObject.anchor = { x: 0.5, y: 0.5 };
+            gameObject.radius = 10;
+
+            sinon.stub(gameObject.context, 'translate');
+
+            gameObject.render();
+
+            expect(
+              gameObject.context.translate.firstCall.calledWith(0, 0)
+            ).to.be.true;
+          });
+        }
 
         it('should not translate if the anchor position is {0, 0}', () => {
           sinon.stub(gameObject.context, 'translate');
@@ -505,7 +528,6 @@ describe(
         expect(gameObject.world.y).to.equal(0);
         expect(gameObject.world.width).to.equal(0);
         expect(gameObject.world.height).to.equal(0);
-        expect(gameObject.world.radius).to.deep.equal({ x: 0, y: 0 });
       });
 
       it('should update position', () => {
@@ -519,14 +541,9 @@ describe(
       it('should update size', () => {
         gameObject.width = 10;
         gameObject.height = 20;
-        gameObject.radius = 30;
 
         expect(gameObject.world.width).to.equal(10);
         expect(gameObject.world.height).to.equal(20);
-        expect(gameObject.world.radius).to.deep.equal({
-          x: 30,
-          y: 30
-        });
       });
 
       if (testContext.GAMEOBJECT_OPACITY) {
@@ -542,6 +559,28 @@ describe(
       } else {
         it('should not have opacity', () => {
           expect(gameObject.world.opacity).to.not.exist;
+        });
+      }
+
+      if (testContext.GAMEOBJECT_RADIUS) {
+        it('should default radius', () => {
+          expect(gameObject.world.radius).to.deep.equal({
+            x: 0,
+            y: 0
+          });
+        });
+
+        it('should update world radius', () => {
+          gameObject.radius = 0.5;
+
+          expect(gameObject.world.radius).to.deep.equal({
+            x: 0.5,
+            y: 0.5
+          });
+        });
+      } else {
+        it('should not have radius', () => {
+          expect(gameObject.world.radius).to.not.exist;
         });
       }
 
@@ -586,16 +625,18 @@ describe(
           expect(gameObject.world.height).to.equal(40);
         });
 
-        it('should update radius based on scale', () => {
-          gameObject.radius = 10;
-          gameObject.scaleX = 2;
-          gameObject.scaleY = 3;
+        if (testContext.GAMEOBJECT_RADIUS) {
+          it('should update radius based on scale', () => {
+            gameObject.radius = 10;
+            gameObject.scaleX = 2;
+            gameObject.scaleY = 3;
 
-          expect(gameObject.world.radius).to.deep.equal({
-            x: 20,
-            y: 30
+            expect(gameObject.world.radius).to.deep.equal({
+              x: 20,
+              y: 30
+            });
           });
-        });
+        }
       } else {
         it('should not have scale', () => {
           expect(gameObject.world.scaleX).to.not.exist;
@@ -605,14 +646,12 @@ describe(
         it('should not update size based on scale', () => {
           gameObject.width = 10;
           gameObject.height = 20;
-          gameObject.radius = 30;
 
           gameObject.scaleX = 2;
           gameObject.scaleY = 2;
 
           expect(gameObject.world.width).to.equal(10);
           expect(gameObject.world.height).to.equal(20);
-          expect(gameObject.world.radius).to.equal(30);
         });
       }
 
@@ -700,22 +739,24 @@ describe(
             expect(gameObject.world.height).to.equal(120);
           });
 
-          it('should update radius based on all scales', () => {
-            GameObject({
-              scaleX: 2,
-              scaleY: 2,
-              children: [gameObject]
-            });
+          if (testContext.GAMEOBJECT_RADIUS) {
+            it('should update radius based on all scales', () => {
+              GameObject({
+                scaleX: 2,
+                scaleY: 2,
+                children: [gameObject]
+              });
 
-            gameObject.radius = 10;
-            gameObject.scaleX = 3;
-            gameObject.scaleY = 4;
+              gameObject.radius = 10;
+              gameObject.scaleX = 3;
+              gameObject.scaleY = 4;
 
-            expect(gameObject.world.radius).to.deep.equal({
-              x: 60,
-              y: 80
+              expect(gameObject.world.radius).to.deep.equal({
+                x: 60,
+                y: 80
+              });
             });
-          });
+          }
         }
 
         if (

@@ -186,6 +186,7 @@ class Sprite extends GameObjectClass {
     if (this.color) {
       this.context.fillStyle = this.color;
 
+      // @ifdef GAMEOBJECT_RADIUS
       if (this.radius) {
         this.context.beginPath();
         this.context.arc(
@@ -196,9 +197,11 @@ class Sprite extends GameObjectClass {
           Math.PI * 2
         );
         this.context.fill();
-      } else {
-        this.context.fillRect(0, 0, this.width, this.height);
+        return;
       }
+      // @endif
+
+      this.context.fillRect(0, 0, this.width, this.height);
     }
   }
 }

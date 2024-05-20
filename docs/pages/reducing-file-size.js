@@ -87,6 +87,7 @@ __Note:__ Some of the more advance classes – such as Button or Grid – requir
 | `anchor`        | `anchor` |
 | `group`         | `children`, `parent`, `addChild`, `removeChild` |
 | `opacity`       | `opacity` |
+| `radius`        | `radius` |
 | `rotation`      | `rotation` |
 | `scale`         | `scaleX`, `scaleY`, `setScale()` |
 | `ttl`           | `ttl`, `isAlive` |

@@ -71,13 +71,6 @@ class GameObject extends Updatable {
     height = 0,
 
     /**
-     * The radius of the game object. Represents the local radius of the object as opposed to the [world](api/gameObject#world) radius.
-     * @memberof GameObject
-     * @property {Number} radius
-     */
-    radius = 0,
-
-    /**
      * The context the game object will draw to.
      * @memberof GameObject
      * @property {CanvasRenderingContext2D} context
@@ -90,6 +83,15 @@ class GameObject extends Updatable {
     // --------------------------------------------------
     // optionals
     // --------------------------------------------------
+
+    // @ifdef GAMEOBJECT_RADIUS
+    /**
+     * The radius of the game object. Represents the local radius of the object as opposed to the [world](api/gameObject#world) radius.
+     * @memberof GameObject
+     * @property {Number} radius
+     */
+    radius = 0,
+    // @endif
 
     // @ifdef GAMEOBJECT_GROUP
     /**
@@ -224,8 +226,11 @@ class GameObject extends Updatable {
     super.init({
       width,
       height,
-      radius,
       context,
+
+      // @ifdef GAMEOBJECT_RADIUS
+      radius,
+      // @endif
 
       // @ifdef GAMEOBJECT_ANCHOR
       anchor,
@@ -328,9 +333,17 @@ class GameObject extends Updatable {
     // @ifdef GAMEOBJECT_ANCHOR
     // 5) translate to the anchor so (0,0) is the top left corner
     // for the render function
+    let width = this.width;
+    let height = this.height;
+
+    // @ifdef GAMEOBJECT_RADIUS
     let diameter = this.radius * 2;
-    let anchorX = -(this.width || diameter) * this.anchor.x;
-    let anchorY = -(this.height || diameter) * this.anchor.y;
+    width ||= diameter;
+    height ||= diameter;
+    // @endif
+
+    let anchorX = -width * this.anchor.x;
+    let anchorY = -height * this.anchor.y;
 
     if (anchorX || anchorY) {
       context.translate(anchorX, anchorY);
@@ -458,16 +471,6 @@ class GameObject extends Updatable {
     this._pc();
   }
 
-  get radius() {
-    // r = radius
-    return this._r;
-  }
-
-  set radius(value) {
-    this._r = value;
-    this._pc();
-  }
-
   /**
    * Update world properties
    */
@@ -502,9 +505,12 @@ class GameObject extends Updatable {
     // ww = world width, wh = world height
     this._ww = this.width;
     this._wh = this.height;
+
+    // @ifdef GAMEOBJECT_RADIUS
     // wrx = world radius x, wry = world radius y
     this._wrx = this.radius;
     this._wry = this.radius;
+    // @endif
 
     // @ifdef GAMEOBJECT_OPACITY
     // wo = world opacity
@@ -520,8 +526,11 @@ class GameObject extends Updatable {
     this._wy = this._wy * _wsy;
     this._ww = this.width * this._wsx;
     this._wh = this.height * this._wsy;
+
+    // @ifdef GAMEOBJECT_RADIUS
     this._wrx = this.radius * this._wsx;
     this._wry = this.radius * this._wsy;
+    // @endif
     // @endif
 
     // @ifdef GAMEOBJECT_ROTATION
@@ -552,7 +561,10 @@ class GameObject extends Updatable {
       y: this._wy,
       width: this._ww,
       height: this._wh,
+
+      // @ifdef GAMEOBJECT_RADIUS
       radius: { x: this._wrx, y: this._wry },
+      // @endif
 
       // @ifdef GAMEOBJECT_OPACITY
       opacity: this._wo,
@@ -649,6 +661,22 @@ class GameObject extends Updatable {
         child._pc();
       }
     });
+  }
+  // @endif
+
+  // --------------------------------------------------
+  // radius
+  // --------------------------------------------------
+
+  // @ifdef GAMEOBJECT_RADIUS
+  get radius() {
+    // r = radius
+    return this._r;
+  }
+
+  set radius(value) {
+    this._r = value;
+    this._pc();
   }
   // @endif
 

@@ -642,6 +642,7 @@ class TileEngine {
 
       let flipped = 0;
       let rotated = 0;
+      let mixed = 0;
 
       // @ifdef TILEENGINE_TILED
       // read flags
@@ -649,6 +650,8 @@ class TileEngine {
       let flippedVertical = tile & FLIPPED_VERTICALLY;
       let turnedClockwise = 0;
       let turnedAntiClockwise = 0;
+      let flippedAndturnedClockwise = 0;
+      let flippedAndturnedAntiClockwise = 0;
       let flippedDiagonally = 0;
       flipped = flippedHorizontal || flippedVertical;
 
@@ -657,12 +660,18 @@ class TileEngine {
       flippedDiagonally = tile & FLIPPED_DIAGONALLY;
       // Identify tile rotation
       if (flippedDiagonally) {
-        if (flippedHorizontal) {
+        if (flippedHorizontal && flippedVertical) {
+          flippedAndturnedClockwise = 1;
+        } else if (flippedHorizontal) {
           turnedClockwise = 1;
         } else if (flippedVertical) {
           turnedAntiClockwise = 1;
+        } else {
+          flippedAndturnedAntiClockwise = 1;
         }
         rotated = turnedClockwise || turnedAntiClockwise;
+        mixed =
+          flippedAndturnedClockwise || flippedAndturnedAntiClockwise;
         tile &= ~FLIPPED_DIAGONALLY;
       }
       // @endif
@@ -688,7 +697,24 @@ class TileEngine {
       let sy = ((offset / cols) | 0) * (tileheight + margin);
 
       // @ifdef TILEENGINE_TILED
-      if (rotated) {
+      if (mixed) {
+        // Begin to flip horizontally
+        context.save();
+        context.translate(x + tilewidth, y);
+        context.scale(-1, 1);
+        x = 0;
+        // Then apply the rotation
+        context.translate(x + tilewidth / 2, y + tileheight / 2);
+        if (flippedAndturnedAntiClockwise) {
+          // Rotate 90° anticlockwise
+          context.rotate(-Math.PI / 2); // 90° in radians
+        } else if (flippedAndturnedClockwise) {
+          // Rotate 90° clockwise
+          context.rotate(Math.PI / 2); // 90° in radians
+        }
+        x = -tilewidth / 2;
+        y = -tileheight / 2;
+      } else if (rotated) {
         context.save();
         // Translate to the center of the tile
         context.translate(x + tilewidth / 2, y + tileheight / 2);
@@ -730,7 +756,7 @@ class TileEngine {
       );
 
       // @ifdef TILEENGINE_TILED
-      if (flipped || rotated) {
+      if (mixed || flipped || rotated) {
         context.restore();
       }
       // @endif

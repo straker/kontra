@@ -698,12 +698,8 @@ class TileEngine {
 
       // @ifdef TILEENGINE_TILED
       if (mixed) {
-        // Begin to flip horizontally
         context.save();
-        context.translate(x + tilewidth, y);
-        context.scale(-1, 1);
-        x = 0;
-        // Then apply the rotation
+        // Begin to apply the rotation
         context.translate(x + tilewidth / 2, y + tileheight / 2);
         if (flippedAndturnedAntiClockwise) {
           // Rotate 90° anticlockwise
@@ -712,13 +708,14 @@ class TileEngine {
           // Rotate 90° clockwise
           context.rotate(Math.PI / 2); // 90° in radians
         }
+        // Then flip horizontally
+        context.scale(-1, 1);
         x = -tilewidth / 2;
         y = -tileheight / 2;
       } else if (rotated) {
         context.save();
         // Translate to the center of the tile
         context.translate(x + tilewidth / 2, y + tileheight / 2);
-
         if (turnedAntiClockwise) {
           // Rotate 90° anticlockwise
           context.rotate(-Math.PI / 2); // 90° in radians

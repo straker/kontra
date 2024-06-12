@@ -642,7 +642,6 @@ class TileEngine {
 
       let flipped = 0;
       let rotated = 0;
-      let mixed = 0;
 
       // @ifdef TILEENGINE_TILED
       // read flags
@@ -669,9 +668,12 @@ class TileEngine {
         } else {
           flippedAndturnedAntiClockwise = 1;
         }
-        rotated = turnedClockwise || turnedAntiClockwise;
-        mixed =
-          flippedAndturnedClockwise || flippedAndturnedAntiClockwise;
+        rotated =
+          turnedClockwise ||
+          turnedAntiClockwise ||
+          flippedAndturnedClockwise ||
+          flippedAndturnedAntiClockwise;
+
         tile &= ~FLIPPED_DIAGONALLY;
       }
       // @endif
@@ -697,31 +699,23 @@ class TileEngine {
       let sy = ((offset / cols) | 0) * (tileheight + margin);
 
       // @ifdef TILEENGINE_TILED
-      if (mixed) {
-        context.save();
-        // Begin to apply the rotation
-        context.translate(x + tilewidth / 2, y + tileheight / 2);
-        if (flippedAndturnedAntiClockwise) {
-          // Rotate 90° anticlockwise
-          context.rotate(-Math.PI / 2); // 90° in radians
-        } else if (flippedAndturnedClockwise) {
-          // Rotate 90° clockwise
-          context.rotate(Math.PI / 2); // 90° in radians
-        }
-        // Then flip horizontally
-        context.scale(-1, 1);
-        x = -tilewidth / 2;
-        y = -tileheight / 2;
-      } else if (rotated) {
+      if (rotated) {
         context.save();
         // Translate to the center of the tile
         context.translate(x + tilewidth / 2, y + tileheight / 2);
-        if (turnedAntiClockwise) {
+        if (turnedAntiClockwise || flippedAndturnedAntiClockwise) {
           // Rotate 90° anticlockwise
           context.rotate(-Math.PI / 2); // 90° in radians
-        } else if (turnedClockwise) {
+        } else if (turnedClockwise || flippedAndturnedClockwise) {
           // Rotate 90° clockwise
           context.rotate(Math.PI / 2); // 90° in radians
+        }
+        if (
+          flippedAndturnedClockwise ||
+          flippedAndturnedAntiClockwise
+        ) {
+          // Then flip horizontally
+          context.scale(-1, 1);
         }
         x = -tilewidth / 2;
         y = -tileheight / 2;
@@ -753,7 +747,7 @@ class TileEngine {
       );
 
       // @ifdef TILEENGINE_TILED
-      if (mixed || flipped || rotated) {
+      if (flipped || rotated) {
         context.restore();
       }
       // @endif

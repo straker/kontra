@@ -11,7 +11,7 @@ import { removeFromArray } from './utils.js';
 let FLIPPED_HORIZONTALLY = 0x80000000;
 let FLIPPED_VERTICALLY = 0x40000000;
 // tile can be rotated also and use the bit 30 in conjunction
-// with bit 32 or 31 to denote that
+// with bit 32 or/and 31 to denote that
 let FLIPPED_DIAGONALLY = 0x20000000;
 // @endif
 

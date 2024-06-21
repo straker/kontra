@@ -1,3 +1,5 @@
+import { circleRectCollision } from './utils.js';
+
 /**
  * A group of helpful functions that are commonly used for game development. Includes things such as converting between radians and degrees and getting random integers.
  *
@@ -235,13 +237,50 @@ export function getStoreItem(key) {
  * @returns {Boolean} `true` if the objects collide, `false` otherwise.
  */
 export function collides(obj1, obj2) {
-  [obj1, obj2] = [obj1, obj2].map(obj => getWorldRect(obj));
+  let rect1 = getWorldRect(obj1);
+  let rect2 = getWorldRect(obj2);
+
+  // @ifdef GAMEOBJECT_RADIUS
+  // don't work with ellipses (i.e. scaling has made
+  // the width and height not the same which means it's
+  // an ellipse and not a circle)
+  if (
+    (obj1.radius && rect1.width != rect1.height) ||
+    (obj2.radius && rect2.width != rect2.height)
+  ) {
+    return false;
+  }
+
+  [rect1, rect2] = [rect1, rect2].map(rect => {
+    if ((rect == rect1 ? obj1 : obj2).radius) {
+      rect.radius = rect.width / 2;
+      rect.x += rect.radius;
+      rect.y += rect.radius;
+    }
+
+    return rect;
+  });
+
+  if (obj1.radius && obj2.radius) {
+    return (
+      Math.hypot(rect1.x - rect2.x, rect1.y - rect2.y) <
+      rect1.radius + rect2.radius
+    );
+  }
+
+  if (obj1.radius || obj2.radius) {
+    return circleRectCollision(
+      obj1.radius ? rect1 : rect2, // circle
+      obj1.radius ? obj2 : obj1 // rect
+    );
+  }
+  // @endif
 
   return (
-    obj1.x < obj2.x + obj2.width &&
-    obj1.x + obj1.width > obj2.x &&
-    obj1.y < obj2.y + obj2.height &&
-    obj1.y + obj1.height > obj2.y
+    rect1.x < rect2.x + rect2.width &&
+    rect1.x + rect1.width > rect2.x &&
+    rect1.y < rect2.y + rect2.height &&
+    rect1.y + rect1.height > rect2.y
   );
 }
 
@@ -254,13 +293,21 @@ export function collides(obj1, obj2) {
  * @returns {{x: Number, y: Number, width: Number, height: Number}} The world `x`, `y`, `width`, and `height` of the object.
  */
 export function getWorldRect(obj) {
-  let { x = 0, y = 0, width, height } = obj.world || obj;
+  let { x = 0, y = 0, width, height, radius } = obj.world || obj;
 
   // take into account tileEngine
   if (obj.mapwidth) {
     width = obj.mapwidth;
     height = obj.mapheight;
   }
+
+  // @ifdef GAMEOBJECT_RADIUS
+  // account for circle
+  if (radius) {
+    width = radius.x * 2;
+    height = radius.y * 2;
+  }
+  // @endif
 
   // @ifdef GAMEOBJECT_ANCHOR
   // account for anchor

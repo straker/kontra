@@ -1,7 +1,6 @@
 import { getCanvas } from './core.js';
 import { on, emit } from './events.js';
-import { getWorldRect } from './helpers.js';
-import { removeFromArray } from './utils.js';
+import { removeFromArray, circleRectCollision } from './utils.js';
 
 /**
  * A simple pointer API. You can use it move the main sprite or respond to a pointer event. Works with both mouse and touch events.
@@ -117,26 +116,6 @@ export function getPointer(canvas = getCanvas()) {
 }
 
 /**
- * Detection collision between a rectangle and a circle.
- * @see https://yal.cc/rectangle-circle-intersection-test/
- *
- * @param {Object} object - Object to check collision against.
- */
-function circleRectCollision(object, pointer) {
-  let { x, y, width, height } = getWorldRect(object);
-
-  // account for camera
-  do {
-    x -= object.sx || 0;
-    y -= object.sy || 0;
-  } while ((object = object.parent));
-
-  let dx = pointer.x - Math.max(x, Math.min(pointer.x, x + width));
-  let dy = pointer.y - Math.max(y, Math.min(pointer.y, y + height));
-  return dx * dx + dy * dy < pointer.radius * pointer.radius;
-}
-
-/**
  * Get the first on top object that the pointer collides with.
  *
  * @param {Object} pointer - The pointer object
@@ -154,7 +133,7 @@ function getCurrentObject(pointer) {
     let object = renderedObjects[i];
     let collides = object.collidesWithPointer
       ? object.collidesWithPointer(pointer)
-      : circleRectCollision(object, pointer);
+      : circleRectCollision(pointer, object);
 
     if (collides) {
       return object;

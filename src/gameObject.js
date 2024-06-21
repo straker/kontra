@@ -84,14 +84,11 @@ class GameObject extends Updatable {
     // optionals
     // --------------------------------------------------
 
-    // @ifdef GAMEOBJECT_RADIUS
     /**
      * The radius of the game object. Represents the local radius of the object as opposed to the [world](api/gameObject#world) radius.
      * @memberof GameObject
      * @property {Number} radius
      */
-    radius = 0,
-    // @endif
 
     // @ifdef GAMEOBJECT_GROUP
     /**
@@ -228,10 +225,6 @@ class GameObject extends Updatable {
       height,
       context,
 
-      // @ifdef GAMEOBJECT_RADIUS
-      radius,
-      // @endif
-
       // @ifdef GAMEOBJECT_ANCHOR
       anchor,
       // @endif
@@ -337,9 +330,11 @@ class GameObject extends Updatable {
     let height = this.height;
 
     // @ifdef GAMEOBJECT_RADIUS
-    let diameter = this.radius * 2;
-    width ||= diameter;
-    height ||= diameter;
+    if (this.radius) {
+      let diameter = this.radius * 2;
+      width ||= diameter;
+      height ||= diameter;
+    }
     // @endif
 
     let anchorX = -width * this.anchor.x;
@@ -508,8 +503,10 @@ class GameObject extends Updatable {
 
     // @ifdef GAMEOBJECT_RADIUS
     // wrx = world radius x, wry = world radius y
-    this._wrx = this.radius;
-    this._wry = this.radius;
+    if (this.radius) {
+      this._wrx = this.radius;
+      this._wry = this.radius;
+    }
     // @endif
 
     // @ifdef GAMEOBJECT_OPACITY
@@ -528,8 +525,10 @@ class GameObject extends Updatable {
     this._wh = this.height * this._wsy;
 
     // @ifdef GAMEOBJECT_RADIUS
-    this._wrx = this.radius * this._wsx;
-    this._wry = this.radius * this._wsy;
+    if (this.radius) {
+      this._wrx = this.radius * this._wsx;
+      this._wry = this.radius * this._wsy;
+    }
     // @endif
     // @endif
 
@@ -563,7 +562,9 @@ class GameObject extends Updatable {
       height: this._wh,
 
       // @ifdef GAMEOBJECT_RADIUS
-      radius: { x: this._wrx, y: this._wry },
+      radius: this.radius
+        ? { x: this._wrx, y: this._wry }
+        : undefined,
       // @endif
 
       // @ifdef GAMEOBJECT_OPACITY

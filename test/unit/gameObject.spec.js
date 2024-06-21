@@ -182,7 +182,7 @@ describe(
 
       if (testContext.GAMEOBJECT_RADIUS) {
         it('should set default radius', () => {
-          expect(gameObject.radius).to.equal(0);
+          expect(gameObject.radius).to.equal(undefined);
         });
 
         it('should set radius property', () => {
@@ -563,11 +563,16 @@ describe(
       }
 
       if (testContext.GAMEOBJECT_RADIUS) {
-        it('should default radius', () => {
+        it('should have radius', () => {
+          gameObject.radius = 10;
           expect(gameObject.world.radius).to.deep.equal({
-            x: 0,
-            y: 0
+            x: 10,
+            y: 10
           });
+        });
+
+        it('should not have radius if not set', () => {
+          expect(gameObject.world.radius).to.not.exist;
         });
 
         it('should update world radius', () => {

@@ -306,6 +306,101 @@ describe('helpers', () => {
       expect(helpers.collides(sprite1, obj)).to.be.true;
       expect(helpers.collides(obj, sprite1)).to.be.true;
     });
+
+    it('should correctly detect collision between two circles', () => {
+      let sprite1 = Sprite({
+        x: 10,
+        y: 20,
+        radius: 5
+      });
+
+      let sprite2 = Sprite({
+        x: 10,
+        y: 25,
+        radius: 10
+      });
+
+      expect(helpers.collides(sprite1, sprite2)).to.be.true;
+
+      sprite2.x = 19;
+      sprite2.y = 20;
+
+      expect(helpers.collides(sprite1, sprite2)).to.be.true;
+
+      sprite2.x = 1;
+      sprite2.y = 1;
+
+      expect(helpers.collides(sprite1, sprite2)).to.be.true;
+
+      sprite2.x = 20;
+      sprite2.y = 20;
+
+      expect(helpers.collides(sprite1, sprite2)).to.be.false;
+
+      sprite2.x = 0;
+      sprite2.y = 0;
+
+      expect(helpers.collides(sprite1, sprite2)).to.be.false;
+    });
+
+    it('should correctly detect collision between a circle and rectangle', () => {
+      let sprite1 = Sprite({
+        x: 10,
+        y: 20,
+        width: 10,
+        height: 20
+      });
+
+      let sprite2 = Sprite({
+        x: 10,
+        y: 25,
+        radius: 10
+      });
+
+      expect(helpers.collides(sprite1, sprite2)).to.be.true;
+
+      sprite2.x = 19;
+      sprite2.y = 20;
+
+      expect(helpers.collides(sprite2, sprite1)).to.be.true;
+
+      sprite2.x = 1;
+      sprite2.y = 1;
+
+      expect(helpers.collides(sprite1, sprite2)).to.be.true;
+
+      sprite2.x = 20;
+      sprite2.y = 20;
+
+      expect(helpers.collides(sprite1, sprite2)).to.be.false;
+
+      sprite2.x = 0;
+      sprite2.y = 0;
+
+      expect(helpers.collides(sprite2, sprite1)).to.be.false;
+    });
+
+    it('returns false if either object is a circle and not scaled uniformly', () => {
+      let sprite1 = Sprite({
+        x: 10,
+        y: 20,
+        radius: 5,
+        scaleX: 2
+      });
+
+      let sprite2 = Sprite({
+        x: 10,
+        y: 25,
+        radius: 10
+      });
+
+      expect(helpers.collides(sprite1, sprite2)).to.be.false;
+
+      sprite1.scaleY = 1;
+      sprite2.scaleY = 2;
+
+      expect(helpers.collides(sprite1, sprite2)).to.be.false;
+    });
   });
 
   // --------------------------------------------------
@@ -327,21 +422,18 @@ describe('helpers', () => {
       expect(rect.height).to.equal(10);
     });
 
-    it('should take into account negative scale', () => {
+    it('should take into account radius', () => {
       let sprite = Sprite({
         x: 40,
         y: 40,
-        width: 10,
-        height: 20,
-        scaleX: -2,
-        scaleY: -2
+        radius: 5
       });
       let rect = helpers.getWorldRect(sprite);
 
-      expect(rect.x).to.equal(20);
-      expect(rect.y).to.equal(0);
-      expect(rect.width).to.equal(20);
-      expect(rect.height).to.equal(40);
+      expect(rect.x).to.equal(40);
+      expect(rect.y).to.equal(40);
+      expect(rect.width).to.equal(10);
+      expect(rect.height).to.equal(10);
     });
 
     it('should take into account anchor', () => {
@@ -362,6 +454,23 @@ describe('helpers', () => {
 
       expect(rect.x).to.equal(30);
       expect(rect.y).to.equal(30);
+    });
+
+    it('should take into account negative scale', () => {
+      let sprite = Sprite({
+        x: 40,
+        y: 40,
+        width: 10,
+        height: 20,
+        scaleX: -2,
+        scaleY: -2
+      });
+      let rect = helpers.getWorldRect(sprite);
+
+      expect(rect.x).to.equal(20);
+      expect(rect.y).to.equal(0);
+      expect(rect.width).to.equal(20);
+      expect(rect.height).to.equal(40);
     });
 
     it('should use objects world x, y, width, and height', () => {

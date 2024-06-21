@@ -1087,6 +1087,110 @@ describe(
             )
           ).to.be.true;
         });
+
+        it('a tile flipped and turned clockwise', () => {
+          let tileEngine = TileEngine({
+            tilewidth: 10,
+            tileheight: 10,
+            width: 1,
+            height: 1,
+            tilesets: [
+              {
+                firstgid: 1,
+                image: new Image(),
+                columns: 10
+              }
+            ],
+            layers: [
+              {
+                name: 'test',
+                data: [3 + 0x80000000 + 0x40000000 + 0x20000000]
+              }
+            ]
+          });
+
+          let r = tileEngine._r.bind(tileEngine);
+          let ctx;
+          tileEngine._r = function overrideR(layer, context) {
+            ctx = context;
+            sinon.stub(context, 'drawImage').callsFake(noop);
+            sinon.stub(context, 'translate').callsFake(noop);
+            sinon.stub(context, 'scale').callsFake(noop);
+            sinon.stub(context, 'rotate').callsFake(noop);
+            r(layer, context);
+          };
+
+          tileEngine.renderLayer('test');
+
+          expect(ctx.translate.calledWith(5, 5)).to.be.true;
+          expect(ctx.rotate.calledWith(Math.PI / 2)).to.be.true;
+          expect(ctx.scale.calledWith(-1, 1)).to.be.true;
+          expect(
+            ctx.drawImage.calledWith(
+              tileEngine.tilesets[0].image,
+              20,
+              0,
+              10,
+              10,
+              -5,
+              -5,
+              10,
+              10
+            )
+          ).to.be.true;
+        });
+
+        it('a tile flipped and turned anticlockwise', () => {
+          let tileEngine = TileEngine({
+            tilewidth: 10,
+            tileheight: 10,
+            width: 1,
+            height: 1,
+            tilesets: [
+              {
+                firstgid: 1,
+                image: new Image(),
+                columns: 10
+              }
+            ],
+            layers: [
+              {
+                name: 'test',
+                data: [3 + 0x20000000]
+              }
+            ]
+          });
+
+          let r = tileEngine._r.bind(tileEngine);
+          let ctx;
+          tileEngine._r = function overrideR(layer, context) {
+            ctx = context;
+            sinon.stub(context, 'drawImage').callsFake(noop);
+            sinon.stub(context, 'translate').callsFake(noop);
+            sinon.stub(context, 'scale').callsFake(noop);
+            sinon.stub(context, 'rotate').callsFake(noop);
+            r(layer, context);
+          };
+
+          tileEngine.renderLayer('test');
+
+          expect(ctx.translate.calledWith(5, 5)).to.be.true;
+          expect(ctx.rotate.calledWith(-Math.PI / 2)).to.be.true;
+          expect(ctx.scale.calledWith(-1, 1)).to.be.true;
+          expect(
+            ctx.drawImage.calledWith(
+              tileEngine.tilesets[0].image,
+              20,
+              0,
+              10,
+              10,
+              -5,
+              -5,
+              10,
+              10
+            )
+          ).to.be.true;
+        });
       } else {
         it('does not rotate tile', () => {
           let tileEngine = TileEngine({

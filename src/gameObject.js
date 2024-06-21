@@ -15,7 +15,7 @@ import { noop, removeFromArray } from './utils.js';
  * @param {Number} [properties.y] - Y coordinate of the position vector.
  * @param {Number} [properties.width] - Width of the game object.
  * @param {Number} [properties.height] - Height of the game object.
- * @param {Number} [properties.radius] - Radius of the game object.
+ * @param {Number} [properties.radius] - Radius of the game object. **Note:** radius is mutually exclusive with `width` and `height` as the GameObject will always use `radius` over `width` and `height` for any logic.
  *
  * @param {CanvasRenderingContext2D} [properties.context] - The context the game object should draw to. Defaults to [core.getContext()](api/core#getContext).
  *
@@ -331,9 +331,7 @@ class GameObject extends Updatable {
 
     // @ifdef GAMEOBJECT_RADIUS
     if (this.radius) {
-      let diameter = this.radius * 2;
-      width ||= diameter;
-      height ||= diameter;
+      width = height = this.radius * 2;
     }
     // @endif
 

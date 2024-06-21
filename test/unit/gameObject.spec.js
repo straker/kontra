@@ -400,9 +400,7 @@ describe(
 
             gameObject.render();
 
-            expect(
-              gameObject.context.translate.firstCall.calledWith(0, 0)
-            ).to.be.true;
+            expect(gameObject.context.translate.called).to.be.false;
           });
         }
 

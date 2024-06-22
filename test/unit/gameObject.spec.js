@@ -9,6 +9,7 @@ let testContext = {
   GAMEOBJECT_ANCHOR: true,
   GAMEOBJECT_GROUP: true,
   GAMEOBJECT_OPACITY: true,
+  GAMEOBJECT_RADIUS: true,
   GAMEOBJECT_ROTATION: true,
   GAMEOBJECT_SCALE: true,
   GAMEOBJECT_VELOCITY: true,
@@ -179,6 +180,22 @@ describe(
         });
       }
 
+      if (testContext.GAMEOBJECT_RADIUS) {
+        it('should set default radius', () => {
+          expect(gameObject.radius).to.equal(undefined);
+        });
+
+        it('should set radius property', () => {
+          gameObject = GameObject({ radius: 0.5 });
+
+          expect(gameObject.radius).to.equal(0.5);
+        });
+      } else {
+        it('should not default radius', () => {
+          expect(gameObject.radius).to.not.exist;
+        });
+      }
+
       if (testContext.GAMEOBJECT_ROTATION) {
         it('should set default rotation', () => {
           expect(gameObject.rotation).to.equal(0);
@@ -341,7 +358,7 @@ describe(
       }
 
       if (testContext.GAMEOBJECT_ANCHOR) {
-        it('should translate to the anchor position', () => {
+        it('should translate to the anchor position (square)', () => {
           gameObject.anchor = { x: 0.5, y: 0.5 };
           gameObject.width = 20;
           gameObject.height = 30;
@@ -357,6 +374,35 @@ describe(
             )
           ).to.be.true;
         });
+
+        if (testContext.GAMEOBJECT_RADIUS) {
+          it('should translate to the anchor position (circle)', () => {
+            gameObject.anchor = { x: 0.5, y: 0.5 };
+            gameObject.radius = 10;
+
+            sinon.stub(gameObject.context, 'translate');
+
+            gameObject.render();
+
+            expect(
+              gameObject.context.translate.firstCall.calledWith(
+                -10,
+                -10
+              )
+            ).to.be.true;
+          });
+        } else {
+          it('should not translate to the anchor position (circle)', () => {
+            gameObject.anchor = { x: 0.5, y: 0.5 };
+            gameObject.radius = 10;
+
+            sinon.stub(gameObject.context, 'translate');
+
+            gameObject.render();
+
+            expect(gameObject.context.translate.called).to.be.false;
+          });
+        }
 
         it('should not translate if the anchor position is {0, 0}', () => {
           sinon.stub(gameObject.context, 'translate');
@@ -514,6 +560,33 @@ describe(
         });
       }
 
+      if (testContext.GAMEOBJECT_RADIUS) {
+        it('should have radius', () => {
+          gameObject.radius = 10;
+          expect(gameObject.world.radius).to.deep.equal({
+            x: 10,
+            y: 10
+          });
+        });
+
+        it('should not have radius if not set', () => {
+          expect(gameObject.world.radius).to.not.exist;
+        });
+
+        it('should update world radius', () => {
+          gameObject.radius = 0.5;
+
+          expect(gameObject.world.radius).to.deep.equal({
+            x: 0.5,
+            y: 0.5
+          });
+        });
+      } else {
+        it('should not have radius', () => {
+          expect(gameObject.world.radius).to.not.exist;
+        });
+      }
+
       if (testContext.GAMEOBJECT_ROTATION) {
         it('should default rotation', () => {
           expect(gameObject.world.rotation).to.equal(0);
@@ -554,6 +627,19 @@ describe(
           expect(gameObject.world.width).to.equal(20);
           expect(gameObject.world.height).to.equal(40);
         });
+
+        if (testContext.GAMEOBJECT_RADIUS) {
+          it('should update radius based on scale', () => {
+            gameObject.radius = 10;
+            gameObject.scaleX = 2;
+            gameObject.scaleY = 3;
+
+            expect(gameObject.world.radius).to.deep.equal({
+              x: 20,
+              y: 30
+            });
+          });
+        }
       } else {
         it('should not have scale', () => {
           expect(gameObject.world.scaleX).to.not.exist;
@@ -655,6 +741,25 @@ describe(
             expect(gameObject.world.width).to.equal(60);
             expect(gameObject.world.height).to.equal(120);
           });
+
+          if (testContext.GAMEOBJECT_RADIUS) {
+            it('should update radius based on all scales', () => {
+              GameObject({
+                scaleX: 2,
+                scaleY: 2,
+                children: [gameObject]
+              });
+
+              gameObject.radius = 10;
+              gameObject.scaleX = 3;
+              gameObject.scaleY = 4;
+
+              expect(gameObject.world.radius).to.deep.equal({
+                x: 60,
+                y: 80
+              });
+            });
+          }
         }
 
         if (

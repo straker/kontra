@@ -185,6 +185,22 @@ class Sprite extends GameObjectClass {
 
     if (this.color) {
       this.context.fillStyle = this.color;
+
+      // @ifdef GAMEOBJECT_RADIUS
+      if (this.radius) {
+        this.context.beginPath();
+        this.context.arc(
+          this.radius,
+          this.radius,
+          this.radius,
+          0,
+          Math.PI * 2
+        );
+        this.context.fill();
+        return;
+      }
+      // @endif
+
       this.context.fillRect(0, 0, this.width, this.height);
     }
   }

@@ -10,6 +10,9 @@ import { removeFromArray } from './utils.js';
 // @see https://doc.mapeditor.org/en/stable/reference/global-tile-ids/
 let FLIPPED_HORIZONTALLY = 0x80000000;
 let FLIPPED_VERTICALLY = 0x40000000;
+// tile can be rotated also and use the bit 30 in conjunction
+// with bit 32 or/and 31 to denote that
+let FLIPPED_DIAGONALLY = 0x20000000;
 // @endif
 
 /**
@@ -638,14 +641,41 @@ class TileEngine {
       if (!tile) return;
 
       let flipped = 0;
+      let rotated = 0;
 
       // @ifdef TILEENGINE_TILED
       // read flags
       let flippedHorizontal = tile & FLIPPED_HORIZONTALLY;
       let flippedVertical = tile & FLIPPED_VERTICALLY;
+      let turnedClockwise = 0;
+      let turnedAntiClockwise = 0;
+      let flippedAndturnedClockwise = 0;
+      let flippedAndturnedAntiClockwise = 0;
+      let flippedDiagonally = 0;
       flipped = flippedHorizontal || flippedVertical;
 
       tile &= ~(FLIPPED_HORIZONTALLY | FLIPPED_VERTICALLY);
+
+      flippedDiagonally = tile & FLIPPED_DIAGONALLY;
+      // Identify tile rotation
+      if (flippedDiagonally) {
+        if (flippedHorizontal && flippedVertical) {
+          flippedAndturnedClockwise = 1;
+        } else if (flippedHorizontal) {
+          turnedClockwise = 1;
+        } else if (flippedVertical) {
+          turnedAntiClockwise = 1;
+        } else {
+          flippedAndturnedAntiClockwise = 1;
+        }
+        rotated =
+          turnedClockwise ||
+          turnedAntiClockwise ||
+          flippedAndturnedClockwise ||
+          flippedAndturnedAntiClockwise;
+
+        tile &= ~FLIPPED_DIAGONALLY;
+      }
       // @endif
 
       // find the tileset the tile belongs to
@@ -669,7 +699,27 @@ class TileEngine {
       let sy = ((offset / cols) | 0) * (tileheight + margin);
 
       // @ifdef TILEENGINE_TILED
-      if (flipped) {
+      if (rotated) {
+        context.save();
+        // Translate to the center of the tile
+        context.translate(x + tilewidth / 2, y + tileheight / 2);
+        if (turnedAntiClockwise || flippedAndturnedAntiClockwise) {
+          // Rotate 90° anticlockwise
+          context.rotate(-Math.PI / 2); // 90° in radians
+        } else if (turnedClockwise || flippedAndturnedClockwise) {
+          // Rotate 90° clockwise
+          context.rotate(Math.PI / 2); // 90° in radians
+        }
+        if (
+          flippedAndturnedClockwise ||
+          flippedAndturnedAntiClockwise
+        ) {
+          // Then flip horizontally
+          context.scale(-1, 1);
+        }
+        x = -tilewidth / 2;
+        y = -tileheight / 2;
+      } else if (flipped) {
         context.save();
         context.translate(
           x + (flippedHorizontal ? tilewidth : 0),
@@ -679,6 +729,8 @@ class TileEngine {
           flippedHorizontal ? -1 : 1,
           flippedVertical ? -1 : 1
         );
+        x = flipped ? 0 : x;
+        y = flipped ? 0 : y;
       }
       // @endif
 
@@ -688,14 +740,14 @@ class TileEngine {
         sy,
         tilewidth,
         tileheight,
-        flipped ? 0 : x,
-        flipped ? 0 : y,
+        x,
+        y,
         tilewidth,
         tileheight
       );
 
       // @ifdef TILEENGINE_TILED
-      if (flipped) {
+      if (flipped || rotated) {
         context.restore();
       }
       // @endif

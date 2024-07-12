@@ -38,7 +38,12 @@ import { getContext } from './core.js';
  */
 class Animation {
   constructor({ spriteSheet, frames, frameRate, loop = true, name }) {
-    let { width, height, margin = 0 } = spriteSheet.frame;
+    let {
+      width,
+      height,
+      spacing = 0,
+      margin = 0
+    } = spriteSheet.frame;
 
     Object.assign(this, {
       /**
@@ -91,7 +96,14 @@ class Animation {
       height,
 
       /**
-       * The space between each frame. Taken from the [frame margin value](api/spriteSheet#frame) of the sprite sheet.
+       * The space between each frame. Taken from the [frame spacing value](api/spriteSheet#frame) of the sprite sheet.
+       * @memberof Animation
+       * @property {Number} spacing
+       */
+      spacing,
+
+      /**
+       * The border space around the sprite sheet image. Taken from the [frame margin value](api/spriteSheet#frame) of the sprite sheet.
        * @memberof Animation
        * @property {Number} margin
        */
@@ -222,8 +234,8 @@ class Animation {
 
     context.drawImage(
       this.spriteSheet.image,
-      col * this.width + (col * 2 + 1) * this.margin,
-      row * this.height + (row * 2 + 1) * this.margin,
+      this.margin + col * this.width + (col * 2 + 1) * this.spacing,
+      this.margin + row * this.height + (row * 2 + 1) * this.spacing,
       this.width,
       this.height,
       x,

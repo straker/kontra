@@ -62,7 +62,8 @@ function getCol(x, tilewidth) {
  * @param {Object[]} properties.tilesets - Array of tileset objects.
  * @param {Number} properties.<tilesetN>.firstgid - First tile index of the tileset. The first tileset will have a firstgid of 1 as 0 represents an empty tile.
  * @param {String|HTMLImageElement} properties.<tilesetN>.image - Relative path to the HTMLImageElement or an HTMLImageElement. If passing a relative path, the image file must have been [loaded](api/assets#load) first.
- * @param {Number} [properties.<tilesetN>.margin=0] - The amount of whitespace between each tile (in pixels).
+ * @param {Number} [properties.<tilesetN>.spacing=0] - The amount of whitespace between each tile (in pixels).
+ * @param {Number} [properties.<tilesetN>.margin=0] - The amount of whitespace border around the entire tileset image (in pixels).
  * @param {Number} [properties.<tilesetN>.tilewidth] - Width of the tileset (in pixels). Defaults to properties.tilewidth.
  * @param {Number} [properties.<tilesetN>.tileheight] - Height of the tileset (in pixels). Defaults to properties.tileheight.
  * @param {String} [properties.<tilesetN>.source] - Relative path to the source JSON file. The source JSON file must have been [loaded](api/assets#load) first.
@@ -689,14 +690,22 @@ class TileEngine {
         }
       }
 
-      let { image, margin = 0, firstgid, columns } = tileset;
+      let {
+        image,
+        spacing = 0,
+        margin = 0,
+        firstgid,
+        columns
+      } = tileset;
+
       let offset = tile - firstgid;
-      let cols = columns ?? (image.width / (tilewidth + margin)) | 0;
+      let cols = columns ?? (image.width / (tilewidth + spacing)) | 0;
 
       let x = (index % width) * tilewidth;
       let y = ((index / width) | 0) * tileheight;
-      let sx = (offset % cols) * (tilewidth + margin);
-      let sy = ((offset / cols) | 0) * (tileheight + margin);
+      let sx = margin + (offset % cols) * (tilewidth + spacing);
+      let sy =
+        margin + ((offset / cols) | 0) * (tileheight + spacing);
 
       // @ifdef TILEENGINE_TILED
       if (rotated) {

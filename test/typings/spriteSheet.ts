@@ -22,7 +22,8 @@ kontra.SpriteSheet({
   image: new Image(),
   frameWidth: 32,
   frameHeight: 32,
-  frameMargin: 32,
+  margin: 32,
+  spacing: 2,
   animations: {
     walk: {
       frames: 1,

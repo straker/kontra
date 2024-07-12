@@ -36,7 +36,7 @@ describe('spriteSheet', () => {
       expect(spriteSheet.frame.height).to.equal(10);
       expect(spriteSheet.frame.margin).to.equal(10);
       expect(spriteSheet.frame.spacing).to.equal(20);
-      expect(spriteSheet._f).to.equal(10);
+      expect(spriteSheet._f).to.equal(9);
     });
 
     it('should create animations if passed an animation object', () => {

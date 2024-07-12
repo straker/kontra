@@ -18,7 +18,8 @@ describe('animation', () => {
         frame: {
           width: 5,
           height: 5,
-          margin: 0
+          margin: 0,
+          spacing: 0
         }
       }
     });
@@ -40,6 +41,7 @@ describe('animation', () => {
       expect(animation.height).to.equal(5);
       expect(animation.loop).to.equal(true);
       expect(animation.margin).to.equal(0);
+      expect(animation.spacing).to.equal(0);
       expect(animation.isStopped).to.equal(false);
     });
   });
@@ -230,6 +232,91 @@ describe('animation', () => {
           animation.spriteSheet.image,
           5,
           5,
+          5,
+          5,
+          10,
+          10,
+          5,
+          5
+        )
+      ).to.be.true;
+    });
+
+    it('should render the spriteSheet with spacing', () => {
+      let context = { drawImage: sinon.stub() };
+
+      animation._f = 2;
+      animation.spacing = 1;
+
+      animation.render({
+        x: 10,
+        y: 10,
+        context
+      });
+
+      expect(context.drawImage.called).to.be.true;
+      expect(
+        context.drawImage.calledWith(
+          animation.spriteSheet.image,
+          8,
+          8,
+          5,
+          5,
+          10,
+          10,
+          5,
+          5
+        )
+      ).to.be.true;
+    });
+
+    it('should render the spriteSheet with margin', () => {
+      let context = { drawImage: sinon.stub() };
+
+      animation._f = 2;
+      animation.margin = 5;
+
+      animation.render({
+        x: 10,
+        y: 10,
+        context
+      });
+
+      expect(context.drawImage.called).to.be.true;
+      expect(
+        context.drawImage.calledWith(
+          animation.spriteSheet.image,
+          10,
+          10,
+          5,
+          5,
+          10,
+          10,
+          5,
+          5
+        )
+      ).to.be.true;
+    });
+
+    it('should render the spriteSheet with spacing and margin', () => {
+      let context = { drawImage: sinon.stub() };
+
+      animation._f = 2;
+      animation.spacing = 1;
+      animation.margin = 5;
+
+      animation.render({
+        x: 10,
+        y: 10,
+        context
+      });
+
+      expect(context.drawImage.called).to.be.true;
+      expect(
+        context.drawImage.calledWith(
+          animation.spriteSheet.image,
+          13,
+          13,
           5,
           5,
           10,

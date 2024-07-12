@@ -85,7 +85,8 @@ function parseFrames(consecutiveFrames) {
  * @param {HTMLImageElement|HTMLCanvasElement} properties.image - The sprite sheet image.
  * @param {Number} properties.frameWidth - The width of a single frame.
  * @param {Number} properties.frameHeight - The height of a single frame.
- * @param {Number} [properties.frameMargin=0] - The amount of whitespace between each frame.
+ * @param {Number} [properties.spacing=0] - The amount of whitespace between each frame.
+ * @param {Number} [properties.margin=0] - The amount of whitespace border around the entire image.
  * @param {Object} [properties.animations] - Animations to create from the sprite sheet using [Animation](api/animation). Passed directly into the sprite sheets [createAnimations()](api/spriteSheet#createAnimations) function.
  */
 class SpriteSheet {
@@ -93,7 +94,8 @@ class SpriteSheet {
     image,
     frameWidth,
     frameHeight,
-    frameMargin,
+    spacing,
+    margin,
     animations
   } = {}) {
     // @ifdef DEBUG
@@ -117,20 +119,21 @@ class SpriteSheet {
     this.image = image;
 
     /**
-     * An object that defines properties of a single frame in the sprite sheet. It has properties of `width`, `height`, and `margin`.
+     * An object that defines properties of a single frame in the sprite sheet. It has properties of `width`, `height`, `spacing`, and `margin`.
      *
-     * `width` and `height` are the width of a single frame, while `margin` defines the amount of whitespace between each frame.
+     * `width` and `height` are the width of a single frame, while `spacing` defines the amount of whitespace between each frame, and `margin` defines the amount of whitespace border around the image.
      * @memberof SpriteSheet
-     * @property {{width: Number, height: Number, margin: Number}} frame
+     * @property {{width: Number, height: Number, spacing: Number, margin: Number}} frame
      */
     this.frame = {
       width: frameWidth,
       height: frameHeight,
-      margin: frameMargin
+      spacing,
+      margin
     };
 
     // f = framesPerRow
-    this._f = (image.width / frameWidth) | 0;
+    this._f = ((image.width - margin) / frameWidth) | 0;
 
     this.createAnimations(animations);
   }

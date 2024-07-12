@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Animation Sprite</title>
+  <script src="../../kontra.js"></script>
+</head>
+<body>
+  <canvas id="game" width="600" height="400" style="background: #333331"></canvas>
+  <script id="code">
+    // initialize the game and setup the canvas
+    let { canvas, context } = kontra.init();
+
+    // set image path so we don't have to reference the sprite sheet by it's path
+    kontra.setImagePath('../imgs/');
+
+    // load the sprite sheet
+    kontra.load('oldHero.png').then(function() {
+
+      // create the sprite sheet and its animation
+      window.spriteSheet = kontra.SpriteSheet({
+        image: kontra.imageAssets.oldHero,
+        frameWidth: 16,
+        frameHeight: 16,
+        margin: 16,
+        animations: {
+          swim: {
+            frames: '21..26',  // frames 21 through 26
+            frameRate: 2
+          }
+        }
+      });
+
+      // pass the animations to the sprite
+      window.sprite = kontra.Sprite({
+        width: 16,
+        height: 16,
+        anchor: {
+          x: 0.5,
+          y: 0.5,
+        },
+        x: 300,
+        y: 200,
+        animations: spriteSheet.animations
+      });
+
+      // set the animation to play
+      sprite.playAnimation('swim');
+
+      // create the game loop to update and render the sprite
+      window.loop = kontra.GameLoop({
+        update: function() {
+          sprite.update();
+        },
+        render: function() {
+          sprite.render();
+        }
+      });
+
+      // start the loop
+      loop.start();
+    });
+  </script>
+  <script src="../prism/codeOutput.js"></script>
+</body>
+</html>

@@ -136,6 +136,21 @@ describe('button', () => {
       expect(button.context.canvas.nextSibling).to.equal(button._dn);
     });
 
+    it('should add the node to a container', () => {
+      const container = document.createElement('div');
+      button.destroy();
+      button = Button({
+        width: 150,
+        text: {
+          text: 'Hello',
+          width: 100
+        },
+        container
+      });
+
+      expect(container.contains(button.node)).to.be.true;
+    });
+
     it('should hide the DOM node', () => {
       let styles = srOnlyStyle
         .split(';')

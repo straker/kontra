@@ -13,6 +13,7 @@ import { srOnlyStyle, focusParams, noop, addToDom } from './utils.js';
  * @param {Boolean} [properties.disabled] - Whether the button is disabled when created.
  * @param {Number} [properties.padX=0] - The horizontal padding.
  * @param {Number} [properties.padY=0] - The vertical padding.
+ * @param {HTMLElement} [properties.container] - The HTMLElement that the HTMLButtonElement will be appended to.
  * @param {Function} [properties.onEnable] - Function called when the button is enabled.
  * @param {Function} [properties.onDisable] - Function called when the button is disabled.
  * @param {Function} [properties.onFocus] - Function called when the button is focused by the keyboard.
@@ -40,6 +41,7 @@ class Button extends SpriteClass {
 
     text,
     disabled = false,
+    container,
     onDown,
     onUp,
     ...props
@@ -94,7 +96,7 @@ class Button extends SpriteClass {
     button.addEventListener('keydown', evt => this._kd(evt));
     button.addEventListener('keyup', evt => this._ku(evt));
 
-    addToDom(button, this.context.canvas);
+    addToDom(button, container ?? this.context.canvas);
 
     this._uw();
     this._p();

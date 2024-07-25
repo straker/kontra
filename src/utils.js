@@ -24,8 +24,10 @@ export function addToDom(node, canvas) {
         ...container.querySelectorAll(':scope > [data-kontra]')
       ].pop() || canvas;
     target.after(node);
-  } else {
+  } else if (canvas.nodeName == 'CANVAS') {
     document.body.append(node);
+  } else {
+    canvas.append(node);
   }
 }
 

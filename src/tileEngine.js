@@ -313,6 +313,34 @@ class TileEngine {
 
   /**
    * Get the tile position of a pointer event.
+   *
+   * ```js
+   * import { initPointer, track, TileEngine } from 'kontra';
+   *
+   * initPointer();
+   * let tileEngine = TileEngine({
+   *   tilewidth: 32,
+   *   tileheight: 32,
+   *   width: 4,
+   *   height: 4,
+   *   tilesets: [{
+   *     // ...
+   *   }],
+   *   layers: [{
+   *     name: 'collision',
+   *     data: [ 0,0,0,0,
+   *             0,1,4,0,
+   *             0,2,5,0,
+   *             0,0,0,0 ]
+   *   }],
+   *   onDown(evt) {
+   *     // row and col is the tile position that was clicked
+   *     let { row, col } = this.getPosition(evt);
+   *   }
+   * });
+   *
+   * track(tileEngine);
+   * ```
    * @memberof TileEngine
    * @function getPosition
    *

@@ -311,6 +311,31 @@ class TileEngine {
   }
   // @endif
 
+  /**
+   * Get the tile position of a pointer event.
+   * @memberof TileEngine
+   * @function getPosition
+   *
+   * @returns {{x: Number, y: Number, row: Number, col: Number}} The `x`, `y`, `row`, and `col` of the pointer event within the tile engine.
+   */
+  getPosition(evt) {
+    let rect = getCanvas().getBoundingClientRect();
+    let x = evt.x - rect.x;
+    let y = evt.y - rect.y;
+
+    // @ifdef TILEENGINE_CAMERA
+    x += this.sx;
+    y += this.sy;
+    // @endif
+
+    return {
+      x,
+      y,
+      row: getRow(y, this.tileheight),
+      col: getCol(x, this.tilewidth)
+    };
+  }
+
   // @ifdef TILEENGINE_DYNAMIC
   /**
    * Set the tile at the specified layer using either x and y coordinates or row and column coordinates.
@@ -590,14 +615,14 @@ class TileEngine {
       canvas.height = mapheight;
 
       layerCanvases[name] = canvas;
-      this._r(layer, context);
+      this._rl(layer, context);
     }
 
     // @ifdef TILEENGINE_DYNAMIC
     if (layer._d) {
       layer._d = false;
       context.clearRect(0, 0, canvas.width, canvas.height);
-      this._r(layer, context);
+      this._rl(layer, context);
     }
     // @endif
 
@@ -619,7 +644,7 @@ class TileEngine {
       layerMap[name] = layer;
 
       if (data && visible != false) {
-        this._r(layer, _ctx);
+        this._rl(layer, _ctx);
       }
     });
   }
@@ -630,7 +655,7 @@ class TileEngine {
    * @param {Object} layer - Layer data.
    * @param {Context} context - Context to draw layer to.
    */
-  _r(layer, context) {
+  _rl(layer, context) {
     let { opacity, data = [] } = layer;
     let { tilesets, width, tilewidth, tileheight } = this;
 

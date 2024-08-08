@@ -1,5 +1,10 @@
 import TileEngine, { TileEngineClass } from '../../src/tileEngine.js';
-import { _reset, init, getContext } from '../../src/core.js';
+import {
+  _reset,
+  init,
+  getContext,
+  getCanvas
+} from '../../src/core.js';
 import { noop } from '../../src/utils.js';
 
 // test-context:start
@@ -1555,8 +1560,14 @@ describe(
     // tileEngine.getPosition
     // --------------------------------------------------
     describe('getPosition', () => {
-      let tileEngine;
+      let tileEngine,
+       canvas;
       beforeEach(() => {
+        canvas = getCanvas();
+        canvas.style.position = 'absolute';
+        canvas.style.left = '0px';
+        canvas.style.top = '0px';
+
         tileEngine = TileEngine({
           tilewidth: 10,
           tileheight: 10,
@@ -1588,9 +1599,8 @@ describe(
       });
 
       it('should take into account canvas position', () => {
-        tileEngine.context.canvas.style.position = 'absolute';
-        tileEngine.context.canvas.style.left = '100px';
-        tileEngine.context.canvas.style.top = '50px';
+        canvas.style.left = '100px';
+        canvas.style.top = '50px';
         let position = tileEngine.getPosition({ x: 100, y: 100 });
 
         expect(position).to.deep.equal({

@@ -1587,6 +1587,19 @@ describe(
         });
       });
 
+      it('should take into account canvas position', () => {
+        tileEngine.context.canvas.style.position = 'absolute';
+        tileEngine.context.canvas.style.left = '100px';
+        let position = tileEngine.getPosition({ x: 100, y: 100 });
+
+        expect(position).to.deep.equal({
+          x: 0,
+          y: 100,
+          row: 10,
+          col: 0
+        });
+      });
+
       if (testContext.TILEENGINE_CAMERA) {
         it('should take into account camera', () => {
           tileEngine.sx = 50;

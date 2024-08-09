@@ -27,5 +27,3 @@ When you become a Patron, you get access to behind the scenes development logs, 
 
 - Karar Al-Remahy
 - UnbrandedTech
-- Innkeeper Games
-- Nezteb

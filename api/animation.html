@@ -173,6 +173,12 @@
                 <a href="api/quadtree" >Quadtree</a>
               </li>
               <li>
+                <div aria-hidden="true" class="cached-icon" id="link-random">
+                  <span class="visually-hidden">Cached for offline viewing</span>
+                </div>
+                <a href="api/random" >Random</a>
+              </li>
+              <li>
                 <div aria-hidden="true" class="cached-icon" id="link-scene">
                   <span class="visually-hidden">Cached for offline viewing</span>
                 </div>
@@ -394,6 +400,11 @@ image.onload = function() {
                   </a>
                 </li>
                 <li>
+                  <a href="api/animation#spacing">
+                    <span>Animation&#8203;.spacing</span>
+                  </a>
+                </li>
+                <li>
                   <a href="api/animation#spriteSheet">
                     <span>Animation&#8203;.spriteSheet</span>
                   </a>
@@ -467,7 +478,7 @@ image.onload = function() {
             </a>
           </h2>
 
-          <p><em>Number</em>. umber of frames to display per second. Adjusting this value will change the speed of the animation.</p>
+          <p><em>Number</em>. Number of frames to display per second. Adjusting this value will change the speed of the animation.</p>
           
         </section>
         <section>
@@ -478,7 +489,7 @@ image.onload = function() {
             </a>
           </h2>
 
-          <p><em>An Array of Numbers</em>. equence of frames to use from the sprite sheet.</p>
+          <p><em>An Array of Numbers</em>. Sequence of frames to use from the sprite sheet.</p>
           
         </section>
         <section>
@@ -489,7 +500,7 @@ image.onload = function() {
             </a>
           </h2>
 
-          <p><em>Number</em>. he height of an individual frame. Taken from the <a href="api/spriteSheet#frame">frame height value</a> of the sprite sheet.</p>
+          <p><em>Number</em>. The height of an individual frame. Taken from the <a href="api/spriteSheet#frame">frame height value</a> of the sprite sheet.</p>
           
         </section>
         <section>
@@ -500,7 +511,7 @@ image.onload = function() {
             </a>
           </h2>
 
-          <p><em>Boolean</em>. f the animation is currently stopped. Stopped animations will not update when the <a href="api/animation#update">update()</a> function is called.</p>
+          <p><em>Boolean</em>. If the animation is currently stopped. Stopped animations will not update when the <a href="api/animation#update">update()</a> function is called.</p>
 <p>Animations are not considered stopped until either the <a href="api/animation#stop">stop()</a> function is called or the animation gets to the last frame and does not loop.</p>
 <div class="tablist">
   <ul role="tablist">
@@ -565,7 +576,7 @@ console.log(animation.isStopped);  //=&gt; true
             </a>
           </h2>
 
-          <p><em>Boolean</em>. f the animation should loop back to the beginning once completed.</p>
+          <p><em>Boolean</em>. If the animation should loop back to the beginning once completed.</p>
           
         </section>
         <section>
@@ -576,7 +587,7 @@ console.log(animation.isStopped);  //=&gt; true
             </a>
           </h2>
 
-          <p><em>Number</em>. he space between each frame. Taken from the <a href="api/spriteSheet#frame">frame margin value</a> of the sprite sheet.</p>
+          <p><em>Number</em>. The border space around the sprite sheet image. Taken from the <a href="api/spriteSheet#frame">frame margin value</a> of the sprite sheet.</p>
           
         </section>
         <section>
@@ -587,7 +598,7 @@ console.log(animation.isStopped);  //=&gt; true
             </a>
           </h2>
 
-          <p><em>String</em>. he name of the animation.</p>
+          <p><em>String</em>. The name of the animation.</p>
           
         </section>
         <section>
@@ -652,6 +663,17 @@ console.log(animation.isStopped);  //=&gt; true
           
         </section>
         <section>
+          <h2 id="spacing">
+            <a href="api/animation#spacing" class="section-link">
+              <span>Animation&#8203;.spacing</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
+
+          <p><em>Number</em>. The space between each frame. Taken from the <a href="api/spriteSheet#frame">frame spacing value</a> of the sprite sheet.</p>
+          
+        </section>
+        <section>
           <h2 id="spriteSheet">
             <a href="api/animation#spriteSheet" class="section-link">
               <span>Animation&#8203;.spriteSheet</span>
@@ -659,7 +681,7 @@ console.log(animation.isStopped);  //=&gt; true
             </a>
           </h2>
 
-          <p><em><a href="api/spriteSheet">SpriteSheet</a></em>. he sprite sheet to use for the animation.</p>
+          <p><em><a href="api/spriteSheet">SpriteSheet</a></em>. The sprite sheet to use for the animation.</p>
           
         </section>
         <section>
@@ -712,7 +734,7 @@ console.log(animation.isStopped);  //=&gt; true
             </a>
           </h2>
 
-          <p><em>Number</em>. he width of an individual frame. Taken from the <a href="api/spriteSheet#frame">frame width value</a> of the sprite sheet.</p>
+          <p><em>Number</em>. The width of an individual frame. Taken from the <a href="api/spriteSheet#frame">frame width value</a> of the sprite sheet.</p>
           
         </section>
 

@@ -173,6 +173,12 @@
                 <a href="api/quadtree" >Quadtree</a>
               </li>
               <li>
+                <div aria-hidden="true" class="cached-icon" id="link-random">
+                  <span class="visually-hidden">Cached for offline viewing</span>
+                </div>
+                <a href="api/random" >Random</a>
+              </li>
+              <li>
                 <div aria-hidden="true" class="cached-icon" id="link-scene">
                   <span class="visually-hidden">Cached for offline viewing</span>
                 </div>
@@ -235,7 +241,7 @@
         <h1>Gamepad        </h1>
 
         <p>A simple gamepad API. You can use it move the main sprite or respond to gamepad events.</p>
-<p><strong>NOTE:</strong> Gamepad support requires using a secure context (HTTPS) and the <a href="/api/gameLoop">GameLoop</a> (since the gamepad state must be checked every frame as there are no global event listeners for gamepad button / axes events).</p>
+<p><strong>NOTE:</strong> Gamepad support requires using a secure context (HTTPS) and the <a href="api/gameLoop">GameLoop</a> (since the gamepad state must be checked every frame as there are no global event listeners for gamepad button / axes events).</p>
 <div class="tablist">
   <ul role="tablist">
     <li role="presentation" data-tab="global">
@@ -530,7 +536,7 @@ let sprite = Sprite({
             </a>
           </h2>
 
-          <p><em>Object</em>.  map of Gamepad button indices to button names. Modify this object to expand the list of <a href="api/gamepad#available-buttons">available buttons</a>. By default, the map uses the Xbox and PS4 controller button indicies.</p>
+          <p><em>Object</em>. A map of Gamepad button indices to button names. Modify this object to expand the list of <a href="api/gamepad#available-buttons">available buttons</a>. By default, the map uses the Xbox and PS4 controller button indicies.</p>
 <div class="tablist">
   <ul role="tablist">
     <li role="presentation" data-tab="global">
@@ -897,7 +903,7 @@ onGamepad(&#39;south&#39;, function() {
             </a>
           </h2>
 
-          <p>Update the gamepad state. Call this function every frame only if you are not using the <a href="/api/gameLoop">GameLoop</a>. Otherwise it is called automatically.</p>
+          <p>Update the gamepad state. Call this function every frame only if you are not using the <a href="api/gameLoop">GameLoop</a>. Otherwise it is called automatically.</p>
 <div class="tablist">
   <ul role="tablist">
     <li role="presentation" data-tab="global">

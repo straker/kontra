@@ -173,6 +173,12 @@
                 <a href="api/quadtree" >Quadtree</a>
               </li>
               <li>
+                <div aria-hidden="true" class="cached-icon" id="link-random">
+                  <span class="visually-hidden">Cached for offline viewing</span>
+                </div>
+                <a href="api/random" >Random</a>
+              </li>
+              <li>
                 <div aria-hidden="true" class="cached-icon" id="link-scene">
                   <span class="visually-hidden">Cached for offline viewing</span>
                 </div>
@@ -308,7 +314,7 @@ export default {
 </thead>
 <tbody><tr>
 <td><code>acceleration</code></td>
-<td><code>acceleration</code>, <code>ddx</code>, <code>ddy</code></td>
+<td><code>acceleration</code>, <code>ddx</code>, <code>ddy</code>, &#39;ddrotation&#39;</td>
 </tr>
 <tr>
 <td><code>anchor</code></td>
@@ -321,6 +327,10 @@ export default {
 <tr>
 <td><code>opacity</code></td>
 <td><code>opacity</code></td>
+</tr>
+<tr>
+<td><code>radius</code></td>
+<td><code>radius</code>, collision detection with circle</td>
 </tr>
 <tr>
 <td><code>rotation</code></td>
@@ -336,7 +346,7 @@ export default {
 </tr>
 <tr>
 <td><code>velocity</code></td>
-<td><code>velocity</code>, <code>dx</code>, <code>dy</code></td>
+<td><code>velocity</code>, <code>dx</code>, <code>dy</code>, &#39;drotation&#39;</td>
 </tr>
 </tbody></table>
 <h4 id="sprite-options"><code>sprite</code> Options:</h4>
@@ -366,7 +376,7 @@ export default {
 </thead>
 <tbody><tr>
 <td><code>autoNewline</code></td>
-<td>Setting a fixed with that automatically adds new lines to the text</td>
+<td>Setting a fixed width that automatically adds new lines to the text</td>
 </tr>
 <tr>
 <td><code>newline</code></td>

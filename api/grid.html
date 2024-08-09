@@ -173,6 +173,12 @@
                 <a href="api/quadtree" >Quadtree</a>
               </li>
               <li>
+                <div aria-hidden="true" class="cached-icon" id="link-random">
+                  <span class="visually-hidden">Cached for offline viewing</span>
+                </div>
+                <a href="api/random" >Random</a>
+              </li>
+              <li>
                 <div aria-hidden="true" class="cached-icon" id="link-scene">
                   <span class="visually-hidden">Cached for offline viewing</span>
                 </div>
@@ -374,7 +380,7 @@
             </a>
           </h2>
 
-          <p>The grid automatically positions each object based on the grids <a href="/api/grid#flow">flow</a>. This means you do not need to set the x/y position of any of the objects and can let the grid handle that for you. This makes it extremely easy to set up UI elements such as menus without having to hand place each one.</p>
+          <p>The grid automatically positions each object based on the grids <a href="api/grid#flow">flow</a>. This means you do not need to set the x/y position of any of the objects and can let the grid handle that for you. This makes it extremely easy to set up UI elements such as menus without having to hand place each one.</p>
 <canvas id="game-canvas-5"></canvas>
 
 <div class="tablist">
@@ -567,8 +573,8 @@ menu.render();
 
           <p>The grid supports properties on the child objects that change how the child is positioned within the grid.</p>
 <ul>
-<li><code>alignSelf</code> - <em>String</em>. Align this item individually in the grid, overriding the grids <a href="/api/grid#align">align</a> setting.</li>
-<li><code>justifySelf</code> - <em>String</em>. Justify this item individually in the grid, overriding the grids <a href="/api/grid#justify">justify</a> setting.</li>
+<li><code>alignSelf</code> - <em>String</em>. Align this item individually in the grid, overriding the grids <a href="api/grid#align">align</a> setting.</li>
+<li><code>justifySelf</code> - <em>String</em>. Justify this item individually in the grid, overriding the grids <a href="api/grid#justify">justify</a> setting.</li>
 <li><code>colSpan</code> - <em>Number</em>. Have the item take up more than 1 column. Great for menu titles.</li>
 </ul>
         </section>
@@ -581,7 +587,7 @@ menu.render();
             </a>
           </h2>
 
-          <p><em>String or an Array of Strings</em>. he vertical alignment of the grid. Valid values are:</p>
+          <p><em>String or an Array of Strings</em>. The vertical alignment of the grid. Valid values are:</p>
 <ul>
 <li><code>start</code> - align to the top of row</li>
 <li><code>center</code> - align to the center of the row</li>
@@ -599,7 +605,7 @@ menu.render();
             </a>
           </h2>
 
-          <p><em>An Array of Objects</em>. ow the grid should change based on different metrics. Based on the concept of CSS Media Queries so you can update how the grid organizes the objects when things change (such as the scale).</p>
+          <p><em>An Array of Objects</em>. How the grid should change based on different metrics. Based on the concept of CSS Media Queries so you can update how the grid organizes the objects when things change (such as the scale).</p>
 <p>Each object in the array uses the <code>metric()</code> function to determine when the breakpoint applies and the <code>callback()</code> function is called to change any properties of the grid.</p>
 <div class="tablist">
   <ul role="tablist">
@@ -688,7 +694,7 @@ let grid = Grid({
             </a>
           </h2>
 
-          <p><em>Number or an Array of Numbers</em>. he horizontal gap between each column in the grid.</p>
+          <p><em>Number or an Array of Numbers</em>. The horizontal gap between each column in the grid.</p>
 <p>An array of numbers means the grid will set the gap between columns using the order of the array. For example, if the gap is set to be <code>[10, 5]</code>, then every odd column gap will use 10 and every even column gap will use 5.</p>
           
         </section>
@@ -711,7 +717,7 @@ let grid = Grid({
             </a>
           </h2>
 
-          <p><em>String</em>. he direction of the grid. Defaults to organizing the grid objects left-to-right, but if set to <code>rtl</code> then the grid is organized right-to-left.</p>
+          <p><em>String</em>. The direction of the grid. Defaults to organizing the grid objects left-to-right, but if set to <code>rtl</code> then the grid is organized right-to-left.</p>
 <p>When determining the direction of the grid, the canvas <code>dir</code> attribute is also taken into account. Setting the attribute to <code>rtl</code> is equivalent to setting the <code>dir</code> property to <code>rtl</code>. The <code>dir</code> property is used instead of the canvas attribute if both are set.</p>
           
         </section>
@@ -723,7 +729,7 @@ let grid = Grid({
             </a>
           </h2>
 
-          <p><em>String</em>. ow to organize all objects in the grid. Valid values are:</p>
+          <p><em>String</em>. How to organize all objects in the grid. Valid values are:</p>
 <ul>
 <li><code>column</code> - organize into a single column</li>
 <li><code>row</code> - organize into a single row</li>
@@ -739,7 +745,7 @@ let grid = Grid({
             </a>
           </h2>
 
-          <p><em>String or an Array of Strings</em>. he horizontal alignment of the grid. Valid values are:</p>
+          <p><em>String or an Array of Strings</em>. The horizontal alignment of the grid. Valid values are:</p>
 <ul>
 <li><code>start</code> - align to the left of column</li>
 <li><code>center</code> - align to the center of the column</li>
@@ -758,7 +764,7 @@ let grid = Grid({
             </a>
           </h2>
 
-          <p><em>Number</em>. he number of columns in the grid. Only applies if the <a href="api/grid#flow">flow</a> property is set to <code>grid</code>.</p>
+          <p><em>Number</em>. The number of columns in the grid. Only applies if the <a href="api/grid#flow">flow</a> property is set to <code>grid</code>.</p>
           
         </section>
         <section>
@@ -769,7 +775,7 @@ let grid = Grid({
             </a>
           </h2>
 
-          <p><em>Number or an Array of Numbers</em>. he vertical gap between each row in the grid.</p>
+          <p><em>Number or an Array of Numbers</em>. The vertical gap between each row in the grid.</p>
 <p>An array of numbers means the grid will set the gap between rows using the order of the array. For example, if the gap is set to be <code>[10, 5]</code>, then every odd row gap will use 10 and every even row gap will use 5.</p>
           
         </section>

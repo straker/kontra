@@ -173,6 +173,12 @@
                 <a href="api/quadtree" >Quadtree</a>
               </li>
               <li>
+                <div aria-hidden="true" class="cached-icon" id="link-random">
+                  <span class="visually-hidden">Cached for offline viewing</span>
+                </div>
+                <a href="api/random" >Random</a>
+              </li>
+              <li>
                 <div aria-hidden="true" class="cached-icon" id="link-scene">
                   <span class="visually-hidden">Cached for offline viewing</span>
                 </div>
@@ -366,10 +372,16 @@ image.onload = function() {
           <dd><p><em>Number</em>. The height of a single frame.</p>
         </dd>
           <dt>
-            <code>properties.frameMargin</code>
+            <code>properties.spacing</code>
             <span class="optional">Optional</span>
           </dt>
           <dd><p><em>Number</em>. The amount of whitespace between each frame. Defaults to <code>0</code>.</p>
+        </dd>
+          <dt>
+            <code>properties.margin</code>
+            <span class="optional">Optional</span>
+          </dt>
+          <dd><p><em>Number</em>. The amount of whitespace border around the entire image. Defaults to <code>0</code>.</p>
         </dd>
           <dt>
             <code>properties.animations</code>
@@ -428,7 +440,7 @@ image.onload = function() {
             </a>
           </h2>
 
-          <p><em>Object</em>. n object of named <a href="api/animation">Animation</a> objects. Typically you pass this object into <a href="api/sprite">Sprite</a> to create an <a href="api/spriteSheet#animation-sprite">animation sprites</a>.</p>
+          <p><em>Object</em>. An object of named <a href="api/animation">Animation</a> objects. Typically you pass this object into <a href="api/sprite">Sprite</a> to create an <a href="api/spriteSheet#animation-sprite">animation sprites</a>.</p>
           
         </section>
         <section>
@@ -636,8 +648,8 @@ image.onload = function() {
             </a>
           </h2>
 
-          <p><em>Object</em>. n object that defines properties of a single frame in the sprite sheet. It has properties of <code>width</code>, <code>height</code>, and <code>margin</code>.</p>
-<p><code>width</code> and <code>height</code> are the width of a single frame, while <code>margin</code> defines the amount of whitespace between each frame.</p>
+          <p><em>Object</em>. An object that defines properties of a single frame in the sprite sheet. It has properties of <code>width</code>, <code>height</code>, <code>spacing</code>, and <code>margin</code>.</p>
+<p><code>width</code> and <code>height</code> are the width of a single frame, while <code>spacing</code> defines the amount of whitespace between each frame, and <code>margin</code> defines the amount of whitespace border around the image.</p>
           
         </section>
         <section>
@@ -648,7 +660,7 @@ image.onload = function() {
             </a>
           </h2>
 
-          <p><em>HTMLImageElement or HTMLCanvasElement</em>. he sprite sheet image.</p>
+          <p><em>HTMLImageElement or HTMLCanvasElement</em>. The sprite sheet image.</p>
           
         </section>
 

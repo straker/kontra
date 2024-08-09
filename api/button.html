@@ -173,6 +173,12 @@
                 <a href="api/quadtree" >Quadtree</a>
               </li>
               <li>
+                <div aria-hidden="true" class="cached-icon" id="link-random">
+                  <span class="visually-hidden">Cached for offline viewing</span>
+                </div>
+                <a href="api/random" >Random</a>
+              </li>
+              <li>
                 <div aria-hidden="true" class="cached-icon" id="link-scene">
                   <span class="visually-hidden">Cached for offline viewing</span>
                 </div>
@@ -270,6 +276,12 @@
           <dd><p><em>Number</em>. The vertical padding. Defaults to <code>0</code>.</p>
         </dd>
           <dt>
+            <code>properties.container</code>
+            <span class="optional">Optional</span>
+          </dt>
+          <dd><p><em>HTMLElement</em>. The HTMLElement that the HTMLButtonElement will be appended to.</p>
+        </dd>
+          <dt>
             <code>properties.onEnable</code>
             <span class="optional">Optional</span>
           </dt>
@@ -324,6 +336,11 @@
                 <li>
                   <a href="api/button#hovered">
                     <span>Button&#8203;.hovered</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="api/button#node">
+                    <span>Button&#8203;.node</span>
                   </a>
                 </li>
                 <li>
@@ -415,7 +432,7 @@
             </a>
           </h2>
 
-          <p>A button is essentially a <a href="/api/sprite">Sprite</a> with a <a href="/api/text">Text</a> child and added functionality to support keyboard interaction. To create a button, pass properties as you would with a Sprite and use the <code>text</code> property to pass any Text properties. You can also pass any <a href="/api/pointer">pointer</a> event functions.</p>
+          <p>A button is essentially a <a href="api/sprite">Sprite</a> with a <a href="api/text">Text</a> child and added functionality to support keyboard interaction. To create a button, pass properties as you would with a Sprite and use the <code>text</code> property to pass any Text properties. You can also pass any <a href="api/pointer">pointer</a> event functions.</p>
 <p>The size of the button will automatically be set as the width and height of the text or image, whichever is greater.</p>
 <p><em>Button image courtesy of <a href="https://kenney.nl/assets">Kenney</a>.</em></p>
 <canvas id="game-canvas-0"></canvas>
@@ -633,11 +650,11 @@ load('blue_button02.png', 'blue_button03.png').then(() => {
             </a>
           </h2>
 
-          <p>A button has four possible states. You should use these states in the <a href="/api/gameObject#render">render()</a> to have the button draw differently based on user input.</p>
+          <p>A button has four possible states. You should use these states in the <a href="api/gameObject#render">render()</a> to have the button draw differently based on user input.</p>
 <ul>
-<li><code>focused</code> - The button is focused by the keyboard or by calling the <a href="/api/button#focus">focus</a> function.</li>
-<li><code>hovered</code> - The button is hovered by the mouse or by calling the <a href="/api/button#onOver">onOver</a> function.</li>
-<li><code>pressed</code> - The button is pressed with a mouse, touch, or keyboard event (such as <kbd>Enter</kbd> or <kbd>Spacebar</kbd> keys) or by calling the <a href="/api/button#onDown">onDown</a> function.</li>
+<li><code>focused</code> - The button is focused by the keyboard or by calling the <a href="api/button#focus">focus</a> function.</li>
+<li><code>hovered</code> - The button is hovered by the mouse or by calling the <a href="api/button#onOver">onOver</a> function.</li>
+<li><code>pressed</code> - The button is pressed with a mouse, touch, or keyboard event (such as <kbd>Enter</kbd> or <kbd>Spacebar</kbd> keys) or by calling the <a href="api/button#onDown">onDown</a> function.</li>
 <li><code>disabled</code> - The button no longer accepts mouse or keyboard events.</li>
 </ul>
 <canvas id="game-canvas-1"></canvas>
@@ -956,7 +973,7 @@ loop.start();
             </a>
           </h2>
 
-          <p><em>Boolean</em>. f the button is disabled.</p>
+          <p><em>Boolean</em>. If the button is disabled.</p>
           
         </section>
         <section>
@@ -989,7 +1006,7 @@ loop.start();
             </a>
           </h2>
 
-          <p><em>Boolean</em>. f the button is focused.</p>
+          <p><em>Boolean</em>. If the button is focused.</p>
           
         </section>
         <section>
@@ -1000,7 +1017,18 @@ loop.start();
             </a>
           </h2>
 
-          <p><em>Boolean</em>. f the button is hovered.</p>
+          <p><em>Boolean</em>. If the button is hovered.</p>
+          
+        </section>
+        <section>
+          <h2 id="node">
+            <a href="api/button#node" class="section-link">
+              <span>Button&#8203;.node</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
+
+          <p><em>HTML<a href="api/button">Button</a>Element</em>. The HTML button element associated with the button (used for accessibility). Typically you won&#39;t need to interact with the <code>node</code> directly, but it can be useful to move its position in the DOM to better support accessible component design.</p>
           
         </section>
         <section>
@@ -1055,7 +1083,7 @@ loop.start();
             </a>
           </h2>
 
-          <p><em>Number</em>. he horizontal padding. This will be added to the width to give the final width of the button.</p>
+          <p><em>Number</em>. The horizontal padding. This will be added to the width to give the final width of the button.</p>
           
         </section>
         <section>
@@ -1066,7 +1094,7 @@ loop.start();
             </a>
           </h2>
 
-          <p><em>Number</em>. he vertical padding. This will be added to the height to give the final height of the button.</p>
+          <p><em>Number</em>. The vertical padding. This will be added to the height to give the final height of the button.</p>
           
         </section>
         <section>
@@ -1077,7 +1105,7 @@ loop.start();
             </a>
           </h2>
 
-          <p><em>Boolean</em>. f the button is pressed.</p>
+          <p><em>Boolean</em>. If the button is pressed.</p>
           
         </section>
         <section>
@@ -1088,7 +1116,7 @@ loop.start();
             </a>
           </h2>
 
-          <p><em>String</em>. he text property of the Text object.</p>
+          <p><em>String</em>. The text property of the Text object.</p>
           
         </section>
         <section>
@@ -1099,7 +1127,7 @@ loop.start();
             </a>
           </h2>
 
-          <p><em><a href="api/text">Text</a></em>. ach Button creates a Text object and adds it as a child. The <code>text</code> of the Text object is used as the accessible name of the HTMLButtonElement.</p>
+          <p><em><a href="api/text">Text</a></em>. Each Button creates a Text object and adds it as a child. The <code>text</code> of the Text object is used as the accessible name of the HTMLButtonElement.</p>
           
         </section>
 

@@ -173,6 +173,12 @@
                 <a href="api/quadtree" >Quadtree</a>
               </li>
               <li>
+                <div aria-hidden="true" class="cached-icon" id="link-random">
+                  <span class="visually-hidden">Cached for offline viewing</span>
+                </div>
+                <a href="api/random" >Random</a>
+              </li>
+              <li>
                 <div aria-hidden="true" class="cached-icon" id="link-scene">
                   <span class="visually-hidden">Cached for offline viewing</span>
                 </div>
@@ -351,7 +357,7 @@ onGesture(&#39;swipeleft&#39;, function() {
             </a>
           </h2>
 
-          <p><em>Object</em>.  map of gesture objects to gesture names. Add to this object to expand the list of <a href="api/gesture#available-gestures">available gestures</a>.</p>
+          <p><em>Object</em>. A map of gesture objects to gesture names. Add to this object to expand the list of <a href="api/gesture#available-gestures">available gestures</a>.</p>
 <p>The gesture name should be the overall name of the gesture (e.g. swipe, pinch) and not include any directional information (e.g. left, in).</p>
 <p>A gesture object should have a <code>touches</code> property and at least one touch event function. The provided gestures also have a <code>threshold</code> property which is the minimum distance before the gesture is recognized.</p>
 <p>The <code>touches</code> property is a number that indicates how many touch points are required for the gesture. A touch event function is a function whose name should match the touch event name it triggers on (e.g. touchstart, touchmove). A touch event function is passed a touch object.</p>

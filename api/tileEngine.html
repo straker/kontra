@@ -173,6 +173,12 @@
                 <a href="api/quadtree" >Quadtree</a>
               </li>
               <li>
+                <div aria-hidden="true" class="cached-icon" id="link-random">
+                  <span class="visually-hidden">Cached for offline viewing</span>
+                </div>
+                <a href="api/random" >Random</a>
+              </li>
+              <li>
                 <div aria-hidden="true" class="cached-icon" id="link-scene">
                   <span class="visually-hidden">Cached for offline viewing</span>
                 </div>
@@ -299,10 +305,16 @@
           <dd><p><em>String or HTMLImageElement</em>. Relative path to the HTMLImageElement or an HTMLImageElement. If passing a relative path, the image file must have been <a href="api/assets#load">loaded</a> first.</p>
         </dd>
           <dt>
-            <code>properties.&lt;tilesetN&gt;.margin</code>
+            <code>properties.&lt;tilesetN&gt;.spacing</code>
             <span class="optional">Optional</span>
           </dt>
           <dd><p><em>Number</em>. The amount of whitespace between each tile (in pixels). Defaults to <code>0</code>.</p>
+        </dd>
+          <dt>
+            <code>properties.&lt;tilesetN&gt;.margin</code>
+            <span class="optional">Optional</span>
+          </dt>
+          <dd><p><em>Number</em>. The amount of whitespace border around the entire tileset image (in pixels). Defaults to <code>0</code>.</p>
         </dd>
           <dt>
             <code>properties.&lt;tilesetN&gt;.tilewidth</code>
@@ -441,6 +453,11 @@
                 <li>
                   <a href="api/tileEngine#add">
                     <span>TileEngine&#8203;.add(&#8203;...objects)</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="api/tileEngine#getPosition">
+                    <span>TileEngine&#8203;.getPosition(&#8203;event)</span>
                   </a>
                 </li>
                 <li>
@@ -1140,8 +1157,123 @@ load('assets/imgs/mapPack_tilesheet.png', 'assets/data/tile_engine_add.json')
             </a>
           </h2>
 
-          <p><em>CanvasRenderingContext2D</em>. he context the tile engine will draw to.</p>
+          <p><em>CanvasRenderingContext2D</em>. The context the tile engine will draw to.</p>
           
+        </section>
+        <section>
+          <h2 id="getPosition">
+            <a href="api/tileEngine#getPosition" class="section-link">
+              <span>TileEngine&#8203;.getPosition(&#8203;event)</span>
+              <span aria-hidden="true">#</span>
+            </a>
+          </h2>
+
+          <p>Get the tile position of a pointer event.</p>
+<div class="tablist">
+  <ul role="tablist">
+    <li role="presentation" data-tab="global">
+      <button role="tab" id="getposition-global-tab">Global Object</button>
+    </li>
+    <li role="presentation" data-tab="es">
+      <button role="tab" id="getposition-es-tab">ES Module Import</button>
+    </li>
+    <li role="presentation" data-tab="bundle">
+      <button role="tab" id="getposition-bundle-tab">Module Bundler</button>
+    </li>
+    <li role="presentation"></li>
+  </ul>
+  <section role="tabpanel" aria-labelledby=getposition-global-tab data-tabpanel="global"><pre><code class="language-js">let { initPointer, track, TileEngine } = kontra;
+
+initPointer();
+let tileEngine = TileEngine({
+  tilewidth: 32,
+  tileheight: 32,
+  width: 4,
+  height: 4,
+  tilesets: [{
+    // ...
+  }],
+  layers: [{
+    name: &#39;collision&#39;,
+    data: [ 0,0,0,0,
+            0,1,4,0,
+            0,2,5,0,
+            0,0,0,0 ]
+  }],
+  onDown(evt) {
+    // row and col is the tile position that was clicked
+    let { row, col } = this.getPosition(evt);
+  }
+});
+
+track(tileEngine);
+</code></pre></section>
+  <section role="tabpanel" aria-labelledby=getposition-es-tab data-tabpanel="es"><pre><code class="language-js">import { initPointer, track, TileEngine } from 'path/to/kontra.mjs';
+
+initPointer();
+let tileEngine = TileEngine({
+  tilewidth: 32,
+  tileheight: 32,
+  width: 4,
+  height: 4,
+  tilesets: [{
+    // ...
+  }],
+  layers: [{
+    name: &#39;collision&#39;,
+    data: [ 0,0,0,0,
+            0,1,4,0,
+            0,2,5,0,
+            0,0,0,0 ]
+  }],
+  onDown(evt) {
+    // row and col is the tile position that was clicked
+    let { row, col } = this.getPosition(evt);
+  }
+});
+
+track(tileEngine);
+</code></pre></section>
+  <section role="tabpanel" aria-labelledby=getposition-bundle-tab data-tabpanel="bundle"><pre><code class="language-js">import { initPointer, track, TileEngine } from &#39;kontra&#39;;
+
+initPointer();
+let tileEngine = TileEngine({
+  tilewidth: 32,
+  tileheight: 32,
+  width: 4,
+  height: 4,
+  tilesets: [{
+    // ...
+  }],
+  layers: [{
+    name: &#39;collision&#39;,
+    data: [ 0,0,0,0,
+            0,1,4,0,
+            0,2,5,0,
+            0,0,0,0 ]
+  }],
+  onDown(evt) {
+    // row and col is the tile position that was clicked
+    let { row, col } = this.getPosition(evt);
+  }
+});
+
+track(tileEngine);
+</code></pre></section>
+</div>
+          <h3 id="title-getPosition"><span class="visually-hidden">getPosition</span> Parameters</span></h3>
+          <dl aria-labelledby="title-getPosition">
+            <dt>
+              <code>event</code>
+              
+            </dt>
+            <dd><p><em>Object</em>. The pointer event with <code>x</code> and <code>y</code> properties.</p>
+          </dd>
+          </dl>
+          
+          <h3><span class="visually-hidden">getPosition</span> Return value</h3>
+          <p><p><em>Object</em>. The <code>x</code>, <code>y</code>, <code>row</code>, and <code>col</code> of the pointer event within the tile engine.</p>
+          </p>
         </section>
         <section>
           <h2 id="height">
@@ -1151,7 +1283,7 @@ load('assets/imgs/mapPack_tilesheet.png', 'assets/data/tile_engine_add.json')
             </a>
           </h2>
 
-          <p><em>Number</em>. he height of tile map (in tiles).</p>
+          <p><em>Number</em>. The height of tile map (in tiles).</p>
           
         </section>
         <section>
@@ -1301,7 +1433,7 @@ tileEngine.layerCollidesWith(&#39;collision&#39;, sprite);  //=&gt; true
             </a>
           </h2>
 
-          <p><em>An Array of Objects</em>. rray of all layers of the tile engine.</p>
+          <p><em>An Array of Objects</em>. Array of all layers of the tile engine.</p>
           
         </section>
         <section>
@@ -1312,7 +1444,7 @@ tileEngine.layerCollidesWith(&#39;collision&#39;, sprite);  //=&gt; true
             </a>
           </h2>
 
-          <p><em>Number</em>. he height of the tile map (in pixels).</p>
+          <p><em>Number</em>. The height of the tile map (in pixels).</p>
           
         </section>
         <section>
@@ -1323,7 +1455,7 @@ tileEngine.layerCollidesWith(&#39;collision&#39;, sprite);  //=&gt; true
             </a>
           </h2>
 
-          <p><em>Number</em>. he width of the tile map (in pixels).</p>
+          <p><em>Number</em>. The width of the tile map (in pixels).</p>
           
         </section>
         <section>
@@ -1606,7 +1738,7 @@ tileEngine.tileAtLayer(&#39;collision&#39;, {row: 2, col: 1});  //=&gt; 10
             </a>
           </h2>
 
-          <p><em>Number</em>.  coordinate of the tile map camera.</p>
+          <p><em>Number</em>. X coordinate of the tile map camera.</p>
           
         </section>
         <section>
@@ -1617,7 +1749,7 @@ tileEngine.tileAtLayer(&#39;collision&#39;, {row: 2, col: 1});  //=&gt; 10
             </a>
           </h2>
 
-          <p><em>Number</em>.  coordinate of the tile map camera.</p>
+          <p><em>Number</em>. Y coordinate of the tile map camera.</p>
           
         </section>
         <section>
@@ -1737,7 +1869,7 @@ tileEngine.tileAtLayer(&#39;collision&#39;, {row: 2, col: 1});  //=&gt; 2
             </a>
           </h2>
 
-          <p><em>Number</em>. he height of a tile (in pixels).</p>
+          <p><em>Number</em>. The height of a tile (in pixels).</p>
           
         </section>
         <section>
@@ -1748,7 +1880,7 @@ tileEngine.tileAtLayer(&#39;collision&#39;, {row: 2, col: 1});  //=&gt; 2
             </a>
           </h2>
 
-          <p><em>An Array of Objects</em>. rray of all tilesets of the tile engine.</p>
+          <p><em>An Array of Objects</em>. Array of all tilesets of the tile engine.</p>
           
         </section>
         <section>
@@ -1759,7 +1891,7 @@ tileEngine.tileAtLayer(&#39;collision&#39;, {row: 2, col: 1});  //=&gt; 2
             </a>
           </h2>
 
-          <p><em>Number</em>. he width a tile (in pixels).</p>
+          <p><em>Number</em>. The width a tile (in pixels).</p>
           
         </section>
         <section>
@@ -1770,7 +1902,7 @@ tileEngine.tileAtLayer(&#39;collision&#39;, {row: 2, col: 1});  //=&gt; 2
             </a>
           </h2>
 
-          <p><em>Number</em>. he width of tile map (in tiles).</p>
+          <p><em>Number</em>. The width of tile map (in tiles).</p>
           
         </section>
 

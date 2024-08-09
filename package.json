@@ -54,7 +54,7 @@
     "eslint": "^8.4.1",
     "eslint-plugin-mocha-no-only": "^1.1.1",
     "glob": "^7.2.0",
-    "gulp": "^4.0.2",
+    "gulp": "^5.0.0",
     "gulp-livingcss": "^5.0.0",
     "gulp-plumber": "^1.2.1",
     "gulp-preprocess": "git+https://github.com/straker/gulp-preprocess.git",

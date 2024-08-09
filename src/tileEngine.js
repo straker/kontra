@@ -344,12 +344,14 @@ class TileEngine {
    * @memberof TileEngine
    * @function getPosition
    *
+   * @param {{x: Number, y: Number}} event - The pointer event with `x` and `y` properties.
+   *
    * @returns {{x: Number, y: Number, row: Number, col: Number}} The `x`, `y`, `row`, and `col` of the pointer event within the tile engine.
    */
-  getPosition(evt) {
+  getPosition(event) {
     let rect = getCanvas().getBoundingClientRect();
-    let x = evt.x - rect.x;
-    let y = evt.y - rect.y;
+    let x = event.x - rect.x;
+    let y = event.y - rect.y;
 
     // @ifdef TILEENGINE_CAMERA
     x += this.sx;

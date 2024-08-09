@@ -18,7 +18,7 @@ const filesToCache = [
   `${prefix}/assets/styles.css`
 ];
 
-const staticCacheName = 'kontra-docs-v9.0.0';
+const staticCacheName = 'kontra-docs-v10.0.0';
 
 // cache the application shell
 self.addEventListener('install', event => {

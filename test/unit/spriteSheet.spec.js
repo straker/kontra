@@ -54,6 +54,18 @@ describe('spriteSheet', () => {
       expect(SpriteSheetClass.prototype.createAnimations.called).to.be
         .true;
     });
+
+    it('should default margin and spacing to 0', () => {
+      let spriteSheet = SpriteSheet({
+        image: new Image(100, 200),
+        frameWidth: 10,
+        frameHeight: 10
+      });
+
+      expect(spriteSheet.frame.margin).to.equal(0);
+      expect(spriteSheet.frame.spacing).to.equal(0);
+      expect(spriteSheet._f).to.equal(10);
+    });
   });
 
   // --------------------------------------------------

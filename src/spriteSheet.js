@@ -94,8 +94,8 @@ class SpriteSheet {
     image,
     frameWidth,
     frameHeight,
-    spacing,
-    margin,
+    spacing = 0,
+    margin = 0,
     animations
   } = {}) {
     // @ifdef DEBUG

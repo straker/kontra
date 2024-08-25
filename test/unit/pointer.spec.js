@@ -166,7 +166,7 @@ describe('pointer', () => {
       pointer.track(obj);
 
       expect(obj.render).to.not.equal(noop);
-      expect(obj._r).to.exist;
+      expect(obj.__r).to.exist;
     });
 
     it('should take multiple objects', () => {
@@ -175,9 +175,9 @@ describe('pointer', () => {
       pointer.track(obj, obj2);
 
       expect(obj.render).to.not.equal(noop);
-      expect(obj._r).to.exist;
+      expect(obj.__r).to.exist;
       expect(obj2.render).to.not.equal(noop);
-      expect(obj2._r).to.exist;
+      expect(obj2.__r).to.exist;
     });
 
     it('should take an array of objects', () => {
@@ -186,9 +186,9 @@ describe('pointer', () => {
       pointer.track([obj, obj2]);
 
       expect(obj.render).to.not.equal(noop);
-      expect(obj._r).to.exist;
+      expect(obj.__r).to.exist;
       expect(obj2.render).to.not.equal(noop);
-      expect(obj2._r).to.exist;
+      expect(obj2.__r).to.exist;
     });
 
     it('should call the objects original render function', () => {
@@ -207,13 +207,13 @@ describe('pointer', () => {
       function func() {
         pointer.track(obj);
 
-        render = obj._r;
+        render = obj.__r;
 
         pointer.track(obj);
       }
 
       expect(func).to.not.throw();
-      expect(render).to.equal(obj._r);
+      expect(render).to.equal(obj.__r);
     });
 
     it('should track objects separately for each canvas', () => {
@@ -254,7 +254,7 @@ describe('pointer', () => {
       pointer.untrack(obj);
 
       expect(obj.render).to.equal(noop);
-      expect(obj._r).to.not.be.true;
+      expect(obj.__r).to.not.be.true;
     });
 
     it('should take multiple objects', () => {
@@ -264,9 +264,9 @@ describe('pointer', () => {
       pointer.untrack(obj, obj2);
 
       expect(obj.render).to.equal(noop);
-      expect(obj._r).to.not.be.true;
+      expect(obj.__r).to.not.be.true;
       expect(obj2.render).to.equal(noop);
-      expect(obj2._r).to.not.be.true;
+      expect(obj2.__r).to.not.be.true;
     });
 
     it('should take an array objects', () => {
@@ -276,9 +276,9 @@ describe('pointer', () => {
       pointer.untrack([obj, obj2]);
 
       expect(obj.render).to.equal(noop);
-      expect(obj._r).to.not.be.true;
+      expect(obj.__r).to.not.be.true;
       expect(obj2.render).to.equal(noop);
-      expect(obj2._r).to.not.be.true;
+      expect(obj2.__r).to.not.be.true;
     });
 
     it('should do nothing if the object was never tracked', () => {

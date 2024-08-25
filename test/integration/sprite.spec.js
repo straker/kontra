@@ -1,5 +1,6 @@
 import Sprite from '../../src/sprite.js';
 import SpriteSheet from '../../src/spriteSheet.js';
+import { track, initPointer } from '../../src/pointer.js';
 
 describe('sprite integration', () => {
   it('should clone spriteSheet animations to prevent frame corruption ', () => {
@@ -76,5 +77,26 @@ describe('sprite integration', () => {
     expect(sprite1.animations.walk._f).to.equal(3);
     expect(sprite2.animations.walk._f).to.equal(0);
     expect(sprite3.animations.walk._f).to.equal(0);
+  });
+
+  it('should render when tracked by pointer', () => {
+    initPointer();
+    let spy = sinon.spy();
+
+    let sprite = Sprite({
+      x: 100,
+      y: 200,
+      color: 'red',
+      render: spy
+    });
+
+    track(sprite);
+    sprite.render();
+
+    // retain _r as radius
+    expect(typeof sprite._r).to.not.equal('function');
+
+    // retain _rf as render function
+    expect(sprite._rf).to.equal(spy);
   });
 });

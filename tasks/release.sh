@@ -25,10 +25,16 @@ fi
 
 printf "\n${Cyan}Releasing lib${NC}\n"
 npm version $1
+version=$(node -p "require('./package.json').version")
+
 npm run dist
 npm publish
 
-version=$(node -p "require('./package.json').version")
+# push version changes to service-worker before updating docs
+# https://github.com/straker/kontra/issues/410
+git add .
+git commit -m "docs: update service-worker version"
+git push origin main
 
 printf "\n${Cyan}Releasing docs${NC}\n"
 # rebuild docs to generate download page with newest version

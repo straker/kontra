@@ -199,6 +199,27 @@ describe('scene', () => {
       expect(scene.context).to.equal(context);
     });
 
+    it('should remove init callback', () => {
+      _reset();
+
+      scene.destroy();
+      scene = Scene({
+        id: 'myId'
+      });
+
+      expect(scene.context).to.be.undefined;
+
+      let canvas = document.createElement('canvas');
+      canvas.width = canvas.height = 600;
+      init(canvas);
+
+      expect(scene.context).to.equal(canvas.getContext('2d'));
+      delete scene.context;
+      init(canvas);
+
+      expect(scene.context).to.be.undefined;
+    });
+
     it('should add dom node to body and set camera if kontra.init is called after created', () => {
       _reset();
 

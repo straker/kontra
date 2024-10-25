@@ -1,5 +1,5 @@
 import { getCanvas, getContext } from './core.js';
-import { on } from './events.js';
+import { once } from './events.js';
 import { clamp, getWorldRect } from './helpers.js';
 import { removeFromArray } from './utils.js';
 
@@ -235,7 +235,7 @@ class TileEngine {
       this._p();
     }
 
-    on('init', () => {
+    once('init', () => {
       this.context ??= getContext();
       this._p();
     });

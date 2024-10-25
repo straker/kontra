@@ -1,5 +1,5 @@
 import { GameObjectClass } from './gameObject.js';
-import { on } from './events.js';
+import { once } from './events.js';
 import { getContext } from './core.js';
 
 let fontSizeRegex = /(\d+)(\w+)/;
@@ -120,7 +120,7 @@ class Text extends GameObjectClass {
       this._p();
     }
 
-    on('init', () => {
+    once('init', () => {
       this.font ??= getContext().font;
       this._p();
     });
@@ -266,7 +266,6 @@ class Text extends GameObjectClass {
       context.textAlign = textAlign;
       context.fillStyle = this.color;
       context.font = this.font;
-
 
       // @ifdef TEXT_STROKE
       if (this.strokeColor) {

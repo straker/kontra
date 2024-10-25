@@ -1,5 +1,5 @@
 import { noop } from './utils.js';
-import { emit, on } from './events.js';
+import { emit, once } from './events.js';
 import { getContext } from './core.js';
 
 /**
@@ -87,7 +87,7 @@ export default function GameLoop({
     });
   }
 
-  on('init', () => {
+  once('init', () => {
     loop.context ??= getContext();
   });
 

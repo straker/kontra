@@ -23,7 +23,10 @@ describe('events', () => {
       events.on('foo', func);
 
       expect(events.callbacks.foo).to.be.an('array');
-      expect(events.callbacks.foo[0]).to.equal(func);
+      expect(events.callbacks.foo[0]).to.deep.equal({
+        fn: func,
+        once: false
+      });
     });
 
     it('should append the event if it already exists', () => {
@@ -33,8 +36,91 @@ describe('events', () => {
       events.on('foo', func2);
 
       expect(events.callbacks.foo).to.be.an('array');
-      expect(events.callbacks.foo[0]).to.equal(func1);
-      expect(events.callbacks.foo[1]).to.equal(func2);
+      expect(events.callbacks.foo[0]).to.deep.equal({
+        fn: func1,
+        once: false
+      });
+      expect(events.callbacks.foo[1]).to.deep.equal({
+        fn: func2,
+        once: false
+      });
+    });
+  });
+
+  // --------------------------------------------------
+  // once
+  // --------------------------------------------------
+  describe('once', () => {
+    afterEach(() => {
+      delete events.callbacks.foo;
+    });
+
+    it('should add the event to the callbacks object', () => {
+      function func() {}
+      events.once('foo', func);
+
+      expect(events.callbacks.foo).to.be.an('array');
+      expect(events.callbacks.foo[0]).to.deep.equal({
+        fn: func,
+        once: true
+      });
+    });
+
+    it('should append the event if it already exists', () => {
+      function func1() {}
+      function func2() {}
+      events.once('foo', func1);
+      events.once('foo', func2);
+
+      expect(events.callbacks.foo).to.be.an('array');
+      expect(events.callbacks.foo[0]).to.deep.equal({
+        fn: func1,
+        once: true
+      });
+      expect(events.callbacks.foo[1]).to.deep.equal({
+        fn: func2,
+        once: true
+      });
+    });
+
+    it('should remove the event after emit', () => {
+      let func = sinon.spy();
+      events.once('foo', func);
+      expect(events.callbacks.foo[0]).to.deep.equal({
+        fn: func,
+        once: true
+      });
+
+      events.emit('foo');
+      expect(func.called).to.equal(true);
+      expect(events.callbacks.foo.length).to.equal(0);
+    });
+
+    it('should call multiple functions with mix once type', () => {
+      let func1 = sinon.spy();
+      let func2 = sinon.spy();
+      let func3 = sinon.spy();
+      let func4 = sinon.spy();
+      events.on('foo', func1);
+      events.once('foo', func2);
+      events.on('foo', func3);
+      events.once('foo', func4);
+
+      events.emit('foo');
+      expect(func1.called).to.equal(true);
+      expect(func2.called).to.equal(true);
+      expect(func3.called).to.equal(true);
+      expect(func4.called).to.equal(true);
+
+      expect(events.callbacks.foo.length).to.equal(2);
+      expect(events.callbacks.foo[0]).to.deep.equal({
+        fn: func1,
+        once: false
+      });
+      expect(events.callbacks.foo[1]).to.deep.equal({
+        fn: func3,
+        once: false
+      });
     });
   });
 
@@ -67,8 +153,14 @@ describe('events', () => {
       events.off('foo', func);
 
       expect(events.callbacks.foo.length).to.equal(2);
-      expect(events.callbacks.foo[0]).to.equal(func1);
-      expect(events.callbacks.foo[1]).to.equal(func2);
+      expect(events.callbacks.foo[0]).to.deep.equal({
+        fn: func1,
+        once: false
+      });
+      expect(events.callbacks.foo[1]).to.deep.equal({
+        fn: func2,
+        once: false
+      });
     });
 
     it('should not error if the callback was not added before', () => {

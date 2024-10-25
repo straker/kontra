@@ -1,6 +1,6 @@
 import { getContext } from './core.js';
 import { GameObjectClass } from './gameObject.js';
-import { on, off } from './events.js';
+import { once, off } from './events.js';
 import {
   srOnlyStyle,
   focusParams,
@@ -218,7 +218,7 @@ class Scene {
       this._i();
     }
 
-    on('init', this._i);
+    once('init', this._i);
   }
 
   set objects(value) {

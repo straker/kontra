@@ -133,7 +133,7 @@ describe(
         expect(text.font).to.equal('42px Arial');
       });
 
-      it('should call prerender if kontra.init is called after created', () => {
+      it('should remove init callback', () => {
         _reset();
 
         let text = Text({ text: '' });
@@ -142,7 +142,27 @@ describe(
         canvas.width = canvas.height = 600;
         init(canvas);
 
-        expect(text._s).to.exist;
+        expect(text._f).to.exist;
+        delete text._f;
+        init(canvas);
+
+        expect(text._f).to.be.undefined;
+      });
+
+      it('should set font if kontra.init is called after created', () => {
+        _reset();
+
+        let text = Text({ text: '' });
+
+        expect(text.font).to.be.undefined;
+
+        let canvas = document.createElement('canvas');
+        canvas.width = canvas.height = 600;
+        let context = canvas.getContext('2d');
+        context.font = '32px Arial';
+        init(canvas);
+
+        expect(text.font).to.equal('32px Arial');
       });
     });
 
@@ -301,8 +321,7 @@ describe(
               'sights'
             ]);
           });
-        }
-        else {
+        } else {
           it('should not calculate new lines and auto new lines', () => {
             let text = Text({
               text: 'Hello\nWorld,\nI must be going to see the\nsights',
@@ -518,8 +537,7 @@ describe(
 
           expect(spy.set.calledWith(2)).to.be.true;
         });
-      }
-      else {
+      } else {
         it('should not call strokeText', () => {
           let text = Text({
             text: 'Hello World',

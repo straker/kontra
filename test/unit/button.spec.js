@@ -263,6 +263,13 @@ describe('button', () => {
 
       expect(document.body.contains(button._dn)).to.be.false;
     });
+
+    it('should call destroy on the textNode', () => {
+      sinon.spy(button.textNode, 'destroy');
+      button.destroy();
+
+      expect(button.textNode.destroy.called).to.be.true;
+    });
   });
 
   // --------------------------------------------------

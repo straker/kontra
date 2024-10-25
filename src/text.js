@@ -1,5 +1,5 @@
 import { GameObjectClass } from './gameObject.js';
-import { once } from './events.js';
+import { on } from './events.js';
 import { getContext } from './core.js';
 
 let fontSizeRegex = /(\d+)(\w+)/;
@@ -120,10 +120,14 @@ class Text extends GameObjectClass {
       this._p();
     }
 
-    once('init', () => {
-      this.font ??= getContext().font;
-      this._p();
-    });
+    on(
+      'init',
+      () => {
+        this.font ??= getContext().font;
+        this._p();
+      },
+      true
+    );
   }
 
   // keep width and height getters/settings so we can set _w and _h

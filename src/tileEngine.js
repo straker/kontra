@@ -1,5 +1,5 @@
 import { getCanvas, getContext } from './core.js';
-import { once } from './events.js';
+import { on } from './events.js';
 import { clamp, getWorldRect } from './helpers.js';
 import { removeFromArray } from './utils.js';
 
@@ -235,10 +235,14 @@ class TileEngine {
       this._p();
     }
 
-    once('init', () => {
-      this.context ??= getContext();
-      this._p();
-    });
+    on(
+      'init',
+      () => {
+        this.context ??= getContext();
+        this._p();
+      },
+      true
+    );
   }
 
   // @ifdef TILEENGINE_CAMERA

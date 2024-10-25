@@ -32,21 +32,11 @@ export let callbacks = {};
  *
  * @param {String} event - Name of the event.
  * @param {Function} callback - Function that will be called when the event is emitted.
+ * @param {Boolean} [once=false] - If the callback should only be called the first time the event is emitted.
  */
 export function on(event, callback, once = false) {
   callbacks[event] = callbacks[event] || [];
   callbacks[event].push({ fn: callback, once });
-}
-
-/**
- * Register a callback for an event to be called only the first time the event is emitted. The callback will be passed all arguments used in the `emit` call.
- * @function once
- *
- * @param {String} event - Name of the event.
- * @param {Function} callback - Function that will be called only the first time the event is emitted.
- */
-export function once(event, callback) {
-  on(event, callback, true);
 }
 
 /**

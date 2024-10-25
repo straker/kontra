@@ -48,16 +48,16 @@ describe('events', () => {
   });
 
   // --------------------------------------------------
-  // once
+  // on(once)
   // --------------------------------------------------
-  describe('once', () => {
+  describe('on(once)', () => {
     afterEach(() => {
       delete events.callbacks.foo;
     });
 
     it('should add the event to the callbacks object', () => {
       function func() {}
-      events.once('foo', func);
+      events.on('foo', func, true);
 
       expect(events.callbacks.foo).to.be.an('array');
       expect(events.callbacks.foo[0]).to.deep.equal({
@@ -69,8 +69,8 @@ describe('events', () => {
     it('should append the event if it already exists', () => {
       function func1() {}
       function func2() {}
-      events.once('foo', func1);
-      events.once('foo', func2);
+      events.on('foo', func1, true);
+      events.on('foo', func2, true);
 
       expect(events.callbacks.foo).to.be.an('array');
       expect(events.callbacks.foo[0]).to.deep.equal({
@@ -85,7 +85,7 @@ describe('events', () => {
 
     it('should remove the event after emit', () => {
       let func = sinon.spy();
-      events.once('foo', func);
+      events.on('foo', func, true);
       expect(events.callbacks.foo[0]).to.deep.equal({
         fn: func,
         once: true
@@ -102,9 +102,9 @@ describe('events', () => {
       let func3 = sinon.spy();
       let func4 = sinon.spy();
       events.on('foo', func1);
-      events.once('foo', func2);
+      events.on('foo', func2, true);
       events.on('foo', func3);
-      events.once('foo', func4);
+      events.on('foo', func4, true);
 
       events.emit('foo');
       expect(func1.called).to.equal(true);

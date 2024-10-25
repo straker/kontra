@@ -1,5 +1,5 @@
 import { noop } from './utils.js';
-import { emit, once } from './events.js';
+import { emit, on } from './events.js';
 import { getContext } from './core.js';
 
 /**
@@ -87,9 +87,13 @@ export default function GameLoop({
     });
   }
 
-  once('init', () => {
-    loop.context ??= getContext();
-  });
+  on(
+    'init',
+    () => {
+      loop.context ??= getContext();
+    },
+    true
+  );
 
   /**
    * Called every frame of the game loop.

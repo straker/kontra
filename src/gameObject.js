@@ -1,6 +1,6 @@
 import { getContext } from './core.js';
 import Updatable from './updatable.js';
-import { once } from './events.js';
+import { on } from './events.js';
 import { rotatePoint, clamp } from './helpers.js';
 import { noop, removeFromArray } from './utils.js';
 
@@ -267,9 +267,13 @@ class GameObject extends Updatable {
     // uf = update function
     this._uf = update;
 
-    once('init', () => {
-      this.context ??= getContext();
-    });
+    on(
+      'init',
+      () => {
+        this.context ??= getContext();
+      },
+      true
+    );
   }
 
   /**

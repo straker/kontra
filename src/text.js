@@ -1,5 +1,5 @@
 import { GameObjectClass } from './gameObject.js';
-import { on } from './events.js';
+import { on, off } from './events.js';
 import { getContext } from './core.js';
 
 let fontSizeRegex = /(\d+)(\w+)/;
@@ -115,19 +115,18 @@ class Text extends GameObjectClass {
       ...props
     });
 
+    // i = init
+    this._i = () => {
+      this.font ??= getContext().font;
+      this._p();
+    };
+
     // p = prerender
     if (this.context) {
-      this._p();
+      this._i();
+    } else {
+      on('init', this._i, true);
     }
-
-    on(
-      'init',
-      () => {
-        this.font ??= getContext().font;
-        this._p();
-      },
-      true
-    );
   }
 
   // keep width and height getters/settings so we can set _w and _h
@@ -173,6 +172,16 @@ class Text extends GameObjectClass {
   set lineHeight(value) {
     this._d = true;
     this._lh = value;
+  }
+
+  /**
+   * Clean up the Text object.
+   * @memberof Text
+   * @function destroy
+   */
+  destroy() {
+    super.destroy();
+    off('init', this._i, true);
   }
 
   render() {

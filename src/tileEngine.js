@@ -1,5 +1,5 @@
 import { getCanvas, getContext } from './core.js';
-import { on } from './events.js';
+import { on, off } from './events.js';
 import { clamp, getWorldRect } from './helpers.js';
 import { removeFromArray } from './utils.js';
 
@@ -230,19 +230,27 @@ class TileEngine {
       ...properties
     });
 
+    // i = init
+    this._i = () => {
+      this.context ??= getContext();
+      this._p();
+    };
+
     // p = prerender
     if (this.context) {
-      this._p();
+      this._i();
+    } else {
+      on('init', this._i, true);
     }
+  }
 
-    on(
-      'init',
-      () => {
-        this.context ??= getContext();
-        this._p();
-      },
-      true
-    );
+  /**
+   * Clean up the TileEngine object.
+   * @memberof TileEngine
+   * @function destroy
+   */
+  destroy() {
+    off('init', this._i, true);
   }
 
   // @ifdef TILEENGINE_CAMERA

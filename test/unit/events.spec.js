@@ -163,6 +163,46 @@ describe('events', () => {
       });
     });
 
+    it('should remove callback added as once', () => {
+      delete events.callbacks.foo;
+
+      function func2() {}
+      events.on('foo', func2, true);
+
+      expect(events.callbacks.foo.length).to.equal(1);
+
+      events.off('foo', func2, true);
+
+      expect(events.callbacks.foo.length).to.equal(0);
+    });
+
+    it('should not remove callback added as once if not passed once param', () => {
+      delete events.callbacks.foo;
+
+      function func2() {}
+      events.on('foo', func2, true);
+
+      expect(events.callbacks.foo.length).to.equal(1);
+
+      events.off('foo', func2);
+
+      expect(events.callbacks.foo.length).to.equal(1);
+    });
+
+    it('should only remove callback that matches once param', () => {
+      events.on('foo', func, true);
+
+      expect(events.callbacks.foo.length).to.equal(2);
+
+      events.off('foo', func, true);
+
+      expect(events.callbacks.foo.length).to.equal(1);
+      expect(events.callbacks.foo[0]).to.deep.equal({
+        fn: func,
+        once: false
+      });
+    });
+
     it('should not error if the callback was not added before', () => {
       function fn() {
         events.off('foo', () => {});

@@ -45,10 +45,11 @@ export function on(event, callback, once = false) {
  *
  * @param {String} event - Name of the event.
  * @param {Function} callback - The function that was passed during registration.
+ * @param {Boolean} [once=false] - If the callback was added as a one time function or not.
  */
-export function off(event, callback) {
+export function off(event, callback, once = false) {
   callbacks[event] = (callbacks[event] || []).filter(
-    ({ fn }) => fn != callback
+    ({ fn, once: _once }) => !(fn == callback && _once == once)
   );
 }
 
@@ -63,7 +64,7 @@ export function emit(event, ...args) {
   (callbacks[event] || []).map(({ fn, once }) => {
     fn(...args);
     if (once) {
-      off(event, fn);
+      off(event, fn, once);
     }
   });
 }

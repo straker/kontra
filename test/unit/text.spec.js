@@ -1,5 +1,10 @@
 import Text, { TextClass } from '../../src/text.js';
 import { _reset, init, getContext } from '../../src/core.js';
+import {
+  callbacks,
+  _reset as resetEvents,
+  emit
+} from '../../src/events.js';
 
 // test-context:start
 let testContext = {
@@ -157,6 +162,37 @@ describe(
         expect(text._f).to.exist;
         delete text._f;
         init(canvas);
+
+        expect(text._f).to.be.undefined;
+      });
+
+      it("should not add init callback if already init'd", () => {
+        _reset();
+        resetEvents();
+
+        let canvas = document.createElement('canvas');
+        canvas.width = canvas.height = 600;
+        init(canvas);
+
+        Text({ text: '' });
+
+        expect(callbacks.init).to.be.undefined;
+      });
+    });
+
+    // --------------------------------------------------
+    // destroy
+    // --------------------------------------------------
+    describe('destroy', () => {
+      it('should clean up init event', () => {
+        _reset();
+        resetEvents();
+
+        let text = Text({ text: '' });
+        expect(text._f).to.be.undefined;
+
+        text.destroy();
+        emit('init');
 
         expect(text._f).to.be.undefined;
       });

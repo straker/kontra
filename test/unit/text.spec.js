@@ -133,6 +133,18 @@ describe(
         expect(text.font).to.equal('42px Arial');
       });
 
+      it('should call prerender if kontra.init is called after created', () => {
+        _reset();
+
+        let text = Text({ text: '' });
+
+        let canvas = document.createElement('canvas');
+        canvas.width = canvas.height = 600;
+        init(canvas);
+
+        expect(text._s).to.exist;
+      });
+
       it('should remove init callback', () => {
         _reset();
 
@@ -147,22 +159,6 @@ describe(
         init(canvas);
 
         expect(text._f).to.be.undefined;
-      });
-
-      it('should set font if kontra.init is called after created', () => {
-        _reset();
-
-        let text = Text({ text: '' });
-
-        expect(text.font).to.be.undefined;
-
-        let canvas = document.createElement('canvas');
-        canvas.width = canvas.height = 600;
-        let context = canvas.getContext('2d');
-        context.font = '32px Arial';
-        init(canvas);
-
-        expect(text.font).to.equal('32px Arial');
       });
     });
 

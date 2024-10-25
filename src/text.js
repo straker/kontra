@@ -118,10 +118,10 @@ class Text extends GameObjectClass {
     // i = init
     this._i = () => {
       this.font ??= getContext().font;
+      // p = prerender
       this._p();
     };
 
-    // p = prerender
     if (this.context) {
       this._i();
     } else {

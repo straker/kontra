@@ -51,6 +51,7 @@ gameObject.render();
 gameObject.draw();
 gameObject.setScale(1);
 gameObject.setScale(1, 2);
+gameObject.destroy();
 
 // options
 kontra.GameObject({

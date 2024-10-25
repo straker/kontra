@@ -233,10 +233,10 @@ class TileEngine {
     // i = init
     this._i = () => {
       this.context ??= getContext();
+      // p = prerender
       this._p();
     };
 
-    // p = prerender
     if (this.context) {
       this._i();
     } else {

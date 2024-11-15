@@ -435,6 +435,14 @@ Have a game you want to add? [Let me know](https://github.com/straker/kontra/iss
       <span><span class="visually-hidden">. By </span><small>Leo Kuo</small></span>
     </a>
   </li>
+
+  <li>
+    <a href="https://js13kgames.com/entries/bubble-burst">
+      <img src="assets/imgs/games/bubble-burst.png" alt="A blue bubble smiling" loading="lazy" width="400" height="250"/>
+      <span>Bubble Burst</span>
+      <span><span class="visually-hidden">. By </span><small>johnedvard</small></span>
+    </a>
+  </li>
 </ul>
 
 @section Games Made with Kontra.js

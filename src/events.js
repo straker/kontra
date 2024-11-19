@@ -32,10 +32,11 @@ export let callbacks = {};
  *
  * @param {String} event - Name of the event.
  * @param {Function} callback - Function that will be called when the event is emitted.
+ * @param {Boolean} [once=false] - If the callback should only be called the first time the event is emitted.
  */
-export function on(event, callback) {
+export function on(event, callback, once = false) {
   callbacks[event] = callbacks[event] || [];
-  callbacks[event].push(callback);
+  callbacks[event].push({ fn: callback, once });
 }
 
 /**
@@ -44,10 +45,11 @@ export function on(event, callback) {
  *
  * @param {String} event - Name of the event.
  * @param {Function} callback - The function that was passed during registration.
+ * @param {Boolean} [once=false] - If the callback was added as a one time function or not.
  */
-export function off(event, callback) {
+export function off(event, callback, once = false) {
   callbacks[event] = (callbacks[event] || []).filter(
-    fn => fn != callback
+    ({ fn, once: _once }) => !(fn == callback && _once == once)
   );
 }
 
@@ -59,7 +61,12 @@ export function off(event, callback) {
  * @param {...*} args - Comma separated list of arguments passed to all callbacks.
  */
 export function emit(event, ...args) {
-  (callbacks[event] || []).map(fn => fn(...args));
+  (callbacks[event] || []).map(({ fn, once }) => {
+    fn(...args);
+    if (once) {
+      off(event, fn, once);
+    }
+  });
 }
 
 // expose for testing

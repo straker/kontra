@@ -87,9 +87,13 @@ export default function GameLoop({
     });
   }
 
-  on('init', () => {
-    loop.context ??= getContext();
-  });
+  on(
+    'init',
+    () => {
+      loop.context ??= getContext();
+    },
+    true
+  );
 
   /**
    * Called every frame of the game loop.

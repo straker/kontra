@@ -5,7 +5,11 @@ import {
   getContext,
   getCanvas
 } from '../../src/core.js';
-import { emit } from '../../src/events.js';
+import {
+  emit,
+  callbacks,
+  _reset as resetEvents
+} from '../../src/events.js';
 import { noop, srOnlyStyle } from '../../src/utils.js';
 import { collides } from '../../src/helpers.js';
 
@@ -199,6 +203,27 @@ describe('scene', () => {
       expect(scene.context).to.equal(context);
     });
 
+    it('should remove init callback', () => {
+      _reset();
+
+      scene.destroy();
+      scene = Scene({
+        id: 'myId'
+      });
+
+      expect(scene.context).to.be.undefined;
+
+      let canvas = document.createElement('canvas');
+      canvas.width = canvas.height = 600;
+      init(canvas);
+
+      expect(scene.context).to.equal(canvas.getContext('2d'));
+      delete scene.context;
+      init(canvas);
+
+      expect(scene.context).to.be.undefined;
+    });
+
     it('should add dom node to body and set camera if kontra.init is called after created', () => {
       _reset();
 
@@ -213,6 +238,22 @@ describe('scene', () => {
 
       expect(scene._dn.isConnected).to.be.true;
       expect(scene.camera.centerX).to.exist;
+    });
+
+    it("should not add init callback if already init'd", () => {
+      scene.destroy();
+      _reset();
+      resetEvents();
+
+      let canvas = document.createElement('canvas');
+      canvas.width = canvas.height = 600;
+      init(canvas);
+
+      scene = Scene({
+        id: 'myId'
+      });
+
+      expect(callbacks.init).to.be.undefined;
     });
   });
 
@@ -525,6 +566,30 @@ describe('scene', () => {
       emit('init');
 
       expect(section.isConnected).to.be.false;
+    });
+
+    it('should call destroy on camera', () => {
+      sinon.spy(scene.camera, 'destroy');
+
+      scene.destroy();
+
+      expect(scene.camera.destroy.called).to.be.true;
+    });
+
+    it('should clean up init event', () => {
+      scene.destroy();
+      _reset();
+      resetEvents();
+
+      scene = Scene({
+        id: 'myId'
+      });
+      expect(scene.context).to.be.undefined;
+
+      scene.destroy();
+      emit('init');
+
+      expect(scene.context).to.be.undefined;
     });
   });
 

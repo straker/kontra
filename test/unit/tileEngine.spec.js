@@ -6,6 +6,11 @@ import {
   getCanvas
 } from '../../src/core.js';
 import { noop } from '../../src/utils.js';
+import {
+  callbacks,
+  _reset as resetEvents,
+  emit
+} from '../../src/events.js';
 
 // test-context:start
 let testContext = {
@@ -173,6 +178,103 @@ describe(
         init(canvas);
 
         expect(tileEngine._p.called).to.be.true;
+      });
+
+      it('should remove init callback', () => {
+        _reset();
+
+        let tileEngine = TileEngine({
+          tilewidth: 10,
+          tileheight: 10,
+          width: 50,
+          height: 50,
+          tilesets: [
+            {
+              image: new Image()
+            }
+          ],
+          layers: [
+            {
+              name: 'test',
+              data: [0, 0, 1, 0, 0]
+            }
+          ]
+        });
+
+        expect(tileEngine.context).to.be.undefined;
+
+        let canvas = document.createElement('canvas');
+        canvas.width = canvas.height = 600;
+        init(canvas);
+
+        expect(tileEngine.context).to.equal(canvas.getContext('2d'));
+        delete tileEngine.context;
+        init(canvas);
+
+        expect(tileEngine.context).to.be.undefined;
+      });
+
+      it("should not add init callback if already init'd", () => {
+        _reset();
+        resetEvents();
+
+        let canvas = document.createElement('canvas');
+        canvas.width = canvas.height = 600;
+        init(canvas);
+
+        TileEngine({
+          tilewidth: 10,
+          tileheight: 10,
+          width: 50,
+          height: 50,
+          tilesets: [
+            {
+              image: new Image()
+            }
+          ],
+          layers: [
+            {
+              name: 'test',
+              data: [0, 0, 1, 0, 0]
+            }
+          ]
+        });
+
+        expect(callbacks.init).to.be.undefined;
+      });
+    });
+
+    // --------------------------------------------------
+    // destroy
+    // --------------------------------------------------
+    describe('destroy', () => {
+      it('should clean up init event', () => {
+        _reset();
+        resetEvents();
+
+        let tileEngine = TileEngine({
+          tilewidth: 10,
+          tileheight: 10,
+          width: 50,
+          height: 50,
+          tilesets: [
+            {
+              image: new Image()
+            }
+          ],
+          layers: [
+            {
+              name: 'test',
+              data: [0, 0, 1, 0, 0]
+            }
+          ]
+        });
+        expect(tileEngine.context).to.be.undefined;
+
+        tileEngine.destroy();
+        emit('init');
+
+        expect(tileEngine.context).to.be.undefined;
       });
     });
 
@@ -1560,8 +1662,7 @@ describe(
     // tileEngine.getPosition
     // --------------------------------------------------
     describe('getPosition', () => {
-      let tileEngine,
-       canvas;
+      let tileEngine, canvas;
       beforeEach(() => {
         canvas = getCanvas();
         canvas.style.position = 'absolute';

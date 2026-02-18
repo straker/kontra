@@ -20,6 +20,7 @@ text.x += 20;
 text.rotation = Math.PI;
 text.advance();
 text.render();
+text.destroy();
 
 // options
 kontra.Text({

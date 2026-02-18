@@ -110,6 +110,24 @@ describe(
         expect(gameObject.context).to.equal(true);
       });
 
+      it('should remove init callback', () => {
+        _reset();
+
+        gameObject = GameObject();
+
+        expect(gameObject.context).to.be.undefined;
+
+        let canvas = document.createElement('canvas');
+        canvas.width = canvas.height = 600;
+        init(canvas);
+
+        expect(gameObject.context).to.equal(canvas.getContext('2d'));
+        delete gameObject.context;
+        init(canvas);
+
+        expect(gameObject.context).to.be.undefined;
+      });
+
       if (testContext.GAMEOBJECT_ANCHOR) {
         it('should set default anchor', () => {
           expect(gameObject.anchor).to.deep.equal({ x: 0, y: 0 });

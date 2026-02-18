@@ -56,6 +56,7 @@ const { x, y, row, col } = tileEngine.getPosition({x: 100, y: 200})
 tileEngine.getPosition({x: 100, y: 200} as PointerEvent)
 tileEngine.setTileAtLayer('ground', { x, y }, 5);
 tileEngine.setTileAtLayer('ground', { row, col }, 5);
+tileEngine.destroy();
 
 // options
 kontra.TileEngine({

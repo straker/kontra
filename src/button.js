@@ -134,6 +134,7 @@ class Button extends SpriteClass {
    */
   destroy() {
     this._dn.remove();
+    this.textNode.destroy();
   }
 
   _p() {

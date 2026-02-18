@@ -56,6 +56,26 @@ describe('gameLoop', () => {
 
       expect(loop.context).to.equal(true);
     });
+
+    it('should remove init callback', () => {
+      _reset();
+
+      let loop = GameLoop({
+        render: noop
+      });
+
+      expect(loop.context).to.be.undefined;
+
+      let canvas = document.createElement('canvas');
+      canvas.width = canvas.height = 600;
+      init(canvas);
+
+      expect(loop.context).to.equal(canvas.getContext('2d'));
+      delete loop.context;
+      init(canvas);
+
+      expect(loop.context).to.be.undefined;
+    });
   });
 
   // --------------------------------------------------

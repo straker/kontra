@@ -216,9 +216,9 @@ class Scene {
 
     if (this.context) {
       this._i();
+    } else {
+      on('init', this._i, true);
     }
-
-    on('init', this._i);
   }
 
   set objects(value) {
@@ -317,9 +317,10 @@ class Scene {
    * @function destroy
    */
   destroy() {
-    off('init', this._i);
+    off('init', this._i, true);
     this._dn.remove();
     this._o.map(object => object.destroy && object.destroy());
+    this.camera.destroy();
   }
 
   /**
